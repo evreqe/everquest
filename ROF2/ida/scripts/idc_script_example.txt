@@ -1,0 +1,95 @@
+// zones.idc
+// dumps zone info from eqgame.exe (zone index, short name, long name)
+// 1/1/2013 - ieatacid
+
+#include <idc.idc>
+
+static main(void)
+{
+    auto ea, ea2, ea3, ea4, ea5, ea6, file, func_end, rdata_start, rdata_end, zoneShort, zoneLong, zoneIndex;
+
+    // store zones.txt in location where eqgame.exe/idb was opened
+    file = fopen("./zones.txt", "wt");
+    if(!file)
+    {
+        Warning("Error opening file");
+        return;
+    }
+
+    ea = FindBinary(FirstSeg(), SEARCH_DOWN, "6a 07 68 c3 08 00 00 68");
+
+    if(ea == BADADDR)
+    {
+        Warning("Binary search for beginning of command list failed!");
+        return;
+    }
+
+    func_end = FindFuncEnd(ea);
+    rdata_start = SegByBase(SegByName(".rdata"));
+    rdata_end = SegEnd(rdata_start);
+
+    ea = nextLine(ea);
+    ea = nextLine(ea);
+
+    while(ea != func_end)
+    {
+        // check if current operand address is located in .rdata, where the zone name strings are located
+        if(isGoodAddr(ea, rdata_start, rdata_end))
+        {
+            // no easy-to-use arrays in idc :(
+            
+            // read data from each line and scan ahead for 0x6A (push 8 bit value)
+            // 0x8B (mov r32,r32) and 0xE8 (call near) - if found in that order
+            // it's a call to EQZoneInfo::EQZoneInfo and we can save the values
+            // from the previous lines containing zone names and index
+            
+            zoneLong = getStr(ea);
+
+            ea2 = nextLine(ea);
+            zoneShort = getStr(ea2);
+
+            ea3 = nextLine(ea2);
+            zoneIndex = GetOperandValue(ea3, 0);
+
+            ea4 = nextLine(ea3);
+            ea5 = nextLine(ea4);
+            ea6 = nextLine(ea5);
+ 
+            if(Byte(ea4) == 0x6A && Byte(ea5) == 0x8B && Byte(ea6) == 0xE8)
+            {
+                Message("{ \"%s\", \"%s\" }, // %d\n", zoneShort, zoneLong, zoneIndex);
+                fprintf(file, "{ \"%s\", \"%s\" }, // %d\n", zoneShort, zoneLong, zoneIndex);
+            }
+
+            ea = ea6;
+        }
+
+        ea = nextLine(ea);
+    }
+    
+    fclose(file);
+    return;
+}
+
+static getStr(ea)
+{
+    auto strEa = GetOperandValue(ea, 0);
+    return GetString(strEa, -1, ASCSTR_C);
+}
+
+static nextLine(ea)
+{
+    auto instr = DecodeInstruction(ea);
+    return ea + instr.size;
+}
+
+static isGoodAddr(ea, fStart, fEnd)
+{
+    auto opnd;
+    opnd = GetOperandValue(ea, 0);
+    if(opnd > fStart && opnd < fEnd)
+    {
+        return 1;
+    }
+    return 0;
+}

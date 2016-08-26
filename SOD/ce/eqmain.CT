@@ -1,0 +1,1554 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="19">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>3</ID>
+      <Description>"No description"</Description>
+      <LastState Value="00000000" RealAddress="0443F0E0"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+FF0E0</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>15</ID>
+      <Description>"No description"</Description>
+      <LastState Value="00000000" RealAddress="0443F0E4"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+FF0E4</Address>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>16</ID>
+          <Description>"0x00"</Description>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+FF0E4</Address>
+          <Offsets>
+            <Offset>0</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>201</ID>
+          <Description>"0x04"</Description>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+FF0E4</Address>
+          <Offsets>
+            <Offset>4</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>202</ID>
+          <Description>"0x08"</Description>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+FF0E4</Address>
+          <Offsets>
+            <Offset>C</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>17</ID>
+          <Description>"0x1C"</Description>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+FF0E4</Address>
+          <Offsets>
+            <Offset>1C</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>12</ID>
+      <Description>"No description"</Description>
+      <LastState Value="00000000" RealAddress="0443F0E8"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+FF0E8</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>18</ID>
+      <Description>"No description"</Description>
+      <LastState Value="0476AAE0" RealAddress="0443F0EC"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+FF0EC</Address>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>203</ID>
+          <Description>"0x08"</Description>
+          <LastState Value="00AD4EE0" RealAddress="0476AAE8"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+FF0EC</Address>
+          <Offsets>
+            <Offset>8</Offset>
+          </Offsets>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>223</ID>
+              <Description>"0x00"</Description>
+              <LastState RealAddress="00AD4EE0"/>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>String</VariableType>
+              <Length>32</Length>
+              <Unicode>0</Unicode>
+              <ZeroTerminate>1</ZeroTerminate>
+              <Address>eqmain.dll+FF0EC</Address>
+              <Offsets>
+                <Offset>0</Offset>
+                <Offset>8</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>224</ID>
+              <Description>"0x50C Password"</Description>
+              <LastState RealAddress="00AD53EC"/>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>String</VariableType>
+              <Length>32</Length>
+              <Unicode>0</Unicode>
+              <ZeroTerminate>1</ZeroTerminate>
+              <Address>eqmain.dll+FF0EC</Address>
+              <Offsets>
+                <Offset>50C</Offset>
+                <Offset>8</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>225</ID>
+              <Description>"0x6B0 Account Name"</Description>
+              <LastState RealAddress="00AD5590"/>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>String</VariableType>
+              <Length>32</Length>
+              <Unicode>0</Unicode>
+              <ZeroTerminate>1</ZeroTerminate>
+              <Address>eqmain.dll+FF0EC</Address>
+              <Offsets>
+                <Offset>6B0</Offset>
+                <Offset>8</Offset>
+              </Offsets>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>220</ID>
+          <Description>"0x2AC"</Description>
+          <LastState Value="0" RealAddress="0476AD8C"/>
+          <VariableType>Byte</VariableType>
+          <Address>eqmain.dll+FF0EC</Address>
+          <Offsets>
+            <Offset>2AC</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>221</ID>
+          <Description>"0x2F0 Is Window In Foreground"</Description>
+          <LastState Value="0" RealAddress="0476ADD0"/>
+          <VariableType>Byte</VariableType>
+          <Address>eqmain.dll+FF0EC</Address>
+          <Offsets>
+            <Offset>2F0</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>230</ID>
+          <Description>"0x305"</Description>
+          <LastState Value="0" RealAddress="0476ADE5"/>
+          <VariableType>Byte</VariableType>
+          <Address>eqmain.dll+FF0EC</Address>
+          <Offsets>
+            <Offset>305</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>229</ID>
+          <Description>"0x338"</Description>
+          <LastState Value="1" RealAddress="0476AE18"/>
+          <VariableType>Byte</VariableType>
+          <Address>eqmain.dll+FF0EC</Address>
+          <Offsets>
+            <Offset>338</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>0</ID>
+      <Description>"No description"</Description>
+      <LastState Value="0476C960" RealAddress="0443F0F0"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+FF0F0</Address>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>222</ID>
+          <Description>"0x50 Draw UI boolean"</Description>
+          <LastState Value="1" RealAddress="0476C9B0"/>
+          <VariableType>Byte</VariableType>
+          <Address>eqmain.dll+FF0F0</Address>
+          <Offsets>
+            <Offset>50</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>231</ID>
+          <Description>"0x60"</Description>
+          <LastState Value="0" RealAddress="0476C9C0"/>
+          <VariableType>Byte</VariableType>
+          <Address>eqmain.dll+FF0F0</Address>
+          <Offsets>
+            <Offset>60</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>6</ID>
+      <Description>"No description"</Description>
+      <LastState Value="0476D570" RealAddress="0443F0F4"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+FF0F4</Address>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>232</ID>
+          <Description>"0x00"</Description>
+          <LastState Value="0109C51C" RealAddress="0476D570"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+FF0F4</Address>
+          <Offsets>
+            <Offset>0</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>9</ID>
+      <Description>"No description"</Description>
+      <LastState Value="046603A8" RealAddress="0443F0FC"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+FF0FC</Address>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>233</ID>
+          <Description>"0x00"</Description>
+          <LastState Value="04697B68" RealAddress="046603A8"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+FF0FC</Address>
+          <Offsets>
+            <Offset>0</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>21</ID>
+      <Description>"starts with CXStr"</Description>
+      <LastState Value="04762DE0" RealAddress="0443F10C"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+FF10C</Address>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>234</ID>
+          <Description>"0x00"</Description>
+          <LastState Value="1" RealAddress="04762DE0"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+FF10C</Address>
+          <Offsets>
+            <Offset>0</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>235</ID>
+          <Description>"0x218"</Description>
+          <LastState Value="1" RealAddress="04762FF8"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+FF10C</Address>
+          <Offsets>
+            <Offset>218</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>24</ID>
+      <Description>"starts with CXStr"</Description>
+      <LastState Value="04762DA0" RealAddress="0443F134"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+FF134</Address>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>236</ID>
+          <Description>"0x00"</Description>
+          <LastState Value="1" RealAddress="04762DA0"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+FF134</Address>
+          <Offsets>
+            <Offset>0</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>51</ID>
+      <Description>"No description"</Description>
+      <LastState Value="04404418" RealAddress="0443F138"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+FF138</Address>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>237</ID>
+          <Description>"0x00"</Description>
+          <LastState Value="04344320" RealAddress="04404418"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+FF138</Address>
+          <Offsets>
+            <Offset>0</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>27</ID>
+      <Description>"No description"</Description>
+      <LastState Value="00000000" RealAddress="0443F140"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+FF140</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>30</ID>
+      <Description>"No description"</Description>
+      <LastState Value="00000000" RealAddress="0443F148"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+FF148</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>33</ID>
+      <Description>"No description"</Description>
+      <LastState Value="00000000" RealAddress="0443F14C"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+FF14C</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>36</ID>
+      <Description>"No description"</Description>
+      <LastState Value="00000000" RealAddress="0443F150"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+FF150</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>39</ID>
+      <Description>"No description"</Description>
+      <LastState Value="047624F0" RealAddress="0443F15C"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+FF15C</Address>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>238</ID>
+          <Description>"0x00"</Description>
+          <LastState Value="00000000" RealAddress="047624F0"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+FF15C</Address>
+          <Offsets>
+            <Offset>0</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>42</ID>
+      <Description>"No description"</Description>
+      <LastState Value="00000035" RealAddress="0443F160"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+FF160</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>48</ID>
+      <Description>"No description"</Description>
+      <LastState Value="04406E7C" RealAddress="0443F180"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+FF180</Address>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>239</ID>
+          <Description>"0x00"</Description>
+          <LastState Value="0435E450" RealAddress="04406E7C"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+FF180</Address>
+          <Offsets>
+            <Offset>0</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>103</ID>
+      <Description>"Mouse Hovered Over Window related"</Description>
+      <LastState Value="698" RealAddress="04630A90"/>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F0A90</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>104</ID>
+      <Description>"Mouse Hovered Over Window related"</Description>
+      <LastState Value="970" RealAddress="04630A8C"/>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F0A8C</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>70</ID>
+      <Description>"Mouse Hovered Over Window related"</Description>
+      <LastState Value="FFFFFFFF" RealAddress="04630A88"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F0A88</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>110</ID>
+      <Description>"Mouse Hovered Over Window related"</Description>
+      <LastState Value="00000000" RealAddress="04630A84"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F0A84</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>109</ID>
+      <Description>"Mouse Hovered Over Window related"</Description>
+      <LastState Value="00000000" RealAddress="04630A80"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F0A80</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>108</ID>
+      <Description>"Mouse Hovered Over Window related"</Description>
+      <LastState Value="0467FA78" RealAddress="04630A7C"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F0A7C</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>107</ID>
+      <Description>"Mouse Hovered Over Window related"</Description>
+      <LastState Value="0" RealAddress="04630A78"/>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F0A78</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>106</ID>
+      <Description>"Mouse Hovered Over Window related"</Description>
+      <LastState Value="2" RealAddress="04630A70"/>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F0A70</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>105</ID>
+      <Description>"Mouse Hovered Over Window related"</Description>
+      <LastState Value="2" RealAddress="04630A70"/>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F0A70</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>90</ID>
+      <Description>"Mouse Hovered Over Window (CXWnd)"</Description>
+      <LastState Value="08806C80" RealAddress="04630A6C"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F0A6C</Address>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>91</ID>
+          <Description>"0x08 Next Sibling Window"</Description>
+          <LastState Value="08806E48" RealAddress="08806C88"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F0A6C</Address>
+          <Offsets>
+            <Offset>8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>158</ID>
+          <Description>"0x10 First Child Window"</Description>
+          <LastState Value="00000000" RealAddress="08806C90"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F0A6C</Address>
+          <Offsets>
+            <Offset>10</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>178</ID>
+          <Description>"0x30 XML Index"</Description>
+          <LastState Value="001D0005" RealAddress="08806CB0"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F0A6C</Address>
+          <Offsets>
+            <Offset>30</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>161</ID>
+          <Description>"0x3C XML ToolTip"</Description>
+          <LastState Value="07931860" RealAddress="08806CBC"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F0A6C</Address>
+          <Offsets>
+            <Offset>3C</Offset>
+          </Offsets>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>162</ID>
+              <Description>"0x14"</Description>
+              <LastState RealAddress="07931874"/>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>String</VariableType>
+              <Length>32</Length>
+              <Unicode>0</Unicode>
+              <ZeroTerminate>1</ZeroTerminate>
+              <Address>eqmain.dll+2F0A6C</Address>
+              <Offsets>
+                <Offset>14</Offset>
+                <Offset>3C</Offset>
+              </Offsets>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>92</ID>
+          <Description>"0x68 Parent Window"</Description>
+          <LastState Value="088091E0" RealAddress="08806CE8"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F0A6C</Address>
+          <Offsets>
+            <Offset>68</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>159</ID>
+          <Description>"0xD8 Window Text"</Description>
+          <LastState Value="07931A40" RealAddress="08806D58"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F0A6C</Address>
+          <Offsets>
+            <Offset>D8</Offset>
+          </Offsets>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>160</ID>
+              <Description>"0x14"</Description>
+              <LastState RealAddress="07931A54"/>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>String</VariableType>
+              <Length>32</Length>
+              <Unicode>0</Unicode>
+              <ZeroTerminate>1</ZeroTerminate>
+              <Address>eqmain.dll+2F0A6C</Address>
+              <Offsets>
+                <Offset>14</Offset>
+                <Offset>D8</Offset>
+              </Offsets>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>128</ID>
+          <Description>"0xA1 Enabled"</Description>
+          <LastState Value="1" RealAddress="08806D21"/>
+          <VariableType>Byte</VariableType>
+          <Address>eqmain.dll+2F0A6C</Address>
+          <Offsets>
+            <Offset>A1</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>179</ID>
+          <Description>"0xBC Y1"</Description>
+          <LastState Value="420" RealAddress="08806D3C"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F0A6C</Address>
+          <Offsets>
+            <Offset>BC</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>129</ID>
+          <Description>"0xC0 X2"</Description>
+          <LastState Value="569" RealAddress="08806D40"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F0A6C</Address>
+          <Offsets>
+            <Offset>C0</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>130</ID>
+          <Description>"0xC4 Y2"</Description>
+          <LastState Value="451" RealAddress="08806D44"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F0A6C</Address>
+          <Offsets>
+            <Offset>C4</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>93</ID>
+          <Description>"0xD8 Window Text"</Description>
+          <LastState Value="07931A40" RealAddress="08806D58"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F0A6C</Address>
+          <Offsets>
+            <Offset>D8</Offset>
+          </Offsets>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>94</ID>
+              <Description>"0x14"</Description>
+              <LastState RealAddress="07931A54"/>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>String</VariableType>
+              <Length>32</Length>
+              <Unicode>0</Unicode>
+              <ZeroTerminate>1</ZeroTerminate>
+              <Address>eqmain.dll+2F0A6C</Address>
+              <Offsets>
+                <Offset>14</Offset>
+                <Offset>D8</Offset>
+              </Offsets>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>95</ID>
+          <Description>"0xF8 ToolTip Text"</Description>
+          <LastState Value="07931860" RealAddress="08806D78"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F0A6C</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+          </Offsets>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>96</ID>
+              <Description>"0x14"</Description>
+              <LastState RealAddress="07931874"/>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>String</VariableType>
+              <Length>32</Length>
+              <Unicode>0</Unicode>
+              <ZeroTerminate>1</ZeroTerminate>
+              <Address>eqmain.dll+2F0A6C</Address>
+              <Offsets>
+                <Offset>14</Offset>
+                <Offset>F8</Offset>
+              </Offsets>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>97</ID>
+          <Description>"0xFC Faded"</Description>
+          <LastState Value="1" RealAddress="08806D7C"/>
+          <VariableType>Byte</VariableType>
+          <Address>eqmain.dll+2F0A6C</Address>
+          <Offsets>
+            <Offset>FC</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>127</ID>
+          <Description>"0x104 Window Style"</Description>
+          <LastState Value="00040480" RealAddress="08806D84"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F0A6C</Address>
+          <Offsets>
+            <Offset>104</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>99</ID>
+          <Description>"0x124 Show"</Description>
+          <LastState Value="1" RealAddress="08806DA4"/>
+          <VariableType>Byte</VariableType>
+          <Address>eqmain.dll+2F0A6C</Address>
+          <Offsets>
+            <Offset>124</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>100</ID>
+          <Description>"0x12C Show 2?"</Description>
+          <LastState Value="1" RealAddress="08806DAC"/>
+          <VariableType>Byte</VariableType>
+          <Address>eqmain.dll+2F0A6C</Address>
+          <Offsets>
+            <Offset>12C</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>101</ID>
+          <Description>"0x130 Draw Template"</Description>
+          <LastState Value="046305C0" RealAddress="08806DB0"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F0A6C</Address>
+          <Offsets>
+            <Offset>130</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>102</ID>
+          <Description>"0x150 Mouse Over"</Description>
+          <LastState Value="0" RealAddress="08806DD0"/>
+          <VariableType>Byte</VariableType>
+          <Address>eqmain.dll+2F0A6C</Address>
+          <Offsets>
+            <Offset>150</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>111</ID>
+          <Description>"0x154 Sidl Text"</Description>
+          <LastState Value="00000000" RealAddress="08806DD4"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F0A6C</Address>
+          <Offsets>
+            <Offset>154</Offset>
+          </Offsets>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>112</ID>
+              <Description>"0x14"</Description>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>String</VariableType>
+              <Length>32</Length>
+              <Unicode>0</Unicode>
+              <ZeroTerminate>1</ZeroTerminate>
+              <Address>eqmain.dll+2F0A6C</Address>
+              <Offsets>
+                <Offset>14</Offset>
+                <Offset>154</Offset>
+              </Offsets>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>165</ID>
+      <Description>"Pointer to Window Manager Pointer"</Description>
+      <LastState Value="0463097C" RealAddress="046308C8"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F08C8</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>123</ID>
+      <Description>"Window Manager Pointer (CLoginViewManager)"</Description>
+      <LastState Value="07770E68" RealAddress="0463097C"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F097C</Address>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>124</ID>
+          <Description>"0x00"</Description>
+          <LastState Value="0440D2CC" RealAddress="07770E68"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F097C</Address>
+          <Offsets>
+            <Offset>0</Offset>
+          </Offsets>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>134</ID>
+              <Description>"0x00"</Description>
+              <LastState Value="043A3CD0" RealAddress="0440D2CC"/>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>4 Bytes</VariableType>
+              <Address>eqmain.dll+2F097C</Address>
+              <Offsets>
+                <Offset>0</Offset>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>135</ID>
+              <Description>"0x04"</Description>
+              <LastState Value="043A0BA0" RealAddress="0440D2D0"/>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>4 Bytes</VariableType>
+              <Address>eqmain.dll+2F097C</Address>
+              <Offsets>
+                <Offset>4</Offset>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>136</ID>
+              <Description>"0x08"</Description>
+              <LastState Value="043C0710" RealAddress="0440D2D4"/>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>4 Bytes</VariableType>
+              <Address>eqmain.dll+2F097C</Address>
+              <Offsets>
+                <Offset>8</Offset>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>137</ID>
+              <Description>"0x0C"</Description>
+              <LastState Value="043C0710" RealAddress="0440D2D8"/>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>4 Bytes</VariableType>
+              <Address>eqmain.dll+2F097C</Address>
+              <Offsets>
+                <Offset>C</Offset>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>138</ID>
+              <Description>"0x10"</Description>
+              <LastState Value="043A1910" RealAddress="0440D2DC"/>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>4 Bytes</VariableType>
+              <Address>eqmain.dll+2F097C</Address>
+              <Offsets>
+                <Offset>10</Offset>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>121</ID>
+          <Description>"0x04 Number Of Windows"</Description>
+          <LastState Value="179" RealAddress="07770E6C"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F097C</Address>
+          <Offsets>
+            <Offset>4</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>125</ID>
+          <Description>"0x08 Window List Pointer"</Description>
+          <LastState Value="08844520" RealAddress="07770E70"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F097C</Address>
+          <Offsets>
+            <Offset>8</Offset>
+          </Offsets>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>126</ID>
+              <Description>"0x00 First Window (CXWnd)"</Description>
+              <LastState Value="08750070" RealAddress="08844520"/>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>4 Bytes</VariableType>
+              <Address>eqmain.dll+2F097C</Address>
+              <Offsets>
+                <Offset>0</Offset>
+                <Offset>8</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>163</ID>
+              <Description>"0x04 Second Window"</Description>
+              <LastState Value="08297ED0" RealAddress="08844524"/>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>4 Bytes</VariableType>
+              <Address>eqmain.dll+2F097C</Address>
+              <Offsets>
+                <Offset>4</Offset>
+                <Offset>8</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>164</ID>
+              <Description>"0x08 Third Window"</Description>
+              <LastState Value="08750238" RealAddress="08844528"/>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>4 Bytes</VariableType>
+              <Address>eqmain.dll+2F097C</Address>
+              <Offsets>
+                <Offset>8</Offset>
+                <Offset>8</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>166</ID>
+              <Description>""</Description>
+              <LastState Value="08750808" RealAddress="0884452C"/>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>4 Bytes</VariableType>
+              <Address>eqmain.dll+2F097C</Address>
+              <Offsets>
+                <Offset>C</Offset>
+                <Offset>8</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>167</ID>
+              <Description>""</Description>
+              <LastState Value="08464AF0" RealAddress="08844530"/>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>4 Bytes</VariableType>
+              <Address>eqmain.dll+2F097C</Address>
+              <Offsets>
+                <Offset>10</Offset>
+                <Offset>8</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>168</ID>
+              <Description>""</Description>
+              <LastState Value="08750630" RealAddress="08844534"/>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>4 Bytes</VariableType>
+              <Address>eqmain.dll+2F097C</Address>
+              <Offsets>
+                <Offset>14</Offset>
+                <Offset>8</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>169</ID>
+              <Description>""</Description>
+              <LastState Value="087509D0" RealAddress="08844538"/>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>4 Bytes</VariableType>
+              <Address>eqmain.dll+2F097C</Address>
+              <Offsets>
+                <Offset>18</Offset>
+                <Offset>8</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>176</ID>
+              <Description>"0x2CC Last Window"</Description>
+              <LastState Value="00000000" RealAddress="088447EC"/>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>4 Bytes</VariableType>
+              <Address>eqmain.dll+2F097C</Address>
+              <Offsets>
+                <Offset>2CC</Offset>
+                <Offset>8</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>177</ID>
+              <Description>"0x4D4"</Description>
+              <LastState Value="00000000" RealAddress="088449F4"/>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>4 Bytes</VariableType>
+              <Address>eqmain.dll+2F097C</Address>
+              <Offsets>
+                <Offset>4D4</Offset>
+                <Offset>8</Offset>
+              </Offsets>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>131</ID>
+          <Description>"0x0C"</Description>
+          <LastState Value="310" RealAddress="07770E74"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F097C</Address>
+          <Offsets>
+            <Offset>C</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>132</ID>
+          <Description>"0x10"</Description>
+          <LastState Value="1" RealAddress="07770E78"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F097C</Address>
+          <Offsets>
+            <Offset>10</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>133</ID>
+          <Description>"0x14"</Description>
+          <LastState Value="0" RealAddress="07770E7C"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F097C</Address>
+          <Offsets>
+            <Offset>14</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>208</ID>
+          <Description>"0x2C"</Description>
+          <LastState Value="10583A57" RealAddress="07770E94"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F097C</Address>
+          <Offsets>
+            <Offset>2C</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>209</ID>
+          <Description>"0x30"</Description>
+          <LastState Value="10583CB7" RealAddress="07770E98"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F097C</Address>
+          <Offsets>
+            <Offset>30</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>210</ID>
+          <Description>"0x38"</Description>
+          <LastState Value="2" RealAddress="07770EA0"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F097C</Address>
+          <Offsets>
+            <Offset>38</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>211</ID>
+          <Description>"0x3C Last Clicked Window"</Description>
+          <LastState Value="0874FEA8" RealAddress="07770EA4"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F097C</Address>
+          <Offsets>
+            <Offset>3C</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>212</ID>
+          <Description>"0x44 Highlighted or Active Window (TAB key)"</Description>
+          <LastState Value="088093C8" RealAddress="07770EAC"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F097C</Address>
+          <Offsets>
+            <Offset>44</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>214</ID>
+          <Description>"0x74 Window Mouse Hover X/Y/Width/Height?"</Description>
+          <LastState Value="474" RealAddress="07770EDC"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F097C</Address>
+          <Offsets>
+            <Offset>74</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>215</ID>
+          <Description>"0x78 Window Mouse Hover X/Y/Width/Height?"</Description>
+          <LastState Value="1021" RealAddress="07770EE0"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F097C</Address>
+          <Offsets>
+            <Offset>78</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>207</ID>
+          <Description>"0x7D"</Description>
+          <LastState Value="00" RealAddress="07770EE5"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>Byte</VariableType>
+          <Address>eqmain.dll+2F097C</Address>
+          <Offsets>
+            <Offset>7D</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>217</ID>
+          <Description>"0x7E"</Description>
+          <LastState Value="00" RealAddress="07770EE6"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>Byte</VariableType>
+          <Address>eqmain.dll+2F097C</Address>
+          <Offsets>
+            <Offset>7E</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>218</ID>
+          <Description>"0x7F"</Description>
+          <LastState Value="00" RealAddress="07770EE7"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>Byte</VariableType>
+          <Address>eqmain.dll+2F097C</Address>
+          <Offsets>
+            <Offset>7F</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>216</ID>
+          <Description>"0x80"</Description>
+          <LastState Value="00" RealAddress="07770EE8"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>Byte</VariableType>
+          <Address>eqmain.dll+2F097C</Address>
+          <Offsets>
+            <Offset>80</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>213</ID>
+          <Description>"0x84"</Description>
+          <LastState Value="00000000" RealAddress="07770EEC"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F097C</Address>
+          <Offsets>
+            <Offset>84</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>204</ID>
+          <Description>"0xEC Window Width"</Description>
+          <LastState Value="1680" RealAddress="07770F54"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F097C</Address>
+          <Offsets>
+            <Offset>EC</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>205</ID>
+          <Description>"0xF0 Window Height"</Description>
+          <LastState Value="1003" RealAddress="07770F58"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F097C</Address>
+          <Offsets>
+            <Offset>F0</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>206</ID>
+          <Description>"0xF4"</Description>
+          <LastState Value="11" RealAddress="07770F5C"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F097C</Address>
+          <Offsets>
+            <Offset>F4</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>219</ID>
+          <Description>"0x134 HCURSOR (SetCursor)"</Description>
+          <LastState Value="0BC40651" RealAddress="07770F9C"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F097C</Address>
+          <Offsets>
+            <Offset>134</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>140</ID>
+      <Description>"No description"</Description>
+      <LastState Value="00000000" RealAddress="04630970"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F0970</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>141</ID>
+      <Description>"No description"</Description>
+      <LastState Value="00000000" RealAddress="04630974"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F0974</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>139</ID>
+      <Description>"No description"</Description>
+      <LastState Value="FFFFFFFF" RealAddress="04630978"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F0978</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>142</ID>
+      <Description>"No description"</Description>
+      <LastState Value="046D44E8" RealAddress="04630984"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F0984</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>143</ID>
+      <Description>"No description"</Description>
+      <LastState Value="00000000" RealAddress="04630988"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F0988</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>144</ID>
+      <Description>"No description"</Description>
+      <LastState Value="1" RealAddress="0463098C"/>
+      <VariableType>Byte</VariableType>
+      <Address>eqmain.dll+2F098C</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>145</ID>
+      <Description>"No description"</Description>
+      <LastState Value="00000000" RealAddress="04630990"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F0990</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>146</ID>
+      <Description>"No description"</Description>
+      <LastState Value="0467F938" RealAddress="04630994"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F0994</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>147</ID>
+      <Description>"No description"</Description>
+      <LastState Value="00000000" RealAddress="04630998"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F0998</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>148</ID>
+      <Description>"No description"</Description>
+      <LastState Value="00000000" RealAddress="0463099C"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F099C</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>149</ID>
+      <Description>"No description"</Description>
+      <LastState Value="FFFFFFFF" RealAddress="046309A0"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F09A0</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>150</ID>
+      <Description>"No description"</Description>
+      <LastState Value="1" RealAddress="046309A4"/>
+      <VariableType>Byte</VariableType>
+      <Address>eqmain.dll+2F09A4</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>151</ID>
+      <Description>"No description"</Description>
+      <LastState Value="00000000" RealAddress="046309A8"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F09A8</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>152</ID>
+      <Description>"No description"</Description>
+      <LastState Value="0467F978" RealAddress="046309AC"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F09AC</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>153</ID>
+      <Description>"No description"</Description>
+      <LastState Value="00000000" RealAddress="046309B0"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F09B0</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>154</ID>
+      <Description>"No description"</Description>
+      <LastState Value="00000000" RealAddress="046309B4"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F09B4</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>155</ID>
+      <Description>"No description"</Description>
+      <LastState Value="FFFFFFFF" RealAddress="046309B8"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F09B8</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>156</ID>
+      <Description>"No description"</Description>
+      <LastState Value="00000000" RealAddress="046309BC"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F09BC</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>175</ID>
+      <Description>"No description"</Description>
+      <LastState Value="00000000" RealAddress="082447D0"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>082447D0</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>180</ID>
+      <Description>""eula" CXStr"</Description>
+      <LastState Value="0467EF78" RealAddress="046303A0"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F03A0</Address>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>186</ID>
+          <Description>"0x14"</Description>
+          <LastState RealAddress="0467EF8C"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>String</VariableType>
+          <Length>32</Length>
+          <Unicode>0</Unicode>
+          <ZeroTerminate>1</ZeroTerminate>
+          <Address>eqmain.dll+2F03A0</Address>
+          <Offsets>
+            <Offset>14</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>195</ID>
+      <Description>""eula" boolean"</Description>
+      <LastState Value="1" RealAddress="046303A4"/>
+      <VariableType>Byte</VariableType>
+      <Address>eqmain.dll+2F03A4</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>196</ID>
+      <Description>""main" CXStr"</Description>
+      <LastState Value="0467F178" RealAddress="04630410"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F0410</Address>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>199</ID>
+          <Description>"0x14"</Description>
+          <LastState RealAddress="0467F18C"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>String</VariableType>
+          <Length>32</Length>
+          <Unicode>0</Unicode>
+          <ZeroTerminate>1</ZeroTerminate>
+          <Address>eqmain.dll+2F0410</Address>
+          <Offsets>
+            <Offset>14</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>197</ID>
+      <Description>""main" boolean"</Description>
+      <LastState Value="1" RealAddress="04630414"/>
+      <VariableType>Byte</VariableType>
+      <Address>eqmain.dll+2F0414</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>200</ID>
+      <Description>"No description"</Description>
+      <LastState Value="46472BE0" RealAddress="0804FEA8"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>0804FEA8</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>227</ID>
+      <Description>"No description"</Description>
+      <LastState Value="0" RealAddress="04630D28"/>
+      <VariableType>Byte</VariableType>
+      <Address>eqmain.dll+2F0D28</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>228</ID>
+      <Description>"No description"</Description>
+      <LastState Value="1" RealAddress="04630D30"/>
+      <VariableType>Byte</VariableType>
+      <Address>eqmain.dll+2F0D30</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>241</ID>
+      <Description>"No description"</Description>
+      <LastState Value="04760000" RealAddress="04631ABC"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqmain.dll+2F1ABC</Address>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>242</ID>
+          <Description>"0x178"</Description>
+          <LastState Value="1" RealAddress="04760178"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqmain.dll+2F1ABC</Address>
+          <Offsets>
+            <Offset>178</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+  </CheatEntries>
+  <CheatCodes>
+    <CodeEntry>
+      <Description>Code :call eqmain.dll+179B0 // Draw Window</Description>
+      <Address>043A0923</Address>
+      <ModuleName>eqmain.dll</ModuleName>
+      <ModuleNameOffset>10923</ModuleNameOffset>
+      <Before>
+        <Byte>0D</Byte>
+        <Byte>F0</Byte>
+        <Byte>F0</Byte>
+        <Byte>48</Byte>
+        <Byte>04</Byte>
+      </Before>
+      <Actual>
+        <Byte>E8</Byte>
+        <Byte>88</Byte>
+        <Byte>70</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>B9</Byte>
+        <Byte>80</Byte>
+        <Byte>F1</Byte>
+        <Byte>48</Byte>
+        <Byte>04</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Code :call eqmain.dll+12200 // Update Window</Description>
+      <Address>043A0918</Address>
+      <ModuleName>eqmain.dll</ModuleName>
+      <ModuleNameOffset>10918</ModuleNameOffset>
+      <Before>
+        <Byte>0D</Byte>
+        <Byte>F4</Byte>
+        <Byte>F0</Byte>
+        <Byte>48</Byte>
+        <Byte>04</Byte>
+      </Before>
+      <Actual>
+        <Byte>E8</Byte>
+        <Byte>E3</Byte>
+        <Byte>18</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>8B</Byte>
+        <Byte>0D</Byte>
+        <Byte>F0</Byte>
+        <Byte>F0</Byte>
+        <Byte>48</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Code :call eqmain.dll+15CA0  </Description>
+      <Address>04647208</Address>
+      <ModuleName>eqmain.dll</ModuleName>
+      <ModuleNameOffset>17208</ModuleNameOffset>
+      <Before>
+        <Byte>14</Byte>
+        <Byte>89</Byte>
+        <Byte>01</Byte>
+        <Byte>8B</Byte>
+        <Byte>CF</Byte>
+      </Before>
+      <Actual>
+        <Byte>E8</Byte>
+        <Byte>93</Byte>
+        <Byte>EA</Byte>
+        <Byte>FF</Byte>
+        <Byte>FF</Byte>
+      </Actual>
+      <After>
+        <Byte>84</Byte>
+        <Byte>C0</Byte>
+        <Byte>0F</Byte>
+        <Byte>84</Byte>
+        <Byte>84</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Code :je eqmain.dll+373AB // NOP to skip splash screen</Description>
+      <Address>04647313</Address>
+      <ModuleName>eqmain.dll</ModuleName>
+      <ModuleNameOffset>37313</ModuleNameOffset>
+      <Before>
+        <Byte>86</Byte>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+        <Byte>84</Byte>
+        <Byte>C0</Byte>
+      </Before>
+      <Actual>
+        <Byte>0F</Byte>
+        <Byte>84</Byte>
+        <Byte>92</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>A1</Byte>
+        <Byte>D8</Byte>
+        <Byte>F0</Byte>
+        <Byte>70</Byte>
+        <Byte>04</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
+  <UserdefinedSymbols/>
+</CheatTable>

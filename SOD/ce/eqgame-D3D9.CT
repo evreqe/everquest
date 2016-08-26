@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="19">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>1</ID>
+      <Description>"No description"</Description>
+      <LastState Value="03810050" RealAddress="00B112BC"/>
+      <ShowAsHex>1</ShowAsHex>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqgame.exe+7112BC</Address>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>4</ID>
+          <Description>"No description"</Description>
+          <LastState Value="0310E328" RealAddress="03810050"/>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqgame.exe+7112BC</Address>
+          <Offsets>
+            <Offset>0</Offset>
+          </Offsets>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>5</ID>
+              <Description>"0xEA8 ?"</Description>
+              <LastState Value="65686374" RealAddress="0310F1D0"/>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>4 Bytes</VariableType>
+              <Address>eqgame.exe+7112BC</Address>
+              <Offsets>
+                <Offset>EA8</Offset>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>7</ID>
+              <Description>"0xF04 LPDIRECT3D9"</Description>
+              <LastState Value="74696E49" RealAddress="0310F22C"/>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>4 Bytes</VariableType>
+              <Address>eqgame.exe+7112BC</Address>
+              <Offsets>
+                <Offset>F04</Offset>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>6</ID>
+              <Description>"0xF08 LPDIRECT3DDEVICE9"</Description>
+              <LastState Value="6946202E" RealAddress="0310F230"/>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>4 Bytes</VariableType>
+              <Address>eqgame.exe+7112BC</Address>
+              <Offsets>
+                <Offset>F08</Offset>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+  </CheatEntries>
+  <CheatCodes>
+    <CodeEntry>
+      <Description>Code :mov [esi+00000F04],eax</Description>
+      <Address>033F7787</Address>
+      <ModuleName>EQGraphicsDX9.DLL</ModuleName>
+      <ModuleNameOffset>87787</ModuleNameOffset>
+      <Before>
+        <Byte>C9</Byte>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+        <Byte>3B</Byte>
+        <Byte>C3</Byte>
+      </Before>
+      <Actual>
+        <Byte>89</Byte>
+        <Byte>86</Byte>
+        <Byte>04</Byte>
+        <Byte>0F</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>75</Byte>
+        <Byte>19</Byte>
+        <Byte>68</Byte>
+        <Byte>A4</Byte>
+        <Byte>FC</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
+  <UserdefinedSymbols/>
+</CheatTable>

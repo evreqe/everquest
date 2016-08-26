@@ -1,0 +1,30 @@
+Part 1:
+
+// show the main window instead of the seizure warning
+eqmain.dll+10853:
+change
+68 0C 4E 0C 10 // seizurewarning
+to
+68 8C 92 0C 10 // main
+
+-- OR --
+
+// change the seizure text to connect
+eqmain.dll+C4E0C:
+change
+73 65 69 7A 75 72 65 77 61 72 6E 69 6E 67 00 // seizurewarning
+to
+63 6F 6E 6E 65 63 74 00 00 00 00 00 00 00 00 // connect
+
+Part 2:
+
+// always show the seizure warning
+eqmain.dll+1084A:
+change
+74 26 // jz short loc_10010872
+to
+90 90 // nop nop
+
+Part 3:
+
+// make the logout button go back to the main screen

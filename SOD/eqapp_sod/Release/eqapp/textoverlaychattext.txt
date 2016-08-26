@@ -1,0 +1,14 @@
+You must first select a target for this spell
+Your spell fizzles
+Your spell is interrupted
+Your spell did not take hold
+Your target resisted
+You resist
+has worn off
+You feel yourself starting to appear
+You have no more room
+You must be standing to forage
+You can't fish without fishing bait
+Your fishing pole broke
+growls...
+DEVASTATING BLOW

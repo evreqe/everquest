@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{6B1F0119-C6B4-4971-BF63-3AD4F0C18410}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>eqapp_sod</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <GenerateManifest>false</GenerateManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;EQAPP_SOD_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Code\everquest\eqsod\include;D:\Code\_libraries\detours\include;D:\Code\_libraries\jansson-2.7\include;D:\Code\_libraries\glfw\include;D:\Code\_libraries\imgui;C:\VisualLeakDetector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>D:\Code\_libraries\detours\lib;D:\Code\_libraries\jansson-2.7\lib;D:\Code\_libraries\glfw\lib;D:\Code\_libraries\imgui;C:\VisualLeakDetector\lib\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>psapi.lib;detours.lib;jansson.lib;glfw3.lib;opengl32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;EQAPP_SOD_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Code\everquest\eqsod\include;D:\Code\_libraries\detours\include;D:\Code\_libraries\jansson-2.7\include;D:\Code\_libraries\glfw\include;D:\Code\_libraries\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>No</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>psapi.lib;detours.lib;jansson.lib;glfw3.lib;opengl32.lib;gdi32.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\Code\_libraries\detours\lib;D:\Code\_libraries\jansson-2.7\lib;D:\Code\_libraries\glfw\lib;D:\Code\_libraries\imgui;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>
+      </AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\_libraries\imgui\imgui.h" />
+    <ClInclude Include="..\..\eqsod\include\eqsod.h" />
+    <ClInclude Include="..\..\eqsod\include\eqsod_functions.h" />
+    <ClInclude Include="..\..\eqsod\include\eqsod_lua.h" />
+    <ClInclude Include="..\..\eqsod\include\eqsod_offsets.h" />
+    <ClInclude Include="..\..\eqsod\include\eqsod_sizes.h" />
+    <ClInclude Include="eqapp.h" />
+    <ClInclude Include="eqapp_alwaysattack.h" />
+    <ClInclude Include="eqapp_alwayshotbutton.h" />
+    <ClInclude Include="eqapp_autogroup.h" />
+    <ClInclude Include="eqapp_autoloot.h" />
+    <ClInclude Include="eqapp_banklist.h" />
+    <ClInclude Include="eqapp_census.h" />
+    <ClInclude Include="eqapp_changeheight.h" />
+    <ClInclude Include="eqapp_characterfile.h" />
+    <ClInclude Include="eqapp_combathotbutton.h" />
+    <ClInclude Include="eqapp_console.h" />
+    <ClInclude Include="eqapp_detours.h" />
+    <ClInclude Include="eqapp_doors.h" />
+    <ClInclude Include="eqapp_drawdistance.h" />
+    <ClInclude Include="eqapp_esp.h" />
+    <ClInclude Include="eqapp_esp_custom.h" />
+    <ClInclude Include="eqapp_esp_spawnlist.h" />
+    <ClInclude Include="eqapp_esp_functions.h" />
+    <ClInclude Include="eqapp_freecamera.h" />
+    <ClInclude Include="eqapp_functions.h" />
+    <ClInclude Include="eqapp_hidecorpselooted.h" />
+    <ClInclude Include="eqapp_hud.h" />
+    <ClInclude Include="eqapp_imgui.h" />
+    <ClInclude Include="eqapp_imgui_consolewindow.h" />
+    <ClInclude Include="eqapp_imgui_functions.h" />
+    <ClInclude Include="eqapp_imgui_optionswindow.h" />
+    <ClInclude Include="eqapp_interpretcommand.h" />
+    <ClInclude Include="eqapp_inventorylist.h" />
+    <ClInclude Include="eqapp_linetotarget.h" />
+    <ClInclude Include="eqapp_maplabels.h" />
+    <ClInclude Include="eqapp_maplocations.h" />
+    <ClInclude Include="eqapp_maxswimmingskill.h" />
+    <ClInclude Include="eqapp_memory.h" />
+    <ClInclude Include="eqapp_namedspawns.h" />
+    <ClInclude Include="eqapp_nobeep.h" />
+    <ClInclude Include="eqapp_onscreentext.h" />
+    <ClInclude Include="eqapp_playeralert.h" />
+    <ClInclude Include="eqapp_replaceraces.h" />
+    <ClInclude Include="eqapp_sounds.h" />
+    <ClInclude Include="eqapp_spawnbeep.h" />
+    <ClInclude Include="eqapp_spawncastspell.h" />
+    <ClInclude Include="eqapp_spawnlist.h" />
+    <ClInclude Include="eqapp_swimspeed.h" />
+    <ClInclude Include="eqapp_targetbeep.h" />
+    <ClInclude Include="eqapp_textoverlaychattext.h" />
+    <ClInclude Include="eqapp_zoneactors.h" />
+    <ClInclude Include="eqapp_zoneshortnames.h" />
+    <ClInclude Include="imgui_impl_glfw.h" />
+    <ClInclude Include="eqapp_waypoint.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\_libraries\imgui\imgui.cpp" />
+    <ClCompile Include="..\..\..\_libraries\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\..\..\_libraries\imgui\imgui_draw.cpp" />
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="imgui_impl_glfw.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

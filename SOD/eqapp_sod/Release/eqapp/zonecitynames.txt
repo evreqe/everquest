@@ -1,0 +1,11 @@
+        zoneId == 1   || // south newport
+        zoneId == 2   || // north newport
+        zoneId == 3   || // surefall
+        zoneId == 23  || // erudin palace
+        zoneId == 24  || // erudin
+        zoneId == 29  || // halas
+        zoneId == 55  || // underhill
+        zoneId == 61  || // athica a
+        zoneId == 62  || // athica b
+        zoneId == 74  || // sadri malath
+        zoneId == 114    // thurgadin
