@@ -1,0 +1,22 @@
+#main_div
+{
+    width: 1280px;
+    margin: 0 auto;
+}
+
+#vendor_list
+{
+    width: 100%;
+    word-wrap: break-word;
+}
+
+.column_tags
+{
+    width: 25%;
+}
+
+.item_icon
+{
+    width:  20px;
+    height: 20px;
+}

@@ -1,0 +1,29 @@
+body
+{
+    background-color: #000000;
+    color: #FFFFFF;
+    background-image: url("images/wnd_bg_dark_rock.png");
+}
+
+.slot
+{
+    z-index: 1;
+    width: 40px;
+    height: 40px;
+    background-image: url("images/slot.png");
+    background-size: 100% 100%;
+    background-color: #000000;
+}
+
+.slottext
+{
+    z-index: 2;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display:block;
+    background-color: #000000;
+    color: #FFFFFF;
+    font-size: 10px;
+    margin: 1px;
+}

@@ -1,0 +1,49 @@
+html *
+{
+    font-family: Verdana, Arial, Helvetica, Sans-Serif !important;
+    font-size: 11px !important;
+}
+
+form
+{
+    margin: 0px;
+    float: left;
+}
+
+table
+{
+    margin: 0px;
+    padding: 0px;
+    border-spacing: 0px;
+    border-collapse: collapse;
+    float: left;
+}
+
+th
+{
+    font-weight: normal;
+    vertical-align: text-top;
+    text-align: left;
+}
+
+.formbutton
+{
+    float: left;
+}
+
+#divmain
+{
+    display: table;
+    margin: 0 auto;
+}
+
+#divitemstats
+{
+    margin: 0px;
+    float: left;
+}
+
+#itemimage
+{
+    border: 1px solid black;
+}
