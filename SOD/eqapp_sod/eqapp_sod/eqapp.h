@@ -1,12 +1,11 @@
-#ifndef EQAPP_H
-#define EQAPP_H
+#pragma once
 
-const char* g_applicationName    = "EQAPP";
-const char* g_applicationExeName = "eqapp";
+const char* g_applicationName = "eqapp";
 
-volatile int g_bLoaded  = 0;
-volatile int g_bExit    = 0;
-volatile int g_bConsole = 0;
+volatile int g_bLoaded = 0;
+volatile int g_bExit   = 0;
+
+volatile int g_bOnEnterZone = 0;
 
 HMODULE g_module;
 
@@ -71,5 +70,3 @@ const std::vector<DWORD> g_importantWindowsList
     EQ_POINTER_CTradeWnd,
     EQ_POINTER_CTrainWnd,
 };
-
-#endif // EQAPP_H

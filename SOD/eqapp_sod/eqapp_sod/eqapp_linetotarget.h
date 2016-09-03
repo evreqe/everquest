@@ -1,5 +1,4 @@
-#ifndef EQAPP_LINETOTARGET_H
-#define EQAPP_LINETOTARGET_H
+#pragma once
 
 bool g_lineToTargetIsEnabled = true;
 DWORD g_lineToTargetColor = 0xFFFF00FF;
@@ -35,4 +34,3 @@ void EQAPP_LineToTarget_Execute()
     }
 }
 
-#endif // EQAPP_LINETOTARGET_H

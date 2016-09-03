@@ -1,5 +1,4 @@
-#ifndef EQSOD_SIZES_H
-#define EQSOD_SIZES_H
+#pragma once
 
 #define EQ_SIZE_ZONE_INFO_CHARACTER_NAME        0x40
 #define EQ_SIZE_ZONE_INFO_SHORT_NAME            0x20
@@ -19,4 +18,3 @@
 
 #define EQ_SIZE_EXECUTECMD_NAME                 0x40
 
-#endif // EQSOD_SIZES_H

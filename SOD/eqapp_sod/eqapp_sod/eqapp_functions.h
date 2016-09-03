@@ -1,5 +1,4 @@
-#ifndef EQAPP_FUNCTIONS_H
-#define EQAPP_FUNCTIONS_H
+#pragma once
 
 #include "eqapp.h"
 
@@ -53,8 +52,11 @@ void EQAPP_SetWindowTitles();
 template <class T>
 void EQAPP_Log(const char* text, T number)
 {
+    std::stringstream filePath;
+    filePath << g_applicationName << "/log.txt";
+
     std::fstream file;
-    file.open("eqapp/eqapplog.txt", std::ios::out | std::ios::app);
+    file.open(filePath.str().c_str(), std::ios::out | std::ios::app);
     file << "[" << __TIME__ << "] " << text << " (" << number << ")" << " Hex(" << std::hex << number << std::dec << ")" << std::endl;
     file.close();
 }
@@ -302,10 +304,15 @@ void EQAPP_ExecuteCmdDebugInformation_Print()
 {
     std::cout << "ExecuteCmd Debug Information:" << std::endl;
 
-    EQAPP_DeleteFileContents("eqapp/executecmddebug.txt");
+    std::stringstream filePath;
+    filePath << g_applicationName << "/executecmddebug.txt";
+
+    std::string filePathStr = filePath.str();
+
+    EQAPP_DeleteFileContents(filePathStr.c_str());
 
     std::fstream file;
-    file.open("eqapp/executecmddebug.txt", std::ios::out | std::ios::app);
+    file.open(filePathStr.c_str(), std::ios::out | std::ios::app);
 
     for (size_t i = 0; i < EQ_NUM_EXECUTECMD; i++)
     {
@@ -321,7 +328,7 @@ void EQAPP_ExecuteCmdDebugInformation_Print()
 
         std::cout << ss.str() << std::endl;
 
-        file << "#define EQ_EXECUTECMD_" << commandName << " " << i << std::endl;
+        file << commandName << "    " << i << std::endl;
     }
 
     file.close();
@@ -465,7 +472,7 @@ void EQAPP_MeleeRangeToTarget_Print()
             return;
         }
 
-        FLOAT meleeRange = EQ_get_melee_range(playerSpawn, targetSpawn);
+        FLOAT meleeRange = EQ_GetMeleeRange(playerSpawn, targetSpawn);
 
         std::cout << "Melee Range to Target: " << meleeRange << std::endl;
     }
@@ -536,4 +543,3 @@ void EQAPP_DeleteFileContents(const char* filename)
     file.close();
 }
 
-#endif // EQAPP_FUNCTIONS_H

@@ -42,8 +42,8 @@
 #include <imgui.h>
 #include "imgui_impl_glfw.h"
 
-#include "eqsod.h"
-#include "eqsod_functions.h"
+#include "eq.h"
+#include "eq_functions.h"
 
 #include "eqapp.h"
 #include "eqapp_functions.h"
@@ -84,6 +84,7 @@
 #include "eqapp_replaceraces.h"
 #include "eqapp_autogroup.h"
 #include "eqapp_zoneactors.h"
+#include "eqapp_backstab.h"
 #include "eqapp_esp.h"                 // needs to be included last
 #include "eqapp_esp_functions.h"       // needs to be included last
 #include "eqapp_hud.h"                 // needs to be included last
@@ -98,6 +99,8 @@ void EQAPP_Load()
 {
     std::cout << "Loading..." << std::endl;
 
+    EQAPP_CharacterFile_Write();
+
     EQAPP_Memory_Load();
     EQAPP_Sounds_Load();
     EQAPP_NamedSpawns_Load();
@@ -105,8 +108,7 @@ void EQAPP_Load()
     EQAPP_TextOverlayChatText_Load();
     EQAPP_NoBeep_Load();
     EQAPP_ZoneShortNames_Load();
-
-    EQAPP_CharacterFile_Write();
+    EQAPP_ZoneActors_NoCollision_Load();
 
     EQ_UpdateLight(EQ_GetCharInfo());
 
@@ -115,15 +117,20 @@ void EQAPP_Load()
     g_bLoaded = 1;
 }
 
+void EQAPP_OnEnterZone()
+{
+    EQAPP_ZoneActors_NoCollision_Execute();
+}
+
 void EQAPP_Unload()
 {
     std::cout << "Unloading..." << std::endl;
 
     EQAPP_CharacterFile_Write();
 
-    g_spawnCastSpellList.clear();
-
     EQ_ResetViewActor();
+
+    g_spawnCastSpellList.clear();
 
     EQAPP_MapLabels_Remove();
 
@@ -489,9 +496,18 @@ int __fastcall EQAPP_DETOUR_CEverQuest__dsp_chat(void* pThis, void* not_used, co
         }
     }
 
+    if (g_backstabIsEnabled == true)
+    {
+        if (strstr(a1, "You see an opening") != NULL)
+        {
+            EQAPP_Backstab_Execute();
+        }
+    }
+
     // camping out
-    const char* eqstr12293 = EQ_StringTable->getString(12293, 0); // 12293 It will take you about 30 seconds to prepare your camp.
-    if (strcmp(a1, eqstr12293) == 0)
+    //const char* eqstr12293 = EQ_StringTable->getString(12293, 0); // 12293 It will take you about 30 seconds to prepare your camp.
+    //if (strcmp(a1, eqstr12293) == 0)
+    if (strcmp(a1, "It will take you about 30 seconds to prepare your camp.") == 0)
     {
         EQ_ResetViewActor();
 
@@ -509,6 +525,8 @@ int __fastcall EQAPP_DETOUR_CEverQuest__MoveToZone(void* pThis, void* not_used, 
     }
 
     std::cout << "Moving to zone..." << std::endl;
+
+    g_bOnEnterZone = 0;
 
     g_espZoneActorIsEnabled = false;
 
@@ -528,6 +546,8 @@ int __fastcall EQAPP_DETOUR_CEverQuest__EnterZone(void* pThis, void* not_used, s
 
     int result = EQAPP_REAL_CEverQuest__EnterZone(pThis, a1);
 
+    g_bOnEnterZone = 1;
+
     EQAPP_MapLabels_Remove();
 
     EQAPP_FreeCamera_Set(false);
@@ -538,6 +558,8 @@ int __fastcall EQAPP_DETOUR_CEverQuest__EnterZone(void* pThis, void* not_used, s
     EQAPP_NoBeep_Load();
     EQAPP_NamedSpawns_Load();
     EQAPP_ESP_Custom_Load();
+    EQAPP_ZoneActors_NoCollision_Load();
+    EQAPP_ZoneActors_NoCollision_Execute();
 
     g_alwaysAttackIsEnabled = false;
 
@@ -813,6 +835,13 @@ int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short
         return EQAPP_REAL_DrawNetStatus(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
     }
 
+    if (g_bOnEnterZone == 1)
+    {
+        EQAPP_OnEnterZone();
+
+        g_bOnEnterZone = 0;
+    }
+
     EQAPP_SetWindowTitles();
 
     EQAPP_FreeCamera_Keys();
@@ -959,6 +988,8 @@ DWORD WINAPI EQAPP_ThreadLoad(LPVOID param)
     EQAPP_EnableDebugPrivileges();
 
     EQ_LoadGraphicsDllFunctions();
+
+    EQ_SetNetStatus(true);
 
     g_handleThreadConsole = CreateThread(NULL, 0, &EQAPP_ThreadConsole, NULL, 0, NULL);
 

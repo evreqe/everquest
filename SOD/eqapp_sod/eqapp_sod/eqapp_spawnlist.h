@@ -1,5 +1,4 @@
-#ifndef EQAPP_SPAWNLIST_H
-#define EQAPP_SPAWNLIST_H
+#pragma once
 
 void EQAPP_SpawnList_Print(const char* filterSpawnName);
 
@@ -151,4 +150,3 @@ void EQAPP_SpawnList_Print(const char* filterSpawnName)
     EQAPP_COUT_RestoreFlags();
 }
 
-#endif // EQAPP_SPAWNLIST_H

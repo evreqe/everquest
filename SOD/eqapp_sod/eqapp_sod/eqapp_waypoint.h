@@ -1,5 +1,4 @@
-#ifndef EQAPP_WAYPOINT_H
-#define EQAPP_WAYPOINT_H
+#pragma once
 
 typedef struct _EQAPPWAYPOINT
 {
@@ -439,14 +438,16 @@ void EQAPP_WaypointList_Load()
     }
 
     std::stringstream filePath;
-    filePath << "eqapp/waypoints/" << zoneShortName << ".txt";
+    filePath << g_applicationName << "/waypoints/" << zoneShortName << ".txt";
+
+    std::string filePathStr = filePath.str();
 
     std::ifstream file;
-    file.open(filePath.str().c_str(), std::ios::in);
+    file.open(filePathStr.c_str(), std::ios::in);
     if (file.is_open() == false)
     {
         std::stringstream ss;
-        ss << "failed to open file: " << filePath.str();
+        ss << "failed to open file: " << filePathStr;
 
         EQAPP_PrintErrorMessage(__FUNCTION__, ss.str());
         return;
@@ -492,9 +493,9 @@ void EQAPP_WaypointList_Load()
     }
 
     std::stringstream ss;
-    ss << "waypoints loaded from file: " << filePath.str();
+    ss << "waypoints loaded from file: " << filePathStr;
 
-    EQAPP_PrintErrorMessage(__FUNCTION__, ss.str());
+    EQAPP_PrintDebugMessage(__FUNCTION__, ss.str());
 
     file.close();
 }
@@ -515,14 +516,16 @@ void EQAPP_WaypointList_Save()
     }
 
     std::stringstream filePath;
-    filePath << "eqapp/waypoints/" << zoneShortName << ".txt";
+    filePath << g_applicationName << "/waypoints/" << zoneShortName << ".txt";
+
+    std::string filePathStr = filePath.str();
 
     std::fstream file;
-    file.open(filePath.str().c_str(), std::ios_base::in | std::ios_base::out | std::ios_base::trunc);
+    file.open(filePathStr.c_str(), std::ios_base::in | std::ios_base::out | std::ios_base::trunc);
     if (file.is_open() == false)
     {
         std::stringstream ss;
-        ss << "failed to open file: " << filePath.str();
+        ss << "failed to open file: " << filePathStr;
 
         EQAPP_PrintErrorMessage(__FUNCTION__, ss.str());
         return;
@@ -559,9 +562,9 @@ void EQAPP_WaypointList_Save()
     }
 
     std::stringstream ss;
-    ss << "waypoints  saved to file: " << filePath.str();
+    ss << "waypoints saved to file: " << filePathStr;
 
-    EQAPP_PrintErrorMessage(__FUNCTION__, ss.str());
+    EQAPP_PrintDebugMessage(__FUNCTION__, ss.str());
 
     file.close();
 }
@@ -601,4 +604,3 @@ void EQAPP_WaypointList_Print()
     }
 }
 
-#endif // EQAPP_WAYPOINT_H

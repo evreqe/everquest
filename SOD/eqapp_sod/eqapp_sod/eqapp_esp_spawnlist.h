@@ -1,5 +1,4 @@
-#ifndef EQAPP_ESP_SPAWNLIST_H
-#define EQAPP_ESP_SPAWNLIST_H
+#pragma once
 
 typedef struct _EQAPPESPSPAWN
 {
@@ -160,4 +159,3 @@ void EQAPP_ESP_SpawnList_Update()
     }
 }
 
-#endif // EQAPP_ESP_SPAWNLIST_H

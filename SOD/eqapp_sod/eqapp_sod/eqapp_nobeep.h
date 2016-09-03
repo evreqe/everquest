@@ -1,5 +1,4 @@
-#ifndef EQAPP_NOBEEP_H
-#define EQAPP_NOBEEP_H
+#pragma once
 
 std::vector<std::string> g_noBeepList;
 
@@ -12,7 +11,10 @@ void EQAPP_NoBeep_Load()
 
     g_noBeepList.clear();
 
-    std::string filePathStr = "eqapp/nobeep.txt";
+    std::stringstream filePath;
+    filePath << g_applicationName << "/nobeep.txt";
+
+    std::string filePathStr = filePath.str();
 
     std::ifstream file;
     file.open(filePathStr.c_str(), std::ios::in);
@@ -49,4 +51,3 @@ void EQAPP_NoBeep_Print()
     }
 }
 
-#endif // EQAPP_NOBEEP_H

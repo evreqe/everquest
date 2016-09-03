@@ -1,5 +1,4 @@
-#ifndef EQAPP_ESP_CUSTOM_H
-#define EQAPP_ESP_CUSTOM_H
+#pragma once
 
 typedef struct _EQAPPESPCUSTOM
 {
@@ -32,14 +31,16 @@ void EQAPP_ESP_Custom_Load()
     }
 
     std::stringstream filePath;
-    filePath << "eqapp/esp/" << zoneShortName << ".txt";
+    filePath << g_applicationName << "/esp/" << zoneShortName << ".txt";
+
+    std::string filePathStr = filePath.str();
 
     std::ifstream file;
-    file.open(filePath.str().c_str(), std::ios::in);
+    file.open(filePathStr.c_str(), std::ios::in);
     if (file.is_open() == false)
     {
         std::stringstream ss;
-        ss << "failed to open file: " << filePath.str();
+        ss << "failed to open file: " << filePathStr;
 
         EQAPP_PrintErrorMessage(__FUNCTION__, ss.str());
         return;
@@ -120,4 +121,3 @@ void EQAPP_ESP_Custom_Draw()
     }
 }
 
-#endif // EQAPP_ESP_CUSTOM_H

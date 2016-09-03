@@ -1,5 +1,4 @@
-#ifndef EQAPP_ALWAYSATTACK_H
-#define EQAPP_ALWAYSATTACK_H
+#pragma once
 
 bool g_alwaysAttackIsEnabled = false;
 
@@ -18,14 +17,14 @@ void EQAPP_AlwaysAttack_Execute()
         return;
     }
 
-    DWORD standingState = EQ_ReadMemory<BYTE>(playerSpawn + EQ_OFFSET_SPAWN_INFO_STANDING_STATE);
-    if (standingState != EQ_STANDING_STATE_STANDING)
+    DWORD targetSpawn = EQ_GetTargetSpawn();
+    if (targetSpawn == NULL || targetSpawn == playerSpawn)
     {
         return;
     }
 
-    DWORD targetSpawn = EQ_GetTargetSpawn();
-    if (targetSpawn == NULL)
+    int standingState = EQ_ReadMemory<BYTE>(playerSpawn + EQ_OFFSET_SPAWN_INFO_STANDING_STATE);
+    if (standingState != EQ_STANDING_STATE_STANDING)
     {
         return;
     }
@@ -39,4 +38,3 @@ void EQAPP_AlwaysAttack_Execute()
     EQ_SetAutoAttack(true);
 }
 
-#endif // EQAPP_ALWAYSATTACK_H

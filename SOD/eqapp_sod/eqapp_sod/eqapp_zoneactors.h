@@ -1,7 +1,15 @@
-#ifndef EQAPP_ZONEACTORS_H
-#define EQAPP_ZONEACTORS_H
+#pragma once
+
+bool g_zoneActorsNoCollisionIsEnabled = true;
+std::vector<std::string> g_zoneActorsNoCollisionList;
+std::vector<std::string>::iterator g_zoneActorsNoCollisionListIterator;
 
 void EQAPP_ZoneActors_Debug();
+
+void EQAPP_ZoneActors_NoCollision_Load();
+void EQAPP_ZoneActors_NoCollision_Print();
+void EQAPP_ZoneActors_NoCollision_Execute();
+void EQAPP_ZoneActors_NoCollision_Restore();
 
 void EQAPP_ZoneActors_Debug()
 {
@@ -16,7 +24,7 @@ void EQAPP_ZoneActors_Debug()
     }
 
     std::stringstream filePath;
-    filePath << "eqapp/zoneactors/" << zoneShortName << ".txt";
+    filePath << g_applicationName << "/zoneactors/" << zoneShortName << ".txt";
 
     std::fstream file;
     file.open(filePath.str().c_str(), std::ios_base::in | std::ios_base::out | std::ios_base::trunc);
@@ -28,6 +36,8 @@ void EQAPP_ZoneActors_Debug()
         EQAPP_PrintErrorMessage(__FUNCTION__, ss.str());
         return;
     }
+
+    file << "# Name Y X Z Rotation Scale" << std::endl;
 
     DWORD playerSpawn = EQ_GetPlayerSpawn();
 
@@ -100,31 +110,31 @@ void EQAPP_ZoneActors_Debug()
                 FLOAT zoneActorExX3 = 0.0f;
                 FLOAT zoneActorExZ3 = 0.0f;
 
-                DWORD zoneActorEx = EQ_ReadMemory<DWORD>(zoneActor + EQ_OFFSET_ZONE_ACTOR_INFO_ACTOR_SUB_INFO);
+                DWORD zoneActorEx = EQ_ReadMemory<DWORD>(zoneActor + EQ_OFFSET_ZONE_ACTOR_INFO_ACTOR_INFO);
                 if (zoneActorEx != NULL)
                 {
-                    zoneActorSpawnInfo = EQ_ReadMemory<DWORD>(zoneActorEx + EQ_OFFSET_ZONE_ACTOR_SUB_INFO_SPAWN_INFO);
+                    zoneActorSpawnInfo = EQ_ReadMemory<DWORD>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_SPAWN_INFO);
 
                     if (zoneActorSpawnInfo == NULL)
                     {
-                        PCHAR zoneActorExNamePointer = (PCHAR)(zoneActorEx - EQ_OFFSET_ZONE_ACTOR_SUB_INFO_NAME);
+                        PCHAR zoneActorExNamePointer = (PCHAR)(zoneActorEx - EQ_OFFSET_ACTOR_INFO_NAME);
                         if (zoneActorExNamePointer != NULL)
                         {
                             zoneActorExName = std::string(zoneActorExNamePointer);
                         }
                     }
 
-                    zoneActorExY1 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ZONE_ACTOR_SUB_INFO_Y1);
-                    zoneActorExX1 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ZONE_ACTOR_SUB_INFO_X1);
-                    zoneActorExZ1 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ZONE_ACTOR_SUB_INFO_Z1);
+                    zoneActorExY1 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_Y1);
+                    zoneActorExX1 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_X1);
+                    zoneActorExZ1 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_Z1);
 
-                    zoneActorExY2 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ZONE_ACTOR_SUB_INFO_Y2);
-                    zoneActorExX2 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ZONE_ACTOR_SUB_INFO_X2);
-                    zoneActorExZ2 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ZONE_ACTOR_SUB_INFO_Z2);
+                    zoneActorExY2 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_Y2);
+                    zoneActorExX2 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_X2);
+                    zoneActorExZ2 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_Z2);
 
-                    zoneActorExY3 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ZONE_ACTOR_SUB_INFO_Y3);
-                    zoneActorExX3 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ZONE_ACTOR_SUB_INFO_X3);
-                    zoneActorExZ3 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ZONE_ACTOR_SUB_INFO_Z3);
+                    zoneActorExY3 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_Y3);
+                    zoneActorExX3 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_X3);
+                    zoneActorExZ3 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_Z3);
                 }
 
                 std::cout << "Name: " << zoneActorName << std::endl;
@@ -179,4 +189,272 @@ void EQAPP_ZoneActors_Debug()
     file.close();
 }
 
-#endif // EQAPP_ZONEACTORS_H
+void EQAPP_ZoneActors_NoCollision_Load()
+{
+    std::cout << "Loading Zone Actors No Collision..." << std::endl;
+
+    g_zoneActorsNoCollisionList.clear();
+
+    std::stringstream filePath;
+    std::string filePathStr;
+    std::ifstream file;
+    std::string line;
+
+    filePath << g_applicationName << "/zoneactorsnocollision.txt";
+
+    filePathStr = filePath.str();
+
+    file.open(filePathStr.c_str(), std::ios::in);
+    if (file.is_open() == false)
+    {
+        std::stringstream ss;
+        ss << "failed to open file: " << filePathStr;
+
+        EQAPP_PrintErrorMessage(__FUNCTION__, ss.str());
+        return;
+    }
+
+    while (std::getline(file, line))
+    {
+        if (line.size() == 0)
+        {
+            continue;
+        }
+
+        std::cout << __FUNCTION__ << ": "<< line << std::endl;
+
+        g_zoneActorsNoCollisionList.push_back(line);
+    }
+
+    file.close();
+
+    filePath.str(std::string());
+    filePath.clear();
+
+    std::string zoneShortName = EQ_GetZoneShortName();
+    if (zoneShortName.size() == 0)
+    {
+        EQAPP_PrintErrorMessage(__FUNCTION__, "zone short name is NULL");
+        return;
+    }
+
+    filePath << g_applicationName << "/zoneactorsnocollision/" << zoneShortName << ".txt";
+
+    filePathStr = filePath.str();
+
+    file.open(filePathStr.c_str(), std::ios::in);
+    if (file.is_open() == false)
+    {
+        std::stringstream ss;
+        ss << "failed to open file: " << filePathStr;
+
+        EQAPP_PrintErrorMessage(__FUNCTION__, ss.str());
+        return;
+    }
+
+    while (std::getline(file, line))
+    {
+        if (line.size() == 0)
+        {
+            continue;
+        }
+
+        std::cout << __FUNCTION__ << ": "<< line << std::endl;
+
+        g_zoneActorsNoCollisionList.push_back(line);
+    }
+
+    g_zoneActorsNoCollisionListIterator = g_zoneActorsNoCollisionList.begin();
+
+    file.close();
+}
+
+void EQAPP_ZoneActors_NoCollision_Print()
+{
+    std::cout << "Zone Actors No Collision: " << std::endl;
+
+    for (auto& zoneActorNoCollisionName : g_zoneActorsNoCollisionList)
+    {
+        std::cout << zoneActorNoCollisionName << std::endl;
+    }
+}
+
+void EQAPP_ZoneActors_NoCollision_Execute()
+{
+    if (g_zoneActorsNoCollisionIsEnabled == false)
+    {
+        return;
+    }
+
+    if (EQ_IsInGame() == false)
+    {
+        return;
+    }
+
+    DWORD playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    FLOAT playerY = EQ_GetSpawnY(playerSpawn);
+    FLOAT playerX = EQ_GetSpawnX(playerSpawn);
+    FLOAT playerZ = EQ_GetSpawnZ(playerSpawn);
+
+    DWORD pointer1 = EQ_ReadMemory<DWORD>(EQ_POINTER_0x00B112C0);
+    if (pointer1 != NULL)
+    {
+        DWORD pointer2 = EQ_ReadMemory<DWORD>(pointer1 + EQ_OFFSET_0x00B112C0_POINTER_2);
+        if (pointer2 != NULL)
+        {
+            DWORD zoneActor = EQ_ReadMemory<DWORD>(pointer2 + EQ_OFFSET_0x00B112C0_POINTER_2_ZONE_ACTOR_INFO_FIRST);
+
+            while (zoneActor)
+            {
+                DWORD zoneActor0x0C = EQ_ReadMemory<DWORD>(zoneActor + EQ_OFFSET_ZONE_ACTOR_INFO_0x0C);
+                if (zoneActor0x0C == 2)
+                {
+                    zoneActor = EQ_ReadMemory<DWORD>(zoneActor + EQ_OFFSET_ZONE_ACTOR_INFO_NEXT); // next
+                    continue;
+                }
+
+                std::string zoneActorName = "ZONEACTOR";
+
+                DWORD zoneActor0x14 = EQ_ReadMemory<DWORD>(zoneActor + EQ_OFFSET_ZONE_ACTOR_INFO_0x14);
+                if (zoneActor0x14 != NULL)
+                {
+                    DWORD zoneActor0x14x18 = EQ_ReadMemory<DWORD>(zoneActor0x14 + EQ_OFFSET_ZONE_ACTOR_INFO_0x14_0x18);
+                    if (zoneActor0x14x18 != NULL)
+                    {
+                        PCHAR zoneActorNamePointer = EQ_ReadMemory<PCHAR>(zoneActor0x14x18 + EQ_OFFSET_ZONE_ACTOR_INFO_NAME_0x14_0x18_0x08);
+                        if (zoneActorNamePointer != NULL)
+                        {
+                            zoneActorName = std::string(zoneActorNamePointer);
+                        }
+                    }
+                }
+
+                DWORD zoneActorSpawnInfo = NULL;
+
+                DWORD zoneActorEx = EQ_ReadMemory<DWORD>(zoneActor + EQ_OFFSET_ZONE_ACTOR_INFO_ACTOR_INFO);
+                if (zoneActorEx != NULL)
+                {
+                    zoneActorSpawnInfo = EQ_ReadMemory<DWORD>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_SPAWN_INFO);
+                    if (zoneActorSpawnInfo == NULL)
+                    {
+                        for (auto& zoneActorNoCollisionName : g_zoneActorsNoCollisionList)
+                        {
+                            if (zoneActorNoCollisionName == zoneActorName)
+                            {
+                                if (g_debugIsEnabled == true)
+                                {
+                                    std::cout << "Applying Zone Actor No Collision to: " << zoneActorName << std::endl;
+                                }
+
+                                EQ_WriteMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_Y2, 0.0f);
+                                EQ_WriteMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_X2, 0.0f);
+                                EQ_WriteMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_Z2, 0.0f);
+
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                zoneActor = EQ_ReadMemory<DWORD>(zoneActor + EQ_OFFSET_ZONE_ACTOR_INFO_NEXT); // next
+            }
+        }
+    }
+}
+
+void EQAPP_ZoneActors_NoCollision_Restore()
+{
+    if (EQ_IsInGame() == false)
+    {
+        return;
+    }
+
+    DWORD playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    FLOAT playerY = EQ_GetSpawnY(playerSpawn);
+    FLOAT playerX = EQ_GetSpawnX(playerSpawn);
+    FLOAT playerZ = EQ_GetSpawnZ(playerSpawn);
+
+    DWORD pointer1 = EQ_ReadMemory<DWORD>(EQ_POINTER_0x00B112C0);
+    if (pointer1 != NULL)
+    {
+        DWORD pointer2 = EQ_ReadMemory<DWORD>(pointer1 + EQ_OFFSET_0x00B112C0_POINTER_2);
+        if (pointer2 != NULL)
+        {
+            DWORD zoneActor = EQ_ReadMemory<DWORD>(pointer2 + EQ_OFFSET_0x00B112C0_POINTER_2_ZONE_ACTOR_INFO_FIRST);
+
+            while (zoneActor)
+            {
+                DWORD zoneActor0x0C = EQ_ReadMemory<DWORD>(zoneActor + EQ_OFFSET_ZONE_ACTOR_INFO_0x0C);
+                if (zoneActor0x0C == 2)
+                {
+                    zoneActor = EQ_ReadMemory<DWORD>(zoneActor + EQ_OFFSET_ZONE_ACTOR_INFO_NEXT); // next
+                    continue;
+                }
+
+                std::string zoneActorName = "ZONEACTOR";
+
+                DWORD zoneActor0x14 = EQ_ReadMemory<DWORD>(zoneActor + EQ_OFFSET_ZONE_ACTOR_INFO_0x14);
+                if (zoneActor0x14 != NULL)
+                {
+                    DWORD zoneActor0x14x18 = EQ_ReadMemory<DWORD>(zoneActor0x14 + EQ_OFFSET_ZONE_ACTOR_INFO_0x14_0x18);
+                    if (zoneActor0x14x18 != NULL)
+                    {
+                        PCHAR zoneActorNamePointer = EQ_ReadMemory<PCHAR>(zoneActor0x14x18 + EQ_OFFSET_ZONE_ACTOR_INFO_NAME_0x14_0x18_0x08);
+                        if (zoneActorNamePointer != NULL)
+                        {
+                            zoneActorName = std::string(zoneActorNamePointer);
+                        }
+                    }
+                }
+
+                DWORD zoneActorSpawnInfo = NULL;
+
+                FLOAT zoneActorExY1 = 0.0f;
+                FLOAT zoneActorExX1 = 0.0f;
+                FLOAT zoneActorExZ1 = 0.0f;
+
+                DWORD zoneActorEx = EQ_ReadMemory<DWORD>(zoneActor + EQ_OFFSET_ZONE_ACTOR_INFO_ACTOR_INFO);
+                if (zoneActorEx != NULL)
+                {
+                    zoneActorSpawnInfo = EQ_ReadMemory<DWORD>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_SPAWN_INFO);
+                    if (zoneActorSpawnInfo == NULL)
+                    {
+                        for (auto& zoneActorNoCollisionName : g_zoneActorsNoCollisionList)
+                        {
+                            if (zoneActorNoCollisionName == zoneActorName)
+                            {
+                                if (g_debugIsEnabled == true)
+                                {
+                                    std::cout << "Restore Zone Actor Collision to: " << zoneActorName << std::endl;
+                                }
+
+                                zoneActorExY1 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_Y1);
+                                zoneActorExX1 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_X1);
+                                zoneActorExZ1 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_Z1);
+
+                                EQ_WriteMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_Y2, zoneActorExY1);
+                                EQ_WriteMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_X2, zoneActorExX1);
+                                EQ_WriteMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_Z2, zoneActorExZ1);
+
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                zoneActor = EQ_ReadMemory<DWORD>(zoneActor + EQ_OFFSET_ZONE_ACTOR_INFO_NEXT); // next
+            }
+        }
+    }
+}
+

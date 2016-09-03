@@ -1,5 +1,4 @@
-#ifndef EQAPP_SPAWNCASTSPELL_H
-#define EQAPP_SPAWNCASTSPELL_H
+#pragma once
 
 typedef struct _EQAPPSPAWNCASTSPELL
 {
@@ -93,4 +92,3 @@ void EQAPP_SpawnCastSpell_Add(DWORD spawnInfo, DWORD spellId, DWORD spellCastTim
     g_spawnCastSpellList.push_back(std::move(spawnCastSpell));
 }
 
-#endif // EQAPP_SPAWNCASTSPELL_H

@@ -1,5 +1,4 @@
-#ifndef EQAPP_SWIMSPEED_H
-#define EQAPP_SWIMSPEED_H
+#pragma once
 
 bool g_swimSpeedHackIsEnabled = true;
 float g_swimSpeedHackModifier = 0.0f;
@@ -53,4 +52,3 @@ void EQAPP_SwimSpeed_Execute()
     EQ_WriteMemory<FLOAT>(EQ_SWIM_SPEED_MULTIPLIER, EQ_SWIM_SPEED_MODIFIER_DEFAULT + g_swimSpeedHackModifier);
 }
 
-#endif // EQAPP_SWIMSPEED_H

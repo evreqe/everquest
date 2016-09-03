@@ -1,5 +1,4 @@
-#ifndef EQAPP_DOORS_H
-#define EQAPP_DOORS_H
+#pragma once
 
 void EQAPP_Doors_OpenAll(bool bOpen);
 void EQAPP_Doors_Print();
@@ -96,4 +95,3 @@ void EQAPP_Doors_Print()
     }
 }
 
-#endif // EQAPP_DOORS_H

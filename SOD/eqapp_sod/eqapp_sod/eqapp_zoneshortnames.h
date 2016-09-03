@@ -1,5 +1,4 @@
-#ifndef EQAPP_ZONESHORTNAMES_H
-#define EQAPP_ZONESHORTNAMES_H
+#pragma once
 
 std::vector<std::string> g_zoneShortNamesList;
 std::vector<std::string>::iterator g_zoneShortNamesListIterator;
@@ -13,7 +12,10 @@ void EQAPP_ZoneShortNames_Load()
 
     g_zoneShortNamesList.clear();
 
-    std::string filePathStr = "eqapp/zoneshortnames.txt";
+    std::stringstream filePath;
+    filePath << g_applicationName << "/zoneshortnames.txt";
+
+    std::string filePathStr = filePath.str();
 
     std::ifstream file;
     file.open(filePathStr.c_str(), std::ios::in);
@@ -52,4 +54,3 @@ void EQAPP_ZoneShortNames_Print()
     }
 }
 
-#endif // EQAPP_ZONESHORTNAMES_H

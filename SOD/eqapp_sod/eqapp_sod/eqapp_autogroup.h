@@ -1,5 +1,4 @@
-#ifndef EQAPP_AUTOGROUP_H
-#define EQAPP_AUTOGROUP_H
+#pragma once
 
 bool g_autoGroupIsEnabled = true;
 DWORD g_autoGroupTimer = 0;
@@ -35,4 +34,3 @@ void EQAPP_AutoGroup_Execute()
     }
 }
 
-#endif // EQAPP_AUTOGROUP_H

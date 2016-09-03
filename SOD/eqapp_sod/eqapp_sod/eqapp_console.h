@@ -1,5 +1,6 @@
-#ifndef EQAPP_CONSOLE_H
-#define EQAPP_CONSOLE_H
+#pragma once
+
+volatile int g_bConsole = 0;
 
 std::stringstream g_consoleStringStream;
 std::streambuf* g_consoleStreamBuffer;
@@ -23,4 +24,3 @@ void EQAPP_Console_Unload()
     g_bConsole = 0;
 }
 
-#endif // EQAPP_CONSOLE_H

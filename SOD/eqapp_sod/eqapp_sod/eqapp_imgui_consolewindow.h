@@ -1,5 +1,4 @@
-#ifndef EQAPP_IMGUI_CONSOLEWINDOW_H
-#define EQAPP_IMGUI_CONSOLEWINDOW_H
+#pragma once
 
 #include "eqapp_imgui.h"
 
@@ -106,6 +105,13 @@ struct EQAPPIMGUIConsoleWindow
         }
 
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 1));
+
+        //unsigned int itemStart = 0;
+        //if (m_items.Size > 1000)
+        //{
+            //itemStart = m_items.Size - 1000;
+        //}
+
         for (int i = 0; i < m_items.Size; i++)
         {
             const char* item = m_items[i];
@@ -317,4 +323,3 @@ struct EQAPPIMGUIConsoleWindow
     }
 };
 
-#endif // EQAPP_IMGUI_CONSOLEWINDOW_H

@@ -1,5 +1,4 @@
-#ifndef EQAPP_COMBATHOTBUTTON_H
-#define EQAPP_COMBATHOTBUTTON_H
+#pragma once
 
 bool g_combatHotbuttonIsEnabled = false;
 unsigned int g_combatHotbuttonNumber = 1;
@@ -71,4 +70,3 @@ void EQAPP_CombatHotbutton_Set(unsigned buttonNumber, DWORD timerDelayInSeconds)
     g_combatHotbuttonTimerDelayInSeconds = timerDelayInSeconds;
 }
 
-#endif // EQAPP_COMBATHOTBUTTON_H

@@ -1,5 +1,4 @@
-#ifndef EQAPP_DETOURS_H
-#define EQAPP_DETOURS_H
+#pragma once
 
 EQ_FUNCTION_TYPE_Exit EQAPP_REAL_Exit = NULL;
 EQ_FUNCTION_TYPE_DrawNetStatus EQAPP_REAL_DrawNetStatus = NULL;
@@ -120,4 +119,3 @@ void EQAPP_Detours_Remove()
     DetourRemove((PBYTE)EQAPP_REAL_MapViewMap__SaveEx, (PBYTE)EQAPP_DETOUR_MapViewMap__SaveEx);
 }
 
-#endif // EQAPP_DETOURS_H

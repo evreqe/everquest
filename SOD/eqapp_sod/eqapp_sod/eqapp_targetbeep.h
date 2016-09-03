@@ -1,5 +1,4 @@
-#ifndef EQAPP_TARGETBEEP_H
-#define EQAPP_TARGETBEEP_H
+#pragma once
 
 bool g_targetBeepIsEnabled = false;
 DWORD g_targetBeepTimer = 0;
@@ -68,4 +67,3 @@ void EQAPP_TargetBeep_Set(std::string spawnName, DWORD timerDelayInSeconds)
     g_targetBeepTimerDelayInSeconds = timerDelayInSeconds;
 }
 
-#endif // EQAPP_TARGETBEEP_H

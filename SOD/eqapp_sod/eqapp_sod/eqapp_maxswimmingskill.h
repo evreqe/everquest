@@ -1,5 +1,4 @@
-#ifndef EQAPP_MAXSWIMMINGSKILL_H
-#define EQAPP_MAXSWIMMINGSKILL_H
+#pragma once
 
 bool g_maxSwimmingSkillIsEnabled = true;
 
@@ -15,4 +14,3 @@ void EQAPP_MaxSwimmingSkill_Execute()
     EQ_SetSwimmingSkillMax();
 }
 
-#endif // EQAPP_MAXSWIMMINGSKILL_H

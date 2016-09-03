@@ -1,5 +1,4 @@
-#ifndef EQAPP_FREECAMERA_H
-#define EQAPP_FREECAMERA_H
+#pragma once
 
 bool g_freeCameraIsEnabled = false;
 float g_freeCameraMultiplier = 1.0f;
@@ -249,4 +248,3 @@ void EQAPP_FreeCamera_Keys()
     }
 }
 
-#endif // EQAPP_FREECAMERA_H

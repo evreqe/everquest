@@ -1,5 +1,4 @@
-#ifndef EQAPP_IMGUI_FUNCTIONS_H
-#define EQAPP_IMGUI_FUNCTIONS_H
+#pragma once
 
 #include "eqapp_imgui.h"
 
@@ -75,4 +74,3 @@ void EQAPP_IMGUI_OptionsWindow()
     g_imguiOptionsWindow.Draw("Options", &g_bImguiOptionsWindow);
 }
 
-#endif // EQAPP_IMGUI_FUNCTIONS_H

@@ -1,5 +1,4 @@
-#ifndef EQSOD_FUNCTIONS_H
-#define EQSOD_FUNCTIONS_H
+#pragma once
 
 #include <string>
 #include <map>
@@ -10,7 +9,7 @@
 
 #include <windows.h>
 
-#include "eqsod.h"
+#include "eq.h"
 
 #define EQ_FUNCTION_AT_ADDRESS(function,offset) __declspec(naked) function\
 {\
@@ -36,7 +35,7 @@ template <class T>
 void EQ_Log(const char* text, T number)
 {
     std::fstream file;
-    file.open("eqapp/eqlog.txt", std::ios::out | std::ios::app);
+    file.open("Logs/eqlog.txt", std::ios::out | std::ios::app);
     file << "[" << __TIME__ << "] " << text << " (" << number << ")" << " Hex(" << std::hex << number << std::dec << ")" << std::endl;
     file.close();
 }
@@ -565,12 +564,12 @@ EQ_FUNCTION_AT_ADDRESS(int __cdecl EQ_CXWnd_DrawColoredRect(PEQCXRECT rect, DWOR
 typedef int (__cdecl* EQ_FUNCTION_TYPE_DrawNetStatus)(int, unsigned short, unsigned short, unsigned short x, unsigned short y, int, unsigned short, unsigned long, long, unsigned long);
 #endif
 
-#ifdef EQ_FUNCTION_get_melee_range
-EQ_FUNCTION_AT_ADDRESS(float __cdecl EQ_get_melee_range(DWORD spawn1, DWORD spawn2), EQ_FUNCTION_get_melee_range);
+#ifdef EQ_FUNCTION_GetMeleeRange
+EQ_FUNCTION_AT_ADDRESS(float __cdecl EQ_GetMeleeRange(DWORD spawn1, DWORD spawn2), EQ_FUNCTION_GetMeleeRange);
 #endif
 
-#ifdef EQ_FUNCTION_get_bearing
-EQ_FUNCTION_AT_ADDRESS(float __cdecl EQ_get_bearing(float y1, float x1, float y2, float x2), EQ_FUNCTION_get_bearing);
+#ifdef EQ_FUNCTION_GetBearing
+EQ_FUNCTION_AT_ADDRESS(float __cdecl EQ_GetBearing(float y1, float x1, float y2, float x2), EQ_FUNCTION_GetBearing);
 #endif
 
 #ifdef EQ_FUNCTION_ExecuteCmd
@@ -736,6 +735,18 @@ bool EQ_IsAutoRunEnabled()
     return (b == 1);
 }
 
+void EQ_SetNetStatus(bool b)
+{
+    if (b == true)
+    {
+        EQ_WriteMemory<BYTE>(EQ_BOOL_NET_STATUS, 0x01);
+    }
+    else
+    {
+        EQ_WriteMemory<BYTE>(EQ_BOOL_NET_STATUS, 0x00);
+    }
+}
+
 void EQ_SetAutoAttack(bool b)
 {
     if (b == true)
@@ -830,7 +841,24 @@ DWORD EQ_GetCharInfo2()
 
 DWORD EQ_GetFirstSpawn()
 {
-    return EQ_ReadMemory<DWORD>(EQ_POINTER_SPAWN_INFO_FIRST);
+    DWORD spawnManager = EQ_ReadMemory<DWORD>(EQ_POINTER_SPAWN_MANAGER);
+    if (spawnManager == NULL)
+    {
+        return NULL;
+    }
+
+    return EQ_ReadMemory<DWORD>(spawnManager + EQ_OFFSET_SPAWN_MANAGER_SPAWN_INFO_FIRST);
+}
+
+DWORD EQ_GetLastSpawn()
+{
+    DWORD spawnManager = EQ_ReadMemory<DWORD>(EQ_POINTER_SPAWN_MANAGER);
+    if (spawnManager == NULL)
+    {
+        return NULL;
+    }
+
+    return EQ_ReadMemory<DWORD>(spawnManager + EQ_OFFSET_SPAWN_MANAGER_SPAWN_INFO_LAST);
 }
 
 DWORD EQ_GetPreviousSpawn(DWORD spawnInfo)
@@ -915,8 +943,8 @@ std::string EQ_GetZoneShortName()
 
     std::string zoneShortNameString = zoneShortName;
 
-    auto find = EQ_KEYVALUE_SHORT_ZONE_NAMES_WR.find(zoneShortNameString);
-    if (find != EQ_KEYVALUE_SHORT_ZONE_NAMES_WR.end())
+    auto find = EQ_KEYVALUE_SHORT_ZONE_NAMES_EMU.find(zoneShortNameString);
+    if (find != EQ_KEYVALUE_SHORT_ZONE_NAMES_EMU.end())
     {
         zoneShortNameString = find->second;
     }
@@ -1930,7 +1958,7 @@ void EQ_TurnPlayerTowardsLocation(float y, float x)
     FLOAT playerY = EQ_GetSpawnY(playerSpawn);
     FLOAT playerX = EQ_GetSpawnX(playerSpawn);
 
-    float targetHeading = EQ_get_bearing(playerY, playerX, y, x);
+    float targetHeading = EQ_GetBearing(playerY, playerX, y, x);
 
     EQ_WriteMemory<FLOAT>(playerSpawn + EQ_OFFSET_SPAWN_INFO_HEADING, targetHeading);
 }
@@ -2234,5 +2262,3 @@ bool EQ_IsContainerWindowOpen()
 
     return false;
 }
-
-#endif // EQSOD_FUNCTIONS_H

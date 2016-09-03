@@ -1,5 +1,4 @@
-#ifndef EQAPP_HUD_H
-#define EQAPP_HUD_H
+#pragma once
 
 bool g_hudIsEnabled = true;
 unsigned int g_hudX = 5;
@@ -51,6 +50,12 @@ void EQAPP_Hud_Execute()
         numDrawText++;
     }
 
+    if (g_autoGroupIsEnabled == true)
+    {
+        ssDrawText << "Auto Group is on.\n";
+        numDrawText++;
+    }
+
     if (EQ_IsAutoAttackEnabled() == true)
     {
         ssDrawText << "Auto Attack is on.\n";
@@ -73,11 +78,26 @@ void EQAPP_Hud_Execute()
     {
         ssDrawText << "Always Hotbutton: " << g_alwaysHotbuttonNumber << " (" << g_alwaysHotbuttonTimerDelayInSeconds << "s)\n";
         numDrawText++;
+
+        if (g_alwaysHotbuttonSitStandAtManaIsEnabled == true)
+        {
+            ssDrawText << "AHB Sit At Mana: " << g_alwaysHotbuttonSitAtManaValue << "\n";
+            numDrawText++;
+
+            ssDrawText << "AHB Stand At Mana: " << g_alwaysHotbuttonStandAtManaValue << "\n";
+            numDrawText++;
+        }
     }
 
     if (g_combatHotbuttonIsEnabled == true)
     {
         ssDrawText << "Combat Hotbutton: " << g_combatHotbuttonNumber << " (" << g_combatHotbuttonTimerDelayInSeconds << "s)\n";
+        numDrawText++;
+    }
+
+    if (g_backstabIsEnabled == true)
+    {
+        ssDrawText << "Backstab: " << g_backstabHotbuttonNumber << "\n";
         numDrawText++;
     }
 
@@ -134,4 +154,3 @@ void EQAPP_Hud_Execute()
     }
 }
 
-#endif // EQAPP_HUD_H

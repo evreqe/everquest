@@ -1,5 +1,4 @@
-#ifndef EQAPP_MEMORY_H
-#define EQAPP_MEMORY_H
+#pragma once
 
 typedef struct _EQAPPMEMORY
 {
@@ -27,7 +26,14 @@ void EQAPP_Memory_Load()
 
     g_memoryList.clear();
 
-    g_memoryIsEnabled = EQAPP_INI_ReadBool("eqapp/memory.ini", "Memory", "bEnabled", 1);
+    std::stringstream filePathIni;
+    filePathIni << g_applicationName << "/memory.ini";
+
+    std::string filePathIniStr = filePathIni.str();
+
+    const char* filePathIniCStr = filePathIniStr.c_str();
+
+    g_memoryIsEnabled = EQAPP_INI_ReadBool(filePathIniCStr, "Memory", "bEnabled", 1);
 
     if (g_memoryIsEnabled == false)
     {
@@ -40,27 +46,27 @@ void EQAPP_Memory_Load()
         std::stringstream ssFilename;
         ssFilename << "sFilename" << i;
 
-        std::string filename = EQAPP_INI_ReadString("eqapp/memory.ini", "Memory", ssFilename.str().c_str(), "");
+        std::string filename = EQAPP_INI_ReadString(filePathIniCStr, "Memory", ssFilename.str().c_str(), "");
         if (filename.size() == 0)
         {
             break;
         }
 
-        std::stringstream filepath;
-        filepath << "eqapp/memory/" << filename;
+        std::stringstream filePath;
+        filePath << g_applicationName << "/memory/" << filename;
 
         std::stringstream ssEnabled;
         ssEnabled << "bEnabled" << i;
 
         EQAPPMEMORY memory;
-        memory.isEnabled = EQAPP_INI_ReadBool("eqapp/memory.ini", "Memory", ssEnabled.str().c_str(), 0);
+        memory.isEnabled = EQAPP_INI_ReadBool(filePathIniCStr, "Memory", ssEnabled.str().c_str(), 0);
 
         std::cout << __FUNCTION__ << ": " << filename << " isEnabled: " << std::boolalpha << memory.isEnabled << std::noboolalpha << std::endl;
 
         memory.index          = i;
-        memory.filename       = filepath.str();
-        memory.name           = EQAPP_INI_ReadString(filepath.str().c_str(), "Memory", "Name", "");
-        memory.description    = EQAPP_INI_ReadString(filepath.str().c_str(), "Memory", "Description", "");
+        memory.filename       = filePath.str();
+        memory.name           = EQAPP_INI_ReadString(filePath.str().c_str(), "Memory", "Name", "");
+        memory.description    = EQAPP_INI_ReadString(filePath.str().c_str(), "Memory", "Description", "");
         
         g_memoryList.push_back(memory);
     }
@@ -210,4 +216,3 @@ void EQAPP_Memory_Print()
     }
 }
 
-#endif // EQAPP_MEMORY_H

@@ -1,5 +1,4 @@
-#ifndef EQAPP_ESP_FUNCTIONS_H
-#define EQAPP_ESP_FUNCTIONS_H
+#pragma once
 
 #include "eqapp_esp.h"
 
@@ -19,12 +18,12 @@ void EQAPP_ESP_SpawnSkeleton_Draw(DWORD spawnInfo, DWORD argbColor);
 
 void EQAPP_ESP_Execute()
 {
-    if (EQ_IsInGame() == false)
+    if (g_espIsEnabled == false)
     {
         return;
     }
 
-    if (g_espIsEnabled == false)
+    if (EQ_IsInGame() == false)
     {
         return;
     }
@@ -487,11 +486,6 @@ void EQAPP_ESP_ZoneActors_Draw()
 
                 DWORD zoneActorSpawnInfo = NULL;
 
-                FLOAT zoneActorEx0x08 = NULL;
-                FLOAT zoneActorEx0x0C = NULL;
-                FLOAT zoneActorEx0x10 = NULL;
-                FLOAT zoneActorEx0x14 = NULL;
-
                 FLOAT zoneActorExY1 = 0.0f;
                 FLOAT zoneActorExX1 = 0.0f;
                 FLOAT zoneActorExZ1 = 0.0f;
@@ -504,45 +498,37 @@ void EQAPP_ESP_ZoneActors_Draw()
                 FLOAT zoneActorExX3 = 0.0f;
                 FLOAT zoneActorExZ3 = 0.0f;
 
-                DWORD zoneActorEx = EQ_ReadMemory<DWORD>(zoneActor + EQ_OFFSET_ZONE_ACTOR_INFO_ACTOR_SUB_INFO);
+                DWORD zoneActorEx = EQ_ReadMemory<DWORD>(zoneActor + EQ_OFFSET_ZONE_ACTOR_INFO_ACTOR_INFO);
                 if (zoneActorEx != NULL)
                 {
-                    zoneActorSpawnInfo = EQ_ReadMemory<DWORD>(zoneActorEx + EQ_OFFSET_ZONE_ACTOR_SUB_INFO_SPAWN_INFO);
+                    zoneActorSpawnInfo = EQ_ReadMemory<DWORD>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_SPAWN_INFO);
 
                     if (zoneActorSpawnInfo == NULL)
                     {
-                        PCHAR zoneActorExNamePointer = (PCHAR)(zoneActorEx - EQ_OFFSET_ZONE_ACTOR_SUB_INFO_NAME);
+                        PCHAR zoneActorExNamePointer = (PCHAR)(zoneActorEx - EQ_OFFSET_ACTOR_INFO_NAME);
                         if (zoneActorExNamePointer != NULL)
                         {
                             zoneActorExName = std::string(zoneActorExNamePointer);
                         }
                     }
 
-                    zoneActorEx0x08 = EQ_ReadMemory<FLOAT>(zoneActorEx + 0x08);
-                    zoneActorEx0x0C = EQ_ReadMemory<FLOAT>(zoneActorEx + 0x0C);
-                    zoneActorEx0x10 = EQ_ReadMemory<FLOAT>(zoneActorEx + 0x10);
-                    zoneActorEx0x14 = EQ_ReadMemory<FLOAT>(zoneActorEx + 0x14);
+                    zoneActorExY1 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_Y1);
+                    zoneActorExX1 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_X1);
+                    zoneActorExZ1 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_Z1);
 
-                    zoneActorExY1 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ZONE_ACTOR_SUB_INFO_Y1);
-                    zoneActorExX1 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ZONE_ACTOR_SUB_INFO_X1);
-                    zoneActorExZ1 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ZONE_ACTOR_SUB_INFO_Z1);
+                    zoneActorExY2 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_Y2);
+                    zoneActorExX2 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_X2);
+                    zoneActorExZ2 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_Z2);
 
-                    zoneActorExY2 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ZONE_ACTOR_SUB_INFO_Y2);
-                    zoneActorExX2 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ZONE_ACTOR_SUB_INFO_X2);
-                    zoneActorExZ2 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ZONE_ACTOR_SUB_INFO_Z2);
-
-                    zoneActorExY3 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ZONE_ACTOR_SUB_INFO_Y3);
-                    zoneActorExX3 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ZONE_ACTOR_SUB_INFO_X3);
-                    zoneActorExZ3 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ZONE_ACTOR_SUB_INFO_Z3);
+                    zoneActorExY3 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_Y3);
+                    zoneActorExX3 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_X3);
+                    zoneActorExZ3 = EQ_ReadMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_Z3);
                 }
 
                 std::stringstream ssDrawText;
                 ssDrawText << "+ " << zoneActorName << " (" << (int)zoneActorDistance << ")\n";
 
-/*
                 ssDrawText << "Address: " << std::hex << zoneActor << "\n";
-                ssDrawText << "Address Ex: " << std::hex << zoneActorEx << "\n";
-*/
 
                 ssDrawText << "Y: " << zoneActorY << "\n";
                 ssDrawText << "X: " << zoneActorX << "\n";
@@ -551,7 +537,6 @@ void EQAPP_ESP_ZoneActors_Draw()
                 ssDrawText << "Rotation: " << zoneActorRotation << "\n";
                 ssDrawText << "Scale: " << zoneActorScale << "\n";
 
-/*
                 ssDrawText << "0x2C: " << zoneActor0x2C << "\n";
                 ssDrawText << "0x2D: " << zoneActor0x2D << "\n";
                 ssDrawText << "0x2E: " << zoneActor0x2E << "\n";
@@ -568,10 +553,10 @@ void EQAPP_ESP_ZoneActors_Draw()
 
                 ssDrawText << "0x50: " << std::hex << zoneActor0x50 << "\n";
                 ssDrawText << "0x54: " << std::hex << zoneActor0x54 << "\n";
-*/
 
-/*
                 ssDrawText << zoneActorExName << "\n";
+
+                ssDrawText << "Address Ex: " << std::hex << zoneActorEx << "\n";
 
                 ssDrawText << "Y1: " << zoneActorExY1 << "\n";
                 ssDrawText << "X1: " << zoneActorExX1 << "\n";
@@ -584,7 +569,6 @@ void EQAPP_ESP_ZoneActors_Draw()
                 ssDrawText << "Y3: " << zoneActorExY3 << "\n";
                 ssDrawText << "X3: " << zoneActorExX3 << "\n";
                 ssDrawText << "Z3: " << zoneActorExZ3 << "\n";
-*/
 
                 if (zoneActorSpawnInfo != NULL)
                 {
@@ -815,4 +799,3 @@ void EQAPP_ESP_SpawnSkeleton_Draw(DWORD spawnInfo, DWORD argbColor)
     }
 }
 
-#endif // EQAPP_ESP_FUNCTIONS_H

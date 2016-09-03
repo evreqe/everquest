@@ -1,5 +1,4 @@
-#ifndef EQAPP_REPLACERACES_H
-#define EQAPP_REPLACERACES_H
+#pragma once
 
 bool g_replaceRacesIsEnabled = true;
 
@@ -42,4 +41,3 @@ void EQAPP_ReplaceRaces_Execute()
     }
 }
 
-#endif // EQAPP_REPLACERACES_H

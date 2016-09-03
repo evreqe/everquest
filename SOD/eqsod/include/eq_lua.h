@@ -1,6 +1,3 @@
-#ifndef EQSOD_LUA_H
-#define EQSOD_LUA_H
+#pragma once
 
 // TODO
-
-#endif // EQSOD_LUA_H

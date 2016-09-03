@@ -1,5 +1,4 @@
-#ifndef EQAPP_SOUNDS_H
-#define EQAPP_SOUNDS_H
+#pragma once
 
 typedef struct _EQAPPSOUND
 {
@@ -21,7 +20,14 @@ void EQAPP_Sounds_Load()
 
     g_soundsList.clear();
 
-    g_soundsIsEnabled = EQAPP_INI_ReadBool("eqapp/sounds.ini", "Sounds", "bEnabled", 1);
+    std::stringstream filePathIni;
+    filePathIni << g_applicationName << "/sounds.ini";
+
+    std::string filePathIniStr = filePathIni.str();
+
+    const char* filePathIniCStr = filePathIniStr.c_str();
+
+    g_soundsIsEnabled = EQAPP_INI_ReadBool(filePathIniCStr, "Sounds", "bEnabled", 1);
 
     if (g_soundsIsEnabled == false)
     {
@@ -34,19 +40,19 @@ void EQAPP_Sounds_Load()
         std::stringstream ssFilename;
         ssFilename << "sFilename" << i;
 
-        std::string filename = EQAPP_INI_ReadString("eqapp/sounds.ini", "Sounds", ssFilename.str().c_str(), "");
+        std::string filename = EQAPP_INI_ReadString(filePathIniCStr, "Sounds", ssFilename.str().c_str(), "");
         if (filename.size() == 0)
         {
             break;
         }
 
-        std::stringstream filepath;
-        filepath << "eqapp\\sounds\\" << filename;
+        std::stringstream filePath;
+        filePath << g_applicationName << "/sounds/" << filename;
 
         std::stringstream ssText;
         ssText << "sText" << i;
 
-        std::string text = EQAPP_INI_ReadString("eqapp/sounds.ini", "Sounds", ssText.str().c_str(), "");
+        std::string text = EQAPP_INI_ReadString(filePathIniCStr, "Sounds", ssText.str().c_str(), "");
         if (text.size() == 0)
         {
             break;
@@ -55,14 +61,14 @@ void EQAPP_Sounds_Load()
         std::stringstream ssEnabled;
         ssEnabled << "bEnabled" << i;
 
-        bool isEnabled = EQAPP_INI_ReadBool("eqapp/sounds.ini", "Sounds", ssEnabled.str().c_str(), 0);
+        bool isEnabled = EQAPP_INI_ReadBool(filePathIniCStr, "Sounds", ssEnabled.str().c_str(), 0);
 
         std::cout << __FUNCTION__ << ": " << filename << " isEnabled: " << std::boolalpha << isEnabled << std::noboolalpha << std::endl;
 
         EQAPPSOUND sound;
         sound.index        = i;
         sound.text         = text;
-        sound.filename     = filepath.str();
+        sound.filename     = filePath.str();
         sound.isEnabled    = isEnabled;
         
         g_soundsList.push_back(sound);
@@ -78,5 +84,3 @@ void EQAPP_Sounds_Print()
         std::cout << "#" << sound.index << " : " << std::boolalpha << sound.isEnabled << std::noboolalpha << " : " << sound.filename << " : " << sound.text << std::endl;
     }
 }
-
-#endif // EQAPP_SOUNDS_H

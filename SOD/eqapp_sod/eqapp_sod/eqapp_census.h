@@ -1,5 +1,4 @@
-#ifndef EQAPP_CENSUS_H
-#define EQAPP_CENSUS_H
+#pragma once
 
 bool g_censusIsEnabled = false;
 DWORD g_censusTimer = 0;
@@ -85,4 +84,3 @@ void EQAPP_Census_Execute()
     g_zoneShortNamesListIterator++;
 }
 
-#endif // EQAPP_CENSUS_H

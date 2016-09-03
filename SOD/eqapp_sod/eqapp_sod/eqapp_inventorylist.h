@@ -1,5 +1,4 @@
-#ifndef EQAPP_INVENTORYLIST_H
-#define EQAPP_INVENTORYLIST_H
+#pragma once
 
 void EQAPP_InventoryList_Print(const char* filterItemName);
 
@@ -132,4 +131,3 @@ void EQAPP_InventoryList_Print(const char* filterItemName)
     EQAPP_COUT_RestoreFlags();
 }
 
-#endif //EQAPP_BANKLIST_H

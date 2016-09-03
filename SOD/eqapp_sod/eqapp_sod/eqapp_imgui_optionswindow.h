@@ -1,5 +1,4 @@
-#ifndef EQAPP_IMGUI_OPTIONSWINDOW_H
-#define EQAPP_IMGUI_OPTIONSWINDOW_H
+#pragma once
 
 #include "eqapp_imgui.h"
 
@@ -197,6 +196,15 @@ struct EQAPPIMGUIOptionsWindow
 
             ImGui::Text(ssAlwaysHotbutton.str().c_str());
 
+            ImGui::Separator();
+
+            ImGui::Checkbox("AHB Sit Stand At Mana", &g_alwaysHotbuttonSitStandAtManaIsEnabled);
+            ImGui::SameLine(200);
+            ImGui::Text("Sit or stand when your mana is less than or greater than the specified values");
+
+            ImGui::InputInt("Sit At Mana", (int*)&g_alwaysHotbuttonSitAtManaValue, 1, 100);
+            ImGui::InputInt("Stand At Mana", (int*)&g_alwaysHotbuttonStandAtManaValue, 1, 100);
+
             ImGui::PopID();
 
             ImGui::Separator();
@@ -237,6 +245,35 @@ struct EQAPPIMGUIOptionsWindow
             ImGui::Text(ssCombatHotbutton.str().c_str());
 
             ImGui::PopID();
+
+            ImGui::Separator();
+
+            ImGui::PushID("ID Backstab Hotbutton");
+
+            ImGui::Checkbox("Backstab Hotbutton", &g_backstabIsEnabled);
+            ImGui::SameLine(200);
+            ImGui::Text("Hotbutton for backstab when there is an opening");
+
+            ImGui::Text("Number:"); ImGui::SameLine(200);
+            if (ImGui::Button(" 1 ")) g_backstabHotbuttonNumber = 1; ImGui::SameLine();
+            if (ImGui::Button(" 2 ")) g_backstabHotbuttonNumber = 2; ImGui::SameLine();
+            if (ImGui::Button(" 3 ")) g_backstabHotbuttonNumber = 3; ImGui::SameLine();
+            if (ImGui::Button(" 4 ")) g_backstabHotbuttonNumber = 4; ImGui::SameLine();
+            if (ImGui::Button(" 5 ")) g_backstabHotbuttonNumber = 5; ImGui::SameLine();
+            if (ImGui::Button(" 6 ")) g_backstabHotbuttonNumber = 6; ImGui::SameLine();
+            if (ImGui::Button(" 7 ")) g_backstabHotbuttonNumber = 7; ImGui::SameLine();
+            if (ImGui::Button(" 8 ")) g_backstabHotbuttonNumber = 8; ImGui::SameLine();
+            if (ImGui::Button(" 9 ")) g_backstabHotbuttonNumber = 9; ImGui::SameLine();
+            if (ImGui::Button(" 10 ")) g_backstabHotbuttonNumber = 10;
+
+            std::stringstream ssBackstabHotbutton;
+            ssBackstabHotbutton << "#" << g_backstabHotbuttonNumber;
+
+            ImGui::Text(ssBackstabHotbutton.str().c_str());
+
+            ImGui::PopID();
+
+            ImGui::Separator();
         }
 
         if (ImGui::CollapsingHeader("Memory"))
@@ -578,6 +615,37 @@ struct EQAPPIMGUIOptionsWindow
             ImGui::PopID();
         }
 
+        if (ImGui::CollapsingHeader("Zone Actors"))
+        {
+            ImGui::PushID("ID Zone Actors No Collision");
+
+            ImGui::Checkbox("No Collision", &g_zoneActorsNoCollisionIsEnabled);
+            ImGui::SameLine(200);
+            ImGui::Text("Walk through objects in zones without getting stuck");
+
+            if (ImGui::Button("Apply"))
+            {
+                EQAPP_ZoneActors_NoCollision_Execute();
+            }
+            ImGui::SameLine(200);
+            if (ImGui::Button("Restore"))
+            {
+                EQAPP_ZoneActors_NoCollision_Restore();
+            }
+
+            if (ImGui::Button("Reload"))
+            {
+                EQAPP_ZoneActors_NoCollision_Load();
+            }
+
+            for (auto& zoneActorNoCollisionName : g_zoneActorsNoCollisionList)
+            {
+                ImGui::Text(zoneActorNoCollisionName.c_str());
+            }
+
+            ImGui::PopID();
+        }
+
         if (ImGui::CollapsingHeader("Other"))
         {
             ImGui::PushID("ID Always Attack");
@@ -711,4 +779,3 @@ struct EQAPPIMGUIOptionsWindow
     }
 };
 
-#endif // EQAPP_IMGUI_OPTIONSWINDOW_H

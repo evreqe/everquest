@@ -1,5 +1,4 @@
-#ifndef EQAPP_TEXTOVERLAYCHATTEXT_H
-#define EQAPP_TEXTOVERLAYCHATTEXT_H
+#pragma once
 
 bool g_textOverlayOnChatTextIsEnabled = true;
 std::vector<std::string> g_textOverlayChatTextList;
@@ -15,7 +14,10 @@ void EQAPP_TextOverlayChatText_Load()
 
     g_textOverlayChatTextList.clear();
 
-    std::string filePathStr = "eqapp/textoverlaychattext.txt";
+    std::stringstream filePath;
+    filePath << g_applicationName << "/textoverlaychattext.txt";
+
+    std::string filePathStr = filePath.str();
 
     std::ifstream file;
     file.open(filePathStr.c_str(), std::ios::in);
@@ -57,4 +59,3 @@ void EQAPP_TextOverlayChatText_Print()
     }
 }
 
-#endif // EQAPP_TEXTOVERLAYCHATTEXT_H

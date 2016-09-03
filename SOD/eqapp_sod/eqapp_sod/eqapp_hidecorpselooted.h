@@ -1,5 +1,4 @@
-#ifndef EQAPP_HIDECORPSELOOTED_H
-#define EQAPP_HIDECORPSELOOTED_H
+#pragma once
 
 bool g_hideCorpseLootedIsEnabled = true;
 
@@ -15,4 +14,3 @@ void EQAPP_HideCorpseLooted_Execute()
     EQ_SetHideCorpseLooted(true);
 }
 
-#endif //EQAPP_HIDECORPSELOOTED_H

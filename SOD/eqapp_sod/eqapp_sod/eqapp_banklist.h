@@ -1,5 +1,4 @@
-#ifndef EQAPP_BANKLIST_H
-#define EQAPP_BANKLIST_H
+#pragma once
 
 void EQAPP_BankList_Print(const char* filterItemName);
 
@@ -138,4 +137,3 @@ void EQAPP_BankList_Print(const char* filterItemName)
     EQAPP_COUT_RestoreFlags();
 }
 
-#endif // EQAPP_BANKLIST_H

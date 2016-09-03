@@ -1,5 +1,4 @@
-#ifndef EQAPP_NAMEDSPAWNS_H
-#define EQAPP_NAMEDSPAWNS_H
+#pragma once
 
 bool g_namedSpawnsIsEnabled = true;
 std::vector<std::string> g_namedSpawnsList;
@@ -19,10 +18,14 @@ void EQAPP_NamedSpawns_Load()
 
     g_namedSpawnsList.clear();
 
+    std::stringstream filePath;
+    std::string filePathStr;
     std::ifstream file;
     std::string line;
 
-    std::string filePathStr = "eqapp/namedspawns.txt";
+    filePath << g_applicationName << "/namedspawns.txt";
+
+    filePathStr = filePath.str();
 
     file.open(filePathStr.c_str(), std::ios::in);
     if (file.is_open() == false)
@@ -48,6 +51,9 @@ void EQAPP_NamedSpawns_Load()
 
     file.close();
 
+    filePath.str(std::string());
+    filePath.clear();
+
     std::string zoneShortName = EQ_GetZoneShortName();
     if (zoneShortName.size() == 0)
     {
@@ -55,8 +61,7 @@ void EQAPP_NamedSpawns_Load()
         return;
     }
 
-    std::stringstream filePath;
-    filePath << "eqapp/namedspawns/" << zoneShortName << ".txt";
+    filePath << g_applicationName << "/namedspawns/" << zoneShortName << ".txt";
 
     file.open(filePath.str().c_str(), std::ios::in);
     if (file.is_open() == false)
@@ -168,4 +173,3 @@ void EQAPP_NamedSpawns_Print()
     }
 }
 
-#endif // EQAPP_NAMEDSPAWNS_H

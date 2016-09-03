@@ -1,5 +1,4 @@
-#ifndef EQAPP_PLAYERALERT_H
-#define EQAPP_PLAYERALERT_H
+#pragma once
 
 bool g_playerAlertIsEnabled = false;
 unsigned int g_playerAlertMinimumNumPlayersInZone = 1;
@@ -49,4 +48,3 @@ void EQAPP_PlayerAlert_Set(unsigned int minimumNumPlayersInZone, DWORD timerDela
     g_playerAlertTimerDelayInSeconds = timerDelayInSeconds;
 }
 
-#endif // EQAPP_PLAYERALERT_H

@@ -1,5 +1,4 @@
-#ifndef EQAPP_MAPLABELS_H
-#define EQAPP_MAPLABELS_H
+#pragma once
 
 bool g_mapLabelsIsEnabled = false;
 bool g_mapLabelsFilterIsEnabled = false;
@@ -177,4 +176,3 @@ void EQAPP_MapLabels_Filter_Print()
     std::cout << "Map Labels Filter: " << g_mapLabelsFilterName << std::endl;
 }
 
-#endif //EQAPP_MAPLABELS_H

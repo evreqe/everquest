@@ -1,5 +1,7 @@
-#ifndef EQSOD_OFFSETS_H
-#define EQSOD_OFFSETS_H
+#pragma once
+
+#define EQ_OFFSET_SPAWN_MANAGER_SPAWN_INFO_FIRST                0x08          // DWORD POINTER
+#define EQ_OFFSET_SPAWN_MANAGER_SPAWN_INFO_LAST                 0x0C          // DWORD POINTER
 
 #define EQ_OFFSET_SPAWN_INFO_PREVIOUS                           0x04          // DWORD POINTER
 #define EQ_OFFSET_SPAWN_INFO_NEXT                               0x08          // DWORD POINTER
@@ -21,6 +23,7 @@
 #define EQ_OFFSET_SPAWN_INFO_STANDING_STATE                     0x279         // BYTE
 #define EQ_OFFSET_SPAWN_INFO_IS_AFK                             0x284         // DWORD
 #define EQ_OFFSET_SPAWN_INFO_IS_PVP                             0x2BC         // BYTE    // player kill flag, red name above head
+#define EQ_OFFSET_SPAWN_INFO_MANA                               0x304         // DWORD
 #define EQ_OFFSET_SPAWN_INFO_GUILD_ID                           0x30C         // DWORD
 #define EQ_OFFSET_SPAWN_INFO_LEVEL                              0x315         // BYTE
 #define EQ_OFFSET_SPAWN_INFO_SPELL_CASTING_TIMER                0x448         // DWORD
@@ -43,8 +46,22 @@
 #define EQ_OFFSET_GROUND_SPAWN_INFO_Y                           0x34          // FLOAT
 #define EQ_OFFSET_GROUND_SPAWN_INFO_NAME                        0x38          // STRING [0x18]
 
+#define EQ_OFFSET_ACTOR_INFO_0x00                               0x00          // UNKNOWN
+#define EQ_OFFSET_ACTOR_INFO_NAME                               0x10          // PCHAR    // offset is negative, use subtract
+#define EQ_OFFSET_ACTOR_INFO_Y1                                 0x28          // FLOAT
+#define EQ_OFFSET_ACTOR_INFO_X1                                 0x2C          // FLOAT
+#define EQ_OFFSET_ACTOR_INFO_Z1                                 0x30          // FLOAT
+#define EQ_OFFSET_ACTOR_INFO_THIS                               0x6C          // DWORD POINTER    // points to 0x00
+#define EQ_OFFSET_ACTOR_INFO_SPAWN_INFO                         0x70          // DWORD POINTER
+#define EQ_OFFSET_ACTOR_INFO_Y2                                 0xB4          // FLOAT    // collision or hitbox, set to 0.0f for zone actors for no collision
+#define EQ_OFFSET_ACTOR_INFO_X2                                 0xB8          // FLOAT    // collision or hitbox, set to 0.0f for zone actors for no collision
+#define EQ_OFFSET_ACTOR_INFO_Z2                                 0xBC          // FLOAT    // collision or hitbox, set to 0.0f for zone actors for no collision
+#define EQ_OFFSET_ACTOR_INFO_COLLISION_TYPE                     0x100         // DWORD    // usually equals 2
 #define EQ_OFFSET_ACTOR_INFO_COLLISION_RADIUS                   0x104         // FLOAT
 #define EQ_OFFSET_ACTOR_INFO_MODEL_INFO                         0x11C         // DWORD POINTER
+#define EQ_OFFSET_ACTOR_INFO_Y3                                 0x150         // FLOAT
+#define EQ_OFFSET_ACTOR_INFO_X3                                 0x154         // FLOAT
+#define EQ_OFFSET_ACTOR_INFO_Z3                                 0x158         // FLOAT
 
 #define EQ_OFFSET_ACTOR_INSTANCE_INFO_SPAWN_INFO                0x70          // DWORD POINTER
 
@@ -140,7 +157,7 @@
 #define EQ_OFFSET_ZONE_ACTOR_INFO_0x14_0x18                     0x18          // DWORD POINTER
 #define EQ_OFFSET_ZONE_ACTOR_INFO_NAME_0x14_0x18_0x08           0x08          // PCHAR
 #define EQ_OFFSET_ZONE_ACTOR_INFO_0x1C                          0x1C          // DWORD    // 1 = object, 3 = player or NPC
-#define EQ_OFFSET_ZONE_ACTOR_INFO_ACTOR_SUB_INFO                0x18          // DWORD POINTER
+#define EQ_OFFSET_ZONE_ACTOR_INFO_ACTOR_INFO                0x18              // DWORD POINTER    // same as spawn actor info
 #define EQ_OFFSET_ZONE_ACTOR_INFO_0x2C                          0x2C          // BYTE    // is dynamic model (player, npc, door, tradeskill container, animated torches)
 #define EQ_OFFSET_ZONE_ACTOR_INFO_0x2D                          0x2D          // BYTE    // is static model (not moving object)
 #define EQ_OFFSET_ZONE_ACTOR_INFO_0x2E                          0x2E          // BYTE
@@ -152,17 +169,3 @@
 #define EQ_OFFSET_ZONE_ACTOR_INFO_SCALE                         0x48          // FLOAT    // 0.0 to 0.1
 #define EQ_OFFSET_ZONE_ACTOR_INFO_0x54                          0x54          // DWORD or FLOAT or BYTE[4]
 
-#define EQ_OFFSET_ZONE_ACTOR_SUB_INFO_NAME                      0x10          // PCHAR    // offset is negative
-#define EQ_OFFSET_ZONE_ACTOR_SUB_INFO_Y1                        0x28          // FLOAT
-#define EQ_OFFSET_ZONE_ACTOR_SUB_INFO_X1                        0x2C          // FLOAT
-#define EQ_OFFSET_ZONE_ACTOR_SUB_INFO_Z1                        0x30          // FLOAT
-#define EQ_OFFSET_ZONE_ACTOR_SUB_INFO_THIS                      0x6C          // DWORD POINTER    // points to address of this zone actor sub info structure
-#define EQ_OFFSET_ZONE_ACTOR_SUB_INFO_SPAWN_INFO                0x70          // DWORD POINTER
-#define EQ_OFFSET_ZONE_ACTOR_SUB_INFO_Y2                        0xB4          // FLOAT    // collision or hitbox
-#define EQ_OFFSET_ZONE_ACTOR_SUB_INFO_X2                        0xB8          // FLOAT    // collision or hitbox
-#define EQ_OFFSET_ZONE_ACTOR_SUB_INFO_Z2                        0xBC          // FLOAT    // collision or hitbox
-#define EQ_OFFSET_ZONE_ACTOR_SUB_INFO_Y3                        0x150         // FLOAT
-#define EQ_OFFSET_ZONE_ACTOR_SUB_INFO_X3                        0x154         // FLOAT
-#define EQ_OFFSET_ZONE_ACTOR_SUB_INFO_Z3                        0x158         // FLOAT
-
-#endif // EQSOD_OFFSETS_H

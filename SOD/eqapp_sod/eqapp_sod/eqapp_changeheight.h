@@ -1,5 +1,4 @@
-#ifndef EQAPP_CHANGEHEIGHT_H
-#define EQAPP_CHANGEHEIGHT_H
+#pragma once
 
 bool g_changeHeightIsEnabled = true;
 float g_changeHeightMinimum = 1.0f;
@@ -64,4 +63,3 @@ void EQAPP_ChangeHeight_Execute()
     }
 }
 
-#endif // EQAPP_CHANGEHEIGHT_H

@@ -1,5 +1,4 @@
-#ifndef EQAPP_CHARACTERFILE_H
-#define EQAPP_CHARACTERFILE_H
+#pragma once
 
 void EQAPP_CharacterFile_Write();
 void EQAPP_CharacterFile_WriteTxt();
@@ -30,16 +29,18 @@ void EQAPP_CharacterFile_WriteTxt()
     std::string characterName = EQ_GetCharacterName();
 
     std::stringstream filePath;
-    filePath << "eqapp/characters/" << characterName << ".txt";
+    filePath << g_applicationName << "/characters/" << characterName << ".txt";
 
-    std::cout << "Writing character file: " << filePath.str() << std::endl;
+    std::string filePathStr = filePath.str();
+
+    std::cout << "Writing character file: " << filePathStr << std::endl;
 
     std::fstream file;
-    file.open(filePath.str().c_str(), std::ios_base::in | std::ios_base::out | std::ios_base::trunc);
+    file.open(filePathStr.c_str(), std::ios_base::in | std::ios_base::out | std::ios_base::trunc);
     if (file.is_open() == false)
     {
         std::stringstream ss;
-        ss << "failed to open file: " << filePath.str();
+        ss << "failed to open file: " << filePathStr;
 
         EQAPP_PrintErrorMessage(__FUNCTION__, ss.str());
         return;
@@ -268,7 +269,7 @@ void EQAPP_CharacterFile_WriteJson()
     memcpy(characterName, (LPVOID)(charInfo + EQ_OFFSET_CHAR_INFO_CHARACTER_NAME), sizeof(characterName));
 
     std::stringstream filePath;
-    filePath << "eqapp/characters/" << characterName << ".json";
+    filePath << g_applicationName << "/characters/" << characterName << ".json";
 
     std::cout << "Writing character file: " << filePath.str() << std::endl;
 
@@ -437,4 +438,3 @@ void EQAPP_CharacterFile_WriteJson()
     json_decref(j_root);
 }
 
-#endif // EQAPP_CHARACTERFILE_H

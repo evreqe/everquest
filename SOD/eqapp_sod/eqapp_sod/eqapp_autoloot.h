@@ -1,5 +1,4 @@
-#ifndef EQAPP_AUTOLOOT_H
-#define EQAPP_AUTOLOOT_H
+#pragma once
 
 bool g_autoLootIsEnabled = false;
 std::vector<std::string> g_autoLootList;
@@ -101,4 +100,3 @@ void EQAPP_AutoLoot_Print()
     }
 }
 
-#endif // EQAPP_AUTOLOOT_H

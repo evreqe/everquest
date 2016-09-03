@@ -1,5 +1,4 @@
-#ifndef EQAPP_DRAWDISTANCE_H
-#define EQAPP_DRAWDISTANCE_H
+#pragma once
 
 bool g_drawDistanceIsEnabled = true;
 float g_drawDistance = 1000.0f;
@@ -29,4 +28,3 @@ void EQAPP_DrawDistance_Print()
     std::cout << "Draw Distance: " << g_drawDistance << std::endl;
 }
 
-#endif // EQAPP_DRAWDISTANCE_H

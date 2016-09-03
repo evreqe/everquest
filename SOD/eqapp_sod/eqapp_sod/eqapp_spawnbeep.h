@@ -1,5 +1,4 @@
-#ifndef EQAPP_SPAWNBEEP_H
-#define EQAPP_SPAWNBEEP_H
+#pragma once
 
 bool g_spawnBeepIsEnabled = false;
 std::string g_spawnBeepName;
@@ -64,4 +63,3 @@ void EQAPP_SpawnBeep_Set(std::string spawnName)
     g_spawnBeepName = spawnName;
 }
 
-#endif // EQAPP_SPAWNBEEP_H

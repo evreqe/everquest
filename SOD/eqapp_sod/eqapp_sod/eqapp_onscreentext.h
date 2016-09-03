@@ -1,5 +1,4 @@
-#ifndef EQAPP_ONSCREENTEXT_H
-#define EQAPP_ONSCREENTEXT_H
+#pragma once
 
 bool g_onScreenTextIsEnabled = true;
 std::list<std::string> g_onScreenTextList;
@@ -134,4 +133,3 @@ void EQAPP_OnScreenText_AddSpawnMessage(DWORD spawnInfo, bool bDespawn)
     }
 }
 
-#endif // EQAPP_ONSCREENTEXT_H

@@ -1,5 +1,4 @@
-#ifndef EQAPP_ESP_H
-#define EQAPP_ESP_H
+#pragma once
 
 bool g_espIsEnabled            = true;
 bool g_espSpawnIsEnabled       = true;
@@ -37,4 +36,3 @@ unsigned int g_espFindCount = 0;
 unsigned int g_espNumDrawText = 0;
 unsigned int g_espNumNpcCorpseMax = 10;
 
-#endif // EQAPP_ESP_H

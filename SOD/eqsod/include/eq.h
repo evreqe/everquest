@@ -1,8 +1,7 @@
-#ifndef EQSOD_H
-#define EQSOD_H
+#pragma once
 
-#include "eqsod_offsets.h"
-#include "eqsod_sizes.h"
+#include "eq_offsets.h"
+#include "eq_sizes.h"
 
 #include <string>
 #include <unordered_map>
@@ -88,13 +87,13 @@ const char* EQ_STRING_GRAPHICS_DLL_NAME_LOWERCASE = "eqgraphicsdx9.dll";
 #define EQ_POINTER_CTradeWnd                  0x00990C60
 #define EQ_POINTER_CTrainWnd                  0x00990BB0
 
+#define EQ_POINTER_SPAWN_MANAGER              0x00AD3A0C // pinstSpawnManager
 #define EQ_POINTER_SPELL_MANAGER              0x00AD3A90 // pinstSpellManager
 #define EQ_POINTER_SWITCH_MANAGER             0x00A40704 // pinstSwitchManager (doors)
 #define EQ_POINTER_CONTAINER_MANAGER          0x00990CD8 // psintCContainerMgr (bags)
 
 #define EQ_POINTER_CHAR_INFO                  0x00A425E4 // pinstCharData
 
-#define EQ_POINTER_SPAWN_INFO_FIRST           0x00AD3A0C // pinstSpawnManager
 #define EQ_POINTER_SPAWN_INFO_PLAYER          0x00A4260C // pinstCharSpawn
 #define EQ_POINTER_SPAWN_INFO_TARGET          0x00A42610 // pinstTarget
 
@@ -127,8 +126,8 @@ const char* EQ_STRING_GRAPHICS_DLL_NAME_LOWERCASE = "eqgraphicsdx9.dll";
 #define EQ_FUNCTION_CXWnd_DrawColoredRect        0x006DBB30
 #define EQ_FUNCTION_DrawNetStatus                0x00512280
 #define EQ_FUNCTION_ExecuteCmd                   0x004A5580
-#define EQ_FUNCTION_get_melee_range              0x004AAA20 // __get_melee_range
-#define EQ_FUNCTION_get_bearing                  0x004B7BF0
+#define EQ_FUNCTION_GetMeleeRange                0x004AAA20 // __get_melee_range
+#define EQ_FUNCTION_GetBearing                   0x004B7BF0 // __get_bearing
 #define EQ_FUNCTION_Screenshot                   0x00469CC0
 #define EQ_FUNCTION_SetTarget                    0x004B2F90
 #define EQ_FUNCTION_OpenAllContainers            0x005CF1A0
@@ -689,7 +688,7 @@ const std::vector<std::string> EQ_LIST_EQUIPMENT_SLOT_NAMES =
     "Bag #8",
 };
 
-const std::unordered_map<std::string, std::string> EQ_KEYVALUE_SHORT_ZONE_NAMES_WR
+const std::unordered_map<std::string, std::string> EQ_KEYVALUE_SHORT_ZONE_NAMES_EMU
 {
     {"paludal", "abyss"},
     {"arena", "arena"},
@@ -773,7 +772,7 @@ const std::unordered_map<std::string, std::string> EQ_KEYVALUE_SHORT_ZONE_NAMES_
     {"necropolis", "necropolis"},
     {"nightmareb", "night"},
     {"qeynos2", "northnport"},
-    {"northro", "northwaste"},
+    {"nro", "northwaste"},
     {"oasis", "oasis"},
     {"nurga", "oggmines"},
     {"oggok", "oggok"},
@@ -810,7 +809,7 @@ const std::unordered_map<std::string, std::string> EQ_KEYVALUE_SHORT_ZONE_NAMES_
     {"sirens", "sirens"},
     {"kerraridge", "smalath"},
     {"qeynos", "southnport"},
-    {"southro", "southwaste"},
+    {"sro", "southwaste"},
     {"kurn", "spires"},
     {"lakerathe", "starfall"},
     {"steamfont", "steamfont"},
@@ -973,5 +972,3 @@ typedef struct _EQITEMINFO
 {
 /* 0x00 */    DWORD Unknown0x00;
 } EQITEMINFO, *PEQITEMINFO;
-
-#endif // EQSOD_H

@@ -1,5 +1,4 @@
-#ifndef EQAPP_INTERPRETCOMMAND_H
-#define EQAPP_INTERPRETCOMMAND_H
+#pragma once
 
 const std::vector<std::string> g_interpretCommandList
 {
@@ -68,10 +67,14 @@ const std::vector<std::string> g_interpretCommandList
     "//alwaysattack, //aa",
     "//combathotbutton, //chb",
     "//getcombathotbutton, //getchb",
-    "//setcombathotbutton (index), //setchb (index), //schb (index)",
+    "//setcombathotbutton (index), //setchb (index)",
     "//alwayshotbutton, //ahb",
     "//getalwayshotbutton, //getahb",
-    "//setalwayshotbutton (index), //setahb (index), //sahb (index)",
+    "//setalwayshotbutton (index), //setahb (index)",
+    "//ahbsitstandatmana",
+    "//setahbsitatmana (mana)",
+    "//setahbstandatmana (mana)",
+    "//getahbsitstandatmana, //getahbsitatmana, //getahbstandatmana",
     "//setcollisionradius (radius), //setcr (radius)",
     "//drawdistance, //dd",
     "//getdrawdistance, //getdd",
@@ -123,6 +126,9 @@ const std::vector<std::string> g_interpretCommandList
     "//maplocations, //maplocs",
     "//getmaplocation, //getmaploc",
     "//openzonemapfile, //openzmf",
+    "//backstab",
+    "//setbackstab (index), //setbs (index)",
+    "//getbackstab, //getbs",
     "//waypointadd, //wpa",
     "//waypointremove (index), //wpr (index)",
     "//waypointconnect (index), //wpc (index)",
@@ -132,12 +138,19 @@ const std::vector<std::string> g_interpretCommandList
     "//waypointlistload, //wpll",
     "//waypointlistsave, //wpls",
     "//waypointgetpath (from index) (to index), //wpgp (from index) (to index)",
+    "//zoneactorsnocollision, //zanc",
+    "//loadzoneactorsnocollision, //loadzanc",
+    "//executezoneactorsnocollision, //executezanc",
+    "//restorezoneactorsnocollision, //restorezanc",
+    "//getzoneactorsnocollision, //getzanc",
 };
 
 void EQAPP_InterpretCommand(const char* command);
 
 void EQAPP_InterpretCommand(const char* command)
 {
+    std::cout << "command: " << command << std::endl;
+
     // help
     if (strcmp(command, "//help") == 0)
     {
@@ -1005,6 +1018,59 @@ void EQAPP_InterpretCommand(const char* command)
         return;
     }
 
+    // toggle always hotbutton sit stand at mana
+    if (strcmp(command, "//ahbsitstandatmana") == 0)
+    {
+        EQAPP_AlwaysHotbutton_SitStandAtMana_Toggle();
+        EQAPP_PrintBool("Always Hotbutton Sit Stand At Mana", g_alwaysHotbuttonSitStandAtManaIsEnabled);
+        return;
+    }
+
+    // get always hotbutton sit stand at mana
+    if (strcmp(command, "//getahbsitstandatmana") == 0 || strcmp(command, "//getahbsitatmana") == 0 || strcmp(command, "//getahbstandatmana") == 0)
+    {
+        EQAPP_AlwaysHotbutton_SitStandAtMana_Print();
+        return;
+    }
+
+    // set always hotbutton sit at mana
+    if (strncmp(command, "//setahbsitatmana ", 18) == 0)
+    {
+        char commandEx[128];
+
+        unsigned int manaValue = 0;
+
+        int result = sscanf_s(command, "%s %d", commandEx, sizeof(commandEx), &manaValue);
+        if (result == 2)
+        {
+            g_alwaysHotbuttonSitAtManaValue = manaValue;
+            EQAPP_AlwaysHotbutton_SitStandAtMana_Print();
+
+            EQAPP_AlwaysHotbutton_SitStandAtMana_Set(true);
+        }
+
+        return;
+    }
+
+    // set always hotbutton stand at mana
+    if (strncmp(command, "//setahbstandatmana ", 20) == 0)
+    {
+        char commandEx[128];
+
+        unsigned int manaValue = 0;
+
+        int result = sscanf_s(command, "%s %d", commandEx, sizeof(commandEx), &manaValue);
+        if (result == 2)
+        {
+            g_alwaysHotbuttonStandAtManaValue = manaValue;
+            EQAPP_AlwaysHotbutton_SitStandAtMana_Print();
+
+            EQAPP_AlwaysHotbutton_SitStandAtMana_Set(true);
+        }
+
+        return;
+    }
+
     // set collision radius
     if (strncmp(command, "//setcollisionradius ", 21) == 0 || strncmp(command, "//setcr ", 8) == 0)
     {
@@ -1316,7 +1382,7 @@ void EQAPP_InterpretCommand(const char* command)
     }
 
     // get zone info
-    if (strcmp(command, "//getzoneinfo") == 0 || strcmp(command, "//getzi"))
+    if (strcmp(command, "//getzoneinfo") == 0 || strcmp(command, "//getzi") == 0)
     {
         EQAPP_ZoneInformation_Print();
         return;
@@ -1375,7 +1441,7 @@ void EQAPP_InterpretCommand(const char* command)
     }
 
     // write character file
-    if (strcmp(command, "//writecharacterfile") == 0 || strcmp(command, "//writechar") || strcmp(command, "//writecf"))
+    if (strcmp(command, "//writecharacterfile") == 0 || strcmp(command, "//writechar") == 0 || strcmp(command, "//writecf") == 0)
     {
         EQAPP_CharacterFile_Write();
         return;
@@ -1501,7 +1567,7 @@ void EQAPP_InterpretCommand(const char* command)
     }
 
     // reset view actor
-    if (strcmp(command, "//resetviewactor") == 0 || strcmp(command, "//resetva"))
+    if (strcmp(command, "//resetviewactor") == 0 || strcmp(command, "//resetva") == 0)
     {
         EQ_ResetViewActor();
         std::cout << "Reset View Actor." << std::endl;
@@ -1539,6 +1605,40 @@ void EQAPP_InterpretCommand(const char* command)
     if (strcmp(command, "//openzonemapfile") == 0 || strcmp(command, "//openzmf") == 0)
     {
         EQAPP_OpenZoneMapFile();
+        return;
+    }
+
+    // toggle backstab
+    if (strcmp(command, "//backstab") == 0)
+    {
+        EQ_ToggleBool(g_backstabIsEnabled);
+        EQAPP_PrintBool("Backstab", g_backstabIsEnabled);
+        return;
+    }
+
+    // set backstab
+    if (strncmp(command, "//setbackstab ", 14) == 0 || strncmp(command, "//setbs ", 8) == 0)
+    {
+        char commandEx[128];
+
+        unsigned int buttonNumber = 0;
+
+        int result = sscanf_s(command, "%s %d", commandEx, sizeof(commandEx), &buttonNumber);
+        if (result == 2)
+        {
+            EQAPP_Backstab_Set(buttonNumber);
+            EQAPP_Backstab_Print();
+
+            g_backstabIsEnabled = true;
+        }
+
+        return;
+    }
+
+    // get backstab
+    if (strcmp(command, "//getbackstab") == 0 || strcmp(command, "//getbs") == 0)
+    {
+        EQAPP_Backstab_Print();
         return;
     }
 
@@ -1628,7 +1728,7 @@ void EQAPP_InterpretCommand(const char* command)
     }
 
     // waypoint list get path
-    if (strncmp(command, "//waypointgetpath ", 22) == 0 || strncmp(command, "//wpgp ", 8) == 0)
+    if (strncmp(command, "//waypointgetpath ", 18) == 0 || strncmp(command, "//wpgp ", 7) == 0)
     {
         char commandEx[128];
 
@@ -1646,6 +1746,41 @@ void EQAPP_InterpretCommand(const char* command)
 
         return;
     }
+
+    // toggle zone actors no collision
+    if (strcmp(command, "//zoneactorsnocollision") == 0 || strcmp(command, "//zanc") == 0)
+    {
+        EQ_ToggleBool(g_zoneActorsNoCollisionIsEnabled);
+        EQAPP_PrintBool("Zone Actors No Collision", g_zoneActorsNoCollisionIsEnabled);
+        return;
+    }
+
+    // load zone actors no collision
+    if (strcmp(command, "//loadzoneactorsnocollision") == 0 || strcmp(command, "//loadzanc") == 0)
+    {
+        EQAPP_ZoneActors_NoCollision_Load();
+        return;
+    }
+
+    // execute zone actors no collision
+    if (strcmp(command, "//executezoneactorsnocollision") == 0 || strcmp(command, "//executezanc") == 0)
+    {
+        EQAPP_ZoneActors_NoCollision_Execute();
+        return;
+    }
+
+    // restore zone actors no collision
+    if (strcmp(command, "//restorezoneactorsnocollision") == 0 || strcmp(command, "//restorezanc") == 0)
+    {
+        EQAPP_ZoneActors_NoCollision_Restore();
+        return;
+    }
+
+     // get zone actors no collision
+    if (strcmp(command, "//getzoneactorsnocollision") == 0 || strcmp(command, "//getzanc") == 0)
+    {
+        EQAPP_ZoneActors_NoCollision_Print();
+        return;
+    }
 }
 
-#endif // EQAPP_INTERPRETCOMMAND_H

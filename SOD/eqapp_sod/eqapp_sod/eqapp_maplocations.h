@@ -1,5 +1,4 @@
-#ifndef EQAPP_MAPLOCATIONS_H
-#define EQAPP_MAPLOCATIONS_H
+#pragma once
 
 void EQAPP_MapLocations_WriteToFile();
 
@@ -15,14 +14,16 @@ void EQAPP_MapLocations_WriteToFile()
     }
 
     std::stringstream filePath;
-    filePath << "eqapp/maplocations/" << zoneShortName << ".txt";
+    filePath << g_applicationName << "/maplocations/" << zoneShortName << ".txt";
+
+    std::string filePathStr = filePath.str();
 
     std::fstream file;
-    file.open(filePath.str().c_str(), std::ios_base::in | std::ios_base::out | std::ios_base::trunc);
+    file.open(filePathStr.c_str(), std::ios_base::in | std::ios_base::out | std::ios_base::trunc);
     if (file.is_open() == false)
     {
         std::stringstream ss;
-        ss << "failed to open file: " << filePath.str();
+        ss << "failed to open file: " << filePathStr;
 
         EQAPP_PrintErrorMessage(__FUNCTION__, ss.str());
         return;
@@ -48,4 +49,3 @@ void EQAPP_MapLocations_WriteToFile()
     file.close();
 }
 
-#endif // EQAPP_MAPLOCATIONS_H
