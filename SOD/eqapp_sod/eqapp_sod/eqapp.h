@@ -1,5 +1,7 @@
 #pragma once
 
+#include <windows.h>
+
 const char* g_applicationName = "eqapp";
 
 volatile int g_bLoaded = 0;
@@ -16,7 +18,7 @@ HANDLE g_handleThreadConsole;
 DWORD WINAPI EQAPP_ThreadLoad(LPVOID param);
 DWORD WINAPI EQAPP_ThreadLoop(LPVOID param);
 DWORD WINAPI EQAPP_ThreadConsole(LPVOID param);
-BOOL APIENTRY DllMain(HMODULE module, DWORD reason, LPVOID reserved);
+BOOL __stdcall DllMain(HMODULE module, DWORD reason, LPVOID reserved);
 
 std::ios g_coutFlags(NULL);
 
@@ -44,6 +46,8 @@ float g_movementSpeedHackModifier = EQ_MOVEMENT_SPEED_MODIFIER_SPIRIT_OF_WOLF;
 bool g_setTargetIsEnabled = true;
 bool g_setTargetMaxDistanceIsEnabled = false;
 float g_setTargetMaxDistance = 25.0f;
+
+int g_setRaceId = EQ_RACE_HUMAN;
 
 // TODO
 bool g_waypointBotIsEnabled = false;

@@ -290,15 +290,31 @@ const char* EQ_STRING_GRAPHICS_DLL_NAME_LOWERCASE = "eqgraphicsdx9.dll";
 #define EQ_RACE_OGRE             10
 #define EQ_RACE_HALFLING         11
 #define EQ_RACE_GNOME            12
-#define EQ_RACE_SKELETON         60
 #define EQ_RACE_INVISIBLE_MAN    127
 #define EQ_RACE_IKSAR            128
 #define EQ_RACE_VAH_SHIR         130
 #define EQ_RACE_FROGLOK          330
+#define EQ_RACE_DRAKKIN          522
+//--------------------------------------------------
+#define EQ_RACE_WEREWOLF         14
+#define EQ_RACE_GOLEM            17
+#define EQ_RACE_CYCLOPS          18
+#define EQ_RACE_VENRIL_SATHIR    20
+#define EQ_RACE_SOLUSEK_RO       58
+#define EQ_RACE_SKELETON         60
+#define EQ_RACE_TUNARE           62
+#define EQ_RACE_RALLOS_ZEK       66
+#define EQ_RACE_CAZIC_THULE      96
+#define EQ_RACE_INNORUK          123
 #define EQ_RACE_CHOKADAI         356
 #define EQ_RACE_SKELETON2        367
 #define EQ_RACE_SKELETON3        484
-#define EQ_RACE_DRAKKIN          522
+#define EQ_RACE_BOAT             550
+#define EQ_RACE_BOAT2            551
+#define EQ_RACE_BOAT3            552
+//--------------------------------------------------
+#define EQ_RACE_MIN              1
+#define EQ_RACE_MAX              627
 
 #define EQ_CLASS_UNKNOWN         0
 #define EQ_CLASS_WARRIOR         1

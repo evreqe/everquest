@@ -353,7 +353,7 @@ void EQAPP_ZoneActors_NoCollision_Execute()
 
                                 EQ_WriteMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_Y2, 0.0f);
                                 EQ_WriteMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_X2, 0.0f);
-                                EQ_WriteMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_Z2, 0.0f);
+                                EQ_WriteMemory<FLOAT>(zoneActorEx + EQ_OFFSET_ACTOR_INFO_Z2, -20000.0f);
 
                                 break;
                             }

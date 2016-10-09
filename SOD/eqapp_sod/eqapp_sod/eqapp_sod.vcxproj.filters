@@ -15,18 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\eqsod\include\eqsod.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\eqsod\include\eqsod_functions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\eqsod\include\eqsod_lua.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui_impl_glfw.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\_libraries\imgui\imgui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -165,12 +153,6 @@
     <ClInclude Include="eqapp_swimspeed.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\eqsod\include\eqsod_offsets.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\eqsod\include\eqsod_sizes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="eqapp_replaceraces.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -180,21 +162,39 @@
     <ClInclude Include="eqapp_zoneactors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="imgui_impl_glfw.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\eqsod\include\eq.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\eqsod\include\eq_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\eqsod\include\eq_lua.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\eqsod\include\eq_offsets.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\eqsod\include\eq_sizes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\code\!libraries\imgui-1.49\imgui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\code\!libraries\imgui-1.49\imgui_demo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\code\!libraries\imgui-1.49\imgui_draw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="imgui_impl_glfw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\_libraries\imgui\imgui.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\_libraries\imgui\imgui_draw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\_libraries\imgui\imgui_demo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -101,7 +101,7 @@ struct EQAPPIMGUIOptionsWindow
             ImGui::SameLine(200);
             ImGui::InputFloat("##ESP Door Distance", &g_espDoorDistance, 1.0f, 100.0f, 0);
 
-            ImGui::Checkbox("Skeletons", &g_espSkeletonIsEnabled);
+            ImGui::Checkbox("Spawn Skeletons", &g_espSkeletonIsEnabled);
             ImGui::SameLine(200);
             ImGui::InputFloat("##ESP Skeleton Distance", &g_espSkeletonDistance, 1.0f, 100.0f, 0);
 
@@ -116,6 +116,19 @@ struct EQAPPIMGUIOptionsWindow
             ImGui::Checkbox("Custom", &g_espCustomIsEnabled);
             ImGui::SameLine(200);
             ImGui::InputFloat("##ESP Custom Distance", &g_espCustomDistance, 1.0f, 100.0f, 0);
+
+            ImGui::PopID();
+
+            ImGui::Separator();
+
+            ImGui::PushID("ID ESP Skeleton");
+
+            ImGui::Text("Spawn Skeletons");
+            ImGui::SameLine(200);
+            ImGui::Text("See a wireframe outline of spawns through walls");
+            ImGui::Checkbox("Hide by Line of Sight", &g_espSkeletonHideByLineOfSightIsEnabled);
+            ImGui::Checkbox("Draw Lines", &g_espSkeletonDrawLinesIsEnabled);
+            ImGui::Checkbox("Draw Addresses", &g_espSkeletonDrawAddressesIsEnabled);
 
             ImGui::PopID();
 
@@ -641,6 +654,32 @@ struct EQAPPIMGUIOptionsWindow
             for (auto& zoneActorNoCollisionName : g_zoneActorsNoCollisionList)
             {
                 ImGui::Text(zoneActorNoCollisionName.c_str());
+            }
+
+            ImGui::PopID();
+        }
+
+        if (ImGui::CollapsingHeader("Set Race"))
+        {
+            ImGui::PushID("ID Set Race");
+
+            if (ImGui::InputInt("Race ID", &g_setRaceId, 1, 100))
+            {
+                DWORD spawnInfo = EQ_GetTargetSpawn();
+                if (spawnInfo == NULL)
+                {
+                    spawnInfo = EQ_GetPlayerSpawn();
+                }
+
+                if (spawnInfo != NULL)
+                {
+                   if (g_setRaceId != 0)
+                   {
+                        int spawnGender = EQ_ReadMemory<BYTE>(spawnInfo + EQ_OFFSET_SPAWN_INFO_GENDER);
+
+                        EQ_SetSpawnForm(spawnInfo, g_setRaceId, spawnGender);
+                    }
+                }
             }
 
             ImGui::PopID();

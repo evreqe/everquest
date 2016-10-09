@@ -70,6 +70,7 @@
 #define EQ_OFFSET_BONE_INFO_Y                                   0x90          // FLOAT
 #define EQ_OFFSET_BONE_INFO_X                                   0x94          // FLOAT
 #define EQ_OFFSET_BONE_INFO_Z                                   0x98          // FLOAT
+#define EQ_OFFSET_BONE_INFO_CHILD_BONE_LIST                     0xE0          // DWORD
 
 // doors are switches
 #define EQ_OFFSET_SWITCH_MANAGER_NUM_DOORS                      0x00          // DWORD

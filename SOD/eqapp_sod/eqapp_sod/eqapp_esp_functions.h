@@ -144,7 +144,14 @@ void EQAPP_ESP_Spawns_Draw()
         {
             if (spawn.distance < g_espSkeletonDistance)
             {
-                if (EQ_CastRay(playerSpawn, spawn.y, spawn.x, spawn.z) == 0)
+                bool shouldDrawSkeleton = true;
+
+                if (g_espSkeletonHideByLineOfSightIsEnabled == true && EQ_CastRay(playerSpawn, spawn.y, spawn.x, spawn.z) != 0)
+                {
+                    shouldDrawSkeleton = false;
+                }
+
+                if (shouldDrawSkeleton == true)
                 {
                     EQAPP_ESP_SpawnSkeleton_Draw(spawn.spawnInfo, textColor);
                 }
@@ -537,38 +544,44 @@ void EQAPP_ESP_ZoneActors_Draw()
                 ssDrawText << "Rotation: " << zoneActorRotation << "\n";
                 ssDrawText << "Scale: " << zoneActorScale << "\n";
 
-                ssDrawText << "0x2C: " << zoneActor0x2C << "\n";
-                ssDrawText << "0x2D: " << zoneActor0x2D << "\n";
-                ssDrawText << "0x2E: " << zoneActor0x2E << "\n";
-                ssDrawText << "0x2F: " << zoneActor0x2F << "\n";
+                if (EQ_IsKeyControlPressed() == true)
+                {
+                    ssDrawText << "0x2C: " << zoneActor0x2C << "\n";
+                    ssDrawText << "0x2D: " << zoneActor0x2D << "\n";
+                    ssDrawText << "0x2E: " << zoneActor0x2E << "\n";
+                    ssDrawText << "0x2F: " << zoneActor0x2F << "\n";
 
-                ssDrawText << "0x1C: " << std::hex << zoneActor0x1C << "\n";
-                ssDrawText << "0x20: " << std::hex << zoneActor0x20 << "\n";
-                ssDrawText << "0x24: " << std::hex << zoneActor0x24 << "\n";
-                ssDrawText << "0x28: " << std::hex << zoneActor0x28 << "\n";
+                    ssDrawText << "0x1C: " << std::hex << zoneActor0x1C << "\n";
+                    ssDrawText << "0x20: " << std::hex << zoneActor0x20 << "\n";
+                    ssDrawText << "0x24: " << std::hex << zoneActor0x24 << "\n";
+                    ssDrawText << "0x28: " << std::hex << zoneActor0x28 << "\n";
 
-                ssDrawText << "0x40: " << zoneActor0x40 << "\n";
-                ssDrawText << "0x44: " << zoneActor0x44 << "\n";
-                ssDrawText << "0x4C: " << zoneActor0x4C << "\n";
+                    ssDrawText << "0x40: " << zoneActor0x40 << "\n";
+                    ssDrawText << "0x44: " << zoneActor0x44 << "\n";
+                    ssDrawText << "0x4C: " << zoneActor0x4C << "\n";
 
-                ssDrawText << "0x50: " << std::hex << zoneActor0x50 << "\n";
-                ssDrawText << "0x54: " << std::hex << zoneActor0x54 << "\n";
+                    ssDrawText << "0x50: " << std::hex << zoneActor0x50 << "\n";
+                    ssDrawText << "0x54: " << std::hex << zoneActor0x54 << "\n";
+                }
 
                 ssDrawText << zoneActorExName << "\n";
 
                 ssDrawText << "Address Ex: " << std::hex << zoneActorEx << "\n";
 
-                ssDrawText << "Y1: " << zoneActorExY1 << "\n";
-                ssDrawText << "X1: " << zoneActorExX1 << "\n";
-                ssDrawText << "Z1: " << zoneActorExZ1 << "\n";
+                if (EQ_IsKeyControlPressed() == true)
+                {
+                    ssDrawText << "Y1: " << zoneActorExY1 << "\n";
+                    ssDrawText << "X1: " << zoneActorExX1 << "\n";
+                    ssDrawText << "Z1: " << zoneActorExZ1 << "\n";
 
-                ssDrawText << "Y2: " << zoneActorExY2 << "\n";
-                ssDrawText << "X2: " << zoneActorExX2 << "\n";
-                ssDrawText << "Z2: " << zoneActorExZ2 << "\n";
+                    ssDrawText << "Y2: " << zoneActorExY2 << "\n";
+                    ssDrawText << "X2: " << zoneActorExX2 << "\n";
+                    ssDrawText << "Z2: " << zoneActorExZ2 << "\n";
 
-                ssDrawText << "Y3: " << zoneActorExY3 << "\n";
-                ssDrawText << "X3: " << zoneActorExX3 << "\n";
-                ssDrawText << "Z3: " << zoneActorExZ3 << "\n";
+                    ssDrawText << "Y3: " << zoneActorExY3 << "\n";
+                    ssDrawText << "X3: " << zoneActorExX3 << "\n";
+                    ssDrawText << "Z3: " << zoneActorExZ3 << "\n";
+                }
 
                 if (zoneActorSpawnInfo != NULL)
                 {
@@ -671,7 +684,7 @@ void EQAPP_ESP_Locator_Draw()
 
         if (g_espLocatorDrawLineIsEnabled == true)
         {
-            DWORD windowWidth  = EQ_GetWindowWidth();
+            DWORD windowWidth = EQ_GetWindowWidth();
             DWORD windowHeight = EQ_GetWindowHeight();
 
             EQ_DrawLine((float)(windowWidth * 0.5f), (float)windowHeight, 0.0f, (float)screenX, (float)screenY, 0.0f, g_espLocatorColor);
@@ -768,7 +781,7 @@ void EQAPP_ESP_SpawnSkeleton_Draw(DWORD spawnInfo, DWORD argbColor)
 
         if (boneMagicNumber != firstBoneMagicNumber)
         {
-            break;
+            continue;
         }
 
         //EQAPP_Log("boneMagicNumber", boneMagicNumber);
@@ -794,8 +807,76 @@ void EQAPP_ESP_SpawnSkeleton_Draw(DWORD spawnInfo, DWORD argbColor)
             continue;
         }
 
-        // draw a line instead of text for performance
-        EQ_DrawLine((float)screenX, (float)screenY, 1.0f, (float)screenX, (float)(screenY + 1.0f), 1.0f, argbColor);
+        if (g_espSkeletonDrawLinesIsEnabled == false)
+        {
+            // draw a line that looks like a dot instead of using text to get better performance
+            EQ_DrawLine((float)screenX, (float)screenY, 1.0f, (float)screenX, (float)(screenY + 1.0f), 1.0f, argbColor);
+        }
+
+        for (size_t j = 0; j < EQ_NUM_BONES; j++)
+        {
+            DWORD boneChildInfo = EQ_ReadMemory<DWORD>(boneInfo + EQ_OFFSET_BONE_INFO_CHILD_BONE_LIST + (j * 4));
+            if (boneChildInfo == NULL)
+            {
+                break;
+            }
+
+            if ((boneChildInfo > (boneList + 0x4000)) || (boneChildInfo < boneList))
+            {
+                break;
+            }
+
+            if (boneChildInfo == firstBoneMagicNumber)
+            {
+                break;
+            }
+
+            DWORD boneChildMagicNumber = EQ_ReadMemory<DWORD>(boneChildInfo + 0x00);
+            if (boneChildMagicNumber == NULL)
+            {
+                break;
+            }
+
+            if (boneChildMagicNumber != firstBoneMagicNumber)
+            {
+                break;
+            }
+
+            FLOAT boneChildY = EQ_ReadMemory<FLOAT>(boneChildInfo + EQ_OFFSET_BONE_INFO_Y);
+            FLOAT boneChildX = EQ_ReadMemory<FLOAT>(boneChildInfo + EQ_OFFSET_BONE_INFO_X);
+            FLOAT boneChildZ = EQ_ReadMemory<FLOAT>(boneChildInfo + EQ_OFFSET_BONE_INFO_Z);
+
+            if (boneChildY == 0.0f || boneChildX == 0.0f || boneChildZ == 0.0f)
+            {
+                continue;
+            }
+
+            int screenChildX = -1;
+            int screenChildY = -1;
+            bool resultChild = EQ_WorldSpaceToScreenSpace(boneChildX, boneChildY, boneChildZ, screenChildX, screenChildY);
+            if (resultChild == false)
+            {
+                continue;
+            }
+
+            if (g_espSkeletonDrawLinesIsEnabled == false)
+            {
+                // draw a line that looks like a dot instead of using text to get better performance
+                EQ_DrawLine((float)screenChildX, (float)screenChildY, 1.0f, (float)screenChildX, (float)(screenChildY + 1.0f), 1.0f, argbColor);
+            }
+            else
+            {
+                // draw a line to the next bone
+                EQ_DrawLine((float)screenX, (float)screenY, 1.0f, (float)screenChildX, (float)screenChildY, 1.0f, argbColor);
+            }
+        }
+
+        if (g_espSkeletonDrawAddressesIsEnabled == true)
+        {
+            std::stringstream boneText;
+            boneText << "0x" << std::hex << boneInfo << std::dec;
+            EQ_DrawText(boneText.str().c_str(), screenX, screenY, argbColor, 2);
+        }
     }
 }
 

@@ -1,12 +1,19 @@
 #pragma once
 
 bool g_replaceRacesIsEnabled = true;
+DWORD g_replaceRacesTimer = 0;
+DWORD g_replaceRacesTimerDelay = 1000;
 
 void EQAPP_ReplaceRaces_Execute();
 
 void EQAPP_ReplaceRaces_Execute()
 {
     if (g_replaceRacesIsEnabled == false)
+    {
+        return;
+    }
+
+    if (EQ_HasTimePassed(g_replaceRacesTimer, g_replaceRacesTimerDelay) == false)
     {
         return;
     }

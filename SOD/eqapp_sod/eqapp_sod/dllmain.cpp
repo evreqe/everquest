@@ -109,6 +109,7 @@ void EQAPP_Load()
     EQAPP_NoBeep_Load();
     EQAPP_ZoneShortNames_Load();
     EQAPP_ZoneActors_NoCollision_Load();
+    EQAPP_ZoneActors_NoCollision_Execute();
 
     EQ_UpdateLight(EQ_GetCharInfo());
 
@@ -861,6 +862,7 @@ int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short
     EQAPP_SwimSpeed_Execute();
     EQAPP_DrawDistance_Execute();
     EQAPP_Census_Execute();
+    EQAPP_ReplaceRaces_Execute();
 
     if (EQAPP_IsAnImportantWindowOpen() == false && EQ_IsKeyShiftPressed() == false)
     {
@@ -891,7 +893,7 @@ DWORD WINAPI EQAPP_ThreadConsole(LPVOID param)
     }
 
     const GLFWvidmode* videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    g_videoModeWidth  = videoMode->width;
+    g_videoModeWidth = videoMode->width;
     g_videoModeHeight = videoMode->height;
 
     g_consoleWindow = glfwCreateWindow(g_videoModeWidth, g_videoModeHeight, g_consoleWindowTitle, NULL, NULL);
@@ -1003,7 +1005,7 @@ DWORD WINAPI EQAPP_ThreadLoad(LPVOID param)
     return 0;
 }
 
-BOOL APIENTRY DllMain(HMODULE module, DWORD reason, LPVOID reserved)
+BOOL __stdcall DllMain(HMODULE module, DWORD reason, LPVOID reserved)
 {
     g_module = module;
 

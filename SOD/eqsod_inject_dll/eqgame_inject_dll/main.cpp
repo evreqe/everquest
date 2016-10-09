@@ -22,7 +22,8 @@
 
 int file_exists(char *filename)
 {
-    FILE *file = fopen(filename, "r");
+    FILE *file;
+    fopen_s(&file, filename, "r");
 
     int result = (file == NULL ? 0 : 1);
 

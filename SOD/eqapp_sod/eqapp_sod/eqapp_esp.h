@@ -22,6 +22,10 @@ DWORD g_espWaypointColor    = 0xFFC0C0C0;
 DWORD g_espLocatorColor     = 0xFFFFFFFF;
 DWORD g_espFindColor        = 0xFF00FF80;
 
+bool g_espSkeletonHideByLineOfSightIsEnabled = false;
+bool g_espSkeletonDrawLinesIsEnabled         = false;
+bool g_espSkeletonDrawAddressesIsEnabled     = false;
+
 bool g_espLocatorIsEnabled = false;
 bool g_espLocatorDrawLineIsEnabled = true;
 float g_espLocatorY = 0.0f;
