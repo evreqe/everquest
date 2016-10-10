@@ -308,7 +308,7 @@ struct EQAPPIMGUIOptionsWindow
             ImGui::PopID();
 
             size_t index = 0;
-            static PEQAPPMEMORY memoryEx;
+            static EQApp::Memory* memoryEx;
 
             for (auto& memory : g_memoryList)
             {
@@ -665,7 +665,7 @@ struct EQAPPIMGUIOptionsWindow
 
             if (ImGui::InputInt("Race ID", &g_setRaceId, 1, 100))
             {
-                DWORD spawnInfo = EQ_GetTargetSpawn();
+                uint32_t spawnInfo = EQ_GetTargetSpawn();
                 if (spawnInfo == NULL)
                 {
                     spawnInfo = EQ_GetPlayerSpawn();
@@ -675,7 +675,7 @@ struct EQAPPIMGUIOptionsWindow
                 {
                    if (g_setRaceId != 0)
                    {
-                        int spawnGender = EQ_ReadMemory<BYTE>(spawnInfo + EQ_OFFSET_SPAWN_INFO_GENDER);
+                        int spawnGender = EQ_ReadMemory<uint8_t>(spawnInfo + EQ_OFFSET_SPAWN_INFO_GENDER);
 
                         EQ_SetSpawnForm(spawnInfo, g_setRaceId, spawnGender);
                     }

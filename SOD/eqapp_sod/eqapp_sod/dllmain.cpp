@@ -163,7 +163,7 @@ void EQAPP_SetWindowTitles()
         return;
     }
 
-    DWORD playerSpawn = EQ_GetPlayerSpawn();
+    uint32_t playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)
     {
         SetWindowTextA(window, EQ_STRING_WINDOW_TITLE);
@@ -194,7 +194,7 @@ void EQAPP_SetWindowTitles()
     }
 }
 
-int __cdecl EQAPP_DETOUR_ExecuteCmd(DWORD a1, BOOL a2, PVOID a3)
+int __cdecl EQAPP_DETOUR_ExecuteCommand(uint32_t a1, BOOL a2, PVOID a3)
 {
     // a1 = command index
     // a2 = key is held down boolean
@@ -202,18 +202,18 @@ int __cdecl EQAPP_DETOUR_ExecuteCmd(DWORD a1, BOOL a2, PVOID a3)
 
     if (g_bExit == 1)
     {
-        return EQAPP_REAL_ExecuteCmd(a1, a2, a3);
+        return EQAPP_REAL_ExecuteCommand(a1, a2, a3);
     }
 
     if (g_debugIsEnabled == true)
     {
-        unsigned int commandIndex = a1;
-        std::string commandName = EQ_GetExecuteCmdName(commandIndex);
+        uint32_t commandIndex = a1;
+        std::string commandName = EQ_GetExecuteCommandName(commandIndex);
 
         if (commandName.size() > 0)
         {
             std::stringstream ss;
-            ss << "ExecuteCmd(): " << commandName << " (" << commandIndex << ")";
+            ss << "ExecuteCommand(): " << commandName << " (" << commandIndex << ")";
 
             EQAPP_PrintDebugMessage(__FUNCTION__, ss.str());
         }
@@ -229,7 +229,7 @@ int __cdecl EQAPP_DETOUR_ExecuteCmd(DWORD a1, BOOL a2, PVOID a3)
             a1 == EQ_EXECUTECMD_TOGGLECAM
         )
         {
-            return EQAPP_REAL_ExecuteCmd(NULL, 0, 0);
+            return EQAPP_REAL_ExecuteCommand(NULL, 0, 0);
         }
     }
 
@@ -250,20 +250,20 @@ int __cdecl EQAPP_DETOUR_ExecuteCmd(DWORD a1, BOOL a2, PVOID a3)
         {
             EQ_CloseAllContainers();
 
-            return EQAPP_REAL_ExecuteCmd(NULL, 0, 0);
+            return EQAPP_REAL_ExecuteCommand(NULL, 0, 0);
         }
     }
     else if (a1 == EQ_EXECUTECMD_OPEN_INV_BAGS && a2 == 0)
     {
-        return EQAPP_REAL_ExecuteCmd(NULL, 0, 0);
+        return EQAPP_REAL_ExecuteCommand(NULL, 0, 0);
     }
 
-    return EQAPP_REAL_ExecuteCmd(a1, a2, a3);
+    return EQAPP_REAL_ExecuteCommand(a1, a2, a3);
 }
 
-int __cdecl EQAPP_DETOUR_SetTarget(DWORD a1, const char* a2)
+int __cdecl EQAPP_DETOUR_SetTarget(uint32_t a1, const char* a2)
 {
-    // a1 = playerSpawn + 0x00 DWORD POINTER
+    // a1 = playerSpawn + 0x00 uint32_t POINTER
     // a2 = spawn name text (/target 'text')
 
     if (g_bExit == 1)
@@ -297,13 +297,13 @@ int __cdecl EQAPP_DETOUR_SetTarget(DWORD a1, const char* a2)
     return 0;
 }
 
-int __fastcall EQAPP_DETOUR_CEverQuest__SetGameState(void* pThis, void* not_used, int a1)
+int __fastcall EQAPP_DETOUR_CEverQuest__SetGameState(void* this_ptr, void* not_used, int a1)
 {
     // a1 = game state
 
     if (g_bExit == 1)
     {
-        return EQAPP_REAL_CEverQuest__SetGameState(pThis, a1);
+        return EQAPP_REAL_CEverQuest__SetGameState(this_ptr, a1);
     }
 
     if (g_debugIsEnabled == true)
@@ -311,25 +311,25 @@ int __fastcall EQAPP_DETOUR_CEverQuest__SetGameState(void* pThis, void* not_used
         std::cout << "[debug] CEverQuest::SetGameState(): " << a1 << std::endl;
     }
 
-    return EQAPP_REAL_CEverQuest__SetGameState(pThis, a1);
+    return EQAPP_REAL_CEverQuest__SetGameState(this_ptr, a1);
 }
 
-int __fastcall EQAPP_DETOUR_CEverQuest__StartCasting(void* pThis, void* not_used, int a1)
+int __fastcall EQAPP_DETOUR_CEverQuest__StartCasting(void* this_ptr, void* not_used, int a1)
 {
     // a1 = spawn casting spell structure
 
     if (g_bExit == 1)
     {
-        return EQAPP_REAL_CEverQuest__StartCasting(pThis, a1);
+        return EQAPP_REAL_CEverQuest__StartCasting(this_ptr, a1);
     }
 
-    DWORD spawnId = EQ_ReadMemory<WORD>(a1);
-    DWORD spellId = EQ_ReadMemory<WORD>(a1 + 2);
-    DWORD spellCastTime = EQ_ReadMemory<DWORD>(a1 + 4);
+    uint32_t spawnId = EQ_ReadMemory<uint16_t>(a1);
+    uint32_t spellId = EQ_ReadMemory<uint16_t>(a1 + 2);
+    uint32_t spellCastTime = EQ_ReadMemory<uint32_t>(a1 + 4);
 
-    DWORD playerSpawn = EQ_GetPlayerSpawn();
+    uint32_t playerSpawn = EQ_GetPlayerSpawn();
 
-    DWORD spawnInfo = EQ_EQPlayerManager->GetSpawnByID(spawnId);
+    uint32_t spawnInfo = EQ_EQPlayerManager->GetSpawnByID(spawnId);
 
     if (spawnInfo != NULL && spawnInfo != playerSpawn)
     {
@@ -357,10 +357,10 @@ int __fastcall EQAPP_DETOUR_CEverQuest__StartCasting(void* pThis, void* not_used
         }
     }
 
-    return EQAPP_REAL_CEverQuest__StartCasting(pThis, a1);
+    return EQAPP_REAL_CEverQuest__StartCasting(this_ptr, a1);
 }
 
-int __fastcall EQAPP_DETOUR_CDisplay__CreatePlayerActor(void* pThis, void* not_used, int a1, int a2, int a3, int a4, int a5)
+int __fastcall EQAPP_DETOUR_CDisplay__CreatePlayerActor(void* this_ptr, void* not_used, int a1, int a2, int a3, int a4, int a5)
 {
     // a1 = spawnInfo
     // a2 = 0
@@ -370,20 +370,20 @@ int __fastcall EQAPP_DETOUR_CDisplay__CreatePlayerActor(void* pThis, void* not_u
 
     if (g_bExit == 1)
     {
-        return EQAPP_REAL_CDisplay__CreatePlayerActor(pThis, a1, a2, a3, a4, a5);
+        return EQAPP_REAL_CDisplay__CreatePlayerActor(this_ptr, a1, a2, a3, a4, a5);
     }
 
     if (a1 != NULL)
     {
         if (g_replaceRacesIsEnabled == true)
         {
-            DWORD playerSpawn = EQ_GetPlayerSpawn();
+            uint32_t playerSpawn = EQ_GetPlayerSpawn();
             if (a1 == playerSpawn)
             {
-                int spawnRace = EQ_ReadMemory<DWORD>(playerSpawn + EQ_OFFSET_SPAWN_INFO_RACE);
+                int spawnRace = EQ_ReadMemory<uint32_t>(playerSpawn + EQ_OFFSET_SPAWN_INFO_RACE);
                 if (spawnRace == EQ_RACE_CHOKADAI)
                 {
-                    EQ_WriteMemory<DWORD>(playerSpawn + EQ_OFFSET_SPAWN_INFO_RACE, EQ_RACE_HUMAN);
+                    EQ_WriteMemory<uint32_t>(playerSpawn + EQ_OFFSET_SPAWN_INFO_RACE, EQ_RACE_HUMAN);
                 }
             }
         }
@@ -412,21 +412,21 @@ int __fastcall EQAPP_DETOUR_CDisplay__CreatePlayerActor(void* pThis, void* not_u
         }
     }
 
-    return EQAPP_REAL_CDisplay__CreatePlayerActor(pThis, a1, a2, a3, a4, a5);
+    return EQAPP_REAL_CDisplay__CreatePlayerActor(this_ptr, a1, a2, a3, a4, a5);
 }
 
-int __fastcall EQAPP_DETOUR_CDisplay__DeleteActor(void* pThis, void* not_used, DWORD a1)
+int __fastcall EQAPP_DETOUR_CDisplay__DeleteActor(void* this_ptr, void* not_used, uint32_t a1)
 {
     // a1 = actorInstance
 
     if (g_bExit == 1)
     {
-        return EQAPP_REAL_CDisplay__DeleteActor(pThis, a1);
+        return EQAPP_REAL_CDisplay__DeleteActor(this_ptr, a1);
     }
 
     if (a1 != NULL)
     {
-        DWORD spawnInfo = EQ_ReadMemory<DWORD>(a1 + EQ_OFFSET_ACTOR_INSTANCE_INFO_SPAWN_INFO);
+        uint32_t spawnInfo = EQ_ReadMemory<uint32_t>(a1 + EQ_OFFSET_ACTOR_INSTANCE_INFO_SPAWN_INFO);
         if (spawnInfo != NULL)
         {
             char spawnNumberedName[EQ_SIZE_SPAWN_INFO_NUMBERED_NAME] = {0};
@@ -441,27 +441,27 @@ int __fastcall EQAPP_DETOUR_CDisplay__DeleteActor(void* pThis, void* not_used, D
         }
     }
 
-    return EQAPP_REAL_CDisplay__DeleteActor(pThis, a1);
+    return EQAPP_REAL_CDisplay__DeleteActor(this_ptr, a1);
 }
 
-int __fastcall EQAPP_DETOUR_CEverQuest__dsp_chat(void* pThis, void* not_used, const char* a1, int a2, bool a3)
+int __fastcall EQAPP_DETOUR_CEverQuest__dsp_chat(void* this_ptr, void* not_used, const char* a1, int a2, bool a3)
 {
     // a1 = text
     // a2 = textColor
 
     if (g_bExit == 1)
     {
-        return EQAPP_REAL_CEverQuest__dsp_chat(pThis, a1, a2, a3);
+        return EQAPP_REAL_CEverQuest__dsp_chat(this_ptr, a1, a2, a3);
     }
 
     if (a1 == NULL)
     {
-        return EQAPP_REAL_CEverQuest__dsp_chat(pThis, a1, a2, a3);
+        return EQAPP_REAL_CEverQuest__dsp_chat(this_ptr, a1, a2, a3);
     }
 
     if (strlen(a1) == 0)
     {
-        return EQAPP_REAL_CEverQuest__dsp_chat(pThis, a1, a2, a3);
+        return EQAPP_REAL_CEverQuest__dsp_chat(this_ptr, a1, a2, a3);
     }
 
     if (g_soundsIsEnabled == true)
@@ -515,14 +515,14 @@ int __fastcall EQAPP_DETOUR_CEverQuest__dsp_chat(void* pThis, void* not_used, co
         EQAPP_CharacterFile_Write();
     }
 
-    return EQAPP_REAL_CEverQuest__dsp_chat(pThis, a1, a2, a3);
+    return EQAPP_REAL_CEverQuest__dsp_chat(this_ptr, a1, a2, a3);
 }
 
-int __fastcall EQAPP_DETOUR_CEverQuest__MoveToZone(void* pThis, void* not_used, int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8)
+int __fastcall EQAPP_DETOUR_CEverQuest__MoveToZone(void* this_ptr, void* not_used, int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8)
 {
     if (g_bExit == 1)
     {
-        return EQAPP_REAL_CEverQuest__MoveToZone(pThis, a1, a2, a3, a4, a5, a6, a7, a8);
+        return EQAPP_REAL_CEverQuest__MoveToZone(this_ptr, a1, a2, a3, a4, a5, a6, a7, a8);
     }
 
     std::cout << "Moving to zone..." << std::endl;
@@ -533,19 +533,19 @@ int __fastcall EQAPP_DETOUR_CEverQuest__MoveToZone(void* pThis, void* not_used, 
 
     EQAPP_MapLabels_Remove();
 
-    return EQAPP_REAL_CEverQuest__MoveToZone(pThis, a1, a2, a3, a4, a5, a6, a7, a8);
+    return EQAPP_REAL_CEverQuest__MoveToZone(this_ptr, a1, a2, a3, a4, a5, a6, a7, a8);
 }
 
-int __fastcall EQAPP_DETOUR_CEverQuest__EnterZone(void* pThis, void* not_used, struct HWND__* a1)
+int __fastcall EQAPP_DETOUR_CEverQuest__EnterZone(void* this_ptr, void* not_used, struct HWND__* a1)
 {
     if (g_bExit == 1)
     {
-        return EQAPP_REAL_CEverQuest__EnterZone(pThis, a1);
+        return EQAPP_REAL_CEverQuest__EnterZone(this_ptr, a1);
     }
 
     std::cout << "Entering zone..." << std::endl;
 
-    int result = EQAPP_REAL_CEverQuest__EnterZone(pThis, a1);
+    int result = EQAPP_REAL_CEverQuest__EnterZone(this_ptr, a1);
 
     g_bOnEnterZone = 1;
 
@@ -574,24 +574,24 @@ int __fastcall EQAPP_DETOUR_CEverQuest__EnterZone(void* pThis, void* not_used, s
 }
 
 /*
-int __fastcall EQAPP_DETOUR_CEverQuest__InterpretCmd(void* pThis, void* not_used, DWORD a1, const char* a2)
+int __fastcall EQAPP_DETOUR_CEverQuest__InterpretCmd(void* this_ptr, void* not_used, uint32_t a1, const char* a2)
 {
     // a1 = spawnInfo
     // a2 = command text
 
     if (g_bExit == 1)
     {
-        return EQAPP_REAL_CEverQuest__InterpretCmd(pThis, NULL, NULL);
+        return EQAPP_REAL_CEverQuest__InterpretCmd(this_ptr, NULL, NULL);
     }
 
     if (a1 == NULL || a2 == NULL)
     {
-        return EQAPP_REAL_CEverQuest__InterpretCmd(pThis, NULL, NULL);
+        return EQAPP_REAL_CEverQuest__InterpretCmd(this_ptr, NULL, NULL);
     }
 
     if (strlen(a2) == 0)
     {
-        return EQAPP_REAL_CEverQuest__InterpretCmd(pThis, NULL, NULL);
+        return EQAPP_REAL_CEverQuest__InterpretCmd(this_ptr, NULL, NULL);
     }
 
     if (strcmp(a2, "/exit") == 0)
@@ -603,31 +603,31 @@ int __fastcall EQAPP_DETOUR_CEverQuest__InterpretCmd(void* pThis, void* not_used
     {
         EQAPP_InterpretCommand(a2);
 
-        return EQAPP_REAL_CEverQuest__InterpretCmd(pThis, NULL, NULL);
+        return EQAPP_REAL_CEverQuest__InterpretCmd(this_ptr, NULL, NULL);
     }
 
-    return EQAPP_REAL_CEverQuest__InterpretCmd(pThis, a1, a2);
+    return EQAPP_REAL_CEverQuest__InterpretCmd(this_ptr, a1, a2);
 }
 */
 
-int __fastcall EQAPP_DETOUR_EQ_Character__eqspa_movement_rate(void* pThis, void* not_used, int a1)
+int __fastcall EQAPP_DETOUR_EQ_Character__eqspa_movement_rate(void* this_ptr, void* not_used, int a1)
 {
     if (g_bExit == 1)
     {
-        return EQAPP_REAL_EQ_Character__eqspa_movement_rate(pThis, a1);
+        return EQAPP_REAL_EQ_Character__eqspa_movement_rate(this_ptr, a1);
     }
 
-    int result = EQAPP_REAL_EQ_Character__eqspa_movement_rate(pThis, a1);
+    int result = EQAPP_REAL_EQ_Character__eqspa_movement_rate(this_ptr, a1);
 
     if (g_movementSpeedHackIsEnabled == true)
     {
-        DWORD playerSpawn = EQ_GetPlayerSpawn();
+        uint32_t playerSpawn = EQ_GetPlayerSpawn();
         if (playerSpawn != NULL)
         {
-            FLOAT speedModifier = EQ_ReadMemory<FLOAT>(playerSpawn + EQ_OFFSET_SPAWN_INFO_SPEED_MODIFIER);
+            float speedModifier = EQ_ReadMemory<float>(playerSpawn + EQ_OFFSET_SPAWN_INFO_SPEED_MODIFIER);
             if (speedModifier < g_movementSpeedHackModifier)
             {
-                EQ_WriteMemory<FLOAT>(playerSpawn + EQ_OFFSET_SPAWN_INFO_SPEED_MODIFIER, g_movementSpeedHackModifier);
+                EQ_WriteMemory<float>(playerSpawn + EQ_OFFSET_SPAWN_INFO_SPEED_MODIFIER, g_movementSpeedHackModifier);
             }
         }
     }
@@ -635,13 +635,13 @@ int __fastcall EQAPP_DETOUR_EQ_Character__eqspa_movement_rate(void* pThis, void*
     return result;
 }
 
-int __fastcall EQAPP_DETOUR_EQPlayer__ChangePosition(void* pThis, void* not_used, BYTE a1)
+int __fastcall EQAPP_DETOUR_EQPlayer__ChangePosition(void* this_ptr, void* not_used, uint8_t a1)
 {
     // a1 = standing state
 
     if (g_bExit == 1)
     {
-        return EQAPP_REAL_EQPlayer__ChangePosition(pThis, a1);
+        return EQAPP_REAL_EQPlayer__ChangePosition(this_ptr, a1);
     }
 
     if (g_neverFrozenIsEnabled == true)
@@ -652,8 +652,8 @@ int __fastcall EQAPP_DETOUR_EQPlayer__ChangePosition(void* pThis, void* not_used
         }
     }
 
-    DWORD playerSpawn = EQ_GetPlayerSpawn();
-    if (playerSpawn != NULL && (DWORD)pThis == playerSpawn)
+    uint32_t playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn != NULL && (uint32_t)this_ptr == playerSpawn)
     {
         if (a1 == EQ_STANDING_STATE_DUCKING)
         {
@@ -666,14 +666,14 @@ int __fastcall EQAPP_DETOUR_EQPlayer__ChangePosition(void* pThis, void* not_used
         }
     }
 
-    return EQAPP_REAL_EQPlayer__ChangePosition(pThis, a1);
+    return EQAPP_REAL_EQPlayer__ChangePosition(this_ptr, a1);
 }
 
-int __fastcall EQAPP_DETOUR_EQPlayer__do_change_form(void* pThis, void* not_used, PEQCHANGEFORM a1)
+int __fastcall EQAPP_DETOUR_EQPlayer__do_change_form(void* this_ptr, void* not_used, EQ::ChangeForm* a1)
 {
     if (g_bExit == 1)
     {
-        return EQAPP_REAL_EQPlayer__do_change_form(pThis, a1);
+        return EQAPP_REAL_EQPlayer__do_change_form(this_ptr, a1);
     }
 
     if (g_debugIsEnabled == true)
@@ -700,8 +700,8 @@ int __fastcall EQAPP_DETOUR_EQPlayer__do_change_form(void* pThis, void* not_used
             a1->RaceId = EQ_RACE_SKELETON2;
         }
 
-        DWORD playerSpawn = EQ_GetPlayerSpawn();
-        if (playerSpawn != NULL && (DWORD)pThis == playerSpawn)
+        uint32_t playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn != NULL && (uint32_t)this_ptr == playerSpawn)
         {
             if (a1->RaceId == EQ_RACE_CHOKADAI)
             {
@@ -710,16 +710,16 @@ int __fastcall EQAPP_DETOUR_EQPlayer__do_change_form(void* pThis, void* not_used
         }
     }
 
-    return EQAPP_REAL_EQPlayer__do_change_form(pThis, a1);
+    return EQAPP_REAL_EQPlayer__do_change_form(this_ptr, a1);
 }
 
-int __fastcall EQAPP_DETOUR_EQPlayer__SetRace(void* pThis, void* not_used, int a1)
+int __fastcall EQAPP_DETOUR_EQPlayer__SetRace(void* this_ptr, void* not_used, int a1)
 {
     // a1 = race id
 
     if (g_bExit == 1)
     {
-        return EQAPP_REAL_EQPlayer__SetRace(pThis, a1);
+        return EQAPP_REAL_EQPlayer__SetRace(this_ptr, a1);
     }
 
     if (g_replaceRacesIsEnabled == true)
@@ -733,8 +733,8 @@ int __fastcall EQAPP_DETOUR_EQPlayer__SetRace(void* pThis, void* not_used, int a
             a1 = EQ_RACE_SKELETON2;
         }
 
-        DWORD playerSpawn = EQ_GetPlayerSpawn();
-        if (playerSpawn != NULL && (DWORD)pThis == playerSpawn)
+        uint32_t playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn != NULL && (uint32_t)this_ptr == playerSpawn)
         {
             if (a1 == EQ_RACE_CHOKADAI)
             {
@@ -743,28 +743,28 @@ int __fastcall EQAPP_DETOUR_EQPlayer__SetRace(void* pThis, void* not_used, int a
         }
     }
 
-    return EQAPP_REAL_EQPlayer__SetRace(pThis, a1);
+    return EQAPP_REAL_EQPlayer__SetRace(this_ptr, a1);
 }
 
 /*
-int __fastcall EQAPP_DETOUR_CMapViewWnd__dCMapViewWnd(void* pThis, void* not_used)
+int __fastcall EQAPP_DETOUR_CMapViewWnd__dCMapViewWnd(void* this_ptr, void* not_used)
 {
     if (g_bExit == 1)
     {
-        return EQAPP_REAL_CMapViewWnd__dCMapViewWnd(pThis);
+        return EQAPP_REAL_CMapViewWnd__dCMapViewWnd(this_ptr);
     }
 
     //std::cout << "CMapViewWnd::~CMapViewWnd()" << std::endl;
 
-    return EQAPP_REAL_CMapViewWnd__dCMapViewWnd(pThis);
+    return EQAPP_REAL_CMapViewWnd__dCMapViewWnd(this_ptr);
 }
 */
 
-int __fastcall EQAPP_DETOUR_CMapViewWnd__DrawMap(void* pThis, void* not_used, int a1, int a2, int a3, int a4)
+int __fastcall EQAPP_DETOUR_CMapViewWnd__DrawMap(void* this_ptr, void* not_used, int a1, int a2, int a3, int a4)
 {
     if (g_bExit == 1)
     {
-        return EQAPP_REAL_CMapViewWnd__DrawMap(pThis, a1, a2, a3, a4);
+        return EQAPP_REAL_CMapViewWnd__DrawMap(this_ptr, a1, a2, a3, a4);
     }
 
     if (g_mapLabelsIsEnabled == true)
@@ -772,40 +772,40 @@ int __fastcall EQAPP_DETOUR_CMapViewWnd__DrawMap(void* pThis, void* not_used, in
         EQAPP_MapLabels_Execute();
     }
 
-    return EQAPP_REAL_CMapViewWnd__DrawMap(pThis, a1, a2, a3, a4);
+    return EQAPP_REAL_CMapViewWnd__DrawMap(this_ptr, a1, a2, a3, a4);
 }
 
-int __fastcall EQAPP_DETOUR_MapViewMap__Save(void* pThis, void* not_used, char* a1)
+int __fastcall EQAPP_DETOUR_MapViewMap__Save(void* this_ptr, void* not_used, char* a1)
 {
     // a1 = short zone name of map
 
     if (g_bExit == 1)
     {
-        return EQAPP_REAL_MapViewMap__Save(pThis, a1);
+        return EQAPP_REAL_MapViewMap__Save(this_ptr, a1);
     }
 
     std::cout << "The game is saving the map..." << std::endl;
 
     EQAPP_MapLabels_Remove();
 
-    return EQAPP_REAL_MapViewMap__Save(pThis, a1);
+    return EQAPP_REAL_MapViewMap__Save(this_ptr, a1);
 }
 
-int __fastcall EQAPP_DETOUR_MapViewMap__SaveEx(void* pThis, void* not_used, char* a1, int a2)
+int __fastcall EQAPP_DETOUR_MapViewMap__SaveEx(void* this_ptr, void* not_used, char* a1, int a2)
 {
     // a1 = short zone name of map
     // a2 = map layer
 
     if (g_bExit == 1)
     {
-        return EQAPP_REAL_MapViewMap__SaveEx(pThis, a1, a2);
+        return EQAPP_REAL_MapViewMap__SaveEx(this_ptr, a1, a2);
     }
 
     std::cout << "The game is saving map layer #" << a2 << std::endl;
 
     EQAPP_MapLabels_Remove();
 
-    return EQAPP_REAL_MapViewMap__SaveEx(pThis, a1, a2);
+    return EQAPP_REAL_MapViewMap__SaveEx(this_ptr, a1, a2);
 }
 
 int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short a3, unsigned short a4, unsigned short a5, int a6, unsigned short a7, unsigned long a8, long a9, unsigned long a10)

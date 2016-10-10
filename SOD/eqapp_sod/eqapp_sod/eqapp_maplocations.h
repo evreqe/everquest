@@ -29,10 +29,10 @@ void EQAPP_MapLocations_WriteToFile()
         return;
     }
 
-    DWORD spawn = EQ_GetFirstSpawn();
+    uint32_t spawn = EQ_GetFirstSpawn();
     while (spawn)
     {
-        int spawnType = EQ_ReadMemory<BYTE>(spawn + EQ_OFFSET_SPAWN_INFO_TYPE);
+        int spawnType = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_TYPE);
         if (spawnType != EQ_SPAWN_TYPE_NPC)
         {
             spawn = EQ_GetNextSpawn(spawn); // next

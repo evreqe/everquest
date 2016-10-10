@@ -19,22 +19,22 @@ void EQAPP_SpawnList_Print(const char* filterSpawnName)
     }
     std::cout << std::endl;
 
-    DWORD playerSpawn = EQ_GetPlayerSpawn();
+    uint32_t playerSpawn = EQ_GetPlayerSpawn();
 
-    FLOAT playerY = EQ_GetSpawnY(playerSpawn);
-    FLOAT playerX = EQ_GetSpawnX(playerSpawn);
-    FLOAT playerZ = EQ_GetSpawnZ(playerSpawn);
+    float playerY = EQ_GetSpawnY(playerSpawn);
+    float playerX = EQ_GetSpawnX(playerSpawn);
+    float playerZ = EQ_GetSpawnZ(playerSpawn);
 
-    DWORD spawn = EQ_GetFirstSpawn();
+    uint32_t spawn = EQ_GetFirstSpawn();
     while (spawn)
     {
         char spawnName[EQ_SIZE_SPAWN_INFO_NAME] = {0};
-        memcpy(spawnName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_INFO_NAME), sizeof(spawnName));
+        memcpy(spawnName, (void*)(spawn + EQ_OFFSET_SPAWN_INFO_NAME), sizeof(spawnName));
 
         char spawnLastName[EQ_SIZE_SPAWN_INFO_LAST_NAME] = {0};
-        memcpy(spawnLastName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_INFO_LAST_NAME), sizeof(spawnLastName));
+        memcpy(spawnLastName, (void*)(spawn + EQ_OFFSET_SPAWN_INFO_LAST_NAME), sizeof(spawnLastName));
 
-        int spawnLevel = EQ_ReadMemory<BYTE>(spawn + EQ_OFFSET_SPAWN_INFO_LEVEL);
+        int spawnLevel = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_LEVEL);
 
         if (spawnLevel < EQ_LEVEL_MIN || spawnLevel > EQ_LEVEL_MAX)
         {
@@ -51,9 +51,9 @@ void EQAPP_SpawnList_Print(const char* filterSpawnName)
             }
         }
 
-        int spawnType = EQ_ReadMemory<BYTE>(spawn + EQ_OFFSET_SPAWN_INFO_TYPE);
+        int spawnType = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_TYPE);
 
-        int spawnClass = EQ_ReadMemory<BYTE>(spawn + EQ_OFFSET_SPAWN_INFO_CLASS);
+        int spawnClass = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_CLASS);
 
         if (spawnType == EQ_SPAWN_TYPE_PLAYER)
         {
@@ -100,31 +100,31 @@ void EQAPP_SpawnList_Print(const char* filterSpawnName)
 
         if (spawnType == EQ_SPAWN_TYPE_PLAYER)
         {
-            int spawnIsLfg = EQ_ReadMemory<BYTE>(spawn + EQ_OFFSET_SPAWN_INFO_IS_LFG);
+            int spawnIsLfg = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_IS_LFG);
             if (spawnIsLfg == 1)
             {
                 std::cout << "  LFG";
             }
 
-            int spawnIsPvp = EQ_ReadMemory<BYTE>(spawn + EQ_OFFSET_SPAWN_INFO_IS_PVP);
+            int spawnIsPvp = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_IS_PVP);
             if (spawnIsPvp == 1)
             {
                 std::cout << "  PVP";
             }
 
-            int spawnIsTrader = EQ_ReadMemory<DWORD>(spawn + EQ_OFFSET_SPAWN_INFO_IS_TRADER);
+            int spawnIsTrader = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_INFO_IS_TRADER);
             if (spawnIsTrader == 1)
             {
                 std::cout << "  TRADER";
             }
 
-            int spawnIsAfk = EQ_ReadMemory<DWORD>(spawn + EQ_OFFSET_SPAWN_INFO_IS_AFK);
+            int spawnIsAfk = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_INFO_IS_AFK);
             if (spawnIsAfk == 1)
             {
                 std::cout << "  AFK";
             }
 
-            int spawnIsGm = EQ_ReadMemory<BYTE>(spawn + EQ_OFFSET_SPAWN_INFO_IS_GM);
+            int spawnIsGm = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_IS_GM);
             if (spawnIsGm == 1)
             {
                 std::cout << "  *GM*";
@@ -133,9 +133,9 @@ void EQAPP_SpawnList_Print(const char* filterSpawnName)
 
         if (g_debugIsEnabled == true && playerSpawn != NULL)
         {
-            FLOAT spawnY = EQ_GetSpawnY(spawn);
-            FLOAT spawnX = EQ_GetSpawnX(spawn);
-            FLOAT spawnZ = EQ_GetSpawnZ(spawn);
+            float spawnY = EQ_GetSpawnY(spawn);
+            float spawnX = EQ_GetSpawnX(spawn);
+            float spawnZ = EQ_GetSpawnZ(spawn);
 
             float spawnDistance = EQ_CalculateDistance3d(playerX, playerY, playerZ, spawnX, spawnY, spawnZ);
 

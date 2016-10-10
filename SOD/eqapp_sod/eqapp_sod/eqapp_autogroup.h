@@ -1,8 +1,8 @@
 #pragma once
 
 bool g_autoGroupIsEnabled = true;
-DWORD g_autoGroupTimer = 0;
-DWORD g_autoGroupTimerDelay = 2000;
+uint32_t g_autoGroupTimer = 0;
+uint32_t g_autoGroupTimerDelay = 2000;
 
 void EQAPP_AutoGroup_Execute();
 
@@ -18,15 +18,15 @@ void EQAPP_AutoGroup_Execute()
         return;
     }
 
-    DWORD playerSpawn = EQ_GetPlayerSpawn();
+    uint32_t playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)
     {
         return;
     }
 
-    int isInvitedToGroup = EQ_ReadMemory<BYTE>(EQ_BOOL_INVITED_TO_GROUP);
+    int isInvitedToGroup = EQ_ReadMemory<uint8_t>(EQ_BOOL_INVITED_TO_GROUP);
 
-    int spawnIsInvitedToGroup = EQ_ReadMemory<BYTE>(playerSpawn + EQ_OFFSET_SPAWN_INFO_IS_INVITED_TO_GROUP);
+    int spawnIsInvitedToGroup = EQ_ReadMemory<uint8_t>(playerSpawn + EQ_OFFSET_SPAWN_INFO_IS_INVITED_TO_GROUP);
 
     if (isInvitedToGroup == 1 || spawnIsInvitedToGroup == 1)
     {

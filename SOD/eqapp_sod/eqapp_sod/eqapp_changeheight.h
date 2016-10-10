@@ -1,10 +1,16 @@
 #pragma once
 
 bool g_changeHeightIsEnabled = true;
-float g_changeHeightMinimum = 1.0f;
-float g_changeHeightMaximum = 5.0f;
-DWORD g_changeHeightTimer = 0;
-DWORD g_changeHeightTimerDelay = 1000;
+bool g_changeHeightPlayersIsEnabled = true;
+bool g_changeHeightPetsIsEnabled = true;
+
+float g_changeHeightDefaultSize = 5.0f;
+
+float g_changeHeightPlayersSize = 5.0f;
+float g_changeHeightPetsSize = 2.0f;
+
+uint32_t g_changeHeightTimer = 0;
+uint32_t g_changeHeightTimerDelay = 1000;
 
 void EQAPP_ChangeHeight_Execute();
 
@@ -20,43 +26,50 @@ void EQAPP_ChangeHeight_Execute()
         return;
     }
 
-    DWORD spawn = EQ_GetFirstSpawn();
+    uint32_t spawn = EQ_GetFirstSpawn();
     while (spawn)
     {
-        // shrink players
-        int spawnType = EQ_ReadMemory<BYTE>(spawn + EQ_OFFSET_SPAWN_INFO_TYPE);
-        if (spawnType == EQ_SPAWN_TYPE_PLAYER)
+        int spawnType = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_TYPE);
+
+        // players
+        if (g_changeHeightPlayersIsEnabled == true)
         {
-            float height = EQ_ReadMemory<FLOAT>(spawn + EQ_OFFSET_SPAWN_INFO_HEIGHT);
-            if (height > g_changeHeightMaximum)
+            if (spawnType == EQ_SPAWN_TYPE_PLAYER)
             {
-                EQ_SetSpawnHeight(spawn, g_changeHeightMaximum);
-
-                spawn = EQ_GetNextSpawn(spawn); // next
-                continue;
-            }
-        }
-
-        // shrink player pets
-        bool isSpawnPlayerOwnedPet = false;
-
-        DWORD spawnPetOwnerSpawnId = EQ_ReadMemory<DWORD>(spawn + EQ_OFFSET_SPAWN_INFO_PET_OWNER_SPAWN_ID);
-        if (spawnPetOwnerSpawnId != 0)
-        {
-            DWORD spawnPetOwnerSpawnInfo = EQ_EQPlayerManager->GetSpawnByID(spawnPetOwnerSpawnId);
-            if (spawnPetOwnerSpawnInfo != NULL)
-            {
-                int spawnType = EQ_ReadMemory<BYTE>(spawnPetOwnerSpawnInfo + EQ_OFFSET_SPAWN_INFO_TYPE);
-                if (spawnType == EQ_SPAWN_TYPE_PLAYER)
+                float height = EQ_ReadMemory<float>(spawn + EQ_OFFSET_SPAWN_INFO_HEIGHT);
+                if (height > g_changeHeightPlayersSize)
                 {
-                    isSpawnPlayerOwnedPet = true;
+                    EQ_SetSpawnHeight(spawn, g_changeHeightPlayersSize);
+
+                    spawn = EQ_GetNextSpawn(spawn); // next
+                    continue;
                 }
             }
         }
 
-        if (spawnType == EQ_SPAWN_TYPE_NPC && isSpawnPlayerOwnedPet == true)
+        // pets
+        if (g_changeHeightPetsIsEnabled == true)
         {
-            EQ_SetSpawnHeight(spawn, g_changeHeightMinimum);
+            bool isSpawnPlayerOwnedPet = false;
+
+            uint32_t spawnIdPetOwner = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_INFO_PET_OWNER_SPAWN_ID);
+            if (spawnIdPetOwner != 0)
+            {
+                uint32_t spawnInfoPetOwner = EQ_EQPlayerManager->GetSpawnByID(spawnIdPetOwner);
+                if (spawnInfoPetOwner != NULL)
+                {
+                    int spawnTypePetOwner = EQ_ReadMemory<uint8_t>(spawnInfoPetOwner + EQ_OFFSET_SPAWN_INFO_TYPE);
+                    if (spawnTypePetOwner == EQ_SPAWN_TYPE_PLAYER)
+                    {
+                        isSpawnPlayerOwnedPet = true;
+                    }
+                }
+            }
+
+            if (spawnType == EQ_SPAWN_TYPE_NPC && isSpawnPlayerOwnedPet == true)
+            {
+                EQ_SetSpawnHeight(spawn, g_changeHeightPetsSize);
+            }
         }
 
         spawn = EQ_GetNextSpawn(spawn); // next

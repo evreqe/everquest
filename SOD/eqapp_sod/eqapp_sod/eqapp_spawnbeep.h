@@ -3,11 +3,11 @@
 bool g_spawnBeepIsEnabled = false;
 std::string g_spawnBeepName;
 
-void EQAPP_SpawnBeep_Execute(DWORD spawnInfo);
+void EQAPP_SpawnBeep_Execute(uint32_t spawnInfo);
 void EQAPP_SpawnBeep_Print();
 void EQAPP_SpawnBeep_Set(std::string spawnName);
 
-void EQAPP_SpawnBeep_Execute(DWORD spawnInfo)
+void EQAPP_SpawnBeep_Execute(uint32_t spawnInfo)
 {
     if (g_spawnBeepIsEnabled == false)
     {
@@ -19,17 +19,16 @@ void EQAPP_SpawnBeep_Execute(DWORD spawnInfo)
         return;
     }
 
-    char spawnName[EQ_SIZE_SPAWN_INFO_NAME] = {0};
-    memcpy(spawnName, (LPVOID)(spawnInfo + EQ_OFFSET_SPAWN_INFO_NAME), sizeof(spawnName));
+    std::string spawnName = EQ_GetSpawnName(spawnInfo);
 
-    if (strlen(spawnName) < EQ_SPAWN_NAME_LENGTH_MIN)
+    if (spawnName.size() < EQ_SPAWN_NAME_LENGTH_MIN)
     {
         return;
     }
 
     for (auto& noBeep : g_noBeepList)
     {
-        if (noBeep.size() != 0 && strcmp(spawnName, noBeep.c_str()) == 0)
+        if (noBeep.size() != 0 && spawnName == noBeep)
         {
             return;
         }
@@ -37,7 +36,7 @@ void EQAPP_SpawnBeep_Execute(DWORD spawnInfo)
 
     for (auto& namedSpawn : g_namedSpawnsList)
     {
-        if (namedSpawn.size() != 0 && strstr(spawnName, namedSpawn.c_str()) != NULL)
+        if (namedSpawn.size() != 0 && spawnName.find(namedSpawn) != std::string::npos)
         {
             EQAPP_Beep();
             break;
@@ -46,7 +45,7 @@ void EQAPP_SpawnBeep_Execute(DWORD spawnInfo)
 
     if (g_spawnBeepIsEnabled == true)
     {
-        if (g_spawnBeepName.size() != 0 && strstr(spawnName, g_spawnBeepName.c_str()) != NULL)
+        if (g_spawnBeepName.size() != 0 && spawnName.find(g_spawnBeepName) != std::string::npos)
         {
             EQAPP_Beep();
         }

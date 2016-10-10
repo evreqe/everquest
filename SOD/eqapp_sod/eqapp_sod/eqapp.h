@@ -22,23 +22,22 @@ BOOL __stdcall DllMain(HMODULE module, DWORD reason, LPVOID reserved);
 
 std::ios g_coutFlags(NULL);
 
-std::mt19937 g_randomEngine((unsigned int)std::chrono::high_resolution_clock::now().time_since_epoch().count());
+std::mt19937 g_randomEngine((uint32_t)std::chrono::high_resolution_clock::now().time_since_epoch().count());
 
 int g_killSwitchKey = VK_PAUSE;
 
 bool g_debugIsEnabled          = false;
 bool g_neverFrozenIsEnabled    = true;
-bool g_autoScreenshotIsEnabled = false; // TODO
 
-unsigned int g_videoModeWidth  = 1920;
-unsigned int g_videoModeHeight = 1080;
+uint32_t g_videoModeWidth  = 1920;
+uint32_t g_videoModeHeight = 1080;
 
 GLFWwindow* g_consoleWindow;
 ImVec4 g_consoleWindowClearColor = ImColor(0, 128, 96);
 HWND g_consoleWindowHwnd;
 const char* g_consoleWindowTitle = "EQC";
-unsigned int g_consoleWindowWidth  = 1440;
-unsigned int g_consoleWindowHeight = 900;
+uint32_t g_consoleWindowWidth  = 1440;
+uint32_t g_consoleWindowHeight = 900;
 
 bool g_movementSpeedHackIsEnabled = true;
 float g_movementSpeedHackModifier = EQ_MOVEMENT_SPEED_MODIFIER_SPIRIT_OF_WOLF;
@@ -50,11 +49,11 @@ float g_setTargetMaxDistance = 25.0f;
 int g_setRaceId = EQ_RACE_HUMAN;
 
 // TODO
-bool g_waypointBotIsEnabled = false;
-std::string g_waypointBotSpawnName;
-DWORD g_waypointBotSpawnInfo;
+//bool g_waypointBotIsEnabled = false;
+//std::string g_waypointBotSpawnName;
+//uint32_t g_waypointBotSpawnInfo;
 
-const std::vector<DWORD> g_importantWindowsList
+const std::vector<uint32_t> g_importantWindowsList
 {
     EQ_POINTER_CAAWnd,
     EQ_POINTER_CBankWnd,
@@ -74,3 +73,23 @@ const std::vector<DWORD> g_importantWindowsList
     EQ_POINTER_CTradeWnd,
     EQ_POINTER_CTrainWnd,
 };
+
+namespace EQApp
+{
+
+    typedef struct _Spawn
+    {
+        /* 0x00 */    uint32_t Unknown0x00;
+    } Spawn, *Spawn_ptr;
+
+    typedef struct _Item
+    {
+        /* 0x00 */    uint32_t Unknown0x00;
+    } Item, *Item_ptr;
+
+    typedef struct _ZoneActor
+    {
+        /* 0x00 */    uint32_t Unknown0x00;
+    } ZoneActor, *ZoneActor_ptr;
+
+}

@@ -28,8 +28,8 @@ std::string EQAPP_INI_ReadString(const char* filename, const char* section, cons
 bool EQAPP_IsAnImportantWindowOpen();
 
 void EQAPP_LootDebugInformation_Print();
-void EQAPP_ExecuteCmdDebugInformation_Print();
-void EQAPP_SpawnInformation_Print(DWORD spawnInfo);
+void EQAPP_ExecuteCommandDebugInformation_Print();
+void EQAPP_SpawnInformation_Print(uint32_t spawnInfo);
 void EQAPP_BankCurrency_Print();
 void EQAPP_CastRayToTarget_Print();
 void EQAPP_MeleeRangeToTarget_Print();
@@ -39,6 +39,8 @@ void EQAPP_OpenZoneMapFile();
 void EQAPP_PlaySound(const char* filename);
 void EQAPP_Beep();
 void EQAPP_DeleteFileContents(const char* filename);
+
+void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list);
 
 //****************************************************************************************************//
 
@@ -266,14 +268,14 @@ void EQAPP_LootDebugInformation_Print()
 {
     std::cout << "Loot Debug Information:" << std::endl;
 
-    DWORD lootWindow = EQ_ReadMemory<DWORD>(EQ_POINTER_CLootWnd);
+    uint32_t lootWindow = EQ_ReadMemory<uint32_t>(EQ_POINTER_CLootWnd);
     if (lootWindow == NULL)
     {
         std::cout << "Loot Window is NULL." << std::endl;
         return;
     }
 
-    DWORD lootWindowIsVisible = EQ_ReadMemory<BYTE>(lootWindow + EQ_OFFSET_WINDOW_IS_VISIBLE);
+    int lootWindowIsVisible = EQ_ReadMemory<uint8_t>(lootWindow + EQ_OFFSET_WINDOW_IS_VISIBLE);
     if (lootWindowIsVisible == 0)
     {
         std::cout << "Loot Window is NOT open." << std::endl;
@@ -282,14 +284,14 @@ void EQAPP_LootDebugInformation_Print()
 
     for (size_t i = 0; i < EQ_NUM_LOOT_WINDOW_SLOTS; i++)
     {
-        DWORD itemInfo = EQ_ReadMemory<DWORD>(lootWindow + (EQ_OFFSET_CLootWnd_ITEM_INFO_FIRST + (i * 4)));
+        uint32_t itemInfo = EQ_ReadMemory<uint32_t>(lootWindow + (EQ_OFFSET_CLootWnd_ITEM_INFO_FIRST + (i * 4)));
         if (itemInfo == NULL)
         {
             std::cout << "#" << i << ": item info is NULL" << std::endl;
             continue;
         }
 
-        PCHAR itemName = EQ_ReadMemory<PCHAR>(itemInfo + EQ_OFFSET_ITEM_INFO_NAME);
+        char* itemName = EQ_ReadMemory<char*>(itemInfo + EQ_OFFSET_ITEM_INFO_NAME);
         if (itemName == NULL)
         {
             std::cout << "#" << i << ": item name is NULL" << std::endl;
@@ -300,9 +302,9 @@ void EQAPP_LootDebugInformation_Print()
     }
 }
 
-void EQAPP_ExecuteCmdDebugInformation_Print()
+void EQAPP_ExecuteCommandDebugInformation_Print()
 {
-    std::cout << "ExecuteCmd Debug Information:" << std::endl;
+    std::cout << "ExecuteCommand Debug Information:" << std::endl;
 
     std::stringstream filePath;
     filePath << g_applicationName << "/executecmddebug.txt";
@@ -316,7 +318,7 @@ void EQAPP_ExecuteCmdDebugInformation_Print()
 
     for (size_t i = 0; i < EQ_NUM_EXECUTECMD; i++)
     {
-        std::string commandName = EQ_GetExecuteCmdName(i);
+        std::string commandName = EQ_GetExecuteCommandName(i);
 
         if (commandName.size() == 0)
         {
@@ -334,7 +336,7 @@ void EQAPP_ExecuteCmdDebugInformation_Print()
     file.close();
 }
 
-void EQAPP_SpawnInformation_Print(DWORD spawnInfo)
+void EQAPP_SpawnInformation_Print(uint32_t spawnInfo)
 {
     if (spawnInfo == NULL)
     {
@@ -347,15 +349,15 @@ void EQAPP_SpawnInformation_Print(DWORD spawnInfo)
     // name
 
     char spawnNumberedName[EQ_SIZE_SPAWN_INFO_NUMBERED_NAME] = {0};
-    memcpy(spawnNumberedName, (LPVOID)(spawnInfo + EQ_OFFSET_SPAWN_INFO_NUMBERED_NAME), sizeof(spawnNumberedName));
+    memcpy(spawnNumberedName, (void*)(spawnInfo + EQ_OFFSET_SPAWN_INFO_NUMBERED_NAME), sizeof(spawnNumberedName));
 
     std::cout << "NAME:  " << spawnNumberedName;
 
-    int spawnType = EQ_ReadMemory<BYTE>(spawnInfo + EQ_OFFSET_SPAWN_INFO_TYPE);
+    int spawnType = EQ_ReadMemory<uint8_t>(spawnInfo + EQ_OFFSET_SPAWN_INFO_TYPE);
     if (spawnType != EQ_SPAWN_TYPE_PLAYER)
     {
         char spawnName[EQ_SIZE_SPAWN_INFO_NAME] = {0};
-        memcpy(spawnName, (LPVOID)(spawnInfo + EQ_OFFSET_SPAWN_INFO_NAME), sizeof(spawnName));
+        memcpy(spawnName, (void*)(spawnInfo + EQ_OFFSET_SPAWN_INFO_NAME), sizeof(spawnName));
 
         std::cout << " (" << spawnName << ")";
     }
@@ -364,13 +366,13 @@ void EQAPP_SpawnInformation_Print(DWORD spawnInfo)
 
     // level
 
-    int spawnLevel = EQ_ReadMemory<BYTE>(spawnInfo + EQ_OFFSET_SPAWN_INFO_LEVEL);
+    int spawnLevel = EQ_ReadMemory<uint8_t>(spawnInfo + EQ_OFFSET_SPAWN_INFO_LEVEL);
 
     std::cout << "LEVEL: " << spawnLevel << std::endl;
 
     // guild
 
-    int spawnGuildId = EQ_ReadMemory<DWORD>(spawnInfo + EQ_OFFSET_SPAWN_INFO_GUILD_ID);
+    int spawnGuildId = EQ_ReadMemory<uint32_t>(spawnInfo + EQ_OFFSET_SPAWN_INFO_GUILD_ID);
 
     const char* spawnGuildName = EQ_EQ_Guilds.GetGuildNameById(spawnGuildId);
 
@@ -378,7 +380,7 @@ void EQAPP_SpawnInformation_Print(DWORD spawnInfo)
 
     // race
 
-    int spawnRace = EQ_ReadMemory<DWORD>(spawnInfo + EQ_OFFSET_SPAWN_INFO_RACE);
+    int spawnRace = EQ_ReadMemory<uint32_t>(spawnInfo + EQ_OFFSET_SPAWN_INFO_RACE);
 
     const char* spawnRaceDescription = EQ_CEverQuest->GetRaceDesc(spawnRace);
 
@@ -386,7 +388,7 @@ void EQAPP_SpawnInformation_Print(DWORD spawnInfo)
 
     // class
 
-    int spawnClass = EQ_ReadMemory<BYTE>(spawnInfo + EQ_OFFSET_SPAWN_INFO_CLASS);
+    int spawnClass = EQ_ReadMemory<uint8_t>(spawnInfo + EQ_OFFSET_SPAWN_INFO_CLASS);
 
     const char* spawnClassDescription = EQ_CEverQuest->GetClassDesc(spawnClass);
 
@@ -394,7 +396,7 @@ void EQAPP_SpawnInformation_Print(DWORD spawnInfo)
 
     // deity
 
-    int spawnDeity = EQ_ReadMemory<BYTE>(spawnInfo + EQ_OFFSET_SPAWN_INFO_DEITY);
+    int spawnDeity = EQ_ReadMemory<uint8_t>(spawnInfo + EQ_OFFSET_SPAWN_INFO_DEITY);
 
     const char* spawnDeityDescription = EQ_CEverQuest->GetDeityDesc(spawnDeity);
 
@@ -409,16 +411,16 @@ void EQAPP_SpawnInformation_Print(DWORD spawnInfo)
 
 void EQAPP_BankCurrency_Print()
 {
-    DWORD charInfo = EQ_GetCharInfo();
+    uint32_t charInfo = EQ_GetCharInfo();
     if (charInfo == NULL)
     {
         return;
     }
 
-    DWORD bankPlatinum = EQ_ReadMemory<DWORD>(charInfo + EQ_OFFSET_CHAR_INFO_BANK_PLATINUM);
-    DWORD bankGold     = EQ_ReadMemory<DWORD>(charInfo + EQ_OFFSET_CHAR_INFO_BANK_GOLD);
-    DWORD bankSilver   = EQ_ReadMemory<DWORD>(charInfo + EQ_OFFSET_CHAR_INFO_BANK_SILVER);
-    DWORD bankCopper   = EQ_ReadMemory<DWORD>(charInfo + EQ_OFFSET_CHAR_INFO_BANK_COPPER);
+    uint32_t bankPlatinum = EQ_ReadMemory<uint32_t>(charInfo + EQ_OFFSET_CHAR_INFO_BANK_PLATINUM);
+    uint32_t bankGold     = EQ_ReadMemory<uint32_t>(charInfo + EQ_OFFSET_CHAR_INFO_BANK_GOLD);
+    uint32_t bankSilver   = EQ_ReadMemory<uint32_t>(charInfo + EQ_OFFSET_CHAR_INFO_BANK_SILVER);
+    uint32_t bankCopper   = EQ_ReadMemory<uint32_t>(charInfo + EQ_OFFSET_CHAR_INFO_BANK_COPPER);
 
     std::cout << "You have "
               << bankPlatinum << "p "
@@ -430,19 +432,19 @@ void EQAPP_BankCurrency_Print()
 
 void EQAPP_CastRayToTarget_Print()
 {
-    DWORD playerSpawn = EQ_GetPlayerSpawn();
+    uint32_t playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn != NULL)
     {
-        DWORD targetSpawn = EQ_GetTargetSpawn();
+        uint32_t targetSpawn = EQ_GetTargetSpawn();
         if (targetSpawn == NULL)
         {
             EQAPP_PrintErrorMessage(__FUNCTION__, "target is NULL");
             return;
         }
 
-        FLOAT targetY = EQ_GetSpawnY(targetSpawn);
-        FLOAT targetX = EQ_GetSpawnX(targetSpawn);
-        FLOAT targetZ = EQ_GetSpawnZ(targetSpawn);
+        float targetY = EQ_GetSpawnY(targetSpawn);
+        float targetX = EQ_GetSpawnX(targetSpawn);
+        float targetZ = EQ_GetSpawnZ(targetSpawn);
 
         int result = EQ_CastRay(playerSpawn, targetY, targetX, targetZ);
 
@@ -462,17 +464,17 @@ void EQAPP_CastRayToTarget_Print()
 
 void EQAPP_MeleeRangeToTarget_Print()
 {
-    DWORD playerSpawn = EQ_GetPlayerSpawn();
+    uint32_t playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn != NULL)
     {
-        DWORD targetSpawn = EQ_GetTargetSpawn();
+        uint32_t targetSpawn = EQ_GetTargetSpawn();
         if (targetSpawn == NULL)
         {
             EQAPP_PrintErrorMessage(__FUNCTION__, "target is NULL");
             return;
         }
 
-        FLOAT meleeRange = EQ_GetMeleeRange(playerSpawn, targetSpawn);
+        float meleeRange = EQ_GetMeleeRange(playerSpawn, targetSpawn);
 
         std::cout << "Melee Range to Target: " << meleeRange << std::endl;
     }
@@ -480,7 +482,7 @@ void EQAPP_MeleeRangeToTarget_Print()
 
 void EQAPP_ZoneInformation_Print()
 {
-    DWORD zoneId = EQ_GetZoneId();
+    uint32_t zoneId = EQ_GetZoneId();
 
     std::string zoneLongName = EQ_GetZoneLongName();
     if (zoneLongName.size() == 0)
@@ -540,6 +542,40 @@ void EQAPP_DeleteFileContents(const char* filename)
 {
     std::fstream file;
     file.open(filename, std::ios::out | std::ios::trunc);
+    file.close();
+}
+
+void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list)
+{
+    std::stringstream filePath;
+    filePath << g_applicationName << "/" << filename;
+
+    std::string filePathStr = filePath.str();
+
+    std::ifstream file;
+    file.open(filePathStr.c_str(), std::ios::in);
+    if (file.is_open() == false)
+    {
+        std::stringstream ss;
+        ss << "failed to open file: " << filePathStr;
+
+        EQAPP_PrintErrorMessage(__FUNCTION__, ss.str());
+        return;
+    }
+
+    std::string line;
+    while (std::getline(file, line))
+    {
+        if (line.size() == 0)
+        {
+            continue;
+        }
+
+        std::cout << filename << ": " << line << std::endl;
+
+        list.push_back(line);
+    }
+
     file.close();
 }
 

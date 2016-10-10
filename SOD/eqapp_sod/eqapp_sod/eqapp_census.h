@@ -1,8 +1,8 @@
 #pragma once
 
 bool g_censusIsEnabled = false;
-DWORD g_censusTimer = 0;
-DWORD g_censusTimerDelay = 1000;
+uint32_t g_censusTimer = 0;
+uint32_t g_censusTimerDelay = 1000;
 
 void EQAPP_Census_On();
 void EQAPP_Census_Off();
@@ -71,7 +71,7 @@ void EQAPP_Census_Execute()
 
     std::cout << "Census: " << ssCommand.str() << std::endl;
 
-    DWORD playerSpawn = EQ_GetPlayerSpawn();
+    uint32_t playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)
     {
         EQAPP_PrintErrorMessage(__FUNCTION__, "player spawn is NULL");

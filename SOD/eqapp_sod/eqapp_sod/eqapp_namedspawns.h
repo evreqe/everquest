@@ -2,11 +2,11 @@
 
 bool g_namedSpawnsIsEnabled = true;
 std::vector<std::string> g_namedSpawnsList;
-unsigned int g_namedSpawnsX = 1200;
-unsigned int g_namedSpawnsY = 28;
+uint32_t g_namedSpawnsX = 1200;
+uint32_t g_namedSpawnsY = 28;
 float g_namedSpawnsWidth  = 256.0f;
 float g_namedSpawnsHeight = 512.0f;
-DWORD g_namedSpawnsColor = 0xFFFFFFFF;
+uint32_t g_namedSpawnsColorARGB = 0xFFFFFFFF;
 
 void EQAPP_NamedSpawns_Load();
 void EQAPP_NamedSpawns_Execute();
@@ -16,44 +16,6 @@ void EQAPP_NamedSpawns_Load()
 {
     std::cout << "Loading Named Spawns..." << std::endl;
 
-    g_namedSpawnsList.clear();
-
-    std::stringstream filePath;
-    std::string filePathStr;
-    std::ifstream file;
-    std::string line;
-
-    filePath << g_applicationName << "/namedspawns.txt";
-
-    filePathStr = filePath.str();
-
-    file.open(filePathStr.c_str(), std::ios::in);
-    if (file.is_open() == false)
-    {
-        std::stringstream ss;
-        ss << "failed to open file: " << filePathStr;
-
-        EQAPP_PrintErrorMessage(__FUNCTION__, ss.str());
-        return;
-    }
-
-    while (std::getline(file, line))
-    {
-        if (line.size() == 0)
-        {
-            continue;
-        }
-
-        std::cout << __FUNCTION__ << ": "<< line << std::endl;
-
-        g_namedSpawnsList.push_back(line);
-    }
-
-    file.close();
-
-    filePath.str(std::string());
-    filePath.clear();
-
     std::string zoneShortName = EQ_GetZoneShortName();
     if (zoneShortName.size() == 0)
     {
@@ -61,31 +23,14 @@ void EQAPP_NamedSpawns_Load()
         return;
     }
 
-    filePath << g_applicationName << "/namedspawns/" << zoneShortName << ".txt";
+    g_namedSpawnsList.clear();
 
-    file.open(filePath.str().c_str(), std::ios::in);
-    if (file.is_open() == false)
-    {
-        std::stringstream ss;
-        ss << "failed to open file: " << filePath.str();
+    EQAPP_ReadFileToList("namedspawns.txt", g_namedSpawnsList);
 
-        EQAPP_PrintErrorMessage(__FUNCTION__, ss.str());
-        return;
-    }
+    std::stringstream filePath;
+    filePath << "namedspawns/" << zoneShortName << ".txt";
 
-    while (std::getline(file, line))
-    {
-        if (line.size() == 0)
-        {
-            continue;
-        }
-
-        std::cout << __FUNCTION__ << ": "<< line << std::endl;
-
-        g_namedSpawnsList.push_back(line);
-    }
-
-    file.close();
+    EQAPP_ReadFileToList(filePath.str().c_str(), g_namedSpawnsList);
 }
 
 void EQAPP_NamedSpawns_Execute()
@@ -95,10 +40,10 @@ void EQAPP_NamedSpawns_Execute()
         return;
     }
 
-    unsigned int fontSize   = 2;
-    unsigned int fontHeight = EQ_GetFontHeight(fontSize);
+    uint32_t fontSize   = 2;
+    uint32_t fontHeight = EQ_GetFontHeight(fontSize);
 
-    unsigned int numSpawns = 0;
+    uint32_t numSpawns = 0;
 
     if (g_namedSpawnsWidth > 0 && g_namedSpawnsHeight > 0)
     {
@@ -107,36 +52,35 @@ void EQAPP_NamedSpawns_Execute()
 
     std::stringstream ssDrawText;
 
-    DWORD spawn = EQ_GetFirstSpawn();
+    uint32_t spawn = EQ_GetFirstSpawn();
     while (spawn)
     {
-        int spawnType = EQ_ReadMemory<BYTE>(spawn + EQ_OFFSET_SPAWN_INFO_TYPE);
+        int spawnType = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_TYPE);
         if (spawnType != EQ_SPAWN_TYPE_NPC)
         {
             spawn = EQ_GetNextSpawn(spawn); // next
             continue;
         }
 
-        int spawnPetOwnerSpawnId = EQ_ReadMemory<DWORD>(spawn + EQ_OFFSET_SPAWN_INFO_PET_OWNER_SPAWN_ID);
-        if (spawnPetOwnerSpawnId != 0)
+        int spawnIdPetOwner = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_INFO_PET_OWNER_SPAWN_ID);
+        if (spawnIdPetOwner != 0)
         {
             spawn = EQ_GetNextSpawn(spawn); // next
             continue;
         }
 
-        int spawnLevel = EQ_ReadMemory<BYTE>(spawn + EQ_OFFSET_SPAWN_INFO_LEVEL);
+        int spawnLevel = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_LEVEL);
         if (spawnLevel < EQ_LEVEL_MIN || spawnLevel > EQ_LEVEL_MAX)
         {
             spawn = EQ_GetNextSpawn(spawn); // next
             continue;
         }
 
-        char spawnName[EQ_SIZE_SPAWN_INFO_NAME] = {0};
-        memcpy(spawnName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_INFO_NAME), sizeof(spawnName));
+        std::string spawnName = EQ_GetSpawnName(spawn);
 
         for (auto& namedSpawn : g_namedSpawnsList)
         {
-            if (strstr(spawnName, namedSpawn.c_str()) != NULL)
+            if (spawnName.find(namedSpawn) != std::string::npos)
             {
                 ssDrawText << spawnName << "\n";
                 numSpawns++;
@@ -147,7 +91,7 @@ void EQAPP_NamedSpawns_Execute()
         spawn = EQ_GetNextSpawn(spawn); // next
     }
 
-    EQ_DrawText(ssDrawText.str().c_str(), g_namedSpawnsX, g_namedSpawnsY, g_namedSpawnsColor, fontSize);
+    EQ_DrawText(ssDrawText.str().c_str(), g_namedSpawnsX, g_namedSpawnsY, g_namedSpawnsColorARGB, fontSize);
 
     if (numSpawns > 0)
     {
@@ -165,9 +109,9 @@ void EQAPP_NamedSpawns_Print()
 
     size_t index = 1;
 
-    for (auto& namedSpawn : g_namedSpawnsList)
+    for (auto& text : g_namedSpawnsList)
     {
-        std::cout << "#" << index << ": " << namedSpawn << std::endl;
+        std::cout << "#" << index << ": " << text << std::endl;
 
         index++;
     }

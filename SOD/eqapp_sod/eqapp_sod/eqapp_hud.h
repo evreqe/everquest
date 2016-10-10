@@ -1,8 +1,8 @@
 #pragma once
 
 bool g_hudIsEnabled = true;
-unsigned int g_hudX = 5;
-unsigned int g_hudY = 28;
+uint32_t g_hudX = 5;
+uint32_t g_hudY = 28;
 float g_hudWidth  = 127.0f;
 float g_hudHeight = 0.0f;
 DWORD g_hudTextColor = 0xFFFFFFFF;
@@ -21,10 +21,10 @@ void EQAPP_Hud_Execute()
 
     EQ_DrawQuad((float)g_hudX, (float)g_hudY, width, height, EQ_TOOLTIP_COLOR);
 
-    unsigned int fontSize   = 2;
-    unsigned int fontHeight = EQ_GetFontHeight(fontSize);
+    uint32_t fontSize   = 2;
+    uint32_t fontHeight = EQ_GetFontHeight(fontSize);
 
-    unsigned int numDrawText = 0;
+    uint32_t numDrawText = 0;
 
     std::stringstream ssDrawText;
 

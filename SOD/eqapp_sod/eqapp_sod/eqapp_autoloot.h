@@ -2,8 +2,8 @@
 
 bool g_autoLootIsEnabled = false;
 std::vector<std::string> g_autoLootList;
-DWORD g_autoLootTimer = 0;
-DWORD g_autoLootTimerDelay = 500;
+uint32_t g_autoLootTimer = 0;
+uint32_t g_autoLootTimerDelay = 500;
 
 void EQAPP_AutoLoot_Execute();
 void EQAPP_AutoLoot_Toggle();

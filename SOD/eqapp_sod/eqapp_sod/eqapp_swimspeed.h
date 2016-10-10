@@ -2,8 +2,8 @@
 
 bool g_swimSpeedHackIsEnabled = true;
 float g_swimSpeedHackModifier = 0.0f;
-DWORD g_swimSpeedHackTimer = 0;
-DWORD g_swimSpeedHackTimerDelay = 1000;
+uint32_t g_swimSpeedHackTimer = 0;
+uint32_t g_swimSpeedHackTimerDelay = 1000;
 
 void EQAPP_SwimSpeed_On();
 void EQAPP_SwimSpeed_Off();
@@ -21,7 +21,7 @@ void EQAPP_SwimSpeed_Off()
     g_swimSpeedHackIsEnabled = false;
     EQAPP_PrintBool("Swim Speed Hack", g_swimSpeedHackIsEnabled);
 
-    EQ_WriteMemory<FLOAT>(EQ_SWIM_SPEED_MULTIPLIER, EQ_SWIM_SPEED_MODIFIER_DEFAULT);
+    EQ_WriteMemory<float>(EQ_SWIM_SPEED_MULTIPLIER, EQ_SWIM_SPEED_MODIFIER_DEFAULT);
 }
 
 void EQAPP_SwimSpeed_Toggle()
@@ -45,10 +45,10 @@ void EQAPP_SwimSpeed_Execute()
 
     if (g_swimSpeedHackIsEnabled == false)
     {
-        EQ_WriteMemory<FLOAT>(EQ_SWIM_SPEED_MULTIPLIER, EQ_SWIM_SPEED_MODIFIER_DEFAULT);
+        EQ_WriteMemory<float>(EQ_SWIM_SPEED_MULTIPLIER, EQ_SWIM_SPEED_MODIFIER_DEFAULT);
         return;
     }
 
-    EQ_WriteMemory<FLOAT>(EQ_SWIM_SPEED_MULTIPLIER, EQ_SWIM_SPEED_MODIFIER_DEFAULT + g_swimSpeedHackModifier);
+    EQ_WriteMemory<float>(EQ_SWIM_SPEED_MULTIPLIER, EQ_SWIM_SPEED_MODIFIER_DEFAULT + g_swimSpeedHackModifier);
 }
 

@@ -1,23 +1,26 @@
 #pragma once
 
-typedef struct _EQAPPMEMORY
+namespace EQApp
 {
-    unsigned int index;
-    std::string name;
-    std::string filename;
-    std::string description;
-    bool isEnabled;
-} EQAPPMEMORY, *PEQAPPMEMORY;
+    typedef struct _Memory
+    {
+        uint32_t index;
+        std::string name;
+        std::string filename;
+        std::string description;
+        bool isEnabled;
+    } Memory, *Memory_ptr;
+}
 
 bool g_memoryIsEnabled = true;
-std::vector<EQAPPMEMORY> g_memoryList;
-unsigned int g_memoryFilesMax = 255;
-unsigned int g_memoryAddressesMax = 8;
+std::vector<EQApp::Memory> g_memoryList;
+uint32_t g_memoryFilesMax = 255;
+uint32_t g_memoryAddressesMax = 8;
 
 void EQAPP_Memory_Load();
 void EQAPP_Memory_Unload();
-void EQAPP_Memory_Set(PEQAPPMEMORY pMemory, bool bEnable);
-void EQAPP_Memory_ToggleByIndex(unsigned int index);
+void EQAPP_Memory_Set(EQApp::Memory* pMemory, bool bEnable);
+void EQAPP_Memory_ToggleByIndex(uint32_t index);
 void EQAPP_Memory_Print();
 
 void EQAPP_Memory_Load()
@@ -58,7 +61,7 @@ void EQAPP_Memory_Load()
         std::stringstream ssEnabled;
         ssEnabled << "bEnabled" << i;
 
-        EQAPPMEMORY memory;
+        EQApp::Memory memory;
         memory.isEnabled = EQAPP_INI_ReadBool(filePathIniCStr, "Memory", ssEnabled.str().c_str(), 0);
 
         std::cout << __FUNCTION__ << ": " << filename << " isEnabled: " << std::boolalpha << memory.isEnabled << std::noboolalpha << std::endl;
@@ -92,7 +95,7 @@ void EQAPP_Memory_Unload()
     }
 }
 
-void EQAPP_Memory_Set(PEQAPPMEMORY pMemory, bool bEnable)
+void EQAPP_Memory_Set(EQApp::Memory* pMemory, bool bEnable)
 {
     if (pMemory == NULL)
     {
@@ -169,12 +172,12 @@ void EQAPP_Memory_Set(PEQAPPMEMORY pMemory, bool bEnable)
         std::vector<std::string> bytesTokens;
         for (std::string bytesToken; std::getline(bytesSplit, bytesToken, ' '); bytesTokens.push_back(bytesToken));
 
-        BYTE value[256];
+        unsigned char value[256];
         size_t valueSize = 0;
 
         for (auto& token : bytesTokens)
         {
-            value[valueSize] = (BYTE)(std::stoul(token, nullptr, 16));
+            value[valueSize] = (unsigned char)(std::stoul(token, nullptr, 16));
             valueSize++;
         }
 
@@ -188,7 +191,7 @@ void EQAPP_Memory_Set(PEQAPPMEMORY pMemory, bool bEnable)
     }
 }
 
-void EQAPP_Memory_ToggleByIndex(unsigned int index)
+void EQAPP_Memory_ToggleByIndex(uint32_t index)
 {
     if (index > (g_memoryList.size() - 1))
     {
@@ -199,7 +202,7 @@ void EQAPP_Memory_ToggleByIndex(unsigned int index)
         return;
     }
 
-    PEQAPPMEMORY pMemory = &g_memoryList.at(index);
+    EQApp::Memory* pMemory = &g_memoryList.at(index);
     EQ_ToggleBool(pMemory->isEnabled);
     EQAPP_Memory_Set(pMemory, pMemory->isEnabled);
     EQAPP_PrintBool(pMemory->name.c_str(), pMemory->isEnabled);

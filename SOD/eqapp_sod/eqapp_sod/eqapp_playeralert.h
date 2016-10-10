@@ -1,14 +1,14 @@
 #pragma once
 
 bool g_playerAlertIsEnabled = false;
-unsigned int g_playerAlertMinimumNumPlayersInZone = 1;
-DWORD g_playerAlertTimer = 0;
-DWORD g_playerAlertTimerDelay = 1000;
-DWORD g_playerAlertTimerDelayInSeconds = 1;
+uint32_t g_playerAlertMinimumNumPlayersInZone = 1;
+uint32_t g_playerAlertTimer = 0;
+uint32_t g_playerAlertTimerDelay = 1000;
+uint32_t g_playerAlertTimerDelayInSeconds = 1;
 
 void EQAPP_PlayerAlert_Execute();
 void EQAPP_PlayerAlert_Print();
-void EQAPP_PlayerAlert_Set(unsigned int minimumNumPlayersInZone, DWORD timerDelayInSeconds);
+void EQAPP_PlayerAlert_Set(uint32_t minimumNumPlayersInZone, uint32_t timerDelayInSeconds);
 
 void EQAPP_PlayerAlert_Execute()
 {
@@ -39,11 +39,11 @@ void EQAPP_PlayerAlert_Print()
     std::cout << "Player Alert: " <<  g_playerAlertMinimumNumPlayersInZone << " (" << g_playerAlertTimerDelayInSeconds << " second(s))" << std::endl;
 }
 
-void EQAPP_PlayerAlert_Set(unsigned int minimumNumPlayersInZone, DWORD timerDelayInSeconds)
+void EQAPP_PlayerAlert_Set(uint32_t minimumNumPlayersInZone, uint32_t timerDelayInSeconds)
 {
     g_playerAlertMinimumNumPlayersInZone = minimumNumPlayersInZone;
 
-    g_playerAlertTimerDelay = (DWORD)(timerDelayInSeconds * 1000); // convert seconds to milliseconds
+    g_playerAlertTimerDelay = (uint32_t)(timerDelayInSeconds * 1000); // convert seconds to milliseconds
 
     g_playerAlertTimerDelayInSeconds = timerDelayInSeconds;
 }

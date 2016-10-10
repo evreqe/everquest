@@ -106,7 +106,7 @@ struct EQAPPIMGUIConsoleWindow
 
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 1));
 
-        //unsigned int itemStart = 0;
+        //uint32_t itemStart = 0;
         //if (m_items.Size > 1000)
         //{
             //itemStart = m_items.Size - 1000;

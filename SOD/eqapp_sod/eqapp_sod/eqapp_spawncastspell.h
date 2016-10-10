@@ -1,21 +1,24 @@
 #pragma once
 
-typedef struct _EQAPPSPAWNCASTSPELL
+namespace EQApp
 {
-    DWORD spawnInfo;
-    std::string spellName;
-    DWORD spellCastTime;
-    DWORD timer = 0;
-} EQAPPSPAWNCASTSPELL, *PEQAPPSPAWNCASTSPELL;
+    typedef struct _SpawnCastSpell
+    {
+        uint32_t spawnInfo;
+        std::string spellName;
+        uint32_t spellCastTime;
+        uint32_t timer = 0;
+    } SpawnCastSpell, *SpawnCastSpell_ptr;
 
-typedef std::shared_ptr<EQAPPSPAWNCASTSPELL> SPEQAPPSPAWNCASTSPELL;
+    typedef std::shared_ptr<EQApp::SpawnCastSpell> SpawnCastSpell_sharedptr;
+}
 
 bool g_spawnCastSpellIsEnabled = true;
-std::vector<SPEQAPPSPAWNCASTSPELL> g_spawnCastSpellList;
-DWORD g_spawnCastSpellTimerDelay = 5000;
+std::vector<EQApp::SpawnCastSpell_sharedptr> g_spawnCastSpellList;
+uint32_t g_spawnCastSpellTimerDelay = 5000;
 
 void EQAPP_SpawnCastSpell_Execute();
-void EQAPP_SpawnCastSpell_Add(DWORD spawnInfo, DWORD spellId, DWORD spellCastTime);
+void EQAPP_SpawnCastSpell_Add(uint32_t spawnInfo, uint32_t spellId, uint32_t spellCastTime);
 
 void EQAPP_SpawnCastSpell_Execute()
 {
@@ -29,23 +32,23 @@ void EQAPP_SpawnCastSpell_Execute()
         return;
     }
 
-    DWORD currentTime = EQ_GetTimer();
+    uint32_t currentTime = EQ_GetTimer();
 
     for (auto spawnCastSpellListIterator = g_spawnCastSpellList.begin(); spawnCastSpellListIterator != g_spawnCastSpellList.end(); spawnCastSpellListIterator++)
     {
-        PEQAPPSPAWNCASTSPELL spawnCastSpell = spawnCastSpellListIterator->get();
+        EQApp::SpawnCastSpell* spawnCastSpell = spawnCastSpellListIterator->get();
         if (spawnCastSpell == nullptr)
         {
             continue;
         }
 
-        DWORD delay = spawnCastSpell->spellCastTime;
+        uint32_t delay = spawnCastSpell->spellCastTime;
         if (delay < g_spawnCastSpellTimerDelay)
         {
             delay = g_spawnCastSpellTimerDelay;
         }
 
-        DWORD spawnStandingState = EQ_ReadMemory<BYTE>(spawnCastSpell->spawnInfo + EQ_OFFSET_SPAWN_INFO_STANDING_STATE);
+        int spawnStandingState = EQ_ReadMemory<uint8_t>(spawnCastSpell->spawnInfo + EQ_OFFSET_SPAWN_INFO_STANDING_STATE);
 
         if
         (
@@ -59,7 +62,7 @@ void EQAPP_SpawnCastSpell_Execute()
     }
 }
 
-void EQAPP_SpawnCastSpell_Add(DWORD spawnInfo, DWORD spellId, DWORD spellCastTime)
+void EQAPP_SpawnCastSpell_Add(uint32_t spawnInfo, uint32_t spellId, uint32_t spellCastTime)
 {
     if (spawnInfo == NULL)
     {
@@ -83,7 +86,7 @@ void EQAPP_SpawnCastSpell_Add(DWORD spawnInfo, DWORD spellId, DWORD spellCastTim
         }
     }
 
-    SPEQAPPSPAWNCASTSPELL spawnCastSpell = std::make_shared<EQAPPSPAWNCASTSPELL>();
+    EQApp::SpawnCastSpell_sharedptr spawnCastSpell = std::make_shared<EQApp::SpawnCastSpell>();
     spawnCastSpell->spawnInfo     = spawnInfo;
     spawnCastSpell->spellName     = spellName;
     spawnCastSpell->spellCastTime = spellCastTime;

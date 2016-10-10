@@ -2,8 +2,8 @@
 
 bool g_drawDistanceIsEnabled = true;
 float g_drawDistance = 1000.0f;
-DWORD g_drawDistanceTimer = 0;
-DWORD g_drawDistanceTimerDelay = 1000;
+uint32_t g_drawDistanceTimer = 0;
+uint32_t g_drawDistanceTimerDelay = 1000;
 
 void EQAPP_DrawDistance_Execute();
 void EQAPP_DrawDistance_Print();

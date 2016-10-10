@@ -1,8 +1,8 @@
 #pragma once
 
 bool g_replaceRacesIsEnabled = true;
-DWORD g_replaceRacesTimer = 0;
-DWORD g_replaceRacesTimerDelay = 1000;
+uint32_t g_replaceRacesTimer = 0;
+uint32_t g_replaceRacesTimerDelay = 1000;
 
 void EQAPP_ReplaceRaces_Execute();
 
@@ -18,14 +18,16 @@ void EQAPP_ReplaceRaces_Execute()
         return;
     }
 
-    DWORD playerSpawn = EQ_GetPlayerSpawn();
+    uint32_t playerSpawn = EQ_GetPlayerSpawn();
 
-    DWORD spawn = EQ_GetFirstSpawn();
+    uint32_t spawn = EQ_GetFirstSpawn();
     while (spawn)
     {
-        int spawnGender = EQ_ReadMemory<BYTE>(playerSpawn + EQ_OFFSET_SPAWN_INFO_GENDER);
+        int spawnType = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_TYPE);
 
-        int spawnRace = EQ_ReadMemory<DWORD>(playerSpawn + EQ_OFFSET_SPAWN_INFO_RACE);
+        int spawnGender = EQ_ReadMemory<uint8_t>(playerSpawn + EQ_OFFSET_SPAWN_INFO_GENDER);
+
+        uint32_t spawnRace = EQ_ReadMemory<uint32_t>(playerSpawn + EQ_OFFSET_SPAWN_INFO_RACE);
 
         if (spawnRace == EQ_RACE_INVISIBLE_MAN)
         {
@@ -36,7 +38,7 @@ void EQAPP_ReplaceRaces_Execute()
             EQ_SetSpawnForm(spawn, EQ_RACE_SKELETON2, spawnGender);
         }
 
-        if (spawn == playerSpawn)
+        if (spawnType == EQ_SPAWN_TYPE_PLAYER)
         {
             if (spawnRace == EQ_RACE_CHOKADAI)
             {

@@ -190,45 +190,25 @@ void EQAPP_InterpretCommand(const char* command)
     {
         std::cout << "test" << std::endl;
 
-        //DWORD playerSpawn = EQ_GetPlayerSpawn();
-        //if (playerSpawn == NULL)
-        //{
-            //return;
-        //}
-
-        //FLOAT playerY = EQ_GetSpawnY(playerSpawn);
-        //FLOAT playerX = EQ_GetSpawnX(playerSpawn);
-        //FLOAT playerZ = EQ_GetSpawnZ(playerSpawn);
-
-        //unsigned int waypointIndex = EQAPP_Waypoint_GetIndexNearestToLocation(playerY, playerX, playerZ);
-
-        //std::cout << "nearest waypoint index: " << waypointIndex << std::endl;
-
-        //PEQAPPWAYPOINT waypoint = EQAPP_Waypoint_GetByIndex(waypointIndex);
-        //if (waypoint != NULL)
-        //{
-            //EQ_TurnPlayerTowardsLocation(waypoint->y, waypoint->x);
-        //}
-
-        // --
-
-        //DWORD mapViewMap = EQ_GetMapViewMap();
-        //if (mapViewMap == NULL)
-        //{
-            //return;
-        //}
-
-        //((MapViewMap*)mapViewMap)->AddLabel(-playerX, -playerY, playerZ, 0xFFFF0000, 2, "TESTING123");
-
-        //--
-
-        DWORD playerSpawn = EQ_GetPlayerSpawn();
+        uint32_t playerSpawn = EQ_GetPlayerSpawn();
         if (playerSpawn == NULL)
         {
             return;
         }
 
-        EQ_SetSpawnForm(playerSpawn, EQ_RACE_IKSAR, EQ_GENDER_MALE);
+        float playerY = EQ_GetSpawnY(playerSpawn);
+        float playerX = EQ_GetSpawnX(playerSpawn);
+        float playerZ = EQ_GetSpawnZ(playerSpawn);
+
+        uint32_t waypointIndex = EQAPP_Waypoint_GetIndexNearestToLocation(playerY, playerX, playerZ);
+
+        std::cout << "nearest waypoint index: " << waypointIndex << std::endl;
+
+        EQApp::Waypoint* waypoint = EQAPP_Waypoint_GetByIndex(waypointIndex);
+        if (waypoint != NULL)
+        {
+            EQ_TurnPlayerTowardsLocation(waypoint->y, waypoint->x);
+        }
 
         return;
     }
@@ -244,7 +224,7 @@ void EQAPP_InterpretCommand(const char* command)
     // print execute command debug information
     if (strcmp(command, "//executecmddebug") == 0 || strcmp(command, "//ecd") == 0)
     {
-        EQAPP_ExecuteCmdDebugInformation_Print();
+        EQAPP_ExecuteCommandDebugInformation_Print();
         return;
     }
 
@@ -253,7 +233,7 @@ void EQAPP_InterpretCommand(const char* command)
     {
         char commandEx[128];
 
-        unsigned int commandIndex = 0;
+        uint32_t commandIndex = 0;
 
         int result = sscanf_s(command, "%s %d", commandEx, sizeof(commandEx), &commandIndex);
         if (result == 2)
@@ -264,13 +244,13 @@ void EQAPP_InterpretCommand(const char* command)
                 return;
             }
 
-            std::string commandName = EQ_GetExecuteCmdName(commandIndex);
+            std::string commandName = EQ_GetExecuteCommandName(commandIndex);
 
             if (commandName.size() > 0)
             {
-                EQ_ExecuteCmd(commandIndex, 0, 0);
+                EQ_ExecuteCommand(commandIndex, 0, 0);
 
-                std::cout << "ExecuteCmd: " << commandName << " (" << commandIndex << ")" << std::endl;
+                std::cout << "ExecuteCommand: " << commandName << " (" << commandIndex << ")" << std::endl;
             }
         }
 
@@ -382,7 +362,7 @@ void EQAPP_InterpretCommand(const char* command)
     {
         char commandEx[128];
 
-        unsigned int spellId = 0;
+        uint32_t spellId = 0;
 
         int result = sscanf_s(command, "%s %d", commandEx, sizeof(commandEx), &spellId);
         if (result == 2)
@@ -797,7 +777,7 @@ void EQAPP_InterpretCommand(const char* command)
     {
         char commandEx[128];
 
-        unsigned int raceId = 0;
+        uint32_t raceId = 0;
 
         int result = sscanf_s(command, "%s %d", commandEx, sizeof(commandEx), &raceId);
         if (result == 2)
@@ -809,7 +789,7 @@ void EQAPP_InterpretCommand(const char* command)
                 return;
             }
 
-            int spawnGender = EQ_ReadMemory<BYTE>(playerSpawn + EQ_OFFSET_SPAWN_INFO_GENDER);
+            int spawnGender = EQ_ReadMemory<uint8_t>(playerSpawn + EQ_OFFSET_SPAWN_INFO_GENDER);
 
             EQ_SetSpawnForm(playerSpawn, raceId, spawnGender);
         }
@@ -929,7 +909,7 @@ void EQAPP_InterpretCommand(const char* command)
     {
         char commandEx[128];
 
-        unsigned int index = 0;
+        uint32_t index = 0;
 
         int result = sscanf_s(command, "%s %d", commandEx, sizeof(commandEx), &index);
         if (result == 2)
@@ -968,8 +948,8 @@ void EQAPP_InterpretCommand(const char* command)
     {
         char commandEx[128];
 
-        unsigned int buttonNumber        = 0;
-        unsigned int timerDelayinSeconds = 1;
+        uint32_t buttonNumber        = 0;
+        uint32_t timerDelayinSeconds = 1;
 
         int result = sscanf_s(command, "%s %d %d", commandEx, sizeof(commandEx), &buttonNumber, &timerDelayinSeconds);
         if (result == 3)
@@ -1003,8 +983,8 @@ void EQAPP_InterpretCommand(const char* command)
     {
         char commandEx[128];
 
-        unsigned int buttonNumber        = 0;
-        unsigned int timerDelayinSeconds = 1;
+        uint32_t buttonNumber        = 0;
+        uint32_t timerDelayinSeconds = 1;
 
         int result = sscanf_s(command, "%s %d %d", commandEx, sizeof(commandEx), &buttonNumber, &timerDelayinSeconds);
         if (result == 3)
@@ -1038,7 +1018,7 @@ void EQAPP_InterpretCommand(const char* command)
     {
         char commandEx[128];
 
-        unsigned int manaValue = 0;
+        uint32_t manaValue = 0;
 
         int result = sscanf_s(command, "%s %d", commandEx, sizeof(commandEx), &manaValue);
         if (result == 2)
@@ -1057,7 +1037,7 @@ void EQAPP_InterpretCommand(const char* command)
     {
         char commandEx[128];
 
-        unsigned int manaValue = 0;
+        uint32_t manaValue = 0;
 
         int result = sscanf_s(command, "%s %d", commandEx, sizeof(commandEx), &manaValue);
         if (result == 2)
@@ -1194,7 +1174,7 @@ void EQAPP_InterpretCommand(const char* command)
 
         char name[1024];
 
-        unsigned int timerDelayInSeconds = 1;
+        uint32_t timerDelayInSeconds = 1;
 
         int result = sscanf_s(command, "%s %s %d", commandEx, sizeof(commandEx), name, sizeof(name), &timerDelayInSeconds);
         if (result == 3)
@@ -1266,8 +1246,8 @@ void EQAPP_InterpretCommand(const char* command)
     {
         char commandEx[128];
 
-        unsigned int minimumNumPlayersInZone = 0;
-        unsigned int timerDelayInSeconds = 1;
+        uint32_t minimumNumPlayersInZone = 0;
+        uint32_t timerDelayInSeconds = 1;
 
         int result = sscanf_s(command, "%s %d %d", commandEx, sizeof(commandEx), &minimumNumPlayersInZone, &timerDelayInSeconds);
         if (result == 3)
@@ -1301,7 +1281,7 @@ void EQAPP_InterpretCommand(const char* command)
 
         char commandEx[128];
 
-        float height = g_changeHeightMaximum;
+        float height = g_changeHeightDefaultSize;
 
         int result = sscanf_s(command, "%s %f", commandEx, sizeof(commandEx), &height);
         if (result == 2)
@@ -1621,7 +1601,7 @@ void EQAPP_InterpretCommand(const char* command)
     {
         char commandEx[128];
 
-        unsigned int buttonNumber = 0;
+        uint32_t buttonNumber = 0;
 
         int result = sscanf_s(command, "%s %d", commandEx, sizeof(commandEx), &buttonNumber);
         if (result == 2)
@@ -1654,7 +1634,7 @@ void EQAPP_InterpretCommand(const char* command)
     {
         char commandEx[128];
 
-        unsigned int index;
+        uint32_t index;
 
         int result = sscanf_s(command, "%s %d", commandEx, sizeof(commandEx), &index);
         if (result == 2)
@@ -1670,8 +1650,8 @@ void EQAPP_InterpretCommand(const char* command)
     {
         char commandEx[128];
 
-        unsigned int fromIndex;
-        unsigned int toIndex;
+        uint32_t fromIndex;
+        uint32_t toIndex;
 
         int result = sscanf_s(command, "%s %d %d", commandEx, sizeof(commandEx), &fromIndex, &toIndex);
         if (result == 3)
@@ -1687,8 +1667,8 @@ void EQAPP_InterpretCommand(const char* command)
     {
         char commandEx[128];
 
-        unsigned int fromIndex;
-        unsigned int toIndex;
+        uint32_t fromIndex;
+        uint32_t toIndex;
 
         int result = sscanf_s(command, "%s %d %d", commandEx, sizeof(commandEx), &fromIndex, &toIndex);
         if (result == 3)
@@ -1732,14 +1712,14 @@ void EQAPP_InterpretCommand(const char* command)
     {
         char commandEx[128];
 
-        unsigned int fromIndex;
-        unsigned int toIndex;
+        uint32_t fromIndex;
+        uint32_t toIndex;
 
         int result = sscanf_s(command, "%s %d %d", commandEx, sizeof(commandEx), &fromIndex, &toIndex);
 
         if (result == 3)
         {
-            EQAPPWaypointPathList pathList = EQAPP_Waypoint_GetPath(fromIndex, toIndex);
+            EQApp::WaypointPathList pathList = EQAPP_Waypoint_GetPath(fromIndex, toIndex);
 
             EQAPP_Waypoint_PrintPath(pathList, fromIndex);
         }

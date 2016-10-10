@@ -2,7 +2,7 @@
 
 EQ_FUNCTION_TYPE_Exit EQAPP_REAL_Exit = NULL;
 EQ_FUNCTION_TYPE_DrawNetStatus EQAPP_REAL_DrawNetStatus = NULL;
-EQ_FUNCTION_TYPE_ExecuteCmd EQAPP_REAL_ExecuteCmd = NULL;
+EQ_FUNCTION_TYPE_ExecuteCommand EQAPP_REAL_ExecuteCommand = NULL;
 EQ_FUNCTION_TYPE_SetTarget EQAPP_REAL_SetTarget = NULL;
 
 EQ_FUNCTION_TYPE_CDisplay__CreatePlayerActor EQAPP_REAL_CDisplay__CreatePlayerActor = NULL;
@@ -34,36 +34,36 @@ void EQAPP_Detours_Remove();
 
 int __cdecl EQAPP_DETOUR_Exit();
 int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short a3, unsigned short a4, unsigned short a5, int a6, unsigned short a7, unsigned long a8, long a9, unsigned long a10);
-int __cdecl EQAPP_DETOUR_ExecuteCmd(DWORD a1, BOOL a2, PVOID a3);
-int __cdecl EQAPP_DETOUR_SetTarget(DWORD a1, const char* a2);
+int __cdecl EQAPP_DETOUR_ExecuteCommand(uint32_t a1, BOOL a2, PVOID a3);
+int __cdecl EQAPP_DETOUR_SetTarget(uint32_t a1, const char* a2);
 
-int __fastcall EQAPP_DETOUR_CDisplay__CreatePlayerActor(void* pThis, void* not_used, int a1, int a2, int a3, int a4, int a5);
-int __fastcall EQAPP_DETOUR_CDisplay__DeleteActor(void* pThis, void* not_used, DWORD a1);
+int __fastcall EQAPP_DETOUR_CDisplay__CreatePlayerActor(void* this_ptr, void* not_used, int a1, int a2, int a3, int a4, int a5);
+int __fastcall EQAPP_DETOUR_CDisplay__DeleteActor(void* this_ptr, void* not_used, uint32_t a1);
 
-int __fastcall EQAPP_DETOUR_CEverQuest__dsp_chat(void* pThis, void* not_used, const char* a1, int a2, bool a3);
-int __fastcall EQAPP_DETOUR_CEverQuest__EnterZone(void* pThis, void* not_used, struct HWND__* a1);
-//int __fastcall EQAPP_DETOUR_CEverQuest__InterpretCmd(void* pThis, void* not_used, DWORD a1, const char* a2);
-int __fastcall EQAPP_DETOUR_CEverQuest__MoveToZone(void* pThis, void* not_used, int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8);
-int __fastcall EQAPP_DETOUR_CEverQuest__SetGameState(void* pThis, void* not_used, int a1);
-int __fastcall EQAPP_DETOUR_CEverQuest__StartCasting(void* pThis, void* not_used, int a1);
+int __fastcall EQAPP_DETOUR_CEverQuest__dsp_chat(void* this_ptr, void* not_used, const char* a1, int a2, bool a3);
+int __fastcall EQAPP_DETOUR_CEverQuest__EnterZone(void* this_ptr, void* not_used, struct HWND__* a1);
+//int __fastcall EQAPP_DETOUR_CEverQuest__InterpretCmd(void* this_ptr, void* not_used, DWORD a1, const char* a2);
+int __fastcall EQAPP_DETOUR_CEverQuest__MoveToZone(void* this_ptr, void* not_used, int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8);
+int __fastcall EQAPP_DETOUR_CEverQuest__SetGameState(void* this_ptr, void* not_used, int a1);
+int __fastcall EQAPP_DETOUR_CEverQuest__StartCasting(void* this_ptr, void* not_used, int a1);
 
-//int __fastcall EQAPP_DETOUR_CMapViewWnd__dCMapViewWnd(void* pThis, void* not_used);
-int __fastcall EQAPP_DETOUR_CMapViewWnd__DrawMap(void* pThis, void* not_used, int a1, int a2, int a3, int a4);
+//int __fastcall EQAPP_DETOUR_CMapViewWnd__dCMapViewWnd(void* this_ptr, void* not_used);
+int __fastcall EQAPP_DETOUR_CMapViewWnd__DrawMap(void* this_ptr, void* not_used, int a1, int a2, int a3, int a4);
 
-int __fastcall EQAPP_DETOUR_EQ_Character__eqspa_movement_rate(void* pThis, void* not_used, int a1);
+int __fastcall EQAPP_DETOUR_EQ_Character__eqspa_movement_rate(void* this_ptr, void* not_used, int a1);
 
-int __fastcall EQAPP_DETOUR_EQPlayer__ChangePosition(void* pThis, void* not_used, BYTE a1);
-int __fastcall EQAPP_DETOUR_EQPlayer__do_change_form(void* pThis, void* not_used, PEQCHANGEFORM a1);
-int __fastcall EQAPP_DETOUR_EQPlayer__SetRace(void* pThis, void* not_used, int a1);
+int __fastcall EQAPP_DETOUR_EQPlayer__ChangePosition(void* this_ptr, void* not_used, uint8_t a1);
+int __fastcall EQAPP_DETOUR_EQPlayer__do_change_form(void* this_ptr, void* not_used, EQ::ChangeForm* a1);
+int __fastcall EQAPP_DETOUR_EQPlayer__SetRace(void* this_ptr, void* not_used, int a1);
 
-int __fastcall EQAPP_DETOUR_MapViewMap__Save(void* pThis, void* not_used, char* a1);
-int __fastcall EQAPP_DETOUR_MapViewMap__SaveEx(void* pThis, void* not_used, char* a1, int a2);
+int __fastcall EQAPP_DETOUR_MapViewMap__Save(void* this_ptr, void* not_used, char* a1);
+int __fastcall EQAPP_DETOUR_MapViewMap__SaveEx(void* this_ptr, void* not_used, char* a1, int a2);
 
 void EQAPP_Detours_Add()
 {
     EQAPP_REAL_Exit = (EQ_FUNCTION_TYPE_Exit)DetourFunction((PBYTE)EQ_FUNCTION_Exit, (PBYTE)EQAPP_DETOUR_Exit);
     EQAPP_REAL_DrawNetStatus = (EQ_FUNCTION_TYPE_DrawNetStatus)DetourFunction((PBYTE)EQ_FUNCTION_DrawNetStatus, (PBYTE)EQAPP_DETOUR_DrawNetStatus);
-    EQAPP_REAL_ExecuteCmd = (EQ_FUNCTION_TYPE_ExecuteCmd)DetourFunction((PBYTE)EQ_FUNCTION_ExecuteCmd, (PBYTE)EQAPP_DETOUR_ExecuteCmd);
+    EQAPP_REAL_ExecuteCommand = (EQ_FUNCTION_TYPE_ExecuteCommand)DetourFunction((PBYTE)EQ_FUNCTION_ExecuteCommand, (PBYTE)EQAPP_DETOUR_ExecuteCommand);
     EQAPP_REAL_SetTarget = (EQ_FUNCTION_TYPE_SetTarget)DetourFunction((PBYTE)EQ_FUNCTION_SetTarget, (PBYTE)EQAPP_DETOUR_SetTarget);
 
     EQAPP_REAL_CDisplay__CreatePlayerActor = (EQ_FUNCTION_TYPE_CDisplay__CreatePlayerActor)DetourFunction((PBYTE)EQ_FUNCTION_CDisplay__CreatePlayerActor, (PBYTE)EQAPP_DETOUR_CDisplay__CreatePlayerActor);
@@ -93,7 +93,7 @@ void EQAPP_Detours_Remove()
 {
     DetourRemove((PBYTE)EQAPP_REAL_Exit, (PBYTE)EQAPP_DETOUR_Exit);
     DetourRemove((PBYTE)EQAPP_REAL_DrawNetStatus, (PBYTE)EQAPP_DETOUR_DrawNetStatus);
-    DetourRemove((PBYTE)EQAPP_REAL_ExecuteCmd, (PBYTE)EQAPP_DETOUR_ExecuteCmd);
+    DetourRemove((PBYTE)EQAPP_REAL_ExecuteCommand, (PBYTE)EQAPP_DETOUR_ExecuteCommand);
     DetourRemove((PBYTE)EQAPP_REAL_SetTarget, (PBYTE)EQAPP_DETOUR_SetTarget);
 
     DetourRemove((PBYTE)EQAPP_REAL_CDisplay__CreatePlayerActor, (PBYTE)EQAPP_DETOUR_CDisplay__CreatePlayerActor);

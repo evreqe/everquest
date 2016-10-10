@@ -1,38 +1,41 @@
 #pragma once
 
-typedef struct _EQAPPWAYPOINT
+namespace EQApp
 {
-    unsigned int index;
-    float y;
-    float x;
-    float z;
-    std::vector<unsigned int> connectList;
-    std::string name;
+    typedef struct _Waypoint
+    {
+        uint32_t index;
+        float y;
+        float x;
+        float z;
+        std::vector<uint32_t> connectList;
+        std::string name;
 
-    // A* Star pathfinding algorithm
-    bool isOpened;
-    bool isClosed;
-    unsigned int f = 0;
-    unsigned int g = 0;
-    unsigned int h = 0;
-    struct _EQAPPWAYPOINT* parent = NULL;
-} EQAPPWAYPOINT, *PEQAPPWAYPOINT;
+        // A* Star pathfinding algorithm
+        bool isOpened;
+        bool isClosed;
+        uint32_t f = 0;
+        uint32_t g = 0;
+        uint32_t h = 0;
+        struct _Waypoint* parent = NULL;
+    } Waypoint, *Waypoint_ptr;
 
-std::vector<EQAPPWAYPOINT> g_waypointList;
+    typedef std::vector<uint32_t> WaypointPathList;
+}
 
-typedef std::vector<unsigned int> EQAPPWaypointPathList;
+std::vector<EQApp::Waypoint> g_waypointList;
 
 void EQAPP_Waypoint_Add();
-void EQAPP_Waypoint_Remove(unsigned int index);
-void EQAPP_Waypoint_Connect(unsigned int fromIndex, unsigned int toIndex);
-void EQAPP_Waypoint_Disconnect(unsigned int fromIndex, unsigned int toIndex);
-PEQAPPWAYPOINT EQAPP_Waypoint_GetByIndex(unsigned int index);
-unsigned int EQAPP_Waypoint_GetIndexNearestToLocation(float y, float x, float z);
-unsigned int EQAPP_Waypoint_GetGScore(PEQAPPWAYPOINT waypoint1, PEQAPPWAYPOINT waypoint2);
-unsigned int EQAPP_Waypoint_GetHScore(PEQAPPWAYPOINT waypoint1, PEQAPPWAYPOINT waypoint2);
-void EQAPP_Waypoint_ComputeScores(PEQAPPWAYPOINT waypoint, PEQAPPWAYPOINT waypointEnd);
-EQAPPWaypointPathList EQAPP_Waypoint_GetPath(unsigned int fromIndex, unsigned int toIndex);
-void EQAPP_Waypoint_PrintPath(EQAPPWaypointPathList& pathList, unsigned int fromIndex);
+void EQAPP_Waypoint_Remove(uint32_t index);
+void EQAPP_Waypoint_Connect(uint32_t fromIndex, uint32_t toIndex);
+void EQAPP_Waypoint_Disconnect(uint32_t fromIndex, uint32_t toIndex);
+EQApp::Waypoint* EQAPP_Waypoint_GetByIndex(uint32_t index);
+uint32_t EQAPP_Waypoint_GetIndexNearestToLocation(float y, float x, float z);
+uint32_t EQAPP_Waypoint_GetGScore(EQApp::Waypoint* waypoint1, EQApp::Waypoint* waypoint2);
+uint32_t EQAPP_Waypoint_GetHScore(EQApp::Waypoint* waypoint1, EQApp::Waypoint* waypoint2);
+void EQAPP_Waypoint_ComputeScores(EQApp::Waypoint* waypoint, EQApp::Waypoint* waypointEnd);
+EQApp::WaypointPathList EQAPP_Waypoint_GetPath(uint32_t fromIndex, uint32_t toIndex);
+void EQAPP_Waypoint_PrintPath(EQApp::WaypointPathList& pathList, uint32_t fromIndex);
 void EQAPP_WaypointList_Clear();
 void EQAPP_WaypointList_Load();
 void EQAPP_WaypointList_Save();
@@ -40,7 +43,7 @@ void EQAPP_WaypointList_Print();
 
 void EQAPP_Waypoint_Add()
 {
-    unsigned int index = 0;
+    uint32_t index = 0;
 
     for (auto& waypoint_it = g_waypointList.begin(); waypoint_it != g_waypointList.end(); waypoint_it++)
     {
@@ -51,7 +54,7 @@ void EQAPP_Waypoint_Add()
         }
     }
 
-    DWORD spawnInfo = EQ_GetTargetSpawn();
+    uint32_t spawnInfo = EQ_GetTargetSpawn();
     if (spawnInfo == NULL)
     {
         spawnInfo = EQ_GetPlayerSpawn();
@@ -62,14 +65,14 @@ void EQAPP_Waypoint_Add()
         }
     }
 
-    FLOAT spawnY = EQ_ReadMemory<FLOAT>(spawnInfo + 0x64);
-    FLOAT spawnX = EQ_ReadMemory<FLOAT>(spawnInfo + 0x68);
-    FLOAT spawnZ = EQ_ReadMemory<FLOAT>(spawnInfo + 0x6C);
+    float spawnY = EQ_ReadMemory<float>(spawnInfo + 0x64);
+    float spawnX = EQ_ReadMemory<float>(spawnInfo + 0x68);
+    float spawnZ = EQ_ReadMemory<float>(spawnInfo + 0x6C);
 
     std::stringstream waypointName;
     waypointName << "Waypoint_" << index;
 
-    EQAPPWAYPOINT waypoint;
+    EQApp::Waypoint waypoint;
     waypoint.index = index;
     waypoint.y = spawnY;
     waypoint.x = spawnX;
@@ -81,7 +84,7 @@ void EQAPP_Waypoint_Add()
     std::cout << "[error] " << __FUNCTION__ << ": added waypoint " << index << std::endl;
 }
 
-void EQAPP_Waypoint_Remove(unsigned int index)
+void EQAPP_Waypoint_Remove(uint32_t index)
 {
     if (g_waypointList.empty() == true)
     {
@@ -119,7 +122,7 @@ void EQAPP_Waypoint_Remove(unsigned int index)
     std::cout << "[error] " << __FUNCTION__ << ": removed waypoint " << index << std::endl;
 }
 
-void EQAPP_Waypoint_Connect(unsigned int fromIndex, unsigned int toIndex)
+void EQAPP_Waypoint_Connect(uint32_t fromIndex, uint32_t toIndex)
 {
     if (fromIndex == toIndex)
     {
@@ -139,7 +142,7 @@ void EQAPP_Waypoint_Connect(unsigned int fromIndex, unsigned int toIndex)
         return;
     }
 
-    PEQAPPWAYPOINT fromWaypoint = EQAPP_Waypoint_GetByIndex(fromIndex);
+    EQApp::Waypoint* fromWaypoint = EQAPP_Waypoint_GetByIndex(fromIndex);
     if (fromWaypoint == NULL)
     {
         EQAPP_PrintErrorMessage(__FUNCTION__, "from waypoint is NULL");
@@ -157,7 +160,7 @@ void EQAPP_Waypoint_Connect(unsigned int fromIndex, unsigned int toIndex)
 
     fromWaypoint->connectList.push_back(toIndex);
 
-    PEQAPPWAYPOINT toWaypoint = EQAPP_Waypoint_GetByIndex(toIndex);
+    EQApp::Waypoint* toWaypoint = EQAPP_Waypoint_GetByIndex(toIndex);
     if (toWaypoint == NULL)
     {
         EQAPP_PrintErrorMessage(__FUNCTION__, "to waypoint is NULL");
@@ -178,7 +181,7 @@ void EQAPP_Waypoint_Connect(unsigned int fromIndex, unsigned int toIndex)
     std::cout << "[error] " << __FUNCTION__ << ": connected waypoints " << fromIndex << " and " << toIndex << std::endl;
 }
 
-void EQAPP_Waypoint_Disconnect(unsigned int fromIndex, unsigned int toIndex)
+void EQAPP_Waypoint_Disconnect(uint32_t fromIndex, uint32_t toIndex)
 {
     if (fromIndex == toIndex)
     {
@@ -198,7 +201,7 @@ void EQAPP_Waypoint_Disconnect(unsigned int fromIndex, unsigned int toIndex)
         return;
     }
 
-    PEQAPPWAYPOINT fromWaypoint = EQAPP_Waypoint_GetByIndex(fromIndex);
+    EQApp::Waypoint* fromWaypoint = EQAPP_Waypoint_GetByIndex(fromIndex);
     if (fromWaypoint == NULL)
     {
         EQAPP_PrintErrorMessage(__FUNCTION__, "from waypoint is NULL");
@@ -215,7 +218,7 @@ void EQAPP_Waypoint_Disconnect(unsigned int fromIndex, unsigned int toIndex)
         }
     }
 
-    PEQAPPWAYPOINT toWaypoint = EQAPP_Waypoint_GetByIndex(toIndex);
+    EQApp::Waypoint* toWaypoint = EQAPP_Waypoint_GetByIndex(toIndex);
     if (toWaypoint == NULL)
     {
         EQAPP_PrintErrorMessage(__FUNCTION__, "to waypoint is NULL");
@@ -235,7 +238,7 @@ void EQAPP_Waypoint_Disconnect(unsigned int fromIndex, unsigned int toIndex)
     std::cout << "[error] " << __FUNCTION__ << ": disconnected waypoints " << fromIndex << " and " << toIndex << std::endl;
 }
 
-PEQAPPWAYPOINT EQAPP_Waypoint_GetByIndex(unsigned int index)
+EQApp::Waypoint* EQAPP_Waypoint_GetByIndex(uint32_t index)
 {
     for (auto& waypoint : g_waypointList)
     {
@@ -249,9 +252,9 @@ PEQAPPWAYPOINT EQAPP_Waypoint_GetByIndex(unsigned int index)
     return NULL;
 }
 
-unsigned int EQAPP_Waypoint_GetIndexNearestToLocation(float y, float x, float z)
+uint32_t EQAPP_Waypoint_GetIndexNearestToLocation(float y, float x, float z)
 {
-    std::map<float, unsigned int> distanceList;
+    std::map<float, uint32_t> distanceList;
 
     for (auto& waypoint : g_waypointList)
     {
@@ -263,21 +266,21 @@ unsigned int EQAPP_Waypoint_GetIndexNearestToLocation(float y, float x, float z)
     return distanceList.begin()->second;
 }
 
-unsigned int EQAPP_Waypoint_GetGScore(PEQAPPWAYPOINT waypoint1, PEQAPPWAYPOINT waypoint2)
+uint32_t EQAPP_Waypoint_GetGScore(EQApp::Waypoint* waypoint1, EQApp::Waypoint* waypoint2)
 {
     return waypoint1->g + ((waypoint2->x == waypoint1->x || waypoint2->y == waypoint1->y) ? 10 : 14);
 }
 
-unsigned int EQAPP_Waypoint_GetHScore(PEQAPPWAYPOINT waypoint1, PEQAPPWAYPOINT waypoint2)
+uint32_t EQAPP_Waypoint_GetHScore(EQApp::Waypoint* waypoint1, EQApp::Waypoint* waypoint2)
 {
     // manhattan distance
-    //return (unsigned int)(abs(waypoint1->x - waypoint2->x) + abs(waypoint1->y - waypoint2->y) * 10);
+    //return (uint32_t)(abs(waypoint1->x - waypoint2->x) + abs(waypoint1->y - waypoint2->y) * 10);
 
     // euclidean distance
-    return (unsigned int)(sqrt(pow(waypoint2->x - waypoint1->x, 2) + pow(waypoint2->y - waypoint1->y, 2) + pow(waypoint2->z - waypoint1->z, 2)));
+    return (uint32_t)(sqrt(pow(waypoint2->x - waypoint1->x, 2) + pow(waypoint2->y - waypoint1->y, 2) + pow(waypoint2->z - waypoint1->z, 2)));
 }
 
-void EQAPP_Waypoint_ComputeScores(PEQAPPWAYPOINT waypoint, PEQAPPWAYPOINT waypointEnd)
+void EQAPP_Waypoint_ComputeScores(EQApp::Waypoint* waypoint, EQApp::Waypoint* waypointEnd)
 {
     waypoint->g = EQAPP_Waypoint_GetGScore(waypoint, waypoint->parent);
     waypoint->h = EQAPP_Waypoint_GetHScore(waypoint, waypointEnd);
@@ -285,9 +288,9 @@ void EQAPP_Waypoint_ComputeScores(PEQAPPWAYPOINT waypoint, PEQAPPWAYPOINT waypoi
     waypoint->f = waypoint->g + waypoint->h;
 }
 
-EQAPPWaypointPathList EQAPP_Waypoint_GetPath(unsigned int fromIndex, unsigned int toIndex)
+EQApp::WaypointPathList EQAPP_Waypoint_GetPath(uint32_t fromIndex, uint32_t toIndex)
 {
-    EQAPPWaypointPathList pathList;
+    EQApp::WaypointPathList pathList;
 
     if (fromIndex == toIndex)
     {
@@ -307,8 +310,8 @@ EQAPPWaypointPathList EQAPP_Waypoint_GetPath(unsigned int fromIndex, unsigned in
         return pathList;
     }
 
-    PEQAPPWAYPOINT start = EQAPP_Waypoint_GetByIndex(fromIndex);
-    PEQAPPWAYPOINT end   = EQAPP_Waypoint_GetByIndex(toIndex);
+    EQApp::Waypoint* start = EQAPP_Waypoint_GetByIndex(fromIndex);
+    EQApp::Waypoint* end   = EQAPP_Waypoint_GetByIndex(toIndex);
 
     if (start == NULL || end == NULL)
     {
@@ -316,15 +319,15 @@ EQAPPWaypointPathList EQAPP_Waypoint_GetPath(unsigned int fromIndex, unsigned in
         return pathList;
     }
 
-    PEQAPPWAYPOINT current;
-    PEQAPPWAYPOINT child;
+    EQApp::Waypoint* current;
+    EQApp::Waypoint* child;
 
-    std::list<PEQAPPWAYPOINT> openedList;
-    std::list<PEQAPPWAYPOINT> closedList;
-    std::list<PEQAPPWAYPOINT>::iterator waypointListIterator;
+    std::list<EQApp::Waypoint*> openedList;
+    std::list<EQApp::Waypoint*> closedList;
+    std::list<EQApp::Waypoint*>::iterator waypointListIterator;
 
-    unsigned int numIterations = 0;
-    unsigned int maxIterations = 100;
+    uint32_t numIterations = 0;
+    uint32_t maxIterations = 100;
 
     openedList.push_back(start);
     start->isOpened = true;
@@ -361,7 +364,7 @@ EQAPPWaypointPathList EQAPP_Waypoint_GetPath(unsigned int fromIndex, unsigned in
 
             if (child->isOpened == true)
             {
-                unsigned int currentGScore = EQAPP_Waypoint_GetGScore(child, current);
+                uint32_t currentGScore = EQAPP_Waypoint_GetGScore(child, current);
 
                 if (child->g > currentGScore)
                 {
@@ -404,7 +407,7 @@ EQAPPWaypointPathList EQAPP_Waypoint_GetPath(unsigned int fromIndex, unsigned in
     return pathList;
 }
 
-void EQAPP_Waypoint_PrintPath(EQAPPWaypointPathList& pathList, unsigned int fromIndex)
+void EQAPP_Waypoint_PrintPath(EQApp::WaypointPathList& pathList, uint32_t fromIndex)
 {
     std::cout << "Waypoint Path: " << fromIndex << " -> ";
 
@@ -461,7 +464,7 @@ void EQAPP_WaypointList_Load()
             continue;
         }
 
-        unsigned int index;
+        uint32_t index;
         float y;
         float x;
         float z;
@@ -474,7 +477,7 @@ void EQAPP_WaypointList_Load()
         {
             EQ_String_ReplaceUnderscoresWithSpaces(name);
 
-            EQAPPWAYPOINT waypoint;
+            EQApp::Waypoint waypoint;
             waypoint.index = index;
             waypoint.y = y;
             waypoint.x = x;

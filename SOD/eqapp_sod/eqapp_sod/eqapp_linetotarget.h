@@ -18,9 +18,9 @@ void EQAPP_LineToTarget_Execute()
         return;
     }
 
-    FLOAT targetY = EQ_GetSpawnY(targetSpawn);
-    FLOAT targetX = EQ_GetSpawnX(targetSpawn);
-    FLOAT targetZ = EQ_GetSpawnZ(targetSpawn);
+    float targetY = EQ_GetSpawnY(targetSpawn);
+    float targetX = EQ_GetSpawnX(targetSpawn);
+    float targetZ = EQ_GetSpawnZ(targetSpawn);
 
     int screenX = -1;
     int screenY = -1;

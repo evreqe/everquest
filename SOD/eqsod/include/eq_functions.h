@@ -126,8 +126,8 @@ class MapViewMap;
 class EQGraphicsDLL
 {
 public:
-    int EQGraphicsDLL::DrawLine(EQLINE* lineBegin, EQLINE* lineEnd, DWORD argbColor);
-    int EQGraphicsDLL::DrawQuad(EQRECT* rect, DWORD argbColor);
+    int EQGraphicsDLL::DrawLine(EQ::Line* lineBegin, EQ::Line* lineEnd, uint32_t colorARGB);
+    int EQGraphicsDLL::DrawQuad(EQ::Rect* rect, uint32_t colorARGB);
 };
 
 EQGraphicsDLL** EQ_ppEQGraphicsDLL = (EQGraphicsDLL**)EQ_POINTER_EQGraphicsDLL;
@@ -136,7 +136,7 @@ EQGraphicsDLL** EQ_ppEQGraphicsDLL = (EQGraphicsDLL**)EQ_POINTER_EQGraphicsDLL;
 class EQ_Guilds
 {
 public:
-    char* EQ_Guilds::GetGuildNameById(DWORD id);
+    char* EQ_Guilds::GetGuildNameById(uint32_t id);
 };
 
 EQ_Guilds* EQ_ppEQ_Guilds = (EQ_Guilds*)EQ_GUILDS;
@@ -170,9 +170,9 @@ StringTable** EQ_ppStringTable = (StringTable**)EQ_POINTER_StringTable;
 class CDisplay
 {
 public:
-    void CDisplay::CreatePlayerActor(DWORD spawnInfo, int a2, int a3, int a4, int a5);
-    void CDisplay::DeleteActor(DWORD actorInstance);
-    void CDisplay::SetViewActor(DWORD actorInstance);
+    void CDisplay::CreatePlayerActor(uint32_t spawnInfo, int a2, int a3, int a4, int a5);
+    void CDisplay::DeleteActor(uint32_t actorInstance);
+    void CDisplay::SetViewActor(uint32_t actorInstance);
     void CDisplay::SetViewActorByName(const char* spawnName);
     static int __cdecl CDisplay::WriteTextHD2(const char* text, int x, int y, int color);
 };
@@ -197,7 +197,7 @@ public:
     char* CEverQuest::GetClassThreeLetterCode(int);
     char* CEverQuest::GetDeityDesc(int);
     char* CEverQuest::GetRaceDesc(int);
-    void CEverQuest::InterpretCmd(DWORD spawnInfo, const char* text);
+    void CEverQuest::InterpretCmd(uint32_t spawnInfo, const char* text);
     int __cdecl CEverQuest::LMouseUp(int x, int y);
     int __cdecl CEverQuest::RMouseUp(int x, int y);
     void CEverQuest::MoveToZone(int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8);
@@ -211,7 +211,7 @@ CEverQuest** EQ_ppCEverQuest = (CEverQuest**)EQ_POINTER_CEverQuest;
 class CHotButtonWnd : public CSidlScreenWnd
 {
 public:
-    void CHotButtonWnd::DoHotButton(unsigned int buttonIndex, bool allowAutoRightClick);
+    void CHotButtonWnd::DoHotButton(uint32_t buttonIndex, bool allowAutoRightClick);
 };
 
 CHotButtonWnd** EQ_ppCHotButtonWnd = (CHotButtonWnd**)EQ_POINTER_CHotButtonWnd;
@@ -259,9 +259,9 @@ class EQPlayer
 {
 public:
     void EQPlayer::ChangeHeight(float height);
-    void EQPlayer::ChangePosition(BYTE standingState);
-    void EQPlayer::do_change_form(PEQCHANGEFORM changeForm);
-    void EQPlayer::FacePlayer(DWORD spawnInfo);
+    void EQPlayer::ChangePosition(uint8_t standingState);
+    void EQPlayer::do_change_form(EQ::ChangeForm* changeForm);
+    void EQPlayer::FacePlayer(uint32_t spawnInfo);
     void EQPlayer::SetRace(int raceId);
     int EQPlayer::UpdateAppearance(int a1, int a2, int a3);
 };
@@ -269,8 +269,8 @@ public:
 class EQPlayerManager
 {
 public:
-    DWORD EQPlayerManager::GetSpawnByID(int spawnId);
-    DWORD EQPlayerManager::GetSpawnByName(char* spawnName);
+    uint32_t EQPlayerManager::GetSpawnByID(int spawnId);
+    uint32_t EQPlayerManager::GetSpawnByName(char* spawnName);
 };
 
 EQPlayerManager** EQ_ppEQPlayerManager = (EQPlayerManager**)EQ_POINTER_EQPlayerManager;
@@ -279,7 +279,7 @@ EQPlayerManager** EQ_ppEQPlayerManager = (EQPlayerManager**)EQ_POINTER_EQPlayerM
 class EQSwitch
 {
 public:
-    void EQSwitch::ChangeState(BYTE state, int a2, int a3);
+    void EQSwitch::ChangeState(uint8_t state, int a2, int a3);
 };
 
 class EQ_Character
@@ -295,24 +295,24 @@ EQ_Character** EQ_ppEQ_Character = (EQ_Character**)EQ_POINTER_EQ_Character;
 class MapViewMap
 {
 public:
-    DWORD MapViewMap::AddLabel(float x, float y, float z, DWORD argbColor, int size, const char* text);
-    void MapViewMap::RemoveLabel(DWORD mapLabelInfo);
+    int MapViewMap::AddLabel(float x, float y, float z, uint32_t colorARGB, int size, const char* text);
+    void MapViewMap::RemoveLabel(uint32_t mapLabelInfo);
     void MapViewMap::Save(char* shortZoneName);
     void MapViewMap::SaveEx(char* shortZoneName, int layer);
 };
 
 /* EQGraphicsDLL */
 
-typedef int (__thiscall* EQ_FUNCTION_TYPE_EQGraphicsDLL__DrawLine)(void* pThis, EQLINE* lineBegin, EQLINE* lineEnd, DWORD argbColor);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQGraphicsDLL__DrawLine)(void* this_ptr, EQ::Line* lineBegin, EQ::Line* lineEnd, uint32_t colorARGB);
 EQ_FUNCTION_TYPE_EQGraphicsDLL__DrawLine EQGraphicsDLL__DrawLine = NULL;
 
-typedef int (__thiscall* EQ_FUNCTION_TYPE_EQGraphicsDLL__DrawQuad)(void* pThis, EQRECT* rect, DWORD argbColor);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQGraphicsDLL__DrawQuad)(void* this_ptr, EQ::Rect* rect, uint32_t colorARGB);
 EQ_FUNCTION_TYPE_EQGraphicsDLL__DrawQuad EQGraphicsDLL__DrawQuad = NULL;
 
 /* EQ_Guilds */
 
 #ifdef EQ_FUNCTION_EQ_Guilds__GetGuildNameById
-EQ_FUNCTION_AT_ADDRESS(char* EQ_Guilds::GetGuildNameById(DWORD id), EQ_FUNCTION_EQ_Guilds__GetGuildNameById);
+EQ_FUNCTION_AT_ADDRESS(char* EQ_Guilds::GetGuildNameById(uint32_t id), EQ_FUNCTION_EQ_Guilds__GetGuildNameById);
 #endif
 
 /* StringTable */
@@ -324,22 +324,22 @@ EQ_FUNCTION_AT_ADDRESS(char* StringTable::getString(unsigned long index, bool* a
 /* CDisplay */
 
 #ifdef EQ_FUNCTION_CDisplay__CreatePlayerActor
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__CreatePlayerActor)(void* pThis, DWORD spawnInfo, int a2, int a3, int a4, int a5);
-EQ_FUNCTION_AT_ADDRESS(void CDisplay::CreatePlayerActor(DWORD spawnInfo, int a2, int a3, int a4, int a5), EQ_FUNCTION_CDisplay__CreatePlayerActor);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__CreatePlayerActor)(void* this_ptr, uint32_t spawnInfo, int a2, int a3, int a4, int a5);
+EQ_FUNCTION_AT_ADDRESS(void CDisplay::CreatePlayerActor(uint32_t spawnInfo, int a2, int a3, int a4, int a5), EQ_FUNCTION_CDisplay__CreatePlayerActor);
 #endif
 
 #ifdef EQ_FUNCTION_CDisplay__DeleteActor
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__DeleteActor)(void* pThis, DWORD actorInstance);
-EQ_FUNCTION_AT_ADDRESS(void CDisplay::DeleteActor(DWORD actorInstance), EQ_FUNCTION_CDisplay__DeleteActor);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__DeleteActor)(void* this_ptr, uint32_t actorInstance);
+EQ_FUNCTION_AT_ADDRESS(void CDisplay::DeleteActor(uint32_t actorInstance), EQ_FUNCTION_CDisplay__DeleteActor);
 #endif
 
 #ifdef EQ_FUNCTION_CDisplay__SetViewActor
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__SetViewActor)(void* pThis, DWORD actorInstance);
-EQ_FUNCTION_AT_ADDRESS(void CDisplay::SetViewActor(DWORD actorInstance), EQ_FUNCTION_CDisplay__SetViewActor);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__SetViewActor)(void* this_ptr, uint32_t actorInstance);
+EQ_FUNCTION_AT_ADDRESS(void CDisplay::SetViewActor(uint32_t actorInstance), EQ_FUNCTION_CDisplay__SetViewActor);
 #endif
 
 #ifdef EQ_FUNCTION_CDisplay__SetViewActorByName
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__SetViewActorByName)(void* pThis, const char* spawnName);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__SetViewActorByName)(void* this_ptr, const char* spawnName);
 EQ_FUNCTION_AT_ADDRESS(void CDisplay::SetViewActorByName(const char* spawnName), EQ_FUNCTION_CDisplay__SetViewActorByName);
 #endif
 
@@ -350,7 +350,7 @@ EQ_FUNCTION_AT_ADDRESS(int CDisplay::WriteTextHD2(const char* text, int x, int y
 /* CEverQuest */
 
 #ifdef EQ_FUNCTION_CEverQuest__dsp_chat
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__dsp_chat)(void* pThis, const char* text, int textColor, bool filtered);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__dsp_chat)(void* this_ptr, const char* text, int textColor, bool filtered);
 EQ_FUNCTION_AT_ADDRESS(void CEverQuest::dsp_chat(const char* text, int textColor, bool filtered), EQ_FUNCTION_CEverQuest__dsp_chat);
 #endif
 
@@ -359,7 +359,7 @@ EQ_FUNCTION_AT_ADDRESS(void CEverQuest::dsp_chat(const char* text), EQ_FUNCTION_
 #endif
 
 #ifdef EQ_FUNCTION_CEverQuest__EnterZone
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__EnterZone)(void* pThis, struct HWND__*);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__EnterZone)(void* this_ptr, struct HWND__*);
 EQ_FUNCTION_AT_ADDRESS(void CEverQuest::EnterZone(struct HWND__ *), EQ_FUNCTION_CEverQuest__EnterZone);
 #endif
 
@@ -384,51 +384,51 @@ EQ_FUNCTION_AT_ADDRESS(char* CEverQuest::GetRaceDesc(int race), EQ_FUNCTION_CEve
 #endif
 
 #ifdef EQ_FUNCTION_CEverQuest__InterpretCmd
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__InterpretCmd)(void* pThis, DWORD spawnInfo, const char* text);
-EQ_FUNCTION_AT_ADDRESS(void CEverQuest::InterpretCmd(DWORD spawnInfo, const char* text), EQ_FUNCTION_CEverQuest__InterpretCmd);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__InterpretCmd)(void* this_ptr, uint32_t spawnInfo, const char* text);
+EQ_FUNCTION_AT_ADDRESS(void CEverQuest::InterpretCmd(uint32_t spawnInfo, const char* text), EQ_FUNCTION_CEverQuest__InterpretCmd);
 #endif
 
 #ifdef EQ_FUNCTION_CEverQuest__LMouseUp
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__LMouseUp)(void* pThis, int x, int y);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__LMouseUp)(void* this_ptr, int x, int y);
 EQ_FUNCTION_AT_ADDRESS(int __cdecl CEverQuest::LMouseUp(int, int), EQ_FUNCTION_CEverQuest__LMouseUp);
 #endif
 
 #ifdef EQ_FUNCTION_CEverQuest__RMouseUp
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__RMouseUp)(void* pThis, int x, int y);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__RMouseUp)(void* this_ptr, int x, int y);
 EQ_FUNCTION_AT_ADDRESS(int __cdecl CEverQuest::RMouseUp(int, int), EQ_FUNCTION_CEverQuest__RMouseUp);
 #endif
 
 #ifdef EQ_FUNCTION_CEverQuest__MoveToZone
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__MoveToZone)(void* pThis, int, int, int, int, int, int, int, int);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__MoveToZone)(void* this_ptr, int, int, int, int, int, int, int, int);
 EQ_FUNCTION_AT_ADDRESS(void CEverQuest::MoveToZone(int, int, int, int, int, int, int, int), EQ_FUNCTION_CEverQuest__MoveToZone);
 #endif
 
 #ifdef EQ_FUNCTION_CEverQuest__SetGameState
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__SetGameState)(void* pThis, int state);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__SetGameState)(void* this_ptr, int state);
 EQ_FUNCTION_AT_ADDRESS(void CEverQuest::SetGameState(int state), EQ_FUNCTION_CEverQuest__SetGameState);
 #endif
 
 #ifdef EQ_FUNCTION_CEverQuest__StartCasting
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__StartCasting)(void* pThis, int a1);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__StartCasting)(void* this_ptr, int a1);
 EQ_FUNCTION_AT_ADDRESS(void CEverQuest::StartCasting(int a1), EQ_FUNCTION_CEverQuest__StartCasting);
 #endif
 
 /* CMapViewWnd */
 
 #ifdef EQ_FUNCTION_CMapViewWnd__dCMapViewWnd
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CMapViewWnd__dCMapViewWnd)(void* pThis);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CMapViewWnd__dCMapViewWnd)(void* this_ptr);
 EQ_FUNCTION_AT_ADDRESS(CMapViewWnd::~CMapViewWnd(), EQ_FUNCTION_CMapViewWnd__dCMapViewWnd);
 #endif
 
 #ifdef EQ_FUNCTION_CMapViewWnd__DrawMap
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CMapViewWnd__DrawMap)(void* pThis, int a1, int a2, int a3, int a4);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CMapViewWnd__DrawMap)(void* this_ptr, int a1, int a2, int a3, int a4);
 EQ_FUNCTION_AT_ADDRESS(void CMapViewWnd::DrawMap(int, int, int, int), EQ_FUNCTION_CMapViewWnd__DrawMap);
 #endif
 
 /* CHotButtonWnd */
 
 #ifdef EQ_FUNCTION_CHotButtonWnd__DoHotButton
-EQ_FUNCTION_AT_ADDRESS(void CHotButtonWnd::DoHotButton(unsigned int buttonIndex, bool allowAutoRightClick), EQ_FUNCTION_CHotButtonWnd__DoHotButton);
+EQ_FUNCTION_AT_ADDRESS(void CHotButtonWnd::DoHotButton(uint32_t buttonIndex, bool allowAutoRightClick), EQ_FUNCTION_CHotButtonWnd__DoHotButton);
 #endif
 
 /* CLootWnd */
@@ -444,14 +444,14 @@ EQ_FUNCTION_AT_ADDRESS(void CLootWnd::RequestLootSlot(int slotIndex, bool autoLo
 /* CTextEntryWnd */
 
 #ifdef EQ_FUNCTION_CTextEntryWnd__Activate
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CTextEntryWnd__Activate)(void* pThis, void*, int, char*, int, int, char*);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CTextEntryWnd__Activate)(void* this_ptr, void*, int, char*, int, int, char*);
 EQ_FUNCTION_AT_ADDRESS(void CTextEntryWnd::Activate(void*, int, char*, int, int, char*), EQ_FUNCTION_CTextEntryWnd__Activate);
 #endif
 
 /* CTextOverlay */
 
 #ifdef EQ_FUNCTION_CTextOverlay__DisplayText
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CTextOverlay__DisplayText)(void* pThis, const char* text, int textColor, int font, int alpha, int x, int y, int duration);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CTextOverlay__DisplayText)(void* this_ptr, const char* text, int textColor, int font, int alpha, int x, int y, int duration);
 EQ_FUNCTION_AT_ADDRESS(void CTextOverlay::DisplayText(const char* text, int textColor, int font, int alpha, int x, int y, int duration), EQ_FUNCTION_CTextOverlay__DisplayText);
 #endif
 
@@ -462,76 +462,76 @@ EQ_FUNCTION_AT_ADDRESS(void EQPlayer::ChangeHeight(float height), EQ_FUNCTION_EQ
 #endif
 
 #ifdef EQ_FUNCTION_EQPlayer__ChangePosition
-typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__ChangePosition)(void* pThis, BYTE standingState);
-EQ_FUNCTION_AT_ADDRESS(void EQPlayer::ChangePosition(BYTE standingState), EQ_FUNCTION_EQPlayer__ChangePosition);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__ChangePosition)(void* this_ptr, uint8_t standingState);
+EQ_FUNCTION_AT_ADDRESS(void EQPlayer::ChangePosition(uint8_t standingState), EQ_FUNCTION_EQPlayer__ChangePosition);
 #endif
 
 #ifdef EQ_FUNCTION_EQPlayer__do_change_form
-typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__do_change_form)(void* pThis, PEQCHANGEFORM changeForm);
-EQ_FUNCTION_AT_ADDRESS(void EQPlayer::do_change_form(PEQCHANGEFORM changeForm), EQ_FUNCTION_EQPlayer__do_change_form);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__do_change_form)(void* this_ptr, EQ::ChangeForm* changeForm);
+EQ_FUNCTION_AT_ADDRESS(void EQPlayer::do_change_form(EQ::ChangeForm* changeForm), EQ_FUNCTION_EQPlayer__do_change_form);
 #endif
 
 #ifdef EQ_FUNCTION_EQPlayer__FacePlayer
-EQ_FUNCTION_AT_ADDRESS(void EQPlayer::FacePlayer(DWORD spawnInfo), EQ_FUNCTION_EQPlayer__FacePlayer);
+EQ_FUNCTION_AT_ADDRESS(void EQPlayer::FacePlayer(uint32_t spawnInfo), EQ_FUNCTION_EQPlayer__FacePlayer);
 #endif
 
 #ifdef EQ_FUNCTION_EQPlayer__SetRace
-typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__SetRace)(void* pThis, int raceId);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__SetRace)(void* this_ptr, int raceId);
 EQ_FUNCTION_AT_ADDRESS(void EQPlayer::SetRace(int raceId), EQ_FUNCTION_EQPlayer__SetRace);
 #endif
 
 #ifdef EQ_FUNCTION_EQPlayer__UpdateAppearance
-typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__UpdateAppearance)(void* pThis, int a1, int a2, int a3);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__UpdateAppearance)(void* this_ptr, int a1, int a2, int a3);
 EQ_FUNCTION_AT_ADDRESS(int EQPlayer::UpdateAppearance(int a1, int a2, int a3), EQ_FUNCTION_EQPlayer__UpdateAppearance);
 #endif
 
 /* EQPlayerManager */
 
 #ifdef EQ_FUNCTION_EQPlayerManager__GetSpawnByID
-EQ_FUNCTION_AT_ADDRESS(DWORD EQPlayerManager::GetSpawnByID(int spawnId), EQ_FUNCTION_EQPlayerManager__GetSpawnByID);
+EQ_FUNCTION_AT_ADDRESS(uint32_t EQPlayerManager::GetSpawnByID(int spawnId), EQ_FUNCTION_EQPlayerManager__GetSpawnByID);
 #endif
 
 #ifdef EQ_FUNCTION_EQPlayerManager__GetSpawnByName
-EQ_FUNCTION_AT_ADDRESS(DWORD EQPlayerManager::GetSpawnByName(char* spawnName), EQ_FUNCTION_EQPlayerManager__GetSpawnByName);
+EQ_FUNCTION_AT_ADDRESS(uint32_t EQPlayerManager::GetSpawnByName(char* spawnName), EQ_FUNCTION_EQPlayerManager__GetSpawnByName);
 #endif
 
 /* EQSwitch */
 
 #ifdef EQ_FUNCTION_EQSwitch__ChangeState
-EQ_FUNCTION_AT_ADDRESS(void EQSwitch::ChangeState(BYTE state, int a2, int a3), EQ_FUNCTION_EQSwitch__ChangeState);
+EQ_FUNCTION_AT_ADDRESS(void EQSwitch::ChangeState(uint8_t state, int a2, int a3), EQ_FUNCTION_EQSwitch__ChangeState);
 #endif
 
 /* EQ_Character */
 
 #ifdef EQ_FUNCTION_EQ_Character__eqspa_movement_rate
-typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__eqspa_movement_rate)(void* pThis, int unknown);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__eqspa_movement_rate)(void* this_ptr, int unknown);
 EQ_FUNCTION_AT_ADDRESS(void EQ_Character::eqspa_movement_rate(int), EQ_FUNCTION_EQ_Character__eqspa_movement_rate);
 #endif
 
 #ifdef EQ_FUNCTION_EQ_Character__UseSkill
-typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__UseSkill)(void* pThis, unsigned char skill, class EQPlayer* targetSpawn);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__UseSkill)(void* this_ptr, unsigned char skill, class EQPlayer* targetSpawn);
 EQ_FUNCTION_AT_ADDRESS(int EQ_Character::UseSkill(unsigned char, class EQPlayer*), EQ_FUNCTION_EQ_Character__UseSkill);
 #endif
 
 /* MapViewMap */
 
 #ifdef EQ_FUNCTION_MapViewMap__AddLabel
-typedef int (__thiscall* EQ_FUNCTION_TYPE_MapViewMap__AddLabel)(void* pThis, float x, float y, float z, DWORD argbColor, int size, const char* text);
-EQ_FUNCTION_AT_ADDRESS(DWORD MapViewMap::AddLabel(float x, float y, float z, DWORD argbColor, int size, const char* text), EQ_FUNCTION_MapViewMap__AddLabel);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_MapViewMap__AddLabel)(void* this_ptr, float x, float y, float z, uint32_t colorARGB, int size, const char* text);
+EQ_FUNCTION_AT_ADDRESS(int MapViewMap::AddLabel(float x, float y, float z, uint32_t colorARGB, int size, const char* text), EQ_FUNCTION_MapViewMap__AddLabel);
 #endif
 
 #ifdef EQ_FUNCTION_MapViewMap__RemoveLabel
-typedef int (__thiscall* EQ_FUNCTION_TYPE_MapViewMap__RemoveLabel)(void* pThis, DWORD mapLabelInfo);
-EQ_FUNCTION_AT_ADDRESS(void MapViewMap::RemoveLabel(DWORD mapLabelInfo), EQ_FUNCTION_MapViewMap__RemoveLabel);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_MapViewMap__RemoveLabel)(void* this_ptr, uint32_t mapLabelInfo);
+EQ_FUNCTION_AT_ADDRESS(void MapViewMap::RemoveLabel(uint32_t mapLabelInfo), EQ_FUNCTION_MapViewMap__RemoveLabel);
 #endif
 
 #ifdef EQ_FUNCTION_MapViewMap__Save
-typedef int (__thiscall* EQ_FUNCTION_TYPE_MapViewMap__Save)(void* pThis, char* shortZoneName);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_MapViewMap__Save)(void* this_ptr, char* shortZoneName);
 EQ_FUNCTION_AT_ADDRESS(void MapViewMap::Save(char* shortZoneName), EQ_FUNCTION_MapViewMap__Save);
 #endif
 
 #ifdef EQ_FUNCTION_MapViewMap__SaveEx
-typedef int (__thiscall* EQ_FUNCTION_TYPE_MapViewMap__SaveEx)(void* pThis, char* shortZoneName, int layer);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_MapViewMap__SaveEx)(void* this_ptr, char* shortZoneName, int layer);
 EQ_FUNCTION_AT_ADDRESS(void MapViewMap::SaveEx(char* shortZoneName, int layer), EQ_FUNCTION_MapViewMap__SaveEx);
 #endif
 
@@ -551,13 +551,13 @@ EQ_FUNCTION_AT_ADDRESS(int __cdecl EQ_WindowResize(WPARAM wparam, LPARAM lparam)
 #endif
 
 #ifdef EQ_FUNCTION_CastRay
-typedef int (__cdecl* EQ_FUNCTION_TYPE_CastRay)(DWORD originSpawn, float y, float x, float z);
-EQ_FUNCTION_AT_ADDRESS(int __cdecl EQ_CastRay(DWORD originSpawn, float y, float x, float z), EQ_FUNCTION_CastRay);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_CastRay)(uint32_t originSpawn, float y, float x, float z);
+EQ_FUNCTION_AT_ADDRESS(int __cdecl EQ_CastRay(uint32_t originSpawn, float y, float x, float z), EQ_FUNCTION_CastRay);
 #endif
 
 #ifdef EQ_FUNCTION_CXWnd_DrawColoredRect
-typedef int (__cdecl* EQ_FUNCTION_TYPE_CXWnd_DrawColoredRect)(PEQCXRECT rect, DWORD argbColor);
-EQ_FUNCTION_AT_ADDRESS(int __cdecl EQ_CXWnd_DrawColoredRect(PEQCXRECT rect, DWORD argbColor), EQ_FUNCTION_CXWnd_DrawColoredRect);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_CXWnd_DrawColoredRect)(EQ::CXRect* rect, uint32_t colorARGB);
+EQ_FUNCTION_AT_ADDRESS(int __cdecl EQ_CXWnd_DrawColoredRect(EQ::CXRect* rect, uint32_t colorARGB), EQ_FUNCTION_CXWnd_DrawColoredRect);
 #endif
 
 #ifdef EQ_FUNCTION_DrawNetStatus
@@ -565,21 +565,21 @@ typedef int (__cdecl* EQ_FUNCTION_TYPE_DrawNetStatus)(int, unsigned short, unsig
 #endif
 
 #ifdef EQ_FUNCTION_GetMeleeRange
-EQ_FUNCTION_AT_ADDRESS(float __cdecl EQ_GetMeleeRange(DWORD spawn1, DWORD spawn2), EQ_FUNCTION_GetMeleeRange);
+EQ_FUNCTION_AT_ADDRESS(float __cdecl EQ_GetMeleeRange(uint32_t spawn1, uint32_t spawn2), EQ_FUNCTION_GetMeleeRange);
 #endif
 
 #ifdef EQ_FUNCTION_GetBearing
 EQ_FUNCTION_AT_ADDRESS(float __cdecl EQ_GetBearing(float y1, float x1, float y2, float x2), EQ_FUNCTION_GetBearing);
 #endif
 
-#ifdef EQ_FUNCTION_ExecuteCmd
-typedef int (__cdecl* EQ_FUNCTION_TYPE_ExecuteCmd)(DWORD command, BOOL hold, PVOID unknown);
-EQ_FUNCTION_AT_ADDRESS(void EQ_ExecuteCmd(DWORD command, BOOL hold, PVOID unknown), EQ_FUNCTION_ExecuteCmd);
+#ifdef EQ_FUNCTION_ExecuteCommand
+typedef int (__cdecl* EQ_FUNCTION_TYPE_ExecuteCommand)(uint32_t command, BOOL hold, PVOID unknown);
+EQ_FUNCTION_AT_ADDRESS(void EQ_ExecuteCommand(uint32_t command, BOOL hold, PVOID unknown), EQ_FUNCTION_ExecuteCommand);
 #endif
 
 #ifdef EQ_FUNCTION_SetTarget
-typedef int (__cdecl* EQ_FUNCTION_TYPE_SetTarget)(DWORD a1, const char* spawnName);
-EQ_FUNCTION_AT_ADDRESS(int __cdecl EQ_SetTarget(DWORD a1, const char* spawnName), EQ_FUNCTION_SetTarget);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_SetTarget)(uint32_t a1, const char* spawnName);
+EQ_FUNCTION_AT_ADDRESS(int __cdecl EQ_SetTarget(uint32_t a1, const char* spawnName), EQ_FUNCTION_SetTarget);
 #endif
 
 #ifdef EQ_FUNCTION_OpenAllContainers
@@ -595,7 +595,7 @@ EQ_FUNCTION_AT_ADDRESS(void EQ_AcceptGroupInvite(), EQ_FUNCTION_AcceptGroupInvit
 #endif
 
 #ifdef EQ_FUNCTION_UpdateLight
-EQ_FUNCTION_AT_ADDRESS(void EQ_UpdateLight(DWORD charInfo), EQ_FUNCTION_UpdateLight);
+EQ_FUNCTION_AT_ADDRESS(void EQ_UpdateLight(uint32_t charInfo), EQ_FUNCTION_UpdateLight);
 #endif
 
 /* functions */
@@ -644,24 +644,18 @@ bool EQ_IsPointInsideRectangle(int pointX, int pointY, int rectX, int rectY, int
     return true;
 }
 
-void EQ_HexColorDarken(DWORD& color, float percent)
+void EQ_Color_Darken(uint32_t& colorARGB, float percent)
 {
-    DWORD alpha = (color >> 24) & 0xFF;
-    DWORD red   = (color >> 16) & 0xFF;
-    DWORD green = (color >> 8)  & 0xFF;
-    DWORD blue  =  color        & 0xFF;
+    uint32_t alpha = (colorARGB >> 24) & 0xFF;
+    uint32_t red   = (colorARGB >> 16) & 0xFF;
+    uint32_t green = (colorARGB >> 8)  & 0xFF;
+    uint32_t blue  =  colorARGB        & 0xFF;
 
-    red   = (DWORD)(red   * percent);
-    green = (DWORD)(green * percent);
-    blue  = (DWORD)(blue  * percent);
+    red   = (uint32_t)(red   * percent);
+    green = (uint32_t)(green * percent);
+    blue  = (uint32_t)(blue  * percent);
 
-    color = (alpha << 24) + (red << 16) + (green << 8) + blue;
-
-    // alternative method
-    //red   = (red   & 0xFE) >> 1;
-    //green = (green & 0xFE) >> 1;
-    //blue  = (blue  & 0xFE) >> 1;
-    //color = (color & 0xFEFEFEFE) >> 1;
+    colorARGB = (alpha << 24) + (red << 16) + (green << 8) + blue;
 }
 
 void EQ_CopyStringToClipboard(std::string& str)
@@ -678,13 +672,13 @@ void EQ_CopyStringToClipboard(std::string& str)
 
 bool EQ_IsInGame()
 {
-    DWORD everquest = EQ_ReadMemory<DWORD>(EQ_POINTER_CEverQuest);
+    uint32_t everquest = EQ_ReadMemory<uint32_t>(EQ_POINTER_CEverQuest);
     if (everquest == NULL)
     {
         return false;
     }
 
-    DWORD gameState = EQ_ReadMemory<DWORD>(everquest + EQ_OFFSET_CEverQuest_GAME_STATE);
+    uint32_t gameState = EQ_ReadMemory<uint32_t>(everquest + EQ_OFFSET_CEverQuest_GAME_STATE);
     if (gameState != EQ_GAME_STATE_IN_GAME)
     {
         return false;
@@ -695,42 +689,42 @@ bool EQ_IsInGame()
 
 bool EQ_IsNetStatusEnabled()
 {
-    DWORD b = EQ_ReadMemory<BYTE>(EQ_BOOL_NET_STATUS);
+    int b = EQ_ReadMemory<uint8_t>(EQ_BOOL_NET_STATUS);
 
     return (b == 1);
 }
 
 bool EQ_IsSafeLockEnabled()
 {
-    DWORD b = EQ_ReadMemory<BYTE>(EQ_BOOL_SAFELOCK);
+    int b = EQ_ReadMemory<uint8_t>(EQ_BOOL_SAFELOCK);
 
     return (b == 1);
 }
 
 bool EQ_IsScreenshotBeingTaken()
 {
-    DWORD b = EQ_ReadMemory<BYTE>(EQ_BOOL_SCREENSHOT);
+    int b = EQ_ReadMemory<uint8_t>(EQ_BOOL_SCREENSHOT);
 
     return (b == 1);
 }
 
 bool EQ_IsAutoAttackEnabled()
 {
-    DWORD b = EQ_ReadMemory<BYTE>(EQ_BOOL_AUTO_ATTACK);
+    int b = EQ_ReadMemory<uint8_t>(EQ_BOOL_AUTO_ATTACK);
 
     return (b == 1);
 }
 
 bool EQ_IsAutoFireEnabled()
 {
-    DWORD b = EQ_ReadMemory<BYTE>(EQ_BOOL_AUTO_FIRE);
+    int b = EQ_ReadMemory<uint8_t>(EQ_BOOL_AUTO_FIRE);
 
     return (b == 1);
 }
 
 bool EQ_IsAutoRunEnabled()
 {
-    DWORD b = EQ_ReadMemory<DWORD>(EQ_BOOL_AUTO_RUN);
+    uint32_t b = EQ_ReadMemory<uint32_t>(EQ_BOOL_AUTO_RUN);
 
     return (b == 1);
 }
@@ -739,11 +733,11 @@ void EQ_SetNetStatus(bool b)
 {
     if (b == true)
     {
-        EQ_WriteMemory<BYTE>(EQ_BOOL_NET_STATUS, 0x01);
+        EQ_WriteMemory<uint8_t>(EQ_BOOL_NET_STATUS, 0x01);
     }
     else
     {
-        EQ_WriteMemory<BYTE>(EQ_BOOL_NET_STATUS, 0x00);
+        EQ_WriteMemory<uint8_t>(EQ_BOOL_NET_STATUS, 0x00);
     }
 }
 
@@ -751,11 +745,11 @@ void EQ_SetAutoAttack(bool b)
 {
     if (b == true)
     {
-        EQ_WriteMemory<BYTE>(EQ_BOOL_AUTO_ATTACK, 0x01);
+        EQ_WriteMemory<uint8_t>(EQ_BOOL_AUTO_ATTACK, 0x01);
     }
     else
     {
-        EQ_WriteMemory<BYTE>(EQ_BOOL_AUTO_ATTACK, 0x00);
+        EQ_WriteMemory<uint8_t>(EQ_BOOL_AUTO_ATTACK, 0x00);
     }
 }
 
@@ -763,38 +757,38 @@ void EQ_SetAutoRun(bool b)
 {
     if (b == true)
     {
-        EQ_WriteMemory<DWORD>(EQ_BOOL_AUTO_RUN, 1);
+        EQ_WriteMemory<uint32_t>(EQ_BOOL_AUTO_RUN, 1);
     }
     else
     {
-        EQ_WriteMemory<DWORD>(EQ_BOOL_AUTO_RUN, 0);
+        EQ_WriteMemory<uint32_t>(EQ_BOOL_AUTO_RUN, 0);
     }
 }
 
 bool EQ_IsKeyShiftPressed()
 {
-    DWORD b = EQ_ReadMemory<BYTE>(EQ_BOOL_KEYBOARD_SHIFT);
+    int b = EQ_ReadMemory<uint8_t>(EQ_BOOL_KEYBOARD_SHIFT);
 
     return (b == 1);
 }
 
 bool EQ_IsKeyAltPressed()
 {
-    DWORD b = EQ_ReadMemory<BYTE>(EQ_BOOL_KEYBOARD_ALT);
+    int b = EQ_ReadMemory<uint8_t>(EQ_BOOL_KEYBOARD_ALT);
 
     return (b == 1);
 }
 
 bool EQ_IsKeyControlPressed()
 {
-    DWORD b = EQ_ReadMemory<BYTE>(EQ_BOOL_KEYBOARD_CONTROL);
+    int b = EQ_ReadMemory<uint8_t>(EQ_BOOL_KEYBOARD_CONTROL);
 
     return (b == 1);
 }
 
-DWORD EQ_GetExitStatus()
+uint32_t EQ_GetExitStatus()
 {
-    return EQ_ReadMemory<BYTE>(EQ_EXIT_STATUS);
+    return EQ_ReadMemory<uint8_t>(EQ_EXIT_STATUS);
 }
 
 HWND EQ_GetWindow()
@@ -802,144 +796,160 @@ HWND EQ_GetWindow()
     return EQ_ReadMemory<HWND>(EQ_WINDOW_HWND);
 }
 
-DWORD EQ_GetWindowWidth()
+uint32_t EQ_GetWindowWidth()
 {
-    return EQ_ReadMemory<DWORD>(EQ_WINDOW_WIDTH);
+    return EQ_ReadMemory<uint32_t>(EQ_WINDOW_WIDTH);
 }
 
-DWORD EQ_GetWindowHeight()
+uint32_t EQ_GetWindowHeight()
 {
-    return EQ_ReadMemory<DWORD>(EQ_WINDOW_HEIGHT);
+    return EQ_ReadMemory<uint32_t>(EQ_WINDOW_HEIGHT);
 }
 
-DWORD EQ_GetCharInfo()
+uint32_t EQ_GetCharInfo()
 {
-    return EQ_ReadMemory<DWORD>(EQ_POINTER_CHAR_INFO);
+    return EQ_ReadMemory<uint32_t>(EQ_POINTER_CHAR_INFO);
 }
 
-DWORD EQ_GetCharInfo_CI2()
+uint32_t EQ_GetCharInfo_CI2()
 {
-    DWORD charInfo = EQ_GetCharInfo();
+    uint32_t charInfo = EQ_GetCharInfo();
     if (charInfo == NULL)
     {
         return NULL;
     }
 
-    return EQ_ReadMemory<DWORD>(charInfo + EQ_OFFSET_CHAR_INFO_CI2);
+    return EQ_ReadMemory<uint32_t>(charInfo + EQ_OFFSET_CHAR_INFO_CI2);
 }
 
-DWORD EQ_GetCharInfo2()
+uint32_t EQ_GetCharInfo2()
 {
-    DWORD charInfo_CI2 = EQ_GetCharInfo_CI2();
+    uint32_t charInfo_CI2 = EQ_GetCharInfo_CI2();
     if (charInfo_CI2 == NULL)
     {
         return NULL;
     }
 
-    return EQ_ReadMemory<DWORD>(charInfo_CI2 + EQ_OFFSET_CI2_CHAR_INFO_2);
+    return EQ_ReadMemory<uint32_t>(charInfo_CI2 + EQ_OFFSET_CI2_CHAR_INFO_2);
 }
 
-DWORD EQ_GetFirstSpawn()
+uint32_t EQ_GetFirstSpawn()
 {
-    DWORD spawnManager = EQ_ReadMemory<DWORD>(EQ_POINTER_SPAWN_MANAGER);
+    uint32_t spawnManager = EQ_ReadMemory<uint32_t>(EQ_POINTER_SPAWN_MANAGER);
     if (spawnManager == NULL)
     {
         return NULL;
     }
 
-    return EQ_ReadMemory<DWORD>(spawnManager + EQ_OFFSET_SPAWN_MANAGER_SPAWN_INFO_FIRST);
+    return EQ_ReadMemory<uint32_t>(spawnManager + EQ_OFFSET_SPAWN_MANAGER_SPAWN_INFO_FIRST);
 }
 
-DWORD EQ_GetLastSpawn()
+uint32_t EQ_GetLastSpawn()
 {
-    DWORD spawnManager = EQ_ReadMemory<DWORD>(EQ_POINTER_SPAWN_MANAGER);
+    uint32_t spawnManager = EQ_ReadMemory<uint32_t>(EQ_POINTER_SPAWN_MANAGER);
     if (spawnManager == NULL)
     {
         return NULL;
     }
 
-    return EQ_ReadMemory<DWORD>(spawnManager + EQ_OFFSET_SPAWN_MANAGER_SPAWN_INFO_LAST);
+    return EQ_ReadMemory<uint32_t>(spawnManager + EQ_OFFSET_SPAWN_MANAGER_SPAWN_INFO_LAST);
 }
 
-DWORD EQ_GetPreviousSpawn(DWORD spawnInfo)
+uint32_t EQ_GetPreviousSpawn(uint32_t spawnInfo)
 {
-    return EQ_ReadMemory<DWORD>(spawnInfo + EQ_OFFSET_SPAWN_INFO_PREVIOUS);
+    return EQ_ReadMemory<uint32_t>(spawnInfo + EQ_OFFSET_SPAWN_INFO_PREVIOUS);
 }
 
-DWORD EQ_GetNextSpawn(DWORD spawnInfo)
+uint32_t EQ_GetNextSpawn(uint32_t spawnInfo)
 {
-    return EQ_ReadMemory<DWORD>(spawnInfo + EQ_OFFSET_SPAWN_INFO_NEXT);
+    return EQ_ReadMemory<uint32_t>(spawnInfo + EQ_OFFSET_SPAWN_INFO_NEXT);
 }
 
-DWORD EQ_GetPlayerSpawn()
+uint32_t EQ_GetPlayerSpawn()
 {
-    return EQ_ReadMemory<DWORD>(EQ_POINTER_SPAWN_INFO_PLAYER);
+    return EQ_ReadMemory<uint32_t>(EQ_POINTER_SPAWN_INFO_PLAYER);
 }
 
-DWORD EQ_GetTargetSpawn()
+uint32_t EQ_GetTargetSpawn()
 {
-    return EQ_ReadMemory<DWORD>(EQ_POINTER_SPAWN_INFO_TARGET);
+    return EQ_ReadMemory<uint32_t>(EQ_POINTER_SPAWN_INFO_TARGET);
 }
 
-DWORD EQ_GetSpawnActorInfo(DWORD spawnInfo)
+uint32_t EQ_GetSpawnActorInfo(uint32_t spawnInfo)
 {
-    return EQ_ReadMemory<DWORD>(spawnInfo + EQ_OFFSET_SPAWN_INFO_ACTOR_INFO);
+    return EQ_ReadMemory<uint32_t>(spawnInfo + EQ_OFFSET_SPAWN_INFO_ACTOR_INFO);
 }
 
-FLOAT EQ_GetSpawnY(DWORD spawnInfo)
+float EQ_GetSpawnY(uint32_t spawnInfo)
 {
-    return EQ_ReadMemory<FLOAT>(spawnInfo + EQ_OFFSET_SPAWN_INFO_Y);
+    return EQ_ReadMemory<float>(spawnInfo + EQ_OFFSET_SPAWN_INFO_Y);
 }
 
-FLOAT EQ_GetSpawnX(DWORD spawnInfo)
+float EQ_GetSpawnX(uint32_t spawnInfo)
 {
-    return EQ_ReadMemory<FLOAT>(spawnInfo + EQ_OFFSET_SPAWN_INFO_X);
+    return EQ_ReadMemory<float>(spawnInfo + EQ_OFFSET_SPAWN_INFO_X);
 }
 
-FLOAT EQ_GetSpawnZ(DWORD spawnInfo)
+float EQ_GetSpawnZ(uint32_t spawnInfo)
 {
-    return EQ_ReadMemory<FLOAT>(spawnInfo + EQ_OFFSET_SPAWN_INFO_Z);
+    return EQ_ReadMemory<float>(spawnInfo + EQ_OFFSET_SPAWN_INFO_Z);
 }
 
-std::string EQ_GetSpawnBodyTypeDescription(DWORD spawnInfo)
+std::string EQ_GetSpawnName(uint32_t spawnInfo)
+{
+    char spawnName[EQ_SIZE_SPAWN_INFO_NAME] = { 0 };
+    memcpy(spawnName, (void*)(spawnInfo + EQ_OFFSET_SPAWN_INFO_NAME), sizeof(spawnName));
+
+    return spawnName;
+}
+
+std::string EQ_GetSpawnNumberedName(uint32_t spawnInfo)
+{
+    char spawnNumberedName[EQ_SIZE_SPAWN_INFO_NUMBERED_NAME] = { 0 };
+    memcpy(spawnNumberedName, (void*)(spawnInfo + EQ_OFFSET_SPAWN_INFO_NUMBERED_NAME), sizeof(spawnNumberedName));
+
+    return spawnNumberedName;
+}
+
+std::string EQ_GetSpawnBodyTypeDescription(uint32_t spawnInfo)
 {
     return EQ_CEverQuest->GetBodyTypeDesc(spawnInfo + EQ_OFFSET_SPAWN_INFO_BODY_TYPE_DESCRIPTION);
 }
 
-DWORD EQ_GetFirstGroundSpawn()
+uint32_t EQ_GetFirstGroundSpawn()
 {
-    return EQ_ReadMemory<DWORD>(EQ_POINTER_GROUND_SPAWN_INFO_FIRST);
+    return EQ_ReadMemory<uint32_t>(EQ_POINTER_GROUND_SPAWN_INFO_FIRST);
 }
 
-DWORD EQ_GetPreviousGroundSpawn(DWORD spawnInfo)
+uint32_t EQ_GetPreviousGroundSpawn(uint32_t spawnInfo)
 {
-    return EQ_ReadMemory<DWORD>(spawnInfo + EQ_OFFSET_GROUND_SPAWN_INFO_PREVIOUS);
+    return EQ_ReadMemory<uint32_t>(spawnInfo + EQ_OFFSET_GROUND_SPAWN_INFO_PREVIOUS);
 }
 
-DWORD EQ_GetNextGroundSpawn(DWORD spawnInfo)
+uint32_t EQ_GetNextGroundSpawn(uint32_t spawnInfo)
 {
-    return EQ_ReadMemory<DWORD>(spawnInfo + EQ_OFFSET_GROUND_SPAWN_INFO_NEXT);
+    return EQ_ReadMemory<uint32_t>(spawnInfo + EQ_OFFSET_GROUND_SPAWN_INFO_NEXT);
 }
 
-FLOAT EQ_GetGroundSpawnY(DWORD spawnInfo)
+float EQ_GetGroundSpawnY(uint32_t spawnInfo)
 {
-    return EQ_ReadMemory<FLOAT>(spawnInfo + EQ_OFFSET_GROUND_SPAWN_INFO_Y);
+    return EQ_ReadMemory<float>(spawnInfo + EQ_OFFSET_GROUND_SPAWN_INFO_Y);
 }
 
-FLOAT EQ_GetGroundSpawnX(DWORD spawnInfo)
+float EQ_GetGroundSpawnX(uint32_t spawnInfo)
 {
-    return EQ_ReadMemory<FLOAT>(spawnInfo + EQ_OFFSET_GROUND_SPAWN_INFO_X);
+    return EQ_ReadMemory<float>(spawnInfo + EQ_OFFSET_GROUND_SPAWN_INFO_X);
 }
 
-FLOAT EQ_GetGroundSpawnZ(DWORD spawnInfo)
+float EQ_GetGroundSpawnZ(uint32_t spawnInfo)
 {
-    return EQ_ReadMemory<FLOAT>(spawnInfo + EQ_OFFSET_GROUND_SPAWN_INFO_Z);
+    return EQ_ReadMemory<float>(spawnInfo + EQ_OFFSET_GROUND_SPAWN_INFO_Z);
 }
 
 std::string EQ_GetZoneShortName()
 {
     char zoneShortName[EQ_SIZE_ZONE_INFO_SHORT_NAME] = {0};
-    memcpy(zoneShortName, (LPVOID)(EQ_ZONE_INFO_SHORT_NAME), sizeof(zoneShortName));
+    memcpy(zoneShortName, (void*)(EQ_ZONE_INFO_SHORT_NAME), sizeof(zoneShortName));
 
     std::string zoneShortNameString = zoneShortName;
 
@@ -955,39 +965,44 @@ std::string EQ_GetZoneShortName()
 std::string EQ_GetZoneLongName()
 {
     char zoneLongName[EQ_SIZE_ZONE_INFO_LONG_NAME] = {0};
-    memcpy(zoneLongName, (LPVOID)(EQ_ZONE_INFO_LONG_NAME), sizeof(zoneLongName));
+    memcpy(zoneLongName, (void*)(EQ_ZONE_INFO_LONG_NAME), sizeof(zoneLongName));
 
     return zoneLongName;
 }
 
 std::string EQ_GetCharacterName()
 {
-    DWORD charInfo = EQ_GetCharInfo();
+    uint32_t charInfo = EQ_GetCharInfo();
     if (charInfo == NULL)
     {
         return std::string();
     }
 
     char characterName[EQ_SIZE_CHAR_INFO_CHARACTER_NAME] = {0};
-    memcpy(characterName, (LPVOID)(charInfo + EQ_OFFSET_CHAR_INFO_CHARACTER_NAME), sizeof(characterName));
+    memcpy(characterName, (void*)(charInfo + EQ_OFFSET_CHAR_INFO_CHARACTER_NAME), sizeof(characterName));
 
     return characterName;
 }
 
-DWORD EQ_GetZoneId()
+void EQ_SetCameraView(uint32_t cameraView)
 {
-    DWORD charInfo = EQ_GetCharInfo();
+    EQ_WriteMemory<uint32_t>(EQ_CAMERA_VIEW, cameraView);
+}
+
+uint32_t EQ_GetZoneId()
+{
+    uint32_t charInfo = EQ_GetCharInfo();
     if (charInfo == NULL)
     {
         return NULL;
     }
 
-    WORD zoneId = EQ_ReadMemory<WORD>(charInfo + EQ_OFFSET_CHAR_INFO_ZONE_ID);
+    uint32_t zoneId = EQ_ReadMemory<uint16_t>(charInfo + EQ_OFFSET_CHAR_INFO_ZONE_ID);
 
     return zoneId;
 }
 
-bool EQ_IsRacePlayable(DWORD raceId)
+bool EQ_IsRacePlayable(uint32_t raceId)
 {
     if
     (
@@ -1004,17 +1019,17 @@ bool EQ_IsRacePlayable(DWORD raceId)
     return false;
 }
 
-void EQ_SetSpawnForm(DWORD spawnInfo, DWORD raceId, BYTE gender)
+void EQ_SetSpawnForm(uint32_t spawnInfo, uint32_t raceId, uint8_t gender)
 {
     if (spawnInfo == NULL)
     {
         return;
     }
 
-    DWORD spawnId = EQ_ReadMemory<WORD>(spawnInfo + EQ_OFFSET_SPAWN_INFO_ID);
+    uint32_t spawnId = EQ_ReadMemory<uint16_t>(spawnInfo + EQ_OFFSET_SPAWN_INFO_ID);
 
-    BYTE unknown73 = 0xFF;
-    BYTE unknown76 = 0xFF;
+    uint8_t unknown73 = 0xFF;
+    uint8_t unknown76 = 0xFF;
 
     if (EQ_IsRacePlayable(raceId) == false)
     {
@@ -1024,7 +1039,7 @@ void EQ_SetSpawnForm(DWORD spawnInfo, DWORD raceId, BYTE gender)
         unknown76 = 0x00;
     }
 
-    static EQCHANGEFORM changeForm = {};
+    static EQ::ChangeForm changeForm = {};
     changeForm.SpawnId      = spawnId;
     changeForm.RaceId       = raceId;
     changeForm.Gender       = gender;
@@ -1055,7 +1070,7 @@ void EQ_WriteToChat(const char* text, int textColor)
     EQ_CEverQuest->dsp_chat(text, textColor, false);
 }
 
-void EQ_SetSpawnCollisionRadius(DWORD spawnInfo, float radius)
+void EQ_SetSpawnCollisionRadius(uint32_t spawnInfo, float radius)
 {
     if (radius < 0.1f)
     {
@@ -1067,20 +1082,20 @@ void EQ_SetSpawnCollisionRadius(DWORD spawnInfo, float radius)
         return;
     }
 
-    DWORD actorInfo = EQ_GetSpawnActorInfo(spawnInfo);
+    uint32_t actorInfo = EQ_GetSpawnActorInfo(spawnInfo);
     if (actorInfo == NULL)
     {
         return;
     }
 
-    EQ_WriteMemory<FLOAT>(actorInfo + EQ_OFFSET_ACTOR_INFO_COLLISION_RADIUS, radius);
+    EQ_WriteMemory<float>(actorInfo + EQ_OFFSET_ACTOR_INFO_COLLISION_RADIUS, radius);
 }
 
 bool EQ_IsZoneCity()
 {
     // TODO
 
-    DWORD zoneId = EQ_GetZoneId();
+    uint32_t zoneId = EQ_GetZoneId();
 
     if
     (
@@ -1105,13 +1120,13 @@ bool EQ_IsZoneCity()
 
 bool EQ_IsPlayerCastingSpell()
 {
-    DWORD playerSpawn = EQ_GetPlayerSpawn();
+    uint32_t playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)
     {
         return false;
     }
 
-    DWORD spellCastingTimer = EQ_ReadMemory<DWORD>(playerSpawn + EQ_OFFSET_SPAWN_INFO_SPELL_CASTING_TIMER);
+    uint32_t spellCastingTimer = EQ_ReadMemory<uint32_t>(playerSpawn + EQ_OFFSET_SPAWN_INFO_SPELL_CASTING_TIMER);
     if (spellCastingTimer > 0)
     {
         return true;
@@ -1120,20 +1135,20 @@ bool EQ_IsPlayerCastingSpell()
     return false;
 }
 
-bool EQ_IsSpawnInGroup(DWORD spawnInfo)
+bool EQ_IsSpawnInGroup(uint32_t spawnInfo)
 {
     if (spawnInfo == NULL)
     {
         return false;
     }
 
-    DWORD charInfo = EQ_GetCharInfo();
+    uint32_t charInfo = EQ_GetCharInfo();
     if (charInfo == NULL)
     {
         return false;
     }
 
-    DWORD groupInfo = EQ_ReadMemory<DWORD>(charInfo + EQ_OFFSET_CHAR_INFO_GROUP_INFO);
+    uint32_t groupInfo = EQ_ReadMemory<uint32_t>(charInfo + EQ_OFFSET_CHAR_INFO_GROUP_INFO);
     if (groupInfo == NULL)
     {
         return false;
@@ -1141,13 +1156,13 @@ bool EQ_IsSpawnInGroup(DWORD spawnInfo)
 
     for (size_t i = 1; i < EQ_NUM_GROUP_MEMBERS + 1; i++)
     {
-        DWORD groupMemberInfo = EQ_ReadMemory<DWORD>(groupInfo + (i * 4));
+        uint32_t groupMemberInfo = EQ_ReadMemory<uint32_t>(groupInfo + (i * 4));
         if (groupMemberInfo == NULL)
         {
             continue;
         }
 
-        DWORD groupMemberSpawnInfo = EQ_ReadMemory<DWORD>(groupMemberInfo + EQ_OFFSET_GROUP_MEMBER_INFO_SPAWN_INFO);
+        uint32_t groupMemberSpawnInfo = EQ_ReadMemory<uint32_t>(groupMemberInfo + EQ_OFFSET_GROUP_MEMBER_INFO_SPAWN_INFO);
         if (groupMemberSpawnInfo == NULL)
         {
             continue;
@@ -1162,48 +1177,48 @@ bool EQ_IsSpawnInGroup(DWORD spawnInfo)
     return false;
 }
 
-DWORD EQ_GetTimer()
+uint32_t EQ_GetTimer()
 {
-    DWORD display = EQ_ReadMemory<DWORD>(EQ_POINTER_CDisplay);
+    uint32_t display = EQ_ReadMemory<uint32_t>(EQ_POINTER_CDisplay);
     if (display == NULL)
     {
         return NULL;
     }
 
-    DWORD timer = EQ_ReadMemory<DWORD>(display + EQ_OFFSET_CDisplay_TIMER);
+    uint32_t timer = EQ_ReadMemory<uint32_t>(display + EQ_OFFSET_CDisplay_TIMER);
 
     return timer;
 }
 
 bool EQ_IsHideCorpseLootedEnabled()
 {
-    DWORD display = EQ_ReadMemory<DWORD>(EQ_POINTER_CDisplay);
+    uint32_t display = EQ_ReadMemory<uint32_t>(EQ_POINTER_CDisplay);
     if (display == NULL)
     {
         return NULL;
     }
 
-    DWORD hideCorpseLooted = EQ_ReadMemory<BYTE>(display + EQ_OFFSET_CDisplay_IS_HIDE_CORPSE_LOOTED_ENABLED);
+    int hideCorpseLooted = EQ_ReadMemory<uint8_t>(display + EQ_OFFSET_CDisplay_IS_HIDE_CORPSE_LOOTED_ENABLED);
 
     return (hideCorpseLooted == 1);
 }
 
 void EQ_SetHideCorpseLooted(bool b)
 {
-    DWORD display = EQ_ReadMemory<DWORD>(EQ_POINTER_CDisplay);
+    uint32_t display = EQ_ReadMemory<uint32_t>(EQ_POINTER_CDisplay);
     if (display == NULL)
     {
         return;
     }
 
-    BYTE value = 0x00;
+    uint8_t value = 0x00;
 
     if (b == true)
     {
         value = 0x01;
     }
 
-    EQ_WriteMemory<BYTE>(display + EQ_OFFSET_CDisplay_IS_HIDE_CORPSE_LOOTED_ENABLED, value);
+    EQ_WriteMemory<uint8_t>(display + EQ_OFFSET_CDisplay_IS_HIDE_CORPSE_LOOTED_ENABLED, value);
 }
 
 void EQ_String_ReplaceUnderscoresWithSpaces(char* str)
@@ -1232,7 +1247,7 @@ void EQ_String_ReplaceSpacesWithUnderscores(char* str)
     }
 }
 
-void EQ_DrawText(const char* text, int x, int y, unsigned int color, unsigned int size)
+void EQ_DrawText(const char* text, int x, int y, uint32_t colorARGB, uint32_t size)
 {
     // color is ARGB format: 0xAARRGGBB
 
@@ -1241,19 +1256,19 @@ void EQ_DrawText(const char* text, int x, int y, unsigned int color, unsigned in
         return;
     }
 
-    DWORD windowManager = EQ_ReadMemory<DWORD>(EQ_POINTER_CXWndManager);
+    uint32_t windowManager = EQ_ReadMemory<uint32_t>(EQ_POINTER_CXWndManager);
     if (windowManager == NULL)
     {
         return;
     }
 
-    DWORD fontManager = EQ_ReadMemory<DWORD>(windowManager + EQ_OFFSET_CXWndManager_FONT_MANAGER);
+    uint32_t fontManager = EQ_ReadMemory<uint32_t>(windowManager + EQ_OFFSET_CXWndManager_FONT_MANAGER);
     if (fontManager == NULL)
     {
         return;
     }
 
-    DWORD fontInfo2 = EQ_ReadMemory<DWORD>(fontManager + EQ_OFFSET_FONT_MANAGER_FONT_INFO_2);
+    uint32_t fontInfo2 = EQ_ReadMemory<uint32_t>(fontManager + EQ_OFFSET_FONT_MANAGER_FONT_INFO_2);
     if (fontInfo2 == NULL)
     {
         return;
@@ -1261,21 +1276,21 @@ void EQ_DrawText(const char* text, int x, int y, unsigned int color, unsigned in
 
     // modifies the game function then restores it to normal
 
-    EQ_WriteMemoryProtected<DWORD>(EQ_FONT_INFO_2_COLOR_ADDRESS, color); // write new color
+    EQ_WriteMemoryProtected<uint32_t>(EQ_FONT_INFO_2_COLOR_ADDRESS, colorARGB); // write new color
 
-    EQ_WriteMemory<DWORD>(fontInfo2 + EQ_OFFSET_FONT_INFO_SIZE, size); // write new font size
+    EQ_WriteMemory<uint32_t>(fontInfo2 + EQ_OFFSET_FONT_INFO_SIZE, size); // write new font size
 
     EQ_CDisplay->WriteTextHD2(text, x, y, 0); // 0 is the color index that gets overwritten
 
-    EQ_WriteMemoryProtected<DWORD>(EQ_FONT_INFO_2_COLOR_ADDRESS, EQ_FONT_INFO_2_COLOR_VALUE); // restore old color
+    EQ_WriteMemoryProtected<uint32_t>(EQ_FONT_INFO_2_COLOR_ADDRESS, EQ_FONT_INFO_2_COLOR_VALUE); // restore old color
 
-    EQ_WriteMemory<DWORD>(fontInfo2 + EQ_OFFSET_FONT_INFO_SIZE, 2); // restore old font size
+    EQ_WriteMemory<uint32_t>(fontInfo2 + EQ_OFFSET_FONT_INFO_SIZE, 2); // restore old font size
 }
 
 
-void EQ_DrawColoredRectangle(int x, int y, unsigned int width, unsigned int height, unsigned int argbColor)
+void EQ_DrawColoredRectangle(int x, int y, uint32_t width, uint32_t height, uint32_t colorARGB)
 {
-    EQCXRECT rect;
+    EQ::CXRect rect;
 
     // top left
     rect.X1 = x;
@@ -1285,12 +1300,12 @@ void EQ_DrawColoredRectangle(int x, int y, unsigned int width, unsigned int heig
     rect.X2 = x + width;
     rect.Y2 = y + height;
 
-    EQ_CXWnd_DrawColoredRect(&rect, argbColor);
+    EQ_CXWnd_DrawColoredRect(&rect, colorARGB);
 }
 
-void EQ_DrawQuad(float x, float y, float width, float height, unsigned int argbColor)
+void EQ_DrawQuad(float x, float y, float width, float height, uint32_t colorARGB)
 {
-    EQRECT rect;
+    EQ::Rect rect;
 
     // top left
     rect.X1 = x;
@@ -1312,12 +1327,12 @@ void EQ_DrawQuad(float x, float y, float width, float height, unsigned int argbC
     rect.Y4 = y + height;
     rect.Z4 = 0.0f;
 
-    EQGraphicsDLL__DrawQuad(EQ_EQGraphicsDLL, &rect, argbColor);
+    EQGraphicsDLL__DrawQuad(EQ_EQGraphicsDLL, &rect, colorARGB);
 }
 
-void EQ_DrawQuadEx(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, unsigned int argbColor)
+void EQ_DrawQuadEx(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, uint32_t colorARGB)
 {
-    EQRECT rect;
+    EQ::Rect rect;
 
     // top left
     rect.X1 = x1;
@@ -1339,69 +1354,69 @@ void EQ_DrawQuadEx(float x1, float y1, float x2, float y2, float x3, float y3, f
     rect.Y4 = y4;
     rect.Z4 = 0.0f;
 
-    EQGraphicsDLL__DrawQuad(EQ_EQGraphicsDLL, &rect, argbColor);
+    EQGraphicsDLL__DrawQuad(EQ_EQGraphicsDLL, &rect, colorARGB);
 }
 
-bool EQ_DrawLine(float x1, float y1, float z1, float x2, float y2, float z2, unsigned int argbColor)
+bool EQ_DrawLine(float x1, float y1, float z1, float x2, float y2, float z2, uint32_t colorARGB)
 {
     if (EQGraphicsDLL__DrawLine == NULL)
     {
         return false;
     }
 
-    EQLINE lineBegin;
+    EQ::Line lineBegin;
     lineBegin.X = x1;
     lineBegin.Y = y1;
     lineBegin.Z = z1;
 
-    EQLINE lineEnd;
+    EQ::Line lineEnd;
     lineEnd.X = x2;
     lineEnd.Y = y2;
     lineEnd.Z = z2;
 
-    EQGraphicsDLL__DrawLine(EQ_EQGraphicsDLL, &lineBegin, &lineEnd, argbColor);
+    EQGraphicsDLL__DrawLine(EQ_EQGraphicsDLL, &lineBegin, &lineEnd, colorARGB);
 
     return true;
 }
 
-DWORD EQ_GetCameraData()
+uint32_t EQ_GetCameraData()
 {
-    DWORD display = EQ_ReadMemory<DWORD>(EQ_POINTER_CDisplay);
+    uint32_t display = EQ_ReadMemory<uint32_t>(EQ_POINTER_CDisplay);
     if (display == NULL)
     {
         return NULL;
     }
 
-    return EQ_ReadMemory<DWORD>(display + EQ_OFFSET_CDisplay_CAMERA_DATA);
+    return EQ_ReadMemory<uint32_t>(display + EQ_OFFSET_CDisplay_CAMERA_DATA);
 }
 
 bool EQ_WorldSpaceToScreenSpace(float worldX, float worldY, float worldZ, int& screenX, int& screenY)
 {
     // this function uses hardcoded offsets
 
-    DWORD cameraData = EQ_GetCameraData();
+    uint32_t cameraData = EQ_GetCameraData();
     if (cameraData == NULL)
     {
         return false;
     }
 
-    FLOAT cameraData_0x1A0 = EQ_ReadMemory<FLOAT>(cameraData + 0x0C); // boolean for if the world should be drawn
-    FLOAT cameraData_0x1A4 = EQ_ReadMemory<FLOAT>(cameraData + 0x10);
-    FLOAT cameraData_0x1A8 = EQ_ReadMemory<FLOAT>(cameraData + 0x14);
-    FLOAT cameraData_0x198 = EQ_ReadMemory<FLOAT>(cameraData + 0x38); // screen width  divided by two
-    FLOAT cameraData_0x19C = EQ_ReadMemory<FLOAT>(cameraData + 0x3C); // screen height divided by two
-    FLOAT cameraData_0x22C = EQ_ReadMemory<FLOAT>(cameraData + 0x48);
-    FLOAT cameraData_0x238 = EQ_ReadMemory<FLOAT>(cameraData + 0x54);
-    FLOAT cameraData_0x244 = EQ_ReadMemory<FLOAT>(cameraData + 0x60);
-    FLOAT cameraData_0x260 = EQ_ReadMemory<FLOAT>(cameraData + 0x84);
-    FLOAT cameraData_0x264 = EQ_ReadMemory<FLOAT>(cameraData + 0x88);
-    FLOAT cameraData_0x268 = EQ_ReadMemory<FLOAT>(cameraData + 0x8C); // always zero?
-    FLOAT cameraData_0x26C = EQ_ReadMemory<FLOAT>(cameraData + 0x90);
-    FLOAT cameraData_0x270 = EQ_ReadMemory<FLOAT>(cameraData + 0x94);
-    FLOAT cameraData_0x274 = EQ_ReadMemory<FLOAT>(cameraData + 0x98);
-    FLOAT cameraData_0x1AC = EQ_ReadMemory<FLOAT>(cameraData + 0xBC);
-    FLOAT cameraData_0x1B0 = EQ_ReadMemory<FLOAT>(cameraData + 0xC0);
-    FLOAT cameraData_0x1B4 = EQ_ReadMemory<FLOAT>(cameraData + 0xC4);
+    float cameraData_0x1A0 = EQ_ReadMemory<float>(cameraData + 0x0C); // boolean for if the world should be drawn
+    float cameraData_0x1A4 = EQ_ReadMemory<float>(cameraData + 0x10);
+    float cameraData_0x1A8 = EQ_ReadMemory<float>(cameraData + 0x14);
+    float cameraData_0x198 = EQ_ReadMemory<float>(cameraData + 0x38); // screen width  divided by two
+    float cameraData_0x19C = EQ_ReadMemory<float>(cameraData + 0x3C); // screen height divided by two
+    float cameraData_0x22C = EQ_ReadMemory<float>(cameraData + 0x48);
+    float cameraData_0x238 = EQ_ReadMemory<float>(cameraData + 0x54);
+    float cameraData_0x244 = EQ_ReadMemory<float>(cameraData + 0x60);
+    float cameraData_0x260 = EQ_ReadMemory<float>(cameraData + 0x84);
+    float cameraData_0x264 = EQ_ReadMemory<float>(cameraData + 0x88);
+    float cameraData_0x268 = EQ_ReadMemory<float>(cameraData + 0x8C); // always zero?
+    float cameraData_0x26C = EQ_ReadMemory<float>(cameraData + 0x90);
+    float cameraData_0x270 = EQ_ReadMemory<float>(cameraData + 0x94);
+    float cameraData_0x274 = EQ_ReadMemory<float>(cameraData + 0x98);
+    float cameraData_0x1AC = EQ_ReadMemory<float>(cameraData + 0xBC);
+    float cameraData_0x1B0 = EQ_ReadMemory<float>(cameraData + 0xC0);
+    float cameraData_0x1B4 = EQ_ReadMemory<float>(cameraData + 0xC4);
 
     float v4 = cameraData_0x1AC - worldY; // changed add to substract because Seeds of Destruction has backwards coordinates
     float v5 = cameraData_0x1B0 - worldX; // changed add to substract because Seeds of Destruction has backwards coordinates
@@ -1453,7 +1468,7 @@ bool EQ_WorldSpaceToScreenSpace(float worldX, float worldY, float worldZ, int& s
 
 void EQ_SetFieldOfView(float fov)
 {
-    DWORD cameraData = EQ_GetCameraData();
+    uint32_t cameraData = EQ_GetCameraData();
     if (cameraData == NULL)
     {
         return;
@@ -1464,12 +1479,12 @@ void EQ_SetFieldOfView(float fov)
         fov = EQ_FIELD_OF_VIEW_DEFAULT;
     }
 
-    EQ_WriteMemory<FLOAT>(cameraData + EQ_OFFSET_CAMERA_DATA_FIELD_OF_VIEW, fov);
+    EQ_WriteMemory<float>(cameraData + EQ_OFFSET_CAMERA_DATA_FIELD_OF_VIEW, fov);
 }
 
 void EQ_SetDrawDistance(float distance)
 {
-    DWORD cameraData = EQ_GetCameraData();
+    uint32_t cameraData = EQ_GetCameraData();
     if (cameraData == NULL)
     {
         return;
@@ -1480,59 +1495,57 @@ void EQ_SetDrawDistance(float distance)
         distance = EQ_DRAW_DISTANCE_DEFAULT;
     }
 
-    EQ_WriteMemory<FLOAT>(EQ_ZONE_INFO_MIN_CLIP, distance);
-    EQ_WriteMemory<FLOAT>(EQ_ZONE_INFO_MAX_CLIP, distance);
+    EQ_WriteMemory<float>(EQ_ZONE_INFO_MIN_CLIP, distance);
+    EQ_WriteMemory<float>(EQ_ZONE_INFO_MAX_CLIP, distance);
 
-    EQ_WriteMemory<FLOAT>(EQ_ZONE_INFO_FOG_MIN_CLIP, distance);
-    EQ_WriteMemory<FLOAT>(EQ_ZONE_INFO_FOG_MAX_CLIP, distance);
+    EQ_WriteMemory<float>(EQ_ZONE_INFO_FOG_MIN_CLIP, distance);
+    EQ_WriteMemory<float>(EQ_ZONE_INFO_FOG_MAX_CLIP, distance);
 
-    EQ_WriteMemory<FLOAT>(EQ_DRAW_DISTANCE_MAX, distance);
+    EQ_WriteMemory<float>(EQ_DRAW_DISTANCE_MAX, distance);
 
-    EQ_WriteMemory<FLOAT>(cameraData + EQ_OFFSET_CAMERA_DATA_DRAW_DISTANCE, distance);
+    EQ_WriteMemory<float>(cameraData + EQ_OFFSET_CAMERA_DATA_DRAW_DISTANCE, distance);
 }
 
-std::string EQ_GetSpellNameById(unsigned int spellId)
+std::string EQ_GetSpellNameById(uint32_t spellId)
 {
     if (spellId > EQ_NUM_SPELLS)
     {
         return "Unknown Spell";
     }
 
-    DWORD spellManager = EQ_ReadMemory<DWORD>(EQ_POINTER_SPELL_MANAGER);
+    uint32_t spellManager = EQ_ReadMemory<uint32_t>(EQ_POINTER_SPELL_MANAGER);
     if (spellManager == NULL)
     {
         return "Unknown Spell";
     }
 
-    DWORD spellInfo = EQ_ReadMemory<DWORD>(spellManager + (EQ_OFFSET_SPELL_MANAGER_SPELL_INFO_FIRST + (spellId * 4)));
+    uint32_t spellInfo = EQ_ReadMemory<uint32_t>(spellManager + (EQ_OFFSET_SPELL_MANAGER_SPELL_INFO_FIRST + (spellId * 4)));
     if (spellInfo == NULL)
     {
         return "Unknown Spell";
     }
 
     char spellName[EQ_SIZE_SPELL_INFO_NAME] = {0};
-    memcpy(spellName, (LPVOID)(spellInfo + EQ_OFFSET_SPELL_INFO_NAME), sizeof(spellName));
+    memcpy(spellName, (void*)(spellInfo + EQ_OFFSET_SPELL_INFO_NAME), sizeof(spellName));
 
     return spellName;
 }
 
-DWORD EQ_GetNumPlayersInZone()
+uint32_t EQ_GetNumPlayersInZone()
 {
-    DWORD numPlayers = 0;
+    uint32_t numPlayers = 0;
 
-    DWORD spawn = EQ_GetFirstSpawn();
+    uint32_t spawn = EQ_GetFirstSpawn();
     while (spawn)
     {
-        int spawnType = EQ_ReadMemory<BYTE>(spawn + EQ_OFFSET_SPAWN_INFO_TYPE);
-
+        int spawnType = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_TYPE);
         if (spawnType == EQ_SPAWN_TYPE_PLAYER)
         {
-            int spawnLevel = EQ_ReadMemory<BYTE>(spawn + EQ_OFFSET_SPAWN_INFO_LEVEL);
-
+            int spawnLevel = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_LEVEL);
             if (spawnLevel > EQ_LEVEL_MIN && spawnLevel < EQ_LEVEL_MAX)
             {
                 char spawnNumberedName[EQ_SIZE_SPAWN_INFO_NUMBERED_NAME] = {0};
-                memcpy(spawnNumberedName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_INFO_NUMBERED_NAME), sizeof(spawnNumberedName));
+                memcpy(spawnNumberedName, (void*)(spawn + EQ_OFFSET_SPAWN_INFO_NUMBERED_NAME), sizeof(spawnNumberedName));
 
                 if (strlen(spawnNumberedName) > EQ_SPAWN_NAME_LENGTH_MIN - 1)
                 {
@@ -1547,11 +1560,11 @@ DWORD EQ_GetNumPlayersInZone()
     return numPlayers;
 }
 
-bool EQ_DoesSpawnExist(DWORD spawnInfo)
+bool EQ_DoesSpawnExist(uint32_t spawnInfo)
 {
-    DWORD numPlayers = 0;
+    uint32_t numPlayers = 0;
 
-    DWORD spawn = EQ_GetFirstSpawn();
+    uint32_t spawn = EQ_GetFirstSpawn();
     while (spawn)
     {
         if (spawn == spawnInfo)
@@ -1565,19 +1578,19 @@ bool EQ_DoesSpawnExist(DWORD spawnInfo)
     return false;
 }
 
-DWORD EQ_GetSpawnByName(const char* name, bool bUseInternalName = false, bool bUsePartialMatch = false)
+uint32_t EQ_GetSpawnByName(const char* name, bool bUseInternalName = false, bool bUsePartialMatch = false)
 {
-    DWORD spawn = EQ_GetFirstSpawn();
+    uint32_t spawn = EQ_GetFirstSpawn();
     while (spawn)
     {
-        DWORD offset = EQ_OFFSET_SPAWN_INFO_NAME;
+        uint32_t offset = EQ_OFFSET_SPAWN_INFO_NAME;
         if (bUseInternalName == true)
         {
             offset = EQ_OFFSET_SPAWN_INFO_NUMBERED_NAME;
         }
 
         char spawnName[0x40] = {0};
-        memcpy(spawnName, (LPVOID)(spawn + offset), sizeof(spawnName));
+        memcpy(spawnName, (void*)(spawn + offset), sizeof(spawnName));
 
         if (bUsePartialMatch == true)
         {
@@ -1600,15 +1613,15 @@ DWORD EQ_GetSpawnByName(const char* name, bool bUseInternalName = false, bool bU
     return NULL;
 }
 
-struct _EQMAPLABEL* EQ_MapWindow_AddLabel(EQMAPLABEL* mapLabel)
+EQ::MapLabel* EQ_MapWindow_AddLabel(EQ::MapLabel* mapLabel)
 {
-    DWORD mapViewWnd = EQ_ReadMemory<DWORD>(EQ_POINTER_CMapViewWnd);
+    uint32_t mapViewWnd = EQ_ReadMemory<uint32_t>(EQ_POINTER_CMapViewWnd);
     if (mapViewWnd == NULL)
     {
         return NULL;
     }
 
-    struct _EQMAPLABEL* node = EQ_ReadMemory<struct _EQMAPLABEL*>(mapViewWnd + EQ_OFFSET_CMapViewWnd_MAP_LABEL_INFO_FIRST);
+    EQ::MapLabel* node = EQ_ReadMemory<EQ::MapLabel*>(mapViewWnd + EQ_OFFSET_CMapViewWnd_MAP_LABEL_INFO_FIRST);
     if (node == NULL)
     {
         return NULL;
@@ -1619,7 +1632,7 @@ struct _EQMAPLABEL* EQ_MapWindow_AddLabel(EQMAPLABEL* mapLabel)
         node = node->Next;
     }
 
-    node->Next = (struct _EQMAPLABEL*)malloc(sizeof(struct _EQMAPLABEL));
+    node->Next = (EQ::MapLabel*)malloc(sizeof(EQ::MapLabel));
 
     node->Next->Next = NULL;
     node->Next->Prev = node;
@@ -1637,21 +1650,21 @@ struct _EQMAPLABEL* EQ_MapWindow_AddLabel(EQMAPLABEL* mapLabel)
     return node;
 }
 
-void EQ_MapWindow_RemoveLabelByData(DWORD data)
+void EQ_MapWindow_RemoveLabelByData(uint32_t data)
 {
-    DWORD mapViewWnd = EQ_ReadMemory<DWORD>(EQ_POINTER_CMapViewWnd);
+    uint32_t mapViewWnd = EQ_ReadMemory<uint32_t>(EQ_POINTER_CMapViewWnd);
     if (mapViewWnd == NULL)
     {
         return;
     }
 
-    struct _EQMAPLABEL* node = EQ_ReadMemory<struct _EQMAPLABEL*>(mapViewWnd + EQ_OFFSET_CMapViewWnd_MAP_LABEL_INFO_FIRST);
+    EQ::MapLabel* node = EQ_ReadMemory<EQ::MapLabel*>(mapViewWnd + EQ_OFFSET_CMapViewWnd_MAP_LABEL_INFO_FIRST);
     if (node == NULL)
     {
         return;
     }
 
-    struct _EQMAPLABEL* first = node;
+    EQ::MapLabel* first = node;
 
     //std::cout << "first: " << first->Label << std::endl;
 
@@ -1660,7 +1673,7 @@ void EQ_MapWindow_RemoveLabelByData(DWORD data)
         node = node->Next;
     }
 
-    struct _EQMAPLABEL* last = node;
+    EQ::MapLabel* last = node;
 
     //std::cout << "last: " << last->Label << std::endl;
 
@@ -1668,8 +1681,8 @@ void EQ_MapWindow_RemoveLabelByData(DWORD data)
 
     while (node != NULL)
     {
-        struct _EQMAPLABEL* after  = node->Next;
-        struct _EQMAPLABEL* before = node->Prev;
+        EQ::MapLabel* after  = node->Next;
+        EQ::MapLabel* before = node->Prev;
 
         if (node->Data == data)
         {
@@ -1705,13 +1718,13 @@ void EQ_MapWindow_RemoveLabelByData(DWORD data)
 
 bool EQ_LootItemByName(const char* name)
 {
-    DWORD lootWindow = EQ_ReadMemory<DWORD>(EQ_POINTER_CLootWnd);
+    uint32_t lootWindow = EQ_ReadMemory<uint32_t>(EQ_POINTER_CLootWnd);
     if (lootWindow == NULL)
     {
         return false;
     }
 
-    DWORD lootWindowIsVisible = EQ_ReadMemory<BYTE>(lootWindow + EQ_OFFSET_WINDOW_IS_VISIBLE);
+    int lootWindowIsVisible = EQ_ReadMemory<uint8_t>(lootWindow + EQ_OFFSET_WINDOW_IS_VISIBLE);
     if (lootWindowIsVisible == 0)
     {
         return false;
@@ -1721,13 +1734,13 @@ bool EQ_LootItemByName(const char* name)
 
     for (size_t i = 0; i < EQ_NUM_LOOT_WINDOW_SLOTS; i++)
     {
-        DWORD itemInfo = EQ_ReadMemory<DWORD>(lootWindow + (EQ_OFFSET_CLootWnd_ITEM_INFO_FIRST + (i * 4)));
+        uint32_t itemInfo = EQ_ReadMemory<uint32_t>(lootWindow + (EQ_OFFSET_CLootWnd_ITEM_INFO_FIRST + (i * 4)));
         if (itemInfo == NULL)
         {
             continue;
         }
 
-        PCHAR itemName = EQ_ReadMemory<PCHAR>(itemInfo + EQ_OFFSET_ITEM_INFO_NAME);
+        char* itemName = EQ_ReadMemory<char*>(itemInfo + EQ_OFFSET_ITEM_INFO_NAME);
         if (itemName == NULL)
         {
             continue;
@@ -1749,7 +1762,7 @@ bool EQ_LootItemByName(const char* name)
     return result;
 }
 
-DWORD EQ_GetFontHeight(int fontSize)
+uint32_t EQ_GetFontHeight(uint32_t fontSize)
 {
     // TODO
 
@@ -1761,22 +1774,22 @@ DWORD EQ_GetFontHeight(int fontSize)
     return 14;
 }
 
-FLOAT EQ_GetAverageFps()
+float EQ_GetAverageFps()
 {
     // average frames per second
 
-    DWORD baseAddress = EQ_ReadMemory<DWORD>(EQ_GRAPHICS_DLL_POINTER_BASE_ADDRESS);
+    uint32_t baseAddress = EQ_ReadMemory<uint32_t>(EQ_GRAPHICS_DLL_POINTER_BASE_ADDRESS);
     if (baseAddress == NULL)
     {
         return 0.0f;
     }
 
-    return EQ_ReadMemory<FLOAT>(baseAddress + EQ_GRAPHICS_DLL_OFFSET_FRAMES_PER_SECOND);
+    return EQ_ReadMemory<float>(baseAddress + EQ_GRAPHICS_DLL_OFFSET_FRAMES_PER_SECOND);
 }
 
-bool EQ_HasTimePassed(DWORD& timer, DWORD& delay)
+bool EQ_HasTimePassed(uint32_t& timer, uint32_t& delay)
 {
-    DWORD currentTime = EQ_GetTimer();
+    uint32_t currentTime = EQ_GetTimer();
 
     if ((currentTime - timer) > delay)
     {
@@ -1787,14 +1800,14 @@ bool EQ_HasTimePassed(DWORD& timer, DWORD& delay)
     return false;
 }
 
-void EQ_SetViewActorBySpawn(DWORD spawnInfo)
+void EQ_SetViewActorBySpawn(uint32_t spawnInfo)
 {
     if (spawnInfo == NULL)
     {
         return;
     }
 
-    DWORD actorInstance = EQ_ReadMemory<DWORD>(spawnInfo + EQ_OFFSET_SPAWN_INFO_ACTOR_INFO);
+    uint32_t actorInstance = EQ_ReadMemory<uint32_t>(spawnInfo + EQ_OFFSET_SPAWN_INFO_ACTOR_INFO);
     if (actorInstance == NULL)
     {
         return;
@@ -1805,7 +1818,7 @@ void EQ_SetViewActorBySpawn(DWORD spawnInfo)
 
 void EQ_ResetViewActor()
 {
-    DWORD playerSpawn = EQ_GetPlayerSpawn();
+    uint32_t playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)
     {
         return;
@@ -1814,7 +1827,7 @@ void EQ_ResetViewActor()
     EQ_SetViewActorBySpawn(playerSpawn);
 }
 
-std::string EQ_GetSpawnMapLocationString(DWORD spawnInfo)
+std::string EQ_GetSpawnMapLocationString(uint32_t spawnInfo)
 {
     if (spawnInfo == NULL)
     {
@@ -1822,13 +1835,13 @@ std::string EQ_GetSpawnMapLocationString(DWORD spawnInfo)
     }
 
     char spawnName[EQ_SIZE_SPAWN_INFO_NAME] = {0};
-    memcpy(spawnName, (LPVOID)(spawnInfo + EQ_OFFSET_SPAWN_INFO_NAME), sizeof(spawnName));
+    memcpy(spawnName, (void*)(spawnInfo + EQ_OFFSET_SPAWN_INFO_NAME), sizeof(spawnName));
 
     EQ_String_ReplaceSpacesWithUnderscores(spawnName);
 
-    FLOAT spawnY = EQ_GetSpawnY(spawnInfo);
-    FLOAT spawnX = EQ_GetSpawnX(spawnInfo);
-    FLOAT spawnZ = EQ_GetSpawnZ(spawnInfo);
+    float spawnY = EQ_GetSpawnY(spawnInfo);
+    float spawnX = EQ_GetSpawnX(spawnInfo);
+    float spawnZ = EQ_GetSpawnZ(spawnInfo);
 
     // -X, -Y, Z, red, green, blue, size, name
     // note X and Y are negative
@@ -1839,16 +1852,16 @@ std::string EQ_GetSpawnMapLocationString(DWORD spawnInfo)
     return ss.str();
 }
 
-std::string EQ_GetSpawnEspCustomLocationString(DWORD spawnInfo)
+std::string EQ_GetSpawnEspCustomLocationString(uint32_t spawnInfo)
 {
     if (spawnInfo == NULL)
     {
         return "NULL";
     }
 
-    FLOAT spawnY = EQ_GetSpawnY(spawnInfo);
-    FLOAT spawnX = EQ_GetSpawnX(spawnInfo);
-    FLOAT spawnZ = EQ_GetSpawnZ(spawnInfo);
+    float spawnY = EQ_GetSpawnY(spawnInfo);
+    float spawnX = EQ_GetSpawnX(spawnInfo);
+    float spawnZ = EQ_GetSpawnZ(spawnInfo);
 
     // y x z red green blue size text
     std::stringstream ss;
@@ -1858,7 +1871,7 @@ std::string EQ_GetSpawnEspCustomLocationString(DWORD spawnInfo)
     return ss.str();
 }
 
-void EQ_CopySpawnMapLocationToClipboard(DWORD spawnInfo)
+void EQ_CopySpawnMapLocationToClipboard(uint32_t spawnInfo)
 {
     if (spawnInfo == NULL)
     {
@@ -1870,7 +1883,7 @@ void EQ_CopySpawnMapLocationToClipboard(DWORD spawnInfo)
     EQ_CopyStringToClipboard(mapLocation);
 }
 
-void EQ_CopySpawnEspCustomLocationToClipboard(DWORD spawnInfo)
+void EQ_CopySpawnEspCustomLocationToClipboard(uint32_t spawnInfo)
 {
     if (spawnInfo == NULL)
     {
@@ -1882,9 +1895,9 @@ void EQ_CopySpawnEspCustomLocationToClipboard(DWORD spawnInfo)
     EQ_CopyStringToClipboard(espCustomLocation);
 }
 
-DWORD EQ_GetMapViewMap()
+uint32_t EQ_GetMapViewMap()
 {
-    DWORD mapViewWnd = EQ_ReadMemory<DWORD>(EQ_POINTER_CMapViewWnd);
+    uint32_t mapViewWnd = EQ_ReadMemory<uint32_t>(EQ_POINTER_CMapViewWnd);
     if (mapViewWnd == NULL)
     {
         return NULL;
@@ -1895,25 +1908,25 @@ DWORD EQ_GetMapViewMap()
 
 void EQ_UpdateMap()
 {
-    DWORD mapViewWnd = EQ_ReadMemory<DWORD>(EQ_POINTER_CMapViewWnd);
+    uint32_t mapViewWnd = EQ_ReadMemory<uint32_t>(EQ_POINTER_CMapViewWnd);
     if (mapViewWnd == NULL)
     {
         return;
     }
 
     // force map to update
-    EQ_WriteMemory<BYTE>(mapViewWnd + EQ_OFFSET_CMapViewWnd_SHOULD_UPDATE_MAP, 0x01);
+    EQ_WriteMemory<uint8_t>(mapViewWnd + EQ_OFFSET_CMapViewWnd_SHOULD_UPDATE_MAP, 0x01);
 }
 
-bool EQ_IsWindowVisible(DWORD windowPointer)
+bool EQ_IsWindowVisible(uint32_t windowPointer)
 {
-    DWORD window = EQ_ReadMemory<DWORD>(windowPointer);
+    uint32_t window = EQ_ReadMemory<uint32_t>(windowPointer);
     if (window == NULL)
     {
         return false;
     }
 
-    DWORD isVisible = EQ_ReadMemory<BYTE>(window + EQ_OFFSET_WINDOW_IS_VISIBLE);
+    int isVisible = EQ_ReadMemory<uint8_t>(window + EQ_OFFSET_WINDOW_IS_VISIBLE);
     if (isVisible == 0)
     {
         return false;
@@ -1922,14 +1935,14 @@ bool EQ_IsWindowVisible(DWORD windowPointer)
     return true;
 }
 
-std::string EQ_GetExecuteCmdName(unsigned int commandIndex)
+std::string EQ_GetExecuteCommandName(uint32_t commandIndex)
 {
     if (commandIndex > (EQ_NUM_EXECUTECMD - 1))
     {
         return "Unknown Command";
     }
 
-    PCHAR commandName = EQ_ReadMemory<PCHAR>(EQ_EXECUTECMD_LIST + (commandIndex * 4));
+    char* commandName = EQ_ReadMemory<char*>(EQ_EXECUTECMD_LIST + (commandIndex * 4));
 
     if (commandName == NULL || strlen(commandName) == 0)
     {
@@ -1949,28 +1962,28 @@ void EQ_FixHeading(float& heading)
 
 void EQ_TurnPlayerTowardsLocation(float y, float x)
 {
-    DWORD playerSpawn = EQ_GetPlayerSpawn();
+    uint32_t playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)
     {
         return;
     }
 
-    FLOAT playerY = EQ_GetSpawnY(playerSpawn);
-    FLOAT playerX = EQ_GetSpawnX(playerSpawn);
+    float playerY = EQ_GetSpawnY(playerSpawn);
+    float playerX = EQ_GetSpawnX(playerSpawn);
 
-    float targetHeading = EQ_GetBearing(playerY, playerX, y, x);
+    float locationHeading = EQ_GetBearing(playerY, playerX, y, x);
 
-    EQ_WriteMemory<FLOAT>(playerSpawn + EQ_OFFSET_SPAWN_INFO_HEADING, targetHeading);
+    EQ_WriteMemory<float>(playerSpawn + EQ_OFFSET_SPAWN_INFO_HEADING, locationHeading);
 }
 
-void EQ_Door_SetState(DWORD doorInfo, BYTE doorState)
+void EQ_Door_SetState(uint32_t doorInfo, uint8_t doorState)
 {
     ((EQSwitch*)doorInfo)->ChangeState(doorState, 0, 0);
 }
 
 void EQ_WalkPlayerToLocation(float y, float x)
 {
-    DWORD playerSpawn = EQ_GetPlayerSpawn();
+    uint32_t playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)
     {
         return;
@@ -1981,27 +1994,27 @@ void EQ_WalkPlayerToLocation(float y, float x)
     EQ_SetAutoRun(true);
 }
 
-void EQ_SetFollowSpawn(DWORD spawnInfo)
+void EQ_SetFollowSpawn(uint32_t spawnInfo)
 {
-    DWORD playerSpawn = EQ_GetPlayerSpawn();
+    uint32_t playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)
     {
         return;
     }
 
-    EQ_WriteMemory<DWORD>(playerSpawn + EQ_OFFSET_SPAWN_INFO_FOLLOW_SPAWN_INFO, spawnInfo);
+    EQ_WriteMemory<uint32_t>(playerSpawn + EQ_OFFSET_SPAWN_INFO_FOLLOW_SPAWN_INFO, spawnInfo);
 }
 
-DWORD EQ_GetSpawnNearestToLocation(float y, float x, float z)
+uint32_t EQ_GetSpawnNearestToLocation(float y, float x, float z)
 {
-    std::map<float, DWORD> distanceList;
+    std::map<float, uint32_t> distanceList;
 
-    DWORD spawn = EQ_GetFirstSpawn();
+    uint32_t spawn = EQ_GetFirstSpawn();
     while (spawn)
     {
-        FLOAT spawnY = EQ_GetSpawnY(spawn);
-        FLOAT spawnX = EQ_GetSpawnX(spawn);
-        FLOAT spawnZ = EQ_GetSpawnZ(spawn);
+        float spawnY = EQ_GetSpawnY(spawn);
+        float spawnX = EQ_GetSpawnX(spawn);
+        float spawnZ = EQ_GetSpawnZ(spawn);
 
         float distance = EQ_CalculateDistance3d(x, y, z, spawnX, spawnY, spawnZ);
 
@@ -2015,13 +2028,13 @@ DWORD EQ_GetSpawnNearestToLocation(float y, float x, float z)
 
 void EQ_SetSwimmingSkillMax()
 {
-    DWORD charInfo2 = EQ_GetCharInfo2();
+    uint32_t charInfo2 = EQ_GetCharInfo2();
     if (charInfo2 == NULL)
     {
         return;
     }
 
-    EQ_WriteMemory<BYTE>(charInfo2 + EQ_OFFSET_CHAR_INFO_2_SKILL_SWIMMING, EQ_SKILL_MAX);
+    EQ_WriteMemory<uint8_t>(charInfo2 + EQ_OFFSET_CHAR_INFO_2_SKILL_SWIMMING, EQ_SKILL_MAX);
 }
 
 void EQ_SetWindowTitle(const char* text)
@@ -2033,14 +2046,9 @@ void EQ_SetWindowTitle(const char* text)
     }
 }
 
-void EQ_SetSpawnHeight(DWORD spawnInfo, float height)
+void EQ_SetSpawnHeight(uint32_t spawnInfo, float height)
 {
     if (spawnInfo == NULL)
-    {
-        return;
-    }
-
-    if (height < 0.0f)
     {
         return;
     }
@@ -2053,9 +2061,9 @@ void EQ_SetSpawnHeight(DWORD spawnInfo, float height)
     ((EQPlayer*)spawnInfo)->ChangeHeight(height);
 }
 
-void EQ_DoHotButton(unsigned int buttonNumber)
+void EQ_DoHotButton(uint32_t buttonNumber)
 {
-    unsigned int buttonIndex = buttonNumber - 1; // convert number to index that starts at 0
+    uint32_t buttonIndex = buttonNumber - 1; // convert number to index that starts at 0
 
     if (buttonIndex < (EQ_HOTBUTTON_NUMBER_MIN - 1) || buttonIndex > (EQ_HOTBUTTON_NUMBER_MAX - 1))
     {
@@ -2065,28 +2073,28 @@ void EQ_DoHotButton(unsigned int buttonNumber)
     EQ_CHotButtonWnd->DoHotButton(buttonIndex, 0);
 }
 
-void EQ_DisplayText(const char* text, unsigned int duration)
+void EQ_DisplayText(const char* text, uint32_t duration)
 {
-    DWORD windowWidth  = EQ_GetWindowWidth();
-    DWORD windowHeight = EQ_GetWindowHeight();
+    uint32_t windowWidth = EQ_GetWindowWidth();
+    uint32_t windowHeight = EQ_GetWindowHeight();
 
     EQ_CTextOverlay->DisplayText(text, EQ_TEXT_COLOR_WHITE, 15, 192, (int)(windowWidth * 0.5f), (int)(windowHeight * 0.3f), duration);
 }
 
 void EQ_LoadGraphicsDllFunctions()
 {
-    DWORD baseAddress = EQ_ReadMemory<DWORD>(EQ_GRAPHICS_DLL_POINTER_BASE_ADDRESS);
+    uint32_t baseAddress = EQ_ReadMemory<uint32_t>(EQ_GRAPHICS_DLL_POINTER_BASE_ADDRESS);
 
-    DWORD addressDrawLine = baseAddress + EQ_GRAPHICS_DLL_OFFSET_DrawLine;
+    uint32_t addressDrawLine = baseAddress + EQ_GRAPHICS_DLL_OFFSET_DrawLine;
     EQGraphicsDLL__DrawLine = (EQ_FUNCTION_TYPE_EQGraphicsDLL__DrawLine)addressDrawLine;
 
-    DWORD addressDrawQuad = baseAddress + EQ_GRAPHICS_DLL_OFFSET_DrawQuad;
+    uint32_t addressDrawQuad = baseAddress + EQ_GRAPHICS_DLL_OFFSET_DrawQuad;
     EQGraphicsDLL__DrawQuad = (EQ_FUNCTION_TYPE_EQGraphicsDLL__DrawQuad)addressDrawQuad;
 }
 
-void EQ_SetTarget(DWORD spawnInfo)
+void EQ_SetTarget(uint32_t spawnInfo)
 {
-    EQ_WriteMemory<DWORD>(EQ_POINTER_SPAWN_INFO_TARGET, spawnInfo);
+    EQ_WriteMemory<uint32_t>(EQ_POINTER_SPAWN_INFO_TARGET, spawnInfo);
 }
 
 void EQ_SetTargetByName(const char* name, float maxDistance)
@@ -2096,19 +2104,19 @@ void EQ_SetTargetByName(const char* name, float maxDistance)
         return;
     }
 
-    std::multimap<float, DWORD> distanceList;
+    std::multimap<float, uint32_t> distanceList;
 
-    DWORD playerSpawn = EQ_GetPlayerSpawn();
+    uint32_t playerSpawn = EQ_GetPlayerSpawn();
 
-    FLOAT playerY = EQ_GetSpawnY(playerSpawn);
-    FLOAT playerX = EQ_GetSpawnX(playerSpawn);
-    FLOAT playerZ = EQ_GetSpawnZ(playerSpawn);
+    float playerY = EQ_GetSpawnY(playerSpawn);
+    float playerX = EQ_GetSpawnX(playerSpawn);
+    float playerZ = EQ_GetSpawnZ(playerSpawn);
 
-    DWORD spawn = EQ_GetFirstSpawn();
+    uint32_t spawn = EQ_GetFirstSpawn();
     while (spawn)
     {
         char spawnName[EQ_SIZE_SPAWN_INFO_NAME] = {0};
-        memcpy(spawnName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_INFO_NAME), sizeof(spawnName));
+        memcpy(spawnName, (void*)(spawn + EQ_OFFSET_SPAWN_INFO_NAME), sizeof(spawnName));
 
         if (strlen(spawnName) < EQ_SPAWN_NAME_LENGTH_MIN)
         {
@@ -2116,9 +2124,9 @@ void EQ_SetTargetByName(const char* name, float maxDistance)
             continue;
         }
 
-        FLOAT spawnY = EQ_GetSpawnY(spawn);
-        FLOAT spawnX = EQ_GetSpawnX(spawn);
-        FLOAT spawnZ = EQ_GetSpawnZ(spawn);
+        float spawnY = EQ_GetSpawnY(spawn);
+        float spawnX = EQ_GetSpawnX(spawn);
+        float spawnZ = EQ_GetSpawnZ(spawn);
 
         float spawnDistance = EQ_CalculateDistance3d(playerX, playerY, playerZ, spawnX, spawnY, spawnZ);
         if (spawnDistance > maxDistance)
@@ -2135,10 +2143,10 @@ void EQ_SetTargetByName(const char* name, float maxDistance)
 /*
     for (auto& distancePair : distanceList)
     {
-        DWORD spawn = distancePair.second;
+        uint32_t spawn = distancePair.second;
 
         char spawnName[EQ_SIZE_SPAWN_INFO_NAME] = {0};
-        memcpy(spawnName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_INFO_NAME), sizeof(spawnName));
+        memcpy(spawnName, (void*)(spawn + EQ_OFFSET_SPAWN_INFO_NAME), sizeof(spawnName));
 
         std::cout << "Distance List: " << spawnName << " : " << distancePair.first << std::endl;
     }
@@ -2146,21 +2154,21 @@ void EQ_SetTargetByName(const char* name, float maxDistance)
 
     for (auto& distancePair : distanceList)
     {
-        DWORD spawn = distancePair.second;
+        uint32_t spawn = distancePair.second;
         if (spawn == NULL)
         {
             continue;
         }
 
         char spawnName[EQ_SIZE_SPAWN_INFO_NAME] = {0};
-        memcpy(spawnName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_INFO_NAME), sizeof(spawnName));
+        memcpy(spawnName, (void*)(spawn + EQ_OFFSET_SPAWN_INFO_NAME), sizeof(spawnName));
 
         if (strlen(spawnName) < EQ_SPAWN_NAME_LENGTH_MIN)
         {
             continue;
         }
 
-        int spawnType = EQ_ReadMemory<BYTE>(spawn + EQ_OFFSET_SPAWN_INFO_TYPE);
+        int spawnType = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_TYPE);
 
         if (spawnType == EQ_SPAWN_TYPE_PLAYER_CORPSE || spawnType == EQ_SPAWN_TYPE_NPC_CORPSE)
         {
@@ -2192,9 +2200,9 @@ void EQ_SetTargetByName(const char* name, float maxDistance)
             continue;
         }
 
-        int spawnPetOwnerSpawnId = EQ_ReadMemory<DWORD>(spawn + EQ_OFFSET_SPAWN_INFO_PET_OWNER_SPAWN_ID);
+        uint32_t spawnIdPetOwner = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_INFO_PET_OWNER_SPAWN_ID);
 
-        if (spawnPetOwnerSpawnId != 0)
+        if (spawnIdPetOwner != 0)
         {
             const char* petText = " pet";
             size_t petTextLength = strlen(petText);
@@ -2240,7 +2248,7 @@ void EQ_SetTargetByName(const char* name, float maxDistance)
 
 bool EQ_IsContainerWindowOpen()
 {
-    DWORD containerManager = EQ_ReadMemory<DWORD>(EQ_POINTER_CONTAINER_MANAGER);
+    uint32_t containerManager = EQ_ReadMemory<uint32_t>(EQ_POINTER_CONTAINER_MANAGER);
     if (containerManager == NULL)
     {
         return false;
@@ -2248,7 +2256,7 @@ bool EQ_IsContainerWindowOpen()
 
     for (size_t i = 0; i < EQ_NUM_CONTAINERS; i++)
     {
-        DWORD containerWindowPointer = containerManager + EQ_OFFSET_CONTAINER_MANAGER_CONTAINER_WINDOW_INFO_FIRST + (i * 4);
+        uint32_t containerWindowPointer = containerManager + EQ_OFFSET_CONTAINER_MANAGER_CONTAINER_WINDOW_INFO_FIRST + (i * 4);
         if (containerWindowPointer == NULL)
         {
             continue;

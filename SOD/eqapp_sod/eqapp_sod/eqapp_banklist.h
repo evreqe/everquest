@@ -10,7 +10,7 @@ void EQAPP_BankList_Print(const char* filterItemName)
         return;
     }
 
-    DWORD charInfo = EQ_GetCharInfo();
+    uint32_t charInfo = EQ_GetCharInfo();
     if (charInfo == NULL)
     {
         EQAPP_PrintErrorMessage(__FUNCTION__, "char info is NULL");
@@ -28,22 +28,22 @@ void EQAPP_BankList_Print(const char* filterItemName)
 
     for (size_t i = 0; i < EQ_NUM_BANK_SLOTS; i++)
     {
-        DWORD itemInfo = EQ_ReadMemory<DWORD>(charInfo + (EQ_OFFSET_CHAR_INFO_BANK_ITEM_INFO_FIRST + (i * 4)));
+        uint32_t itemInfo = EQ_ReadMemory<uint32_t>(charInfo + (EQ_OFFSET_CHAR_INFO_BANK_ITEM_INFO_FIRST + (i * 4)));
         if (itemInfo == NULL)
         {
             continue;
         }
 
-        DWORD itemSubInfo = EQ_ReadMemory<DWORD>(itemInfo + EQ_OFFSET_ITEM_INFO_ITEM_SUB_INFO);
+        uint32_t itemSubInfo = EQ_ReadMemory<uint32_t>(itemInfo + EQ_OFFSET_ITEM_INFO_ITEM_SUB_INFO);
 
-        DWORD itemCount = EQ_ReadMemory<DWORD>(itemInfo + EQ_OFFSET_ITEM_INFO_COUNT);
+        uint32_t itemCount = EQ_ReadMemory<uint32_t>(itemInfo + EQ_OFFSET_ITEM_INFO_COUNT);
 
-        PCHAR itemName = EQ_ReadMemory<PCHAR>(itemInfo + EQ_OFFSET_ITEM_INFO_NAME);
+        char* itemName = EQ_ReadMemory<char*>(itemInfo + EQ_OFFSET_ITEM_INFO_NAME);
         if (itemName != NULL)
         {
             if (filterItemName != NULL)
             {
-                DWORD itemSlots = EQ_ReadMemory<BYTE>(itemSubInfo + EQ_OFFSET_ITEM_SUB_INFO_SLOTS);
+                int itemSlots = EQ_ReadMemory<uint8_t>(itemSubInfo + EQ_OFFSET_ITEM_SUB_INFO_SLOTS);
                 if (itemSlots == 0)
                 {
                     if (strstr(itemName, filterItemName) == NULL)
@@ -70,13 +70,13 @@ void EQAPP_BankList_Print(const char* filterItemName)
 
             std::cout << itemName;
 
-            int itemIsLore = EQ_ReadMemory<DWORD>(itemSubInfo + EQ_OFFSET_ITEM_SUB_INFO_IS_LORE);
+            int itemIsLore = EQ_ReadMemory<uint32_t>(itemSubInfo + EQ_OFFSET_ITEM_SUB_INFO_IS_LORE);
             if (itemIsLore != 0)
             {
                 std::cout << " [LORE ITEM]";
             }
 
-            int itemIsNotNoDrop = EQ_ReadMemory<BYTE>(itemSubInfo + EQ_OFFSET_ITEM_SUB_INFO_IS_NOT_NO_DROP);
+            int itemIsNotNoDrop = EQ_ReadMemory<uint8_t>(itemSubInfo + EQ_OFFSET_ITEM_SUB_INFO_IS_NOT_NO_DROP);
             if (itemIsNotNoDrop == 0)
             {
                 std::cout << " [NO DROP]";
@@ -87,17 +87,17 @@ void EQAPP_BankList_Print(const char* filterItemName)
 
         for (size_t j = 0; j < EQ_NUM_CONTAINER_SLOTS; j++)
         {
-            DWORD containerItemInfo = EQ_ReadMemory<DWORD>(itemInfo + (EQ_OFFSET_ITEM_INFO_CONTAINER_ITEM_INFO + (j * 4)));
+            uint32_t containerItemInfo = EQ_ReadMemory<uint32_t>(itemInfo + (EQ_OFFSET_ITEM_INFO_CONTAINER_ITEM_INFO + (j * 4)));
             if (containerItemInfo == NULL)
             {
                 continue;
             }
 
-            DWORD containerItemSubInfo = EQ_ReadMemory<DWORD>(containerItemInfo + EQ_OFFSET_ITEM_INFO_ITEM_SUB_INFO);
+            uint32_t containerItemSubInfo = EQ_ReadMemory<uint32_t>(containerItemInfo + EQ_OFFSET_ITEM_INFO_ITEM_SUB_INFO);
 
-            DWORD containerItemCount = EQ_ReadMemory<DWORD>(containerItemInfo + EQ_OFFSET_ITEM_INFO_COUNT);
+            uint32_t containerItemCount = EQ_ReadMemory<uint32_t>(containerItemInfo + EQ_OFFSET_ITEM_INFO_COUNT);
 
-            PCHAR containerItemName = EQ_ReadMemory<PCHAR>(containerItemInfo + EQ_OFFSET_ITEM_INFO_NAME);
+            char* containerItemName = EQ_ReadMemory<char*>(containerItemInfo + EQ_OFFSET_ITEM_INFO_NAME);
             if (containerItemName != NULL)
             {
                 if (filterItemName != NULL)
@@ -117,13 +117,13 @@ void EQAPP_BankList_Print(const char* filterItemName)
 
                 std::cout << containerItemName;
 
-                int itemIsLore = EQ_ReadMemory<DWORD>(containerItemSubInfo + EQ_OFFSET_ITEM_SUB_INFO_IS_LORE);
+                int itemIsLore = EQ_ReadMemory<uint32_t>(containerItemSubInfo + EQ_OFFSET_ITEM_SUB_INFO_IS_LORE);
                 if (itemIsLore != 0)
                 {
                     std::cout << " [LORE ITEM]";
                 }
 
-                int itemIsNotNoDrop = EQ_ReadMemory<BYTE>(containerItemSubInfo + EQ_OFFSET_ITEM_SUB_INFO_IS_NOT_NO_DROP);
+                int itemIsNotNoDrop = EQ_ReadMemory<uint8_t>(containerItemSubInfo + EQ_OFFSET_ITEM_SUB_INFO_IS_NOT_NO_DROP);
                 if (itemIsNotNoDrop == 0)
                 {
                     std::cout << " [NO DROP]";

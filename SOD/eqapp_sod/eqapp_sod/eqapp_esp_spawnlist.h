@@ -2,7 +2,7 @@
 
 typedef struct _EQAPPESPSPAWN
 {
-    DWORD spawnInfo;
+    uint32_t spawnInfo;
     char name[EQ_SIZE_SPAWN_INFO_NAME];
     char lastName[EQ_SIZE_SPAWN_INFO_LAST_NAME];
     float y;
@@ -29,8 +29,8 @@ typedef struct _EQAPPESPSPAWN
 } EQAPPESPSPAWN, *PEQAPPESPSPAWN;
 
 std::vector<EQAPPESPSPAWN> g_espSpawnList;
-DWORD g_espSpawnListTimer = 0;
-DWORD g_espSpawnListTimerDelay = 1000;
+uint32_t g_espSpawnListTimer = 0;
+uint32_t g_espSpawnListTimerDelay = 1000;
 
 void EQAPP_ESP_SpawnList_Update();
 
@@ -43,19 +43,19 @@ void EQAPP_ESP_SpawnList_Update()
 
     g_espSpawnList.clear();
 
-    unsigned int numNpcCorpse = 0;
+    uint32_t numNpcCorpse = 0;
 
     g_espFindCount = 0;
 
-    DWORD targetSpawn = EQ_GetTargetSpawn();
-    DWORD playerSpawn = EQ_GetPlayerSpawn();
+    uint32_t targetSpawn = EQ_GetTargetSpawn();
+    uint32_t playerSpawn = EQ_GetPlayerSpawn();
 
-    FLOAT playerY = EQ_GetSpawnY(playerSpawn);
-    FLOAT playerX = EQ_GetSpawnX(playerSpawn);
-    FLOAT playerZ = EQ_GetSpawnZ(playerSpawn);
+    float playerY = EQ_GetSpawnY(playerSpawn);
+    float playerX = EQ_GetSpawnX(playerSpawn);
+    float playerZ = EQ_GetSpawnZ(playerSpawn);
 
     // spawn
-    DWORD spawn = EQ_GetFirstSpawn();
+    uint32_t spawn = EQ_GetFirstSpawn();
     while (spawn)
     {
         if (spawn == playerSpawn)
@@ -67,8 +67,8 @@ void EQAPP_ESP_SpawnList_Update()
         EQAPPESPSPAWN espSpawn;
         espSpawn.spawnInfo = spawn;
 
-        memcpy(espSpawn.name,     (LPVOID)(spawn + EQ_OFFSET_SPAWN_INFO_NAME),      sizeof(espSpawn.name));
-        memcpy(espSpawn.lastName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_INFO_LAST_NAME), sizeof(espSpawn.lastName));
+        memcpy(espSpawn.name, (void*)(spawn + EQ_OFFSET_SPAWN_INFO_NAME), sizeof(espSpawn.name));
+        memcpy(espSpawn.lastName, (void*)(spawn + EQ_OFFSET_SPAWN_INFO_LAST_NAME), sizeof(espSpawn.lastName));
 
         espSpawn.y = EQ_GetSpawnY(spawn);
         espSpawn.x = EQ_GetSpawnX(spawn);
@@ -76,7 +76,7 @@ void EQAPP_ESP_SpawnList_Update()
 
         espSpawn.distance = EQ_CalculateDistance3d(playerX, playerY, playerZ, espSpawn.x, espSpawn.y, espSpawn.z);
 
-        espSpawn.level = EQ_ReadMemory<BYTE>(spawn + EQ_OFFSET_SPAWN_INFO_LEVEL);
+        espSpawn.level = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_LEVEL);
 
         if (espSpawn.level < EQ_LEVEL_MIN || espSpawn.level > EQ_LEVEL_MAX)
         {
@@ -84,21 +84,21 @@ void EQAPP_ESP_SpawnList_Update()
             continue;
         }
 
-        espSpawn.type = EQ_ReadMemory<BYTE>(spawn + EQ_OFFSET_SPAWN_INFO_TYPE);
-        espSpawn._class = EQ_ReadMemory<BYTE>(spawn + EQ_OFFSET_SPAWN_INFO_CLASS);
-        espSpawn.guildId = EQ_ReadMemory<DWORD>(spawn + EQ_OFFSET_SPAWN_INFO_GUILD_ID);
+        espSpawn.type = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_TYPE);
+        espSpawn._class = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_CLASS);
+        espSpawn.guildId = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_INFO_GUILD_ID);
 
-        espSpawn.standingState = EQ_ReadMemory<BYTE>(spawn + EQ_OFFSET_SPAWN_INFO_STANDING_STATE);
+        espSpawn.standingState = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_STANDING_STATE);
 
-        espSpawn.isHoldingPrimary   = EQ_ReadMemory<BYTE>(spawn + EQ_OFFSET_SPAWN_INFO_IS_HOLDING_PRIMARY);
-        espSpawn.isHoldingSecondary = EQ_ReadMemory<BYTE>(spawn + EQ_OFFSET_SPAWN_INFO_IS_HOLDING_SECONDARY);
+        espSpawn.isHoldingPrimary   = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_IS_HOLDING_PRIMARY);
+        espSpawn.isHoldingSecondary = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_IS_HOLDING_SECONDARY);
 
-        espSpawn.isPet    = EQ_ReadMemory<DWORD>(spawn + EQ_OFFSET_SPAWN_INFO_PET_OWNER_SPAWN_ID);
-        espSpawn.isLfg    = EQ_ReadMemory<BYTE>(spawn + EQ_OFFSET_SPAWN_INFO_IS_LFG);
-        espSpawn.isPvp    = EQ_ReadMemory<BYTE>(spawn + EQ_OFFSET_SPAWN_INFO_IS_PVP);
-        espSpawn.isTrader = EQ_ReadMemory<DWORD>(spawn + EQ_OFFSET_SPAWN_INFO_IS_TRADER);
-        espSpawn.isAfk    = EQ_ReadMemory<DWORD>(spawn + EQ_OFFSET_SPAWN_INFO_IS_AFK);
-        espSpawn.isGm     = EQ_ReadMemory<BYTE>(spawn + EQ_OFFSET_SPAWN_INFO_IS_GM);
+        espSpawn.isPet    = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_INFO_PET_OWNER_SPAWN_ID);
+        espSpawn.isLfg    = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_IS_LFG);
+        espSpawn.isPvp    = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_IS_PVP);
+        espSpawn.isTrader = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_INFO_IS_TRADER);
+        espSpawn.isAfk    = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_INFO_IS_AFK);
+        espSpawn.isGm     = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_IS_GM);
 
         if (spawn == targetSpawn)
         {

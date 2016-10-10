@@ -1,15 +1,18 @@
 #pragma once
 
-typedef struct _EQAPPSOUND
+namespace EQApp
 {
-    unsigned int index;
-    std::string text;
-    std::string filename;
-    bool isEnabled;
-} EQAPPSOUND, *PEQAPPSOUND;
+    typedef struct _Sound
+    {
+        uint32_t index;
+        std::string text;
+        std::string filename;
+        bool isEnabled;
+    } Sound, *Sound_ptr;
+}
 
 bool g_soundsIsEnabled = true;
-std::vector<EQAPPSOUND> g_soundsList;
+std::vector<EQApp::Sound> g_soundsList;
 
 void EQAPP_Sounds_Load();
 void EQAPP_Sounds_Print();
@@ -65,7 +68,7 @@ void EQAPP_Sounds_Load()
 
         std::cout << __FUNCTION__ << ": " << filename << " isEnabled: " << std::boolalpha << isEnabled << std::noboolalpha << std::endl;
 
-        EQAPPSOUND sound;
+        EQApp::Sound sound;
         sound.index        = i;
         sound.text         = text;
         sound.filename     = filePath.str();

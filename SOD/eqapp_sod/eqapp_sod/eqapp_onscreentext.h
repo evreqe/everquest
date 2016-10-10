@@ -2,17 +2,17 @@
 
 bool g_onScreenTextIsEnabled = true;
 std::list<std::string> g_onScreenTextList;
-unsigned int g_onScreenTextCountMax = 10;
-unsigned int g_onScreenTextX = 1200;
-unsigned int g_onScreenTextY = 500;
-DWORD g_onScreenTextTimer = 0;
-DWORD g_onScreenTextTimerDelay = 5000;
-DWORD g_onScreenTextColor = 0xFFFFFFFF;
+uint32_t g_onScreenTextCountMax = 10;
+uint32_t g_onScreenTextX = 1200;
+uint32_t g_onScreenTextY = 500;
+uint32_t g_onScreenTextTimer = 0;
+uint32_t g_onScreenTextTimerDelay = 5000;
+uint32_t g_onScreenTextColorARGB = 0xFFFFFFFF;
 
 void EQAPP_OnScreenText_Execute();
 void EQAPP_OnScreenText_Print();
 void EQAPP_OnScreenText_Add(std::string str);
-void EQAPP_OnScreenText_AddSpawnMessage(DWORD spawnInfo, bool bDespawn);
+void EQAPP_OnScreenText_AddSpawnMessage(uint32_t spawnInfo, bool bDespawn);
 
 void EQAPP_OnScreenText_Execute()
 {
@@ -44,16 +44,16 @@ void EQAPP_OnScreenText_Execute()
         textCount++;
     }
 
-    EQ_DrawText(ssDrawText.str().c_str(), g_onScreenTextX, g_onScreenTextY, g_onScreenTextColor, 2);
+    EQ_DrawText(ssDrawText.str().c_str(), g_onScreenTextX, g_onScreenTextY, g_onScreenTextColorARGB, 2);
 }
 
 void EQAPP_OnScreenText_Print()
 {
     std::cout << "On Screen Text List:" << std::endl;
 
-    for (auto& onScreenText : g_onScreenTextList)
+    for (auto& text : g_onScreenTextList)
     {
-        std::cout << onScreenText << std::endl;
+        std::cout << text << std::endl;
     }
 }
 
@@ -68,7 +68,7 @@ void EQAPP_OnScreenText_Add(std::string str)
     g_onScreenTextList.push_back(str);
 }
 
-void EQAPP_OnScreenText_AddSpawnMessage(DWORD spawnInfo, bool bDespawn)
+void EQAPP_OnScreenText_AddSpawnMessage(uint32_t spawnInfo, bool bDespawn)
 {
     if (spawnInfo == NULL)
     {
@@ -81,9 +81,9 @@ void EQAPP_OnScreenText_AddSpawnMessage(DWORD spawnInfo, bool bDespawn)
     }
 
     char spawnName[EQ_SIZE_SPAWN_INFO_NAME] = {0};
-    memcpy(spawnName, (LPVOID)(spawnInfo + EQ_OFFSET_SPAWN_INFO_NAME), sizeof(spawnName));
+    memcpy(spawnName, (void*)(spawnInfo + EQ_OFFSET_SPAWN_INFO_NAME), sizeof(spawnName));
 
-    int spawnType = EQ_ReadMemory<BYTE>(spawnInfo + EQ_OFFSET_SPAWN_INFO_TYPE);
+    int spawnType = EQ_ReadMemory<uint8_t>(spawnInfo + EQ_OFFSET_SPAWN_INFO_TYPE);
 
     if (spawnType == EQ_SPAWN_TYPE_PLAYER)
     {

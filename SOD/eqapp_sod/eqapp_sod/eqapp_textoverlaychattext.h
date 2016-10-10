@@ -2,7 +2,7 @@
 
 bool g_textOverlayOnChatTextIsEnabled = true;
 std::vector<std::string> g_textOverlayChatTextList;
-int g_textOverlayChatTextDuration = 5000;
+uint32_t g_textOverlayChatTextDuration = 5000;
 
 void EQAPP_TextOverlayChatText_Load();
 void EQAPP_TextOverlayChatText_DisplayText(std::string text);
@@ -14,34 +14,7 @@ void EQAPP_TextOverlayChatText_Load()
 
     g_textOverlayChatTextList.clear();
 
-    std::stringstream filePath;
-    filePath << g_applicationName << "/textoverlaychattext.txt";
-
-    std::string filePathStr = filePath.str();
-
-    std::ifstream file;
-    file.open(filePathStr.c_str(), std::ios::in);
-    if (file.is_open() == false)
-    {
-        std::stringstream ss;
-        ss << "failed to open file: " << filePathStr;
-
-        EQAPP_PrintErrorMessage(__FUNCTION__, ss.str());
-        return;
-    }
-
-    std::string line;
-    while (std::getline(file, line))
-    {
-        if (line.size() == 0)
-        {
-            continue;
-        }
-
-        g_textOverlayChatTextList.push_back(line);
-    }
-
-    file.close();
+    EQAPP_ReadFileToList("textoverlaychattext.txt", g_textOverlayChatTextList);
 }
 
 void EQAPP_TextOverlayChatText_DisplayText(std::string text)
@@ -53,9 +26,9 @@ void EQAPP_TextOverlayChatText_Print()
 {
     std::cout << "Text Overlay Chat Text List:" << std::endl;
 
-    for (auto& textOverlayChatText : g_textOverlayChatTextList)
+    for (auto& text : g_textOverlayChatTextList)
     {
-        std::cout << textOverlayChatText << std::endl;
+        std::cout << text << std::endl;
     }
 }
 

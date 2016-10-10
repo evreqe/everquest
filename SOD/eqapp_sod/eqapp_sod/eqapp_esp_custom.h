@@ -5,8 +5,8 @@ typedef struct _EQAPPESPCUSTOM
     float y;
     float x;
     float z;
-    DWORD color;
-    unsigned int size = 2;
+    uint32_t colorARGB;
+    uint32_t size = 2;
     std::string text;
 } EQAPPESPCUSTOM, *PEQAPPESPCUSTOM;
 
@@ -57,10 +57,10 @@ void EQAPP_ESP_Custom_Load()
         float y;
         float x;
         float z;
-        unsigned int red;
-        unsigned int green;
-        unsigned int blue;
-        unsigned int size;
+        uint32_t red;
+        uint32_t green;
+        uint32_t blue;
+        uint32_t size;
         char text[1024];
 
         int result = sscanf_s(line.c_str(), "%f %f %f %d %d %d %d %s", &y, &x, &z, &red, &green, &blue, &size, text, sizeof(text));
@@ -69,15 +69,15 @@ void EQAPP_ESP_Custom_Load()
         {
             EQ_String_ReplaceUnderscoresWithSpaces(text);
 
-            unsigned int alpha = 255;
+            uint32_t alpha = 255;
 
             EQAPPESPCUSTOM espCustom;
-            espCustom.y        = y;
-            espCustom.x        = x;
-            espCustom.z        = z;
-            espCustom.color    = (alpha << 24) + (red << 16) + (green << 8) + blue; // 0xAARRGGBB
-            espCustom.size     = size;
-            espCustom.text     = text;
+            espCustom.y            = y;
+            espCustom.x            = x;
+            espCustom.z            = z;
+            espCustom.colorARGB    = (alpha << 24) + (red << 16) + (green << 8) + blue; // 0xAARRGGBB
+            espCustom.size         = size;
+            espCustom.text         = text;
 
             g_espCustomList.push_back(espCustom);
         }
@@ -93,11 +93,11 @@ void EQAPP_ESP_Custom_Draw()
         return;
     }
 
-    DWORD playerSpawn = EQ_GetPlayerSpawn();
+    uint32_t playerSpawn = EQ_GetPlayerSpawn();
 
-    FLOAT playerY = EQ_GetSpawnY(playerSpawn);
-    FLOAT playerX = EQ_GetSpawnX(playerSpawn);
-    FLOAT playerZ = EQ_GetSpawnZ(playerSpawn);
+    float playerY = EQ_GetSpawnY(playerSpawn);
+    float playerX = EQ_GetSpawnX(playerSpawn);
+    float playerZ = EQ_GetSpawnZ(playerSpawn);
 
     for (auto& espCustom : g_espCustomList)
     {
@@ -117,7 +117,7 @@ void EQAPP_ESP_Custom_Draw()
 
         std::stringstream ss;
         ss << "# " << espCustom.text << " (" << (int)distance << ")";
-        EQ_DrawText(ss.str().c_str(), screenX, screenY, espCustom.color, espCustom.size);
+        EQ_DrawText(ss.str().c_str(), screenX, screenY, espCustom.colorARGB, espCustom.size);
     }
 }
 

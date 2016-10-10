@@ -6,6 +6,8 @@
 #include <string>
 #include <unordered_map>
 
+#include <cstdint>
+
 const char* EQ_STRING_WINDOW_TITLE                = "EverQuest";
 const char* EQ_STRING_PROCESS_NAME                = "eqgame.exe";
 const char* EQ_STRING_GRAPHICS_DLL_NAME           = "EQGraphicsDX9.dll";
@@ -15,7 +17,7 @@ const char* EQ_STRING_GRAPHICS_DLL_NAME_LOWERCASE = "eqgraphicsdx9.dll";
 
 #define EQ_GRAPHICS_DLL_POINTER_BASE_ADDRESS 0x00B112A8 // EQGraphicsDX9.DLL
 
-#define EQ_GRAPHICS_DLL_OFFSET_FRAMES_PER_SECOND 0x173CB0 // FLOAT
+#define EQ_GRAPHICS_DLL_OFFSET_FRAMES_PER_SECOND 0x173CB0 // float
 
 #define EQ_GRAPHICS_DLL_OFFSET_DrawLine    0x7A850
 #define EQ_GRAPHICS_DLL_OFFSET_DrawQuad    0x7A560
@@ -23,31 +25,31 @@ const char* EQ_STRING_GRAPHICS_DLL_NAME_LOWERCASE = "eqgraphicsdx9.dll";
 #define EQ_GRAPHICS_DLL_ORDINAL_DrawLine    0x84
 #define EQ_GRAPHICS_DLL_ORDINAL_DrawQuad    0x9C
 
-#define EQ_WINDOW_HWND      0x00AD6974 // DWORD
-#define EQ_WINDOW_WIDTH     0x00AD6950 // DWORD
-#define EQ_WINDOW_HEIGHT    0x00AD6954 // DWORD
+#define EQ_WINDOW_HWND      0x00AD6974 // uint32_t
+#define EQ_WINDOW_WIDTH     0x00AD6950 // uint32_t
+#define EQ_WINDOW_HEIGHT    0x00AD6954 // uint32_t
 
-#define EQ_EXIT_STATUS 0x00A60A03 // BYTE ; 0 = not exiting, 1 or 2 = exiting
+#define EQ_EXIT_STATUS 0x00A60A03 // uint8_t ; 0 = not exiting, 1 or 2 = exiting
 
 #define EQ_RESET_DEVICE_VALUE 0x00AD6DB4
 
-#define EQ_BOOL_AUTO_ATTACK         0x00AC1196 // BYTE
-#define EQ_BOOL_AUTO_FIRE           0x00AC1197 // BYTE
-#define EQ_BOOL_AUTO_RUN            0x00A603FC // DWORD
-#define EQ_BOOL_NET_STATUS          0x00A603E1 // BYTE
-#define EQ_BOOL_SAFELOCK            0x00A96858 // BYTE
-#define EQ_BOOL_SCREENSHOT          0x00A609A1 // BYTE ; set to 1 to force the game to take a screenshot
-#define EQ_BOOL_INVITED_TO_GROUP    0x00A96858 // BYTE
+#define EQ_BOOL_AUTO_ATTACK         0x00AC1196 // uint8_t
+#define EQ_BOOL_AUTO_FIRE           0x00AC1197 // uint8_t
+#define EQ_BOOL_AUTO_RUN            0x00A603FC // uint32_t
+#define EQ_BOOL_NET_STATUS          0x00A603E1 // uint8_t
+#define EQ_BOOL_SAFELOCK            0x00A96858 // uint8_t
+#define EQ_BOOL_SCREENSHOT          0x00A609A1 // uint8_t ; set to 1 to force the game to take a screenshot
+#define EQ_BOOL_INVITED_TO_GROUP    0x00A96858 // uint8_t
 
-#define EQ_BOOL_KEYBOARD_SHIFT            0x00A609B0 // BYTE
-#define EQ_BOOL_KEYBOARD_CONTROL          0x00A609B1 // BYTE
-#define EQ_BOOL_KEYBOARD_ALT              0x00A609B2 // BYTE
-#define EQ_BOOL_KEYBOARD_LEFT_SHIFT       0x00A609B3 // BYTE
-#define EQ_BOOL_KEYBOARD_LEFT_CONTROL     0x00A609B4 // BYTE
-#define EQ_BOOL_KEYBOARD_LEFT_ALT         0x00A609B5 // BYTE
-#define EQ_BOOL_KEYBOARD_RIGHT_SHIFT      0x00A609B6 // BYTE
-#define EQ_BOOL_KEYBOARD_RIGHT_CONTROL    0x00A609B7 // BYTE
-#define EQ_BOOL_KEYBOARD_RIGHT_ALT        0x00A609B8 // BYTE
+#define EQ_BOOL_KEYBOARD_SHIFT            0x00A609B0 // uint8_t
+#define EQ_BOOL_KEYBOARD_CONTROL          0x00A609B1 // uint8_t
+#define EQ_BOOL_KEYBOARD_ALT              0x00A609B2 // uint8_t
+#define EQ_BOOL_KEYBOARD_LEFT_SHIFT       0x00A609B3 // uint8_t
+#define EQ_BOOL_KEYBOARD_LEFT_CONTROL     0x00A609B4 // uint8_t
+#define EQ_BOOL_KEYBOARD_LEFT_ALT         0x00A609B5 // uint8_t
+#define EQ_BOOL_KEYBOARD_RIGHT_SHIFT      0x00A609B6 // uint8_t
+#define EQ_BOOL_KEYBOARD_RIGHT_CONTROL    0x00A609B7 // uint8_t
+#define EQ_BOOL_KEYBOARD_RIGHT_ALT        0x00A609B8 // uint8_t
 
 #define EQ_POINTER_EQGraphicsDLL              0x00B112BC
 
@@ -111,11 +113,11 @@ const char* EQ_STRING_GRAPHICS_DLL_NAME_LOWERCASE = "eqgraphicsdx9.dll";
 #define EQ_ZONE_INFO_CHARACTER_NAME    0x00A6057C // STRING [0x40]
 #define EQ_ZONE_INFO_SHORT_NAME        0x00A605BC // STRING [0x20]
 #define EQ_ZONE_INFO_LONG_NAME         0x00A6063C // STRING [0x80]
-#define EQ_ZONE_INFO_FOG_MIN_CLIP      0x00A60760 // FLOAT
-#define EQ_ZONE_INFO_FOG_MAX_CLIP      0x00A60770 // FLOAT
-#define EQ_ZONE_INFO_GRAVITY           0x00A60780 // FLOAT
-#define EQ_ZONE_INFO_MIN_CLIP          0x00A607E0 // FLOAT
-#define EQ_ZONE_INFO_MAX_CLIP          0x00A607E4 // FLOAT
+#define EQ_ZONE_INFO_FOG_MIN_CLIP      0x00A60760 // float
+#define EQ_ZONE_INFO_FOG_MAX_CLIP      0x00A60770 // float
+#define EQ_ZONE_INFO_GRAVITY           0x00A60780 // float
+#define EQ_ZONE_INFO_MIN_CLIP          0x00A607E0 // float
+#define EQ_ZONE_INFO_MAX_CLIP          0x00A607E4 // float
 
 #define EQ_FUNCTION_Exit 0x004B06B0 // called by the "/exit" command
 
@@ -125,7 +127,7 @@ const char* EQ_STRING_GRAPHICS_DLL_NAME_LOWERCASE = "eqgraphicsdx9.dll";
 #define EQ_FUNCTION_CastRay                      0x004C3E40 // __CastRay
 #define EQ_FUNCTION_CXWnd_DrawColoredRect        0x006DBB30
 #define EQ_FUNCTION_DrawNetStatus                0x00512280
-#define EQ_FUNCTION_ExecuteCmd                   0x004A5580
+#define EQ_FUNCTION_ExecuteCommand               0x004A5580 // __ExecuteCmd
 #define EQ_FUNCTION_GetMeleeRange                0x004AAA20 // __get_melee_range
 #define EQ_FUNCTION_GetBearing                   0x004B7BF0 // __get_bearing
 #define EQ_FUNCTION_Screenshot                   0x00469CC0
@@ -200,9 +202,9 @@ const char* EQ_STRING_GRAPHICS_DLL_NAME_LOWERCASE = "eqgraphicsdx9.dll";
 
 #define EQ_FUNCTION_StringTable__getString    0x0067C470
 
-#define EQ_SWIM_SPEED_MULTIPLIER 0x0085AFC0 // FLOAT
+#define EQ_SWIM_SPEED_MULTIPLIER 0x0085AFC0 // float
 
-#define EQ_CAMERA_VIEW 0x00990CF0 // DWORD
+#define EQ_CAMERA_VIEW 0x00990CF0 // uint32_t
 
 #define EQ_CAMERA_VIEW_FIRST_PERSON             0
 #define EQ_CAMERA_VIEW_THIRD_PERSON_OVERHEAD    1
@@ -211,7 +213,7 @@ const char* EQ_STRING_GRAPHICS_DLL_NAME_LOWERCASE = "eqgraphicsdx9.dll";
 #define EQ_CAMERA_VIEW_THIRD_PERSON4            4
 #define EQ_CAMERA_VIEW_THIRD_PERSON_CHASE       5
 
-#define EQ_DRAW_DISTANCE_MAX 0x00A607E4 // FLOAT
+#define EQ_DRAW_DISTANCE_MAX 0x00A607E4 // float
 
 #define EQ_SPAWN_TYPE_PLAYER           0
 #define EQ_SPAWN_TYPE_NPC              1
@@ -252,7 +254,7 @@ const char* EQ_STRING_GRAPHICS_DLL_NAME_LOWERCASE = "eqgraphicsdx9.dll";
 
 #define EQ_TOOLTIP_COLOR 0xC8000040 // ARGB color
 
-// EQPlayer::ChangePosition(BYTE standingState)
+// EQPlayer::ChangePosition(uint8_t standingState)
 #define EQ_STANDING_STATE_STANDING    0x64
 #define EQ_STANDING_STATE_FROZEN      0x66 // stunned / mesmerized / feared ; You lose control of yourself!
 #define EQ_STANDING_STATE_LOOTING     0x69 // looting or binding wounds
@@ -859,132 +861,127 @@ const std::unordered_map<std::string, std::string> EQ_KEYVALUE_SHORT_ZONE_NAMES_
     {"cazicthule", "yaralith"},
 };
 
-typedef struct _EQLINE
+namespace EQ
 {
-    FLOAT X;
-    FLOAT Y;
-    FLOAT Z = 0.0f;
-    //FLOAT X1;
-    //FLOAT Y1;
-    //FLOAT Z1 = 0.0f;
-    //FLOAT X2;
-    //FLOAT Y2;
-    //FLOAT Z2 = 0.0f;
-} EQLINE, *PEQLINE;
 
-typedef struct _EQRECT
-{
-    FLOAT X1;
-    FLOAT Y1;
-    FLOAT Z1 = 1.0f;
-    FLOAT X2;
-    FLOAT Y2;
-    FLOAT Z2 = 1.0f;
-    FLOAT X3;
-    FLOAT Y3;
-    FLOAT Z3 = 1.0f;
-    FLOAT X4;
-    FLOAT Y4;
-    FLOAT Z4 = 1.0f;
-} EQRECT, *PEQRECT;
-
-typedef struct _EQCXRECT
-{
-    int X1;
-    int Y1;
-    int X2;
-    int Y2;
-} EQCXRECT, *PEQCXRECT;
-
-typedef struct _EQXYZ
-{
-    FLOAT X;
-    FLOAT Y;
-    FLOAT Z;
-} EQXYZ, *PEQXYZ;
-
-typedef struct _EQYXZ
-{
-    FLOAT Y;
-    FLOAT X;
-    FLOAT Z;
-} EQYXZ, *PEQYXZ;
-
-typedef struct _EQARGBCOLOR
-{
-    union
+    typedef struct _Line
     {
-        struct
+        float X;
+        float Y;
+        float Z = 0.0f;
+        //float X1;
+        //float Y1;
+        //float Z1 = 0.0f;
+        //float X2;
+        //float Y2;
+        //float Z2 = 0.0f;
+    } Line, *Line_ptr;
+
+    typedef struct _Rect
+    {
+        float X1;
+        float Y1;
+        float Z1 = 1.0f;
+        float X2;
+        float Y2;
+        float Z2 = 1.0f;
+        float X3;
+        float Y3;
+        float Z3 = 1.0f;
+        float X4;
+        float Y4;
+        float Z4 = 1.0f;
+    } Rect, *Rect_ptr;
+
+    typedef struct _CXRect
+    {
+        INT32 X1;
+        INT32 Y1;
+        INT32 X2;
+        INT32 Y2;
+    } CXRect, *CXRect_ptr;
+
+    typedef struct _XYZ
+    {
+        float X;
+        float Y;
+        float Z;
+    } XYZ, *XYZ_ptr;
+
+    typedef struct _YXZ
+    {
+        float Y;
+        float X;
+        float Z;
+    } YXZ, *YXZ_ptr;
+
+    typedef struct _ColorARGB
+    {
+        union
         {
-            BYTE B;
-            BYTE G;
-            BYTE R;
-            BYTE A;
+            struct
+            {
+                uint8_t B;
+                uint8_t G;
+                uint8_t R;
+                uint8_t A;
+            };
+            uint32_t Color;
         };
-        DWORD Color;
-    };
-} EQARGBCOLOR, *PEQARGBCOLOR;
+    } ColorARGB, *ColorARGB_ptr;
 
-typedef struct _EQRGBCOLOR
-{
-    BYTE B;
-    BYTE G;
-    BYTE R;
-} EQRGBCOLOR, *PEQRGBCOLOR;
+    typedef struct _ColorRGB
+    {
+        uint8_t B;
+        uint8_t G;
+        uint8_t R;
+    } ColorRGB, *ColorRGB_ptr;
 
-typedef struct _EQMAPLABEL
-{
-/*0x00*/    struct _EQMAPLABEL* Next = NULL;
-/*0x04*/    struct _EQMAPLABEL* Prev;
-/*0x08*/    EQXYZ Location;
-/*0x14*/    EQARGBCOLOR Color;
-/*0x18*/    DWORD Size = 2; // 1-3
-/*0x1C*/    PCHAR Label; // text
-/*0x20*/    DWORD Layer = 3; // 0-3
-/*0x24*/    DWORD Width = 20;
-/*0x28*/    DWORD Height = 12;
-/*0x2C*/    DWORD Unknown0x2C; // BYTE X;
-/*0x30*/    DWORD Unknown0x30; // BYTE Y;
-            DWORD Data = 254; // custom data for identifying labels by value
-} EQMAPLABEL, *PEQMAPLABEL;
+    typedef struct _MapLabel
+    {
+        /*0x00*/    struct _MapLabel* Next = NULL;
+        /*0x04*/    struct _MapLabel* Prev;
+        /*0x08*/    EQ::XYZ Location;
+        /*0x14*/    EQ::ColorARGB Color;
+        /*0x18*/    uint32_t Size = 2; // 1-3
+        /*0x1C*/    char* Label; // text
+        /*0x20*/    uint32_t Layer = 3; // 0-3
+        /*0x24*/    uint32_t Width = 20;
+        /*0x28*/    uint32_t Height = 12;
+        /*0x2C*/    uint32_t Unknown0x2C; // uint8_t X;
+        /*0x30*/    uint32_t Unknown0x30; // uint8_t Y;
+        uint32_t Data = 254; // custom data for identifying labels by value
+    } MapLabel, *MapLabel_ptr;
 
-typedef struct _EQMAPLINE
-{
-    struct _EQMAPLINE* Next;
-    struct _EQMAPLINE* Prev;
-    EQXYZ Begin;
-    EQXYZ End;
-    EQARGBCOLOR Color;
-    DWORD Layer; // 0-3
-} EQMAPLINE, *PEQMAPLINE;
+    typedef struct _MapLine
+    {
+        struct _MapLine* Next;
+        struct _MapLine* Prev;
+        EQ::XYZ Begin;
+        EQ::XYZ End;
+        EQ::ColorARGB Color;
+        uint32_t Layer; // 0-3
+    } MapLine, *MapLine_ptr;
 
-typedef struct _EQCHANGEFORM
-{
-    DWORD SpawnId;
-    BYTE Unknown2[63];
-    DWORD RaceId          = EQ_RACE_HUMAN;
-    BYTE Gender           = EQ_GENDER_MALE;
-    BYTE Unknown73;    // = 0xFF for playable races, 0x00 for unplayable races like skeletons
-    BYTE Unknown74[2];
-    BYTE Unknown76;    // = 0xFF for playable races, 0x00 for unplayable races like skeletons
-    BYTE Unknown77[3];
-    BYTE Unknown80        = 0x06;
+    typedef struct _ChangeForm
+    {
+        uint32_t SpawnId;
+        uint8_t Unknown2[63];
+        uint32_t RaceId = EQ_RACE_HUMAN;
+        uint8_t Gender = EQ_GENDER_MALE;
+        uint8_t Unknown73;    // = 0xFF for playable races, 0x00 for unplayable races like skeletons
+        uint8_t Unknown74[2];
+        uint8_t Unknown76;    // = 0xFF for playable races, 0x00 for unplayable races like skeletons
+        uint8_t Unknown77[3];
+        uint8_t Unknown80 = 0x06;
 
-    // bytes[00] = Spawn ID    // DWORD
-    // bytes[68] = Race ID     // DWORD
-    // bytes[72] = Gender      // BYTE
-    // bytes[73] = 0xFF        // BYTE = 0xFF for playable races, 0x00 for unplayable races like skeletons
-    // bytes[76] = 0xFF        // BYTE = 0xFF for playable races, 0x00 for unplayable races like skeletons
-    // bytes[80] = 0x06        // BYTE
+        // bytes[00] = Spawn ID    // uint32_t
+        // bytes[68] = Race ID     // uint32_t
+        // bytes[72] = Gender      // uint8_t
+        // bytes[73] = 0xFF        // uint8_t = 0xFF for playable races, 0x00 for unplayable races like skeletons
+        // bytes[76] = 0xFF        // uint8_t = 0xFF for playable races, 0x00 for unplayable races like skeletons
+        // bytes[80] = 0x06        // uint8_t
 
-} EQCHANGEFORM, *PEQCHANGEFORM;
+    } ChangeForm, *ChangeForm_ptr;
 
-typedef struct _EQSPAWNINFO
-{
-/* 0x00 */    DWORD Unknown0x00;
-} EQSPAWNINFO, *PEQSPAWNINFO;
-
-typedef struct _EQITEMINFO
-{
-/* 0x00 */    DWORD Unknown0x00;
-} EQITEMINFO, *PEQITEMINFO;
+} // namespace EQ
