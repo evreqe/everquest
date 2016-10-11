@@ -34,7 +34,7 @@ void EQAPP_Detours_Remove();
 
 int __cdecl EQAPP_DETOUR_Exit();
 int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short a3, unsigned short a4, unsigned short a5, int a6, unsigned short a7, unsigned long a8, long a9, unsigned long a10);
-int __cdecl EQAPP_DETOUR_ExecuteCommand(uint32_t a1, BOOL a2, PVOID a3);
+int __cdecl EQAPP_DETOUR_ExecuteCommand(uint32_t a1, int a2, void* a3);
 int __cdecl EQAPP_DETOUR_SetTarget(uint32_t a1, const char* a2);
 
 int __fastcall EQAPP_DETOUR_CDisplay__CreatePlayerActor(void* this_ptr, void* not_used, int a1, int a2, int a3, int a4, int a5);

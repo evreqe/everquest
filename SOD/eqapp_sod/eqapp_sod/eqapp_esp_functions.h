@@ -137,7 +137,7 @@ void EQAPP_ESP_Spawns_Draw()
 
         if (spawn.isHalfDistance == true)
         {
-            EQ_Color_Darken(textColorARGB, g_espHalfDistanceColorDarkenPercent);
+            EQ_ColorARGB_Darken(textColorARGB, g_espHalfDistanceColorDarkenPercent);
         }
 
         if (g_espSkeletonIsEnabled == true)
@@ -641,7 +641,7 @@ void EQAPP_ESP_Waypoints_Draw()
                 continue;
             }
 
-            EQApp::Waypoint* connectWaypoint = EQAPP_Waypoint_GetByIndex(connectIndex);
+            EQApp::Waypoint* connectWaypoint = EQAPP_WaypointList_GetByIndex(connectIndex);
             if (connectWaypoint == NULL)
             {
                 EQAPP_PrintErrorMessage(__FUNCTION__ , "connect waypoint is NULL");

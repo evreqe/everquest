@@ -7,8 +7,8 @@ const std::vector<std::string> g_interpretCommandList
     "//debug",
     "//test",
     "//hud",
-    "//executecmddebug, //ecd",
-    "//executecmd",
+    "//executecommanddebug, //ecd",
+    "//executecommand",
     "//lootdebug, //ld",
     "//loot (item name)",
     "//autoloot, //al",
@@ -137,12 +137,17 @@ const std::vector<std::string> g_interpretCommandList
     "//waypointlistclear, //wplc",
     "//waypointlistload, //wpll",
     "//waypointlistsave, //wpls",
-    "//waypointgetpath (from index) (to index), //wpgp (from index) (to index)",
+    "//waypointgetpathlist (from index) (to index), //wpgpl (from index) (to index)",
     "//zoneactorsnocollision, //zanc",
     "//loadzoneactorsnocollision, //loadzanc",
     "//executezoneactorsnocollision, //executezanc",
     "//restorezoneactorsnocollision, //restorezanc",
     "//getzoneactorsnocollision, //getzanc",
+    "//chatfilter, //cf",
+    "//chatfilterlist, //cfl",
+    "//chatfilterreset",
+    "//chatfilteradd (text), //cfa (text)",
+    "//chatfilterremove (text), //cfr (text)",
 };
 
 void EQAPP_InterpretCommand(const char* command);
@@ -200,11 +205,11 @@ void EQAPP_InterpretCommand(const char* command)
         float playerX = EQ_GetSpawnX(playerSpawn);
         float playerZ = EQ_GetSpawnZ(playerSpawn);
 
-        uint32_t waypointIndex = EQAPP_Waypoint_GetIndexNearestToLocation(playerY, playerX, playerZ);
+        uint32_t waypointIndex = EQAPP_WaypointList_GetIndexNearestToLocation(playerY, playerX, playerZ);
 
         std::cout << "nearest waypoint index: " << waypointIndex << std::endl;
 
-        EQApp::Waypoint* waypoint = EQAPP_Waypoint_GetByIndex(waypointIndex);
+        EQApp::Waypoint* waypoint = EQAPP_WaypointList_GetByIndex(waypointIndex);
         if (waypoint != NULL)
         {
             EQ_TurnPlayerTowardsLocation(waypoint->y, waypoint->x);
@@ -222,14 +227,14 @@ void EQAPP_InterpretCommand(const char* command)
     }
 
     // print execute command debug information
-    if (strcmp(command, "//executecmddebug") == 0 || strcmp(command, "//ecd") == 0)
+    if (strcmp(command, "//executecommanddebug") == 0 || strcmp(command, "//ecd") == 0)
     {
         EQAPP_ExecuteCommandDebugInformation_Print();
         return;
     }
 
     // execute command
-    if (strncmp(command, "//executecmd ", 13) == 0)
+    if (strncmp(command, "//executecommand ", 17) == 0)
     {
         char commandEx[128];
 
@@ -1625,7 +1630,7 @@ void EQAPP_InterpretCommand(const char* command)
     // waypoint add
     if (strcmp(command, "//waypointadd") == 0 || strcmp(command, "//wpa") == 0)
     {
-        EQAPP_Waypoint_Add();
+        EQAPP_WaypointList_Add();
         return;
     }
 
@@ -1639,7 +1644,7 @@ void EQAPP_InterpretCommand(const char* command)
         int result = sscanf_s(command, "%s %d", commandEx, sizeof(commandEx), &index);
         if (result == 2)
         {
-            EQAPP_Waypoint_Remove(index);
+            EQAPP_WaypointList_Remove(index);
         }
 
         return;
@@ -1656,7 +1661,7 @@ void EQAPP_InterpretCommand(const char* command)
         int result = sscanf_s(command, "%s %d %d", commandEx, sizeof(commandEx), &fromIndex, &toIndex);
         if (result == 3)
         {
-            EQAPP_Waypoint_Connect(fromIndex, toIndex);
+            EQAPP_WaypointList_Connect(fromIndex, toIndex);
         }
 
         return;
@@ -1673,7 +1678,7 @@ void EQAPP_InterpretCommand(const char* command)
         int result = sscanf_s(command, "%s %d %d", commandEx, sizeof(commandEx), &fromIndex, &toIndex);
         if (result == 3)
         {
-            EQAPP_Waypoint_Disconnect(fromIndex, toIndex);
+            EQAPP_WaypointList_Disconnect(fromIndex, toIndex);
         }
 
         return;
@@ -1708,7 +1713,7 @@ void EQAPP_InterpretCommand(const char* command)
     }
 
     // waypoint list get path
-    if (strncmp(command, "//waypointgetpath ", 18) == 0 || strncmp(command, "//wpgp ", 7) == 0)
+    if (strncmp(command, "//waypointgetpathlist ", 22) == 0 || strncmp(command, "//wpgpl ", 8) == 0)
     {
         char commandEx[128];
 
@@ -1719,9 +1724,9 @@ void EQAPP_InterpretCommand(const char* command)
 
         if (result == 3)
         {
-            EQApp::WaypointPathList pathList = EQAPP_Waypoint_GetPath(fromIndex, toIndex);
+            EQApp::WaypointPathList pathList = EQAPP_Waypoint_CreatePathList(fromIndex, toIndex);
 
-            EQAPP_Waypoint_PrintPath(pathList, fromIndex);
+            EQAPP_Waypoint_PrintPathList(fromIndex, pathList);
         }
 
         return;
@@ -1760,6 +1765,66 @@ void EQAPP_InterpretCommand(const char* command)
     if (strcmp(command, "//getzoneactorsnocollision") == 0 || strcmp(command, "//getzanc") == 0)
     {
         EQAPP_ZoneActors_NoCollision_Print();
+        return;
+    }
+
+    // toggle chat filter
+    if (strcmp(command, "//chatfilter") == 0 || strcmp(command, "//cf") == 0)
+    {
+        EQ_ToggleBool(g_chatFilterIsEnabled);
+        EQAPP_PrintBool("Chat Filter", g_chatFilterIsEnabled);
+        return;
+    }
+
+    // print chat filter list
+    if (strcmp(command, "//chatfilterlist") == 0 || strcmp(command, "//cfl") == 0)
+    {
+        EQAPP_ChatFilter_Print();
+        return;
+    }
+
+    // reset chat filter
+    if (strcmp(command, "//chatfilterreset") == 0)
+    {
+        EQAPP_ChatFilter_Reset();
+        return;
+    }
+
+    // add to chat filter list
+    if (strncmp(command, "//chatfilteradd ", 16) == 0 || strncmp(command, "//cfa ", 6) == 0)
+    {
+        char commandEx[128];
+
+        char chatText[1024];
+
+        int result = sscanf_s(command, "%s %s", commandEx, sizeof(commandEx), chatText, sizeof(chatText));
+        if (result == 2)
+        {
+            EQ_String_ReplaceUnderscoresWithSpaces(chatText);
+
+            EQAPP_ChatFilter_Add(chatText);
+
+            g_chatFilterIsEnabled = true;
+        }
+
+        return;
+    }
+
+    // remove from chat filter list
+    if (strncmp(command, "//chatfilterremove ", 19) == 0 || strncmp(command, "//cfr ", 6) == 0)
+    {
+        char commandEx[128];
+
+        char chatText[1024];
+
+        int result = sscanf_s(command, "%s %s", commandEx, sizeof(commandEx), chatText, sizeof(chatText));
+        if (result == 2)
+        {
+            EQ_String_ReplaceUnderscoresWithSpaces(chatText);
+
+            EQAPP_ChatFilter_Remove(chatText);
+        }
+
         return;
     }
 }

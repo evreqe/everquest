@@ -85,6 +85,7 @@
 #include "eqapp_autogroup.h"
 #include "eqapp_zoneactors.h"
 #include "eqapp_backstab.h"
+#include "eqapp_chatfilter.h"
 #include "eqapp_esp.h"                 // needs to be included last
 #include "eqapp_esp_functions.h"       // needs to be included last
 #include "eqapp_hud.h"                 // needs to be included last
@@ -102,6 +103,7 @@ void EQAPP_Load()
     EQAPP_CharacterFile_Write();
 
     EQAPP_Memory_Load();
+    EQAPP_ChatFilter_Load();
     EQAPP_Sounds_Load();
     EQAPP_NamedSpawns_Load();
     EQAPP_ESP_Custom_Load();
@@ -175,14 +177,12 @@ void EQAPP_SetWindowTitles()
     }
     else
     {
-        char playerName[EQ_SIZE_SPAWN_INFO_NAME] = {0};
-        memcpy(playerName, (LPVOID)(playerSpawn + EQ_OFFSET_SPAWN_INFO_NAME), sizeof(playerName));
+        std::string playerName = EQ_GetSpawnName(playerSpawn);
 
         std::stringstream ss;
         ss << "EQ: " << playerName;
 
         SetWindowTextA(window, ss.str().c_str());
-        //SetWindowTextA(window, playerName);
 
         if (g_consoleWindowHwnd != NULL)
         {
@@ -194,7 +194,7 @@ void EQAPP_SetWindowTitles()
     }
 }
 
-int __cdecl EQAPP_DETOUR_ExecuteCommand(uint32_t a1, BOOL a2, PVOID a3)
+int __cdecl EQAPP_DETOUR_ExecuteCommand(uint32_t a1, int a2, void* a3)
 {
     // a1 = command index
     // a2 = key is held down boolean
@@ -334,7 +334,7 @@ int __fastcall EQAPP_DETOUR_CEverQuest__StartCasting(void* this_ptr, void* not_u
     if (spawnInfo != NULL && spawnInfo != playerSpawn)
     {
         char spawnName[EQ_SIZE_SPAWN_INFO_NAME] = {0};
-        memcpy(spawnName, (LPVOID)(spawnInfo + EQ_OFFSET_SPAWN_INFO_NAME), sizeof(spawnName));
+        memcpy(spawnName, (void*)(spawnInfo + EQ_OFFSET_SPAWN_INFO_NAME), sizeof(spawnName));
 
         std::string spellName = EQ_GetSpellNameById(spellId);
 
@@ -388,11 +388,10 @@ int __fastcall EQAPP_DETOUR_CDisplay__CreatePlayerActor(void* this_ptr, void* no
             }
         }
 
-        char spawnNumberedName[EQ_SIZE_SPAWN_INFO_NUMBERED_NAME] = {0};
-        memcpy(spawnNumberedName, (LPVOID)(a1 + EQ_OFFSET_SPAWN_INFO_NUMBERED_NAME), sizeof(spawnNumberedName));
-
-        if (g_debugIsEnabled == true && spawnNumberedName != NULL)
+        if (g_debugIsEnabled == true)
         {
+            std::string spawnNumberedName = EQ_GetSpawnNumberedName(a1);
+
             std::cout << "[debug] CDisplay::CreatePlayerActor(): " << spawnNumberedName << std::endl;
             std::cout << "[debug] a1: " << std::hex << a1 << std::endl; // spawnInfo
             std::cout << "[debug] a2: " << a2 << std::endl; // 0
@@ -429,11 +428,10 @@ int __fastcall EQAPP_DETOUR_CDisplay__DeleteActor(void* this_ptr, void* not_used
         uint32_t spawnInfo = EQ_ReadMemory<uint32_t>(a1 + EQ_OFFSET_ACTOR_INSTANCE_INFO_SPAWN_INFO);
         if (spawnInfo != NULL)
         {
-            char spawnNumberedName[EQ_SIZE_SPAWN_INFO_NUMBERED_NAME] = {0};
-            memcpy(spawnNumberedName, (LPVOID)(spawnInfo + EQ_OFFSET_SPAWN_INFO_NUMBERED_NAME), sizeof(spawnNumberedName));
-
-            if (g_debugIsEnabled == true && spawnNumberedName != NULL)
+            if (g_debugIsEnabled == true)
             {
+                std::string spawnNumberedName = EQ_GetSpawnNumberedName(spawnInfo);
+
                 std::cout << "[debug] CDisplay::DeleteActor(): " << spawnNumberedName << " (" << std::hex << spawnInfo << ")" << std::endl;
             }
 
@@ -456,12 +454,24 @@ int __fastcall EQAPP_DETOUR_CEverQuest__dsp_chat(void* this_ptr, void* not_used,
 
     if (a1 == NULL)
     {
+        a1 = "";
         return EQAPP_REAL_CEverQuest__dsp_chat(this_ptr, a1, a2, a3);
     }
 
     if (strlen(a1) == 0)
     {
         return EQAPP_REAL_CEverQuest__dsp_chat(this_ptr, a1, a2, a3);
+    }
+
+    if (g_chatFilterIsEnabled == true)
+    {
+        for (auto& text : g_chatFilterList)
+        {
+            if (strstr(a1, text.c_str()) != NULL)
+            {
+                return EQAPP_REAL_CEverQuest__dsp_chat(this_ptr, "", a2, a3);
+            }
+        }
     }
 
     if (g_soundsIsEnabled == true)
@@ -506,8 +516,6 @@ int __fastcall EQAPP_DETOUR_CEverQuest__dsp_chat(void* this_ptr, void* not_used,
     }
 
     // camping out
-    //const char* eqstr12293 = EQ_StringTable->getString(12293, 0); // 12293 It will take you about 30 seconds to prepare your camp.
-    //if (strcmp(a1, eqstr12293) == 0)
     if (strcmp(a1, "It will take you about 30 seconds to prepare your camp.") == 0)
     {
         EQ_ResetViewActor();
@@ -543,6 +551,12 @@ int __fastcall EQAPP_DETOUR_CEverQuest__EnterZone(void* this_ptr, void* not_used
         return EQAPP_REAL_CEverQuest__EnterZone(this_ptr, a1);
     }
 
+    if (g_imguiConsoleWindow.m_items.Size > 1000)
+    {
+        g_imguiConsoleWindow.ClearHistory();
+        g_imguiConsoleWindow.ClearLog();
+    }
+
     std::cout << "Entering zone..." << std::endl;
 
     int result = EQAPP_REAL_CEverQuest__EnterZone(this_ptr, a1);
@@ -555,6 +569,7 @@ int __fastcall EQAPP_DETOUR_CEverQuest__EnterZone(void* this_ptr, void* not_used
 
     EQAPP_CharacterFile_Write();
 
+    EQAPP_ChatFilter_Load();
     EQAPP_TextOverlayChatText_Load();
     EQAPP_NoBeep_Load();
     EQAPP_NamedSpawns_Load();

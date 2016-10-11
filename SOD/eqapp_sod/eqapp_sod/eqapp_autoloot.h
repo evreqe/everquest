@@ -94,9 +94,9 @@ void EQAPP_AutoLoot_Print()
 {
     std::cout << "Auto Loot List:" << std::endl;
 
-    for (auto& itemName : g_autoLootList)
+    for (auto& text : g_autoLootList)
     {
-        std::cout << itemName << std::endl;
+        std::cout << text << std::endl;
     }
 }
 

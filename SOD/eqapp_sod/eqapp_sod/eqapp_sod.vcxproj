@@ -101,6 +101,7 @@
     <ClInclude Include="eqapp_census.h" />
     <ClInclude Include="eqapp_changeheight.h" />
     <ClInclude Include="eqapp_characterfile.h" />
+    <ClInclude Include="eqapp_chatfilter.h" />
     <ClInclude Include="eqapp_combathotbutton.h" />
     <ClInclude Include="eqapp_console.h" />
     <ClInclude Include="eqapp_detours.h" />

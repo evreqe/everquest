@@ -35,6 +35,7 @@ uint32_t g_espLocatorFontSize = 5;
 
 bool g_espFindIsEnabled = false;
 bool g_espFindDrawLineIsEnabled = true;
+bool g_espFindIgnoreNpcCorpseIsEnabled = true;
 std::string g_espFindSpawnName;
 uint32_t g_espFindCount = 0;
 

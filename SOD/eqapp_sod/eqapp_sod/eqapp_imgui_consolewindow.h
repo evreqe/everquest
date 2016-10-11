@@ -34,10 +34,7 @@ struct EQAPPIMGUIConsoleWindow
     {
         ClearLog();
 
-        for (int i = 0; i < m_history.Size; i++)
-        {
-            free(m_history[i]);
-        }
+        ClearHistory();
     }
 
     // portable helpers
@@ -54,6 +51,15 @@ struct EQAPPIMGUIConsoleWindow
         m_items.clear();
 
         m_bScrollToBottom = true;
+    }
+
+    void ClearHistory()
+    {
+        for (int i = 0; i < m_history.Size; i++)
+        {
+            free(m_history[i]);
+        }
+        m_history.clear();
     }
 
     void AddLog(const char* fmt, ...) IM_PRINTFARGS(2)

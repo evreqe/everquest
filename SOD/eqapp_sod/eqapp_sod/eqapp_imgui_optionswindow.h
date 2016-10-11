@@ -154,6 +154,7 @@ struct EQAPPIMGUIOptionsWindow
             ImGui::SameLine(200);
             ImGui::Text("Show an indicator in-game of where a spawn is located");
             ImGui::Checkbox("Draw Line", &g_espFindDrawLineIsEnabled);
+            ImGui::Checkbox("Ignore NPC Corpse", &g_espFindIgnoreNpcCorpseIsEnabled);
 
             ImGui::Text("Spawn Name:");
             ImGui::SameLine(200);
@@ -360,7 +361,7 @@ struct EQAPPIMGUIOptionsWindow
             ImGui::SameLine(200);
 
             ImGui::PushItemWidth(400);
-            static char g_autoLootInputText[256];
+            static char g_autoLootInputText[1024];
             ImGui::InputText("##Auto Loot Input Text", g_autoLootInputText, IM_ARRAYSIZE(g_autoLootInputText));
             ImGui::PopItemWidth();
 
@@ -371,12 +372,12 @@ struct EQAPPIMGUIOptionsWindow
                 EQAPP_AutoLoot_Add(g_autoLootInputText);
             }
 
-            if (ImGui::Button("Clear Items"))
+            if (ImGui::Button("Clear List"))
             {
                 g_autoLootList.clear();
             }
             ImGui::SameLine();
-            ImGui::Text("(click item names to remove)");
+            ImGui::Text("(click text to remove)");
 
             ImGui::PopID();
 
@@ -489,6 +490,87 @@ struct EQAPPIMGUIOptionsWindow
             {
                 ImGui::Text(textOverlayChatText.c_str());
             }
+
+            ImGui::PopID();
+        }
+
+        if (ImGui::CollapsingHeader("Chat Filter"))
+        {
+            ImGui::PushID("ID Chat Filter");
+
+            ImGui::Checkbox("Enabled", &g_chatFilterIsEnabled);
+            ImGui::SameLine(200);
+            ImGui::Text("Hide chat text containing specific words or sentences");
+
+            ImGui::Separator();
+
+            ImGui::Text("Chat Text:");
+
+            ImGui::SameLine(200);
+
+            ImGui::PushItemWidth(400);
+            static char g_chatFilterInputText[1024];
+            ImGui::InputText("##Chat Filter Input Text", g_chatFilterInputText, IM_ARRAYSIZE(g_chatFilterInputText));
+            ImGui::PopItemWidth();
+
+            ImGui::SameLine();
+
+            if (ImGui::Button("Add"))
+            {
+                EQAPP_ChatFilter_Add(g_chatFilterInputText);
+            }
+
+            if (ImGui::Button("Clear List"))
+            {
+                g_chatFilterList.clear();
+            }
+            ImGui::SameLine();
+            ImGui::Text("(click text to remove)");
+
+            if (ImGui::Button("Reload"))
+            {
+                EQAPP_ChatFilter_Load();
+            }
+
+            ImGui::PopID();
+
+            size_t listIndex = 0;
+            float listHeight = 1.0f;
+
+            if (g_chatFilterList.size() > 0)
+            {
+                if (g_chatFilterList.size() < 10)
+                {
+                    listHeight = 200.0f;
+                }
+                else
+                {
+                    listHeight = 400.0f;
+                }
+            }
+
+            ImGui::BeginChild("ID Chat Filter List", ImVec2(600.0f, listHeight), true);
+
+            static std::string chatTextEx;
+
+            for (auto& chatText : g_chatFilterList)
+            {
+                chatTextEx = chatText;
+
+                std::stringstream ssPushId;
+                ssPushId << "ID Chat Filter List Index " << listIndex;
+
+                ImGui::PushID(ssPushId.str().c_str());
+
+                if (ImGui::Button(chatTextEx.c_str()))
+                {
+                    EQAPP_ChatFilter_Remove(chatTextEx.c_str());
+                }
+
+                ImGui::PopID();
+            }
+
+            ImGui::EndChild();
 
             ImGui::PopID();
         }
@@ -612,6 +694,27 @@ struct EQAPPIMGUIOptionsWindow
             ImGui::PopID();
         }
 
+        if (ImGui::CollapsingHeader("Draw Distance"))
+        {
+            ImGui::PushID("ID Change Height");
+
+            ImGui::Checkbox("Enabled", &g_changeHeightIsEnabled);
+            ImGui::SameLine(200);
+            ImGui::Text("Shrink players or pets that are too tall or too big");
+
+            ImGui::Separator();
+
+            ImGui::Checkbox("Players", &g_changeHeightPlayersIsEnabled);
+            ImGui::SameLine(200);
+            ImGui::InputFloat("##Change Height Players Size", &g_changeHeightPlayersSize, 1.0f, 10.0f, 0);
+
+            ImGui::Checkbox("Pets", &g_changeHeightPetsIsEnabled);
+            ImGui::SameLine(200);
+            ImGui::InputFloat("##Change Height Pets Size", &g_changeHeightPetsSize, 1.0f, 10.0f, 0);
+
+            ImGui::PopID();
+        }
+
         if (ImGui::CollapsingHeader("Set Target"))
         {
             ImGui::PushID("ID Set Target");
@@ -697,12 +800,6 @@ struct EQAPPIMGUIOptionsWindow
             ImGui::Checkbox("Line to Target", &g_lineToTargetIsEnabled);
             ImGui::SameLine(200);
             ImGui::Text("Draw a line to the spawn you are targeting");
-            ImGui::PopID();
-
-            ImGui::PushID("ID Change Height");
-            ImGui::Checkbox("Change Height", &g_changeHeightIsEnabled);
-            ImGui::SameLine(200);
-            ImGui::Text("Shrink players that are too tall or too big");
             ImGui::PopID();
 
             ImGui::PushID("ID Hide Corpse Looted");

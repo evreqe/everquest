@@ -1,34 +1,37 @@
 #pragma once
 
-typedef struct _EQAPPESPSPAWN
+namespace EQApp
 {
-    uint32_t spawnInfo;
-    char name[EQ_SIZE_SPAWN_INFO_NAME];
-    char lastName[EQ_SIZE_SPAWN_INFO_LAST_NAME];
-    float y;
-    float x;
-    float z;
-    float distance;
-    int level;
-    int type;
-    int _class;
-    int guildId;
-    int standingState;
-    int isHoldingPrimary;
-    int isHoldingSecondary;
-    int isPet;
-    int isLfg;
-    int isPvp;
-    int isTrader;
-    int isAfk;
-    int isGm;
-    bool showAtAnyDistance = false;
-    bool isTarget = false;
-    bool isFindSpawn = false;
-    bool isHalfDistance = false;
-} EQAPPESPSPAWN, *PEQAPPESPSPAWN;
+    typedef struct _ESPSpawn
+    {
+        uint32_t spawnInfo;
+        char name[EQ_SIZE_SPAWN_INFO_NAME];
+        char lastName[EQ_SIZE_SPAWN_INFO_LAST_NAME];
+        float y;
+        float x;
+        float z;
+        float distance;
+        int level;
+        int type;
+        int _class;
+        int guildId;
+        int standingState;
+        int isHoldingPrimary;
+        int isHoldingSecondary;
+        int isPet;
+        int isLfg;
+        int isPvp;
+        int isTrader;
+        int isAfk;
+        int isGm;
+        bool showAtAnyDistance = false;
+        bool isTarget = false;
+        bool isFindSpawn = false;
+        bool isHalfDistance = false;
+    } ESPSpawn, *ESPSpawn_ptr;
+}
 
-std::vector<EQAPPESPSPAWN> g_espSpawnList;
+std::vector<EQApp::ESPSpawn> g_espSpawnList;
 uint32_t g_espSpawnListTimer = 0;
 uint32_t g_espSpawnListTimerDelay = 1000;
 
@@ -64,7 +67,7 @@ void EQAPP_ESP_SpawnList_Update()
             continue;
         }
 
-        EQAPPESPSPAWN espSpawn;
+        EQApp::ESPSpawn espSpawn;
         espSpawn.spawnInfo = spawn;
 
         memcpy(espSpawn.name, (void*)(spawn + EQ_OFFSET_SPAWN_INFO_NAME), sizeof(espSpawn.name));
@@ -109,10 +112,20 @@ void EQAPP_ESP_SpawnList_Update()
         {
             if (strstr(espSpawn.name, g_espFindSpawnName.c_str()) != NULL)
             {
-                espSpawn.showAtAnyDistance = true;
-                espSpawn.isFindSpawn = true;
+                bool ignoreFind = false;
 
-                g_espFindCount++;
+                if (g_espFindIgnoreNpcCorpseIsEnabled && espSpawn.type == EQ_SPAWN_TYPE_NPC_CORPSE)
+                {
+                    ignoreFind = true;
+                }
+
+                if (ignoreFind == false)
+                {
+                    espSpawn.showAtAnyDistance = true;
+                    espSpawn.isFindSpawn = true;
+
+                    g_espFindCount++;
+                }
             }
         }
 

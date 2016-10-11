@@ -1,17 +1,20 @@
 #pragma once
 
-typedef struct _EQAPPESPCUSTOM
+namespace EQApp
 {
-    float y;
-    float x;
-    float z;
-    uint32_t colorARGB;
-    uint32_t size = 2;
-    std::string text;
-} EQAPPESPCUSTOM, *PEQAPPESPCUSTOM;
+    typedef struct _ESPCustom
+    {
+        float y;
+        float x;
+        float z;
+        uint32_t colorARGB;
+        uint32_t size = 2;
+        std::string text;
+    } ESPCustom, *ESPCustom_ptr;
+}
 
 bool g_espCustomIsEnabled = true;
-std::vector<EQAPPESPCUSTOM> g_espCustomList;
+std::vector<EQApp::ESPCustom> g_espCustomList;
 float g_espCustomDistance = 400.0f;
 
 void EQAPP_ESP_Custom_Load();
@@ -71,7 +74,7 @@ void EQAPP_ESP_Custom_Load()
 
             uint32_t alpha = 255;
 
-            EQAPPESPCUSTOM espCustom;
+            EQApp::ESPCustom espCustom;
             espCustom.y            = y;
             espCustom.x            = x;
             espCustom.z            = z;

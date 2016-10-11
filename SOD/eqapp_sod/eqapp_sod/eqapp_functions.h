@@ -307,7 +307,7 @@ void EQAPP_ExecuteCommandDebugInformation_Print()
     std::cout << "ExecuteCommand Debug Information:" << std::endl;
 
     std::stringstream filePath;
-    filePath << g_applicationName << "/executecmddebug.txt";
+    filePath << g_applicationName << "/executecommanddebug.txt";
 
     std::string filePathStr = filePath.str();
 

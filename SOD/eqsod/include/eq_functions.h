@@ -573,8 +573,8 @@ EQ_FUNCTION_AT_ADDRESS(float __cdecl EQ_GetBearing(float y1, float x1, float y2,
 #endif
 
 #ifdef EQ_FUNCTION_ExecuteCommand
-typedef int (__cdecl* EQ_FUNCTION_TYPE_ExecuteCommand)(uint32_t command, BOOL hold, PVOID unknown);
-EQ_FUNCTION_AT_ADDRESS(void EQ_ExecuteCommand(uint32_t command, BOOL hold, PVOID unknown), EQ_FUNCTION_ExecuteCommand);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_ExecuteCommand)(uint32_t command, int hold, void* unknown);
+EQ_FUNCTION_AT_ADDRESS(void EQ_ExecuteCommand(uint32_t command, int hold, void* unknown), EQ_FUNCTION_ExecuteCommand);
 #endif
 
 #ifdef EQ_FUNCTION_SetTarget
@@ -644,7 +644,7 @@ bool EQ_IsPointInsideRectangle(int pointX, int pointY, int rectX, int rectY, int
     return true;
 }
 
-void EQ_Color_Darken(uint32_t& colorARGB, float percent)
+void EQ_ColorARGB_Darken(uint32_t& colorARGB, float percent)
 {
     uint32_t alpha = (colorARGB >> 24) & 0xFF;
     uint32_t red   = (colorARGB >> 16) & 0xFF;

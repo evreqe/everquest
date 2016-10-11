@@ -180,6 +180,9 @@
     <ClInclude Include="..\..\eqsod\include\eq_sizes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="eqapp_chatfilter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
