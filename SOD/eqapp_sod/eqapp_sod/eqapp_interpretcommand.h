@@ -195,6 +195,7 @@ void EQAPP_InterpretCommand(const char* command)
     {
         std::cout << "test" << std::endl;
 
+    /*
         uint32_t playerSpawn = EQ_GetPlayerSpawn();
         if (playerSpawn == NULL)
         {
@@ -213,6 +214,26 @@ void EQAPP_InterpretCommand(const char* command)
         if (waypoint != NULL)
         {
             EQ_TurnPlayerTowardsLocation(waypoint->y, waypoint->x);
+        }
+    */
+
+        size_t spawnIndex = 0;
+
+        uint32_t spawn = EQ_GetFirstSpawn();
+        while (spawn)
+        {
+            uint32_t randomNumber = EQAPP_GetRandomNumberLowHigh(5000, 30000);
+
+            EQAPP_SpawnCastSpell_Add(spawn, 100, randomNumber);
+
+            spawnIndex++;
+
+            if (spawnIndex > 64)
+            {
+                break;
+            }
+
+            spawn = EQ_GetNextSpawn(spawn);
         }
 
         return;

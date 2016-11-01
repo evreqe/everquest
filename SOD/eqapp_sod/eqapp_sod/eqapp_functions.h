@@ -42,6 +42,8 @@ void EQAPP_DeleteFileContents(const char* filename);
 
 void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list);
 
+uint32_t EQAPP_GetRandomNumber(uint32_t low, uint32_t high);
+
 //****************************************************************************************************//
 
 void EQAPP_Load();
@@ -577,5 +579,13 @@ void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list)
     }
 
     file.close();
+}
+
+uint32_t EQAPP_GetRandomNumberLowHigh(uint32_t low, uint32_t high)
+{
+    std::uniform_int_distribution<uint32_t> uid;
+    std::uniform_int_distribution<uint32_t>::param_type uidpt(low, high);
+
+    return uid(g_randomEngine, uidpt);
 }
 

@@ -41,7 +41,7 @@ void EQ_Log(const char* text, T number)
 }
 
 template <class T>
-T EQ_ReadMemory(DWORD address)
+T EQ_ReadMemory(uintptr_t address)
 {
 #ifdef _DEBUG
     EQ_Log("EQ_ReadMemory address: ", address);
@@ -52,7 +52,7 @@ T EQ_ReadMemory(DWORD address)
 }
 
 template <class T>
-void EQ_WriteMemory(DWORD address, T value)
+void EQ_WriteMemory(uintptr_t address, T value)
 {
 #ifdef _DEBUG
     EQ_Log("EQ_WriteMemory address: ", address);
@@ -1789,11 +1789,11 @@ float EQ_GetAverageFps()
 
 bool EQ_HasTimePassed(uint32_t& timer, uint32_t& delay)
 {
-    uint32_t currentTime = EQ_GetTimer();
+    uint32_t currentTimer = EQ_GetTimer();
 
-    if ((currentTime - timer) > delay)
+    if ((currentTimer - timer) > delay)
     {
-        timer = currentTime;
+        timer = currentTimer;
         return true;
     }
 

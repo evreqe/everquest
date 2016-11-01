@@ -1,6 +1,6 @@
 #pragma once
 
-bool g_replaceRacesIsEnabled = true;
+bool g_replaceRacesIsEnabled = false;
 uint32_t g_replaceRacesTimer = 0;
 uint32_t g_replaceRacesTimerDelay = 1000;
 
@@ -25,9 +25,9 @@ void EQAPP_ReplaceRaces_Execute()
     {
         int spawnType = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_TYPE);
 
-        int spawnGender = EQ_ReadMemory<uint8_t>(playerSpawn + EQ_OFFSET_SPAWN_INFO_GENDER);
+        int spawnGender = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_GENDER);
 
-        uint32_t spawnRace = EQ_ReadMemory<uint32_t>(playerSpawn + EQ_OFFSET_SPAWN_INFO_RACE);
+        uint32_t spawnRace = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_INFO_RACE);
 
         if (spawnRace == EQ_RACE_INVISIBLE_MAN)
         {

@@ -270,13 +270,24 @@ void EQAPP_ESP_Spawns_Draw()
             }
         }
 
-        if (g_spawnCastSpellIsEnabled == true)
+        if (g_spawnCastSpellIsEnabled == true && g_spawnCastSpellEspIsEnabled == true)
         {
             for (auto& spawnCastSpell : g_spawnCastSpellList)
             {
                 if (spawnCastSpell->spawnInfo == spawn.spawnInfo)
                 {
-                    ssDrawText << "(" << spawnCastSpell->spellName << ")\n";
+                    ssDrawText << "(" << spawnCastSpell->spellName << ")";
+
+                    if (spawnCastSpell->spellCastTimeCountdown > 0)
+                    {
+                        float spellCastTimeCurrentFloat = (float)(spawnCastSpell->spellCastTimeCountdown / 1000.0f);
+
+                        ssDrawText.precision(1);
+                        ssDrawText << " " << std::fixed << spellCastTimeCurrentFloat;
+                    }
+
+                    ssDrawText << "\n";
+
                     g_espNumDrawText++;
                     break;
                 }

@@ -24,6 +24,15 @@ struct EQAPPIMGUIOptionsWindow
         ImGui::Text("Show debugging information for this application");
         ImGui::PopID();
 
+        ImGui::PushID("ID Test");
+        if (ImGui::Button("Test"))
+        {
+            EQAPP_InterpretCommand("//test");
+        }
+        ImGui::SameLine(200);
+        ImGui::Text("Perform the //test command");
+        ImGui::PopID();
+
         if (ImGui::CollapsingHeader("HUD"))
         {
             ImGui::PushID("ID HUD");
@@ -116,6 +125,16 @@ struct EQAPPIMGUIOptionsWindow
             ImGui::Checkbox("Custom", &g_espCustomIsEnabled);
             ImGui::SameLine(200);
             ImGui::InputFloat("##ESP Custom Distance", &g_espCustomDistance, 1.0f, 100.0f, 0);
+
+            ImGui::PopID();
+
+            ImGui::Separator();
+
+            ImGui::PushID("ID ESP Spawn Cast Spell");
+
+            ImGui::Checkbox("Spawn Cast Spell", &g_spawnCastSpellEspIsEnabled);
+            ImGui::SameLine(200);
+            ImGui::Text("Show what spells players and NPCs are casting");
 
             ImGui::PopID();
 
@@ -694,7 +713,7 @@ struct EQAPPIMGUIOptionsWindow
             ImGui::PopID();
         }
 
-        if (ImGui::CollapsingHeader("Draw Distance"))
+        if (ImGui::CollapsingHeader("Change Height"))
         {
             ImGui::PushID("ID Change Height");
 
@@ -727,6 +746,38 @@ struct EQAPPIMGUIOptionsWindow
 
             ImGui::Checkbox("Use Max Distance", &g_setTargetMaxDistanceIsEnabled);
             ImGui::InputFloat("Max Distance", &g_setTargetMaxDistance, 1.0f, 100.0f, 0);
+
+            ImGui::PopID();
+        }
+
+        if (ImGui::CollapsingHeader("Spawn Cast Spell"))
+        {
+            ImGui::PushID("ID Spawn Cast Spell");
+
+            ImGui::Checkbox("Enabled", &g_spawnCastSpellIsEnabled);
+            ImGui::SameLine(200);
+            ImGui::Text("Show what spells players and NPCs are casting");
+
+            ImGui::Checkbox("ESP", &g_spawnCastSpellEspIsEnabled);
+            ImGui::SameLine(200);
+            ImGui::Text("Show spell casting information at spawn location on screen");
+
+            ImGui::Separator();
+
+            ImGui::Checkbox("Cast Bars", &g_spawnCastSpellDrawBarsIsEnabled);
+            ImGui::SameLine(200);
+            ImGui::Text("Show name, timer and progress bar for spells currently being casted");
+
+            ImGui::Text(" ");
+
+            ImGui::Checkbox("Show Cast Bars for Players", &g_spawnCastSpellDrawBarsForPlayerIsEnabled);
+            ImGui::Checkbox("Show Cast Bars for NPCs", &g_spawnCastSpellDrawBarsForNpcIsEnabled);
+            ImGui::Checkbox("Show Cast Bars for Healer classes only", &g_spawnCastSpellDrawBarsForHealerClassOnlyIsEnabled);
+
+            ImGui::Text(" ");
+
+            ImGui::InputInt("Max Cast Bars shown", (int*)&g_spawnCastSpellDrawBarsMax, 1, 10);
+            ImGui::InputInt("Minimum spell casting time in milliseconds", (int*)&g_spawnCastSpellDrawBarsMinimumSpellCastTime, 1000, 10000);
 
             ImGui::PopID();
         }
