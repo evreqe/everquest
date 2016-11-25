@@ -18,6 +18,7 @@
 #define EQ_OFFSET_SPAWN_INFO_HEIGHT                             0x13C         // float
 #define EQ_OFFSET_SPAWN_INFO_ID                                 0x148         // uint32_t
 #define EQ_OFFSET_SPAWN_INFO_IS_LFG                             0x1F1         // uint8_t    // looking for group
+#define EQ_OFFSET_SPAWN_INFO_HP                                 0x1F8         // uint32_t    // hit points
 #define EQ_OFFSET_SPAWN_INFO_IS_TRADER                          0x228         // uint32_t
 #define EQ_OFFSET_SPAWN_INFO_PET_OWNER_SPAWN_ID                 0x260         // uint32_t
 #define EQ_OFFSET_SPAWN_INFO_STANDING_STATE                     0x279         // uint8_t

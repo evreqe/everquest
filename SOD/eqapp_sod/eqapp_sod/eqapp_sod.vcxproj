@@ -97,6 +97,7 @@
     <ClInclude Include="eqapp_alwayshotbutton.h" />
     <ClInclude Include="eqapp_autogroup.h" />
     <ClInclude Include="eqapp_autoloot.h" />
+    <ClInclude Include="eqapp_backgroundfps.h" />
     <ClInclude Include="eqapp_banklist.h" />
     <ClInclude Include="eqapp_census.h" />
     <ClInclude Include="eqapp_changeheight.h" />

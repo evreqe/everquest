@@ -40,56 +40,56 @@
         <CheatEntry>
           <ID>6</ID>
           <Description>"Fog Distance Minimum"</Description>
-          <LastState Value="100" RealAddress="00A60760"/>
+          <LastState Value="1000" RealAddress="00A60760"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+66057C+1E4</Address>
         </CheatEntry>
         <CheatEntry>
           <ID>752</ID>
           <Description>"Fog Distance"</Description>
-          <LastState Value="1" RealAddress="00A60764"/>
+          <LastState Value="400" RealAddress="00A60764"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+66057C+1E8</Address>
         </CheatEntry>
         <CheatEntry>
           <ID>753</ID>
           <Description>"Fog Distance"</Description>
-          <LastState Value="1" RealAddress="00A60768"/>
+          <LastState Value="400" RealAddress="00A60768"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+66057C+1EC</Address>
         </CheatEntry>
         <CheatEntry>
           <ID>754</ID>
           <Description>"Fog Distance"</Description>
-          <LastState Value="1" RealAddress="00A6076C"/>
+          <LastState Value="400" RealAddress="00A6076C"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+66057C+1F0</Address>
         </CheatEntry>
         <CheatEntry>
           <ID>755</ID>
           <Description>"Fog Distance Maximum"</Description>
-          <LastState Value="2000" RealAddress="00A60770"/>
+          <LastState Value="1000" RealAddress="00A60770"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+66057C+1F4</Address>
         </CheatEntry>
         <CheatEntry>
           <ID>756</ID>
           <Description>"Fog Distance"</Description>
-          <LastState Value="1200" RealAddress="00A60774"/>
+          <LastState Value="1000" RealAddress="00A60774"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+66057C+1F8</Address>
         </CheatEntry>
         <CheatEntry>
           <ID>859</ID>
           <Description>"Fog Distance"</Description>
-          <LastState Value="1200" RealAddress="00A60778"/>
+          <LastState Value="1000" RealAddress="00A60778"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+66057C+1FC</Address>
         </CheatEntry>
         <CheatEntry>
           <ID>860</ID>
           <Description>"Fog Distance"</Description>
-          <LastState Value="1200" RealAddress="00A6077C"/>
+          <LastState Value="1000" RealAddress="00A6077C"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+66057C+1FC+4</Address>
         </CheatEntry>
@@ -117,14 +117,14 @@
         <CheatEntry>
           <ID>8</ID>
           <Description>"Min Clip"</Description>
-          <LastState Value="100" RealAddress="00A607E0"/>
+          <LastState Value="1000" RealAddress="00A607E0"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+66057C+264</Address>
         </CheatEntry>
         <CheatEntry>
           <ID>7</ID>
           <Description>"Max Clip"</Description>
-          <LastState Value="2000" RealAddress="00A607E4"/>
+          <LastState Value="1000" RealAddress="00A607E4"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+66057C+268</Address>
         </CheatEntry>
@@ -140,7 +140,7 @@
     <CheatEntry>
       <ID>18</ID>
       <Description>"First Person Camera Pointer"</Description>
-      <LastState Value="03169F58" RealAddress="00A61BE0"/>
+      <LastState Value="02C7E520" RealAddress="00A61BE0"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>eqgame.exe+661BE0</Address>
@@ -148,7 +148,7 @@
         <CheatEntry>
           <ID>19</ID>
           <Description>"0x00"</Description>
-          <LastState Value="007CF918" RealAddress="03169F58"/>
+          <LastState Value="007CF918" RealAddress="02C7E520"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe+661BE0</Address>
@@ -159,7 +159,7 @@
         <CheatEntry>
           <ID>876</ID>
           <Description>"0x04 Y"</Description>
-          <LastState Value="-2000.043579" RealAddress="03169F5C"/>
+          <LastState Value="-27.25" RealAddress="02C7E524"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+661BE0</Address>
           <Offsets>
@@ -169,7 +169,7 @@
         <CheatEntry>
           <ID>875</ID>
           <Description>"0x08 X"</Description>
-          <LastState Value="-2339.731445" RealAddress="03169F60"/>
+          <LastState Value="-7.625" RealAddress="02C7E528"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+661BE0</Address>
           <Offsets>
@@ -179,7 +179,7 @@
         <CheatEntry>
           <ID>874</ID>
           <Description>"0x0C Z"</Description>
-          <LastState Value="31.55430031" RealAddress="03169F64"/>
+          <LastState Value="6.201998711" RealAddress="02C7E52C"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+661BE0</Address>
           <Offsets>
@@ -189,7 +189,7 @@
         <CheatEntry>
           <ID>873</ID>
           <Description>"0x10 Yaw (Heading)"</Description>
-          <LastState Value="124.5199738" RealAddress="03169F68"/>
+          <LastState Value="511.9891663" RealAddress="02C7E530"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+661BE0</Address>
           <Offsets>
@@ -199,7 +199,7 @@
         <CheatEntry>
           <ID>20</ID>
           <Description>"0x14 Pitch"</Description>
-          <LastState Value="-8.5" RealAddress="03169F6C"/>
+          <LastState Value="-8.5" RealAddress="02C7E534"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+661BE0</Address>
           <Offsets>
@@ -209,7 +209,7 @@
         <CheatEntry>
           <ID>21</ID>
           <Description>"0x18 Roll"</Description>
-          <LastState Value="0" RealAddress="03169F70"/>
+          <LastState Value="0" RealAddress="02C7E538"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+661BE0</Address>
           <Offsets>
@@ -219,7 +219,7 @@
         <CheatEntry>
           <ID>878</ID>
           <Description>"0x40 Field Of View"</Description>
-          <LastState Value="90" RealAddress="03169F98"/>
+          <LastState Value="90" RealAddress="02C7E560"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+661BE0</Address>
           <Offsets>
@@ -229,7 +229,7 @@
         <CheatEntry>
           <ID>879</ID>
           <Description>"0x46"</Description>
-          <LastState Value="0" RealAddress="03169F9E"/>
+          <LastState Value="0" RealAddress="02C7E566"/>
           <VariableType>Byte</VariableType>
           <Address>eqgame.exe+661BE0</Address>
           <Offsets>
@@ -239,7 +239,7 @@
         <CheatEntry>
           <ID>899</ID>
           <Description>"0x48"</Description>
-          <LastState Value="0" RealAddress="03169FA0"/>
+          <LastState Value="0" RealAddress="02C7E568"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+661BE0</Address>
           <Offsets>
@@ -249,7 +249,7 @@
         <CheatEntry>
           <ID>882</ID>
           <Description>"0x60"</Description>
-          <LastState Value="1" RealAddress="03169FB8"/>
+          <LastState Value="544567129" RealAddress="02C7E580"/>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe+661BE0</Address>
           <Offsets>
@@ -259,7 +259,7 @@
         <CheatEntry>
           <ID>883</ID>
           <Description>"0x68"</Description>
-          <LastState Value="10" RealAddress="03169FC0"/>
+          <LastState Value="544501614" RealAddress="02C7E588"/>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe+661BE0</Address>
           <Offsets>
@@ -269,7 +269,7 @@
         <CheatEntry>
           <ID>885</ID>
           <Description>"0x70"</Description>
-          <LastState Value="8" RealAddress="03169FC8"/>
+          <LastState Value="544502629" RealAddress="02C7E590"/>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe+661BE0</Address>
           <Offsets>
@@ -279,7 +279,7 @@
         <CheatEntry>
           <ID>884</ID>
           <Description>"0x78"</Description>
-          <LastState Value="3000" RealAddress="03169FD0"/>
+          <LastState Value="1684370017" RealAddress="02C7E598"/>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe+661BE0</Address>
           <Offsets>
@@ -289,7 +289,7 @@
         <CheatEntry>
           <ID>886</ID>
           <Description>"0x138"</Description>
-          <LastState Value="3000" RealAddress="0316A090"/>
+          <LastState Value="1684370017" RealAddress="02C7E658"/>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe+661BE0</Address>
           <Offsets>
@@ -299,7 +299,7 @@
         <CheatEntry>
           <ID>880</ID>
           <Description>"0x224"</Description>
-          <LastState Value="1.854211374E25" RealAddress="0316A17C"/>
+          <LastState Value="1.095085012E21" RealAddress="02C7E744"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+661BE0</Address>
           <Offsets>
@@ -309,7 +309,7 @@
         <CheatEntry>
           <ID>881</ID>
           <Description>"0x344"</Description>
-          <LastState Value="3.825544808E-43" RealAddress="0316A29C"/>
+          <LastState Value="1.854211374E25" RealAddress="02C7E864"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+661BE0</Address>
           <Offsets>
@@ -321,7 +321,7 @@
     <CheatEntry>
       <ID>890</ID>
       <Description>"Overhead Camera Pointer"</Description>
-      <LastState Value="0319EF90" RealAddress="00A61BE4"/>
+      <LastState Value="02C47458" RealAddress="00A61BE4"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>eqgame.exe+661BE4</Address>
@@ -329,7 +329,7 @@
         <CheatEntry>
           <ID>891</ID>
           <Description>"0x00"</Description>
-          <LastState Value="007CFA70" RealAddress="0319EF90"/>
+          <LastState Value="007CFA70" RealAddress="02C47458"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe+661BE4</Address>
@@ -340,7 +340,7 @@
         <CheatEntry>
           <ID>892</ID>
           <Description>"0x04 Y"</Description>
-          <LastState Value="-2000.043579" RealAddress="0319EF94"/>
+          <LastState Value="0" RealAddress="02C4745C"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+661BE4</Address>
           <Offsets>
@@ -350,7 +350,7 @@
         <CheatEntry>
           <ID>893</ID>
           <Description>"0x08 X"</Description>
-          <LastState Value="-2339.731445" RealAddress="0319EF98"/>
+          <LastState Value="0" RealAddress="02C47460"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+661BE4</Address>
           <Offsets>
@@ -360,7 +360,7 @@
         <CheatEntry>
           <ID>894</ID>
           <Description>"0x0C Z"</Description>
-          <LastState Value="56.55429459" RealAddress="0319EF9C"/>
+          <LastState Value="0" RealAddress="02C47464"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+661BE4</Address>
           <Offsets>
@@ -370,7 +370,7 @@
         <CheatEntry>
           <ID>895</ID>
           <Description>"0x10 Yaw (Heading)"</Description>
-          <LastState Value="124.5199738" RealAddress="0319EFA0"/>
+          <LastState Value="0" RealAddress="02C47468"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+661BE4</Address>
           <Offsets>
@@ -380,7 +380,7 @@
         <CheatEntry>
           <ID>896</ID>
           <Description>"0x14 Pitch"</Description>
-          <LastState Value="-100" RealAddress="0319EFA4"/>
+          <LastState Value="0" RealAddress="02C4746C"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+661BE4</Address>
           <Offsets>
@@ -390,7 +390,7 @@
         <CheatEntry>
           <ID>897</ID>
           <Description>"0x18 Roll"</Description>
-          <LastState Value="0" RealAddress="0319EFA8"/>
+          <LastState Value="0" RealAddress="02C47470"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+661BE4</Address>
           <Offsets>
@@ -400,7 +400,7 @@
         <CheatEntry>
           <ID>898</ID>
           <Description>"0x40 Field Of View"</Description>
-          <LastState Value="90" RealAddress="0319EFD0"/>
+          <LastState Value="90" RealAddress="02C47498"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+661BE4</Address>
           <Offsets>
@@ -412,7 +412,7 @@
     <CheatEntry>
       <ID>1473</ID>
       <Description>"Third Person Slow Chase Camera Pointer"</Description>
-      <LastState Value="030C5D30" RealAddress="00A61BF4"/>
+      <LastState Value="02C02668" RealAddress="00A61BF4"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>eqgame.exe+661BF4</Address>
@@ -420,7 +420,7 @@
         <CheatEntry>
           <ID>1474</ID>
           <Description>"0x00"</Description>
-          <LastState Value="007CFB70" RealAddress="030C5D30"/>
+          <LastState Value="007CFB70" RealAddress="02C02668"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe+661BF4</Address>
@@ -431,7 +431,7 @@
         <CheatEntry>
           <ID>1475</ID>
           <Description>"0x04 Y"</Description>
-          <LastState Value="-1991.796021" RealAddress="030C5D34"/>
+          <LastState Value="0" RealAddress="02C0266C"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+661BF4</Address>
           <Offsets>
@@ -441,7 +441,7 @@
         <CheatEntry>
           <ID>1476</ID>
           <Description>"0x08 X"</Description>
-          <LastState Value="-2482.277588" RealAddress="030C5D38"/>
+          <LastState Value="0" RealAddress="02C02670"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+661BF4</Address>
           <Offsets>
@@ -451,7 +451,7 @@
         <CheatEntry>
           <ID>1477</ID>
           <Description>"0x0C Z"</Description>
-          <LastState Value="27.49503136" RealAddress="030C5D3C"/>
+          <LastState Value="0" RealAddress="02C02674"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+661BF4</Address>
           <Offsets>
@@ -461,7 +461,7 @@
         <CheatEntry>
           <ID>1478</ID>
           <Description>"0x10 Yaw (Heading)"</Description>
-          <LastState Value="239.3422241" RealAddress="030C5D40"/>
+          <LastState Value="0" RealAddress="02C02678"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+661BF4</Address>
           <Offsets>
@@ -471,7 +471,7 @@
         <CheatEntry>
           <ID>1479</ID>
           <Description>"0x14 Pitch"</Description>
-          <LastState Value="0" RealAddress="030C5D44"/>
+          <LastState Value="0" RealAddress="02C0267C"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+661BF4</Address>
           <Offsets>
@@ -481,7 +481,7 @@
         <CheatEntry>
           <ID>1480</ID>
           <Description>"0x18 Roll"</Description>
-          <LastState Value="0" RealAddress="030C5D48"/>
+          <LastState Value="0" RealAddress="02C02680"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+661BF4</Address>
           <Offsets>
@@ -491,7 +491,7 @@
         <CheatEntry>
           <ID>1481</ID>
           <Description>"0x40 Field Of View"</Description>
-          <LastState Value="90" RealAddress="030C5D70"/>
+          <LastState Value="90" RealAddress="02C026A8"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+661BF4</Address>
           <Offsets>
@@ -503,7 +503,7 @@
     <CheatEntry>
       <ID>23</ID>
       <Description>"Player Spawn Info"</Description>
-      <LastState Value="00000000" RealAddress="00A4260C"/>
+      <LastState Value="0932FF90" RealAddress="00A4260C"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>A4260C</Address>
@@ -511,6 +511,7 @@
         <CheatEntry>
           <ID>656</ID>
           <Description>"0x13C Height"</Description>
+          <LastState Value="5" RealAddress="093300CC"/>
           <VariableType>Float</VariableType>
           <Address>A4260C</Address>
           <Offsets>
@@ -520,6 +521,7 @@
         <CheatEntry>
           <ID>650</ID>
           <Description>"0x13C Height"</Description>
+          <LastState Value="40A00000" RealAddress="093300CC"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>A4260C</Address>
@@ -530,6 +532,7 @@
         <CheatEntry>
           <ID>1271</ID>
           <Description>"0x2C0"</Description>
+          <LastState Value="031B8FD8" RealAddress="09330250"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>A4260C</Address>
@@ -540,6 +543,7 @@
             <CheatEntry>
               <ID>1272</ID>
               <Description>"0x08 Actor Definition"</Description>
+              <LastState RealAddress="031B8FE0"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>String</VariableType>
               <Length>10</Length>
@@ -556,6 +560,7 @@
         <CheatEntry>
           <ID>654</ID>
           <Description>"0xDF4 Following Spawn Info"</Description>
+          <LastState Value="00000000" RealAddress="09330D84"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>A4260C</Address>
@@ -579,6 +584,7 @@
         <CheatEntry>
           <ID>1270</ID>
           <Description>"0xE64 Race"</Description>
+          <LastState Value="00000004" RealAddress="09330DF4"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>A4260C</Address>
@@ -6774,7 +6780,7 @@
     <CheatEntry>
       <ID>22</ID>
       <Description>"Local Player"</Description>
-      <LastState Value="00000000" RealAddress="00A425F8"/>
+      <LastState Value="0932FF90" RealAddress="00A425F8"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>A425F8</Address>
@@ -6782,6 +6788,7 @@
         <CheatEntry>
           <ID>770</ID>
           <Description>"0x84"</Description>
+          <LastState Value="0" RealAddress="09330014"/>
           <VariableType>Byte</VariableType>
           <Address>A425F8</Address>
           <Offsets>
@@ -6793,6 +6800,7 @@
     <CheatEntry>
       <ID>772</ID>
       <Description>"0x20"</Description>
+      <LastState Value="0.8000000119" RealAddress="0932FFB0"/>
       <VariableType>Float</VariableType>
       <Address>A425F8</Address>
       <Offsets>
@@ -6802,14 +6810,14 @@
     <CheatEntry>
       <ID>25</ID>
       <Description>"Camera Yaw (Heading)"</Description>
-      <LastState Value="381.516571" RealAddress="00AC11B0"/>
+      <LastState Value="108.9709244" RealAddress="00AC11B0"/>
       <VariableType>Float</VariableType>
       <Address>eqgame.exe+6C11B0</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>35</ID>
       <Description>"CDisplay"</Description>
-      <LastState Value="08EE9F70" RealAddress="00A42628"/>
+      <LastState Value="09253E30" RealAddress="00A42628"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>eqgame.exe+642628</Address>
@@ -6818,7 +6826,7 @@
           <ID>32</ID>
           <Description>"Camera Data Pointer (World Space to Screen Space) (t3dWorldSpaceToScreenSpace)"</Description>
           <Options moHideChildren="1" moManualExpandCollapse="1"/>
-          <LastState Value="0B191740" RealAddress="08EEA088"/>
+          <LastState Value="03FB1088" RealAddress="09253F48"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe+642628</Address>
@@ -6829,7 +6837,7 @@
             <CheatEntry>
               <ID>913</ID>
               <Description>"0x00"</Description>
-              <LastState Value="032A5948" RealAddress="0B191740"/>
+              <LastState Value="032C5948" RealAddress="03FB1088"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe+642628</Address>
@@ -6841,7 +6849,7 @@
             <CheatEntry>
               <ID>916</ID>
               <Description>"0x04 Field Of View"</Description>
-              <LastState Value="45" RealAddress="0B191744"/>
+              <LastState Value="45" RealAddress="03FB108C"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -6852,7 +6860,7 @@
             <CheatEntry>
               <ID>917</ID>
               <Description>"0x08 Aspect Ratio"</Description>
-              <LastState Value="1.777777672" RealAddress="0B191748"/>
+              <LastState Value="1.685055375" RealAddress="03FB1090"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -6863,7 +6871,7 @@
             <CheatEntry>
               <ID>53</ID>
               <Description>"0x0C Draw World or Update Screen (dalaya 1A0)"</Description>
-              <LastState Value="1" RealAddress="0B19174C"/>
+              <LastState Value="1" RealAddress="03FB1094"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -6874,7 +6882,7 @@
             <CheatEntry>
               <ID>40</ID>
               <Description>"0x10 dalaya 1A4"</Description>
-              <LastState Value="1.000833988" RealAddress="0B191750"/>
+              <LastState Value="1.001001" RealAddress="03FB1098"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -6885,7 +6893,7 @@
             <CheatEntry>
               <ID>41</ID>
               <Description>"0x14 dalaya 1A8"</Description>
-              <LastState Value="1000" RealAddress="0B191754"/>
+              <LastState Value="1000" RealAddress="03FB109C"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -6896,7 +6904,7 @@
             <CheatEntry>
               <ID>915</ID>
               <Description>"0x14 Draw Distance"</Description>
-              <LastState Value="1000" RealAddress="0B191754"/>
+              <LastState Value="1000" RealAddress="03FB109C"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -6907,7 +6915,7 @@
             <CheatEntry>
               <ID>918</ID>
               <Description>"0x18"</Description>
-              <LastState Value="550" RealAddress="0B191758"/>
+              <LastState Value="550" RealAddress="03FB10A0"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -6918,7 +6926,7 @@
             <CheatEntry>
               <ID>914</ID>
               <Description>"0x1C"</Description>
-              <LastState Value="302500" RealAddress="0B19175C"/>
+              <LastState Value="302500" RealAddress="03FB10A4"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -6929,7 +6937,7 @@
             <CheatEntry>
               <ID>919</ID>
               <Description>"0x20"</Description>
-              <LastState Value="260" RealAddress="0B191760"/>
+              <LastState Value="260" RealAddress="03FB10A8"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -6940,7 +6948,7 @@
             <CheatEntry>
               <ID>920</ID>
               <Description>"0x24"</Description>
-              <LastState Value="67600" RealAddress="0B191764"/>
+              <LastState Value="67600" RealAddress="03FB10AC"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -6951,7 +6959,7 @@
             <CheatEntry>
               <ID>921</ID>
               <Description>"0x28"</Description>
-              <LastState Value="1200" RealAddress="0B191768"/>
+              <LastState Value="1000" RealAddress="03FB10B0"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -6962,7 +6970,7 @@
             <CheatEntry>
               <ID>922</ID>
               <Description>"0x2C"</Description>
-              <LastState Value="1440000" RealAddress="0B19176C"/>
+              <LastState Value="1000000" RealAddress="03FB10B4"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -6973,7 +6981,7 @@
             <CheatEntry>
               <ID>923</ID>
               <Description>"0x2C"</Description>
-              <LastState Value="1440000" RealAddress="0B19176C"/>
+              <LastState Value="1000000" RealAddress="03FB10B4"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -6984,7 +6992,7 @@
             <CheatEntry>
               <ID>57</ID>
               <Description>"0x38 Screen Width Half (dalaya 198)"</Description>
-              <LastState Value="800" RealAddress="0B191778"/>
+              <LastState Value="840" RealAddress="03FB10C0"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -6995,7 +7003,7 @@
             <CheatEntry>
               <ID>58</ID>
               <Description>"0x3C Screen Height Half (dalaya 19C)"</Description>
-              <LastState Value="450" RealAddress="0B19177C"/>
+              <LastState Value="498.5" RealAddress="03FB10C4"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7006,7 +7014,7 @@
             <CheatEntry>
               <ID>44</ID>
               <Description>"0x48 dalaya 22C"</Description>
-              <LastState Value="0.07638126612" RealAddress="0B191788"/>
+              <LastState Value="-0.8880863786" RealAddress="03FB10D0"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7017,7 +7025,7 @@
             <CheatEntry>
               <ID>45</ID>
               <Description>"0x54 dalaya 238"</Description>
-              <LastState Value="-0.9384239316" RealAddress="0B191794"/>
+              <LastState Value="0.2367494404" RealAddress="03FB10DC"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7028,7 +7036,7 @@
             <CheatEntry>
               <ID>47</ID>
               <Description>"0x60 dalaya 244"</Description>
-              <LastState Value="-0.336889863" RealAddress="0B1917A0"/>
+              <LastState Value="-0.3939920366" RealAddress="03FB10E8"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7039,7 +7047,7 @@
             <CheatEntry>
               <ID>50</ID>
               <Description>"0x84 dalaya 260"</Description>
-              <LastState Value="-1294.015503" RealAddress="0B1917C4"/>
+              <LastState Value="351.1477966" RealAddress="03FB110C"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7050,7 +7058,7 @@
             <CheatEntry>
               <ID>51</ID>
               <Description>"0x88 dalaya 264"</Description>
-              <LastState Value="-105.3239822" RealAddress="0B1917C8"/>
+              <LastState Value="1317.213623" RealAddress="03FB1110"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7061,7 +7069,7 @@
             <CheatEntry>
               <ID>52</ID>
               <Description>"0x8C dalaya 268"</Description>
-              <LastState Value="0" RealAddress="0B1917CC"/>
+              <LastState Value="0" RealAddress="03FB1114"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7072,7 +7080,7 @@
             <CheatEntry>
               <ID>54</ID>
               <Description>"0x90 dalaya 26C"</Description>
-              <LastState Value="35.48257446" RealAddress="0B1917D0"/>
+              <LastState Value="-518.9716187" RealAddress="03FB1118"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7083,7 +7091,7 @@
             <CheatEntry>
               <ID>55</ID>
               <Description>"0x94 dalaya 270"</Description>
-              <LastState Value="-435.9406433" RealAddress="0B1917D4"/>
+              <LastState Value="138.3494415" RealAddress="03FB111C"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7094,7 +7102,7 @@
             <CheatEntry>
               <ID>56</ID>
               <Description>"0x98 dalaya 274"</Description>
-              <LastState Value="1222.423218" RealAddress="0B1917D8"/>
+              <LastState Value="1252.967041" RealAddress="03FB1120"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7105,7 +7113,7 @@
             <CheatEntry>
               <ID>38</ID>
               <Description>"0xB0 Camera Yaw (Heading)"</Description>
-              <LastState Value="390.6179199" RealAddress="0B1917F0"/>
+              <LastState Value="234.7705078" RealAddress="03FB1138"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7116,7 +7124,7 @@
             <CheatEntry>
               <ID>1268</ID>
               <Description>"0xB4 Camera Pitch"</Description>
-              <LastState Value="484" RealAddress="0B1917F4"/>
+              <LastState Value="479" RealAddress="03FB113C"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7127,7 +7135,7 @@
             <CheatEntry>
               <ID>1269</ID>
               <Description>"0xB8 Camera Roll?"</Description>
-              <LastState Value="0" RealAddress="0B1917F8"/>
+              <LastState Value="0" RealAddress="03FB1140"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7138,7 +7146,7 @@
             <CheatEntry>
               <ID>70</ID>
               <Description>"0xBC Y (dalaya 1AC)"</Description>
-              <LastState Value="-1936.755127" RealAddress="0B1917FC"/>
+              <LastState Value="4.620324135" RealAddress="03FB1144"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7149,7 +7157,7 @@
             <CheatEntry>
               <ID>71</ID>
               <Description>"0xC0 X (dalaya 1B0)"</Description>
-              <LastState Value="-2587.020508" RealAddress="0B191800"/>
+              <LastState Value="-11.72941494" RealAddress="03FB1148"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7160,7 +7168,7 @@
             <CheatEntry>
               <ID>72</ID>
               <Description>"0xC4 Z (dalaya 1B4)"</Description>
-              <LastState Value="44.60790634" RealAddress="0B191804"/>
+              <LastState Value="15.24960327" RealAddress="03FB114C"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7171,7 +7179,7 @@
             <CheatEntry>
               <ID>888</ID>
               <Description>"0xC8 Width"</Description>
-              <LastState Value="1600" RealAddress="0B191808"/>
+              <LastState Value="1680" RealAddress="03FB1150"/>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7182,7 +7190,7 @@
             <CheatEntry>
               <ID>889</ID>
               <Description>"0xCC Height"</Description>
-              <LastState Value="900" RealAddress="0B19180C"/>
+              <LastState Value="997" RealAddress="03FB1154"/>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7195,7 +7203,7 @@
         <CheatEntry>
           <ID>461</ID>
           <Description>"0x05"</Description>
-          <LastState Value="1" RealAddress="08EE9F75"/>
+          <LastState Value="1" RealAddress="09253E35"/>
           <VariableType>Byte</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7205,7 +7213,7 @@
         <CheatEntry>
           <ID>830</ID>
           <Description>"0x08"</Description>
-          <LastState Value="1200" RealAddress="08EE9F78"/>
+          <LastState Value="1000" RealAddress="09253E38"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7215,7 +7223,7 @@
         <CheatEntry>
           <ID>815</ID>
           <Description>"0x0C"</Description>
-          <LastState Value="1" RealAddress="08EE9F7C"/>
+          <LastState Value="1" RealAddress="09253E3C"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7225,7 +7233,7 @@
         <CheatEntry>
           <ID>814</ID>
           <Description>"0x11"</Description>
-          <LastState Value="0" RealAddress="08EE9F81"/>
+          <LastState Value="0" RealAddress="09253E41"/>
           <VariableType>Byte</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7235,7 +7243,7 @@
         <CheatEntry>
           <ID>819</ID>
           <Description>"0x12"</Description>
-          <LastState Value="0" RealAddress="08EE9F82"/>
+          <LastState Value="0" RealAddress="09253E42"/>
           <VariableType>Byte</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7245,7 +7253,7 @@
         <CheatEntry>
           <ID>818</ID>
           <Description>"0x14 Hide Corpse Looted boolean"</Description>
-          <LastState Value="1" RealAddress="08EE9F84"/>
+          <LastState Value="1" RealAddress="09253E44"/>
           <VariableType>Byte</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7255,7 +7263,7 @@
         <CheatEntry>
           <ID>757</ID>
           <Description>"0x118 Camera Data Pointer"</Description>
-          <LastState Value="0B191740" RealAddress="08EEA088"/>
+          <LastState Value="03FB1088" RealAddress="09253F48"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe+642628</Address>
@@ -7266,7 +7274,7 @@
         <CheatEntry>
           <ID>833</ID>
           <Description>"0x11C Camera values"</Description>
-          <LastState Value="08FE18D0" RealAddress="08EEA08C"/>
+          <LastState Value="0923B928" RealAddress="09253F4C"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe+642628</Address>
@@ -7277,7 +7285,7 @@
             <CheatEntry>
               <ID>835</ID>
               <Description>"0x00 Y"</Description>
-              <LastState Value="-1936.755127" RealAddress="08FE18D0"/>
+              <LastState Value="4.620324135" RealAddress="0923B928"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7288,7 +7296,7 @@
             <CheatEntry>
               <ID>836</ID>
               <Description>"0x04 X"</Description>
-              <LastState Value="-2587.020508" RealAddress="08FE18D4"/>
+              <LastState Value="-11.72941494" RealAddress="0923B92C"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7299,7 +7307,7 @@
             <CheatEntry>
               <ID>837</ID>
               <Description>"0x08 Z"</Description>
-              <LastState Value="44.60790634" RealAddress="08FE18D8"/>
+              <LastState Value="15.24960327" RealAddress="0923B930"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7310,7 +7318,7 @@
             <CheatEntry>
               <ID>838</ID>
               <Description>"0x0C"</Description>
-              <LastState Value="0" RealAddress="08FE18DC"/>
+              <LastState Value="0" RealAddress="0923B934"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7321,7 +7329,7 @@
             <CheatEntry>
               <ID>839</ID>
               <Description>"0x10"</Description>
-              <LastState Value="5.204590198E25" RealAddress="08FE18E0"/>
+              <LastState Value="3.712488768E36" RealAddress="0923B938"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7332,7 +7340,7 @@
             <CheatEntry>
               <ID>840</ID>
               <Description>"0x14"</Description>
-              <LastState Value="-9.937798513E-32" RealAddress="08FE18E4"/>
+              <LastState Value="-1.009277569E-31" RealAddress="0923B93C"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7343,7 +7351,7 @@
             <CheatEntry>
               <ID>841</ID>
               <Description>"0x18 Yaw (Heading)"</Description>
-              <LastState Value="1.529360762E-33" RealAddress="08FE18E8"/>
+              <LastState Value="4.203895393E-44" RealAddress="0923B940"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7354,7 +7362,7 @@
             <CheatEntry>
               <ID>842</ID>
               <Description>"0x1C Pitch"</Description>
-              <LastState Value="2.662467082E-44" RealAddress="08FE18EC"/>
+              <LastState Value="4.203895393E-44" RealAddress="0923B944"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7365,7 +7373,7 @@
             <CheatEntry>
               <ID>843</ID>
               <Description>"0x20"</Description>
-              <LastState Value="0" RealAddress="08FE18F0"/>
+              <LastState Value="0" RealAddress="0923B948"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7378,7 +7386,7 @@
         <CheatEntry>
           <ID>834</ID>
           <Description>"0x120 Camera values"</Description>
-          <LastState Value="08FE16D8" RealAddress="08EEA090"/>
+          <LastState Value="0923BA48" RealAddress="09253F50"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe+642628</Address>
@@ -7389,7 +7397,7 @@
             <CheatEntry>
               <ID>37</ID>
               <Description>"0x00 Camera Yaw (Heading)"</Description>
-              <LastState Value="390.6179199" RealAddress="08FE16D8"/>
+              <LastState Value="234.7705078" RealAddress="0923BA48"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7400,7 +7408,7 @@
             <CheatEntry>
               <ID>33</ID>
               <Description>"0x04 Camera Pitch"</Description>
-              <LastState Value="484" RealAddress="08FE16DC"/>
+              <LastState Value="479" RealAddress="0923BA4C"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7411,7 +7419,7 @@
             <CheatEntry>
               <ID>34</ID>
               <Description>"0x08 Camera Roll"</Description>
-              <LastState Value="0" RealAddress="08FE16E0"/>
+              <LastState Value="0" RealAddress="0923BA50"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+642628</Address>
               <Offsets>
@@ -7424,7 +7432,7 @@
         <CheatEntry>
           <ID>817</ID>
           <Description>"0x125"</Description>
-          <LastState Value="0" RealAddress="08EEA095"/>
+          <LastState Value="0" RealAddress="09253F55"/>
           <VariableType>Byte</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7434,7 +7442,7 @@
         <CheatEntry>
           <ID>832</ID>
           <Description>"0x129"</Description>
-          <LastState Value="0" RealAddress="08EEA099"/>
+          <LastState Value="0" RealAddress="09253F59"/>
           <VariableType>Byte</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7444,7 +7452,7 @@
         <CheatEntry>
           <ID>831</ID>
           <Description>"0x130 Fog Is Enabled"</Description>
-          <LastState Value="1" RealAddress="08EEA0A0"/>
+          <LastState Value="1" RealAddress="09253F60"/>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7454,7 +7462,7 @@
         <CheatEntry>
           <ID>760</ID>
           <Description>"0x134 Fog Begin"</Description>
-          <LastState Value="100" RealAddress="08EEA0A4"/>
+          <LastState Value="849" RealAddress="09253F64"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7464,7 +7472,7 @@
         <CheatEntry>
           <ID>761</ID>
           <Description>"0x138 Fog End"</Description>
-          <LastState Value="1715" RealAddress="08EEA0A8"/>
+          <LastState Value="850" RealAddress="09253F68"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7474,7 +7482,7 @@
         <CheatEntry>
           <ID>762</ID>
           <Description>"0x13C"</Description>
-          <LastState Value="0.3300000131" RealAddress="08EEA0AC"/>
+          <LastState Value="0.3300000131" RealAddress="09253F6C"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7484,7 +7492,7 @@
         <CheatEntry>
           <ID>763</ID>
           <Description>"0x140 Fog Red"</Description>
-          <LastState Value="192" RealAddress="08EEA0B0"/>
+          <LastState Value="1" RealAddress="09253F70"/>
           <VariableType>Byte</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7494,7 +7502,7 @@
         <CheatEntry>
           <ID>764</ID>
           <Description>"0x141 Fog Green"</Description>
-          <LastState Value="192" RealAddress="08EEA0B1"/>
+          <LastState Value="1" RealAddress="09253F71"/>
           <VariableType>Byte</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7504,7 +7512,7 @@
         <CheatEntry>
           <ID>765</ID>
           <Description>"0x142 Fog Blue"</Description>
-          <LastState Value="192" RealAddress="08EEA0B2"/>
+          <LastState Value="1" RealAddress="09253F72"/>
           <VariableType>Byte</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7514,7 +7522,7 @@
         <CheatEntry>
           <ID>827</ID>
           <Description>"0x148"</Description>
-          <LastState Value="0" RealAddress="08EEA0B8"/>
+          <LastState Value="0" RealAddress="09253F78"/>
           <VariableType>Byte</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7524,7 +7532,7 @@
         <CheatEntry>
           <ID>495</ID>
           <Description>"0x154 Timer"</Description>
-          <LastState Value="2538172" RealAddress="08EEA0C4"/>
+          <LastState Value="2266573" RealAddress="09253F84"/>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7534,7 +7542,7 @@
         <CheatEntry>
           <ID>661</ID>
           <Description>"0xFC4"</Description>
-          <LastState Value="0" RealAddress="08EEAF34"/>
+          <LastState Value="0" RealAddress="09254DF4"/>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7544,7 +7552,7 @@
         <CheatEntry>
           <ID>824</ID>
           <Description>"0xFC8"</Description>
-          <LastState Value="0" RealAddress="08EEAF38"/>
+          <LastState Value="0" RealAddress="09254DF8"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7554,7 +7562,7 @@
         <CheatEntry>
           <ID>822</ID>
           <Description>"0xFCC"</Description>
-          <LastState Value="0" RealAddress="08EEAF3C"/>
+          <LastState Value="0" RealAddress="09254DFC"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7564,7 +7572,7 @@
         <CheatEntry>
           <ID>823</ID>
           <Description>"0xFD0"</Description>
-          <LastState Value="0" RealAddress="08EEAF40"/>
+          <LastState Value="0" RealAddress="09254E00"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7574,7 +7582,7 @@
         <CheatEntry>
           <ID>825</ID>
           <Description>"0xFD4"</Description>
-          <LastState Value="0" RealAddress="08EEAF44"/>
+          <LastState Value="0" RealAddress="09254E04"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7584,7 +7592,7 @@
         <CheatEntry>
           <ID>826</ID>
           <Description>"0xFE4"</Description>
-          <LastState Value="0" RealAddress="08EEAF54"/>
+          <LastState Value="0" RealAddress="09254E14"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7594,7 +7602,7 @@
         <CheatEntry>
           <ID>821</ID>
           <Description>"0xFF8"</Description>
-          <LastState Value="0" RealAddress="08EEAF68"/>
+          <LastState Value="0" RealAddress="09254E28"/>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7604,7 +7612,7 @@
         <CheatEntry>
           <ID>820</ID>
           <Description>"0x2D04 0 = Loading Screen"</Description>
-          <LastState Value="0" RealAddress="08EECC74"/>
+          <LastState Value="1" RealAddress="09256B34"/>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7614,7 +7622,7 @@
         <CheatEntry>
           <ID>521</ID>
           <Description>"0x2D68"</Description>
-          <LastState Value="0" RealAddress="08EECCD8"/>
+          <LastState Value="0" RealAddress="09256B98"/>
           <VariableType>Byte</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7624,7 +7632,7 @@
         <CheatEntry>
           <ID>828</ID>
           <Description>"0x2D69"</Description>
-          <LastState Value="1" RealAddress="08EECCD9"/>
+          <LastState Value="1" RealAddress="09256B99"/>
           <VariableType>Byte</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7634,7 +7642,7 @@
         <CheatEntry>
           <ID>829</ID>
           <Description>"0x2D6A"</Description>
-          <LastState Value="1" RealAddress="08EECCDA"/>
+          <LastState Value="1" RealAddress="09256B9A"/>
           <VariableType>Byte</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7644,7 +7652,7 @@
         <CheatEntry>
           <ID>816</ID>
           <Description>"0x2D74"</Description>
-          <LastState Value="50" RealAddress="08EECCE4"/>
+          <LastState Value="50" RealAddress="09256BA4"/>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe+642628</Address>
           <Offsets>
@@ -7656,7 +7664,7 @@
     <CheatEntry>
       <ID>68</ID>
       <Description>"CEverQuest"</Description>
-      <LastState Value="04020CF8" RealAddress="00AD6DB8"/>
+      <LastState Value="04028A48" RealAddress="00AD6DB8"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>00AD6DB8</Address>
@@ -7664,7 +7672,7 @@
         <CheatEntry>
           <ID>69</ID>
           <Description>"0x5C4 Game State (5 = In Game)"</Description>
-          <LastState Value="4" RealAddress="040212BC"/>
+          <LastState Value="5" RealAddress="0402900C"/>
           <VariableType>4 Bytes</VariableType>
           <Address>00AD6DB8</Address>
           <Offsets>
@@ -7674,7 +7682,7 @@
         <CheatEntry>
           <ID>809</ID>
           <Description>"0x38E98"</Description>
-          <LastState Value="0" RealAddress="04059B90"/>
+          <LastState Value="0" RealAddress="040618E0"/>
           <VariableType>4 Bytes</VariableType>
           <Address>00AD6DB8</Address>
           <Offsets>
@@ -7686,7 +7694,7 @@
     <CheatEntry>
       <ID>73</ID>
       <Description>"CXWndManager"</Description>
-      <LastState Value="090ADD98" RealAddress="00B10A38"/>
+      <LastState Value="133A5200" RealAddress="00B10A38"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>00B10A38</Address>
@@ -7694,7 +7702,7 @@
         <CheatEntry>
           <ID>74</ID>
           <Description>"0x38"</Description>
-          <LastState Value="0" RealAddress="090ADDD1"/>
+          <LastState Value="3087007744" RealAddress="133A5239"/>
           <VariableType>4 Bytes</VariableType>
           <Address>00B10A38</Address>
           <Offsets>
@@ -7704,7 +7712,7 @@
         <CheatEntry>
           <ID>277</ID>
           <Description>"0x3D"</Description>
-          <LastState Value="0" RealAddress="090ADDD5"/>
+          <LastState Value="1246917" RealAddress="133A523D"/>
           <VariableType>4 Bytes</VariableType>
           <Address>00B10A38</Address>
           <Offsets>
@@ -7714,7 +7722,7 @@
         <CheatEntry>
           <ID>276</ID>
           <Description>"0xEC Game Width"</Description>
-          <LastState Value="1600" RealAddress="090ADE84"/>
+          <LastState Value="1680" RealAddress="133A52EC"/>
           <VariableType>4 Bytes</VariableType>
           <Address>00B10A38</Address>
           <Offsets>
@@ -7724,7 +7732,7 @@
         <CheatEntry>
           <ID>75</ID>
           <Description>"0xF0 Game Height"</Description>
-          <LastState Value="900" RealAddress="090ADE88"/>
+          <LastState Value="997" RealAddress="133A52F0"/>
           <VariableType>4 Bytes</VariableType>
           <Address>00B10A38</Address>
           <Offsets>
@@ -7734,7 +7742,7 @@
         <CheatEntry>
           <ID>76</ID>
           <Description>"0xF4"</Description>
-          <LastState Value="11" RealAddress="090ADE8C"/>
+          <LastState Value="11" RealAddress="133A52F4"/>
           <VariableType>4 Bytes</VariableType>
           <Address>00B10A38</Address>
           <Offsets>
@@ -7744,7 +7752,7 @@
         <CheatEntry>
           <ID>77</ID>
           <Description>"0xF8 Font Manager"</Description>
-          <LastState Value="031978F0" RealAddress="090ADE90"/>
+          <LastState Value="02C575F8" RealAddress="133A52F8"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>00B10A38</Address>
@@ -7755,7 +7763,7 @@
             <CheatEntry>
               <ID>78</ID>
               <Description>"0x00 Font 1"</Description>
-              <LastState Value="132CAAB8" RealAddress="031978F0"/>
+              <LastState Value="132EF230" RealAddress="02C575F8"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>00B10A38</Address>
@@ -7767,7 +7775,7 @@
                 <CheatEntry>
                   <ID>84</ID>
                   <Description>"0x04 Font Size"</Description>
-                  <LastState Value="0" RealAddress="132CAABC"/>
+                  <LastState Value="0" RealAddress="132EF234"/>
                   <VariableType>4 Bytes</VariableType>
                   <Address>00B10A38</Address>
                   <Offsets>
@@ -7781,7 +7789,7 @@
             <CheatEntry>
               <ID>79</ID>
               <Description>"0x04 Font 2"</Description>
-              <LastState Value="132CAAF8" RealAddress="031978F4"/>
+              <LastState Value="132EF3B0" RealAddress="02C575FC"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>00B10A38</Address>
@@ -7793,7 +7801,7 @@
                 <CheatEntry>
                   <ID>83</ID>
                   <Description>"0x00"</Description>
-                  <LastState Value="10C8A618" RealAddress="132CAAE8"/>
+                  <LastState Value="10C9B318" RealAddress="132EF3A0"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>00B10A38</Address>
@@ -7806,7 +7814,7 @@
                 <CheatEntry>
                   <ID>570</ID>
                   <Description>"0x04 Font Size"</Description>
-                  <LastState Value="1" RealAddress="132CAAFC"/>
+                  <LastState Value="1" RealAddress="132EF3B4"/>
                   <VariableType>4 Bytes</VariableType>
                   <Address>00B10A38</Address>
                   <Offsets>
@@ -7820,7 +7828,7 @@
             <CheatEntry>
               <ID>80</ID>
               <Description>"0x08 Font 3 (DrawNetStatus Font)"</Description>
-              <LastState Value="132CAB08" RealAddress="031978F8"/>
+              <LastState Value="132EF250" RealAddress="02C57600"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>00B10A38</Address>
@@ -7832,7 +7840,7 @@
                 <CheatEntry>
                   <ID>81</ID>
                   <Description>"0x00"</Description>
-                  <LastState Value="007C8318" RealAddress="132CAB08"/>
+                  <LastState Value="007C8318" RealAddress="132EF250"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>00B10A38</Address>
@@ -7845,7 +7853,7 @@
                 <CheatEntry>
                   <ID>82</ID>
                   <Description>"0x04 Font Size"</Description>
-                  <LastState Value="2" RealAddress="132CAB0C"/>
+                  <LastState Value="2" RealAddress="132EF254"/>
                   <VariableType>4 Bytes</VariableType>
                   <Address>00B10A38</Address>
                   <Offsets>
@@ -7859,7 +7867,7 @@
             <CheatEntry>
               <ID>274</ID>
               <Description>"0x0C Font 4"</Description>
-              <LastState Value="132CABD8" RealAddress="031978FC"/>
+              <LastState Value="132EF2E0" RealAddress="02C57604"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>00B10A38</Address>
@@ -7871,7 +7879,7 @@
                 <CheatEntry>
                   <ID>275</ID>
                   <Description>"0x04 Font Size"</Description>
-                  <LastState Value="3" RealAddress="132CABDC"/>
+                  <LastState Value="3" RealAddress="132EF2E4"/>
                   <VariableType>4 Bytes</VariableType>
                   <Address>00B10A38</Address>
                   <Offsets>
@@ -7889,7 +7897,7 @@
     <CheatEntry>
       <ID>108</ID>
       <Description>"EQGraphicsDX9.DLL+139798"</Description>
-      <LastState Value="033A8D88" RealAddress="032D9798"/>
+      <LastState Value="030B8D88" RealAddress="032F9798"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>EQGraphicsDX9.DLL+139798</Address>
@@ -7897,7 +7905,7 @@
         <CheatEntry>
           <ID>109</ID>
           <Description>""</Description>
-          <LastState Value="032AC598" RealAddress="033A8D88"/>
+          <LastState Value="032CC598" RealAddress="030B8D88"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>EQGraphicsDX9.DLL+139798</Address>
@@ -7908,7 +7916,7 @@
         <CheatEntry>
           <ID>111</ID>
           <Description>""</Description>
-          <LastState Value="032AC3EC" RealAddress="033A8D8C"/>
+          <LastState Value="032CC3EC" RealAddress="030B8D8C"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>EQGraphicsDX9.DLL+139798</Address>
@@ -7919,7 +7927,7 @@
         <CheatEntry>
           <ID>110</ID>
           <Description>""</Description>
-          <LastState Value="30DCF110" RealAddress="033A8D90"/>
+          <LastState Value="030B90E0" RealAddress="030B8D90"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>EQGraphicsDX9.DLL+139798</Address>
@@ -7942,7 +7950,7 @@
     <CheatEntry>
       <ID>439</ID>
       <Description>"pinstViewActor"</Description>
-      <LastState Value="00000000" RealAddress="00990CDC"/>
+      <LastState Value="3384D4C0" RealAddress="00990CDC"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>990CDC</Address>
@@ -7950,7 +7958,7 @@
     <CheatEntry>
       <ID>438</ID>
       <Description>"pinstLocalPlayer"</Description>
-      <LastState Value="00000000" RealAddress="00A425F8"/>
+      <LastState Value="0932FF90" RealAddress="00A425F8"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>A425F8</Address>
@@ -7965,7 +7973,7 @@
     <CheatEntry>
       <ID>428</ID>
       <Description>"Char Info | pisntPCData | pinstCharData"</Description>
-      <LastState Value="13380630" RealAddress="00A425E4"/>
+      <LastState Value="1337F028" RealAddress="00A425E4"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>A425E4</Address>
@@ -7973,7 +7981,7 @@
         <CheatEntry>
           <ID>429</ID>
           <Description>"0x00"</Description>
-          <LastState Value="007D3528" RealAddress="13380630"/>
+          <LastState Value="007D3528" RealAddress="1337F028"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>A425E4</Address>
@@ -7998,7 +8006,7 @@
         <CheatEntry>
           <ID>430</ID>
           <Description>"0x04"</Description>
-          <LastState Value="1337FEE0" RealAddress="13380634"/>
+          <LastState Value="13392310" RealAddress="1337F02C"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>A425E4</Address>
@@ -8009,7 +8017,7 @@
             <CheatEntry>
               <ID>435</ID>
               <Description>"0x00"</Description>
-              <LastState Value="0" RealAddress="1337FEE0"/>
+              <LastState Value="0" RealAddress="13392310"/>
               <VariableType>4 Bytes</VariableType>
               <Address>A425E4</Address>
               <Offsets>
@@ -8020,7 +8028,7 @@
             <CheatEntry>
               <ID>436</ID>
               <Description>"0x04"</Description>
-              <LastState Value="00000000" RealAddress="1337FEE4"/>
+              <LastState Value="00000000" RealAddress="13392314"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>A425E4</Address>
@@ -8032,7 +8040,7 @@
             <CheatEntry>
               <ID>437</ID>
               <Description>"0x08"</Description>
-              <LastState Value="0" RealAddress="1337FEE8"/>
+              <LastState Value="0" RealAddress="13392318"/>
               <VariableType>4 Bytes</VariableType>
               <Address>A425E4</Address>
               <Offsets>
@@ -8043,7 +8051,7 @@
             <CheatEntry>
               <ID>440</ID>
               <Description>"0x0C"</Description>
-              <LastState Value="00000000" RealAddress="1337FEEC"/>
+              <LastState Value="00000000" RealAddress="1339231C"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>A425E4</Address>
@@ -8055,7 +8063,7 @@
             <CheatEntry>
               <ID>441</ID>
               <Description>"0x10"</Description>
-              <LastState Value="0" RealAddress="1337FEF0"/>
+              <LastState Value="0" RealAddress="13392320"/>
               <VariableType>4 Bytes</VariableType>
               <Address>A425E4</Address>
               <Offsets>
@@ -8066,7 +8074,7 @@
             <CheatEntry>
               <ID>442</ID>
               <Description>"0x14"</Description>
-              <LastState Value="0" RealAddress="1337FEF4"/>
+              <LastState Value="0" RealAddress="13392324"/>
               <VariableType>4 Bytes</VariableType>
               <Address>A425E4</Address>
               <Offsets>
@@ -8077,7 +8085,7 @@
             <CheatEntry>
               <ID>443</ID>
               <Description>"0x20"</Description>
-              <LastState Value="00000000" RealAddress="1337FF00"/>
+              <LastState Value="00000000" RealAddress="13392330"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>A425E4</Address>
@@ -8091,7 +8099,7 @@
         <CheatEntry>
           <ID>431</ID>
           <Description>"0x08"</Description>
-          <LastState Value="007D3570" RealAddress="13380638"/>
+          <LastState Value="007D3570" RealAddress="1337F030"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>A425E4</Address>
@@ -8116,7 +8124,7 @@
         <CheatEntry>
           <ID>432</ID>
           <Description>"0x0C"</Description>
-          <LastState Value="6C696600" RealAddress="1338063C"/>
+          <LastState Value="6C696600" RealAddress="1337F034"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>A425E4</Address>
@@ -8129,7 +8137,7 @@
     <CheatEntry>
       <ID>446</ID>
       <Description>"Char Info"</Description>
-      <LastState Value="13380630" RealAddress="00A425E4"/>
+      <LastState Value="1337F028" RealAddress="00A425E4"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>A425E4</Address>
@@ -8137,7 +8145,7 @@
         <CheatEntry>
           <ID>576</ID>
           <Description>"0xF1D8 Char Info 2 Info"</Description>
-          <LastState Value="08FD4BA0" RealAddress="1338F808"/>
+          <LastState Value="09224370" RealAddress="1338E200"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>A425E4</Address>
@@ -8148,7 +8156,7 @@
             <CheatEntry>
               <ID>577</ID>
               <Description>"0x04 Char Info 2"</Description>
-              <LastState Value="13392960" RealAddress="08FD4BA4"/>
+              <LastState Value="13392B30" RealAddress="09224374"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>A425E4</Address>
@@ -8160,7 +8168,7 @@
                 <CheatEntry>
                   <ID>579</ID>
                   <Description>"0xA4 Buff #1"</Description>
-                  <LastState Value="655360" RealAddress="13392A04"/>
+                  <LastState Value="0" RealAddress="13392BD4"/>
                   <VariableType>4 Bytes</VariableType>
                   <Address>A425E4</Address>
                   <Offsets>
@@ -8172,7 +8180,7 @@
                 <CheatEntry>
                   <ID>1485</ID>
                   <Description>"0xA8 Buff #1 Spell ID"</Description>
-                  <LastState Value="4294967295" RealAddress="13392A08"/>
+                  <LastState Value="4294967295" RealAddress="13392BD8"/>
                   <VariableType>4 Bytes</VariableType>
                   <Address>A425E4</Address>
                   <Offsets>
@@ -8184,7 +8192,7 @@
                 <CheatEntry>
                   <ID>1484</ID>
                   <Description>"0xAC Buff #1 Duration"</Description>
-                  <LastState Value="0" RealAddress="13392A0C"/>
+                  <LastState Value="0" RealAddress="13392BDC"/>
                   <VariableType>4 Bytes</VariableType>
                   <Address>A425E4</Address>
                   <Offsets>
@@ -8196,7 +8204,7 @@
                 <CheatEntry>
                   <ID>1486</ID>
                   <Description>"0xC4 Buff #2 Duration"</Description>
-                  <LastState Value="0" RealAddress="13392A24"/>
+                  <LastState Value="0" RealAddress="13392BF4"/>
                   <ShowAsSigned>1</ShowAsSigned>
                   <VariableType>4 Bytes</VariableType>
                   <Address>A425E4</Address>
@@ -8209,7 +8217,7 @@
                 <CheatEntry>
                   <ID>1483</ID>
                   <Description>"0x1384 Skill #1"</Description>
-                  <LastState Value="100" RealAddress="13393CE4"/>
+                  <LastState Value="136" RealAddress="13393EB4"/>
                   <VariableType>4 Bytes</VariableType>
                   <Address>A425E4</Address>
                   <Offsets>
@@ -8221,7 +8229,7 @@
                 <CheatEntry>
                   <ID>580</ID>
                   <Description>"0x144C Swimming"</Description>
-                  <LastState Value="250" RealAddress="13393DAC"/>
+                  <LastState Value="250" RealAddress="13393F7C"/>
                   <VariableType>4 Bytes</VariableType>
                   <Address>A425E4</Address>
                   <Offsets>
@@ -8233,7 +8241,7 @@
                 <CheatEntry>
                   <ID>578</ID>
                   <Description>"0x160C Race"</Description>
-                  <LastState Value="5" RealAddress="13393F6C"/>
+                  <LastState Value="4" RealAddress="1339413C"/>
                   <VariableType>4 Bytes</VariableType>
                   <Address>A425E4</Address>
                   <Offsets>
@@ -8245,7 +8253,7 @@
                 <CheatEntry>
                   <ID>1320</ID>
                   <Description>"0x1624 Level"</Description>
-                  <LastState Value="25" RealAddress="13393F84"/>
+                  <LastState Value="65" RealAddress="13394154"/>
                   <VariableType>4 Bytes</VariableType>
                   <Address>A425E4</Address>
                   <Offsets>
@@ -8257,7 +8265,7 @@
                 <CheatEntry>
                   <ID>592</ID>
                   <Description>"0x1424 Sense Heading"</Description>
-                  <LastState Value="250" RealAddress="13393D84"/>
+                  <LastState Value="250" RealAddress="13393F54"/>
                   <VariableType>4 Bytes</VariableType>
                   <Address>A425E4</Address>
                   <Offsets>
@@ -8273,7 +8281,7 @@
         <CheatEntry>
           <ID>476</ID>
           <Description>"0x129C Air Breath Oxygen"</Description>
-          <LastState Value="83" RealAddress="133818CC"/>
+          <LastState Value="100" RealAddress="133802C4"/>
           <VariableType>4 Bytes</VariableType>
           <Address>A425E4</Address>
           <Offsets>
@@ -8283,7 +8291,7 @@
         <CheatEntry>
           <ID>575</ID>
           <Description>"0x1AC0 Experience"</Description>
-          <LastState Value="283" RealAddress="133820F0"/>
+          <LastState Value="0" RealAddress="13380AE8"/>
           <VariableType>4 Bytes</VariableType>
           <Address>A425E4</Address>
           <Offsets>
@@ -8293,7 +8301,7 @@
         <CheatEntry>
           <ID>447</ID>
           <Description>"0xF028"</Description>
-          <LastState Value="007D34D8" RealAddress="1338F658"/>
+          <LastState Value="007D34D8" RealAddress="1338E050"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>A425E4</Address>
@@ -8304,7 +8312,7 @@
         <CheatEntry>
           <ID>1482</ID>
           <Description>"0xF034"</Description>
-          <LastState Value="0" RealAddress="1338F664"/>
+          <LastState Value="0" RealAddress="1338E05C"/>
           <VariableType>Byte</VariableType>
           <Address>A425E4</Address>
           <Offsets>
@@ -8314,7 +8322,7 @@
         <CheatEntry>
           <ID>1457</ID>
           <Description>"0xF180"</Description>
-          <LastState Value="1" RealAddress="1338F7B0"/>
+          <LastState Value="1" RealAddress="1338E1A8"/>
           <VariableType>Byte</VariableType>
           <Address>A425E4</Address>
           <Offsets>
@@ -8324,7 +8332,7 @@
         <CheatEntry>
           <ID>1456</ID>
           <Description>"0xF2D0 Is Stunned"</Description>
-          <LastState Value="0" RealAddress="1338F900"/>
+          <LastState Value="0" RealAddress="1338E2F8"/>
           <VariableType>Byte</VariableType>
           <Address>A425E4</Address>
           <Offsets>
@@ -8334,7 +8342,7 @@
         <CheatEntry>
           <ID>587</ID>
           <Description>"0xF2D4 Zone ID"</Description>
-          <LastState Value="61" RealAddress="1338F904"/>
+          <LastState Value="162" RealAddress="1338E2FC"/>
           <VariableType>2 Bytes</VariableType>
           <Address>A425E4</Address>
           <Offsets>
@@ -8344,7 +8352,7 @@
         <CheatEntry>
           <ID>1134</ID>
           <Description>"0x1128 Bank Item #1"</Description>
-          <LastState Value="33343450" RealAddress="13381758"/>
+          <LastState Value="1359F458" RealAddress="13380150"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>A425E4</Address>
@@ -8355,7 +8363,7 @@
             <CheatEntry>
               <ID>1135</ID>
               <Description>"0xB8"</Description>
-              <LastState Value="04B87CB0" RealAddress="33343508"/>
+              <LastState Value="04D9D870" RealAddress="1359F510"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>A425E4</Address>
@@ -8367,7 +8375,7 @@
                 <CheatEntry>
                   <ID>1136</ID>
                   <Description>"0x00 Name"</Description>
-                  <LastState RealAddress="04B87CB0"/>
+                  <LastState RealAddress="04D9D870"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>String</VariableType>
                   <Length>64</Length>
@@ -8383,7 +8391,7 @@
                 <CheatEntry>
                   <ID>1137</ID>
                   <Description>"0xEE Type"</Description>
-                  <LastState Value="1" RealAddress="04B87D9E"/>
+                  <LastState Value="1" RealAddress="04D9D95E"/>
                   <VariableType>Byte</VariableType>
                   <Address>A425E4</Address>
                   <Offsets>
@@ -8395,7 +8403,7 @@
                 <CheatEntry>
                   <ID>1138</ID>
                   <Description>"0x475 Slots"</Description>
-                  <LastState Value="10" RealAddress="04B88125"/>
+                  <LastState Value="10" RealAddress="04D9DCE5"/>
                   <VariableType>Byte</VariableType>
                   <Address>A425E4</Address>
                   <Offsets>
@@ -8407,7 +8415,7 @@
                 <CheatEntry>
                   <ID>1139</ID>
                   <Description>"0x476 SizeCapacity"</Description>
-                  <LastState Value="4" RealAddress="04B88126"/>
+                  <LastState Value="3" RealAddress="04D9DCE6"/>
                   <VariableType>Byte</VariableType>
                   <Address>A425E4</Address>
                   <Offsets>
@@ -8425,14 +8433,14 @@
     <CheatEntry>
       <ID>451</ID>
       <Description>"No description"</Description>
-      <LastState Value="0" RealAddress="1239BEC4"/>
+      <LastState Value="32" RealAddress="1239BEC4"/>
       <VariableType>Byte</VariableType>
       <Address>1239BEC4</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>457</ID>
       <Description>"pinstWorldData"</Description>
-      <LastState Value="090291B8" RealAddress="00A425C4"/>
+      <LastState Value="09276C58" RealAddress="00A425C4"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>A425C4</Address>
@@ -8440,7 +8448,7 @@
         <CheatEntry>
           <ID>458</ID>
           <Description>"Hour"</Description>
-          <LastState Value="13" RealAddress="090291BC"/>
+          <LastState Value="1" RealAddress="09276C5C"/>
           <VariableType>Byte</VariableType>
           <Address>A425C4</Address>
           <Offsets>
@@ -8452,7 +8460,7 @@
     <CheatEntry>
       <ID>459</ID>
       <Description>"Daylight Value (63, 71, 76, 123, 190, 301)"</Description>
-      <LastState Value="54" RealAddress="00A614F8"/>
+      <LastState Value="210" RealAddress="00A614F8"/>
       <VariableType>4 Bytes</VariableType>
       <Address>00A614F8</Address>
       <Hotkeys>
@@ -8478,7 +8486,7 @@
     <CheatEntry>
       <ID>522</ID>
       <Description>"Zone Fog or Sky Lighting"</Description>
-      <LastState Value="1" RealAddress="00A60784"/>
+      <LastState Value="4" RealAddress="00A60784"/>
       <VariableType>Byte</VariableType>
       <Address>A60784</Address>
     </CheatEntry>
@@ -8492,7 +8500,7 @@
     <CheatEntry>
       <ID>524</ID>
       <Description>"No description"</Description>
-      <LastState Value="0A12A340" RealAddress="00990998"/>
+      <LastState Value="18C4C600" RealAddress="00990998"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>990998</Address>
@@ -8508,7 +8516,7 @@
     <CheatEntry>
       <ID>460</ID>
       <Description>"No description"</Description>
-      <LastState Value="1" RealAddress="00A60784"/>
+      <LastState Value="4" RealAddress="00A60784"/>
       <VariableType>Byte</VariableType>
       <Address>00A60784</Address>
     </CheatEntry>
@@ -8544,7 +8552,7 @@
     <CheatEntry>
       <ID>477</ID>
       <Description>"pinstSpellManager"</Description>
-      <LastState Value="09112D10" RealAddress="00AD3A90"/>
+      <LastState Value="093543C0" RealAddress="00AD3A90"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>AD3A90</Address>
@@ -8552,7 +8560,7 @@
         <CheatEntry>
           <ID>479</ID>
           <Description>"0x00"</Description>
-          <LastState Value="007CF738" RealAddress="09112D10"/>
+          <LastState Value="007CF738" RealAddress="093543C0"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>AD3A90</Address>
@@ -8563,7 +8571,7 @@
         <CheatEntry>
           <ID>478</ID>
           <Description>"0x01"</Description>
-          <LastState Value="02007CF7" RealAddress="09112D11"/>
+          <LastState Value="02007CF7" RealAddress="093543C1"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>AD3A90</Address>
@@ -8574,7 +8582,7 @@
         <CheatEntry>
           <ID>482</ID>
           <Description>"0x68 first spell"</Description>
-          <LastState Value="09099F50" RealAddress="09112D78"/>
+          <LastState Value="0933D7B0" RealAddress="09354428"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>AD3A90</Address>
@@ -8585,7 +8593,7 @@
         <CheatEntry>
           <ID>483</ID>
           <Description>"0x6C second spell"</Description>
-          <LastState Value="0910D690" RealAddress="09112D7C"/>
+          <LastState Value="0934DCD0" RealAddress="0935442C"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>AD3A90</Address>
@@ -8614,14 +8622,14 @@
     <CheatEntry>
       <ID>484</ID>
       <Description>"No description"</Description>
-      <LastState Value="5" RealAddress="124262F0"/>
+      <LastState Value="101" RealAddress="124262F0"/>
       <VariableType>Byte</VariableType>
       <Address>124262F0</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>503</ID>
       <Description>"Camera View"</Description>
-      <LastState Value="4" RealAddress="009903A4"/>
+      <LastState Value="0" RealAddress="009903A4"/>
       <VariableType>4 Bytes</VariableType>
       <Address>eqgame.exe+5903A4</Address>
     </CheatEntry>
@@ -8652,7 +8660,7 @@
     <CheatEntry>
       <ID>508</ID>
       <Description>"No description"</Description>
-      <LastState Value="00000000" RealAddress="00A425F8"/>
+      <LastState Value="0932FF90" RealAddress="00A425F8"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>A425F8</Address>
@@ -8660,7 +8668,7 @@
     <CheatEntry>
       <ID>512</ID>
       <Description>"No description"</Description>
-      <LastState Value="1" RealAddress="09059DD4"/>
+      <LastState Value="1" RealAddress="092ABA7C"/>
       <VariableType>4 Bytes</VariableType>
       <Address>991214</Address>
       <Offsets>
@@ -8670,7 +8678,7 @@
     <CheatEntry>
       <ID>537</ID>
       <Description>"pinstCSpellBookWnd"</Description>
-      <LastState Value="114E1060" RealAddress="00990C40"/>
+      <LastState Value="118FB7D8" RealAddress="00990C40"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>990C40</Address>
@@ -8678,7 +8686,7 @@
         <CheatEntry>
           <ID>538</ID>
           <Description>"0x1A8"</Description>
-          <LastState Value="FFFFFFFF" RealAddress="114E1208"/>
+          <LastState Value="FFFFFFFF" RealAddress="118FB980"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C40</Address>
@@ -8689,7 +8697,7 @@
         <CheatEntry>
           <ID>541</ID>
           <Description>"0x1AC ID of spell being memorized"</Description>
-          <LastState Value="00000000" RealAddress="114E120C"/>
+          <LastState Value="121A2DC8" RealAddress="118FB984"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C40</Address>
@@ -8700,7 +8708,7 @@
         <CheatEntry>
           <ID>542</ID>
           <Description>"0x1B0 Timer for spell being memorized"</Description>
-          <LastState Value="00000000" RealAddress="114E1210"/>
+          <LastState Value="121A2C00" RealAddress="118FB988"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C40</Address>
@@ -8711,7 +8719,7 @@
         <CheatEntry>
           <ID>539</ID>
           <Description>"0x1B4"</Description>
-          <LastState Value="FFFFFFFF" RealAddress="114E1214"/>
+          <LastState Value="FFFFFFFF" RealAddress="118FB98C"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C40</Address>
@@ -8722,7 +8730,7 @@
         <CheatEntry>
           <ID>540</ID>
           <Description>"0x1B8"</Description>
-          <LastState Value="00000000" RealAddress="114E1218"/>
+          <LastState Value="121A2F90" RealAddress="118FB990"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C40</Address>
@@ -9075,7 +9083,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>869</ID>
       <Description>"Window HWND"</Description>
-      <LastState Value="001E0416" RealAddress="00AD6974"/>
+      <LastState Value="001802AC" RealAddress="00AD6974"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>AD6974</Address>
@@ -9097,28 +9105,28 @@ dealloc(newmem)
     <CheatEntry>
       <ID>865</ID>
       <Description>"Viewport Width"</Description>
-      <LastState Value="1600" RealAddress="00A60308"/>
+      <LastState Value="1680" RealAddress="00A60308"/>
       <VariableType>4 Bytes</VariableType>
       <Address>a60308</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>862</ID>
       <Description>"Viewport Height"</Description>
-      <LastState Value="900" RealAddress="00A6030C"/>
+      <LastState Value="997" RealAddress="00A6030C"/>
       <VariableType>4 Bytes</VariableType>
       <Address>a6030C</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>568</ID>
       <Description>"Window Width Ex Ex"</Description>
-      <LastState Value="1600" RealAddress="00A60334"/>
+      <LastState Value="1680" RealAddress="00A60334"/>
       <VariableType>4 Bytes</VariableType>
       <Address>a60334</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>864</ID>
       <Description>"Window Height Ex Ex"</Description>
-      <LastState Value="900" RealAddress="00A60338"/>
+      <LastState Value="997" RealAddress="00A60338"/>
       <VariableType>4 Bytes</VariableType>
       <Address>a60338</Address>
     </CheatEntry>
@@ -9146,21 +9154,21 @@ dealloc(newmem)
     <CheatEntry>
       <ID>585</ID>
       <Description>"No description"</Description>
-      <LastState Value="1476035911" RealAddress="00B0D88C"/>
+      <LastState Value="1478564104" RealAddress="00B0D88C"/>
       <VariableType>4 Bytes</VariableType>
       <Address>B0D88C</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>588</ID>
       <Description>"Zone ID static pointer"</Description>
-      <LastState Value="61" RealAddress="00B01E50"/>
+      <LastState Value="162" RealAddress="00B01E50"/>
       <VariableType>4 Bytes</VariableType>
       <Address>eqgame.exe+701E50</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>590</ID>
       <Description>"CTrackingWnd"</Description>
-      <LastState Value="331CA178" RealAddress="00990C74"/>
+      <LastState Value="2ED3AF10" RealAddress="00990C74"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>990C74</Address>
@@ -9241,7 +9249,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>595</ID>
       <Description>"CTextEntryWnd"</Description>
-      <LastState Value="051BF608" RealAddress="00990C90"/>
+      <LastState Value="121B4788" RealAddress="00990C90"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>990C90</Address>
@@ -9249,7 +9257,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>604</ID>
           <Description>"0xD8 CXStr Window Title"</Description>
-          <LastState Value="05535BF8" RealAddress="051BF6E0"/>
+          <LastState Value="0590E350" RealAddress="121B4860"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C90</Address>
@@ -9260,7 +9268,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>605</ID>
               <Description>"Encoding"</Description>
-              <LastState Value="4" RealAddress="05535BF8"/>
+              <LastState Value="4" RealAddress="0590E350"/>
               <VariableType>4 Bytes</VariableType>
               <Address>990C90</Address>
               <Offsets>
@@ -9271,7 +9279,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>606</ID>
               <Description>"Text"</Description>
-              <LastState RealAddress="05535C0C"/>
+              <LastState RealAddress="0590E364"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>String</VariableType>
               <Length>32</Length>
@@ -9288,7 +9296,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>607</ID>
           <Description>"0x1A0 CXStr Entry Text"</Description>
-          <LastState Value="00000000" RealAddress="051BF7A8"/>
+          <LastState Value="00000000" RealAddress="121B4928"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C90</Address>
@@ -9325,7 +9333,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>610</ID>
           <Description>"0x1A4 Parent Window Address"</Description>
-          <LastState Value="00000000" RealAddress="051BF7AC"/>
+          <LastState Value="00000000" RealAddress="121B492C"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C90</Address>
@@ -9336,7 +9344,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>613</ID>
           <Description>"0x1A8"</Description>
-          <LastState Value="12CD8200" RealAddress="051BF7B0"/>
+          <LastState Value="135AC530" RealAddress="121B4930"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C90</Address>
@@ -9347,7 +9355,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>614</ID>
               <Description>"0x160"</Description>
-              <LastState Value="4294967295" RealAddress="12CD8360"/>
+              <LastState Value="4294967295" RealAddress="135AC690"/>
               <VariableType>4 Bytes</VariableType>
               <Address>990C90</Address>
               <Offsets>
@@ -9358,7 +9366,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>615</ID>
               <Description>"0x268"</Description>
-              <LastState Value="0" RealAddress="12CD8468"/>
+              <LastState Value="0" RealAddress="135AC798"/>
               <VariableType>4 Bytes</VariableType>
               <Address>990C90</Address>
               <Offsets>
@@ -9371,7 +9379,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>611</ID>
           <Description>"0x198"</Description>
-          <LastState Value="1" RealAddress="051BF7A0"/>
+          <LastState Value="1" RealAddress="121B4920"/>
           <VariableType>4 Bytes</VariableType>
           <Address>990C90</Address>
           <Offsets>
@@ -9381,7 +9389,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>612</ID>
           <Description>"0x19C Max Text Length?"</Description>
-          <LastState Value="10" RealAddress="051BF7A4"/>
+          <LastState Value="10" RealAddress="121B4924"/>
           <VariableType>4 Bytes</VariableType>
           <Address>990C90</Address>
           <Offsets>
@@ -9393,7 +9401,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>599</ID>
       <Description>"Graphics DLL CXStr"</Description>
-      <LastState Value="03FF7938" RealAddress="0331862C"/>
+      <LastState Value="03FB6D08" RealAddress="0333862C"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>EQGraphicsDX9.DLL+17862C</Address>
@@ -9401,7 +9409,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>600</ID>
           <Description>"Text"</Description>
-          <LastState RealAddress="03FF794C"/>
+          <LastState RealAddress="03FB6D1C"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>String</VariableType>
           <Length>32</Length>
@@ -9417,7 +9425,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>616</ID>
       <Description>"Char Info"</Description>
-      <LastState Value="13380630" RealAddress="00A425E4"/>
+      <LastState Value="1337F028" RealAddress="00A425E4"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>A425E4</Address>
@@ -9425,7 +9433,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>625</ID>
           <Description>"Group Info"</Description>
-          <LastState Value="00000000" RealAddress="1338F7E8"/>
+          <LastState Value="00000000" RealAddress="1338E1E0"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>A425E4</Address>
@@ -9561,7 +9569,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>647</ID>
       <Description>"No description"</Description>
-      <LastState Value="176" RealAddress="00B10580"/>
+      <LastState Value="168" RealAddress="00B10580"/>
       <VariableType>Byte</VariableType>
       <Address>b10580</Address>
     </CheatEntry>
@@ -9602,7 +9610,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>759</ID>
       <Description>""</Description>
-      <LastState Value="0A12A340" RealAddress="00990998"/>
+      <LastState Value="18C4C600" RealAddress="00990998"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>990998</Address>
@@ -9685,7 +9693,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>768</ID>
       <Description>"CMapViewWnd"</Description>
-      <LastState Value="119023B8" RealAddress="00990C0C"/>
+      <LastState Value="0566B838" RealAddress="00990C0C"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>990C0C</Address>
@@ -9693,7 +9701,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>798</ID>
           <Description>"0x278"</Description>
-          <LastState Value="32FC0990" RealAddress="11902630"/>
+          <LastState Value="132E5300" RealAddress="0566BAB0"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C0C</Address>
@@ -9704,7 +9712,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1287</ID>
           <Description>"0x27C Map Canvas Window"</Description>
-          <LastState Value="13278628" RealAddress="11902634"/>
+          <LastState Value="10BD08A0" RealAddress="0566BAB4"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C0C</Address>
@@ -9715,7 +9723,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1288</ID>
               <Description>"0x68 Parent Window"</Description>
-              <LastState Value="12DE6CC8" RealAddress="13278690"/>
+              <LastState Value="1227C008" RealAddress="10BD0908"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>990C0C</Address>
@@ -9727,7 +9735,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1289</ID>
                   <Description>"0x68 Parent Window"</Description>
-                  <LastState Value="32FC0990" RealAddress="12DE6D30"/>
+                  <LastState Value="132E5300" RealAddress="1227C070"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>990C0C</Address>
@@ -9740,7 +9748,7 @@ dealloc(newmem)
                     <CheatEntry>
                       <ID>1290</ID>
                       <Description>"0xB8"</Description>
-                      <LastState Value="0" RealAddress="32FC0A48"/>
+                      <LastState Value="0" RealAddress="132E53B8"/>
                       <VariableType>4 Bytes</VariableType>
                       <Address>990C0C</Address>
                       <Offsets>
@@ -9753,7 +9761,7 @@ dealloc(newmem)
                     <CheatEntry>
                       <ID>1291</ID>
                       <Description>"0xBC"</Description>
-                      <LastState Value="0" RealAddress="32FC0A4C"/>
+                      <LastState Value="0" RealAddress="132E53BC"/>
                       <VariableType>4 Bytes</VariableType>
                       <Address>990C0C</Address>
                       <Offsets>
@@ -9766,7 +9774,7 @@ dealloc(newmem)
                     <CheatEntry>
                       <ID>1292</ID>
                       <Description>"0xC0"</Description>
-                      <LastState Value="0" RealAddress="32FC0A50"/>
+                      <LastState Value="0" RealAddress="132E53C0"/>
                       <VariableType>4 Bytes</VariableType>
                       <Address>990C0C</Address>
                       <Offsets>
@@ -9779,7 +9787,7 @@ dealloc(newmem)
                     <CheatEntry>
                       <ID>1293</ID>
                       <Description>"0xC4"</Description>
-                      <LastState Value="0" RealAddress="32FC0A54"/>
+                      <LastState Value="0" RealAddress="132E53C4"/>
                       <VariableType>4 Bytes</VariableType>
                       <Address>990C0C</Address>
                       <Offsets>
@@ -9794,7 +9802,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1294</ID>
                   <Description>"0xB8"</Description>
-                  <LastState Value="4" RealAddress="12DE6D80"/>
+                  <LastState Value="4" RealAddress="1227C0C0"/>
                   <VariableType>4 Bytes</VariableType>
                   <Address>990C0C</Address>
                   <Offsets>
@@ -9806,7 +9814,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1295</ID>
                   <Description>"0xBC"</Description>
-                  <LastState Value="22" RealAddress="12DE6D84"/>
+                  <LastState Value="22" RealAddress="1227C0C4"/>
                   <VariableType>4 Bytes</VariableType>
                   <Address>990C0C</Address>
                   <Offsets>
@@ -9818,7 +9826,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1296</ID>
                   <Description>"0xC0"</Description>
-                  <LastState Value="576" RealAddress="12DE6D88"/>
+                  <LastState Value="576" RealAddress="1227C0C8"/>
                   <VariableType>4 Bytes</VariableType>
                   <Address>990C0C</Address>
                   <Offsets>
@@ -9830,7 +9838,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1297</ID>
                   <Description>"0xC4"</Description>
-                  <LastState Value="444" RealAddress="12DE6D8C"/>
+                  <LastState Value="444" RealAddress="1227C0CC"/>
                   <VariableType>4 Bytes</VariableType>
                   <Address>990C0C</Address>
                   <Offsets>
@@ -9844,7 +9852,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1298</ID>
               <Description>"0xB8"</Description>
-              <LastState Value="20" RealAddress="132786E0"/>
+              <LastState Value="20" RealAddress="10BD0958"/>
               <VariableType>4 Bytes</VariableType>
               <Address>990C0C</Address>
               <Offsets>
@@ -9855,7 +9863,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1299</ID>
               <Description>"0xBC"</Description>
-              <LastState Value="20" RealAddress="132786E4"/>
+              <LastState Value="20" RealAddress="10BD095C"/>
               <VariableType>4 Bytes</VariableType>
               <Address>990C0C</Address>
               <Offsets>
@@ -9866,7 +9874,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1300</ID>
               <Description>"0xC0"</Description>
-              <LastState Value="492" RealAddress="132786E8"/>
+              <LastState Value="492" RealAddress="10BD0960"/>
               <VariableType>4 Bytes</VariableType>
               <Address>990C0C</Address>
               <Offsets>
@@ -9877,7 +9885,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1301</ID>
               <Description>"0xC4"</Description>
-              <LastState Value="380" RealAddress="132786EC"/>
+              <LastState Value="380" RealAddress="10BD0964"/>
               <VariableType>4 Bytes</VariableType>
               <Address>990C0C</Address>
               <Offsets>
@@ -9890,7 +9898,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1305</ID>
           <Description>"0x28C MapViewMap"</Description>
-          <LastState Value="-2693" RealAddress="11902644"/>
+          <LastState Value="-535" RealAddress="0566BAC4"/>
           <VariableType>Float</VariableType>
           <Address>990C0C</Address>
           <Offsets>
@@ -9900,7 +9908,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1280</ID>
           <Description>"0x290"</Description>
-          <LastState Value="-2803" RealAddress="11902648"/>
+          <LastState Value="-1195" RealAddress="0566BAC8"/>
           <VariableType>Float</VariableType>
           <Address>990C0C</Address>
           <Offsets>
@@ -9910,7 +9918,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1281</ID>
           <Description>"0x294"</Description>
-          <LastState Value="2766" RealAddress="1190264C"/>
+          <LastState Value="1032" RealAddress="0566BACC"/>
           <VariableType>Float</VariableType>
           <Address>990C0C</Address>
           <Offsets>
@@ -9920,7 +9928,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1282</ID>
           <Description>"0x298"</Description>
-          <LastState Value="2717" RealAddress="11902650"/>
+          <LastState Value="580" RealAddress="0566BAD0"/>
           <VariableType>Float</VariableType>
           <Address>990C0C</Address>
           <Offsets>
@@ -9930,7 +9938,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1283</ID>
           <Description>"0x29C"</Description>
-          <LastState Value="472" RealAddress="11902654"/>
+          <LastState Value="472" RealAddress="0566BAD4"/>
           <VariableType>Float</VariableType>
           <Address>990C0C</Address>
           <Offsets>
@@ -9940,7 +9948,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1284</ID>
           <Description>"0x2A0"</Description>
-          <LastState Value="360" RealAddress="11902658"/>
+          <LastState Value="360" RealAddress="0566BAD8"/>
           <VariableType>Float</VariableType>
           <Address>990C0C</Address>
           <Offsets>
@@ -9950,7 +9958,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1285</ID>
           <Description>"0x2A4"</Description>
-          <LastState Value="20" RealAddress="1190265C"/>
+          <LastState Value="20" RealAddress="0566BADC"/>
           <VariableType>Float</VariableType>
           <Address>990C0C</Address>
           <Offsets>
@@ -9960,7 +9968,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1286</ID>
           <Description>"0x2A8"</Description>
-          <LastState Value="20" RealAddress="11902660"/>
+          <LastState Value="20" RealAddress="0566BAE0"/>
           <VariableType>Float</VariableType>
           <Address>990C0C</Address>
           <Offsets>
@@ -9970,7 +9978,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1279</ID>
           <Description>"0x2CC Lines"</Description>
-          <LastState Value="135A9D28" RealAddress="11902684"/>
+          <LastState Value="11EB4458" RealAddress="0566BB04"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C0C</Address>
@@ -9981,7 +9989,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>774</ID>
           <Description>"0x2D0 Labels (first label in doubly linked list)"</Description>
-          <LastState Value="332DA918" RealAddress="11902688"/>
+          <LastState Value="2EE21D50" RealAddress="0566BB08"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C0C</Address>
@@ -9992,7 +10000,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>803</ID>
               <Description>"0x08 X"</Description>
-              <LastState Value="-527.9194946" RealAddress="332DA920"/>
+              <LastState Value="29.17919922" RealAddress="2EE21D58"/>
               <VariableType>Float</VariableType>
               <Address>990C0C</Address>
               <Offsets>
@@ -10003,7 +10011,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1309</ID>
               <Description>"0x0C Y"</Description>
-              <LastState Value="466.459198" RealAddress="332DA924"/>
+              <LastState Value="34.28720093" RealAddress="2EE21D5C"/>
               <VariableType>Float</VariableType>
               <Address>990C0C</Address>
               <Offsets>
@@ -10014,7 +10022,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1310</ID>
               <Description>"0x10 Z"</Description>
-              <LastState Value="114.4072037" RealAddress="332DA928"/>
+              <LastState Value="0.001000000047" RealAddress="2EE21D60"/>
               <VariableType>Float</VariableType>
               <Address>990C0C</Address>
               <Offsets>
@@ -10025,7 +10033,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1308</ID>
               <Description>"0x18 Size"</Description>
-              <LastState Value="2" RealAddress="332DA930"/>
+              <LastState Value="2" RealAddress="2EE21D68"/>
               <VariableType>4 Bytes</VariableType>
               <Address>990C0C</Address>
               <Offsets>
@@ -10036,7 +10044,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>801</ID>
               <Description>"0x1C Label"</Description>
-              <LastState Value="336F6DB0" RealAddress="332DA934"/>
+              <LastState Value="117D2C48" RealAddress="2EE21D6C"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>990C0C</Address>
@@ -10048,7 +10056,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>802</ID>
                   <Description>"0x00 Text"</Description>
-                  <LastState RealAddress="336F6DB0"/>
+                  <LastState RealAddress="117D2C48"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>String</VariableType>
                   <Length>32</Length>
@@ -10066,7 +10074,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1307</ID>
               <Description>"0x24 Width"</Description>
-              <LastState Value="69" RealAddress="332DA93C"/>
+              <LastState Value="64" RealAddress="2EE21D74"/>
               <VariableType>4 Bytes</VariableType>
               <Address>990C0C</Address>
               <Offsets>
@@ -10077,7 +10085,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>806</ID>
               <Description>"0x28 Height"</Description>
-              <LastState Value="12" RealAddress="332DA940"/>
+              <LastState Value="12" RealAddress="2EE21D78"/>
               <VariableType>4 Bytes</VariableType>
               <Address>990C0C</Address>
               <Offsets>
@@ -10088,7 +10096,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>805</ID>
               <Description>"0x2C X"</Description>
-              <LastState Value="0" RealAddress="332DA944"/>
+              <LastState Value="224" RealAddress="2EE21D7C"/>
               <VariableType>Byte</VariableType>
               <Address>990C0C</Address>
               <Offsets>
@@ -10099,7 +10107,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>804</ID>
               <Description>"0x30 Y"</Description>
-              <LastState Value="0" RealAddress="332DA948"/>
+              <LastState Value="242" RealAddress="2EE21D80"/>
               <VariableType>Byte</VariableType>
               <Address>990C0C</Address>
               <Offsets>
@@ -10112,7 +10120,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>773</ID>
           <Description>"0x310 Group Display boolean"</Description>
-          <LastState Value="0" RealAddress="119026C8"/>
+          <LastState Value="0" RealAddress="0566BB48"/>
           <VariableType>Byte</VariableType>
           <Address>990C0C</Address>
           <Offsets>
@@ -10122,7 +10130,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1311</ID>
           <Description>"0x312 Set to 1 to update the map! (label positions)"</Description>
-          <LastState Value="1" RealAddress="119026CA"/>
+          <LastState Value="0" RealAddress="0566BB4A"/>
           <VariableType>Byte</VariableType>
           <Address>990C0C</Address>
           <Offsets>
@@ -10163,7 +10171,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>813</ID>
       <Description>"No description"</Description>
-      <LastState Value="1.401298464E-45" RealAddress="05026808"/>
+      <LastState Value="0" RealAddress="05026808"/>
       <VariableType>Float</VariableType>
       <Address>05026808</Address>
     </CheatEntry>
@@ -10212,35 +10220,31 @@ dealloc(newmem)
     <CheatEntry>
       <ID>850</ID>
       <Description>"No description"</Description>
-      <LastState Value="0" RealAddress="05CA5550"/>
       <VariableType>Float</VariableType>
       <Address>05CA5550</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>851</ID>
       <Description>"No description"</Description>
-      <LastState Value="0" RealAddress="05CA5554"/>
       <VariableType>Float</VariableType>
       <Address>05CA5554</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>852</ID>
       <Description>"No description"</Description>
-      <LastState Value="0" RealAddress="05CA5558"/>
       <VariableType>Float</VariableType>
       <Address>05CA5558</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>853</ID>
       <Description>"No description"</Description>
-      <LastState Value="0" RealAddress="05CA555C"/>
       <VariableType>Float</VariableType>
       <Address>05CA555C</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>872</ID>
       <Description>"CTradeskillWnd"</Description>
-      <LastState Value="109CF048" RealAddress="00B02B90"/>
+      <LastState Value="10ABA048" RealAddress="00B02B90"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>B02B90</Address>
@@ -10248,7 +10252,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>900</ID>
       <Description>"ptr"</Description>
-      <LastState Value="00000000" RealAddress="00A425F8"/>
+      <LastState Value="0932FF90" RealAddress="00A425F8"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>eqgame.exe+6425F8</Address>
@@ -10256,6 +10260,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>902</ID>
           <Description>"0x64 Y"</Description>
+          <LastState Value="-15.79471493" RealAddress="0932FFF4"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+6425F8</Address>
           <Offsets>
@@ -10265,6 +10270,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>906</ID>
           <Description>"0x68 X"</Description>
+          <LastState Value="-6.348629951" RealAddress="0932FFF8"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+6425F8</Address>
           <Offsets>
@@ -10274,6 +10280,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>905</ID>
           <Description>"0x6C Z"</Description>
+          <LastState Value="3.126998425" RealAddress="0932FFFC"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+6425F8</Address>
           <Offsets>
@@ -10283,6 +10290,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>904</ID>
           <Description>"0x80 Heading"</Description>
+          <LastState Value="108.9709244" RealAddress="09330010"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+6425F8</Address>
           <Offsets>
@@ -10292,6 +10300,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>903</ID>
           <Description>"0x90 Field Of View"</Description>
+          <LastState Value="0" RealAddress="09330020"/>
           <VariableType>Float</VariableType>
           <Address>eqgame.exe+6425F8</Address>
           <Offsets>
@@ -10303,7 +10312,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>901</ID>
       <Description>"No description"</Description>
-      <LastState Value="00000000" RealAddress="00A4260C"/>
+      <LastState Value="0932FF90" RealAddress="00A4260C"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>eqgame.exe+64260C</Address>
@@ -10311,14 +10320,14 @@ dealloc(newmem)
     <CheatEntry>
       <ID>909</ID>
       <Description>"Graphics DLL"</Description>
-      <LastState Value="0" RealAddress="032D9838"/>
+      <LastState Value="0" RealAddress="032F9838"/>
       <VariableType>Byte</VariableType>
       <Address>EQGraphicsDX9.DLL+139838</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>928</ID>
       <Description>"Maximum Draw Distance"</Description>
-      <LastState Value="2000" RealAddress="00A607E4"/>
+      <LastState Value="1000" RealAddress="00A607E4"/>
       <VariableType>Float</VariableType>
       <Address>eqgame.exe+6607E4</Address>
     </CheatEntry>
@@ -10391,7 +10400,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1029</ID>
       <Description>"No description"</Description>
-      <LastState Value="08410883" RealAddress="1532D240"/>
+      <LastState Value="0000FFFF" RealAddress="1532D240"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>1532D240</Address>
@@ -10399,7 +10408,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1028</ID>
       <Description>"No description"</Description>
-      <LastState Value="088310C4" RealAddress="1532D760"/>
+      <LastState Value="0000FFFF" RealAddress="1532D760"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>1532D760</Address>
@@ -10407,7 +10416,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1055</ID>
       <Description>"No description"</Description>
-      <LastState Value="DDECD867" RealAddress="02F59D40"/>
+      <LastState Value="DE07D866" RealAddress="02F59D40"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>02F59D40</Address>
@@ -10415,7 +10424,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1083</ID>
       <Description>"CLootWnd"</Description>
-      <LastState Value="117073B0" RealAddress="00990C50"/>
+      <LastState Value="12F41C68" RealAddress="00990C50"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>990C50</Address>
@@ -10423,7 +10432,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1115</ID>
           <Description>"0x124 Is Visible"</Description>
-          <LastState Value="0" RealAddress="117074D4"/>
+          <LastState Value="0" RealAddress="12F41D8C"/>
           <VariableType>Byte</VariableType>
           <Address>990C50</Address>
           <Offsets>
@@ -10433,7 +10442,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1114</ID>
           <Description>"0x1A0 Item #1 Loot Slot"</Description>
-          <LastState Value="FFFFFFFF" RealAddress="11707550"/>
+          <LastState Value="FFFFFFFF" RealAddress="12F41E08"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C50</Address>
@@ -10444,7 +10453,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1091</ID>
           <Description>"0x220 Timer increments while window is open"</Description>
-          <LastState Value="0" RealAddress="117075D0"/>
+          <LastState Value="0" RealAddress="12F41E88"/>
           <VariableType>4 Bytes</VariableType>
           <Address>990C50</Address>
           <Offsets>
@@ -10454,7 +10463,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1085</ID>
           <Description>"0x228 Item #1 (32 items total)"</Description>
-          <LastState Value="00000000" RealAddress="117075D8"/>
+          <LastState Value="00000000" RealAddress="12F41E90"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C50</Address>
@@ -10517,7 +10526,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1088</ID>
           <Description>"0x22C Item #2"</Description>
-          <LastState Value="00000000" RealAddress="117075DC"/>
+          <LastState Value="00000000" RealAddress="12F41E94"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C50</Address>
@@ -10558,7 +10567,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1092</ID>
           <Description>"0x230 Item #3"</Description>
-          <LastState Value="00000000" RealAddress="117075E0"/>
+          <LastState Value="00000000" RealAddress="12F41E98"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C50</Address>
@@ -10601,7 +10610,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1116</ID>
       <Description>"contains the body types BodyTypeManager"</Description>
-      <LastState Value="029C6590" RealAddress="00B0DD58"/>
+      <LastState Value="031B6590" RealAddress="00B0DD58"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>b0dd58</Address>
@@ -10616,7 +10625,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1117</ID>
           <Description>"+10"</Description>
-          <LastState Value="029CEE10" RealAddress="00B0DD68"/>
+          <LastState Value="031BEE10" RealAddress="00B0DD68"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>b0dd58+10</Address>
@@ -10624,7 +10633,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1119</ID>
               <Description>"0x00"</Description>
-              <LastState Value="08FE14C8" RealAddress="029CEE10"/>
+              <LastState Value="0923B760" RealAddress="031BEE10"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>b0dd58+10</Address>
@@ -10635,7 +10644,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1128</ID>
                   <Description>"0x00"</Description>
-                  <LastState Value="08FE15A0" RealAddress="08FE14C8"/>
+                  <LastState Value="0923B7A8" RealAddress="0923B760"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>b0dd58+10</Address>
@@ -10647,7 +10656,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1129</ID>
                   <Description>"0x04"</Description>
-                  <LastState Value="9999" RealAddress="08FE14CC"/>
+                  <LastState Value="9999" RealAddress="0923B764"/>
                   <VariableType>4 Bytes</VariableType>
                   <Address>b0dd58+10</Address>
                   <Offsets>
@@ -10658,7 +10667,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1130</ID>
                   <Description>"0x08"</Description>
-                  <LastState Value="08FE8008" RealAddress="08FE14D0"/>
+                  <LastState Value="0921AFC0" RealAddress="0923B768"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>b0dd58+10</Address>
@@ -10672,7 +10681,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1120</ID>
               <Description>"0x04"</Description>
-              <LastState Value="08FE0A30" RealAddress="029CEE14"/>
+              <LastState Value="0921B8A8" RealAddress="031BEE14"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>b0dd58+10</Address>
@@ -10683,7 +10692,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1125</ID>
                   <Description>"0x00"</Description>
-                  <LastState Value="08FE0A00" RealAddress="08FE0A30"/>
+                  <LastState Value="0921B800" RealAddress="0921B8A8"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>b0dd58+10</Address>
@@ -10695,7 +10704,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1126</ID>
                   <Description>"0x04 body type id"</Description>
-                  <LastState Value="1112" RealAddress="08FE0A34"/>
+                  <LastState Value="1112" RealAddress="0921B8AC"/>
                   <VariableType>4 Bytes</VariableType>
                   <Address>b0dd58+10</Address>
                   <Offsets>
@@ -10706,7 +10715,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1127</ID>
                   <Description>"0x08"</Description>
-                  <LastState Value="08FE76A8" RealAddress="08FE0A38"/>
+                  <LastState Value="0921A168" RealAddress="0921B8B0"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>b0dd58+10</Address>
@@ -10720,7 +10729,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1121</ID>
               <Description>"0x08"</Description>
-              <LastState Value="08FE0A18" RealAddress="029CEE18"/>
+              <LastState Value="0921B638" RealAddress="031BEE18"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>b0dd58+10</Address>
@@ -10731,7 +10740,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1122</ID>
                   <Description>"0x00"</Description>
-                  <LastState Value="08FE0A48" RealAddress="08FE0A18"/>
+                  <LastState Value="0921B608" RealAddress="0921B638"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>b0dd58+10</Address>
@@ -10743,7 +10752,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1123</ID>
                   <Description>"0x04"</Description>
-                  <LastState Value="1113" RealAddress="08FE0A1C"/>
+                  <LastState Value="1113" RealAddress="0921B63C"/>
                   <VariableType>4 Bytes</VariableType>
                   <Address>b0dd58+10</Address>
                   <Offsets>
@@ -10754,7 +10763,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1124</ID>
                   <Description>"0x08"</Description>
-                  <LastState Value="08FE7F30" RealAddress="08FE0A20"/>
+                  <LastState Value="0921AF60" RealAddress="0921B640"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>b0dd58+10</Address>
@@ -10772,21 +10781,21 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1144</ID>
       <Description>"Frames Per Second tick"</Description>
-      <LastState Value="15" RealAddress="03313CD4"/>
+      <LastState Value="3" RealAddress="03333CD4"/>
       <VariableType>4 Bytes</VariableType>
       <Address>eqgraphicsdx9.dll+173CD4</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>1146</ID>
       <Description>"Frames Per Second average value"</Description>
-      <LastState Value="62.13591766" RealAddress="03313CB0"/>
+      <LastState Value="8.077543259" RealAddress="03333CB0"/>
       <VariableType>Float</VariableType>
       <Address>eqgraphicsdx9.dll+173CB0</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>1145</ID>
       <Description>"Frames Per Second text"</Description>
-      <LastState RealAddress="03313BB0"/>
+      <LastState RealAddress="03333BB0"/>
       <VariableType>String</VariableType>
       <Length>128</Length>
       <Unicode>0</Unicode>
@@ -10796,35 +10805,35 @@ dealloc(newmem)
     <CheatEntry>
       <ID>908</ID>
       <Description>"Graphics DLL Fog End Distance"</Description>
-      <LastState Value="-1" RealAddress="032D27D0"/>
+      <LastState Value="-1" RealAddress="032F27D0"/>
       <VariableType>Float</VariableType>
       <Address>EQGraphicsDX9.DLL+1327D0</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>867</ID>
       <Description>"ResetDevice value (set to 1 to resize window)"</Description>
-      <LastState Value="0" RealAddress="00AD6DB4"/>
+      <LastState Value="1" RealAddress="00AD6DB4"/>
       <VariableType>4 Bytes</VariableType>
       <Address>AD6DB4</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>253</ID>
       <Description>"boolean for drawing the UI"</Description>
-      <LastState Value="1" RealAddress="032DD02C"/>
+      <LastState Value="1" RealAddress="032FD02C"/>
       <VariableType>Byte</VariableType>
       <Address>EQGraphicsDX9.DLL+13D02C</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>911</ID>
       <Description>"Graphics DLL"</Description>
-      <LastState Value="29" RealAddress="032D27CC"/>
+      <LastState Value="29" RealAddress="032F27CC"/>
       <VariableType>4 Bytes</VariableType>
       <Address>EQGraphicsDX9.DLL+1327CC</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>910</ID>
       <Description>"Graphics DLL"</Description>
-      <LastState Value="31" RealAddress="032D27C8"/>
+      <LastState Value="31" RealAddress="032F27C8"/>
       <VariableType>4 Bytes</VariableType>
       <Address>EQGraphicsDX9.DLL+1327C8</Address>
     </CheatEntry>
@@ -10855,14 +10864,14 @@ dealloc(newmem)
     <CheatEntry>
       <ID>567</ID>
       <Description>"Window Height"</Description>
-      <LastState Value="900" RealAddress="00AD6954"/>
+      <LastState Value="997" RealAddress="00AD6954"/>
       <VariableType>4 Bytes</VariableType>
       <Address>eqgame.exe+6D6954</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>861</ID>
       <Description>"Window Width"</Description>
-      <LastState Value="1600" RealAddress="00AD6950"/>
+      <LastState Value="1680" RealAddress="00AD6950"/>
       <VariableType>4 Bytes</VariableType>
       <Address>eqgame.exe+6D6950</Address>
     </CheatEntry>
@@ -10909,7 +10918,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>450</ID>
       <Description>"pointer to graphics dll"</Description>
-      <LastState Value="031A0000" RealAddress="00B112A8"/>
+      <LastState Value="031C0000" RealAddress="00B112A8"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>eqgame.exe+7112A8</Address>
@@ -10917,7 +10926,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>552</ID>
       <Description>"EQGraphicsDLL class vtable functions by ordinal"</Description>
-      <LastState Value="0340B338" RealAddress="00B112BC"/>
+      <LastState Value="0311B338" RealAddress="00B112BC"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>B112BC</Address>
@@ -10925,7 +10934,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1147</ID>
           <Description>"0x75F8"</Description>
-          <LastState Value="0" RealAddress="032B5920"/>
+          <LastState Value="0" RealAddress="032D5920"/>
           <VariableType>4 Bytes</VariableType>
           <Address>B112BC</Address>
           <Offsets>
@@ -10936,7 +10945,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>561</ID>
           <Description>"Draw Line"</Description>
-          <LastState Value="0321A850" RealAddress="032AE3AC"/>
+          <LastState Value="0323A850" RealAddress="032CE3AC"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>B112BC</Address>
@@ -10948,7 +10957,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>569</ID>
           <Description>"Draw Quad"</Description>
-          <LastState Value="0321A560" RealAddress="032AE3C4"/>
+          <LastState Value="0323A560" RealAddress="032CE3C4"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>B112BC</Address>
@@ -10962,7 +10971,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>241</ID>
       <Description>"EQGraphicsDX9.DLL+13979C"</Description>
-      <LastState Value="0340B338" RealAddress="032D979C"/>
+      <LastState Value="0311B338" RealAddress="032F979C"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>EQGraphicsDX9.DLL+13979C</Address>
@@ -10970,7 +10979,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>855</ID>
           <Description>"0x9A18 Fog End Distance"</Description>
-          <LastState Value="1715" RealAddress="03414D50"/>
+          <LastState Value="850" RealAddress="03124D50"/>
           <VariableType>Float</VariableType>
           <Address>EQGraphicsDX9.DLL+13979C</Address>
           <Offsets>
@@ -10980,7 +10989,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>854</ID>
           <Description>"0xA040 Timer"</Description>
-          <LastState Value="2537312" RealAddress="03415378"/>
+          <LastState Value="2266572" RealAddress="03125378"/>
           <VariableType>4 Bytes</VariableType>
           <Address>EQGraphicsDX9.DLL+13979C</Address>
           <Offsets>
@@ -10990,7 +10999,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>242</ID>
           <Description>"0xF08"</Description>
-          <LastState Value="08A14680" RealAddress="0340C240"/>
+          <LastState Value="08BCA8E0" RealAddress="0311C240"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>EQGraphicsDX9.DLL+13979C</Address>
@@ -11001,7 +11010,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>243</ID>
               <Description>"0x00"</Description>
-              <LastState Value="08A174EC" RealAddress="08A14680"/>
+              <LastState Value="08BCD74C" RealAddress="08BCA8E0"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>EQGraphicsDX9.DLL+13979C</Address>
@@ -11013,7 +11022,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>244</ID>
               <Description>"0x04"</Description>
-              <LastState Value="FFFFFFFF" RealAddress="08A14684"/>
+              <LastState Value="FFFFFFFF" RealAddress="08BCA8E4"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>EQGraphicsDX9.DLL+13979C</Address>
@@ -11027,7 +11036,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>907</ID>
           <Description>"0x9A10 Fog ARGB color"</Description>
-          <LastState Value="00C0C0C0" RealAddress="03414D48"/>
+          <LastState Value="00010101" RealAddress="03124D48"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>EQGraphicsDX9.DLL+13979C</Address>
@@ -11038,7 +11047,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>856</ID>
           <Description>"0x9A10 Fog ARGB color"</Description>
-          <LastState Value="00C0C0C0" RealAddress="03414D48"/>
+          <LastState Value="00010101" RealAddress="03124D48"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>EQGraphicsDX9.DLL+13979C</Address>
@@ -11049,7 +11058,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>857</ID>
           <Description>"0x9A14 Fog Begin Distance"</Description>
-          <LastState Value="100" RealAddress="03414D4C"/>
+          <LastState Value="849" RealAddress="03124D4C"/>
           <VariableType>Float</VariableType>
           <Address>EQGraphicsDX9.DLL+13979C</Address>
           <Offsets>
@@ -11059,7 +11068,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>858</ID>
           <Description>"0x9A1C"</Description>
-          <LastState Value="0.3300000131" RealAddress="03414D54"/>
+          <LastState Value="0.3300000131" RealAddress="03124D54"/>
           <VariableType>Float</VariableType>
           <Address>EQGraphicsDX9.DLL+13979C</Address>
           <Offsets>
@@ -11079,14 +11088,14 @@ dealloc(newmem)
     <CheatEntry>
       <ID>658</ID>
       <Description>"ptr"</Description>
-      <LastState Value="51061872" RealAddress="00B112E4"/>
+      <LastState Value="45884528" RealAddress="00B112E4"/>
       <VariableType>4 Bytes</VariableType>
       <Address>B112E4</Address>
       <CheatEntries>
         <CheatEntry>
           <ID>871</ID>
           <Description>"Window Width"</Description>
-          <LastState Value="1600" RealAddress="030B2488"/>
+          <LastState Value="1680" RealAddress="02BC2488"/>
           <VariableType>4 Bytes</VariableType>
           <Address>B112E4</Address>
           <Offsets>
@@ -11096,7 +11105,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>870</ID>
           <Description>"Window Height"</Description>
-          <LastState Value="900" RealAddress="030B248C"/>
+          <LastState Value="997" RealAddress="02BC248C"/>
           <VariableType>4 Bytes</VariableType>
           <Address>B112E4</Address>
           <Offsets>
@@ -11108,7 +11117,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1167</ID>
       <Description>"pinstSwitchManager (Doors)"</Description>
-      <LastState Value="08EF9598" RealAddress="00A40704"/>
+      <LastState Value="09146BC0" RealAddress="00A40704"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>A40704</Address>
@@ -11116,7 +11125,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1168</ID>
           <Description>"Number of doors"</Description>
-          <LastState Value="0" RealAddress="08EF9598"/>
+          <LastState Value="71" RealAddress="09146BC0"/>
           <VariableType>4 Bytes</VariableType>
           <Address>A40704</Address>
           <Offsets>
@@ -11126,7 +11135,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1169</ID>
           <Description>"Door #1"</Description>
-          <LastState Value="1357BC50" RealAddress="08EF959C"/>
+          <LastState Value="0F2BE8A0" RealAddress="09146BC4"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>A40704</Address>
@@ -11137,7 +11146,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1189</ID>
               <Description>"0x00"</Description>
-              <LastState Value="007CF388" RealAddress="1357BC50"/>
+              <LastState Value="007CF388" RealAddress="0F2BE8A0"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>A40704</Address>
@@ -11149,7 +11158,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1193</ID>
               <Description>"0x04"</Description>
-              <LastState Value="5" RealAddress="1357BC54"/>
+              <LastState Value="5" RealAddress="0F2BE8A4"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11160,7 +11169,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1192</ID>
               <Description>"0x05"</Description>
-              <LastState Value="107" RealAddress="1357BC55"/>
+              <LastState Value="78" RealAddress="0F2BE8A5"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11171,7 +11180,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1191</ID>
               <Description>"0x06 Name"</Description>
-              <LastState RealAddress="1357BC56"/>
+              <LastState RealAddress="0F2BE8A6"/>
               <VariableType>String</VariableType>
               <Length>32</Length>
               <Unicode>0</Unicode>
@@ -11185,7 +11194,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1188</ID>
               <Description>"0x26 Type"</Description>
-              <LastState Value="54" RealAddress="1357BC76"/>
+              <LastState Value="58" RealAddress="0F2BE8C6"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11196,7 +11205,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1176</ID>
               <Description>"0x27 State"</Description>
-              <LastState Value="0" RealAddress="1357BC77"/>
+              <LastState Value="0" RealAddress="0F2BE8C7"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11207,7 +11216,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1177</ID>
               <Description>"0x28 Default Y"</Description>
-              <LastState Value="-2047.369995" RealAddress="1357BC78"/>
+              <LastState Value="-945.9089966" RealAddress="0F2BE8C8"/>
               <VariableType>Float</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11218,7 +11227,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1178</ID>
               <Description>"0x2C Default X"</Description>
-              <LastState Value="-302.381012" RealAddress="1357BC7C"/>
+              <LastState Value="-391.6530151" RealAddress="0F2BE8CC"/>
               <VariableType>Float</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11229,7 +11238,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1179</ID>
               <Description>"0x30 Default Z"</Description>
-              <LastState Value="5.892660141" RealAddress="1357BC80"/>
+              <LastState Value="-259.9979858" RealAddress="0F2BE8D0"/>
               <VariableType>Float</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11240,7 +11249,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1180</ID>
               <Description>"0x34 Default Heading"</Description>
-              <LastState Value="348.4389954" RealAddress="1357BC84"/>
+              <LastState Value="128" RealAddress="0F2BE8D4"/>
               <VariableType>Float</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11251,7 +11260,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1181</ID>
               <Description>"0x38 Angle"</Description>
-              <LastState Value="0" RealAddress="1357BC88"/>
+              <LastState Value="0" RealAddress="0F2BE8D8"/>
               <VariableType>Float</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11262,7 +11271,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1182</ID>
               <Description>"0x44 Y"</Description>
-              <LastState Value="-2047.369995" RealAddress="1357BC94"/>
+              <LastState Value="-945.9089966" RealAddress="0F2BE8E4"/>
               <VariableType>Float</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11273,7 +11282,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1183</ID>
               <Description>"0x48 X"</Description>
-              <LastState Value="-302.381012" RealAddress="1357BC98"/>
+              <LastState Value="-391.6530151" RealAddress="0F2BE8E8"/>
               <VariableType>Float</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11284,7 +11293,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1184</ID>
               <Description>"0x4C Z"</Description>
-              <LastState Value="5.892660141" RealAddress="1357BC9C"/>
+              <LastState Value="-259.9979858" RealAddress="0F2BE8EC"/>
               <VariableType>Float</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11295,7 +11304,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1185</ID>
               <Description>"0x50 Heading"</Description>
-              <LastState Value="348.4389954" RealAddress="1357BCA0"/>
+              <LastState Value="128" RealAddress="0F2BE8F0"/>
               <VariableType>Float</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11306,7 +11315,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1174</ID>
               <Description>"0x58"</Description>
-              <LastState Value="0" RealAddress="1357BCA8"/>
+              <LastState Value="0" RealAddress="0F2BE8F8"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11317,7 +11326,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1210</ID>
               <Description>"0x5B"</Description>
-              <LastState Value="0" RealAddress="1357BCAB"/>
+              <LastState Value="0" RealAddress="0F2BE8FB"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11328,7 +11337,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1204</ID>
               <Description>"0x62"</Description>
-              <LastState Value="0" RealAddress="1357BCB2"/>
+              <LastState Value="0" RealAddress="0F2BE902"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11339,7 +11348,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1196</ID>
               <Description>"0x63"</Description>
-              <LastState Value="0" RealAddress="1357BCB3"/>
+              <LastState Value="0" RealAddress="0F2BE903"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11350,7 +11359,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1197</ID>
               <Description>"0x64"</Description>
-              <LastState Value="0" RealAddress="1357BCB4"/>
+              <LastState Value="0" RealAddress="0F2BE904"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11361,7 +11370,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1198</ID>
               <Description>"0x65"</Description>
-              <LastState Value="0" RealAddress="1357BCB5"/>
+              <LastState Value="0" RealAddress="0F2BE905"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11372,7 +11381,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1199</ID>
               <Description>"0x66"</Description>
-              <LastState Value="0" RealAddress="1357BCB6"/>
+              <LastState Value="0" RealAddress="0F2BE906"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11383,7 +11392,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1195</ID>
               <Description>"0x67"</Description>
-              <LastState Value="0" RealAddress="1357BCB7"/>
+              <LastState Value="0" RealAddress="0F2BE907"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11394,7 +11403,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1200</ID>
               <Description>"0x68"</Description>
-              <LastState Value="0" RealAddress="1357BCB8"/>
+              <LastState Value="0" RealAddress="0F2BE908"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11405,7 +11414,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1201</ID>
               <Description>"0x69"</Description>
-              <LastState Value="0" RealAddress="1357BCB9"/>
+              <LastState Value="0" RealAddress="0F2BE909"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11416,7 +11425,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1202</ID>
               <Description>"0x6A"</Description>
-              <LastState Value="0" RealAddress="1357BCBA"/>
+              <LastState Value="0" RealAddress="0F2BE90A"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11427,7 +11436,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1203</ID>
               <Description>"0x6B"</Description>
-              <LastState Value="0" RealAddress="1357BCBB"/>
+              <LastState Value="0" RealAddress="0F2BE90B"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11438,7 +11447,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1194</ID>
               <Description>"0xA4"</Description>
-              <LastState Value="00000000" RealAddress="1357BCF4"/>
+              <LastState Value="19352640" RealAddress="0F2BE944"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>A40704</Address>
@@ -11450,6 +11459,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1209</ID>
                   <Description>"0x00"</Description>
+                  <LastState Value="032CB0F8" RealAddress="19352640"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>A40704</Address>
@@ -11464,7 +11474,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1173</ID>
               <Description>"0xA8"</Description>
-              <LastState Value="00000000" RealAddress="1357BCF8"/>
+              <LastState Value="00000000" RealAddress="0F2BE948"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>A40704</Address>
@@ -11476,7 +11486,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1186</ID>
               <Description>"0xAC"</Description>
-              <LastState Value="00241768" RealAddress="1357BCFC"/>
+              <LastState Value="00022210" RealAddress="0F2BE94C"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>A40704</Address>
@@ -11488,7 +11498,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1187</ID>
               <Description>"0xB0"</Description>
-              <LastState Value="00000000" RealAddress="1357BD00"/>
+              <LastState Value="00000000" RealAddress="0F2BE950"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>A40704</Address>
@@ -11500,7 +11510,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1175</ID>
               <Description>"0xB8"</Description>
-              <LastState Value="0" RealAddress="1357BD08"/>
+              <LastState Value="0" RealAddress="0F2BE958"/>
               <VariableType>4 Bytes</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11511,7 +11521,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1212</ID>
               <Description>"0xC8"</Description>
-              <LastState Value="0" RealAddress="1357BD18"/>
+              <LastState Value="0" RealAddress="0F2BE968"/>
               <VariableType>4 Bytes</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11522,7 +11532,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1211</ID>
               <Description>"0xCC"</Description>
-              <LastState Value="0" RealAddress="1357BD1C"/>
+              <LastState Value="0" RealAddress="0F2BE96C"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11533,7 +11543,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1205</ID>
               <Description>"0xD4"</Description>
-              <LastState Value="1" RealAddress="1357BD24"/>
+              <LastState Value="1" RealAddress="0F2BE974"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11544,7 +11554,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1206</ID>
               <Description>"0xD5"</Description>
-              <LastState Value="0" RealAddress="1357BD25"/>
+              <LastState Value="0" RealAddress="0F2BE975"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11555,7 +11565,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1208</ID>
               <Description>"0xD6"</Description>
-              <LastState Value="1" RealAddress="1357BD26"/>
+              <LastState Value="1" RealAddress="0F2BE976"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11566,7 +11576,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1207</ID>
               <Description>"0xD7"</Description>
-              <LastState Value="0" RealAddress="1357BD27"/>
+              <LastState Value="0" RealAddress="0F2BE977"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11579,7 +11589,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1170</ID>
           <Description>"Door #2"</Description>
-          <LastState Value="1357B088" RealAddress="08EF95A0"/>
+          <LastState Value="0F2BEFE0" RealAddress="09146BC8"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>A40704</Address>
@@ -11590,7 +11600,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1171</ID>
           <Description>"Door #3"</Description>
-          <LastState Value="1357AC00" RealAddress="08EF95A4"/>
+          <LastState Value="0F2BF0C8" RealAddress="09146BCC"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>A40704</Address>
@@ -11601,7 +11611,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1213</ID>
           <Description>"Door #4"</Description>
-          <LastState Value="1357AB18" RealAddress="08EF95A8"/>
+          <LastState Value="0F2BE248" RealAddress="09146BD0"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>A40704</Address>
@@ -11612,7 +11622,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1214</ID>
           <Description>"Door #5"</Description>
-          <LastState Value="1357A948" RealAddress="08EF95AC"/>
+          <LastState Value="0F2BE988" RealAddress="09146BD4"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>A40704</Address>
@@ -11623,7 +11633,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1215</ID>
               <Description>"0x00"</Description>
-              <LastState Value="007CF388" RealAddress="1357A948"/>
+              <LastState Value="007CF388" RealAddress="0F2BE988"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>A40704</Address>
@@ -11635,7 +11645,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1216</ID>
               <Description>"0x04"</Description>
-              <LastState Value="5" RealAddress="1357A94C"/>
+              <LastState Value="5" RealAddress="0F2BE98C"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11646,7 +11656,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1217</ID>
               <Description>"0x05"</Description>
-              <LastState Value="103" RealAddress="1357A94D"/>
+              <LastState Value="68" RealAddress="0F2BE98D"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11657,7 +11667,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1218</ID>
               <Description>"0x06 Name"</Description>
-              <LastState RealAddress="1357A94E"/>
+              <LastState RealAddress="0F2BE98E"/>
               <VariableType>String</VariableType>
               <Length>32</Length>
               <Unicode>0</Unicode>
@@ -11671,7 +11681,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1219</ID>
               <Description>"0x26 Type"</Description>
-              <LastState Value="54" RealAddress="1357A96E"/>
+              <LastState Value="27" RealAddress="0F2BE9AE"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11682,7 +11692,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1220</ID>
               <Description>"0x27 State"</Description>
-              <LastState Value="0" RealAddress="1357A96F"/>
+              <LastState Value="0" RealAddress="0F2BE9AF"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11693,7 +11703,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1221</ID>
               <Description>"0x28 Default Y"</Description>
-              <LastState Value="-2047.369995" RealAddress="1357BC78"/>
+              <LastState Value="-945.9089966" RealAddress="0F2BE8C8"/>
               <VariableType>Float</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11704,7 +11714,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1222</ID>
               <Description>"0x2C Default X"</Description>
-              <LastState Value="-302.381012" RealAddress="1357BC7C"/>
+              <LastState Value="-391.6530151" RealAddress="0F2BE8CC"/>
               <VariableType>Float</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11715,7 +11725,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1223</ID>
               <Description>"0x30 Default Z"</Description>
-              <LastState Value="5.892660141" RealAddress="1357BC80"/>
+              <LastState Value="-259.9979858" RealAddress="0F2BE8D0"/>
               <VariableType>Float</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11726,7 +11736,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1224</ID>
               <Description>"0x34 Default Heading"</Description>
-              <LastState Value="348.4389954" RealAddress="1357BC84"/>
+              <LastState Value="128" RealAddress="0F2BE8D4"/>
               <VariableType>Float</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11737,7 +11747,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1225</ID>
               <Description>"0x38 Angle"</Description>
-              <LastState Value="0" RealAddress="1357BC88"/>
+              <LastState Value="0" RealAddress="0F2BE8D8"/>
               <VariableType>Float</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11748,7 +11758,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1226</ID>
               <Description>"0x44 Y"</Description>
-              <LastState Value="-2047.369995" RealAddress="1357BC94"/>
+              <LastState Value="-945.9089966" RealAddress="0F2BE8E4"/>
               <VariableType>Float</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11759,7 +11769,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1227</ID>
               <Description>"0x48 X"</Description>
-              <LastState Value="-302.381012" RealAddress="1357BC98"/>
+              <LastState Value="-391.6530151" RealAddress="0F2BE8E8"/>
               <VariableType>Float</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11770,7 +11780,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1228</ID>
               <Description>"0x4C Z"</Description>
-              <LastState Value="5.892660141" RealAddress="1357BC9C"/>
+              <LastState Value="-259.9979858" RealAddress="0F2BE8EC"/>
               <VariableType>Float</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11781,7 +11791,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1229</ID>
               <Description>"0x50 Heading"</Description>
-              <LastState Value="348.4389954" RealAddress="1357BCA0"/>
+              <LastState Value="128" RealAddress="0F2BE8F0"/>
               <VariableType>Float</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11792,7 +11802,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1230</ID>
               <Description>"0x58"</Description>
-              <LastState Value="0" RealAddress="1357BCA8"/>
+              <LastState Value="0" RealAddress="0F2BE8F8"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11803,7 +11813,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1231</ID>
               <Description>"0x5B"</Description>
-              <LastState Value="0" RealAddress="1357BCAB"/>
+              <LastState Value="0" RealAddress="0F2BE8FB"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11814,7 +11824,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1232</ID>
               <Description>"0x62"</Description>
-              <LastState Value="0" RealAddress="1357BCB2"/>
+              <LastState Value="0" RealAddress="0F2BE902"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11825,7 +11835,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1233</ID>
               <Description>"0x63"</Description>
-              <LastState Value="0" RealAddress="1357BCB3"/>
+              <LastState Value="0" RealAddress="0F2BE903"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11836,7 +11846,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1234</ID>
               <Description>"0x64"</Description>
-              <LastState Value="0" RealAddress="1357BCB4"/>
+              <LastState Value="0" RealAddress="0F2BE904"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11847,7 +11857,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1235</ID>
               <Description>"0x65"</Description>
-              <LastState Value="0" RealAddress="1357BCB5"/>
+              <LastState Value="0" RealAddress="0F2BE905"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11858,7 +11868,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1236</ID>
               <Description>"0x66"</Description>
-              <LastState Value="0" RealAddress="1357BCB6"/>
+              <LastState Value="0" RealAddress="0F2BE906"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11869,7 +11879,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1237</ID>
               <Description>"0x67"</Description>
-              <LastState Value="0" RealAddress="1357BCB7"/>
+              <LastState Value="0" RealAddress="0F2BE907"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11880,7 +11890,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1238</ID>
               <Description>"0x68"</Description>
-              <LastState Value="0" RealAddress="1357BCB8"/>
+              <LastState Value="0" RealAddress="0F2BE908"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11891,7 +11901,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1239</ID>
               <Description>"0x69"</Description>
-              <LastState Value="0" RealAddress="1357BCB9"/>
+              <LastState Value="0" RealAddress="0F2BE909"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11902,7 +11912,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1240</ID>
               <Description>"0x6A"</Description>
-              <LastState Value="0" RealAddress="1357BCBA"/>
+              <LastState Value="0" RealAddress="0F2BE90A"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11913,7 +11923,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1241</ID>
               <Description>"0x6B"</Description>
-              <LastState Value="0" RealAddress="1357BCBB"/>
+              <LastState Value="0" RealAddress="0F2BE90B"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11924,7 +11934,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1242</ID>
               <Description>"0xA4"</Description>
-              <LastState Value="00000000" RealAddress="1357BCF4"/>
+              <LastState Value="19352640" RealAddress="0F2BE944"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>A40704</Address>
@@ -11936,6 +11946,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1243</ID>
                   <Description>"0x00"</Description>
+                  <LastState Value="032CB0F8" RealAddress="19352640"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>A40704</Address>
@@ -11950,7 +11961,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1244</ID>
               <Description>"0xA8"</Description>
-              <LastState Value="00000000" RealAddress="1357BCF8"/>
+              <LastState Value="00000000" RealAddress="0F2BE948"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>A40704</Address>
@@ -11962,7 +11973,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1245</ID>
               <Description>"0xAC"</Description>
-              <LastState Value="00241768" RealAddress="1357BCFC"/>
+              <LastState Value="00022210" RealAddress="0F2BE94C"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>A40704</Address>
@@ -11974,7 +11985,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1246</ID>
               <Description>"0xB0"</Description>
-              <LastState Value="00000000" RealAddress="1357BD00"/>
+              <LastState Value="00000000" RealAddress="0F2BE950"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>A40704</Address>
@@ -11986,7 +11997,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1247</ID>
               <Description>"0xB8"</Description>
-              <LastState Value="0" RealAddress="1357BD08"/>
+              <LastState Value="0" RealAddress="0F2BE958"/>
               <VariableType>4 Bytes</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -11997,7 +12008,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1248</ID>
               <Description>"0xC8"</Description>
-              <LastState Value="0" RealAddress="1357BD18"/>
+              <LastState Value="0" RealAddress="0F2BE968"/>
               <VariableType>4 Bytes</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -12008,7 +12019,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1249</ID>
               <Description>"0xCC"</Description>
-              <LastState Value="0" RealAddress="1357BD1C"/>
+              <LastState Value="0" RealAddress="0F2BE96C"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -12019,7 +12030,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1250</ID>
               <Description>"0xD4"</Description>
-              <LastState Value="1" RealAddress="1357BD24"/>
+              <LastState Value="1" RealAddress="0F2BE974"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -12030,7 +12041,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1251</ID>
               <Description>"0xD5"</Description>
-              <LastState Value="0" RealAddress="1357BD25"/>
+              <LastState Value="0" RealAddress="0F2BE975"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -12041,7 +12052,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1252</ID>
               <Description>"0xD6"</Description>
-              <LastState Value="1" RealAddress="1357BD26"/>
+              <LastState Value="1" RealAddress="0F2BE976"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -12052,7 +12063,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1253</ID>
               <Description>"0xD7"</Description>
-              <LastState Value="0" RealAddress="1357BD27"/>
+              <LastState Value="0" RealAddress="0F2BE977"/>
               <VariableType>Byte</VariableType>
               <Address>A40704</Address>
               <Offsets>
@@ -12067,7 +12078,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1254</ID>
       <Description>"DI8__Keyboard"</Description>
-      <LastState Value="0892DDBC" RealAddress="00AD6C38"/>
+      <LastState Value="08C21D34" RealAddress="00AD6C38"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>AD6C38</Address>
@@ -12312,14 +12323,14 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1312</ID>
       <Description>"No description"</Description>
-      <LastState Value="52" RealAddress="00B0D8D0"/>
+      <LastState Value="49" RealAddress="00B0D8D0"/>
       <VariableType>Byte</VariableType>
       <Address>B0D8D0</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>1313</ID>
       <Description>"pinstCFindLocationWnd"</Description>
-      <LastState Value="04D2D038" RealAddress="00AFFAC8"/>
+      <LastState Value="12CD6190" RealAddress="00AFFAC8"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>AFFAC8</Address>
@@ -12469,13 +12480,14 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1329</ID>
       <Description>"No description"</Description>
+      <LastState Value="49" RealAddress="292E4C1E"/>
       <VariableType>Byte</VariableType>
       <Address>292E4C1E</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>1397</ID>
       <Description>"Zone Object Pointer"</Description>
-      <LastState Value="033A8D88" RealAddress="00B112C0"/>
+      <LastState Value="030B8D88" RealAddress="00B112C0"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>eqgame.exe+7112C0</Address>
@@ -12483,7 +12495,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1413</ID>
           <Description>"First Zone Object"</Description>
-          <LastState Value="00000000" RealAddress="033A9214"/>
+          <LastState Value="030C40B8" RealAddress="030B9214"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe+7112C0</Address>
@@ -12495,6 +12507,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1414</ID>
               <Description>"0x00 Previous"</Description>
+              <LastState Value="00000000" RealAddress="030C40B8"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe+7112C0</Address>
@@ -12507,6 +12520,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1415</ID>
               <Description>"0x04 Next"</Description>
+              <LastState Value="030C44D8" RealAddress="030C40BC"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe+7112C0</Address>
@@ -12519,6 +12533,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1416</ID>
               <Description>"0x08 Pointer to Pointer to First"</Description>
+              <LastState Value="030B9214" RealAddress="030C40C0"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe+7112C0</Address>
@@ -12531,6 +12546,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1417</ID>
               <Description>"0x0C Type (1 = objects.wld object)"</Description>
+              <LastState Value="2" RealAddress="030C40C4"/>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe+7112C0</Address>
               <Offsets>
@@ -12542,6 +12558,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1555</ID>
               <Description>"0x10"</Description>
+              <LastState Value="0356F220" RealAddress="030C40C8"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe+7112C0</Address>
@@ -12554,6 +12571,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1553</ID>
                   <Description>"0x00"</Description>
+                  <LastState Value="02A01790" RealAddress="0356F220"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>eqgame.exe+7112C0</Address>
@@ -12567,6 +12585,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1556</ID>
                   <Description>"0x04"</Description>
+                  <LastState Value="0000E62F" RealAddress="0356F224"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>eqgame.exe+7112C0</Address>
@@ -12580,6 +12599,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1557</ID>
                   <Description>"0x08"</Description>
+                  <LastState Value="80000000" RealAddress="0356F228"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>eqgame.exe+7112C0</Address>
@@ -12593,6 +12613,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1558</ID>
                   <Description>"0x0C"</Description>
+                  <LastState Value="030C40B8" RealAddress="0356F22C"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>eqgame.exe+7112C0</Address>
@@ -12608,6 +12629,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1448</ID>
               <Description>"0x14"</Description>
+              <LastState Value="030ED318" RealAddress="030C40CC"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe+7112C0</Address>
@@ -12620,6 +12642,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1449</ID>
                   <Description>"0x18"</Description>
+                  <LastState Value="00000000" RealAddress="030ED330"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>eqgame.exe+7112C0</Address>
@@ -12671,6 +12694,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1543</ID>
               <Description>"0x18 Zone Actor Info"</Description>
+              <LastState Value="188894A0" RealAddress="030C40D0"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe+7112C0</Address>
@@ -12683,6 +12707,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1566</ID>
                   <Description>"0x28 Y1"</Description>
+                  <LastState Value="3.852313862E37" RealAddress="188894C8"/>
                   <VariableType>Float</VariableType>
                   <Address>eqgame.exe+7112C0</Address>
                   <Offsets>
@@ -12695,6 +12720,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1569</ID>
                   <Description>"0x2C X1"</Description>
+                  <LastState Value="-9.997682897E-32" RealAddress="188894CC"/>
                   <VariableType>Float</VariableType>
                   <Address>eqgame.exe+7112C0</Address>
                   <Offsets>
@@ -12707,6 +12733,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1570</ID>
                   <Description>"0x30 Z1"</Description>
+                  <LastState Value="5.067369677E-37" RealAddress="188894D0"/>
                   <VariableType>Float</VariableType>
                   <Address>eqgame.exe+7112C0</Address>
                   <Offsets>
@@ -12719,6 +12746,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1571</ID>
                   <Description>"0xB4 Y2 (collision or hitbox)"</Description>
+                  <LastState Value="0" RealAddress="18889554"/>
                   <VariableType>Float</VariableType>
                   <Address>eqgame.exe+7112C0</Address>
                   <Offsets>
@@ -12731,6 +12759,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1572</ID>
                   <Description>"0xB8 X2"</Description>
+                  <LastState Value="4.018479023E37" RealAddress="18889558"/>
                   <VariableType>Float</VariableType>
                   <Address>eqgame.exe+7112C0</Address>
                   <Offsets>
@@ -12743,6 +12772,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1574</ID>
                   <Description>"0xBC Z2"</Description>
+                  <LastState Value="-3.90569753E-34" RealAddress="1888955C"/>
                   <VariableType>Float</VariableType>
                   <Address>eqgame.exe+7112C0</Address>
                   <Offsets>
@@ -12755,6 +12785,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1568</ID>
                   <Description>"0x6C pThis"</Description>
+                  <LastState Value="00002118" RealAddress="18889510"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>eqgame.exe+7112C0</Address>
@@ -12768,6 +12799,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1567</ID>
                   <Description>"0x70 Spawn Info"</Description>
+                  <LastState Value="00002118" RealAddress="18889510"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>eqgame.exe+7112C0</Address>
@@ -12783,6 +12815,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1548</ID>
               <Description>"0x1C 1=object, 3=player or NPC"</Description>
+              <LastState Value="00000000" RealAddress="030C40D4"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe+7112C0</Address>
@@ -12795,6 +12828,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1549</ID>
               <Description>"0x20"</Description>
+              <LastState Value="00000000" RealAddress="030C40D8"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe+7112C0</Address>
@@ -12807,6 +12841,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1550</ID>
               <Description>"0x24"</Description>
+              <LastState Value="00000000" RealAddress="030C40DC"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe+7112C0</Address>
@@ -12819,6 +12854,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1551</ID>
               <Description>"0x28"</Description>
+              <LastState Value="00000000" RealAddress="030C40E0"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe+7112C0</Address>
@@ -12831,6 +12867,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1544</ID>
               <Description>"0x2C Is Player or NPC"</Description>
+              <LastState Value="0" RealAddress="030C40E4"/>
               <VariableType>Byte</VariableType>
               <Address>eqgame.exe+7112C0</Address>
               <Offsets>
@@ -12842,6 +12879,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1545</ID>
               <Description>"0x2D Is Static Model"</Description>
+              <LastState Value="1" RealAddress="030C40E5"/>
               <VariableType>Byte</VariableType>
               <Address>eqgame.exe+7112C0</Address>
               <Offsets>
@@ -12853,6 +12891,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1546</ID>
               <Description>"0x2E"</Description>
+              <LastState Value="0" RealAddress="030C40E6"/>
               <VariableType>Byte</VariableType>
               <Address>eqgame.exe+7112C0</Address>
               <Offsets>
@@ -12864,6 +12903,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1547</ID>
               <Description>"0x2F"</Description>
+              <LastState Value="0" RealAddress="030C40E7"/>
               <VariableType>Byte</VariableType>
               <Address>eqgame.exe+7112C0</Address>
               <Offsets>
@@ -12875,6 +12915,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1542</ID>
               <Description>"0x30 Y"</Description>
+              <LastState Value="0" RealAddress="030C40E8"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+7112C0</Address>
               <Offsets>
@@ -12886,6 +12927,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1419</ID>
               <Description>"0x34 X"</Description>
+              <LastState Value="0" RealAddress="030C40EC"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+7112C0</Address>
               <Offsets>
@@ -12897,6 +12939,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1420</ID>
               <Description>"0x38 Z"</Description>
+              <LastState Value="0" RealAddress="030C40F0"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+7112C0</Address>
               <Offsets>
@@ -12908,6 +12951,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1564</ID>
               <Description>"0x3C Rotation"</Description>
+              <LastState Value="0" RealAddress="030C40F4"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+7112C0</Address>
               <Offsets>
@@ -12919,6 +12963,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1565</ID>
               <Description>"0x48 Scale"</Description>
+              <LastState Value="0" RealAddress="030C4100"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe+7112C0</Address>
               <Offsets>
@@ -12930,6 +12975,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1554</ID>
               <Description>"0x50"</Description>
+              <LastState Value="719D40F3" RealAddress="030C4108"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe+7112C0</Address>
@@ -12942,6 +12988,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>1432</ID>
                   <Description>"0x00"</Description>
+                  <LastState Value="7.629839498E-34" RealAddress="719D40F3"/>
                   <VariableType>Float</VariableType>
                   <Address>eqgame.exe+7112C0</Address>
                   <Offsets>
@@ -12956,6 +13003,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1552</ID>
               <Description>"0x54"</Description>
+              <LastState Value="8C008600" RealAddress="030C410C"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe+7112C0</Address>
@@ -12970,7 +13018,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1412</ID>
           <Description>"Last Zone Object"</Description>
-          <LastState Value="00000000" RealAddress="033A9218"/>
+          <LastState Value="338F6360" RealAddress="030B9218"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe+7112C0</Address>
@@ -12982,7 +13030,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1438</ID>
           <Description>""</Description>
-          <LastState Value="00000000" RealAddress="033A921C"/>
+          <LastState Value="030ED318" RealAddress="030B921C"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe+7112C0</Address>
@@ -12994,7 +13042,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1439</ID>
           <Description>""</Description>
-          <LastState Value="00000000" RealAddress="033A9220"/>
+          <LastState Value="29876B00" RealAddress="030B9220"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe+7112C0</Address>
@@ -13008,6 +13056,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1408</ID>
       <Description>"No description"</Description>
+      <LastState Value="00000000" RealAddress="0364A330"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>0364A330</Address>
@@ -13015,6 +13064,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1409</ID>
       <Description>"No description"</Description>
+      <LastState Value="00000000" RealAddress="0364A334"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>0364A330+4</Address>
@@ -13022,6 +13072,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1410</ID>
       <Description>"No description"</Description>
+      <LastState Value="00000000" RealAddress="0364A338"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>0364A330+8</Address>
@@ -13029,12 +13080,14 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1411</ID>
       <Description>"No description"</Description>
+      <LastState Value="0" RealAddress="0364A33C"/>
       <VariableType>4 Bytes</VariableType>
       <Address>0364A330+C</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>1426</ID>
       <Description>"No description"</Description>
+      <LastState Value="00000000" RealAddress="0364A340"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>0364A330+10</Address>
@@ -13042,6 +13095,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1428</ID>
       <Description>"0x14"</Description>
+      <LastState Value="00000000" RealAddress="0364A344"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>0364A330+14</Address>
@@ -13091,6 +13145,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1427</ID>
       <Description>"model info?"</Description>
+      <LastState Value="00000000" RealAddress="0364A348"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>0364A330+18</Address>
@@ -13138,7 +13193,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1452</ID>
       <Description>"CMerchantWnd"</Description>
-      <LastState Value="11707968" RealAddress="00990C5C"/>
+      <LastState Value="1169EF48" RealAddress="00990C5C"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>990C5C</Address>
@@ -13146,7 +13201,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1472</ID>
           <Description>"0x18C"</Description>
-          <LastState Value="2" RealAddress="11707AF4"/>
+          <LastState Value="2" RealAddress="1169F0D4"/>
           <VariableType>4 Bytes</VariableType>
           <Address>990C5C</Address>
           <Offsets>
@@ -13156,7 +13211,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1471</ID>
           <Description>"0x190"</Description>
-          <LastState Value="88" RealAddress="11707AF8"/>
+          <LastState Value="216" RealAddress="1169F0D8"/>
           <VariableType>Byte</VariableType>
           <Address>990C5C</Address>
           <Offsets>
@@ -13166,7 +13221,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1470</ID>
           <Description>"0x1A0"</Description>
-          <LastState Value="00000000" RealAddress="11707B08"/>
+          <LastState Value="00000000" RealAddress="1169F0E8"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C5C</Address>
@@ -13177,7 +13232,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1455</ID>
           <Description>"0x2E0"</Description>
-          <LastState Value="0" RealAddress="11707C48"/>
+          <LastState Value="0" RealAddress="1169F228"/>
           <VariableType>Float</VariableType>
           <Address>990C5C</Address>
           <Offsets>
@@ -13187,7 +13242,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1459</ID>
           <Description>"0x2E4 Selected Slot ID"</Description>
-          <LastState Value="0" RealAddress="11707C4C"/>
+          <LastState Value="0" RealAddress="1169F22C"/>
           <VariableType>4 Bytes</VariableType>
           <Address>990C5C</Address>
           <Offsets>
@@ -13197,7 +13252,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1458</ID>
           <Description>"0x2E8 Selected Item"</Description>
-          <LastState Value="00000000" RealAddress="11707C50"/>
+          <LastState Value="00000000" RealAddress="1169F230"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C5C</Address>
@@ -13208,7 +13263,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1463</ID>
           <Description>"0x2EC"</Description>
-          <LastState Value="00000000" RealAddress="11707C54"/>
+          <LastState Value="00000000" RealAddress="1169F234"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C5C</Address>
@@ -13219,7 +13274,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1464</ID>
           <Description>"0x2F0 MW_MerchantName"</Description>
-          <LastState Value="114E52C8" RealAddress="11707C58"/>
+          <LastState Value="11C3FDF8" RealAddress="1169F238"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C5C</Address>
@@ -13230,7 +13285,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1454</ID>
           <Description>"0x2F4 MW_SelectedItemLabel"</Description>
-          <LastState Value="114E4080" RealAddress="11707C5C"/>
+          <LastState Value="11C40230" RealAddress="1169F23C"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C5C</Address>
@@ -13241,7 +13296,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1460</ID>
           <Description>"0x2F8 MW_SelectedPriceLabel"</Description>
-          <LastState Value="114E41E8" RealAddress="11707C60"/>
+          <LastState Value="11C40398" RealAddress="1169F240"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C5C</Address>
@@ -13252,7 +13307,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1461</ID>
           <Description>"0x2FC MW_SelectedItem"</Description>
-          <LastState Value="114D2B60" RealAddress="11707C64"/>
+          <LastState Value="1306DCE0" RealAddress="1169F244"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C5C</Address>
@@ -13263,7 +13318,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1462</ID>
               <Description>"0x1A8"</Description>
-              <LastState Value="118C0370" RealAddress="114D2D08"/>
+              <LastState Value="132E6258" RealAddress="1306DE88"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>990C5C</Address>
@@ -13277,7 +13332,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1465</ID>
           <Description>"0x300 MW_Buy_Button"</Description>
-          <LastState Value="114D3280" RealAddress="11707C68"/>
+          <LastState Value="1306DB18" RealAddress="1169F248"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C5C</Address>
@@ -13288,7 +13343,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1466</ID>
           <Description>"0x304 MW_Sell_Button"</Description>
-          <LastState Value="114D2D28" RealAddress="11707C6C"/>
+          <LastState Value="1306E070" RealAddress="1169F24C"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C5C</Address>
@@ -13299,7 +13354,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1468</ID>
           <Description>"0x308 Item List"</Description>
-          <LastState Value="114B5058" RealAddress="11707C70"/>
+          <LastState Value="12DE31D8" RealAddress="1169F250"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990C5C</Address>
@@ -13310,7 +13365,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>1467</ID>
               <Description>"0x00"</Description>
-              <LastState Value="007FE338" RealAddress="114B5058"/>
+              <LastState Value="007FE338" RealAddress="12DE31D8"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>990C5C</Address>
@@ -13365,7 +13420,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1495</ID>
       <Description>"No description"</Description>
-      <LastState Value="00" RealAddress="02A1AF75"/>
+      <LastState Value="23" RealAddress="02A0AF75"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>Byte</VariableType>
       <Address>dpvs.dll+4AF75</Address>
@@ -13373,7 +13428,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1497</ID>
       <Description>"No description"</Description>
-      <LastState Value="0" RealAddress="00A60530"/>
+      <LastState Value="2275616" RealAddress="00A60530"/>
       <VariableType>4 Bytes</VariableType>
       <Address>A60530</Address>
     </CheatEntry>
@@ -13401,7 +13456,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1501</ID>
       <Description>"Encumbered related"</Description>
-      <LastState Value="1" RealAddress="00A60418"/>
+      <LastState Value="0" RealAddress="00A60418"/>
       <VariableType>4 Bytes</VariableType>
       <Address>A60418</Address>
     </CheatEntry>
@@ -13457,7 +13512,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1523</ID>
       <Description>"Walking Forward boolean"</Description>
-      <LastState Value="1" RealAddress="00A61C0C"/>
+      <LastState Value="0" RealAddress="00A61C0C"/>
       <VariableType>4 Bytes</VariableType>
       <Address>A61C0C</Address>
     </CheatEntry>
@@ -13513,7 +13568,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1510</ID>
       <Description>"No description"</Description>
-      <LastState Value="00000000" RealAddress="00A4260C"/>
+      <LastState Value="0932FF90" RealAddress="00A4260C"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>A4260C</Address>
@@ -13521,14 +13576,14 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1511</ID>
       <Description>"No description"</Description>
-      <LastState Value="230507891255502" RealAddress="00AD6C18"/>
+      <LastState Value="2799227850499119" RealAddress="00AD6C18"/>
       <VariableType>8 Bytes</VariableType>
       <Address>AD6C18</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>1512</ID>
       <Description>"No description"</Description>
-      <LastState Value="2876642" RealAddress="00AD6C20"/>
+      <LastState Value="2879644" RealAddress="00AD6C20"/>
       <VariableType>8 Bytes</VariableType>
       <Address>AD6C20</Address>
     </CheatEntry>
@@ -13598,7 +13653,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1532</ID>
       <Description>"pinstCContainerMgr (Container Manager)"</Description>
-      <LastState Value="12F92468" RealAddress="00990CD8"/>
+      <LastState Value="12F9F448" RealAddress="00990CD8"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>990CD8</Address>
@@ -13606,7 +13661,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1533</ID>
           <Description>"0x00 pvfTable"</Description>
-          <LastState Value="007DD8DC" RealAddress="12F92468"/>
+          <LastState Value="007DD8DC" RealAddress="12F9F448"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990CD8</Address>
@@ -13617,7 +13672,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1534</ID>
           <Description>"0x04 First Container Window"</Description>
-          <LastState Value="00000000" RealAddress="12F9246C"/>
+          <LastState Value="00000000" RealAddress="12F9F44C"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990CD8</Address>
@@ -13650,7 +13705,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1537</ID>
           <Description>"0x08 Second Container"</Description>
-          <LastState Value="00000000" RealAddress="12F92470"/>
+          <LastState Value="00000000" RealAddress="12F9F450"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>990CD8</Address>
@@ -13663,7 +13718,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1579</ID>
       <Description>"pinstCEQMainWnd (EQ button with menu)"</Description>
-      <LastState Value="12CD3B88" RealAddress="00AFFA30"/>
+      <LastState Value="11C36858" RealAddress="00AFFA30"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>AFFA30</Address>
@@ -13671,7 +13726,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1581</ID>
           <Description>"0x08 pNextSiblingWnd"</Description>
-          <LastState Value="00000000" RealAddress="12CD3B90"/>
+          <LastState Value="00000000" RealAddress="11C36860"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>AFFA30</Address>
@@ -13682,7 +13737,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1582</ID>
           <Description>"0x10 pFirstChildWnd"</Description>
-          <LastState Value="114D77F8" RealAddress="12CD3B98"/>
+          <LastState Value="130608E8" RealAddress="11C36868"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>AFFA30</Address>
@@ -13693,7 +13748,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1580</ID>
           <Description>"0x68 pParentWindow"</Description>
-          <LastState Value="00000000" RealAddress="12CD3BF0"/>
+          <LastState Value="00000000" RealAddress="11C368C0"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>AFFA30</Address>
@@ -13727,7 +13782,7 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1590</ID>
       <Description>"pinstCFindLocationWnd"</Description>
-      <LastState Value="04D2D038" RealAddress="00AFFAC8"/>
+      <LastState Value="12CD6190" RealAddress="00AFFAC8"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>AFFAC8</Address>
@@ -13735,7 +13790,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1591</ID>
           <Description>"0x00"</Description>
-          <LastState Value="007DEFC8" RealAddress="04D2D038"/>
+          <LastState Value="007DEFC8" RealAddress="12CD6190"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>AFFAC8</Address>
@@ -13746,7 +13801,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1592</ID>
           <Description>"0x10"</Description>
-          <LastState Value="115B9AC0" RealAddress="04D2D048"/>
+          <LastState Value="116A2B28" RealAddress="12CD61A0"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>AFFAC8</Address>
@@ -13757,7 +13812,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1593</ID>
           <Description>"0x14"</Description>
-          <LastState Value="332096D0" RealAddress="04D2D04C"/>
+          <LastState Value="2ED70220" RealAddress="12CD61A4"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>AFFAC8</Address>
@@ -13768,7 +13823,7 @@ dealloc(newmem)
         <CheatEntry>
           <ID>1594</ID>
           <Description>"0x1C"</Description>
-          <LastState Value="FFFFFFFF" RealAddress="04D2D054"/>
+          <LastState Value="FFFFFFFF" RealAddress="12CD61AC"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>AFFAC8</Address>
@@ -13781,16 +13836,37 @@ dealloc(newmem)
     <CheatEntry>
       <ID>1616</ID>
       <Description>"pointer EQGraphicsDX9.DLL+139898"</Description>
-      <LastState Value="0" RealAddress="032D9898"/>
+      <LastState Value="22384" RealAddress="032F9898"/>
       <VariableType>4 Bytes</VariableType>
       <Address>EQGraphicsDX9.DLL+139898</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>1617</ID>
       <Description>"Bone Magic Number (EQGraphicsDX9.DLL+109D40)"</Description>
-      <LastState Value="52254480" RealAddress="032A9D40"/>
+      <LastState Value="52385552" RealAddress="032C9D40"/>
       <VariableType>4 Bytes</VariableType>
       <Address>EQGraphicsDX9.DLL+109D40</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1619</ID>
+      <Description>"Max Foreground FPS (10-100)"</Description>
+      <LastState Value="60" RealAddress="00A61B9C"/>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqgame.exe+661B9C</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1618</ID>
+      <Description>"Max Background FPS (9-100)"</Description>
+      <LastState Value="9" RealAddress="00A61BA0"/>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqgame.exe+661BA0</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1621</ID>
+      <Description>"Auto Run"</Description>
+      <LastState Value="0" RealAddress="00A603FC"/>
+      <VariableType>4 Bytes</VariableType>
+      <Address>A603FC</Address>
     </CheatEntry>
   </CheatEntries>
   <CheatCodes>

@@ -16,6 +16,7 @@ namespace EQApp
         int _class;
         int guildId;
         int standingState;
+        int hp;
         int isHoldingPrimary;
         int isHoldingSecondary;
         int isPet;
@@ -26,6 +27,7 @@ namespace EQApp
         int isGm;
         bool showAtAnyDistance = false;
         bool isTarget = false;
+        bool isInGroup = false;
         bool isFindSpawn = false;
         bool isHalfDistance = false;
     } ESPSpawn, *ESPSpawn_ptr;
@@ -93,6 +95,8 @@ void EQAPP_ESP_SpawnList_Update()
 
         espSpawn.standingState = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_STANDING_STATE);
 
+        espSpawn.hp = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_INFO_HP);
+
         espSpawn.isHoldingPrimary   = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_IS_HOLDING_PRIMARY);
         espSpawn.isHoldingSecondary = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_INFO_IS_HOLDING_SECONDARY);
 
@@ -106,6 +110,11 @@ void EQAPP_ESP_SpawnList_Update()
         if (spawn == targetSpawn)
         {
             espSpawn.isTarget = true;
+        }
+
+        if (EQ_IsSpawnInGroup(spawn) == true)
+        {
+            espSpawn.isInGroup = true;
         }
 
         if (g_espFindIsEnabled == true && g_espFindSpawnName.size() != 0)

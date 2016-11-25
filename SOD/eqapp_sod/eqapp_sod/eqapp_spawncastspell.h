@@ -185,11 +185,15 @@ void EQAPP_SpawnCastSpell_Execute()
 
                     float spellCastTimePercent = (float)((spellCastTimeCurrent * 100) / spellCastTimeTotal);
 
+                    EQAPP_COUT_SaveFlags();
+
                     std::stringstream spellCastBarText;
                     spellCastBarText.precision(1);
-                    spellCastBarText << "#" << spawnCastSpell->index << " " << spawnName
-                        << " (" << spawnCastSpell->spellName << ") "
-                        << std::fixed << spellCastTimeCurrentFloat;
+                    spellCastBarText << spawnName
+                                     << " (" << spawnCastSpell->spellName << ") "
+                                     << std::fixed << spellCastTimeCurrentFloat;
+
+                    EQAPP_COUT_RestoreFlags();
 
                     float spawnCastSpellDrawBarsWidth = (100.0f * g_spawnCastSpellDrawBarsWidthMultiplier);
 

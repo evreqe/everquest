@@ -222,9 +222,10 @@ void EQAPP_InterpretCommand(const char* command)
         uint32_t spawn = EQ_GetFirstSpawn();
         while (spawn)
         {
-            uint32_t randomNumber = EQAPP_GetRandomNumberLowHigh(5000, 30000);
+            uint32_t randomSpellId       = EQAPP_GetRandomNumberLowHigh(1, 100);
+            uint32_t randomSpellCastTime = EQAPP_GetRandomNumberLowHigh(5000, 30000);
 
-            EQAPP_SpawnCastSpell_Add(spawn, 100, randomNumber);
+            EQAPP_SpawnCastSpell_Add(spawn, randomSpellId, randomSpellCastTime);
 
             spawnIndex++;
 

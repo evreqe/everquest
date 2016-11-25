@@ -114,7 +114,7 @@ void EQAPP_ESP_Spawns_Draw()
 
         if (spawn.type == EQ_SPAWN_TYPE_PLAYER)
         {
-            if (EQ_IsSpawnInGroup(spawn.spawnInfo) == true)
+            if (spawn.isInGroup == true)
             {
                 textColorARGB = 0xFF00FF00; // green
             }
@@ -207,6 +207,14 @@ void EQAPP_ESP_Spawns_Draw()
 
         ssDrawText << "\n";
         g_espNumDrawText++;
+
+        if (spawn.isInGroup == true || spawn.isTarget == true)
+        {
+            if (spawn.hp < 100)
+            {
+                ssDrawText << "HP: " << spawn.hp << "%\n";
+            }
+        }
 
         if (spawn.type == EQ_SPAWN_TYPE_PLAYER)
         {

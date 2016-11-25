@@ -86,6 +86,7 @@
 #include "eqapp_zoneactors.h"
 #include "eqapp_backstab.h"
 #include "eqapp_chatfilter.h"
+#include "eqapp_backgroundfps.h"
 #include "eqapp_esp.h"                 // needs to be included last
 #include "eqapp_esp_functions.h"       // needs to be included last
 #include "eqapp_hud.h"                 // needs to be included last
@@ -862,6 +863,8 @@ int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short
 
     EQAPP_FreeCamera_Keys();
 
+    EQAPP_BackgroundFps_Execute();
+
     EQAPP_PlayerAlert_Execute();
     EQAPP_TargetBeep_Execute();
 
@@ -889,6 +892,15 @@ int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short
     }
 
     EQAPP_Hud_Execute();
+
+    /*
+    uint32_t textOffsetY = 100;
+    for (size_t i = 1; i < 11; i++)
+    {
+        EQ_DrawText("Testing Text 123ABC", 300, textOffsetY, 0xFF00FF00, i);
+        textOffsetY += 50;
+    }
+    */
 
     return EQAPP_REAL_DrawNetStatus(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
 }

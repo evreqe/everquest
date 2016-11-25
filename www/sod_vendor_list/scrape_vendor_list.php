@@ -45,9 +45,9 @@ $dump = '';
 
 $file_get_context = stream_context_create(array('http' => array('header' => 'Connection: close')));
 
-$listinvdata = file_get_html('http://shardsofdalaya.com/vendorlist/listinvdata.php', false, $file_get_context);
+$listinvdata = file_get_html('https://shardsofdalaya.com/vendorlist/listinvdata.php', false, $file_get_context);
 
-//echo $listinvdata . '<br>';
+//echo 'listinvdata: ' . $listinvdata . '<br>';
 
 $pages = Array();
 
@@ -65,7 +65,7 @@ $max_pages = max($pages);
 
 for ($character_pages_counter = 1; $character_pages_counter <= $max_pages; $character_pages_counter++)
 {
-    $listinvdata = file_get_html('http://shardsofdalaya.com/vendorlist/listinvdata.php?page=' . $character_pages_counter, false, $file_get_context);
+    $listinvdata = file_get_html('https://shardsofdalaya.com/vendorlist/listinvdata.php?page=' . $character_pages_counter, false, $file_get_context);
 
     echo 'Page: ' . $character_pages_counter . '<br><br>';
 
@@ -81,7 +81,7 @@ for ($character_pages_counter = 1; $character_pages_counter <= $max_pages; $char
 
             echo 'Character: ' . $character_name . '<br>';
 
-            $vendorinv = file_get_html('http://shardsofdalaya.com/vendorlist/vendorinv.php?char=' . $character_name, false, $file_get_context);
+            $vendorinv = file_get_html('https://shardsofdalaya.com/vendorlist/vendorinv.php?char=' . $character_name, false, $file_get_context);
 
             $number_of_items_for_sale = string_between($vendorinv->plaintext, $character_name . ' has ', ' items for sale');
 
@@ -96,7 +96,7 @@ for ($character_pages_counter = 1; $character_pages_counter <= $max_pages; $char
 
             for ($item_pages_counter = 1; $item_pages_counter <= $max_item_pages; $item_pages_counter++)
             {
-                $vendorinv = file_get_html('http://shardsofdalaya.com/vendorlist/vendorinv.php?char=' . $character_name . '&page=' . $item_pages_counter, false, $file_get_context);
+                $vendorinv = file_get_html('https://shardsofdalaya.com/vendorlist/vendorinv.php?char=' . $character_name . '&page=' . $item_pages_counter, false, $file_get_context);
 
                 foreach ($vendorinv->find('a') as $vendorinv_link)
                 {
