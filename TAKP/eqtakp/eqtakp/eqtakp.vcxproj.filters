@@ -68,5 +68,8 @@
     <ClInclude Include="eq_graphicsdll.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="eqapp_bufftimers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

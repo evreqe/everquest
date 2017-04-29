@@ -26,10 +26,13 @@ template <class T>
 void EQ_WriteMemory(uintptr_t address, T value);
 
 template <class T>
-T EQ_ReadMemoryProtected(DWORD address);
+T EQ_ReadMemoryProtected(uint32_t address);
 
 template <class T>
-void EQ_WriteMemoryProtected(DWORD address, T value);
+void EQ_WriteMemoryProtected(uint32_t address, T value);
+
+void EQ_ReadMemoryString(uint32_t address, size_t size, char result[]);
+void EQ_WriteMemoryString(uint32_t address, const char* value);
 
 void EQ_ToggleBool(bool& b);
 float EQ_CalculateDistance(float x1, float y1, float x2, float y2);
@@ -39,6 +42,18 @@ float EQ_GetRadians(float degrees);
 bool EQ_IsPointInsideRectangle(int pointX, int pointY, int rectX, int rectY, int rectWidth, int rectHeight);
 void EQ_ColorARGB_Darken(uint32_t& colorARGB, float percent);
 void EQ_CopyStringToClipboard(std::string& str);
+void EQ_CXStr_Set(EQ::CXStr** cxstr, char* text);
+void EQ_CXStr_Append(EQ::CXStr** cxstr, char* text);
+bool EQ_IsInGame();
+bool EQ_IsAutoAttackEnabled();
+bool EQ_IsNetStatusEnabled();
+bool EQ_IsNotTypingInChat();
+bool EQ_IsInspectEnabled();
+bool EQ_IsShowNPCNamesEnabled();
+bool EQ_IsKeyPressedControl();
+bool EQ_IsKeyPressedAlt();
+bool EQ_IsKeyPressedShift();
+bool EQ_IsMouseHoveringOverCXWnd();
 void EQ_SetAutoAttack(bool bEnabled);
 void EQ_SetFreeCamera(bool bEnabled);
 size_t EQ_GetFontTextWidth(char text[], uint32_t fontPointer);
@@ -48,6 +63,9 @@ void EQ_DrawTextEx(const char* text, int x, int y, int textColor, uint32_t fontP
 void EQ_DrawLine(float x1, float y1, float x2, float y2, uint32_t colorARGB);
 void EQ_DrawRectangle(float x, float y, float width, float height, uint32_t colorARGB, bool isFilled = false);
 void EQ_WriteChatText(const char* text);
+std::string EQ_GetTickTimeString(int ticks);
+
+uint32_t EQ_GetTimer();
 
 EQ::Spawn_ptr EQ_GetPlayerSpawn();
 EQ::Spawn_ptr EQ_GetTargetSpawn();
@@ -57,6 +75,15 @@ EQ::Spawn_ptr EQ_GetMerchantSpawn();
 EQ::Spawn_ptr EQ_GetBankerSpawn();
 EQ::Spawn_ptr EQ_GetCorpseSpawn();
 EQ::Spawn_ptr EQ_GetGamemasterSpawn();
+
+uint32_t EQ_GetPlayerSpawnAddress();
+uint32_t EQ_GetTargetSpawnAddress();
+uint32_t EQ_GetControlledSpawnAddress();
+uint32_t EQ_GetTradeSpawnAddress();
+uint32_t EQ_GetMerchantSpawnAddress();
+uint32_t EQ_GetBankerSpawnAddress();
+uint32_t EQ_GetCorpseSpawnAddress();
+uint32_t EQ_GetGamemasterSpawnAddress();
 
 template <class T>
 void EQ_Log(const char* text, T number)
@@ -90,7 +117,7 @@ void EQ_WriteMemory(uintptr_t address, T value)
 }
 
 template <class T>
-T EQ_ReadMemoryProtected(DWORD address)
+T EQ_ReadMemoryProtected(uint32_t address)
 {
     DWORD oldProtect;
     VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, sizeof(T), PAGE_READWRITE, &oldProtect);
@@ -103,7 +130,7 @@ T EQ_ReadMemoryProtected(DWORD address)
 }
 
 template <class T>
-void EQ_WriteMemoryProtected(DWORD address, T value)
+void EQ_WriteMemoryProtected(uint32_t address, T value)
 {
     DWORD oldProtect;
     VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, sizeof(value), PAGE_READWRITE, &oldProtect);
@@ -114,10 +141,70 @@ void EQ_WriteMemoryProtected(DWORD address, T value)
     VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, sizeof(value), oldProtect, &oldProtect);
 }
 
+void EQ_ReadMemoryString(uint32_t address, size_t size, char result[])
+{
+    char* buffer = new char[size + 1];
+
+    for (size_t i = 0; i < size; i++)
+    {
+        buffer[i] = *(unsigned char*)(address + i);
+    }
+
+    result = buffer;
+
+    delete[] buffer;
+}
+
+void EQ_WriteMemoryString(uint32_t address, const char* value)
+{
+    size_t length = strlen(value);
+
+    size_t j = 0;
+
+    for (size_t i = 0; i < length; i++)
+    {
+        *(unsigned char*)(address + j) = value[i];
+        j++;
+    }
+
+    *(unsigned char*)(address + j) = '\0';
+}
+
 /* game's functions */
 
 #define EQ_ADDRESS_FUNCTION_DrawNetStatus 0x0054D3AE
 typedef int (__cdecl* EQ_FUNCTION_TYPE_DrawNetStatus)(int, unsigned short, unsigned short, unsigned short x, unsigned short y, int, unsigned short, unsigned long, long, unsigned long);
+
+#define EQ_ADDRESS_FUNCTION_HandleMouseWheel 0x0055B2E0
+typedef int (__cdecl* EQ_FUNCTION_TYPE_HandleMouseWheel)(int mouseWheelDelta);
+
+#define EQ_ADDRESS_FUNCTION_ProcessKeyDown 0x00525B04
+typedef int (__cdecl* EQ_FUNCTION_TYPE_ProcessKeyDown)(int key);
+
+#define EQ_ADDRESS_FUNCTION_ProcessKeyUp 0x0052462A
+typedef int (__cdecl* EQ_FUNCTION_TYPE_ProcessKeyUp)(int key);
+
+#define EQ_ADDRESS_FUNCTION_ProcessMovementKeys 0x005257FA
+typedef int (__cdecl* EQ_FUNCTION_TYPE_ProcessMovementKeys)(int key);
+
+#define EQ_ADDRESS_FUNCTION_GetKey 0x0055AFE2
+typedef int (__cdecl* EQ_FUNCTION_TYPE_GetKey)(void);
+
+#define EQ_ADDRESS_FUNCTION_get_bearing 0x004F3777
+
+#define EQ_ADDRESS_FUNCTION_ExecuteCmd 0x0054050C
+
+#define EQ_ADDRESS_FUNCTION_send_message 0x0054E51A
+
+#define EQ_ADDRESS_FUNCTION_CastRay 0x004F20DB
+EQ_MACRO_FunctionAtAddress(int __cdecl EQ_CastRay(class EQPlayer* spawn, float y, float x, float z), EQ_ADDRESS_FUNCTION_CastRay);
+
+#define EQ_ADDRESS_FUNCTION_AutoInventory 0x004F0EEB
+EQ_MACRO_FunctionAtAddress(int __cdecl EQ_AutoInventory(EQ::Character_ptr character, EQ::Item** item, short unknown = 0), EQ_ADDRESS_FUNCTION_AutoInventory);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_AutoInventory)(EQ::Character_ptr character, EQ::Item** item, short unknown);
+
+#define EQ_ADDRESS_FUNCTION_get_melee_range 0x004F3898
+EQ_MACRO_FunctionAtAddress(float __cdecl EQ_get_melee_range(class EQPlayer* spawn1, class EQPlayer* spawn2), EQ_ADDRESS_FUNCTION_get_melee_range);
 
 /* functions */
 
@@ -189,6 +276,74 @@ void EQ_CopyStringToClipboard(std::string& str)
     EmptyClipboard();
     SetClipboardData(CF_TEXT, mem);
     CloseClipboard();
+}
+
+void EQ_CXStr_Set(EQ::CXStr** cxstr, char* text)
+{ 
+    EQClass::CXStr* temp = (EQClass::CXStr*)cxstr;
+
+    (*temp) = text;
+
+    cxstr = (EQ::CXStr**)temp;
+}
+
+void EQ_CXStr_Append(EQ::CXStr** cxstr, char* text)
+{
+    EQClass::CXStr* temp = (EQClass::CXStr*)cxstr;
+
+    (*temp) += text;
+
+    cxstr = (EQ::CXStr**)temp;
+}
+
+bool EQ_IsInGame()
+{
+    return (EQ_POINTER_CEverQuest->GameState == EQ_GAME_STATE_IN_GAME);
+}
+
+bool EQ_IsAutoAttackEnabled()
+{
+    return (EQ_ReadMemory<uint8_t>(EQ_ADDRESS_IS_AUTO_ATTACK_ENABLED) == 1);
+}
+
+bool EQ_IsNetStatusEnabled()
+{
+    return (EQ_ReadMemory<uint8_t>(EQ_ADDRESS_IS_NET_STATUS_ENABLED) == 1);
+}
+
+bool EQ_IsNotTypingInChat()
+{
+    return (EQ_ReadMemory<uint8_t>(EQ_ADDRESS_IS_NOT_TYPING_IN_CHAT) == 1);
+}
+
+bool EQ_IsInspectEnabled()
+{
+    return (EQ_ReadMemory<uint8_t>(EQ_ADDRESS_IS_INSPECT_ENABLED) == 1);
+}
+
+bool EQ_IsShowNPCNamesEnabled()
+{
+    return (EQ_ReadMemory<uint8_t>(EQ_ADDRESS_IS_SHOW_NPC_NAMES_ENABLED) == 1);
+}
+
+bool EQ_IsKeyPressedControl()
+{
+    return (EQ_ReadMemory<uint32_t>(EQ_ADDRESS_IS_KEY_PRESSED_CONTROL) == 1);
+}
+
+bool EQ_IsKeyPressedAlt()
+{
+    return (EQ_ReadMemory<uint32_t>(EQ_ADDRESS_IS_KEY_PRESSED_ALT) == 1);
+}
+
+bool EQ_IsKeyPressedShift()
+{
+    return (EQ_ReadMemory<uint32_t>(EQ_ADDRESS_IS_KEY_PRESSED_SHIFT) == 1);
+}
+
+bool EQ_IsMouseHoveringOverCXWnd()
+{
+    return (EQ_ReadMemory<uint32_t>(EQ_ADDRESS_CXWND_MANAGER_MOUSE_HOVER_WINDOW) != 0);
 }
 
 void EQ_SetAutoAttack(bool bEnabled)
@@ -440,6 +595,69 @@ void EQ_WriteChatText(const char* text)
     EQ_CLASS_POINTER_CEverQuest->dsp_chat(text);
 }
 
+void EQ_CalculateTickTime(int ticks, int& hours, int& minutes, int& seconds)
+{
+    if (ticks > 0)
+    {
+        seconds = ticks * 3;
+
+        if (seconds > 0)
+        {
+            hours = seconds / (60 * 60);
+
+            seconds = seconds - hours * (60 * 60);
+
+            if (seconds > 0)
+            {
+                minutes = seconds / 60;
+
+                seconds = seconds - minutes * 60;
+            }
+        }
+    }
+}
+
+std::string EQ_GetTickTimeString(int ticks)
+{
+    int hours = 0;
+    int minutes = 0;
+    int seconds = 0;
+
+    EQ_CalculateTickTime(ticks, hours, minutes, seconds);
+
+    std::stringstream ssTimeText;
+
+    if (hours > 0)
+    {
+        ssTimeText << hours << "h";
+    }
+
+    if (minutes > 0)
+    {
+        if (hours > 0)
+        {
+            ssTimeText << " ";
+        }
+
+        ssTimeText << minutes << "m";
+    }
+
+    if (hours == 0 && minutes == 0)
+    {
+        if (seconds > 0)
+        {
+            ssTimeText << seconds << "s";
+        }
+    }
+
+    return ssTimeText.str();
+}
+
+uint32_t EQ_GetTimer()
+{
+    return EQ_POINTER_CDisplay->Timer;
+}
+
 EQ::Spawn_ptr EQ_GetPlayerSpawn()
 {
     return (EQ::Spawn_ptr)EQ_POINTER_PlayerSpawn;
@@ -478,4 +696,44 @@ EQ::Spawn_ptr EQ_GetCorpseSpawn()
 EQ::Spawn_ptr EQ_GetGamemasterSpawn()
 {
     return (EQ::Spawn_ptr)EQ_POINTER_GamemasterSpawn;
+}
+
+uint32_t EQ_GetPlayerSpawnAddress()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_PLAYER_SPAWN);
+}
+
+uint32_t EQ_GetTargetSpawnAddress()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_TARGET_SPAWN);
+}
+
+uint32_t EQ_GetControlledSpawnAddress()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CONTROLLED_SPAWN);
+}
+
+uint32_t EQ_GetTradeSpawnAddress()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_TRADE_SPAWN);
+}
+
+uint32_t EQ_GetMerchantSpawnAddress()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_MERCHANT_SPAWN);
+}
+
+uint32_t EQ_GetBankerSpawnAddress()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_BANKER_SPAWN);
+}
+
+uint32_t EQ_GetCorpseSpawnAddress()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CORPSE_SPAWN);
+}
+
+uint32_t EQ_GetGamemasterSpawnAddress()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_GAMEMASTER_SPAWN);
 }

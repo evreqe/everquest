@@ -1,5 +1,7 @@
 #pragma once
 
+#include "eq.h"
+
 const char* EQ_STRING_GRAPHICS_DLL_NAME           = "EQGfx_Dx8.dll";
 const char* EQ_STRING_GRAPHICS_DLL_NAME_LOWERCASE = "eqgfx_dx8.dll";
 
@@ -8,8 +10,6 @@ const char* EQ_STRING_GRAPHICS_DLL_NAME_LOWERCASE = "eqgfx_dx8.dll";
 #define EQ_ADDRESS_POINTER_EQGraphicsDLL__t3dSetCameraLocation 0x007F9AE4
 
 #define EQ_GRAPHICS_DLL_DEFERRED_2D_ITEMS_MAX 4000 // t3dDefer...
-
-#define EQ_ADDRESS_POINTER_CAMERA_DATA 0x0063B924 // pass this as first argument to graphics DLL world space to screen space funtion
 
 #define EQ_GRAPHICS_DLL_WORLD_SPACE_TO_SCREEN_SPACE_RESULT_FAILURE 0xFFFF3D3E // world space to screen space failed because the location is not on screen
 

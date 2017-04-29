@@ -277,7 +277,7 @@ union
 /* 0x00E4 */ ItemBook      Book;
 };
 /* ...... */ 
-} Item, *Item_ptr;
+} Item, *Item_ptr, EQ_Item, *EQ_Item_ptr;
 
 // class EQ_Spell
 // sizeof 0x110
@@ -327,13 +327,13 @@ typedef struct _Spell
 /* 0x00E8 */ char* CastOnOther; // [40]
 /* 0x00EC */ char* WearOff;     // [32]
 /* ...... */ 
-} Spell, *Spell_ptr;
+} Spell, *Spell_ptr, EQ_Spell, *EQ_Spell_ptr;
 
 // class SpellManager
 typedef struct _SpellList
 {
     struct _Spell* Spell[EQ_NUM_SPELLS];
-} SpellList, *SpellList_ptr;
+} SpellList, *SpellList_ptr, SpellManager, *SpellManager_ptr;
 
 // 21 inventory slots
 typedef struct _Inventory
@@ -490,7 +490,7 @@ union
 /* 0x1709 */ uint8_t Unknown1709[2475];
 /* 0x20B4 */ struct _Item* InventoryBankItem[EQ_NUM_INVENTORY_BANK_SLOTS];
 /* ...... */ 
-} Character, *Character_ptr;
+} Character, *Character_ptr, EQ_Character, *EQ_Character_ptr;
 
 // used for name and guild name above head of each spawn
 typedef struct _StringSprite
@@ -517,7 +517,7 @@ typedef struct _StringSprite
 /* ...... */ 
 } StringSprite, *StringSprite_ptr;
 
-// model skeleton animation?
+// model skeleton animation
 typedef struct _ModelTrack
 {
 /* 0x0000 */ uint32_t Unknown0000;
@@ -526,8 +526,8 @@ typedef struct _ModelTrack
 /* ...... */ 
 } ModelTrack, *ModelTrack_ptr;
 
-// model skeleton bones
 // T3D_DAG
+// model skeleton bones
 typedef struct _ModelBone
 {
 /* 0x0000 */ uint32_t Unknown0000;
@@ -759,16 +759,18 @@ typedef struct _Spawn
 /* 0x0160 */ uint32_t Unknown0160;
 /* 0x0164 */ uint32_t Unknown0164;
 /* 0x0168 */
-} Spawn, *Spawn_ptr;
+} Spawn, *Spawn_ptr, EQPlayer, *EQPlayer_ptr;
 
+// class EQItemList
 typedef struct _GroundSpawn
 {
 /* 0x0000 */ struct _GroundSpawn* PreviousSpawn;
 /* 0x0004 */ struct _GroundSpawn* NextSpawn;
 /* 0x0008 */ uint16_t ID;
 /* 0x000A */ uint8_t Unknown000A[2];
-/* 0x000C */ uint16_t DropID;
-/* 0x000E */ uint8_t Unknown000E[2];
+/////* 0x000C */ uint16_t DropID;
+/////* 0x000E */ uint8_t Unknown000E[2];
+/* 0x000C */ uint32_t Item; // TODO
 /* 0x0010 */ uint16_t Unknown0010;
 /* 0x0012 */ uint8_t Unknown0012[2];
 /* 0x0014 */ uint32_t Unknown0014; // pointer
@@ -782,11 +784,12 @@ typedef struct _GroundSpawn
 } GroundSpawn, *GroundSpawn_ptr;
 
 // class EQSwitch
-typedef struct _DoorSpawn
+// doors and switches
+typedef struct _Switch
 {
 /* 0x0000 */ uint8_t Unknown0000[4];
-/* 0x0004 */ struct _DoorSpawn* PreviousSpawn;
-/* 0x0008 */ struct _DoorSpawn* NextSpawn;
+/* 0x0004 */ struct _Switch* PreviousSwitch;
+/* 0x0008 */ struct _Switch* NextSwitch;
 /* 0x000C */ uint8_t Unknown000C;
 /* 0x000D */ char Name[11]; // [0x0B]
 /* 0x0018 */ uint32_t Unknown0018;
@@ -801,7 +804,7 @@ typedef struct _DoorSpawn
 /* 0x003C */ float Z;
 /* 0x0040 */ float Heading;
 /* ...... */ 
-} DoorSpawn, *DoorSpawn_ptr;
+} Switch, *Switch_ptr, EQSwitch, *EQSwitch_ptr;
 
 typedef struct _GroupList
 {
@@ -853,7 +856,7 @@ typedef struct _HotButtonList
     struct _HotButton HotButton[EQ_NUM_HOTBUTTONS_TOTAL];
 } HotButtonList, *HotButtonList_ptr;
 
-// /viewport
+// /viewport command
 typedef struct _Viewport
 {
 /* 0x0000 */ uint16_t X1;
@@ -861,6 +864,17 @@ typedef struct _Viewport
 /* 0x0004 */ uint16_t X2;
 /* 0x0006 */ uint16_t Y2;
 } Viewport, *Viewport_ptr;
+
+typedef struct _CDisplay
+{
+/* 0x0000 */ uint8_t Unknown0000[64];
+/* 0x0040 */ uint8_t IsCursorItem;
+/* 0x0041 */ uint8_t Unknown0041;
+/* 0x0042 */ uint8_t IsCursorHotkey;
+/* 0x0043 */ uint8_t Unknown0043;
+/* 0x0044 */ uint8_t Unknown0044[132];
+/* 0x00C8 */ uint32_t Timer;
+} CDisplay, *CDisplay_ptr;
 
 typedef struct _CEverQuest
 {
@@ -900,6 +914,12 @@ typedef struct _CXWndManager
 /* ...... */
 } CXWndManager, *CXWndManager_ptr;
 
+typedef struct _CXPoint
+{
+    uint32_t X;
+    uint32_t Y;
+} CXPoint, *CXPoint_ptr;
+
 typedef struct _CXRect
 {
     uint32_t X1;
@@ -918,6 +938,7 @@ typedef struct _CXStr
 /* 0x0014*/ char Text[1]; // use Length and MaxLength
 } CXStr, *CXStr_ptr;
 
+// class EQWnd
 // CXWnd and CSidlScreenWnd share these same properties
 // sizeof 0xAC
 typedef struct _Window
@@ -964,9 +985,9 @@ typedef struct _Window
 /* 0x00AC */
 } Window, *Window_ptr;
 
-// the moveable resizable parent windows
 // class CSidlScreenWnd
 // sizeof 0x138
+// the moveable resizable parent windows
 typedef struct _CsidlScreenWnd
 {
 /* 0x0000 */ struct _Window Window;
@@ -974,8 +995,8 @@ typedef struct _CsidlScreenWnd
 /* 0x0138 */
 } CsidlScreenWnd, *CsidlScreenWnd_ptr;
 
-// usually a child window like a button or label
 // sizeof 0x138
+// usually a child window like a button or label
 typedef struct _CXWnd
 {
 /* 0x0000 */ struct _Window Window;
@@ -989,8 +1010,8 @@ typedef struct _CItemDisplayWnd
 /* 0x0138 */ uint8_t Unknown0138[4];
 /* 0x013C */ struct _CsidlScreenWnd* DisplayWnd; // the item stats text window
 /* 0x0140 */ uint8_t Unknown0140[4];
-/* 0x0144 */ CXStr_ptr DisplayText; // the item name is the title text
-/* 0x0148 */ CXStr_ptr WindowTitle; // the item stats text
+/* 0x0144 */ CXStr_ptr DisplayText; // the item stats text
+/* 0x0148 */ CXStr_ptr WindowTitle; // the item name is the title text
 /* 0x014C */ struct _Item Item;
 /* ...... */
 } CItemDisplayWnd, *CItemDisplayWnd_ptr;

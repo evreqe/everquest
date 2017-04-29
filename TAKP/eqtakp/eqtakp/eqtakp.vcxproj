@@ -147,6 +147,7 @@
     <ClInclude Include="eq.h" />
     <ClInclude Include="eqapp.h" />
     <ClInclude Include="eqapp_alwaysattack.h" />
+    <ClInclude Include="eqapp_bufftimers.h" />
     <ClInclude Include="eqapp_console.h" />
     <ClInclude Include="eqapp_detours.h" />
     <ClInclude Include="eqapp_functions.h" />

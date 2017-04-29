@@ -98,6 +98,8 @@
 #define EQ_SPAWN_TARGET_TYPE_CAN_TARGET_2   0x01
 #define EQ_SPAWN_TARGET_TYPE_CANNOT_TARGET  0x41
 
+#define EQ_ADDRESS_POINTER_CAMERA_DATA 0x0063B924 // pass this as first argument to graphics DLL world space to screen space funtion
+
 #define EQ_ADDRESS_CAMERA_VIEW 0x0063BE68 // uint32_t ; EQ_CAMERA_VIEW_x
 
 #define EQ_CAMERA_VIEW_FIRST_PERSON  0

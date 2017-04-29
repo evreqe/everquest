@@ -46,6 +46,7 @@
 
 #include "eqapp_speedhack.h"
 #include "eqapp_alwaysattack.h"
+#include "eqapp_bufftimers.h"
 
 #include "eqapp_detours.h"
 
@@ -73,13 +74,16 @@ DWORD WINAPI EQAPP_ThreadLoop(LPVOID param)
 {
     while (g_bExit == 0)
     {
-        Sleep(100);
+        Sleep(1000);
     }
 
     // wait for the console to unload
-    while (g_bConsole == 1);
+    while (g_bConsole == 1)
+    {
+        Sleep(1000);
+    }
 
-    Sleep(100);
+    Sleep(1000);
 
     EQAPP_Detours_Remove();
 
@@ -110,6 +114,8 @@ DWORD WINAPI EQAPP_ThreadLoad(LPVOID param)
 
     EQAPP_Detours_Add();
 
+    ExitThread(0);
+
     return 0;
 }
 
@@ -123,6 +129,8 @@ DWORD WINAPI EQAPP_ThreadConsole(LPVOID param)
     }
 
     EQAPP_Console_Unload();
+
+    ExitThread(0);
 
     return 0;
 }
