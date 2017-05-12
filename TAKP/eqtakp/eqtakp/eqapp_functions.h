@@ -7,6 +7,7 @@ void EQAPP_Log(const char* text, T number);
 
 void EQAPP_EnableDebugPrivileges();
 DWORD EQAPP_GetModuleBaseAddress(const wchar_t* moduleName);
+bool EQAPP_IsForegroundWindowCurrentProcessId();
 
 void EQAPP_PrintBool(const char* text, bool& b);
 void EQAPP_PrintErrorMessage(const char* functionName, std::string text);
@@ -83,6 +84,16 @@ DWORD EQAPP_GetModuleBaseAddress(const wchar_t* moduleName)
     }
 
     return moduleBaseAddress;
+}
+
+bool EQAPP_IsForegroundWindowCurrentProcessId()
+{
+    HWND foregroundHwnd = GetForegroundWindow();
+
+    DWORD foregroundProcessId;
+    GetWindowThreadProcessId(foregroundHwnd, &foregroundProcessId);
+
+    return (foregroundProcessId == GetCurrentProcessId());
 }
 
 void EQAPP_PrintBool(const char* text, bool& b)

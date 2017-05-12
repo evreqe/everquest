@@ -19,3 +19,9 @@
     __asm{mov eax, [eax]};\
     __asm{jmp eax};\
 }
+
+#define EQ_MACRO_AddDetour(functionName) EQAPP_REAL_##functionName =\
+(EQ_FUNCTION_TYPE_##functionName)DetourFunction((PBYTE)EQ_ADDRESS_FUNCTION_##functionName, (PBYTE)EQAPP_DETOUR_##functionName)
+
+#define EQ_MACRO_RemoveDetour(functionName) DetourRemove((PBYTE)EQAPP_REAL_##functionName, (PBYTE)EQAPP_DETOUR_##functionName)
+

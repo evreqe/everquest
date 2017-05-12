@@ -51,6 +51,12 @@ EQ_MACRO_FunctionAtAddress(char* EQClass::StringTable::getString(unsigned long I
 
 /* EQWorldData */
 
+class EQClass::EQWorldData
+{
+public:
+    //
+};
+
 #define EQ_ADDRESS_FUNCTION_EQWorldData__GetFullZoneName 0x00523E49
 
 #define EQ_ADDRESS_FUNCTION_EQWorldData__GetZoneNameFromIndex 0x00523F73
@@ -227,7 +233,7 @@ public:
     int EQ_Character::CastSpell(unsigned char gemIndex, short spellID, EQ::Item** item, short unknown);
     int EQ_Character::StopSpellCast(unsigned char gemIndex, short spellID);
     int EQ_Character::StopSpellCast(unsigned char gemIndex);
-    int EQ_Character::UseSkill(unsigned char skill, class EQPlayer* targetSpawn);
+    int EQ_Character::UseSkill(unsigned char skillID, class EQPlayer* targetSpawn);
 };
 
 #define EQ_ADDRESS_FUNCTION_EQ_Character__Max_Mana 0x004B9483
@@ -250,8 +256,8 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__StopSpellCast__2)(void* 
 EQ_MACRO_FunctionAtAddress(int EQClass::EQ_Character::StopSpellCast(unsigned char gemIndex), EQ_ADDRESS_FUNCTION_EQ_Character__StopSpellCast__2);
 
 #define EQ_ADDRESS_FUNCTION_EQ_Character__UseSkill 0x004BDF2F
-typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__UseSkill)(void* this_ptr, unsigned char skill, class EQPlayer* targetSpawn);
-EQ_MACRO_FunctionAtAddress(int EQClass::EQ_Character::UseSkill(unsigned char skill, class EQPlayer* targetSpawn), EQ_ADDRESS_FUNCTION_EQ_Character__UseSkill);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__UseSkill)(void* this_ptr, unsigned char skillID, class EQPlayer* targetSpawn);
+EQ_MACRO_FunctionAtAddress(int EQClass::EQ_Character::UseSkill(unsigned char skillID, class EQPlayer* targetSpawn), EQ_ADDRESS_FUNCTION_EQ_Character__UseSkill);
 
 /* EQ_Item */
 
@@ -425,13 +431,13 @@ EQ_MACRO_FunctionAtAddress(void EQClass::CHotButtonWnd::DoHotButton(unsigned sho
 class EQClass::CItemDisplayWnd : public EQClass::CSidlScreenWnd
 {
 public:
-    void CItemDisplayWnd::SetItem(class EQ_Item* item, bool unknown);
+    void CItemDisplayWnd::SetItem(EQ::Item_ptr item, bool unknown);
     void CItemDisplayWnd::SetSpell(short spellID, bool hasDescription, int unknown);
 };
 
 #define EQ_ADDRESS_FUNCTION_CItemDisplayWnd__SetItem 0x00423640
-EQ_MACRO_FunctionAtAddress(void EQClass::CItemDisplayWnd::SetItem(class EQ_Item*, bool unknown), EQ_ADDRESS_FUNCTION_CItemDisplayWnd__SetItem);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CItemDisplayWnd__SetItem)(void* this_ptr, class EQ_Item* item, bool unknown);
+EQ_MACRO_FunctionAtAddress(void EQClass::CItemDisplayWnd::SetItem(EQ::Item_ptr item, bool unknown), EQ_ADDRESS_FUNCTION_CItemDisplayWnd__SetItem);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CItemDisplayWnd__SetItem)(void* this_ptr, EQ::Item_ptr item, bool unknown);
 
 #define EQ_ADDRESS_FUNCTION_CItemDisplayWnd__SetSpell 0x00425957
 EQ_MACRO_FunctionAtAddress(void EQClass::CItemDisplayWnd::SetSpell(short spellID, bool hasDescription, int unknown), EQ_ADDRESS_FUNCTION_CItemDisplayWnd__SetSpell);
@@ -508,14 +514,4 @@ public:
 #define EQ_ADDRESS_FUNCTION_CTradeWnd__Activate 0x004392C9
 EQ_MACRO_FunctionAtAddress(void EQClass::CTradeWnd::Activate(class EQPlayer* spawn, bool isTargetNPC), EQ_ADDRESS_FUNCTION_CTradeWnd__Activate);
 
-/* Direct Input */
-
-//IDirectInput8** EQ_POINTER_ppIDirectInput8 = (IDirectInput8**)EQ_DINPUT_ROOT;
-//#define EQ_POINTER_IDirectInput8 (*EQ_POINTER_ppIDirectInput8)
-
-//IDirectInputDevice8** EQ_POINTER_ppIDirectInputDevice8_Keyboard = (IDirectInputDevice8**)EQ_DINPUT_DEVICE_KEYBOARD;
-//#define EQ_POINTER_IDirectInputDevice8_Keyboard (*EQ_POINTER_ppIDirectInputDevice8_Keyboard)
-
-//IDirectInputDevice8** EQ_POINTER_ppIDirectInputDevice8_Mouse = (IDirectInputDevice8**)EQ_DINPUT_DEVICE_MOUSE;
-//#define EQ_POINTER_IDirectInputDevice8_Mouse (*EQ_POINTER_ppIDirectInputDevice8_Mouse)
 

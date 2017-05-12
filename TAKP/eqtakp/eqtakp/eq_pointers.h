@@ -21,12 +21,37 @@ EQ::GroupList* EQ_POINTER_GroupList_ptr = (EQ::GroupList*)EQ_ADDRESS_STRUCTURE_G
 EQ::Zone* EQ_POINTER_Zone_ptr = (EQ::Zone*)EQ_ADDRESS_STRUCTURE_ZONE;
 #define EQ_POINTER_Zone (*EQ_POINTER_Zone_ptr)
 
+/* Direct Input */
+
+#define EQ_ADDRESS_POINTER_DINPUT_ROOT               0x8092DC
+#define EQ_ADDRESS_POINTER_DINPUT_DEVICE_KEYBOARD    0x8092E0
+#define EQ_ADDRESS_POINTER_DINPUT_DEVICE_MOUSE       0x8092E4
+
+IDirectInput8** EQ_CLASS_POINTER_IDirectInput8_pptr = (IDirectInput8**)EQ_ADDRESS_POINTER_DINPUT_ROOT;
+#define EQ_CLASS_POINTER_IDirectInput8 (*EQ_CLASS_POINTER_IDirectInput8_pptr)
+
+IDirectInputDevice8** EQ_CLASS_POINTER_DInputKeyboard_pptr = (IDirectInputDevice8**)EQ_ADDRESS_POINTER_DINPUT_DEVICE_KEYBOARD;
+#define EQ_CLASS_POINTER_DInputKeyboard (*EQ_CLASS_POINTER_DInputKeyboard_pptr)
+
+IDirectInputDevice8** EQ_CLASS_POINTER_DInputMouse_pptr = (IDirectInputDevice8**)EQ_ADDRESS_POINTER_DINPUT_DEVICE_MOUSE;
+#define EQ_CLASS_POINTER_DInputMouse (*EQ_CLASS_POINTER_DInputMouse_pptr)
+
 /* StringTable */
 
 #define EQ_ADDRESS_POINTER_StringTable 0x007F9490 // eqstr_xx.txt
 
 EQClass::StringTable** EQ_CLASS_POINTER_StringTable_pptr = (EQClass::StringTable**)EQ_ADDRESS_POINTER_StringTable;
 #define EQ_CLASS_POINTER_StringTable (*EQ_CLASS_POINTER_StringTable_pptr)
+
+/* EQWorldData */
+
+#define EQ_ADDRESS_POINTER_EQWorldData 0x007F9494
+
+EQ::EQWorldData** EQ_POINTER_EQWorldData_pptr = (EQ::EQWorldData**)EQ_ADDRESS_POINTER_EQWorldData;
+#define EQ_POINTER_EQWorldData (*EQ_POINTER_EQWorldData_pptr)
+
+EQClass::EQWorldData** EQ_CLASS_POINTER_EQWorldData_pptr = (EQClass::EQWorldData**)EQ_ADDRESS_POINTER_EQWorldData;
+#define EQ_CLASS_POINTER_EQWorldData (*EQ_CLASS_POINTER_EQWorldData_pptr)
 
 /* EqSoundManager */
 
@@ -70,6 +95,8 @@ EQClass::CEverQuest** EQ_CLASS_POINTER_CEverQuest_pptr = (EQClass::CEverQuest**)
 
 /* EQPlayer */
 
+#define EQ_ADDRESS_POINTER_FIRST_SPAWN 0x007F9498
+
 #define EQ_ADDRESS_POINTER_PLAYER_SPAWN        0x007F94CC
 #define EQ_ADDRESS_POINTER_TARGET_SPAWN        0x007F94EC
 #define EQ_ADDRESS_POINTER_CONTROLLED_SPAWN    0x007F94E0
@@ -80,6 +107,9 @@ EQClass::CEverQuest** EQ_CLASS_POINTER_CEverQuest_pptr = (EQClass::CEverQuest**)
 #define EQ_ADDRESS_POINTER_BANKER_SPAWN        0x007F94FC
 #define EQ_ADDRESS_POINTER_CORPSE_SPAWN        0x007F9500
 #define EQ_ADDRESS_POINTER_GAMEMASTER_SPAWN    0x007F9504
+
+EQ::EQPlayer** EQ_POINTER_FirstSpawn_pptr = (EQ::EQPlayer**)EQ_ADDRESS_POINTER_FIRST_SPAWN;
+#define EQ_POINTER_FirstSpawn (*EQ_POINTER_FirstSpawn_pptr)
 
 EQ::EQPlayer** EQ_POINTER_PlayerSpawn_pptr = (EQ::EQPlayer**)EQ_ADDRESS_POINTER_PLAYER_SPAWN;
 #define EQ_POINTER_PlayerSpawn (*EQ_POINTER_PlayerSpawn_pptr)
@@ -107,6 +137,13 @@ EQ::EQPlayer** EQ_POINTER_CorpseSpawn_pptr = (EQ::EQPlayer**)EQ_ADDRESS_POINTER_
 
 EQ::EQPlayer** EQ_POINTER_GamemasterSpawn_pptr = (EQ::EQPlayer**)EQ_ADDRESS_POINTER_GAMEMASTER_SPAWN;
 #define EQ_POINTER_GamemasterSpawn (*EQ_POINTER_GamemasterSpawn_pptr)
+
+/* GroundSpawn */
+
+#define EQ_ADDRESS_POINTER_FIRST_GROUND_SPAWN 0x007F949C
+
+EQ::GroundSpawn** EQ_POINTER_FirstGroundSpawn_pptr = (EQ::GroundSpawn**)EQ_ADDRESS_POINTER_FIRST_GROUND_SPAWN;
+#define EQ_POINTER_FirstGroundSpawn (*EQ_POINTER_FirstGroundSpawn_pptr)
 
 /* EQ_Character */
 

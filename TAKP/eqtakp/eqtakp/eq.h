@@ -34,6 +34,7 @@
 #define EQ_ADDRESS_POINTER_FONT_ARIAL20 0x0063D3BC
 
 #define EQ_NUM_COMMANDS 277 // 0-276
+#define EQ_NUM_ZONES 224
 #define EQ_NUM_BUFFS 15
 #define EQ_NUM_SPELLS 4000
 #define EQ_NUM_SPELL_GEMS 8
@@ -42,7 +43,7 @@
 #define EQ_NUM_INVENTORY_PACK_SLOTS 8
 #define EQ_NUM_INVENTORY_BANK_SLOTS 8
 #define EQ_NUM_SKILLS 74
-#define EQ_NUM_SPELL_BOOK_SPELLS 250 // 32 pages, 8 spells per page, should be 256?
+#define EQ_NUM_SPELL_BOOK_SPELLS 250
 #define EQ_NUM_SPAWNS 8192
 #define EQ_NUM_GUILDS 512
 #define EQ_NUM_LOOT_WINDOW_SLOTS 30
@@ -54,35 +55,46 @@
 #define EQ_EXPERIENCE_BAR_VALUE_MAX 350 // the progress bar (0-350)
 #define EQ_ALTERNATE_ADVANCEMENT_EXPERIENCE_BAR_VALUE_MAX 330 // the progress bar (0-330)
 
+#define EQ_ITEM_NO_DROP_TRUE  0x00
+#define EQ_ITEM_NO_DROP_FALSE 0xFF
+#define EQ_ITEM_NO_RENT_TRUE  0x00
+#define EQ_ITEM_NO_RENT_FALSE 0xFF
+
 #define EQ_ITEM_SIZE_TINY   0
 #define EQ_ITEM_SIZE_SMALL  1
 #define EQ_ITEM_SIZE_MEDIUM 2
 #define EQ_ITEM_SIZE_LARGE  3
 #define EQ_ITEM_SIZE_GIANT  4
 
-#define EQ_ITEM_NO_DROP_TRUE  0x00
-#define EQ_ITEM_NO_DROP_FALSE 0xFF
-#define EQ_ITEM_NO_RENT_TRUE  0x00
-#define EQ_ITEM_NO_RENT_FALSE 0xFF
+#define EQ_ITEM_TYPE_1H_SLASHING           0
+#define EQ_ITEM_TYPE_PIERCING              2
+#define EQ_ITEM_TYPE_2H_SLASHING           1
+#define EQ_ITEM_TYPE_1H_BLUNT              3
+#define EQ_ITEM_TYPE_2H_BLUNT              4
+#define EQ_ITEM_TYPE_BOW                   5
+#define EQ_ITEM_TYPE_SHIELD                8
+#define EQ_ITEM_TYPE_EFFECT                10 // haste
+#define EQ_ITEM_TYPE_MISCELLANEOUS         11 // misc
+#define EQ_ITEM_TYPE_FOOD                  14
+#define EQ_ITEM_TYPE_DRINK                 15
+#define EQ_ITEM_TYPE_COMBINABLE            17 // stackable gems, silks, etc
+#define EQ_ITEM_TYPE_THROWING              19
+#define EQ_ITEM_TYPE_SPELL_SCROLL          20
+#define EQ_ITEM_TYPE_POTION                21 // potion
+#define EQ_ITEM_TYPE_WIND_INSTRUMENT       23
+#define EQ_ITEM_TYPE_STRINGED_INSTRUMENT   24
+#define EQ_ITEM_TYPE_BRASS_INSTRUMENT      25
+#define EQ_ITEM_TYPE_PERCUSSION_INSTRUMENT 26
+#define EQ_ITEM_TYPE_ARROW                 27
+#define EQ_ITEM_TYPE_JEWELRY               29
+#define EQ_ITEM_TYPE_2H_PIERCING           35
+#define EQ_ITEM_TYPE_ALCOHOL               38
+#define EQ_ITEM_TYPE_SINGING               50
+#define EQ_ITEM_TYPE_ALL_INSTRUMENT_TYPES  51
 
-#define EQ_ADDRESS_ZONE_ID 0x007B9648 // uint32_t
-
-#define EQ_ZONE_ID_FREPORTW       9   // West Freeport
-#define EQ_ZONE_ID_COMMONS        21  // West Commonlands
-#define EQ_ZONE_ID_ECOMMONS       22  // East Commonlands
-#define EQ_ZONE_ID_CSHOME         26  // Sunset Home
-#define EQ_ZONE_ID_FIELDOFBONE    78  // The Field of Bone
-#define EQ_ZONE_ID_SLEEPER        128 // Sleeper's Tomb
-#define EQ_ZONE_ID_BAZAAR         151 // The Bazaar
-#define EQ_ZONE_ID_NEXUS          152 // The Nexus
-#define EQ_ZONE_ID_SSERU          159 // Sanctus Seru
-#define EQ_ZONE_ID_TUTORIAL       183 // Tutorial Zone
-#define EQ_ZONE_ID_LOAD           184 // Loading
-#define EQ_ZONE_ID_LOAD2          185 // Loading
-#define EQ_ZONE_ID_POKNOWLEDGE    202 // The Plane of Knowledge
-#define EQ_ZONE_ID_POTRANQUILITY  203 // Plane of Tranquility
-#define EQ_ZONE_ID_POTIMEA        219 // Plane of Time A
-#define EQ_ZONE_ID_POTIMEB        223 // Plane of Time B
+#define EQ_ITEM_EFFECT_FLAG_COMBAT     0
+#define EQ_ITEM_EFFECT_FLAG_WORN       2
+#define EQ_ITEM_EFFECT_FLAG_MUST_EQUIP 4
 
 #define EQ_BUFF_TYPE_DETRIMENTAL           0
 #define EQ_BUFF_TYPE_BENEFICIAL            1
@@ -121,6 +133,7 @@
 #define EQ_IS_HIDING_OR_TRACKING_EQUALS_TRACKING 0x0035
 
 #define EQ_SPELL_ID_NULL 0xFFFF // uint16_t
+#define EQ_SPELL_ID_HASTE 998 // uint16_t
 
 #define EQ_BUFF_TYPE_DETRIMENTAL           0
 #define EQ_BUFF_TYPE_BENEFICIAL            1
@@ -184,12 +197,6 @@
 
 #define EQ_OFFSET_CLASS_GUILDMASTER 16 // EQ_CLASS_x + 16 = EQ_CLASS_x_GUILDMASTER
 
-#define EQ_GUILD_ID_NULL 0xFFFF // uint16_t
-
-#define EQ_GUILD_STATUS_MEMBER  0
-#define EQ_GUILD_STATUS_OFFICER 1
-#define EQ_GUILD_STATUS_LEADER  2
-
 #define EQ_DEITY_BERTOXXULOUS  0x00C9
 #define EQ_DEITY_BRELL_SERILIS 0x00CA
 #define EQ_DEITY_CAZIC_THULE   0x00CB
@@ -200,6 +207,12 @@
 #define EQ_DEITY_THE_TRIBUNAL  0x00D6
 #define EQ_DEITY_TUNARE        0x00D7
 #define EQ_DEITY_AGNOSTIC      0x018C
+
+#define EQ_GUILD_ID_NULL 0xFFFF // uint16_t
+
+#define EQ_GUILD_STATUS_MEMBER  0
+#define EQ_GUILD_STATUS_OFFICER 1
+#define EQ_GUILD_STATUS_LEADER  2
 
 // EQPlayer::ChangePosition(uint8_t standingState)
 #define EQ_STANDING_STATE_STANDING    0x64
@@ -230,6 +243,24 @@
 #define EQ_GAME_STATE_IN_GAME          5
 #define EQ_GAME_STATE_LOADING_SCREEN   6
 #define EQ_GAME_STATE_ZONING3          7
+
+#define EQ_MOVEMENT_TYPE_NONE         0
+#define EQ_MOVEMENT_TYPE_CROUCHING    1
+#define EQ_MOVEMENT_TYPE_WALKING      4
+#define EQ_MOVEMENT_TYPE_RUNNING      6
+#define EQ_MOVEMENT_TYPE_SWIMMING     7
+#define EQ_MOVEMENT_TYPE_SWIMMING_EX  16
+#define EQ_MOVEMENT_TYPE_BACKWARDS    253
+
+#define EQ_HOTBUTTTON_TYPE1_ATTACK       1 // Melee or Range
+#define EQ_HOTBUTTTON_TYPE1_SKILL1       2
+#define EQ_HOTBUTTTON_TYPE1_SKILL2       3
+#define EQ_HOTBUTTTON_TYPE1_SOCIAL_MACRO 4
+#define EQ_HOTBUTTTON_TYPE1_ITEM         5
+#define EQ_HOTBUTTTON_TYPE1_DEFAULT      6
+#define EQ_HOTBUTTTON_TYPE1_SPELL_GEM    7
+
+#define EQ_HOTBUTTTON_TYPE2_EMPTY 255
 
 #define EQ_SKILL_1H_BLUNT               0
 #define EQ_SKILL_1H_SLASHING            1
@@ -309,16 +340,6 @@
 #define EQ_SKILL_FRENZY                 74
 #define EQ_SKILL_GENERIC_TRADESKILL     75
 #define EQ_SKILL_SLAM                   111
-
-#define EQ_HOTBUTTTON_TYPE1_ATTACK       1 // Melee or Range
-#define EQ_HOTBUTTTON_TYPE1_SKILL1       2
-#define EQ_HOTBUTTTON_TYPE1_SKILL2       3
-#define EQ_HOTBUTTTON_TYPE1_SOCIAL_MACRO 4
-#define EQ_HOTBUTTTON_TYPE1_ITEM         5
-#define EQ_HOTBUTTTON_TYPE1_DEFAULT      6
-#define EQ_HOTBUTTTON_TYPE1_SPELL_GEM    7
-
-#define EQ_HOTBUTTTON_TYPE2_EMPTY 255
 
 #define EQ_TEXT_COLOR_BLACK       0x00
 #define EQ_TEXT_COLOR_GRAY        0x01
@@ -552,6 +573,198 @@
 #define EQ_KEY_MEDIASELECT     0xED
 #define EQ_KEY_MEDIA_SELECT    EQ_KEY_MEDIASELECT
 
+#define EQ_ADDRESS_ZONE_ID 0x007B9648 // uint32_t
+
+#define EQ_ZONE_ID_NULL          0   // no zone at zero index
+#define EQ_ZONE_ID_QEYNOS        1   // South Qeynos
+#define EQ_ZONE_ID_QEYNOS2       2   // North Qeynos
+#define EQ_ZONE_ID_QRG           3   // Surefall Glade
+#define EQ_ZONE_ID_QEYTOQRG      4   // Qeynos Hills
+#define EQ_ZONE_ID_HIGHPASS      5   // Highpass Hold
+#define EQ_ZONE_ID_HIGHKEEP      6   // HighKeep
+#define EQ_ZONE_ID_FREPORTN      8   // North Freeport
+#define EQ_ZONE_ID_FREPORTW      9   // West Freeport
+#define EQ_ZONE_ID_FREPORTE      10  // East Freeport
+#define EQ_ZONE_ID_RUNNYEYE      11  // Clan RunnyEye
+#define EQ_ZONE_ID_QEY2HH1       12  // West Karana
+#define EQ_ZONE_ID_NORTHKARANA   13  // North Karana
+#define EQ_ZONE_ID_SOUTHKARANA   14  // South Karana
+#define EQ_ZONE_ID_EASTKARANA    15  // East Karana
+#define EQ_ZONE_ID_BEHOLDER      16  // Gorge of King Xorbb
+#define EQ_ZONE_ID_BLACKBURROW   17  // BlackBurrow
+#define EQ_ZONE_ID_PAW           18  // Infected Paw
+#define EQ_ZONE_ID_RIVERVALE     19  // Rivervale
+#define EQ_ZONE_ID_KITHICOR      20  // Kithicor Forest
+#define EQ_ZONE_ID_COMMONS       21  // West Commonlands
+#define EQ_ZONE_ID_ECOMMONS      22  // East Commonlands
+#define EQ_ZONE_ID_ERUDNINT      23  // Erudin Palace
+#define EQ_ZONE_ID_ERUDNEXT      24  // Erudin
+#define EQ_ZONE_ID_NEKTULOS      25  // Nektulos Forest
+#define EQ_ZONE_ID_CSHOME        26  // Sunset Home
+#define EQ_ZONE_ID_LAVASTORM     27  // Lavastorm Mountains
+#define EQ_ZONE_ID_NEKTROPOS     28  // Nektropos
+#define EQ_ZONE_ID_HALAS         29  // Halas
+#define EQ_ZONE_ID_EVERFROST     30  // Everfrost Peaks
+#define EQ_ZONE_ID_SOLDUNGA      31  // Solusek's Eye
+#define EQ_ZONE_ID_SOLDUNGB      32  // Nagafen's Lair
+#define EQ_ZONE_ID_MISTY         33  // Misty Thicket
+#define EQ_ZONE_ID_NRO           34  // North Ro
+#define EQ_ZONE_ID_SRO           35  // South Ro
+#define EQ_ZONE_ID_BEFALLEN      36  // Befallen
+#define EQ_ZONE_ID_OASIS         37  // Oasis of Marr
+#define EQ_ZONE_ID_TOX           38  // Toxxulia Forest
+#define EQ_ZONE_ID_HOLE          39  // The Hole
+#define EQ_ZONE_ID_NERIAKA       40  // Neriak Foreign Quarter
+#define EQ_ZONE_ID_NERIAKB       41  // Neriak Commons
+#define EQ_ZONE_ID_NERIAKC       42  // Neriak Third Gate
+#define EQ_ZONE_ID_NERIAKD       43  // Neriak Palace
+#define EQ_ZONE_ID_NAJENA        44  // Najena
+#define EQ_ZONE_ID_QCAT          45  // Qeynos Catacombs
+#define EQ_ZONE_ID_INNOTHULE     46  // Innothule Swamp
+#define EQ_ZONE_ID_FEERROTT      47  // The Feerrott
+#define EQ_ZONE_ID_CAZICTHULE    48  // Cazic-Thule
+#define EQ_ZONE_ID_OGGOK         49  // Oggok
+#define EQ_ZONE_ID_RATHEMTN      50  // Mountains of Rathe
+#define EQ_ZONE_ID_LAKERATHE     51  // Lake Rathetear
+#define EQ_ZONE_ID_GROBB         52  // Grobb
+#define EQ_ZONE_ID_AVIAK         53  // Aviak Village
+#define EQ_ZONE_ID_GFAYDARK      54  // Greater Faydark
+#define EQ_ZONE_ID_AKANON        55  // Ak'Anon
+#define EQ_ZONE_ID_STEAMFONT     56  // Steamfont Mountains
+#define EQ_ZONE_ID_LFAYDARK      57  // Lesser Faydark
+#define EQ_ZONE_ID_CRUSHBONE     58  // Clan Crushbone
+#define EQ_ZONE_ID_MISTMOORE     59  // Castle Mistmoore
+#define EQ_ZONE_ID_KALADIMA      60  // Kaladim
+#define EQ_ZONE_ID_FELWITHEA     61  // Felwithe
+#define EQ_ZONE_ID_FELWITHEB     62  // Felwithe
+#define EQ_ZONE_ID_UNREST        63  // Estate of Unrest
+#define EQ_ZONE_ID_KEDGE         64  // Kedge Keep
+#define EQ_ZONE_ID_GUKTOP        65  // Upper Guk
+#define EQ_ZONE_ID_GUKBOTTOM     66  // Lower Guk
+#define EQ_ZONE_ID_KALADIMB      67  // Kaladim
+#define EQ_ZONE_ID_BUTCHER       68  // Butcherblock Mountains
+#define EQ_ZONE_ID_OOT           69  // Ocean of Tears
+#define EQ_ZONE_ID_CAULDRON      70  // Dagnor's Cauldron
+#define EQ_ZONE_ID_AIRPLANE      71  // Plane of Sky
+#define EQ_ZONE_ID_FEARPLANE     72  // Plane of Fear
+#define EQ_ZONE_ID_PERMAFROST    73  // Permafrost Keep
+#define EQ_ZONE_ID_KERRARIDGE    74  // Kerra Isle
+#define EQ_ZONE_ID_PAINEEL       75  // Paineel
+#define EQ_ZONE_ID_HATEPLANE     76  // The Plane of Hate
+#define EQ_ZONE_ID_ARENA         77  // The Arena
+#define EQ_ZONE_ID_FIELDOFBONE   78  // The Field of Bone
+#define EQ_ZONE_ID_WARSLIKSWOOD  79  // Warsliks Wood
+#define EQ_ZONE_ID_SOLTEMPLE     80  // Temple of Solusek Ro
+#define EQ_ZONE_ID_DROGA         81  // Temple of Droga
+#define EQ_ZONE_ID_CABWEST       82  // West Cabilis
+#define EQ_ZONE_ID_SWAMPOFNOHOPE 83  // Swamp of No Hope
+#define EQ_ZONE_ID_FIRIONA       84  // Firiona Vie
+#define EQ_ZONE_ID_LAKEOFILLOMEN 85  // Lake of Ill Omen
+#define EQ_ZONE_ID_DREADLANDS    86  // Dreadlands
+#define EQ_ZONE_ID_BURNINGWOOD   87  // Burning Woods
+#define EQ_ZONE_ID_KAESORA       88  // Kaesora
+#define EQ_ZONE_ID_SEBILIS       89  // Old Sebilis
+#define EQ_ZONE_ID_CITYMIST      90  // City of Mist
+#define EQ_ZONE_ID_SKYFIRE       91  // Skyfire Mountains
+#define EQ_ZONE_ID_FRONTIERMTNS  92  // Frontier Mountains
+#define EQ_ZONE_ID_OVERTHERE     93  // The Overthere
+#define EQ_ZONE_ID_EMERALDJUNGLE 94  // The Emerald Jungle
+#define EQ_ZONE_ID_TRAKANON      95  // Trakanon's Teeth
+#define EQ_ZONE_ID_TIMOROUS      96  // Timorous Deep
+#define EQ_ZONE_ID_KURN          97  // Kurn's Tower
+#define EQ_ZONE_ID_ERUDSXING     98  // Erud's Crossing
+#define EQ_ZONE_ID_STONEBRUNT    100 // Stonebrunt Mountains
+#define EQ_ZONE_ID_WARRENS       101 // The Warrens
+#define EQ_ZONE_ID_KARNOR        102 // Karnor's Castle
+#define EQ_ZONE_ID_CHARDOK       103 // Chardok
+#define EQ_ZONE_ID_DALNIR        104 // Dalnir
+#define EQ_ZONE_ID_CHARASIS      105 // Howling Stones
+#define EQ_ZONE_ID_CABEAST       106 // East Cabilis
+#define EQ_ZONE_ID_NURGA         107 // Mines of Nurga
+#define EQ_ZONE_ID_VEESHAN       108 // Veeshan's Peak
+#define EQ_ZONE_ID_VEKSAR        109 // Veksar
+#define EQ_ZONE_ID_ICECLAD       110 // Iceclad Ocean
+#define EQ_ZONE_ID_FROZENSHADOW  111 // Tower of Frozen Shadow
+#define EQ_ZONE_ID_VELKETOR      112 // Velketor's Labyrinth
+#define EQ_ZONE_ID_KAEL          113 // Kael Drakkal
+#define EQ_ZONE_ID_SKYSHRINE     114 // Skyshrine
+#define EQ_ZONE_ID_THURGADINA    115 // Thurgadin
+#define EQ_ZONE_ID_EASTWASTES    116 // Eastern Wastes
+#define EQ_ZONE_ID_COBALTSCAR    117 // Cobalt Scar
+#define EQ_ZONE_ID_GREATDIVIDE   118 // Great Divide
+#define EQ_ZONE_ID_WAKENING      119 // The Wakening Land
+#define EQ_ZONE_ID_WESTWASTES    120 // Western Wastes
+#define EQ_ZONE_ID_CRYSTAL       121 // Crystal Caverns
+#define EQ_ZONE_ID_NECROPOLIS    123 // Dragon Necropolis
+#define EQ_ZONE_ID_TEMPLEVEESHAN 124 // Temple of Veeshan
+#define EQ_ZONE_ID_SIRENS        125 // Siren's Grotto
+#define EQ_ZONE_ID_MISCHIEFPLANE 126 // Plane of Mischief
+#define EQ_ZONE_ID_GROWTHPLANE   127 // Plane of Growth
+#define EQ_ZONE_ID_SLEEPER       128 // Sleeper's Tomb
+#define EQ_ZONE_ID_THURGADINB    129 // Icewell Keep
+#define EQ_ZONE_ID_ERUDSXING2    130 // Marauder's Mire
+#define EQ_ZONE_ID_SHADOWHAVEN   150 // Shadow Haven
+#define EQ_ZONE_ID_BAZAAR        151 // The Bazaar
+#define EQ_ZONE_ID_NEXUS         152 // The Nexus
+#define EQ_ZONE_ID_ECHO          153 // Echo Caverns
+#define EQ_ZONE_ID_ACRYLIA       154 // Acrylia Caverns
+#define EQ_ZONE_ID_SHARVAHL      155 // Shar Vahl
+#define EQ_ZONE_ID_PALUDAL       156 // Paludal Caverns
+#define EQ_ZONE_ID_FUNGUSGROVE   157 // Fungus Grove
+#define EQ_ZONE_ID_VEXTHAL       158 // Vex Thal
+#define EQ_ZONE_ID_SSERU         159 // Sanctus Seru
+#define EQ_ZONE_ID_KATTA         160 // Katta Castellum
+#define EQ_ZONE_ID_NETHERBIAN    161 // Netherbian Lair
+#define EQ_ZONE_ID_SSRATEMPLE    162 // Ssraeshza Temple
+#define EQ_ZONE_ID_GRIEGSEND     163 // Grieg's End
+#define EQ_ZONE_ID_THEDEEP       164 // The Deep
+#define EQ_ZONE_ID_SHADEWEAVER   165 // Shadeweaver's Thicket
+#define EQ_ZONE_ID_HOLLOWSHADE   166 // Hollowshade Moor
+#define EQ_ZONE_ID_GRIMLING      167 // Grimling Forest
+#define EQ_ZONE_ID_MSERU         168 // Marus Seru
+#define EQ_ZONE_ID_LETALIS       169 // Mons Letalis
+#define EQ_ZONE_ID_TWILIGHT      170 // The Twilight Sea
+#define EQ_ZONE_ID_THEGREY       171 // The Grey
+#define EQ_ZONE_ID_TENEBROUS     172 // The Tenebrous Mountains
+#define EQ_ZONE_ID_MAIDEN        173 // The Maiden's Eye
+#define EQ_ZONE_ID_DAWNSHROUD    174 // Dawnshroud Peaks
+#define EQ_ZONE_ID_SCARLET       175 // The Scarlet Desert
+#define EQ_ZONE_ID_UMBRAL        176 // The Umbral Plains
+#define EQ_ZONE_ID_AKHEVA        179 // Akheva Ruins
+#define EQ_ZONE_ID_ARENA2        180 // The Arena
+#define EQ_ZONE_ID_JAGGEDPINE    181 // The Jaggedpine Forest
+#define EQ_ZONE_ID_TUTORIAL      183 // Tutorial Zone
+#define EQ_ZONE_ID_LOAD          184 // Loading
+#define EQ_ZONE_ID_LOAD2         185 // Loading
+#define EQ_ZONE_ID_CODECAY       200 // Ruins of Lxanvom
+#define EQ_ZONE_ID_POJUSTICE     201 // Plane of Justice
+#define EQ_ZONE_ID_POKNOWLEDGE   202 // Plane of Knowledge
+#define EQ_ZONE_ID_POTRANQUILITY 203 // Plane of Tranquility
+#define EQ_ZONE_ID_PONIGHTMARE   204 // Plane of Nightmare
+#define EQ_ZONE_ID_PODISEASE     205 // Plane of Disease
+#define EQ_ZONE_ID_POINNOVATION  206 // Plane of Innovation
+#define EQ_ZONE_ID_POTORMENT     207 // Plane of Torment
+#define EQ_ZONE_ID_POVALOR       208 // Plane of Valor
+#define EQ_ZONE_ID_BOTHUNDER     209 // Torden, The Bastion of Thunder
+#define EQ_ZONE_ID_POSTORMS      210 // Plane of Storms
+#define EQ_ZONE_ID_HOHONORA      211 // Halls of Honor
+#define EQ_ZONE_ID_SOLROTOWER    212 // Solusek Ro's Tower
+#define EQ_ZONE_ID_POWAR         213 // Plane of War
+#define EQ_ZONE_ID_POTACTICS     214 // Drunder, Fortress of Zek
+#define EQ_ZONE_ID_POAIR         215 // Eryslai, the Kingdom of Wind
+#define EQ_ZONE_ID_POWATER       216 // Reef of Coirnav
+#define EQ_ZONE_ID_POFIRE        217 // Doomfire, The Burning Lands
+#define EQ_ZONE_ID_POEARTHA      218 // Vegarlson, The Earthen Badlands
+#define EQ_ZONE_ID_POTIMEA       219 // Plane of Time
+#define EQ_ZONE_ID_HOHONORB      220 // Temple of Marr
+#define EQ_ZONE_ID_NIGHTMAREB    221 // Lair of Terris Thule
+#define EQ_ZONE_ID_POEARTHB      222 // Ragrax, Stronghold of the Twelve
+#define EQ_ZONE_ID_POTIMEB       223 // Plane of Time
+
+#define EQ_ZONE_TYPE_INDOORS  0x01
+#define EQ_ZONE_TYPE_OUTDOORS 0x02
+#define EQ_ZONE_TYPE_ANY      0xFF
+
 #define EQ_INVENTORY_SLOT_EAR_LEFT    0
 #define EQ_INVENTORY_SLOT_HEAD        1
 #define EQ_INVENTORY_SLOT_FACE        2
@@ -598,11 +811,13 @@
 #define EQ_MOUSE_CURSOR_WIDTH  16 // pixels
 #define EQ_MOUSE_CURSOR_HEIGHT 16 // pixels
 
-#define EQ_ADDRESS_MOUSE_X_REAL 0x008092E8 // DWORD ; read/write, DirectInput Mouse
-#define EQ_ADDRESS_MOUSE_Y_REAL 0x008092EC // DWORD ; read/write, DirectInput Mouse
+#define EQ_ADDRESS_MOUSE_X       0x008092E8 // uint32_t ; read/write, DirectInput Mouse
+#define EQ_ADDRESS_MOUSE_Y       0x008092EC // uint32_t ; read/write, DirectInput Mouse
+#define EQ_ADDRESS_MOUSE_SPEED_X 0x008092F0 // uint32_t
+#define EQ_ADDRESS_MOUSE_SPEED_Y 0x008092F4 // uint32_t
 
-#define EQ_ADDRESS_MOUSE_X 0x00798580 // uint16_t ; read only
-#define EQ_ADDRESS_MOUSE_Y 0x00798582 // uint16_t ; read-only
+#define EQ_ADDRESS_MOUSE_X_READ_ONLY 0x00798580 // uint16_t ; read-only
+#define EQ_ADDRESS_MOUSE_Y_READ_ONLY 0x00798582 // uint16_t ; read-only
 
 #define EQ_ADDRESS_MOUSE_CLICK_STATE 0x00798614 // uint32_t
 
@@ -615,8 +830,8 @@
 #define EQ_MOUSE_LOOK_STATE_FALSE 0x00010000
 #define EQ_MOUSE_LOOK_STATE_TRUE  0x00010001
 
-#define EQ_ADDRESS_MOUSE_TIMER_RIGHT_CLICK 0x0079862C
-#define EQ_ADDRESS_MOUSE_TIMER_LEFT_CLICK  0x00798630
+#define EQ_ADDRESS_MOUSE_TIMER_RIGHT_CLICK 0x0079862C // uint32_t
+#define EQ_ADDRESS_MOUSE_TIMER_LEFT_CLICK  0x00798630 // uint32_t
 
 #define EQ_ADDRESS_CXWND_MOUSE_X 0x00809DD0 // uint32_t
 #define EQ_ADDRESS_CXWND_MOUSE_Y 0x00809DD4 // uint32_t
@@ -653,6 +868,43 @@ const float EQ_MOVEMENT_SPEED_MODIFIER_AA_RUN_1       = 0.08f;
 const float EQ_MOVEMENT_SPEED_MODIFIER_AA_RUN_2       = 0.14f;
 const float EQ_MOVEMENT_SPEED_MODIFIER_AA_RUN_3       = 0.21f;
 const float EQ_MOVEMENT_SPEED_MODIFIER_SPIRIT_OF_WOLF = 0.30f;
+
+std::vector<std::string> EQ_STRING_LIST_CLASS_SHORT_NAME =
+{
+    "UNK",
+    "WAR",
+    "CLR",
+    "PAL",
+    "RNG",
+    "SHD",
+    "DRU",
+    "MNK",
+    "BRD",
+    "ROG",
+    "SHM",
+    "NEC",
+    "WIZ",
+    "MAG",
+    "ENC",
+    "BST",
+    "BANKER",
+    "WAR",
+    "CLR",
+    "PAL",
+    "RNG",
+    "SHD",
+    "DRU",
+    "MNK",
+    "BRD",
+    "ROG",
+    "SHM",
+    "NEC",
+    "WIZ",
+    "MAG",
+    "ENC",
+    "BST",
+    "MERCHANT",
+};
 
 // font glyph sizes use ASCII table indexes
 // used to get width of string when using font text

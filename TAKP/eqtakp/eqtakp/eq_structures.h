@@ -47,6 +47,16 @@ typedef struct _Rect
     float Z4 = 1.0f;
 } Rect, *Rect_ptr;
 
+typedef struct _Mouse
+{
+    uint32_t X;
+    uint32_t Y;
+    uint32_t ClickState;
+    uint32_t LookState;
+    uint32_t LeftClickTimer;
+    uint32_t RightClickTimer;
+} Mouse, *Mouse_ptr;
+
 typedef struct _ColorARGB
 {
     union
@@ -131,6 +141,43 @@ typedef struct _Light
 /* ...... */ 
 } Light, *Light_ptr;
 
+// sizeof 0x1A0
+typedef struct _EQZoneInfo
+{
+/* 0x000 */ uint32_t Header;
+/* 0x004 */ uint32_t Expansion;
+/* 0x008 */ uint32_t ID;
+/* 0x00C */ char ShortName[129]; // [0x81]
+/* 0x08D */ char LongName[259]; // [0x103]
+union
+{
+struct
+{
+/* 0x190 */ uint8_t Flag1; // 0x2 = Is Newbie Zone, 0x4 = Unknown, 0x20 = Is No Bind Zone
+/* 0x191 */ uint8_t Flag2; // 0x40 = Is No Air Zone
+/* 0x192 */ uint8_t Flag3; // 0x10 = Has Minimum Level
+/* 0x193 */ uint8_t Flag4;
+};
+/* 0x190 */ uint32_t Flags;
+};
+/* 0x194 */ uint32_t ID2; // ID + 2242
+/* 0x198 */ uint32_t POPValue; // this has something to do with Planes of Power zones
+/* 0x19C */ uint32_t MinimumLevel; // level required to access zone
+/* 0x1A0 */
+} EQZoneInfo, *EQZoneInfo_ptr;
+
+typedef struct _EQWorldData
+{
+/*0x000*/ void* VTable;
+/*0x004*/ uint8_t Hour;
+/*0x005*/ uint8_t Minute;
+/*0x006*/ uint8_t Day;
+/*0x007*/ uint8_t Month;
+/*0x008*/ uint16_t Year;
+/*0x00A*/ uint8_t Unknown00A[18]; // [0x12]
+/*0x01C*/ struct _EQZoneInfo* ZoneList[EQ_NUM_ZONES];
+} EQWorldData, *EQWorldData_ptr;
+
 typedef struct _Zone
 {
 /* 0x0000 */ char PlayerName[64]; // [0x40]
@@ -185,51 +232,61 @@ typedef struct _Buff
 
 typedef struct _ItemCommon
 {
-/* 0x00E4 */ int8_t Strength;       // STR
-/* 0x00E5 */ int8_t Stamina;        // STA
-/* 0x00E6 */ int8_t Charisma;       // CHA
-/* 0x00E7 */ int8_t Dexterity;      // DEX
-/* 0x00E8 */ int8_t Intelligence;   // INT
-/* 0x00E9 */ int8_t Agility;        // AGI
-/* 0x00EA */ int8_t Wisdom;         // WIS
-/* 0x00EB */ int8_t SaveMagic;      // SV MAGIC
-/* 0x00EC */ int8_t SaveFire;       // SV FIRE
-/* 0x00ED */ int8_t SaveCold;       // SV COLD
-/* 0x00EE */ int8_t SaveDisease;    // SV DISEASE
-/* 0x00EF */ int8_t SavePoison;     // SV POISON
-/* 0x00F0 */ int16_t Health;        // HP
-/* 0x00F2 */ int16_t Mana;          // Mana
-/* 0x00F4 */ int16_t ArmorClass;    // AC
-/* 0x00F6 */ uint8_t Unknown0246[2];
-/* 0x00F8 */ uint8_t Light;
-/* 0x00F9 */ uint8_t AttackDelay;    // Atk Delay
-/* 0x00FA */ uint8_t Damage;         // DMG
-/* 0x00FB */ uint8_t IsStackableEx;
-/* 0x00FC */ uint8_t Range;
-/* 0x00FD */ uint8_t Skill;
-/* 0x00FE */ uint8_t Magic;
-/* 0x00FF */ uint8_t CastingLevelEx;
-/* 0x0100 */ uint8_t Material; // 0=None, 1=Leather, 2=Chain, 3=Plate, 4=Silk, etc
-/* 0x0101 */ uint8_t Unknown0258[3];
-/* 0x0104 */ uint32_t Color;
-/* 0x0108 */ uint8_t Unknown0264[2];
-/* 0x010A */ uint16_t SpellIDEx;
-/* 0x010C */ uint16_t Classes; // bitwise flag
-/* 0x010E */ uint8_t Unknown0270[2];
-/* 0x0110 */ uint16_t Races; // bitwise flag
-/* 0x0112 */ uint8_t Unknown0274[2];
-/* 0x0114 */ uint8_t IsStackable;
-/* 0x0115 */ uint8_t CastingLevel; // also weapon proc level
+/* 0x00E4 */ /* 0x0000 */ int8_t Strength;       // STR
+/* 0x00E5 */ /* 0x0001 */ int8_t Stamina;        // STA
+/* 0x00E6 */ /* 0x0002 */ int8_t Charisma;       // CHA
+/* 0x00E7 */ /* 0x0003 */ int8_t Dexterity;      // DEX
+/* 0x00E8 */ /* 0x0004 */ int8_t Intelligence;   // INT
+/* 0x00E9 */ /* 0x0005 */ int8_t Agility;        // AGI
+/* 0x00EA */ /* 0x0006 */ int8_t Wisdom;         // WIS
+/* 0x00EB */ /* 0x0007 */ int8_t SaveMagic;      // SV MAGIC
+/* 0x00EC */ /* 0x0008 */ int8_t SaveFire;       // SV FIRE
+/* 0x00ED */ /* 0x0009 */ int8_t SaveCold;       // SV COLD
+/* 0x00EE */ /* 0x000A */ int8_t SaveDisease;    // SV DISEASE
+/* 0x00EF */ /* 0x000B */ int8_t SavePoison;     // SV POISON
+/* 0x00F0 */ /* 0x000C */ int16_t Health;        // HP
+/* 0x00F2 */ /* 0x000E */ int16_t Mana;          // Mana
+/* 0x00F4 */ /* 0x0010 */ int8_t ArmorClass;     // AC
+/* 0x00F5 */ /* 0x0011 */ uint8_t Unknown0xF5;
+/* 0x00F6 */ /* 0x0012 */ uint8_t Unknown0xF6;
+/* 0x00F7 */ /* 0x0013 */ uint8_t Unknown0xF7;
+/* 0x00F8 */ /* 0x0014 */ uint8_t Light;
+/* 0x00F9 */ /* 0x0015 */ uint8_t AttackDelay;    // Atk Delay
+/* 0x00FA */ /* 0x0016 */ uint8_t Damage;         // DMG
+/* 0x00FB */ /* 0x0017 */ uint8_t EffectFlag; // EQ_ITEM_EFFECT_FLAG_x
+/* 0x00FC */ /* 0x0018 */ uint8_t Range;
+/* 0x00FD */ /* 0x0019 */ uint8_t Type; // EQ_ITEM_TYPE_x
+/* 0x00FE */ /* 0x001A */ uint8_t MagicOrLore;
 union
 {
-/* 0x0116 */ uint8_t StackCount;
-/* 0x0116 */ uint8_t Charges;
+/* 0x00FF */ /* 0x001A */ uint8_t CastingLevelEx; // also weapon proc level
+/* 0x00FF */ /* 0x001A */ uint8_t HasteEx; // need to add +1 to value
 };
-/* 0x0117 */ uint8_t EffectType;
-/* 0x0118 */ uint16_t SpellID;
-/* 0x011A */ uint8_t Unknown0123[10];
-/* 0x0124 */ uint16_t SkillModID;
-/* 0x0126 */ int8_t SkillModPercent;
+/* 0x0100 */ /* 0x001B */ uint8_t Material; // 0=None, 1=Leather, 2=Chain, 3=Plate, 4=Silk, etc
+/* 0x0101 */ /* 0x001C */ uint8_t Unknown0258[3];
+/* 0x0104 */ /* 0x001F */ uint32_t Color;
+/* 0x0108 */ /* 0x0023 */ uint8_t Unknown0264[2];
+/* 0x010A */ /* 0x0025 */ uint16_t SpellIDEx;
+/* 0x010C */ /* 0x0027 */ uint16_t Classes; // bitwise flag
+/* 0x010E */ /* 0x0029 */ uint8_t Unknown0270[2];
+/* 0x0110 */ /* 0x002B */ uint16_t Races; // bitwise flag
+/* 0x0112 */ /* 0x002D */ uint8_t Unknown0274[2];
+/* 0x0114 */ /* 0x002F */ uint8_t IsStackable;
+union
+{
+/* 0x0115 */ /* 0x0030 */ uint8_t CastingLevel; // also weapon proc level
+/* 0x0115 */ /* 0x0030 */ uint8_t Haste; // need to add +1 to value
+};
+union
+{
+/* 0x0116 */ /* 0x0031 */ uint8_t StackCount;
+/* 0x0116 */ /* 0x0031 */ uint8_t Charges;
+};
+/* 0x0117 */ /* 0x0032 */ uint8_t EffectType;
+/* 0x0118 */ /* 0x0033 */ uint16_t SpellID;
+/* 0x011A */ /* 0x0035 */ uint8_t Unknown0123[10];
+/* 0x0124 */ /* 0x003E */ uint16_t SkillModID;
+/* 0x0126 */ /* 0x0040 */ int8_t SkillModPercent;
 /* ...... */ 
 } ItemCommon, *ItemCommon_ptr;
 
@@ -305,7 +362,7 @@ typedef struct _Spell
 /* 0x0072 */ uint8_t Unknown0146[8];
 /* 0x007A */ uint8_t Calc[12];
 /* 0x0086 */ uint8_t LightType;
-/* 0x0087 */ uint8_t BuffType; // 0x00 = Detrimental, 0x01 = Beneficial, 0x02 = Beneficial (Group Only)
+/* 0x0087 */ uint8_t BuffType; // EQ_BUFF_TYPE_x
 /* 0x0088 */ uint8_t Activated; // unknown
 /* 0x0089 */ uint8_t ResistType;
 /* 0x008A */ uint8_t Attribute[12];
@@ -412,9 +469,9 @@ typedef struct _Character
 /* 0x0B80 */ uint32_t BankSilver;
 /* 0x0B84 */ uint32_t BankCopper;
 /* 0x0B88 */ uint32_t CursorPlatinum; // currency held on the mouse cursor
-/* 0x0B8C */ uint32_t CursorGold;
-/* 0x0B90 */ uint32_t CursorSilver;
-/* 0x0B94 */ uint32_t CursorCopper;
+/* 0x0B8C */ uint32_t CursorGold; // currency held on the mouse cursor
+/* 0x0B90 */ uint32_t CursorSilver; // currency held on the mouse cursor
+/* 0x0B94 */ uint32_t CursorCopper; // currency held on the mouse cursor
 /* 0x0B98 */ uint8_t Unknown0B98[16];
 /* 0x0BA8 */ uint16_t Skill[EQ_NUM_SKILLS];
 /* 0x0C3C */ uint8_t Unknown0C3C[64];
@@ -467,7 +524,7 @@ union
 /* 0x0F0C */ uint32_t Unknown0F0C;
 /* 0x0F10 */ float ZoneBirthZ;
 /* 0x0F14 */ uint8_t Unknown0F14[1080];
-/* 0x134C */ uint16_t Deity;
+/* 0x134C */ uint16_t Deity; // EQ_DEITY_x
 /* 0x134E */ uint16_t GuildID;
 /* 0x1350 */ uint8_t Unknown1350[8];
 /* 0x1358 */ uint8_t Unknown1358;
@@ -476,7 +533,7 @@ union
 /* 0x135B */ uint8_t Unknown135B;
 /* 0x135C */ uint8_t Unknown135C;
 /* 0x135D */ uint8_t Unknown135D;
-/* 0x135E */ uint8_t Stamina; // yellow endurance bar ; 100 = Empty, 0 = Full
+/* 0x135E */ uint8_t Stamina; // yellow endurance bar ; 100 = Empty, 0 = Full ; EQ_PC::SetFatigue(x)
 /* 0x135F */ uint8_t Unknown135F;
 /* 0x1360 */ uint8_t Unknown1360;
 /* 0x1361 */ uint8_t AnonymousState;
@@ -651,7 +708,7 @@ typedef struct _Actor
 /* 0x00C0 */ uint8_t Unknown00C0[196];
 /* 0x0184 */ uint32_t Animation;
 /* 0x0188 */ uint8_t Unknown0188[44];
-/* 0x01B4 */ uint32_t IsInvisible; // NPCs only? used by /hidecorpses command
+/* 0x01B4 */ uint32_t IsInvisible; // NPCs only? used by /hidecorpse command
 /* 0x01B8 */ uint8_t Unknown01B8[168];
 /* 0x0260 */ uint32_t IsHoldingBoth;
 /* 0x0264 */ uint32_t IsHoldingSecondary;
@@ -665,18 +722,18 @@ typedef struct _Actor
 /* 0x027F */ uint8_t Unknown027F;
 /* 0x0280 */ uint8_t Unknown0280[4];
 /* 0x0284 */ struct _Model* Model;
-/* 0x0288 */ struct _ModelBone* BoneHeadPoint;
-/* 0x028C */ struct _ModelBone* BoneHead;
-/* 0x0290 */ struct _ModelBone* BoneUnknown;
-/* 0x0294 */ struct _ModelBone* BoneRightPoint;
-/* 0x0298 */ struct _ModelBone* BoneLeftPoint;
-/* 0x029C */ struct _ModelBone* BoneShieldPoint;
+/* 0x0288 */ struct _ModelBone* ModelBoneHeadPoint;
+/* 0x028C */ struct _ModelBone* ModelBoneHead;
+/* 0x0290 */ struct _ModelBone* ModelBoneUnknown;
+/* 0x0294 */ struct _ModelBone* ModelBoneRightPoint;
+/* 0x0298 */ struct _ModelBone* ModelBoneLeftPoint;
+/* 0x029C */ struct _ModelBone* ModelBoneShieldPoint;
 /* 0x02A0 */ uint8_t Unknown02A0[128];
-/* 0x0320 */ uint8_t MovementType; // 0 = None, 4 = Walking, 6 = Running, 7 = Swimming
+/* 0x0320 */ uint8_t MovementType; // EQ_MOVEMENT_TYPE_x
 /* 0x0321 */ uint8_t Unknown0321[12];
 /* 0x032D */ uint8_t IsMovingTimer; // 0 = Moving, 1-6 = Recently Stopped Moving, 200 = Not Moving
 /* 0x032E */ uint8_t Unknown032E[266];
-/* 0x0438 */ uint32_t IsLookingForGroup;
+/* 0x0438 */ uint32_t IsLookingForGroup; // LFG
 /* 0x043C */ uint32_t IsTrader;
 /* ...... */ 
 } Actor, *Actor_ptr;
@@ -701,8 +758,8 @@ typedef struct _Spawn
 /* 0x006C */ float MovementSpeedHeading;
 /* 0x0070 */ float Unknown0070;
 /* 0x0074 */ float Pitch; // camera view up/down
-/* 0x0078 */ struct _Spawn* PreviousSpawn;
-/* 0x007C */ struct _Spawn* NextSpawn;
+/* 0x0078 */ struct _Spawn* Previous;
+/* 0x007C */ struct _Spawn* Next;
 /* 0x0080 */ uint32_t Unknown0080;
 /* 0x0084 */ struct _Actor* Actor;
 /* 0x0088 */ struct _Character* Character;
@@ -742,7 +799,7 @@ typedef struct _Spawn
 /* 0x010A */ uint16_t LevitationState; // EQ_LEVITATION_STATE_x
 /* 0x010C */ uint32_t TargetType; // EQ_SPAWN_TARGET_TYPE_x
 /* 0x0110 */ uint32_t Unknown0110;
-/* 0x0114 */ uint32_t AnonymousState; // EQ_ANONYMOUS_STATE_x, /anonymous and /roleplay
+/* 0x0114 */ uint32_t AnonymousState; // EQ_ANONYMOUS_STATE_x ; /anonymous and /roleplay
 /* 0x0118 */ uint32_t Unknown0118;
 /* 0x011C */ uint32_t IsAwayFromKeyboard; // AFK
 /* 0x0120 */ uint8_t Unknown0120[4];
@@ -750,7 +807,7 @@ typedef struct _Spawn
 /* 0x0128 */ uint8_t Unknown0128[4];
 /* 0x012C */ char LastName[22]; // surname or title // [0x16]
 /* 0x0142 */ uint8_t Unknown0142[10];
-/* 0x014C */ uint16_t GuildStatus; // guild rank
+/* 0x014C */ uint16_t GuildStatus; // EQ_GUILD_STATUS_x ; guild rank
 /* 0x014E */ uint16_t Deity; // EQ_DEITY_x
 /* 0x0150 */ uint8_t Unknown0150;
 /* 0x0151 */ uint8_t Unknown0151[6];
@@ -764,22 +821,21 @@ typedef struct _Spawn
 // class EQItemList
 typedef struct _GroundSpawn
 {
-/* 0x0000 */ struct _GroundSpawn* PreviousSpawn;
-/* 0x0004 */ struct _GroundSpawn* NextSpawn;
+/* 0x0000 */ struct _GroundSpawn* Previous;
+/* 0x0004 */ struct _GroundSpawn* Next;
 /* 0x0008 */ uint16_t ID;
 /* 0x000A */ uint8_t Unknown000A[2];
-/////* 0x000C */ uint16_t DropID;
-/////* 0x000E */ uint8_t Unknown000E[2];
-/* 0x000C */ uint32_t Item; // TODO
+/* 0x000C */ uint16_t DropID;
+/* 0x000E */ uint8_t Unknown000E[2];
 /* 0x0010 */ uint16_t Unknown0010;
 /* 0x0012 */ uint8_t Unknown0012[2];
-/* 0x0014 */ uint32_t Unknown0014; // pointer
+/* 0x0014 */ struct _ActorInstance* ActorInstance;
 /* 0x0018 */ uint8_t Unknown0018[116];
 /* 0x008C */ float Heading;
 /* 0x0090 */ float Z;
 /* 0x0094 */ float X;
 /* 0x0098 */ float Y;
-/* 0x009C */ char Name[30]; // [0x1E]
+/* 0x009C */ char ActorDef[30]; // [0x1E] ; ITXX_ACTORDEF string
 /* ...... */ 
 } GroundSpawn, *GroundSpawn_ptr;
 
@@ -788,8 +844,8 @@ typedef struct _GroundSpawn
 typedef struct _Switch
 {
 /* 0x0000 */ uint8_t Unknown0000[4];
-/* 0x0004 */ struct _Switch* PreviousSwitch;
-/* 0x0008 */ struct _Switch* NextSwitch;
+/* 0x0004 */ struct _Switch* Previous;
+/* 0x0008 */ struct _Switch* Next;
 /* 0x000C */ uint8_t Unknown000C;
 /* 0x000D */ char Name[11]; // [0x0B]
 /* 0x0018 */ uint32_t Unknown0018;
@@ -804,7 +860,7 @@ typedef struct _Switch
 /* 0x003C */ float Z;
 /* 0x0040 */ float Heading;
 /* ...... */ 
-} Switch, *Switch_ptr, EQSwitch, *EQSwitch_ptr;
+} Switch, *Switch_ptr, DoorSpawn, *DoorSpawn_ptr, EQSwitch, *EQSwitch_ptr;
 
 typedef struct _GroupList
 {
@@ -868,12 +924,14 @@ typedef struct _Viewport
 typedef struct _CDisplay
 {
 /* 0x0000 */ uint8_t Unknown0000[64];
-/* 0x0040 */ uint8_t IsCursorItem;
+/* 0x0040 */ uint8_t IsCursorItem; // when you pick up and hold an item on your mouse cursor
 /* 0x0041 */ uint8_t Unknown0041;
-/* 0x0042 */ uint8_t IsCursorHotkey;
+/* 0x0042 */ uint8_t IsCursorHotkey; // when you pick up and hold a hotkey button on your mouse cursor
 /* 0x0043 */ uint8_t Unknown0043;
 /* 0x0044 */ uint8_t Unknown0044[132];
 /* 0x00C8 */ uint32_t Timer;
+/* 0x00CC */ uint8_t Unknown00CC[11580];
+/* 0x2E08 */ uint32_t StringSpriteFontTexture; // pointer ; S3D_FONTTEXTURE* for CDisplay::ChangeDagStringSprite
 } CDisplay, *CDisplay_ptr;
 
 typedef struct _CEverQuest
@@ -938,10 +996,9 @@ typedef struct _CXStr
 /* 0x0014*/ char Text[1]; // use Length and MaxLength
 } CXStr, *CXStr_ptr;
 
-// class EQWnd
-// CXWnd and CSidlScreenWnd share these same properties
 // sizeof 0xAC
-typedef struct _Window
+// CXWnd and CSidlScreenWnd share these same properties
+typedef struct _CSidlWnd
 {
 /* 0x0000 */ uint32_t Unknown0000; // struct _CSIDLWNDVFTABLE *pvfTable; struct _CXWNDVFTABLE *pvfTable;
 /* 0x0004 */ uint32_t MouseHoverTimer;
@@ -953,9 +1010,9 @@ typedef struct _Window
 /* 0x0013 */ uint8_t Unknown0013;
 /* 0x0014 */ uint32_t Unknown0014;
 /* 0x0018 */ uint32_t Unknown0018;
-/* 0x001C */ struct _Window* ParentWnd;
-/* 0x0020 */ struct _Window* FirstChildWnd;
-/* 0x0024 */ struct _Window* NextSiblingWnd;
+/* 0x001C */ struct _CSidlWnd* ParentWnd;
+/* 0x0020 */ struct _CSidlWnd* FirstChildWnd;
+/* 0x0024 */ struct _CSidlWnd* NextSiblingWnd;
 /* 0x0028 */ uint8_t HasChildren;
 /* 0x0029 */ uint8_t HasSiblings;
 /* 0x002A */ uint8_t Unknown0030[2];
@@ -983,14 +1040,14 @@ typedef struct _Window
 /* 0x00A1 */ uint8_t Unknown00A1[7];
 /* 0x00A8 */ uint32_t DrawTemplate;
 /* 0x00AC */
-} Window, *Window_ptr;
+} CSidlWnd, *CSidlWnd_ptr;
 
 // class CSidlScreenWnd
 // sizeof 0x138
 // the moveable resizable parent windows
 typedef struct _CsidlScreenWnd
 {
-/* 0x0000 */ struct _Window Window;
+/* 0x0000 */ struct _CSidlWnd Window;
 /* 0x00AC */ uint8_t Unknown00AC[140]; // skips the rest
 /* 0x0138 */
 } CsidlScreenWnd, *CsidlScreenWnd_ptr;
@@ -999,7 +1056,7 @@ typedef struct _CsidlScreenWnd
 // usually a child window like a button or label
 typedef struct _CXWnd
 {
-/* 0x0000 */ struct _Window Window;
+/* 0x0000 */ struct _CSidlWnd Window;
 /* 0x00AC */ uint8_t Unknown00AC[140]; // skips the rest
 /* 0x0138 */
 } CXWnd, *CXWnd_ptr;

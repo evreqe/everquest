@@ -56,17 +56,24 @@ bool EQ_IsKeyPressedShift();
 bool EQ_IsMouseHoveringOverCXWnd();
 void EQ_SetAutoAttack(bool bEnabled);
 void EQ_SetFreeCamera(bool bEnabled);
+uint32_t EQ_GetFontTextHeight(uint32_t fontPointer);
 size_t EQ_GetFontTextWidth(char text[], uint32_t fontPointer);
 void EQ_DrawTooltipText(char text[], int x, int y, uint32_t fontPointer);
 void EQ_DrawText(const char* text, int x, int y, int textColor);
 void EQ_DrawTextEx(const char* text, int x, int y, int textColor, uint32_t fontPointer);
 void EQ_DrawLine(float x1, float y1, float x2, float y2, uint32_t colorARGB);
 void EQ_DrawRectangle(float x, float y, float width, float height, uint32_t colorARGB, bool isFilled = false);
+bool EQ_WorldSpaceToScreenSpace(EQ::Location location, uint32_t &screenX, uint32_t &screenY);
 void EQ_WriteChatText(const char* text);
+void EQ_CalculateTickTime(int ticks, int& hours, int& minutes, int& seconds);
 std::string EQ_GetTickTimeString(int ticks);
-
+void EQ_CalculateItemCost(int cost, int& platinum, int& gold, int& silver, int& copper);
+std::string EQ_GetItemCostString(int cost);
+std::string EQ_GetGuildNameByID(int guildID);
+uint32_t EQ_GetStringSpriteFontTexture();
 uint32_t EQ_GetTimer();
-
+bool EQ_HasTimePassed(uint32_t& timer, uint32_t& delay);
+EQ::Spawn_ptr EQ_GetFirstSpawn();
 EQ::Spawn_ptr EQ_GetPlayerSpawn();
 EQ::Spawn_ptr EQ_GetTargetSpawn();
 EQ::Spawn_ptr EQ_GetControlledSpawn();
@@ -75,7 +82,6 @@ EQ::Spawn_ptr EQ_GetMerchantSpawn();
 EQ::Spawn_ptr EQ_GetBankerSpawn();
 EQ::Spawn_ptr EQ_GetCorpseSpawn();
 EQ::Spawn_ptr EQ_GetGamemasterSpawn();
-
 uint32_t EQ_GetPlayerSpawnAddress();
 uint32_t EQ_GetTargetSpawnAddress();
 uint32_t EQ_GetControlledSpawnAddress();
@@ -84,6 +90,16 @@ uint32_t EQ_GetMerchantSpawnAddress();
 uint32_t EQ_GetBankerSpawnAddress();
 uint32_t EQ_GetCorpseSpawnAddress();
 uint32_t EQ_GetGamemasterSpawnAddress();
+void EQ_SetTargetSpawn(EQ::Spawn_ptr spawn);
+EQ::GroundSpawn_ptr EQ_GetFirstGroundSpawn();
+bool EQ_IsSpawnGroupMember(EQ::Spawn_ptr spawn);
+EQ::Mouse EQ_GetMouse();
+void EQ_SetMousePosition(int x, int y);
+void EQ_UseItem(int slotID);
+std::string EQ_GetClassShortName(int classValue);
+uint32_t EQ_GetZoneID();
+void EQ_UseSkill(uint8_t skillID, EQClass::EQPlayer* targetSpawn);
+HWND EQ_GetWindow();
 
 template <class T>
 void EQ_Log(const char* text, T number)
@@ -176,7 +192,10 @@ void EQ_WriteMemoryString(uint32_t address, const char* value)
 typedef int (__cdecl* EQ_FUNCTION_TYPE_DrawNetStatus)(int, unsigned short, unsigned short, unsigned short x, unsigned short y, int, unsigned short, unsigned long, long, unsigned long);
 
 #define EQ_ADDRESS_FUNCTION_HandleMouseWheel 0x0055B2E0
-typedef int (__cdecl* EQ_FUNCTION_TYPE_HandleMouseWheel)(int mouseWheelDelta);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_HandleMouseWheel)(int delta);
+
+#define EQ_ADDRESS_FUNCTION_ProcessMouseEvent 0x00525DB4
+typedef int (__cdecl* EQ_FUNCTION_TYPE_ProcessMouseEvent)(void);
 
 #define EQ_ADDRESS_FUNCTION_ProcessKeyDown 0x00525B04
 typedef int (__cdecl* EQ_FUNCTION_TYPE_ProcessKeyDown)(int key);
@@ -197,14 +216,14 @@ typedef int (__cdecl* EQ_FUNCTION_TYPE_GetKey)(void);
 #define EQ_ADDRESS_FUNCTION_send_message 0x0054E51A
 
 #define EQ_ADDRESS_FUNCTION_CastRay 0x004F20DB
-EQ_MACRO_FunctionAtAddress(int __cdecl EQ_CastRay(class EQPlayer* spawn, float y, float x, float z), EQ_ADDRESS_FUNCTION_CastRay);
+EQ_MACRO_FunctionAtAddress(int __cdecl EQ_CastRay(class EQClass::EQPlayer* spawn, float y, float x, float z), EQ_ADDRESS_FUNCTION_CastRay);
 
 #define EQ_ADDRESS_FUNCTION_AutoInventory 0x004F0EEB
 EQ_MACRO_FunctionAtAddress(int __cdecl EQ_AutoInventory(EQ::Character_ptr character, EQ::Item** item, short unknown = 0), EQ_ADDRESS_FUNCTION_AutoInventory);
 typedef int (__cdecl* EQ_FUNCTION_TYPE_AutoInventory)(EQ::Character_ptr character, EQ::Item** item, short unknown);
 
 #define EQ_ADDRESS_FUNCTION_get_melee_range 0x004F3898
-EQ_MACRO_FunctionAtAddress(float __cdecl EQ_get_melee_range(class EQPlayer* spawn1, class EQPlayer* spawn2), EQ_ADDRESS_FUNCTION_get_melee_range);
+EQ_MACRO_FunctionAtAddress(float __cdecl EQ_get_melee_range(class EQClass::EQPlayer* spawn1, class EQClass::EQPlayer* spawn2), EQ_ADDRESS_FUNCTION_get_melee_range);
 
 /* functions */
 
@@ -408,6 +427,38 @@ void EQ_SetFreeCamera(bool bEnabled)
     EQ_WriteMemory<uint32_t>(EQ_ADDRESS_CAMERA_VIEW, EQ_CAMERA_VIEW_FIRST_PERSON);
 }
 
+uint32_t EQ_GetFontTextHeight(uint32_t fontPointer)
+{
+    uint32_t fontHeight = 0;
+
+    if (fontPointer == EQ_ADDRESS_POINTER_FONT_ARIAL10)
+    {
+        fontHeight = 10;
+    }
+    else if (fontPointer == EQ_ADDRESS_POINTER_FONT_ARIAL12)
+    {
+        fontHeight = 12;
+    }
+    else if (fontPointer == EQ_ADDRESS_POINTER_FONT_ARIAL14)
+    {
+        fontHeight = 14;
+    }
+    else if (fontPointer == EQ_ADDRESS_POINTER_FONT_ARIAL15)
+    {
+        fontHeight = 15;
+    }
+    else if (fontPointer == EQ_ADDRESS_POINTER_FONT_ARIAL16)
+    {
+        fontHeight = 16;
+    }
+    else if (fontPointer == EQ_ADDRESS_POINTER_FONT_ARIAL20)
+    {
+        fontHeight = 20;
+    }
+
+    return fontHeight;
+}
+
 size_t EQ_GetFontTextWidth(char text[], uint32_t fontPointer)
 {
     size_t textLength = strlen(text);
@@ -469,46 +520,18 @@ size_t EQ_GetFontTextWidth(char text[], uint32_t fontPointer)
 void EQ_DrawTooltipText(char text[], int x, int y, uint32_t fontPointer)
 {
     size_t textLength = strlen(text);
-
     if (textLength == 0)
     {
         return;
     }
 
-    uint32_t fontHeight = 0;
-
-    if (fontPointer == EQ_ADDRESS_POINTER_FONT_ARIAL10)
-    {
-        fontHeight = 10;
-    }
-    else if (fontPointer == EQ_ADDRESS_POINTER_FONT_ARIAL12)
-    {
-        fontHeight = 12;
-    }
-    else if (fontPointer == EQ_ADDRESS_POINTER_FONT_ARIAL14)
-    {
-        fontHeight = 14;
-    }
-    else if (fontPointer == EQ_ADDRESS_POINTER_FONT_ARIAL15)
-    {
-        fontHeight = 15;
-    }
-    else if (fontPointer == EQ_ADDRESS_POINTER_FONT_ARIAL16)
-    {
-        fontHeight = 16;
-    }
-    else if (fontPointer == EQ_ADDRESS_POINTER_FONT_ARIAL20)
-    {
-        fontHeight = 20;
-    }
-
+    uint32_t fontHeight = EQ_GetFontTextHeight(fontPointer);
     if (fontHeight == 0)
     {
         return;
     }
 
     size_t textWidth = EQ_GetFontTextWidth(text, fontPointer);
-
     if (textWidth == 0)
     {
         return;
@@ -590,6 +613,21 @@ void EQ_DrawRectangle(float x, float y, float width, float height, uint32_t colo
     }
 }
 
+bool EQ_WorldSpaceToScreenSpace(EQ::Location location, uint32_t &screenX, uint32_t &screenY)
+{
+    uint32_t cameraData = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CAMERA_DATA);
+
+    float resultX = 0.0f;
+    float resultY = 0.0f;
+    uint32_t result = EQGraphicsDLL__t3dWorldSpaceToScreenSpace(cameraData, &location, &resultX, &resultY);
+
+    screenX = (uint32_t)resultX;
+    screenY = (uint32_t)resultY;
+
+    return result != EQ_GRAPHICS_DLL_WORLD_SPACE_TO_SCREEN_SPACE_RESULT_FAILURE;
+}
+
+
 void EQ_WriteChatText(const char* text)
 {
     EQ_CLASS_POINTER_CEverQuest->dsp_chat(text);
@@ -625,37 +663,140 @@ std::string EQ_GetTickTimeString(int ticks)
 
     EQ_CalculateTickTime(ticks, hours, minutes, seconds);
 
-    std::stringstream ssTimeText;
+    std::stringstream buffer;
 
     if (hours > 0)
     {
-        ssTimeText << hours << "h";
+        buffer << hours << "h";
     }
 
     if (minutes > 0)
     {
         if (hours > 0)
         {
-            ssTimeText << " ";
+            buffer << " ";
         }
 
-        ssTimeText << minutes << "m";
+        buffer << minutes << "m";
     }
 
     if (hours == 0 && minutes == 0)
     {
         if (seconds > 0)
         {
-            ssTimeText << seconds << "s";
+            buffer << seconds << "s";
         }
     }
 
-    return ssTimeText.str();
+    return buffer.str();
+}
+
+void EQ_CalculateItemCost(int cost, int& platinum, int& gold, int& silver, int& copper)
+{
+    // cost is in total copper value of item
+
+    if (cost < 0)
+    {
+        return;
+    }
+
+    platinum = cost / 1000;
+    cost     = cost % 1000;
+
+    gold     = cost / 100;
+    cost     = cost % 100;
+
+    silver   = cost / 10;
+    cost     = cost % 10;
+
+    copper   = cost;
+}
+
+std::string EQ_GetItemCostString(int cost)
+{
+    int platinum = 0;
+    int gold = 0;
+    int silver = 0;
+    int copper = 0;
+
+    EQ_CalculateItemCost(cost, platinum, gold, silver, copper);
+
+    std::stringstream buffer;
+
+    if (platinum > 0)
+    {
+        buffer << platinum << "p";
+    }
+
+    if (gold > 0)
+    {
+        if (platinum > 0)
+        {
+            buffer << " ";
+        }
+
+        buffer << gold << "g";
+    }
+
+    if (silver > 0)
+    {
+        if (platinum > 0 || gold > 0)
+        {
+            buffer << " ";
+        }
+
+        buffer << silver << "s";
+    }
+
+    if (copper > 0)
+    {
+        if (platinum > 0 || gold > 0 || silver > 0)
+        {
+            buffer << " ";
+        }
+
+        buffer << copper << "c";
+    }
+
+    return buffer.str();
+}
+
+std::string EQ_GetGuildNameByID(int guildID)
+{
+    if (guildID == EQ_GUILD_ID_NULL)
+    {
+        return "Unknown Guild";
+    }
+
+    return EQ_POINTER_GuildList.Guild[guildID].Name;
+}
+
+uint32_t EQ_GetStringSpriteFontTexture()
+{
+    return EQ_POINTER_CDisplay->StringSpriteFontTexture;
 }
 
 uint32_t EQ_GetTimer()
 {
     return EQ_POINTER_CDisplay->Timer;
+}
+
+bool EQ_HasTimePassed(uint32_t& timer, uint32_t& delay)
+{
+    uint32_t currentTimer = EQ_GetTimer();
+
+    if ((currentTimer - timer) > delay)
+    {
+        timer = currentTimer;
+        return true;
+    }
+
+    return false;
+}
+
+EQ::Spawn_ptr EQ_GetFirstSpawn()
+{
+    return (EQ::Spawn_ptr)EQ_POINTER_FirstSpawn;
 }
 
 EQ::Spawn_ptr EQ_GetPlayerSpawn()
@@ -737,3 +878,96 @@ uint32_t EQ_GetGamemasterSpawnAddress()
 {
     return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_GAMEMASTER_SPAWN);
 }
+
+void EQ_SetTargetSpawn(EQ::Spawn_ptr spawn)
+{
+    EQ_WriteMemory<EQ::Spawn_ptr>(EQ_ADDRESS_POINTER_TARGET_SPAWN, spawn);
+}
+
+EQ::GroundSpawn_ptr EQ_GetFirstGroundSpawn()
+{
+    return (EQ::GroundSpawn_ptr)EQ_POINTER_FirstGroundSpawn;
+}
+
+bool EQ_IsSpawnGroupMember(EQ::Spawn_ptr spawn)
+{
+    for (size_t i = 0; i < EQ_NUM_GROUP_MEMBERS; i++)
+    {
+        if (spawn == EQ_POINTER_GroupList.GroupMember[i])
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+EQ::Mouse EQ_GetMouse()
+{
+    EQ::Mouse mouse;
+
+    mouse.X = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_X);
+    mouse.Y = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_Y);
+    mouse.ClickState = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_CLICK_STATE);
+    mouse.LookState = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_LOOK_STATE);
+    mouse.LeftClickTimer = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_TIMER_LEFT_CLICK);
+    mouse.RightClickTimer = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_TIMER_RIGHT_CLICK);
+
+    return mouse;
+}
+
+void EQ_SetMousePosition(int x, int y)
+{
+    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_MOUSE_X, x);
+    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_MOUSE_Y, y);
+}
+
+void EQ_UseItem(int slotID)
+{
+    if (slotID >= EQ_INVENTORY_SLOT_FIRST && slotID <= EQ_INVENTORY_SLOT_LAST)
+    {
+        EQClass::CInvSlot* invSlot = EQ_CLASS_POINTER_CInvSlotMgr->FindInvSlot(slotID + 1); // have to add 1 because FindInvSlot does not start at 0 index
+
+        if (invSlot != nullptr)
+        {
+            EQ::Mouse mouse = EQ_GetMouse();
+
+            invSlot->HandleRButtonUp(mouse.X, mouse.Y);
+        }
+    }
+}
+
+std::string EQ_GetClassShortName(int classValue)
+{
+    if ((size_t)classValue > EQ_STRING_LIST_CLASS_SHORT_NAME.size())
+    {
+        return "UNK";
+    }
+
+    return EQ_STRING_LIST_CLASS_SHORT_NAME.at(classValue);
+}
+
+uint32_t EQ_GetZoneID()
+{
+    return EQ_ReadMemory<int32_t>(EQ_ADDRESS_ZONE_ID);
+}
+
+void EQ_UseSkill(uint8_t skillID, EQClass::EQPlayer* targetSpawn)
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == nullptr)
+    {
+        return;
+    }
+
+    if (playerSpawn->Character->Skill[skillID] > 0)
+    {
+        EQ_CLASS_POINTER_PlayerCharacter->UseSkill(skillID, nullptr);
+    }
+}
+
+HWND EQ_GetWindow()
+{
+    return EQ_ReadMemory<HWND>(EQ_ADDRESS_WINDOW_HWND);
+}
+

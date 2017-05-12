@@ -29,6 +29,13 @@
 #include <psapi.h>
 #pragma comment(lib, "psapi.lib")
 
+#include <d3d8.h>
+#pragma comment(lib, "d3d8.lib")
+
+#define DIRECTINPUT_VERSION 0x0800
+#include <dinput.h>
+#pragma comment(lib, "dinput8.lib")
+
 #include "detours.h"
 #pragma comment(lib, "detours.lib")
 
@@ -47,6 +54,16 @@
 #include "eqapp_speedhack.h"
 #include "eqapp_alwaysattack.h"
 #include "eqapp_bufftimers.h"
+#include "eqapp_itemdisplay.h"
+#include "eqapp_hidecorpselooted.h"
+#include "eqapp_namespritestate.h"
+#include "eqapp_namespritetint.h"
+#include "eqapp_changeheight.h"
+#include "eqapp_standwhencastspell.h"
+#include "eqapp_esp.h"
+#include "eqapp_maxskills.h"
+#include "eqapp_useskills.h"
+#include "eqapp_foodanddrink.h"
 
 #include "eqapp_detours.h"
 
@@ -56,6 +73,13 @@ void EQAPP_Load()
 
     EQAPP_Memory_Load();
 
+    //EQ_CLASS_POINTER_DInputMouse->SetCooperativeLevel(EQ_GetWindow(), DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
+
+    //std::fstream myFile("eqtakp/test.txt", std::fstream::in | std::fstream::out | std::fstream::binary | std::fstream::trunc);
+    //myFile.seekg(0);
+    //myFile.write((char*)EQ_POINTER_PlayerSpawn, sizeof(EQ::Spawn));
+    //myFile.close();
+
     g_bLoaded = 1;
 
     EQ_WriteChatText("Loaded!");
@@ -64,6 +88,8 @@ void EQAPP_Load()
 void EQAPP_Unload()
 {
     EQ_WriteChatText("Unloading...");
+
+    //EQ_CLASS_POINTER_DInputMouse->SetCooperativeLevel(EQ_GetWindow(), DISCL_FOREGROUND | DISCL_EXCLUSIVE);
 
     EQAPP_Memory_Unload();
 
@@ -86,6 +112,9 @@ DWORD WINAPI EQAPP_ThreadLoop(LPVOID param)
     Sleep(1000);
 
     EQAPP_Detours_Remove();
+
+    TerminateThread(EQAPP_ThreadLoad, 0);
+    TerminateThread(EQAPP_ThreadConsole, 0);
 
     Sleep(1000);
 

@@ -115,13 +115,13 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;EQTAKP_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Code\!libraries\detours;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Code\!libraries\detours;D:\Code\!libraries\directx8sdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>D:\Code\!libraries\detours;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Code\!libraries\detours;D:\Code\!libraries\directx8sdk\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -148,12 +148,22 @@
     <ClInclude Include="eqapp.h" />
     <ClInclude Include="eqapp_alwaysattack.h" />
     <ClInclude Include="eqapp_bufftimers.h" />
+    <ClInclude Include="eqapp_changeheight.h" />
     <ClInclude Include="eqapp_console.h" />
     <ClInclude Include="eqapp_detours.h" />
+    <ClInclude Include="eqapp_esp.h" />
+    <ClInclude Include="eqapp_foodanddrink.h" />
     <ClInclude Include="eqapp_functions.h" />
+    <ClInclude Include="eqapp_hidecorpselooted.h" />
     <ClInclude Include="eqapp_ini.h" />
+    <ClInclude Include="eqapp_itemdisplay.h" />
     <ClInclude Include="eqapp_memory.h" />
+    <ClInclude Include="eqapp_namespritestate.h" />
+    <ClInclude Include="eqapp_namespritetint.h" />
     <ClInclude Include="eqapp_speedhack.h" />
+    <ClInclude Include="eqapp_standwhencastspell.h" />
+    <ClInclude Include="eqapp_maxskills.h" />
+    <ClInclude Include="eqapp_useskills.h" />
     <ClInclude Include="eq_classes.h" />
     <ClInclude Include="eq_functions.h" />
     <ClInclude Include="eq_graphicsdll.h" />
