@@ -5,6 +5,8 @@
 template <class T>
 void EQAPP_Log(const char* text, T number);
 
+void EQAPP_String_ReplaceAll(std::string& subject, const std::string& search, const std::string& replace);
+
 void EQAPP_EnableDebugPrivileges();
 DWORD EQAPP_GetModuleBaseAddress(const wchar_t* moduleName);
 bool EQAPP_IsForegroundWindowCurrentProcessId();
@@ -23,6 +25,16 @@ void EQAPP_Log(const char* text, T number)
     file.open(filePath.str().c_str(), std::ios::out | std::ios::app);
     file << "[" << __TIME__ << "] " << text << " (" << number << ")" << " Hex(" << std::hex << number << std::dec << ")" << std::endl;
     file.close();
+}
+
+void EQAPP_String_ReplaceAll(std::string& subject, const std::string& search, const std::string& replace)
+{
+    std::size_t position = 0;
+    while ((position = subject.find(search, position)) != std::string::npos)
+    {
+         subject.replace(position, search.length(), replace);
+         position += replace.length();
+    }
 }
 
 void EQAPP_EnableDebugPrivileges()

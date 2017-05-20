@@ -32,31 +32,31 @@ EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dDeferQuad EQGraphicsDLL__t3dDeferQuad;
 bool EQ_GraphicsDLL_LoadFunctions()
 {
     HINSTANCE graphicsDLL = LoadLibraryA(EQ_STRING_GRAPHICS_DLL_NAME);
-    if (graphicsDLL == nullptr)
+    if (graphicsDLL == NULL)
     {
         return false;
     }
 
     EQGraphicsDLL__t3dWorldSpaceToScreenSpace = (EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dWorldSpaceToScreenSpace)GetProcAddress(graphicsDLL, "t3dWorldSpaceToScreenSpace");
-    if (EQGraphicsDLL__t3dWorldSpaceToScreenSpace == nullptr)
+    if (EQGraphicsDLL__t3dWorldSpaceToScreenSpace == NULL)
     {
         return false;
     }
 
     EQGraphicsDLL__t3dDeferLine = (EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dDeferLine)GetProcAddress(graphicsDLL, "t3dDeferLine");
-    if (EQGraphicsDLL__t3dDeferLine == nullptr)
+    if (EQGraphicsDLL__t3dDeferLine == NULL)
     {
         return false;
     }
 
     EQGraphicsDLL__t3dDeferRect = (EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dDeferRect)GetProcAddress(graphicsDLL, "t3dDeferRect");
-    if (EQGraphicsDLL__t3dDeferRect == nullptr)
+    if (EQGraphicsDLL__t3dDeferRect == NULL)
     {
         return false;
     }
 
     EQGraphicsDLL__t3dDeferQuad = (EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dDeferQuad)GetProcAddress(graphicsDLL, "t3dDeferQuad");
-    if (EQGraphicsDLL__t3dDeferQuad == nullptr)
+    if (EQGraphicsDLL__t3dDeferQuad == NULL)
     {
         return false;
     }

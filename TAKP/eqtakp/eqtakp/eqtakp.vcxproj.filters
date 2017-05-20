@@ -101,5 +101,11 @@
     <ClInclude Include="eqapp_useskills.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="eqapp_map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eq_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

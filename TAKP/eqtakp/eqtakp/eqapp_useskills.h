@@ -13,20 +13,23 @@ void EQAPP_UseSkills_Execute()
     }
 
     auto playerSpawn = EQ_GetPlayerSpawn();
-    if (playerSpawn == nullptr)
+    if (playerSpawn == NULL)
     {
         return;
     }
 
     if (playerSpawn->IsAwayFromKeyboard == 1)
     {
-        EQ_UseSkill(EQ_SKILL_SENSE_HEADING, nullptr);
+        ////EQ_UseSkill(EQ_SKILL_SENSE_HEADING, NULL);
 
-        EQ_UseSkill(EQ_SKILL_FORAGE, nullptr);
-
-        if (playerSpawn->Character->CursorItem != nullptr)
+        if (EQ_IsAutoAttackEnabled() == false)
         {
-            EQ_AutoInventory(playerSpawn->Character, &playerSpawn->Character->CursorItem, 0);
+            EQ_UseSkill(EQ_SKILL_FORAGE, NULL);
+
+            if (playerSpawn->Character->CursorItem != NULL)
+            {
+                EQ_AutoInventory(playerSpawn->Character, &playerSpawn->Character->CursorItem, 0);
+            }
         }
     }
 
@@ -35,7 +38,7 @@ void EQAPP_UseSkills_Execute()
         if (EQ_IsAutoAttackEnabled() == true)
         {
             auto targetSpawn = EQ_GetTargetSpawn();
-            if (targetSpawn != nullptr && targetSpawn != playerSpawn)
+            if (targetSpawn != NULL && targetSpawn != playerSpawn)
             {
                 float targetSpawnDistance = EQ_CalculateDistance(playerSpawn->X, playerSpawn->Y, targetSpawn->X, targetSpawn->Y);
 

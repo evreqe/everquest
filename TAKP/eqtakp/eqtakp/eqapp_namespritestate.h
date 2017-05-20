@@ -6,39 +6,63 @@ bool EQAPP_NameSpriteState_Execute(class EQPlayer* a1);
 
 bool EQAPP_NameSpriteState_Execute(class EQPlayer* a1)
 {
+    if (EQ_IsInGame() == false)
+    {
+        return false;
+    }
+
     EQ::Spawn_ptr spawn = (EQ::Spawn_ptr)a1;
-    if (spawn == nullptr)
+    if (spawn == NULL)
     {
         return false;
     }
 
-    if (spawn->Actor->ModelBoneHeadPoint == nullptr)
+    if (spawn->Actor == NULL)
     {
         return false;
     }
 
-    if (spawn->Actor->ModelBoneHeadPoint->StringSprite == nullptr)
+    if (spawn->Actor->ModelBoneHeadPoint == NULL)
     {
         return false;
     }
 
-    if (spawn->Actor->ModelBoneHeadPoint->StringSprite->Text == nullptr)
+    if (spawn->Actor->ModelBoneHeadPoint->StringSprite == NULL)
+    {
+        return false;
+    }
+
+    if (spawn->Actor->ModelBoneHeadPoint->StringSprite->Type != EQ_STRINGSPRITE_TYPE_1)
+    {
+        return false;
+    }
+
+    if (spawn->Actor->ModelBoneHeadPoint->StringSprite->ID == 0)
+    {
+        return false;
+    }
+
+    if (spawn->Actor->ModelBoneHeadPoint->StringSprite->Text == NULL)
+    {
+        return false;
+    }
+
+    if (spawn->Actor->ModelBoneHeadPoint->StringSprite->TextLength == 0)
     {
         return false;
     }
 
     auto playerSpawn = EQ_GetPlayerSpawn();
-    auto targetSpawn = EQ_GetTargetSpawn();
-
-    if (playerSpawn == nullptr)
+    if (playerSpawn == NULL)
     {
         return false;
     }
 
+    auto targetSpawn = EQ_GetTargetSpawn();
+
     if (spawn->Type == EQ_SPAWN_TYPE_PLAYER || spawn->Type == EQ_SPAWN_TYPE_NPC)
     {
-        std::string nameSpriteText;
-        nameSpriteText = spawn->Actor->ModelBoneHeadPoint->StringSprite->Text;
+        std::string nameSpriteText = spawn->Actor->ModelBoneHeadPoint->StringSprite->Text;
 
         std::stringstream replacementText;
 
@@ -95,7 +119,7 @@ bool EQAPP_NameSpriteState_Execute(class EQPlayer* a1)
 
         auto fontTexture = EQ_GetStringSpriteFontTexture();
 
-        EQ_CLASS_POINTER_CDisplay->ChangeDagStringSprite(spawn->Actor->ModelBoneHeadPoint, fontTexture, (char*)replacementText.str().c_str());
+        EQ_CLASS_POINTER_CDisplay->ChangeDagStringSprite(spawn->Actor->ModelBoneHeadPoint, fontTexture, replacementText.str().c_str());
     }
 
     return true;

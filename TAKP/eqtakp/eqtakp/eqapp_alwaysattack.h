@@ -12,13 +12,13 @@ void EQAPP_AlwaysAttack_Execute()
     }
 
     auto playerSpawn = EQ_GetPlayerSpawn();
-    if (playerSpawn == nullptr)
+    if (playerSpawn == NULL)
     {
         return;
     }
 
     auto targetSpawn = EQ_GetTargetSpawn();
-    if (targetSpawn == nullptr || targetSpawn == playerSpawn)
+    if (targetSpawn == NULL || targetSpawn == playerSpawn)
     {
         return;
     }

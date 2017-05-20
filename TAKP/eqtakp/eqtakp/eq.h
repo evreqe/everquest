@@ -35,6 +35,7 @@
 
 #define EQ_NUM_COMMANDS 277 // 0-276
 #define EQ_NUM_ZONES 224
+#define EQ_NUM_CLASSES 32
 #define EQ_NUM_BUFFS 15
 #define EQ_NUM_SPELLS 4000
 #define EQ_NUM_SPELL_GEMS 8
@@ -112,7 +113,10 @@
 
 #define EQ_ADDRESS_POINTER_CAMERA_DATA 0x0063B924 // pass this as first argument to graphics DLL world space to screen space funtion
 
-#define EQ_ADDRESS_CAMERA_VIEW 0x0063BE68 // uint32_t ; EQ_CAMERA_VIEW_x
+// all three camera view values must be set to same value at same time or client will crash
+#define EQ_ADDRESS_CAMERA_VIEW       0x0063BE68 // uint32_t ; EQ_CAMERA_VIEW_x
+#define EQ_ADDRESS_CAMERA_VIEW_EX    0x0063B8EC // uint32_t
+#define EQ_ADDRESS_CAMERA_VIEW_EX_EX 0x006EC6E4 // uint8_t
 
 #define EQ_CAMERA_VIEW_FIRST_PERSON  0
 #define EQ_CAMERA_VIEW_THIRD_PERSON_1 1
@@ -852,6 +856,18 @@
 #define EQ_MOUSE_ICON_SIZE_BOTTOM_LEFT  8
 #define EQ_MOUSE_ICON_SIZE_BOTTOM_RIGHT 9
 
+// clip lines within a rectangle
+// Cohen-Sutherland algorithm
+// http://en.wikipedia.org/wiki/Cohen%E2%80%93Sutherland_algorithm
+#define EQ_LINECLIP_INSIDE 0 // 0000
+#define EQ_LINECLIP_LEFT   1 // 0001
+#define EQ_LINECLIP_RIGHT  2 // 0010
+#define EQ_LINECLIP_BOTTOM 4 // 0100
+#define EQ_LINECLIP_TOP    8 // 1000
+
+#define EQ_STRINGSPRITE_TYPE_1 0x51
+#define EQ_STRINGSPRITE_TYPE_2 0x14
+
 const char* EQ_STRING_PROCESS_NAME = "eqgame.exe";
 
 const float EQ_PI = 3.14159265358979f;
@@ -904,6 +920,27 @@ std::vector<std::string> EQ_STRING_LIST_CLASS_SHORT_NAME =
     "ENC",
     "BST",
     "MERCHANT",
+};
+
+// zones that have multiple levels going up and down
+std::vector<uint32_t> EQ_ZONE_ID_LIST_VERTICAL =
+{
+    EQ_ZONE_ID_BEFALLEN,
+    EQ_ZONE_ID_BLACKBURROW,
+    EQ_ZONE_ID_HIGHKEEP,
+    EQ_ZONE_ID_KURN,
+};
+
+// zones that are safe cities with mostly no monsters
+std::vector<uint32_t> EQ_ZONE_ID_LIST_CITY =
+{
+    EQ_ZONE_ID_POKNOWLEDGE,
+    EQ_ZONE_ID_NEXUS,
+    EQ_ZONE_ID_BAZAAR,
+    EQ_ZONE_ID_FELWITHEA,
+    EQ_ZONE_ID_FELWITHEB,
+    EQ_ZONE_ID_HALAS,
+    EQ_ZONE_ID_RIVERVALE
 };
 
 // font glyph sizes use ASCII table indexes

@@ -8,18 +8,38 @@ bool EQAPP_NameSpriteTint_Execute(class EQPlayer* a1);
 
 bool EQAPP_NameSpriteTint_Execute(class EQPlayer* a1)
 {
+    if (EQ_IsInGame() == false)
+    {
+        return false;
+    }
+
     EQ::Spawn_ptr spawn = (EQ::Spawn_ptr)a1;
-    if (spawn == nullptr)
+    if (spawn == NULL)
     {
         return false;
     }
 
-    if (spawn->Actor->ModelBoneHeadPoint == nullptr)
+    if (spawn->Actor == NULL)
     {
         return false;
     }
 
-    if (spawn->Actor->ModelBoneHeadPoint->StringSprite == nullptr)
+    if (spawn->Actor->ModelBoneHeadPoint == NULL)
+    {
+        return false;
+    }
+
+    if (spawn->Actor->ModelBoneHeadPoint->StringSprite == NULL)
+    {
+        return false;
+    }
+
+    if (spawn->Actor->ModelBoneHeadPoint->StringSprite->Type != EQ_STRINGSPRITE_TYPE_1)
+    {
+        return false;
+    }
+
+    if (spawn->Actor->ModelBoneHeadPoint->StringSprite->ID == 0)
     {
         return false;
     }
@@ -27,7 +47,7 @@ bool EQAPP_NameSpriteTint_Execute(class EQPlayer* a1)
     EQ::ColorRGB color;
 
     auto playerSpawn = EQ_GetPlayerSpawn();
-    if (playerSpawn == nullptr)
+    if (playerSpawn == NULL)
     {
         return false;
     }
@@ -80,7 +100,7 @@ bool EQAPP_NameSpriteTint_Execute(class EQPlayer* a1)
     }
 
     auto targetSpawn = EQ_GetTargetSpawn();
-    if (targetSpawn == nullptr)
+    if (targetSpawn == NULL)
     {
         return false;
     }

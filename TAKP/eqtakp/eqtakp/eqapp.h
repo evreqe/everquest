@@ -7,6 +7,8 @@ volatile int g_bExit = 0;
 
 int g_killSwitchKey = VK_PAUSE;
 
+int g_zoneID = 0;
+
 HMODULE g_module;
 
 HANDLE g_handleThreadLoad;

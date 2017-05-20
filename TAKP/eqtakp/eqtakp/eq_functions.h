@@ -42,8 +42,8 @@ float EQ_GetRadians(float degrees);
 bool EQ_IsPointInsideRectangle(int pointX, int pointY, int rectX, int rectY, int rectWidth, int rectHeight);
 void EQ_ColorARGB_Darken(uint32_t& colorARGB, float percent);
 void EQ_CopyStringToClipboard(std::string& str);
-void EQ_CXStr_Set(EQ::CXStr** cxstr, char* text);
-void EQ_CXStr_Append(EQ::CXStr** cxstr, char* text);
+void EQ_CXStr_Set(EQ::CXStr** cxstr, const char* text);
+void EQ_CXStr_Append(EQ::CXStr** cxstr, const char* text);
 bool EQ_IsInGame();
 bool EQ_IsAutoAttackEnabled();
 bool EQ_IsNetStatusEnabled();
@@ -57,11 +57,12 @@ bool EQ_IsMouseHoveringOverCXWnd();
 void EQ_SetAutoAttack(bool bEnabled);
 void EQ_SetFreeCamera(bool bEnabled);
 uint32_t EQ_GetFontTextHeight(uint32_t fontPointer);
-size_t EQ_GetFontTextWidth(char text[], uint32_t fontPointer);
-void EQ_DrawTooltipText(char text[], int x, int y, uint32_t fontPointer);
+size_t EQ_GetFontTextWidth(const char* text, uint32_t fontPointer);
+void EQ_DrawTooltipText(const char* text, int x, int y, uint32_t fontPointer);
 void EQ_DrawText(const char* text, int x, int y, int textColor);
 void EQ_DrawTextEx(const char* text, int x, int y, int textColor, uint32_t fontPointer);
 void EQ_DrawLine(float x1, float y1, float x2, float y2, uint32_t colorARGB);
+void EQ_DrawLineEx(EQ::Line_ptr line, uint32_t colorARGB);
 void EQ_DrawRectangle(float x, float y, float width, float height, uint32_t colorARGB, bool isFilled = false);
 bool EQ_WorldSpaceToScreenSpace(EQ::Location location, uint32_t &screenX, uint32_t &screenY);
 void EQ_WriteChatText(const char* text);
@@ -100,6 +101,10 @@ std::string EQ_GetClassShortName(int classValue);
 uint32_t EQ_GetZoneID();
 void EQ_UseSkill(uint8_t skillID, EQClass::EQPlayer* targetSpawn);
 HWND EQ_GetWindow();
+int EQ_GetLineClipValue(float x, float y, float minX, float minY, float maxX, float maxY);
+bool EQ_LineClip(EQ::Line_ptr line, float minX, float minY, float maxX, float maxY);
+bool EQ_IsZoneVertical();
+bool EQ_IsZoneCity();
 
 template <class T>
 void EQ_Log(const char* text, T number)
@@ -225,6 +230,9 @@ typedef int (__cdecl* EQ_FUNCTION_TYPE_AutoInventory)(EQ::Character_ptr characte
 #define EQ_ADDRESS_FUNCTION_get_melee_range 0x004F3898
 EQ_MACRO_FunctionAtAddress(float __cdecl EQ_get_melee_range(class EQClass::EQPlayer* spawn1, class EQClass::EQPlayer* spawn2), EQ_ADDRESS_FUNCTION_get_melee_range);
 
+#define EQ_ADDRESS_FUNCTION_UpdateLight 0x004F0C7B
+EQ_MACRO_FunctionAtAddress(int __cdecl EQ_UpdateLight(EQ::Character_ptr character), EQ_ADDRESS_FUNCTION_UpdateLight);
+
 /* functions */
 
 void EQ_ToggleBool(bool& b)
@@ -297,7 +305,7 @@ void EQ_CopyStringToClipboard(std::string& str)
     CloseClipboard();
 }
 
-void EQ_CXStr_Set(EQ::CXStr** cxstr, char* text)
+void EQ_CXStr_Set(EQ::CXStr** cxstr, const char* text)
 { 
     EQClass::CXStr* temp = (EQClass::CXStr*)cxstr;
 
@@ -306,7 +314,7 @@ void EQ_CXStr_Set(EQ::CXStr** cxstr, char* text)
     cxstr = (EQ::CXStr**)temp;
 }
 
-void EQ_CXStr_Append(EQ::CXStr** cxstr, char* text)
+void EQ_CXStr_Append(EQ::CXStr** cxstr, const char* text)
 {
     EQClass::CXStr* temp = (EQClass::CXStr*)cxstr;
 
@@ -317,6 +325,11 @@ void EQ_CXStr_Append(EQ::CXStr** cxstr, char* text)
 
 bool EQ_IsInGame()
 {
+    if (EQ_POINTER_CEverQuest == NULL)
+    {
+        return false;
+    }
+
     return (EQ_POINTER_CEverQuest->GameState == EQ_GAME_STATE_IN_GAME);
 }
 
@@ -459,10 +472,9 @@ uint32_t EQ_GetFontTextHeight(uint32_t fontPointer)
     return fontHeight;
 }
 
-size_t EQ_GetFontTextWidth(char text[], uint32_t fontPointer)
+size_t EQ_GetFontTextWidth(const char* text, uint32_t fontPointer)
 {
     size_t textLength = strlen(text);
-
     if (textLength == 0)
     {
         return 0;
@@ -517,7 +529,7 @@ size_t EQ_GetFontTextWidth(char text[], uint32_t fontPointer)
     return width;
 }
 
-void EQ_DrawTooltipText(char text[], int x, int y, uint32_t fontPointer)
+void EQ_DrawTooltipText(const char* text, int x, int y, uint32_t fontPointer)
 {
     size_t textLength = strlen(text);
     if (textLength == 0)
@@ -579,6 +591,11 @@ void EQ_DrawLine(float x1, float y1, float x2, float y2, uint32_t colorARGB)
     EQGraphicsDLL__t3dDeferLine(&line, colorARGB);
 }
 
+void EQ_DrawLineEx(EQ::Line_ptr line, uint32_t colorARGB)
+{
+    EQGraphicsDLL__t3dDeferLine(line, colorARGB);
+}
+
 void EQ_DrawRectangle(float x, float y, float width, float height, uint32_t colorARGB, bool isFilled) // isFilled = false
 {
     EQ::Rect rect;
@@ -623,6 +640,13 @@ bool EQ_WorldSpaceToScreenSpace(EQ::Location location, uint32_t &screenX, uint32
 
     screenX = (uint32_t)resultX;
     screenY = (uint32_t)resultY;
+
+    //uint32_t resolutionWidth = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_RESOLUTION_WIDTH);
+    //uint32_t resolutionHeight = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_RESOLUTION_HEIGHT);
+    //if (screenX < 0) return false;
+    //if (screenY < 0) return false;
+    //if (screenX > resolutionWidth) return false;
+    //if (screenY > resolutionHeight) return false;
 
     return result != EQ_GRAPHICS_DLL_WORLD_SPACE_TO_SCREEN_SPACE_RESULT_FAILURE;
 }
@@ -928,7 +952,7 @@ void EQ_UseItem(int slotID)
     {
         EQClass::CInvSlot* invSlot = EQ_CLASS_POINTER_CInvSlotMgr->FindInvSlot(slotID + 1); // have to add 1 because FindInvSlot does not start at 0 index
 
-        if (invSlot != nullptr)
+        if (invSlot != NULL)
         {
             EQ::Mouse mouse = EQ_GetMouse();
 
@@ -939,7 +963,7 @@ void EQ_UseItem(int slotID)
 
 std::string EQ_GetClassShortName(int classValue)
 {
-    if ((size_t)classValue > EQ_STRING_LIST_CLASS_SHORT_NAME.size())
+    if ((classValue > EQ_NUM_CLASSES) || ((size_t)classValue > EQ_STRING_LIST_CLASS_SHORT_NAME.size()))
     {
         return "UNK";
     }
@@ -955,14 +979,14 @@ uint32_t EQ_GetZoneID()
 void EQ_UseSkill(uint8_t skillID, EQClass::EQPlayer* targetSpawn)
 {
     auto playerSpawn = EQ_GetPlayerSpawn();
-    if (playerSpawn == nullptr)
+    if (playerSpawn == NULL)
     {
         return;
     }
 
     if (playerSpawn->Character->Skill[skillID] > 0)
     {
-        EQ_CLASS_POINTER_PlayerCharacter->UseSkill(skillID, nullptr);
+        EQ_CLASS_POINTER_PlayerCharacter->UseSkill(skillID, NULL);
     }
 }
 
@@ -970,4 +994,131 @@ HWND EQ_GetWindow()
 {
     return EQ_ReadMemory<HWND>(EQ_ADDRESS_WINDOW_HWND);
 }
+
+int EQ_GetLineClipValue(float x, float y, float minX, float minY, float maxX, float maxY)
+{
+    int value = EQ_LINECLIP_INSIDE;
+ 
+    if (x < minX)
+    {
+        value |= EQ_LINECLIP_LEFT;
+    }
+    else if (x > maxX)
+    {
+        value |= EQ_LINECLIP_RIGHT;
+    }
+
+    if (y < minY)
+    {
+        value |= EQ_LINECLIP_BOTTOM;
+    }
+    else if (y > maxY)
+    {
+        value |= EQ_LINECLIP_TOP;
+    }
+ 
+    return value;
+}
+
+bool EQ_LineClip(EQ::Line_ptr line, float minX, float minY, float maxX, float maxY)
+{
+    bool bDrawLine = false;
+
+    // don't clip lines into the rectangle, offset by a 1 pixel border
+    minX = minX + 1.0f;
+    minY = minY + 1.0f;
+    maxX = maxX - 1.0f;
+    maxY = maxY - 1.0f;
+
+    int lineClipValue1 = EQ_GetLineClipValue(line->X1, line->Y1, minX, minY, maxX, maxY);
+    int lineClipValue2 = EQ_GetLineClipValue(line->X2, line->Y2, minX, minY, maxX, maxY);
+
+    while (true)
+    {
+        if (!(lineClipValue1 | lineClipValue2))
+        {
+            bDrawLine = true;
+            break;
+        }
+        else if (lineClipValue1 & lineClipValue2)
+        {
+            break;
+        }
+        else
+        {
+            float x;
+            float y;
+ 
+            int lineClipValueOut = lineClipValue1 ? lineClipValue1 : lineClipValue2;
+ 
+            if (lineClipValueOut & EQ_LINECLIP_TOP)
+            {
+                x = line->X1 + (line->X2 - line->X1) * (maxY - line->Y1) / (line->Y2 - line->Y1);
+                y = maxY;
+            }
+            else if (lineClipValueOut & EQ_LINECLIP_BOTTOM)
+            {
+                x = line->X1 + (line->X2 - line->X1) * (minY - line->Y1) / (line->Y2 - line->Y1);
+                y = minY;
+            }
+            else if (lineClipValueOut & EQ_LINECLIP_RIGHT)
+            {
+                y = line->Y1 + (line->Y2 - line->Y1) * (maxX - line->X1) / (line->X2 - line->X1);
+                x = maxX;
+            }
+            else if (lineClipValueOut & EQ_LINECLIP_LEFT)
+            {
+                y = line->Y1 + (line->Y2 - line->Y1) * (minX - line->X1) / (line->X2 - line->X1);
+                x = minX;
+            }
+ 
+            if (lineClipValueOut == lineClipValue1)
+            {
+                line->X1 = x;
+                line->Y1 = y;
+                lineClipValue1 = EQ_GetLineClipValue(line->X1, line->Y1, minX, minY, maxX, maxY);
+            }
+            else
+            {
+                line->X2 = x;
+                line->Y2 = y;
+                lineClipValue2 = EQ_GetLineClipValue(line->X2, line->Y2, minX, minY, maxX, maxY);
+            }
+        }
+    }
+
+    return bDrawLine;
+}
+
+bool EQ_IsZoneVertical()
+{
+    auto zoneID = EQ_GetZoneID();
+
+    for (auto& ID : EQ_ZONE_ID_LIST_VERTICAL)
+    {
+        if (zoneID == ID)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool EQ_IsZoneCity()
+{
+    auto zoneID = EQ_GetZoneID();
+
+    for (auto& ID : EQ_ZONE_ID_LIST_CITY)
+    {
+        if (zoneID == ID)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
 

@@ -89,9 +89,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;EQTAKP_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Code\!libraries\detours;D:\Code\!libraries\directx8sdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>D:\Code\!libraries\detours;D:\Code\!libraries\directx8sdk\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -157,6 +159,7 @@
     <ClInclude Include="eqapp_hidecorpselooted.h" />
     <ClInclude Include="eqapp_ini.h" />
     <ClInclude Include="eqapp_itemdisplay.h" />
+    <ClInclude Include="eqapp_map.h" />
     <ClInclude Include="eqapp_memory.h" />
     <ClInclude Include="eqapp_namespritestate.h" />
     <ClInclude Include="eqapp_namespritetint.h" />
@@ -171,6 +174,7 @@
     <ClInclude Include="eq_offsets.h" />
     <ClInclude Include="eq_pointers.h" />
     <ClInclude Include="eq_structures.h" />
+    <ClInclude Include="eq_types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

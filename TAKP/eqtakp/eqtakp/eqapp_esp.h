@@ -1,34 +1,70 @@
 #pragma once
 
+namespace EQApp
+{
+    typedef struct _ESPSpawn
+    {
+        EQ::Spawn_ptr SpawnInfo;
+        uint16_t ID;
+        std::string Name;
+        std::string LastName;
+        EQ::Location Location;
+        float Distance;
+        float DistanceZ;
+        int Level;
+        int Type;
+        int Class;
+        std::string ClassShortName;
+        int GuildID;
+        int StandingState;
+        int HPCurrent;
+        int HPMax;
+        bool ShowAtAnyDistance = false;
+        bool IsTarget = false;
+        bool IsGroupMember = false;
+        std::string Text;
+        uint32_t TextColor = EQ_TEXT_COLOR_WHITE;
+    } ESPSpawn, *ESPSpawn_ptr;
+}
+
 bool g_ESPIsEnabled = true;
 
 float g_ESPSpawnDistanceMax = 400.0f;
+float g_ESPSpawnDistanceZMax = 100.0f;
 
-std::vector<std::string> g_ESPSpawnList =
+std::vector<EQApp::ESPSpawn> g_ESPSpawnList;
+uint32_t g_ESPSpawnListTimer = 0;
+uint32_t g_ESPSpawnListTimerDelay = 1000;
+
+std::vector<std::string> g_ESPNamedSpawnList =
 {
-    "thorn drakeling",
-    "Soulbinder"
+    "Soulbinder",
+    "Banker",
+    "Priest of Discord",
 };
 
+void EQAPP_ESP_UpdateSpawnList();
 void EQAPP_ESP_Execute();
 
-void EQAPP_ESP_Execute()
+void EQAPP_ESP_UpdateSpawnList()
 {
-    auto playerSpawn = EQ_GetPlayerSpawn();
-    if (playerSpawn == nullptr)
+    if (EQ_HasTimePassed(g_ESPSpawnListTimer, g_ESPSpawnListTimerDelay) == false)
     {
         return;
     }
 
-    EQ::Location playerLocation;
-    playerLocation.X = playerSpawn->X;
-    playerLocation.Y = playerSpawn->Y;
-    playerLocation.Z = playerSpawn->Z;
+    g_ESPSpawnList.clear();
+
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
 
     auto targetSpawn = EQ_GetTargetSpawn();
 
     auto spawn = EQ_GetFirstSpawn();
-    while (spawn != nullptr)
+    while (spawn != NULL)
     {
         if (spawn == playerSpawn)
         {
@@ -36,119 +72,169 @@ void EQAPP_ESP_Execute()
             continue;
         }
 
-        std::string spawnName = EQ_CLASS_POINTER_CEverQuest->trimName(spawn->Name);
+        EQApp::ESPSpawn espSpawn;
 
-        EQ::Location spawnLocation;
-        spawnLocation.X = spawn->X;
-        spawnLocation.Y = spawn->Y;
-        spawnLocation.Z = spawn->Z;
+        espSpawn.SpawnInfo = spawn;
 
-        float spawnDistance = EQ_CalculateDistance((float)spawnLocation.X, (float)spawnLocation.Y, (float)playerLocation.X, (float)playerLocation.Y);
+        espSpawn.ID = spawn->SpawnID;
 
-        bool useDistance = true;
+        espSpawn.Name = EQ_CLASS_POINTER_CEverQuest->trimName(spawn->Name);
+        espSpawn.LastName = spawn->LastName;
 
-        for (auto& name : g_ESPSpawnList)
+        espSpawn.Location.X = spawn->X;
+        espSpawn.Location.Y = spawn->Y;
+        espSpawn.Location.Z = spawn->Z;
+
+        espSpawn.Level = spawn->Level;
+        espSpawn.Type = spawn->Type;
+        espSpawn.Class = spawn->Class;
+        espSpawn.ClassShortName = EQ_GetClassShortName(spawn->Class);
+        espSpawn.GuildID = spawn->GuildID;
+        espSpawn.StandingState = spawn->StandingState;
+        espSpawn.HPCurrent = spawn->HPCurrent;
+        espSpawn.HPMax = spawn->HPMax;
+
+        espSpawn.Distance = EQ_CalculateDistance(spawn->X, spawn->Y, playerSpawn->X, playerSpawn->Y);
+        espSpawn.DistanceZ = std::fabsf(spawn->Z - playerSpawn->Z);
+
+        espSpawn.ShowAtAnyDistance = true;
+
+        for (auto& name : g_ESPNamedSpawnList)
         {
-            if (spawnName.find(name) != std::string::npos)
+            if (espSpawn.Name.find(name) != std::string::npos)
             {
-                useDistance = false;
+                espSpawn.ShowAtAnyDistance = false;
                 break;
             }
         }
 
-        if (spawn == targetSpawn || spawn->Type == EQ_SPAWN_TYPE_PLAYER || spawn->Type == EQ_SPAWN_TYPE_PLAYER_CORPSE)
+        if (spawn == targetSpawn || espSpawn.Type == EQ_SPAWN_TYPE_PLAYER || espSpawn.Type == EQ_SPAWN_TYPE_PLAYER_CORPSE)
         {
-            useDistance = false;
+            espSpawn.ShowAtAnyDistance = false;
         }
 
-        if (EQ_IsKeyPressedAlt() == true)
+        if (EQ_IsKeyPressedControl() == true)
         {
-            useDistance = false;
+            espSpawn.ShowAtAnyDistance = false;
         }
 
-        if (useDistance == true)
+        if (espSpawn.ShowAtAnyDistance == true)
         {
-            if (spawnDistance > g_ESPSpawnDistanceMax)
+            if (EQ_IsZoneVertical() == true)
+            {
+                if (espSpawn.DistanceZ > g_ESPSpawnDistanceZMax)
+                {
+                    spawn = spawn->Next;
+                    continue;
+                }
+            }
+
+            if (espSpawn.Distance > g_ESPSpawnDistanceMax)
             {
                 spawn = spawn->Next;
                 continue;
             }
         }
 
-        uint32_t screenX = 0;
-        uint32_t screenY = 0;
-        if (EQ_WorldSpaceToScreenSpace(spawnLocation, screenX, screenY) == false)
-        {
-            spawn = spawn->Next;
-            continue;
-        }
+        espSpawn.TextColor = EQ_TEXT_COLOR_WHITE;
 
-        int textColor = EQ_TEXT_COLOR_WHITE;
-
-        if (spawn->Type == EQ_SPAWN_TYPE_PLAYER)
+        if (espSpawn.Type == EQ_SPAWN_TYPE_PLAYER)
         {
-            textColor = EQ_TEXT_COLOR_RED;
+            espSpawn.TextColor = EQ_TEXT_COLOR_RED;
         }
-        else if (spawn->Type == EQ_SPAWN_TYPE_NPC)
+        else if (espSpawn.Type == EQ_SPAWN_TYPE_NPC)
         {
-            textColor = EQ_TEXT_COLOR_CYAN;
+            espSpawn.TextColor = EQ_TEXT_COLOR_CYAN;
         }
         else
         {
-            textColor = EQ_TEXT_COLOR_YELLOW;
+            espSpawn.TextColor = EQ_TEXT_COLOR_YELLOW;
         }
 
         if (EQ_IsSpawnGroupMember(spawn) == true)
         {
-            textColor = EQ_TEXT_COLOR_LIGHT_GREEN;
+            espSpawn.IsGroupMember = true;
+
+            espSpawn.TextColor = EQ_TEXT_COLOR_LIGHT_GREEN;
         }
 
         if (spawn == targetSpawn)
         {
-            textColor = EQ_TEXT_COLOR_PINK;
+            espSpawn.IsTarget = true;
+
+            espSpawn.TextColor = EQ_TEXT_COLOR_PINK;
         }
 
         std::stringstream espText;
 
-        espText << "[" << (int)spawn->Level;
+        espText << "[" << espSpawn.Level;
 
-        if (spawn->Type == EQ_SPAWN_TYPE_PLAYER)
+        if (espSpawn.Type == EQ_SPAWN_TYPE_PLAYER)
         {
-            espText << " " << EQ_GetClassShortName(spawn->Class);
+            espText << " " << espSpawn.ClassShortName;
         }
-        else if (spawn->Type == EQ_SPAWN_TYPE_NPC)
+        else if (espSpawn.Type == EQ_SPAWN_TYPE_NPC)
         {
-            if (spawn->Class != EQ_CLASS_WARRIOR && spawn->Class != EQ_CLASS_BANKER && spawn->Class != EQ_CLASS_MERCHANT)
+            if ((espSpawn.Class != EQ_CLASS_WARRIOR) && (espSpawn.Class != EQ_CLASS_BANKER) && (espSpawn.Class != EQ_CLASS_MERCHANT))
             {
-                espText << " " << EQ_GetClassShortName(spawn->Class);
+                espText << " " << espSpawn.ClassShortName;
             }
         }
 
         espText << "] ";
 
-        espText << spawnName;
+        espText << espSpawn.Name;
 
-        espText << " (" << (int)spawnDistance << ")";
+        espText << " (" << (int)espSpawn.Distance << ")";
 
-        if (spawn->Type == EQ_SPAWN_TYPE_NPC)
+        if (espSpawn.Type == EQ_SPAWN_TYPE_NPC)
         {
-            if (spawn->Class == EQ_CLASS_BANKER)
+            if (espSpawn.Class == EQ_CLASS_BANKER)
             {
                 espText << "\n(Banker)";
             }
-            else if (spawn->Class == EQ_CLASS_MERCHANT)
+            else if (espSpawn.Class == EQ_CLASS_MERCHANT)
             {
                 espText << "\n(Merchant)";
             }
-            else if (spawn->Class >= EQ_CLASS_GUILDMASTER_BEGIN && spawn->Class <= EQ_CLASS_GUILDMASTER_END)
+            else if ((espSpawn.Class >= EQ_CLASS_GUILDMASTER_BEGIN) && (espSpawn.Class <= EQ_CLASS_GUILDMASTER_END))
             {
-                espText << "\n(" << EQ_GetClassShortName(spawn->Class) << " Guildmaster)";
+                espText << "\n(" << espSpawn.ClassShortName << " Guildmaster)";
             }
         }
 
-        EQ_DrawText(espText.str().c_str(), screenX, screenY, textColor);
+        espSpawn.Text = espText.str();
+
+        g_ESPSpawnList.push_back(espSpawn);
 
         spawn = spawn->Next;
+    }
+}
+
+void EQAPP_ESP_Execute()
+{
+    EQAPP_ESP_UpdateSpawnList();
+
+    for (auto& spawn : g_ESPSpawnList)
+    {
+        if (spawn.SpawnInfo != NULL)
+        {
+            if (spawn.SpawnInfo->SpawnID == spawn.ID)
+            {
+                spawn.Location.X = spawn.SpawnInfo->X;
+                spawn.Location.Y = spawn.SpawnInfo->Y;
+                spawn.Location.Z = spawn.SpawnInfo->Z;
+            }
+        }
+
+        uint32_t screenX = 0;
+        uint32_t screenY = 0;
+        if (EQ_WorldSpaceToScreenSpace(spawn.Location, screenX, screenY) == false)
+        {
+            continue;
+        }
+
+        EQ_DrawText(spawn.Text.c_str(), screenX, screenY, spawn.TextColor);
     }
 }
 

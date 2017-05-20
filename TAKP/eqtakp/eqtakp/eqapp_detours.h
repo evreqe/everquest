@@ -3,46 +3,48 @@
 void EQAPP_Detours_Add();
 void EQAPP_Detours_Remove();
 
-EQ_FUNCTION_TYPE_DrawNetStatus EQAPP_REAL_DrawNetStatus = nullptr;
+EQ_FUNCTION_TYPE_DrawNetStatus EQAPP_REAL_DrawNetStatus = NULL;
 
-EQ_FUNCTION_TYPE_CEverQuest__InterpretCmd EQAPP_REAL_CEverQuest__InterpretCmd = nullptr;
+EQ_FUNCTION_TYPE_CEverQuest__InterpretCmd EQAPP_REAL_CEverQuest__InterpretCmd = NULL;
 
-EQ_FUNCTION_TYPE_CEverQuest__dsp_chat EQAPP_REAL_CEverQuest__dsp_chat = nullptr;
+EQ_FUNCTION_TYPE_CEverQuest__dsp_chat EQAPP_REAL_CEverQuest__dsp_chat = NULL;
 
-EQ_FUNCTION_TYPE_EQ_Character__eqspa_movement_rate EQAPP_REAL_EQ_Character__eqspa_movement_rate = nullptr;
+EQ_FUNCTION_TYPE_EQ_Character__eqspa_movement_rate EQAPP_REAL_EQ_Character__eqspa_movement_rate = NULL;
 
-EQ_FUNCTION_TYPE_EQ_Character__CastSpell EQAPP_REAL_EQ_Character__CastSpell = nullptr;
+EQ_FUNCTION_TYPE_EQ_Character__CastSpell EQAPP_REAL_EQ_Character__CastSpell = NULL;
 
-EQ_FUNCTION_TYPE_CDisplay__CreatePlayerActor EQAPP_REAL_CDisplay__CreatePlayerActor = nullptr;
-EQ_FUNCTION_TYPE_CDisplay__DeleteActor EQAPP_REAL_CDisplay__DeleteActor = nullptr;
+EQ_FUNCTION_TYPE_CDisplay__CreatePlayerActor EQAPP_REAL_CDisplay__CreatePlayerActor = NULL;
+EQ_FUNCTION_TYPE_CDisplay__DeleteActor EQAPP_REAL_CDisplay__DeleteActor = NULL;
 
-EQ_FUNCTION_TYPE_CDisplay__SetNameSpriteState EQAPP_REAL_CDisplay__SetNameSpriteState = nullptr;
-EQ_FUNCTION_TYPE_CDisplay__SetNameSpriteTint EQAPP_REAL_CDisplay__SetNameSpriteTint = nullptr;
+EQ_FUNCTION_TYPE_CDisplay__SetNameSpriteState EQAPP_REAL_CDisplay__SetNameSpriteState = NULL;
+EQ_FUNCTION_TYPE_CDisplay__SetNameSpriteTint EQAPP_REAL_CDisplay__SetNameSpriteTint = NULL;
 
-EQ_FUNCTION_TYPE_CBuffWindow__RefreshBuffDisplay EQAPP_REAL_CBuffWindow__RefreshBuffDisplay = nullptr;
-EQ_FUNCTION_TYPE_CBuffWindow__PostDraw EQAPP_REAL_CBuffWindow__PostDraw = nullptr;
+EQ_FUNCTION_TYPE_CDisplay__ToggleView EQAPP_REAL_CDisplay__ToggleView = NULL;
 
-EQ_FUNCTION_TYPE_CItemDisplayWnd__SetItem EQAPP_REAL_CItemDisplayWnd__SetItem = nullptr;
-EQ_FUNCTION_TYPE_CItemDisplayWnd__SetSpell EQAPP_REAL_CItemDisplayWnd__SetSpell = nullptr;
+EQ_FUNCTION_TYPE_CBuffWindow__RefreshBuffDisplay EQAPP_REAL_CBuffWindow__RefreshBuffDisplay = NULL;
+EQ_FUNCTION_TYPE_CBuffWindow__PostDraw EQAPP_REAL_CBuffWindow__PostDraw = NULL;
 
-EQ_FUNCTION_TYPE_CSpellBookWnd__StartSpellMemorization EQAPP_REAL_CSpellBookWnd__StartSpellMemorization = nullptr;
-EQ_FUNCTION_TYPE_CSpellBookWnd__FinishMemorizing EQAPP_REAL_CSpellBookWnd__FinishMemorizing = nullptr;
+EQ_FUNCTION_TYPE_CItemDisplayWnd__SetItem EQAPP_REAL_CItemDisplayWnd__SetItem = NULL;
+EQ_FUNCTION_TYPE_CItemDisplayWnd__SetSpell EQAPP_REAL_CItemDisplayWnd__SetSpell = NULL;
 
-EQ_FUNCTION_TYPE_CLootWnd__Deactivate EQAPP_REAL_CLootWnd__Deactivate = nullptr;
+EQ_FUNCTION_TYPE_CSpellBookWnd__StartSpellMemorization EQAPP_REAL_CSpellBookWnd__StartSpellMemorization = NULL;
+EQ_FUNCTION_TYPE_CSpellBookWnd__FinishMemorizing EQAPP_REAL_CSpellBookWnd__FinishMemorizing = NULL;
 
-EQ_FUNCTION_TYPE_CEverQuest__LMouseDown EQAPP_REAL_CEverQuest__LMouseDown = nullptr;
-EQ_FUNCTION_TYPE_CEverQuest__LMouseUp EQAPP_REAL_CEverQuest__LMouseUp = nullptr;
+EQ_FUNCTION_TYPE_CLootWnd__Deactivate EQAPP_REAL_CLootWnd__Deactivate = NULL;
 
-EQ_FUNCTION_TYPE_HandleMouseWheel EQAPP_REAL_HandleMouseWheel = nullptr;
+EQ_FUNCTION_TYPE_CEverQuest__LMouseDown EQAPP_REAL_CEverQuest__LMouseDown = NULL;
+EQ_FUNCTION_TYPE_CEverQuest__LMouseUp EQAPP_REAL_CEverQuest__LMouseUp = NULL;
 
-EQ_FUNCTION_TYPE_ProcessMouseEvent EQAPP_REAL_ProcessMouseEvent = nullptr;
+EQ_FUNCTION_TYPE_HandleMouseWheel EQAPP_REAL_HandleMouseWheel = NULL;
 
-EQ_FUNCTION_TYPE_ProcessKeyDown EQAPP_REAL_ProcessKeyDown = nullptr;
-EQ_FUNCTION_TYPE_ProcessKeyUp EQAPP_REAL_ProcessKeyUp = nullptr;
+EQ_FUNCTION_TYPE_ProcessMouseEvent EQAPP_REAL_ProcessMouseEvent = NULL;
 
-EQ_FUNCTION_TYPE_ProcessMovementKeys EQAPP_REAL_ProcessMovementKeys = nullptr;
+EQ_FUNCTION_TYPE_ProcessKeyDown EQAPP_REAL_ProcessKeyDown = NULL;
+EQ_FUNCTION_TYPE_ProcessKeyUp EQAPP_REAL_ProcessKeyUp = NULL;
 
-EQ_FUNCTION_TYPE_AutoInventory EQAPP_REAL_AutoInventory = nullptr;
+EQ_FUNCTION_TYPE_ProcessMovementKeys EQAPP_REAL_ProcessMovementKeys = NULL;
+
+EQ_FUNCTION_TYPE_AutoInventory EQAPP_REAL_AutoInventory = NULL;
 
 int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short a3, unsigned short a4, unsigned short a5, int a6, unsigned short a7, unsigned long a8, long a9, unsigned long a10);
 
@@ -57,6 +59,8 @@ int __fastcall EQAPP_DETOUR_CDisplay__DeleteActor(void* this_ptr, void* not_used
 
 int __fastcall EQAPP_DETOUR_CDisplay__SetNameSpriteState(void* this_ptr, void* not_used, class EQPlayer* a1, bool a2);
 int __fastcall EQAPP_DETOUR_CDisplay__SetNameSpriteTint(void* this_ptr, void* not_used, class EQPlayer* a1);
+
+int __fastcall EQAPP_DETOUR_CDisplay__ToggleView(void* this_ptr, void* not_used);
 
 int __fastcall EQAPP_DETOUR_CBuffWindow__RefreshBuffDisplay(void* this_ptr, void* not_used);
 int __fastcall EQAPP_DETOUR_CBuffWindow__PostDraw(void* this_ptr, void* not_used);
@@ -93,6 +97,7 @@ void EQAPP_Detours_Add()
 
     EQ_MACRO_AddDetour(CDisplay__SetNameSpriteState);
     EQ_MACRO_AddDetour(CDisplay__SetNameSpriteTint);
+    EQ_MACRO_AddDetour(CDisplay__ToggleView);
 
     EQ_MACRO_AddDetour(CBuffWindow__RefreshBuffDisplay);
     EQ_MACRO_AddDetour(CBuffWindow__PostDraw);
@@ -102,7 +107,9 @@ void EQAPP_Detours_Add()
 
     EQ_MACRO_AddDetour(CLootWnd__Deactivate);
 
-    EQ_MACRO_AddDetour(ProcessMouseEvent);
+    EQ_MACRO_AddDetour(HandleMouseWheel);
+
+    //EQ_MACRO_AddDetour(ProcessMouseEvent);
 }
 
 void EQAPP_Detours_Remove()
@@ -115,6 +122,7 @@ void EQAPP_Detours_Remove()
 
     EQ_MACRO_RemoveDetour(CDisplay__SetNameSpriteState);
     EQ_MACRO_RemoveDetour(CDisplay__SetNameSpriteTint);
+    EQ_MACRO_RemoveDetour(CDisplay__ToggleView);
 
     EQ_MACRO_RemoveDetour(CBuffWindow__RefreshBuffDisplay);
     EQ_MACRO_RemoveDetour(CBuffWindow__PostDraw);
@@ -124,7 +132,9 @@ void EQAPP_Detours_Remove()
 
     EQ_MACRO_RemoveDetour(CLootWnd__Deactivate);
 
-    EQ_MACRO_RemoveDetour(ProcessMouseEvent);
+    EQ_MACRO_RemoveDetour(HandleMouseWheel);
+
+    //EQ_MACRO_RemoveDetour(ProcessMouseEvent);
 }
 
 int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short a3, unsigned short a4, unsigned short a5, int a6, unsigned short a7, unsigned long a8, long a9, unsigned long a10)
@@ -153,7 +163,7 @@ int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short
     if (GetAsyncKeyState(VK_F1))
     {
         auto groundSpawn = EQ_GetFirstGroundSpawn();
-        while (groundSpawn != nullptr)
+        while (groundSpawn != NULL)
         {
             std::stringstream buffer;
             buffer << groundSpawn->ID << ": " << groundSpawn->ActorDef;
@@ -169,19 +179,29 @@ int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short
 
     EQ_DrawText("EQTAKP", 200, 6, EQ_TEXT_COLOR_PINK);
 
-    std::stringstream ssZoneType;
-    ssZoneType << "Zone Type: " << (int)EQ_POINTER_Zone.Type;
+    auto zoneID = EQ_GetZoneID();
+    if (g_zoneID != zoneID && zoneID != 0)
+    {
+        g_zoneID = zoneID;
 
-    EQ_DrawText(ssZoneType.str().c_str(), 400, 6, EQ_TEXT_COLOR_PINK);
+        EQAPP_Map_Load();
+    }
+
+    if (g_mapIsEnabled == true)
+    {
+        EQAPP_Map_Execute();
+    }
+    else
+    {
+        if (g_ESPIsEnabled == true)
+        {
+            EQAPP_ESP_Execute();
+        }
+    }
 
     if (g_changeHeightIsEnabled == true)
     {
         EQAPP_ChangeHeight_Execute();
-    }
-
-    if (g_ESPIsEnabled == true)
-    {
-        EQAPP_ESP_Execute();
     }
 
     if (g_maxSkillsIsEnabled == true)
@@ -199,24 +219,39 @@ int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short
         EQAPP_FoodAndDrink_Execute();
     }
 
+
     // mouse fix
-    if (EQAPP_IsForegroundWindowCurrentProcessId() == true)
+    if (EQ_CLASS_POINTER_IDirectInput8 != NULL && EQ_CLASS_POINTER_DInputMouse != NULL)
     {
-        SetCapture(GetForegroundWindow());
-
-        //DIMOUSESTATE mouseState;
-        //HRESULT result = EQ_CLASS_POINTER_DInputMouse->GetDeviceState(sizeof(mouseState), (LPVOID)&mouseState);
-        //if (result == DIERR_INPUTLOST || result == DIERR_NOTACQUIRED)
-        //{
-            EQ_CLASS_POINTER_DInputMouse->Acquire();
-        //}
+        if (EQAPP_IsForegroundWindowCurrentProcessId() == true)
+        {
+            DIMOUSESTATE mouseState;
+            HRESULT result = EQ_CLASS_POINTER_DInputMouse->GetDeviceState(sizeof(DIMOUSESTATE), (LPVOID)&mouseState);
+            if (result == DIERR_INPUTLOST || result == DIERR_NOTACQUIRED)
+            {
+                if (EQ_CLASS_POINTER_DInputMouse->Acquire() == DI_OK)
+                {
+                    SetCapture(GetForegroundWindow());
+                    EQ_WriteChatText("Mouse Acquired.");
+                }
+            }
+        }
     }
-    else
-    {
-        ReleaseCapture();
+/*
+        else
+        {
+            DIMOUSESTATE mouseState;
+            HRESULT result = EQ_CLASS_POINTER_DInputMouse->GetDeviceState(sizeof(DIMOUSESTATE), (LPVOID)&mouseState);
+            if (result == DI_OK)
+            {
+                EQ_CLASS_POINTER_DInputMouse->Unacquire();
+                ReleaseCapture();
 
-        EQ_CLASS_POINTER_DInputMouse->Unacquire();
+                EQ_WriteChatText("Mouse UnAcquired.");
+            }
+        }
     }
+*/
 
     // redraw the mouse cursor
     uint32_t mouseClickState = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_CLICK_STATE);
@@ -225,13 +260,7 @@ int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short
         EQ_CLASS_POINTER_CXWndManager->DrawCursor();
     }
 
-    // print redirected std::cout to the console
-    for (std::string text; std::getline(g_consoleStringStream, text, '\n');)
-    {
-        EQ_WriteChatText(text.c_str());
-    }
-    g_consoleStringStream.str(std::string());
-    g_consoleStringStream.clear();
+    EQAPP_Console_Print();
 
     return EQAPP_REAL_DrawNetStatus(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
 }
@@ -287,7 +316,7 @@ int __fastcall EQAPP_DETOUR_CDisplay__SetNameSpriteState(void* this_ptr, void* n
 
     int result = EQAPP_REAL_CDisplay__SetNameSpriteState(this_ptr, a1, a2);
 
-    if (g_nameSpriteStateIsEnabled == true)
+    if (g_nameSpriteStateIsEnabled == true && a2 != 0)
     {
         if (EQAPP_NameSpriteState_Execute(a1) == false)
         {
@@ -320,6 +349,25 @@ int __fastcall EQAPP_DETOUR_CDisplay__SetNameSpriteTint(void* this_ptr, void* no
     }
 
     return result;
+}
+
+int __fastcall EQAPP_DETOUR_CDisplay__ToggleView(void* this_ptr, void* not_used)
+{
+    if (g_bExit == 1)
+    {
+        return EQAPP_REAL_CDisplay__ToggleView(this_ptr);
+    }
+
+    uint32_t cameraView = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_CAMERA_VIEW);
+
+    if (cameraView == EQ_CAMERA_VIEW_FIRST_PERSON)
+    {
+        EQ_WriteMemory<uint32_t>(EQ_ADDRESS_CAMERA_VIEW, EQ_CAMERA_VIEW_THIRD_PERSON_3);
+        EQ_WriteMemory<uint32_t>(EQ_ADDRESS_CAMERA_VIEW_EX, EQ_CAMERA_VIEW_THIRD_PERSON_3);
+        EQ_WriteMemory<uint8_t>(0x006EC6E4, EQ_CAMERA_VIEW_THIRD_PERSON_3);
+    }
+
+    return EQAPP_REAL_CDisplay__ToggleView(this_ptr);
 }
 
 int __fastcall EQAPP_DETOUR_CBuffWindow__RefreshBuffDisplay(void* this_ptr, void* not_used)
@@ -413,6 +461,37 @@ int __fastcall EQAPP_DETOUR_CLootWnd__Deactivate(void* this_ptr, void* not_used)
     }
 
     return result;
+}
+
+int __cdecl EQAPP_DETOUR_HandleMouseWheel(int a1)
+{
+    // a1 = delta
+
+    if (g_bExit == 1)
+    {
+        return EQAPP_REAL_HandleMouseWheel(a1);
+    }
+
+    if (EQ_IsInGame() == false)
+    {
+        return EQAPP_REAL_HandleMouseWheel(a1);
+    }
+
+    if (EQ_IsNetStatusEnabled() == false)
+    {
+        return EQAPP_REAL_HandleMouseWheel(a1);
+    }
+
+    if (EQ_IsMouseHoveringOverCXWnd() == true)
+    {
+        return EQAPP_REAL_HandleMouseWheel(a1);
+    }
+
+    int mouseWheelDelta = a1;
+
+    EQAPP_Map_HandleMouseWheel(mouseWheelDelta);
+
+    return EQAPP_REAL_HandleMouseWheel(a1);
 }
 
 int __cdecl EQAPP_DETOUR_ProcessMouseEvent(void)

@@ -9,7 +9,7 @@ void EQAPP_SpeedHack_Execute();
 void EQAPP_SpeedHack_Execute()
 {
     auto playerSpawn = EQ_GetPlayerSpawn();
-    if (playerSpawn == nullptr)
+    if (playerSpawn == NULL)
     {
         return;
     }

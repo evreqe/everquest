@@ -51,6 +51,7 @@
 #include "eqapp_ini.h"
 #include "eqapp_memory.h"
 
+#include "eqapp_map.h"
 #include "eqapp_speedhack.h"
 #include "eqapp_alwaysattack.h"
 #include "eqapp_bufftimers.h"
@@ -73,11 +74,18 @@ void EQAPP_Load()
 
     EQAPP_Memory_Load();
 
+    if (EQ_IsInGame() == true)
+    {
+        EQ_UpdateLight(EQ_POINTER_PlayerCharacter);
+
+        EQAPP_Map_Load();
+    }
+
     //EQ_CLASS_POINTER_DInputMouse->SetCooperativeLevel(EQ_GetWindow(), DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
 
     //std::fstream myFile("eqtakp/test.txt", std::fstream::in | std::fstream::out | std::fstream::binary | std::fstream::trunc);
     //myFile.seekg(0);
-    //myFile.write((char*)EQ_POINTER_PlayerSpawn, sizeof(EQ::Spawn));
+    //myFile.write(EQ_POINTER_PlayerSpawn, sizeof(EQ::Spawn));
     //myFile.close();
 
     g_bLoaded = 1;

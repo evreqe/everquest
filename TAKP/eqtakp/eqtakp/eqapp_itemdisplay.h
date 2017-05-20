@@ -10,7 +10,7 @@ void EQAPP_ItemDisplay_SetSpell(short spellID, bool hasDescription);
 
 void EQAPP_ItemDisplay_SetItem(EQ::Item_ptr item)
 {
-    if (item == nullptr || EQ_POINTER_CItemDisplayWnd->DisplayText == nullptr)
+    if (item == NULL || EQ_POINTER_CItemDisplayWnd->DisplayText == NULL)
     {
         return;
     }
@@ -20,7 +20,7 @@ void EQAPP_ItemDisplay_SetItem(EQ::Item_ptr item)
     std::stringstream ssItemIDText;
     ssItemIDText << "ID: " << item->ID << " (0x" << std::hex << item->ID << std::dec << ")<BR>";
 
-    EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, (char*)ssItemIDText.str().c_str());
+    EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, ssItemIDText.str().c_str());
 
     std::stringstream buffer;
 
@@ -31,7 +31,7 @@ void EQAPP_ItemDisplay_SetItem(EQ::Item_ptr item)
         buffer.str(std::string());
         buffer << "Vendors for: " << itemCostString << "<BR>";
 
-        EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, (char*)buffer.str().c_str());
+        EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
     }
 
     if (item->Common.SpellID != 0)
@@ -41,7 +41,7 @@ void EQAPP_ItemDisplay_SetItem(EQ::Item_ptr item)
             buffer.str(std::string());
             buffer << "Haste: " << (int)((item->Common.Haste) + 1) << "%<BR>";
 
-            EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, (char*)buffer.str().c_str());
+            EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
         }
         else
         {
@@ -60,7 +60,7 @@ void EQAPP_ItemDisplay_SetItem(EQ::Item_ptr item)
                 buffer << "Cast at Level: " << (int)item->Common.CastingLevel << "<BR>";
             }
 
-            EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, (char*)buffer.str().c_str());
+            EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
         }
     }
 
@@ -75,7 +75,7 @@ void EQAPP_ItemDisplay_SetItem(EQ::Item_ptr item)
         buffer << std::hex << i << std::dec << ": " << (int)EQ_ReadMemory<uint8_t>(itemAddress + i) << "<BR>";
     }
 
-    EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, (char*)buffer.str().c_str());
+    EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
 */
 
     EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, "</c>");
@@ -90,7 +90,7 @@ void EQAPP_ItemDisplay_SetSpell(short spellID, bool hasDescription)
 
     EQ::Spell_ptr spell = EQ_POINTER_SpellList->Spell[spellID];
 
-    if (spell == nullptr || EQ_POINTER_CItemDisplayWnd->DisplayText == nullptr)
+    if (spell == NULL || EQ_POINTER_CItemDisplayWnd->DisplayText == NULL)
     {
         return;
     }
@@ -100,7 +100,7 @@ void EQAPP_ItemDisplay_SetSpell(short spellID, bool hasDescription)
     std::stringstream ssSpellIDText;
     ssSpellIDText << "ID: " << spell->ID << " (0x" << std::hex << spell->ID << std::dec << ")<BR>";
 
-    EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, (char*)ssSpellIDText.str().c_str());
+    EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, ssSpellIDText.str().c_str());
 
     std::stringstream buffer;
 
@@ -111,7 +111,7 @@ void EQAPP_ItemDisplay_SetSpell(short spellID, bool hasDescription)
         buffer.str(std::string());
         buffer << "Recast Time: " << std::fixed << std::setprecision(2) << spellRecastTime << "<BR>";
 
-        EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, (char*)buffer.str().c_str());
+        EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
     }
 
     if (spell->RecoveryTime > 0)
@@ -121,7 +121,7 @@ void EQAPP_ItemDisplay_SetSpell(short spellID, bool hasDescription)
         buffer.str(std::string());
         buffer << "Recovery Time: " << std::fixed << std::setprecision(2) << spellRecoveryTime << "<BR>";
 
-        EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, (char*)buffer.str().c_str());
+        EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
     }
 
     if (spell->Range > 0.0f)
@@ -129,7 +129,7 @@ void EQAPP_ItemDisplay_SetSpell(short spellID, bool hasDescription)
         buffer.str(std::string());
         buffer << "Range: " << std::fixed << std::setprecision(2) << spell->Range << "<BR>";
 
-        EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, (char*)buffer.str().c_str());
+        EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
     }
 
     if (spell->AOERange > 0.0f)
@@ -137,7 +137,7 @@ void EQAPP_ItemDisplay_SetSpell(short spellID, bool hasDescription)
         buffer.str(std::string());
         buffer << "AOE Range: " << std::fixed << std::setprecision(2) << spell->AOERange << "<BR>";
 
-        EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, (char*)buffer.str().c_str());
+        EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
     }
 
     if (spell->Duration > 0)
@@ -147,7 +147,7 @@ void EQAPP_ItemDisplay_SetSpell(short spellID, bool hasDescription)
         buffer.str(std::string());
         buffer << "Duration: " << spellDuration << "<BR>";
 
-        EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, (char*)buffer.str().c_str());
+        EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
     }
 
     if (spell->AOEDuration > 0)
@@ -157,7 +157,7 @@ void EQAPP_ItemDisplay_SetSpell(short spellID, bool hasDescription)
         buffer.str(std::string());
         buffer << "AOE Duration: " << spellAOEDuration << "<BR>";
 
-        EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, (char*)buffer.str().c_str());
+        EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
     }
 
     if (spell->DurationFormula > 0)
@@ -165,7 +165,7 @@ void EQAPP_ItemDisplay_SetSpell(short spellID, bool hasDescription)
         buffer.str(std::string());
         buffer << "Duration Formula: " << spell->DurationFormula << "<BR>";
 
-        EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, (char*)buffer.str().c_str());
+        EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
     }
 
     EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, "</c>");

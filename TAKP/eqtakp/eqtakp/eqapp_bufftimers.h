@@ -32,11 +32,11 @@ void EQAPP_BuffTimers_RefreshBuffDisplay(void* this_ptr)
 
         EQ::CsidlScreenWnd_ptr buffButtonWnd = (EQ::CsidlScreenWnd_ptr)buffWindow->BuffButtonWnd[i];
 
-        if (buffButtonWnd != nullptr)
+        if (buffButtonWnd != NULL)
         {
-            if (buffButtonWnd->Window.ToolTipText != nullptr)
+            if (buffButtonWnd->Window.ToolTipText != NULL)
             {
-                EQ_CXStr_Append(&buffButtonWnd->Window.ToolTipText, (char*)ssBuffTimeText.str().c_str());
+                EQ_CXStr_Append(&buffButtonWnd->Window.ToolTipText, ssBuffTimeText.str().c_str());
             }
         }
     }
@@ -64,21 +64,21 @@ void EQAPP_BuffTimers_PostDraw(void* this_ptr)
 
         EQ::CsidlScreenWnd_ptr buffButtonWnd = (EQ::CsidlScreenWnd_ptr)buffWindow->BuffButtonWnd[i];
 
-        if (buffButtonWnd != nullptr)
+        if (buffButtonWnd != NULL)
         {
-            if (buffButtonWnd->Window.ToolTipText != nullptr && buffButtonWnd->Window.Font != nullptr)
+            if (buffButtonWnd->Window.ToolTipText != NULL && buffButtonWnd->Window.Font != NULL)
             {
                 buffButtonWnd->Window.Font->Size = g_buffTimersFontSize;
 
                 std::string originalToolTipText = buffButtonWnd->Window.ToolTipText->Text;
 
-                EQ_CXStr_Set(&buffButtonWnd->Window.ToolTipText, (char*)buffTimeText.c_str());
+                EQ_CXStr_Set(&buffButtonWnd->Window.ToolTipText, buffTimeText.c_str());
 
                 EQClass::CXRect screenRect = ((EQClass::CXWnd*)buffButtonWnd)->GetScreenRect();
 
                 ((EQClass::CXWnd*)buffButtonWnd)->DrawTooltipAtPoint(screenRect.X1, screenRect.Y1);
 
-                EQ_CXStr_Set(&buffButtonWnd->Window.ToolTipText, (char*)originalToolTipText.c_str());
+                EQ_CXStr_Set(&buffButtonWnd->Window.ToolTipText, originalToolTipText.c_str());
 
                 buffButtonWnd->Window.Font->Size = EQ_FONT_SIZE_DEFAULT;
             }

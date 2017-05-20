@@ -4,11 +4,11 @@ namespace EQApp
 {
     typedef struct _Memory
     {
-        uint32_t index;
-        std::string name;
-        std::string filename;
-        std::string description;
-        bool isEnabled;
+        uint32_t Index;
+        std::string Name;
+        std::string Filename;
+        std::string Description;
+        bool Enabled;
     } Memory, *Memory_ptr;
 }
 
@@ -63,25 +63,25 @@ void EQAPP_Memory_Load()
         ssEnabled << "bEnabled" << i;
 
         EQApp::Memory memory;
-        memory.isEnabled = EQAPP_INI_ReadBool(filePathIniCStr, "Memory", ssEnabled.str().c_str(), 0);
+        memory.Enabled = EQAPP_INI_ReadBool(filePathIniCStr, "Memory", ssEnabled.str().c_str(), 0);
 
-        std::cout << __FUNCTION__ << ": " << filename << " isEnabled: " << std::boolalpha << memory.isEnabled << std::noboolalpha << std::endl;
+        std::cout << __FUNCTION__ << ": " << filename << " Enabled: " << std::boolalpha << memory.Enabled << std::noboolalpha << std::endl;
 
-        memory.index          = i;
-        memory.filename       = filePath.str();
-        memory.name           = EQAPP_INI_ReadString(filePath.str().c_str(), "Memory", "Name", "");
-        memory.description    = EQAPP_INI_ReadString(filePath.str().c_str(), "Memory", "Description", "");
+        memory.Index          = i;
+        memory.Filename       = filePath.str();
+        memory.Name           = EQAPP_INI_ReadString(filePath.str().c_str(), "Memory", "Name", "");
+        memory.Description    = EQAPP_INI_ReadString(filePath.str().c_str(), "Memory", "Description", "");
         
         g_memoryList.push_back(memory);
     }
 
     for (auto& memory : g_memoryList)
     {
-        if (memory.isEnabled == true)
+        if (memory.Enabled == true)
         {
             EQAPP_Memory_Set(&memory, true);
 
-            std::cout << __FUNCTION__ << ": " << memory.filename << " has been enabled" << std::endl;
+            std::cout << __FUNCTION__ << ": " << memory.Filename << " has been enabled" << std::endl;
         }
     }
 }
@@ -98,18 +98,18 @@ void EQAPP_Memory_Unload()
 
 void EQAPP_Memory_Set(EQApp::Memory* pMemory, bool bEnable)
 {
-    if (pMemory == nullptr)
+    if (pMemory == NULL)
     {
         EQAPP_PrintErrorMessage(__FUNCTION__, "memory is NULL");
         return;
     }
 
-    pMemory->isEnabled = bEnable;
+    pMemory->Enabled = bEnable;
 
     for (size_t i = 0; i < g_memoryAddressesMax; i++)
     {
         std::stringstream ssFilename;
-        ssFilename << pMemory->filename.c_str() << ".ini";
+        ssFilename << pMemory->Filename.c_str() << ".ini";
 
         std::stringstream ssAddress;
         ssAddress << "Address" << i;
@@ -155,7 +155,7 @@ void EQAPP_Memory_Set(EQApp::Memory* pMemory, bool bEnable)
         std::vector<std::string> addressTokens;
         for (std::string addressToken; std::getline(addressSplit, addressToken, '+'); addressTokens.push_back(addressToken));
 
-        DWORD offset = std::stoul(addressTokens.back(), nullptr, 16);
+        DWORD offset = std::stoul(addressTokens.back(), NULL, 16);
 
         DWORD address = baseAddress + offset;
 
@@ -184,7 +184,7 @@ void EQAPP_Memory_Set(EQApp::Memory* pMemory, bool bEnable)
 
         for (auto& token : bytesTokens)
         {
-            value[valueSize] = (unsigned char)(std::stoul(token, nullptr, 16));
+            value[valueSize] = (unsigned char)(std::stoul(token, NULL, 16));
             valueSize++;
         }
 
@@ -210,9 +210,9 @@ void EQAPP_Memory_ToggleByIndex(uint32_t index)
     }
 
     EQApp::Memory* pMemory = &g_memoryList.at(index);
-    EQ_ToggleBool(pMemory->isEnabled);
-    EQAPP_Memory_Set(pMemory, pMemory->isEnabled);
-    EQAPP_PrintBool(pMemory->name.c_str(), pMemory->isEnabled);
+    EQ_ToggleBool(pMemory->Enabled);
+    EQAPP_Memory_Set(pMemory, pMemory->Enabled);
+    EQAPP_PrintBool(pMemory->Name.c_str(), pMemory->Enabled);
 }
 
 void EQAPP_Memory_Print()
@@ -222,6 +222,6 @@ void EQAPP_Memory_Print()
 
     for (auto& memory : g_memoryList)
     {
-        std::cout << "#" << memory.index << " : " << memory.isEnabled << " : " << memory.name << " (" << memory.description << ")" << std::endl;
+        std::cout << "#" << memory.Index << " : " << memory.Enabled << " : " << memory.Name << " (" << memory.Description << ")" << std::endl;
     }
 }

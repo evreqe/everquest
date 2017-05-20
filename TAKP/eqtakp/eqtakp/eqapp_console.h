@@ -7,6 +7,7 @@ std::streambuf* g_consoleStreamBuffer;
 
 void EQAPP_Console_Load();
 void EQAPP_Console_Unload();
+void EQAPP_Console_Print();
 
 void EQAPP_Console_Load()
 {
@@ -22,4 +23,15 @@ void EQAPP_Console_Unload()
     std::cout.rdbuf(g_consoleStreamBuffer);
 
     g_bConsole = 0;
+}
+
+void EQAPP_Console_Print()
+{
+    // print redirected std::cout to the chat window
+    for (std::string text; std::getline(g_consoleStringStream, text, '\n');)
+    {
+        EQ_WriteChatText(text.c_str());
+    }
+    g_consoleStringStream.str(std::string());
+    g_consoleStringStream.clear();
 }

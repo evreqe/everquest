@@ -70,12 +70,13 @@ public:
     void CDisplay::RealRender_World(void);
     void CDisplay::MoveLocalPlayerToSafeCoords(void);
     static int __cdecl CDisplay::WriteTextHD2(const char* text, int x, int y, int textColor, int font);
-    EQ::StringSprite_ptr CDisplay::ChangeDagStringSprite(EQ::ModelBone_ptr modelBone, int fontTexture, char* text);
+    EQ::StringSprite_ptr CDisplay::ChangeDagStringSprite(EQ::ModelBone_ptr modelBone, int fontTexture, const char* text);
     int __cdecl CDisplay::SetNameSpriteState(class EQPlayer* spawn, bool show);
     int __cdecl CDisplay::SetNameSpriteTint(class EQPlayer* spawn);
     void CDisplay::CreatePlayerActor(class EQPlayer* spawn);
     void CDisplay::DeleteActor(EQ::ActorInstance_ptr actorInstance);
     void CDisplay::SetViewActor(EQ::ActorInstance_ptr actorInstance);
+    int CDisplay::ToggleView(void);
 };
 
 #define EQ_ADDRESS_FUNCTION_CDisplay__Render_World 0x004AA8BC
@@ -93,8 +94,8 @@ EQ_MACRO_FunctionAtAddress(void EQClass::CDisplay::MoveLocalPlayerToSafeCoords(v
 EQ_MACRO_FunctionAtAddress(int EQClass::CDisplay::WriteTextHD2(const char* text, int x, int y, int textColor, int font), EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2);
 
 #define EQ_ADDRESS_FUNCTION_CDisplay__ChangeDagStringSprite 0x004B0AA8
-EQ_MACRO_FunctionAtAddress(EQ::StringSprite_ptr EQClass::CDisplay::ChangeDagStringSprite(EQ::ModelBone_ptr modelBone, int fontTexture, char* text), EQ_ADDRESS_FUNCTION_CDisplay__ChangeDagStringSprite);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__ChangeDagStringSprite)(void* this_ptr, EQ::ModelBone_ptr modelBone, int fontTexture, char* text);
+EQ_MACRO_FunctionAtAddress(EQ::StringSprite_ptr EQClass::CDisplay::ChangeDagStringSprite(EQ::ModelBone_ptr modelBone, int fontTexture, const char* text), EQ_ADDRESS_FUNCTION_CDisplay__ChangeDagStringSprite);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__ChangeDagStringSprite)(void* this_ptr, EQ::ModelBone_ptr modelBone, int fontTexture, const char* text);
 
 #define EQ_ADDRESS_FUNCTION_CDisplay__SetNameSpriteState 0x004B0BD9
 EQ_MACRO_FunctionAtAddress(int EQClass::CDisplay::SetNameSpriteState(class EQPlayer* spawn, bool show), EQ_ADDRESS_FUNCTION_CDisplay__SetNameSpriteState);
@@ -115,6 +116,10 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__DeleteActor)(void* this_ptr,
 #define EQ_ADDRESS_FUNCTION_CDisplay__SetViewActor 0x004AC9F7
 EQ_MACRO_FunctionAtAddress(void EQClass::CDisplay::SetViewActor(EQ::ActorInstance_ptr actorInstance), EQ_ADDRESS_FUNCTION_CDisplay__SetViewActor);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__SetViewActor)(void* this_ptr, EQ::ActorInstance_ptr actorInstance);
+
+#define EQ_ADDRESS_FUNCTION_CDisplay__ToggleView 0x004ADC80
+EQ_MACRO_FunctionAtAddress(int EQClass::CDisplay::ToggleView(void), EQ_ADDRESS_FUNCTION_CDisplay__ToggleView);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__ToggleView)(void* this_ptr);
 
 /* CEverQuest */
 

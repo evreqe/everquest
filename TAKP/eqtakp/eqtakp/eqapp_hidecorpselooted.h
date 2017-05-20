@@ -7,7 +7,7 @@ void EQAPP_HideCorpseLooted_Execute();
 void EQAPP_HideCorpseLooted_Execute()
 {
     auto corpseSpawn = EQ_GetCorpseSpawn();
-    if (corpseSpawn == nullptr)
+    if (corpseSpawn == NULL)
     {
         return;
     }

@@ -68,15 +68,23 @@ typedef struct _ColorARGB
             uint8_t R;
             uint8_t A;
         };
-        uint32_t Color;
+        uint32_t ARGB;
     };
 } ColorARGB, *ColorARGB_ptr;
 
 typedef struct _ColorRGB
 {
-    uint8_t B;
-    uint8_t G;
-    uint8_t R;
+    union
+    {
+        struct
+        {
+            uint8_t B;
+            uint8_t G;
+            uint8_t R;
+            uint8_t Unused;
+        };
+        uint32_t RGB;
+    };
 } ColorRGB, *ColorRGB_ptr;
 
 typedef struct _Font
@@ -552,8 +560,8 @@ union
 // used for name and guild name above head of each spawn
 typedef struct _StringSprite
 {
-/* 0x0000 */ uint32_t Unknown0000;
-/* 0x0004 */ uint32_t Unknown0004; // id or index?
+/* 0x0000 */ uint32_t Type; // EQ_STRINGSPRITE_TYPE_X ; 0x51 or 0x14 
+/* 0x0004 */ uint32_t ID; // ID or Index
 /* 0x0008 */ uint32_t Unknown0008;
 /* 0x000C */ uint32_t Unknown000C;
 /* 0x0010 */ uint32_t Unknown0010;
