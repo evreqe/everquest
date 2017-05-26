@@ -149,6 +149,7 @@
     <ClInclude Include="eq.h" />
     <ClInclude Include="eqapp.h" />
     <ClInclude Include="eqapp_alwaysattack.h" />
+    <ClInclude Include="eqapp_autoloot.h" />
     <ClInclude Include="eqapp_bufftimers.h" />
     <ClInclude Include="eqapp_changeheight.h" />
     <ClInclude Include="eqapp_console.h" />
@@ -161,9 +162,11 @@
     <ClInclude Include="eqapp_itemdisplay.h" />
     <ClInclude Include="eqapp_map.h" />
     <ClInclude Include="eqapp_memory.h" />
+    <ClInclude Include="eqapp_namedspawns.h" />
     <ClInclude Include="eqapp_namespritestate.h" />
     <ClInclude Include="eqapp_namespritetint.h" />
     <ClInclude Include="eqapp_speedhack.h" />
+    <ClInclude Include="eqapp_spellset.h" />
     <ClInclude Include="eqapp_standwhencastspell.h" />
     <ClInclude Include="eqapp_maxskills.h" />
     <ClInclude Include="eqapp_useskills.h" />

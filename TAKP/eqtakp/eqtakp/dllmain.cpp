@@ -35,6 +35,14 @@
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
 #pragma comment(lib, "dinput8.lib")
+#define DINPUT_MOUSE_BUTTON_LEFT   0
+#define DINPUT_MOUSE_BUTTON_RIGHT  1
+#define DINPUT_MOUSE_BUTTON_MIDDLE 2
+#define DINPUT_MOUSE_BUTTON_4      3
+#define DINPUT_MOUSE_BUTTON_5      4
+#define DINPUT_MOUSE_BUTTON_6      5
+#define DINPUT_MOUSE_BUTTON_7      6
+#define DINPUT_MOUSE_BUTTON_8      7
 
 #include "detours.h"
 #pragma comment(lib, "detours.lib")
@@ -51,7 +59,9 @@
 #include "eqapp_ini.h"
 #include "eqapp_memory.h"
 
-#include "eqapp_map.h"
+#include "eqapp_autoloot.h"
+#include "eqapp_namedspawns.h"
+
 #include "eqapp_speedhack.h"
 #include "eqapp_alwaysattack.h"
 #include "eqapp_bufftimers.h"
@@ -61,10 +71,13 @@
 #include "eqapp_namespritetint.h"
 #include "eqapp_changeheight.h"
 #include "eqapp_standwhencastspell.h"
-#include "eqapp_esp.h"
 #include "eqapp_maxskills.h"
 #include "eqapp_useskills.h"
 #include "eqapp_foodanddrink.h"
+#include "eqapp_spellset.h"
+
+#include "eqapp_map.h"
+#include "eqapp_esp.h"
 
 #include "eqapp_detours.h"
 
@@ -76,16 +89,20 @@ void EQAPP_Load()
 
     if (EQ_IsInGame() == true)
     {
+        g_zoneID = EQ_GetZoneID();
+
         EQ_UpdateLight(EQ_POINTER_PlayerCharacter);
 
         EQAPP_Map_Load();
+        EQAPP_AutoLoot_Load();
+        EQAPP_NamedSpawns_Load();
     }
 
     //EQ_CLASS_POINTER_DInputMouse->SetCooperativeLevel(EQ_GetWindow(), DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
 
     //std::fstream myFile("eqtakp/test.txt", std::fstream::in | std::fstream::out | std::fstream::binary | std::fstream::trunc);
     //myFile.seekg(0);
-    //myFile.write(EQ_POINTER_PlayerSpawn, sizeof(EQ::Spawn));
+    //myFile.write((char*)EQ_POINTER_PlayerSpawn, sizeof(EQ::Spawn));
     //myFile.close();
 
     g_bLoaded = 1;
@@ -97,7 +114,7 @@ void EQAPP_Unload()
 {
     EQ_WriteChatText("Unloading...");
 
-    //EQ_CLASS_POINTER_DInputMouse->SetCooperativeLevel(EQ_GetWindow(), DISCL_FOREGROUND | DISCL_EXCLUSIVE);
+    //EQ_CLASS_POINTER_DInputMouse->SetCooperativeLevel(EQ_GetWindow(), DISCL_BACKGROUND | DISCL_EXCLUSIVE);
 
     EQAPP_Memory_Unload();
 

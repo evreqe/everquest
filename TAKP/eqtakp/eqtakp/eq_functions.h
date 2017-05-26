@@ -74,7 +74,10 @@ std::string EQ_GetGuildNameByID(int guildID);
 uint32_t EQ_GetStringSpriteFontTexture();
 uint32_t EQ_GetTimer();
 bool EQ_HasTimePassed(uint32_t& timer, uint32_t& delay);
+EQ::Spawn_ptr EQ_GetSpawnFromIDArray(uint32_t index);
 EQ::Spawn_ptr EQ_GetFirstSpawn();
+EQ::GroundSpawn_ptr EQ_GetFirstGroundSpawn();
+EQ::DoorSpawn_ptr EQ_GetFirstDoorSpawn();
 EQ::Spawn_ptr EQ_GetPlayerSpawn();
 EQ::Spawn_ptr EQ_GetTargetSpawn();
 EQ::Spawn_ptr EQ_GetControlledSpawn();
@@ -92,7 +95,6 @@ uint32_t EQ_GetBankerSpawnAddress();
 uint32_t EQ_GetCorpseSpawnAddress();
 uint32_t EQ_GetGamemasterSpawnAddress();
 void EQ_SetTargetSpawn(EQ::Spawn_ptr spawn);
-EQ::GroundSpawn_ptr EQ_GetFirstGroundSpawn();
 bool EQ_IsSpawnGroupMember(EQ::Spawn_ptr spawn);
 EQ::Mouse EQ_GetMouse();
 void EQ_SetMousePosition(int x, int y);
@@ -105,6 +107,13 @@ int EQ_GetLineClipValue(float x, float y, float minX, float minY, float maxX, fl
 bool EQ_LineClip(EQ::Line_ptr line, float minX, float minY, float maxX, float maxY);
 bool EQ_IsZoneVertical();
 bool EQ_IsZoneCity();
+void EQ_SetCameraView(uint8_t cameraView);
+std::string EQ_GetZoneShortName();
+std::string EQ_GetZoneLongName();
+bool EQ_IsWindowVisible(uint32_t windowAddressPointer);
+bool EQ_LootItemByName(std::string name);
+void EQ_OpenAllContainers();
+void EQ_CloseAllContainers();
 
 template <class T>
 void EQ_Log(const char* text, T number)
@@ -818,9 +827,26 @@ bool EQ_HasTimePassed(uint32_t& timer, uint32_t& delay)
     return false;
 }
 
+EQ::Spawn_ptr EQ_GetSpawnFromIDArray(uint32_t index)
+{
+    uint32_t spawnAddress = *(&EQ_POINTER_SpawnIDArray + index);
+
+    return (EQ::Spawn_ptr)spawnAddress;
+}
+
 EQ::Spawn_ptr EQ_GetFirstSpawn()
 {
     return (EQ::Spawn_ptr)EQ_POINTER_FirstSpawn;
+}
+
+EQ::GroundSpawn_ptr EQ_GetFirstGroundSpawn()
+{
+    return (EQ::GroundSpawn_ptr)EQ_POINTER_FirstGroundSpawn;
+}
+
+EQ::DoorSpawn_ptr EQ_GetFirstDoorSpawn()
+{
+    return (EQ::DoorSpawn_ptr)EQ_POINTER_FirstDoorSpawn;
 }
 
 EQ::Spawn_ptr EQ_GetPlayerSpawn()
@@ -906,11 +932,6 @@ uint32_t EQ_GetGamemasterSpawnAddress()
 void EQ_SetTargetSpawn(EQ::Spawn_ptr spawn)
 {
     EQ_WriteMemory<EQ::Spawn_ptr>(EQ_ADDRESS_POINTER_TARGET_SPAWN, spawn);
-}
-
-EQ::GroundSpawn_ptr EQ_GetFirstGroundSpawn()
-{
-    return (EQ::GroundSpawn_ptr)EQ_POINTER_FirstGroundSpawn;
 }
 
 bool EQ_IsSpawnGroupMember(EQ::Spawn_ptr spawn)
@@ -1120,5 +1141,117 @@ bool EQ_IsZoneCity()
     return false;
 }
 
+void EQ_SetCameraView(uint8_t cameraView)
+{
+    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_CAMERA_VIEW, cameraView);
+    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_CAMERA_VIEW_EX, cameraView);
+    EQ_WriteMemory<uint8_t>(EQ_ADDRESS_CAMERA_VIEW_EX_EX, cameraView);
+}
+
+std::string EQ_GetZoneShortName()
+{
+    return EQ_POINTER_Zone.ShortName;
+}
+
+std::string EQ_GetZoneLongName()
+{
+    return EQ_POINTER_Zone.LongName;
+}
+
+bool EQ_IsWindowVisible(uint32_t windowAddressPointer)
+{
+    if (windowAddressPointer == NULL)
+    {
+        return false;
+    }
+
+    EQ::CSidlWnd** window = (EQ::CSidlWnd**)windowAddressPointer;
+    if (window == NULL)
+    {
+        return false;
+    }
+
+    if ((*window)->IsVisible == 1)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool EQ_LootItemByName(std::string name)
+{
+    if (EQ_IsWindowVisible(EQ_ADDRESS_POINTER_CLootWnd) == false)
+    {
+        return false;
+    }
+
+    bool result = false;
+
+    for (size_t i = 0; i < EQ_NUM_LOOT_WINDOW_SLOTS; i++)
+    {
+        if (EQ_POINTER_CLootWnd->Item[i] == NULL)
+        {
+            continue;
+        }
+
+        std::string itemName = EQ_POINTER_CLootWnd->Item[i]->Name;
+        if (itemName.size() == 0)
+        {
+            continue;
+        }
+
+        if (itemName.find(name) != std::string::npos)
+        {
+            EQ_CLASS_POINTER_CLootWnd->RequestLootSlot(i, true);
+
+            result = true;
+
+            break;
+        }
+    }
+
+    return result;
+}
+
+void EQ_OpenAllContainers()
+{
+    if (EQ_IsInGame() == false)
+    {
+        return;
+    }
+
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    for (size_t i = 0; i < EQ_NUM_INVENTORY_PACK_SLOTS; i++)
+    {
+        if (playerSpawn->Character->InventoryPackItem[i] == NULL)
+        {
+            continue;
+        }
+
+        bool isContainer = (playerSpawn->Character->InventoryPackItem[i]->IsContainer == 1);
+        if (isContainer == false)
+        {
+            continue;
+        }
+
+        EQ_CLASS_POINTER_CContainerMgr->OpenContainer((EQ::EQ_Container_ptr)playerSpawn->Character->InventoryPackItem[i], i + (EQ_NUM_INVENTORY_SLOTS + 1));
+    }
+}
+
+void EQ_CloseAllContainers()
+{
+    if (EQ_IsInGame() == false)
+    {
+        return;
+    }
+
+    EQ_CLASS_POINTER_CContainerMgr->CloseAllContainers();
+}
 
 

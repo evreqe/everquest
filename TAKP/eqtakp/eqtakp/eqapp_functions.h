@@ -15,6 +15,14 @@ void EQAPP_PrintBool(const char* text, bool& b);
 void EQAPP_PrintErrorMessage(const char* functionName, std::string text);
 void EQAPP_PrintDebugMessage(const char* functionName, std::string text);
 
+void EQAPP_PlaySound(const char* filename);
+void EQAPP_Beep();
+void EQAPP_BeepEx(UINT beepType);
+void EQAPP_DeleteFileContents(const char* filename);
+void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list);
+
+uint32_t EQAPP_GetRandomNumber(uint32_t low, uint32_t high);
+
 template <class T>
 void EQAPP_Log(const char* text, T number)
 {
@@ -133,3 +141,73 @@ void EQAPP_PrintDebugMessage(const char* functionName, std::string text)
 {
     std::cout << "[DEBUG] " << functionName << ": " << text << std::endl;
 }
+
+void EQAPP_PlaySound(const char* filename)
+{
+    PlaySoundA(filename, 0, SND_FILENAME | SND_NODEFAULT | SND_ASYNC);
+}
+
+void EQAPP_Beep()
+{
+    MessageBeep(0);
+}
+
+void EQAPP_BeepEx(UINT beepType)
+{
+    MessageBeep(beepType);
+}
+
+void EQAPP_DeleteFileContents(const char* filename)
+{
+    std::fstream file;
+    file.open(filename, std::fstream::out | std::fstream::trunc);
+    file.close();
+}
+
+void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list)
+{
+    std::stringstream filePath;
+    filePath << g_applicationName << "/" << filename;
+
+    std::string filePathStr = filePath.str();
+
+    std::fstream file;
+    file.open(filePathStr.c_str(), std::fstream::in);
+    if (file.is_open() == false)
+    {
+        std::stringstream ss;
+        ss << "failed to open file: " << filePathStr;
+
+        EQAPP_PrintErrorMessage(__FUNCTION__, ss.str());
+        return;
+    }
+
+    std::string line;
+    while (std::getline(file, line))
+    {
+        if (line.size() == 0)
+        {
+            continue;
+        }
+
+        if (line.at(0) == '#')
+        {
+            continue;
+        }
+
+        std::cout << filename << ": " << line << std::endl;
+
+        list.push_back(line);
+    }
+
+    file.close();
+}
+
+uint32_t EQAPP_GetRandomNumberLowHigh(uint32_t low, uint32_t high)
+{
+    std::uniform_int_distribution<uint32_t> uid;
+    std::uniform_int_distribution<uint32_t>::param_type uidpt(low, high);
+
+    return uid(g_randomEngine, uidpt);
+}
+

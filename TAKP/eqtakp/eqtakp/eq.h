@@ -41,8 +41,9 @@
 #define EQ_NUM_SPELL_GEMS 8
 #define EQ_NUM_GROUP_MEMBERS 5
 #define EQ_NUM_INVENTORY_SLOTS 21
-#define EQ_NUM_INVENTORY_PACK_SLOTS 8
+#define EQ_NUM_INVENTORY_PACK_SLOTS 8 // bags
 #define EQ_NUM_INVENTORY_BANK_SLOTS 8
+#define EQ_NUM_INVENTORY_SLOTS_TOTAL // 21 + 8 + 8, inventory + bags + bank
 #define EQ_NUM_SKILLS 74
 #define EQ_NUM_SPELL_BOOK_SPELLS 250
 #define EQ_NUM_SPAWNS 8192
@@ -366,6 +367,137 @@
 #define EQ_TEXT_COLOR_CYAN        0x12
 #define EQ_TEXT_COLOR_GRAY8       0x13
 #define EQ_TEXT_COLOR_BLACK2      0x14
+
+// ExecuteCmd() function
+#define EQ_EXECUTECMD_NULL                      0
+#define EQ_EXECUTECMD_AUTORUN                   1
+#define EQ_EXECUTECMD_JUMP                      2
+#define EQ_EXECUTECMD_FORWARD                   3
+#define EQ_EXECUTECMD_BACK                      4
+#define EQ_EXECUTECMD_RIGHT                     5
+#define EQ_EXECUTECMD_LEFT                      6
+#define EQ_EXECUTECMD_MOUSELOOK                 7
+#define EQ_EXECUTECMD_AUTOPRIM                  8
+#define EQ_EXECUTECMD_CONSIDER                  9
+#define EQ_EXECUTECMD_DUCK                      10
+#define EQ_EXECUTECMD_HAIL                      11
+#define EQ_EXECUTECMD_INVENTORY                 12
+#define EQ_EXECUTECMD_TELL                      13
+#define EQ_EXECUTECMD_UNKNOWN_14                14
+#define EQ_EXECUTECMD_PITCHUP                   15
+#define EQ_EXECUTECMD_PITCHDOWN                 16
+#define EQ_EXECUTECMD_CENTERVIEW                17
+#define EQ_EXECUTECMD_ZOOMIN                    18
+#define EQ_EXECUTECMD_ZOOMOUT                   19
+#define EQ_EXECUTECMD_TOGGLECAM                 20
+#define EQ_EXECUTECMD_FULLSCREEN                21
+#define EQ_EXECUTECMD_TARGETME                  22
+#define EQ_EXECUTECMD_PARTY1                    23
+#define EQ_EXECUTECMD_PARTY2                    24
+#define EQ_EXECUTECMD_PARTY3                    25
+#define EQ_EXECUTECMD_PARTY4                    26
+#define EQ_EXECUTECMD_PARTY5                    27
+#define EQ_EXECUTECMD_TARGETPC                  28
+#define EQ_EXECUTECMD_TARGETNPC                 29
+#define EQ_EXECUTECMD_NETSTAT                   30
+#define EQ_EXECUTECMD_HOT1                      31
+#define EQ_EXECUTECMD_HOT2                      32
+#define EQ_EXECUTECMD_HOT3                      33
+#define EQ_EXECUTECMD_HOT4                      34
+#define EQ_EXECUTECMD_HOT5                      35
+#define EQ_EXECUTECMD_HOT6                      36
+#define EQ_EXECUTECMD_HOT7                      37
+#define EQ_EXECUTECMD_HOT8                      38
+#define EQ_EXECUTECMD_HOT9                      39
+#define EQ_EXECUTECMD_HOT10                     40
+#define EQ_EXECUTECMD_HOTPAGE1                  41
+#define EQ_EXECUTECMD_HOTPAGE2                  42
+#define EQ_EXECUTECMD_HOTPAGE3                  43
+#define EQ_EXECUTECMD_HOTPAGE4                  44
+#define EQ_EXECUTECMD_HOTPAGE5                  45
+#define EQ_EXECUTECMD_HOTPAGE6                  46
+#define EQ_EXECUTECMD_HOTPAGE7                  47
+#define EQ_EXECUTECMD_HOTPAGE8                  48
+#define EQ_EXECUTECMD_HOTPAGE9                  49
+#define EQ_EXECUTECMD_HOTPAGE10                 50
+#define EQ_EXECUTECMD_CAST1                     51
+#define EQ_EXECUTECMD_CAST2                     52
+#define EQ_EXECUTECMD_CAST3                     53
+#define EQ_EXECUTECMD_CAST4                     54
+#define EQ_EXECUTECMD_CAST5                     55
+#define EQ_EXECUTECMD_CAST6                     56
+#define EQ_EXECUTECMD_CAST7                     57
+#define EQ_EXECUTECMD_CAST8                     58
+#define EQ_EXECUTECMD_REPLY                     59
+#define EQ_EXECUTECMD_CYCLEREPLY                60
+#define EQ_EXECUTECMD_CYCLEREPLY_BACK           61
+#define EQ_EXECUTECMD_BACKDROP                  62
+#define EQ_EXECUTECMD_TOGGLETARGET              63
+#define EQ_EXECUTECMD_SPELLBOOK                 64
+#define EQ_EXECUTECMD_ABILITIES                 65
+#define EQ_EXECUTECMD_COMBAT                    66
+#define EQ_EXECUTECMD_SOCIALS                   67
+#define EQ_EXECUTECMD_MAIN                      68
+#define EQ_EXECUTECMD_UNKNOWN_69                69
+#define EQ_EXECUTECMD_INVITE_FOLLOW             70
+#define EQ_EXECUTECMD_DISBAND                   71
+#define EQ_EXECUTECMD_CAMP                      72
+#define EQ_EXECUTECMD_SIT_STAND                 73
+#define EQ_EXECUTECMD_RUN_WALK                  74
+#define EQ_EXECUTECMD_CLIP_IN                   75
+#define EQ_EXECUTECMD_CLIP_OUT                  76
+#define EQ_EXECUTECMD_VOICE_ON                  77
+#define EQ_EXECUTECMD_SCREENCAP                 78
+#define EQ_EXECUTECMD_HISTORY_UP                79
+#define EQ_EXECUTECMD_HISTORY_DOWN              80
+#define EQ_EXECUTECMD_CHATLEFT                  81
+#define EQ_EXECUTECMD_CHATRIGHT                 82
+#define EQ_EXECUTECMD_CHATBEGIN                 83
+#define EQ_EXECUTECMD_CHATEND                   84
+#define EQ_EXECUTECMD_PAGEUP                    85
+#define EQ_EXECUTECMD_PAGEDOWN                  86
+#define EQ_EXECUTECMD_CMDMODE_SAY               87
+#define EQ_EXECUTECMD_CMDMODE_EMOTE             88
+#define EQ_EXECUTECMD_LOCK_WINDOWS              89
+#define EQ_EXECUTECMD_TOGGLE_PLAYERWIN          90
+#define EQ_EXECUTECMD_TOGGLE_PARTYWIN           91
+#define EQ_EXECUTECMD_TOGGLE_TARGETWIN          92
+#define EQ_EXECUTECMD_TOGGLE_SPELLSWIN          93
+#define EQ_EXECUTECMD_TOGGLE_BUFFWIN            94
+#define EQ_EXECUTECMD_TOGGLE_HOTBOXWIN          95
+#define EQ_EXECUTECMD_TOGGLE_CHATWIN            96
+#define EQ_EXECUTECMD_TOGGLE_MAINMENUWIN        97
+#define EQ_EXECUTECMD_TOGGLE_ALTADVWIN          98
+#define EQ_EXECUTECMD_TOGGLE_BAZAARWIN          99
+#define EQ_EXECUTECMD_RTARGET                   100
+#define EQ_EXECUTECMD_TOGGLE_FRIENDSWIN         101
+#define EQ_EXECUTECMD_TOGGLE_PETINFOWIN         102
+#define EQ_EXECUTECMD_TOGGLE_OPTIONSWIN         103
+#define EQ_EXECUTECMD_TOGGLE_HELPWIN            104
+#define EQ_EXECUTECMD_TOGGLE_SELECTORWIN        105
+#define EQ_EXECUTECMD_TOGGLE_VIDEOMODEWIN       106
+#define EQ_EXECUTECMD_TOGGLE_BAZAARSEARCHWIN    107
+#define EQ_EXECUTECMD_TOGGLE_COMPASSWIN         108
+#define EQ_EXECUTECMD_TOGGLE_RAIDWIN            109
+#define EQ_EXECUTECMD_TOGGLE_MUSICPLAYERWIN     110
+#define EQ_EXECUTECMD_FORWARD_CAM               111
+#define EQ_EXECUTECMD_BACK_CAM                  112
+#define EQ_EXECUTECMD_RIGHT_CAM                 113
+#define EQ_EXECUTECMD_LEFT_CAM                  114
+#define EQ_EXECUTECMD_PITCHUP_CAM               115
+#define EQ_EXECUTECMD_PITCHDOWN_CAM             116
+#define EQ_EXECUTECMD_TOGGLE_FPS                117
+#define EQ_EXECUTECMD_TOGGLE_AVATAR             118
+#define EQ_EXECUTECMD_TOGGLE_PETITION           119
+#define EQ_EXECUTECMD_TOGGLE_MEMINFO            120
+#define EQ_EXECUTECMD_FLY_UP                    121
+#define EQ_EXECUTECMD_FLY_DOWN                  122
+#define EQ_EXECUTECMD_TOGGLE_DEV_WINDOW         123
+#define EQ_EXECUTECMD_ADD_ROUTE                 124
+#define EQ_EXECUTECMD_LAY_PPOINT                125
+#define EQ_EXECUTECMD_LAY_LINK                  126
+//
+#define EQ_EXECUTECMD_ESCAPE                    200 // void CDisplay::NewUIProcessEscape()
 
 // direct input key scan codes (DIK_*)
 #define EQ_KEY_NULL            0x00
@@ -868,6 +1000,13 @@
 #define EQ_STRINGSPRITE_TYPE_1 0x51
 #define EQ_STRINGSPRITE_TYPE_2 0x14
 
+#define EQ_BAZAAR_ACTION_SEARCH_RESULTS 7
+#define EQ_BAZAAR_ACTION_SEARCH_DONE    12
+
+#define EQ_BAZAAR_COLUMN_INDEX_ITEM_NAME 1
+#define EQ_BAZAAR_COLUMN_INDEX_PRICE     2
+#define EQ_BAZAAR_COLUMN_INDEX_SELLER    3
+
 const char* EQ_STRING_PROCESS_NAME = "eqgame.exe";
 
 const float EQ_PI = 3.14159265358979f;
@@ -920,6 +1059,49 @@ std::vector<std::string> EQ_STRING_LIST_CLASS_SHORT_NAME =
     "ENC",
     "BST",
     "MERCHANT",
+};
+
+std::unordered_map<std::string, std::string> EQ_STRING_MAP_GROUND_SPAWN_NAME
+{
+    {"IT27_ACTORDEF",    "Book"},
+    {"IT28_ACTORDEF",    "Book"},
+    {"IT63_ACTORDEF",    "Small Bag"},
+    {"IT64_ACTORDEF",    "Large Bag"},
+    {"IT66_ACTORDEF",    "Forge"},
+    {"IT69_ACTORDEF",    "Oven"},
+    {"IT70_ACTORDEF",    "Brew Barrel"},
+    {"IT73_ACTORDEF",    "Kiln"},
+    {"IT74_ACTORDEF",    "Pottery Wheel"},
+    {"IT128_ACTORDEF",   "Sewing Kit"},
+    {"IT10645_ACTORDEF", "Book"},
+};
+
+std::unordered_map<std::string, std::string> EQ_STRING_MAP_DOOR_SPAWN_NAME =
+{
+    {"POKTELE500",    "Plane of Knowledge"}, // POK book
+
+    {"POKAAPORT500",  "Ak'Anon"},
+    {"POKCABPORT500", "Cabilis"},
+    {"POKERPORT500",  "Erudin"},
+    {"POKFELPORT500", "Felwithe"},
+    {"POKFVPORT500",  "Firiona Vie"},
+    {"POKFPTPORT500", "Freeport"},
+    {"POKGROPORT500", "Grobb"},
+    {"POKHALPORT500", "Halas"},
+    {"POKKALPORT500", "Kaladim"},
+    {"POKKELPORT500", "Kelethin"},
+    {"POKNRKPORT500", "Neriak"},
+    {"POKOGPORT500",  "Oggok"},
+    {"POKOVPORT500",  "Overthere"},
+    {"POKPPORT500",   "Paineel"},
+    {"POKPTPORT500",  "Plane of Tranquility"},
+    {"POKQNSPORT500", "Qeynos"},
+    {"POKRVPORT500",  "Rivervale"},
+    {"POKSHPORT500",  "Shar Vahl"},
+    {"POKTGDPORT500", "The Great Divide"},
+    {"POKTNPORT500",  "The Nexus"},
+
+    {"FAYLEVATOR",    "Faydark Elevator"},
 };
 
 // zones that have multiple levels going up and down

@@ -9,6 +9,8 @@ int g_killSwitchKey = VK_PAUSE;
 
 int g_zoneID = 0;
 
+std::mt19937 g_randomEngine((uint32_t)std::chrono::high_resolution_clock::now().time_since_epoch().count());
+
 HMODULE g_module;
 
 HANDLE g_handleThreadLoad;
@@ -22,4 +24,6 @@ BOOL __stdcall DllMain(HMODULE module, DWORD reason, LPVOID reserved);
 
 void EQAPP_Load();
 void EQAPP_Unload();
+
+
 

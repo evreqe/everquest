@@ -21,6 +21,8 @@ EQ_FUNCTION_TYPE_CDisplay__SetNameSpriteTint EQAPP_REAL_CDisplay__SetNameSpriteT
 
 EQ_FUNCTION_TYPE_CDisplay__ToggleView EQAPP_REAL_CDisplay__ToggleView = NULL;
 
+EQ_FUNCTION_TYPE_CBazaarSearchWnd__HandleBazaarMsg EQAPP_REAL_CBazaarSearchWnd__HandleBazaarMsg = NULL;
+
 EQ_FUNCTION_TYPE_CBuffWindow__RefreshBuffDisplay EQAPP_REAL_CBuffWindow__RefreshBuffDisplay = NULL;
 EQ_FUNCTION_TYPE_CBuffWindow__PostDraw EQAPP_REAL_CBuffWindow__PostDraw = NULL;
 
@@ -31,6 +33,8 @@ EQ_FUNCTION_TYPE_CSpellBookWnd__StartSpellMemorization EQAPP_REAL_CSpellBookWnd_
 EQ_FUNCTION_TYPE_CSpellBookWnd__FinishMemorizing EQAPP_REAL_CSpellBookWnd__FinishMemorizing = NULL;
 
 EQ_FUNCTION_TYPE_CLootWnd__Deactivate EQAPP_REAL_CLootWnd__Deactivate = NULL;
+
+EQ_FUNCTION_TYPE_CContainerMgr__OpenContainer EQAPP_REAL_CContainerMgr__OpenContainer = NULL;
 
 EQ_FUNCTION_TYPE_CEverQuest__LMouseDown EQAPP_REAL_CEverQuest__LMouseDown = NULL;
 EQ_FUNCTION_TYPE_CEverQuest__LMouseUp EQAPP_REAL_CEverQuest__LMouseUp = NULL;
@@ -62,6 +66,8 @@ int __fastcall EQAPP_DETOUR_CDisplay__SetNameSpriteTint(void* this_ptr, void* no
 
 int __fastcall EQAPP_DETOUR_CDisplay__ToggleView(void* this_ptr, void* not_used);
 
+int __fastcall EQAPP_DETOUR_CBazaarSearchWnd__HandleBazaarMsg(void* this_ptr, void* not_used, EQ::CBazaarSearchWndBazaarMsg_ptr message);
+
 int __fastcall EQAPP_DETOUR_CBuffWindow__RefreshBuffDisplay(void* this_ptr, void* not_used);
 int __fastcall EQAPP_DETOUR_CBuffWindow__PostDraw(void* this_ptr, void* not_used);
 
@@ -72,6 +78,8 @@ int __fastcall EQAPP_DETOUR_CSpellBookWnd__StartSpellMemorization(void* this_ptr
 int __fastcall EQAPP_DETOUR_CSpellBookWnd__FinishMemorizing(void* this_ptr, void* not_used, int a1, short a2);
 
 int __fastcall EQAPP_DETOUR_CLootWnd__Deactivate(void* this_ptr, void* not_used);
+
+int __fastcall EQAPP_DETOUR_CContainerMgr__OpenContainer(void* this_ptr, void* not_used, EQ::EQ_Container_ptr a1, int a2);
 
 int __fastcall EQAPP_DETOUR_CEverQuest__LMouseDown(void* this_ptr, void* not_used, unsigned short a1, unsigned short a2);
 int __fastcall EQAPP_DETOUR_CEverQuest__LMouseUp(void* this_ptr, void* not_used, unsigned short a1, unsigned short a2);
@@ -99,6 +107,8 @@ void EQAPP_Detours_Add()
     EQ_MACRO_AddDetour(CDisplay__SetNameSpriteTint);
     EQ_MACRO_AddDetour(CDisplay__ToggleView);
 
+    EQ_MACRO_AddDetour(CBazaarSearchWnd__HandleBazaarMsg);
+
     EQ_MACRO_AddDetour(CBuffWindow__RefreshBuffDisplay);
     EQ_MACRO_AddDetour(CBuffWindow__PostDraw);
     
@@ -107,9 +117,11 @@ void EQAPP_Detours_Add()
 
     EQ_MACRO_AddDetour(CLootWnd__Deactivate);
 
+    ////EQ_MACRO_AddDetour(CContainerMgr__OpenContainer);
+
     EQ_MACRO_AddDetour(HandleMouseWheel);
 
-    //EQ_MACRO_AddDetour(ProcessMouseEvent);
+    EQ_MACRO_AddDetour(ProcessMouseEvent);
 }
 
 void EQAPP_Detours_Remove()
@@ -124,6 +136,8 @@ void EQAPP_Detours_Remove()
     EQ_MACRO_RemoveDetour(CDisplay__SetNameSpriteTint);
     EQ_MACRO_RemoveDetour(CDisplay__ToggleView);
 
+    EQ_MACRO_RemoveDetour(CBazaarSearchWnd__HandleBazaarMsg);
+
     EQ_MACRO_RemoveDetour(CBuffWindow__RefreshBuffDisplay);
     EQ_MACRO_RemoveDetour(CBuffWindow__PostDraw);
     
@@ -132,9 +146,11 @@ void EQAPP_Detours_Remove()
 
     EQ_MACRO_RemoveDetour(CLootWnd__Deactivate);
 
+    ////EQ_MACRO_RemoveDetour(CContainerMgr__OpenContainer);
+
     EQ_MACRO_RemoveDetour(HandleMouseWheel);
 
-    //EQ_MACRO_RemoveDetour(ProcessMouseEvent);
+    EQ_MACRO_RemoveDetour(ProcessMouseEvent);
 }
 
 int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short a3, unsigned short a4, unsigned short a5, int a6, unsigned short a7, unsigned long a8, long a9, unsigned long a10)
@@ -159,32 +175,33 @@ int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short
         return EQAPP_REAL_DrawNetStatus(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
     }
 
-/*
-    if (GetAsyncKeyState(VK_F1))
-    {
-        auto groundSpawn = EQ_GetFirstGroundSpawn();
-        while (groundSpawn != NULL)
-        {
-            std::stringstream buffer;
-            buffer << groundSpawn->ID << ": " << groundSpawn->ActorDef;
-
-            EQ_WriteChatText(buffer.str().c_str());
-
-            groundSpawn = groundSpawn->Next;
-        }
-
-        Sleep(100);
-    }
-*/
-
     EQ_DrawText("EQTAKP", 200, 6, EQ_TEXT_COLOR_PINK);
 
+    // on changed zone event
     auto zoneID = EQ_GetZoneID();
     if (g_zoneID != zoneID && zoneID != 0)
     {
         g_zoneID = zoneID;
 
         EQAPP_Map_Load();
+        EQAPP_AutoLoot_Load();
+        EQAPP_NamedSpawns_Load();
+
+        if (zoneID == EQ_ZONE_ID_FIELDOFBONE)
+        {
+            auto playerSpawn = EQ_GetPlayerSpawn();
+            if (playerSpawn != NULL)
+            {
+                if (playerSpawn->Class == EQ_CLASS_WARRIOR)
+                {
+                    g_alwaysAttackIsEnabled = true;
+                }
+            }
+        }
+        else
+        {
+            g_alwaysAttackIsEnabled = false;
+        }
     }
 
     if (g_mapIsEnabled == true)
@@ -197,6 +214,16 @@ int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short
         {
             EQAPP_ESP_Execute();
         }
+    }
+
+    if (g_autoLootIsEnabled == true)
+    {
+        EQAPP_AutoLoot_Execute();
+    }
+
+    if (g_alwaysAttackIsEnabled == true)
+    {
+        EQAPP_AlwaysAttack_Execute();
     }
 
     if (g_changeHeightIsEnabled == true)
@@ -218,7 +245,6 @@ int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short
     {
         EQAPP_FoodAndDrink_Execute();
     }
-
 
     // mouse fix
     if (EQ_CLASS_POINTER_IDirectInput8 != NULL && EQ_CLASS_POINTER_DInputMouse != NULL)
@@ -360,14 +386,41 @@ int __fastcall EQAPP_DETOUR_CDisplay__ToggleView(void* this_ptr, void* not_used)
 
     uint32_t cameraView = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_CAMERA_VIEW);
 
-    if (cameraView == EQ_CAMERA_VIEW_FIRST_PERSON)
+    if (cameraView == EQ_CAMERA_VIEW_FIRST_PERSON || cameraView == EQ_CAMERA_VIEW_THIRD_PERSON_1 || cameraView == EQ_CAMERA_VIEW_THIRD_PERSON_2)
     {
-        EQ_WriteMemory<uint32_t>(EQ_ADDRESS_CAMERA_VIEW, EQ_CAMERA_VIEW_THIRD_PERSON_3);
-        EQ_WriteMemory<uint32_t>(EQ_ADDRESS_CAMERA_VIEW_EX, EQ_CAMERA_VIEW_THIRD_PERSON_3);
-        EQ_WriteMemory<uint8_t>(0x006EC6E4, EQ_CAMERA_VIEW_THIRD_PERSON_3);
+        EQ_SetCameraView(EQ_CAMERA_VIEW_THIRD_PERSON_3);
     }
 
     return EQAPP_REAL_CDisplay__ToggleView(this_ptr);
+}
+
+int __fastcall EQAPP_DETOUR_CBazaarSearchWnd__HandleBazaarMsg(void* this_ptr, void* not_used, EQ::CBazaarSearchWndBazaarMsg_ptr message)
+{
+    if (g_bExit == 1)
+    {
+        return EQAPP_REAL_CBazaarSearchWnd__HandleBazaarMsg(this_ptr, message);
+    }
+
+    int result = EQAPP_REAL_CBazaarSearchWnd__HandleBazaarMsg(this_ptr, message);
+
+/*
+    if (message->Action == EQ_BAZAAR_ACTION_SEARCH_RESULTS)
+    {
+        auto spawn = EQ_GetSpawnFromIDArray(message->SpawnIDArrayIndex);
+        if (spawn != NULL)
+        {
+            std::cout << "[CBazaarSearchWnd__HandleBazaarMsg] Action: " << message->Action << std::endl;
+            std::cout << "[CBazaarSearchWnd__HandleBazaarMsg] Item Quantity: " << message->ItemQuantity << std::endl;
+            std::cout << "[CBazaarSearchWnd__HandleBazaarMsg] Item ID: " << std::hex << message->ItemID << std::dec << std::endl;
+            std::cout << "[CBazaarSearchWnd__HandleBazaarMsg] Seller Name: " << spawn->Name << std::endl;
+            std::cout << "[CBazaarSearchWnd__HandleBazaarMsg] Item Price: " << EQ_CLASS_POINTER_CBazaarSearchWnd->GetPriceString(message->ItemValue) << std::endl;
+            std::cout << "[CBazaarSearchWnd__HandleBazaarMsg] Item Name: " << message->ItemName << std::endl;
+            std::cout << "--------------------------------------------------" << std::endl;
+        }
+    }
+*/
+
+    return result;
 }
 
 int __fastcall EQAPP_DETOUR_CBuffWindow__RefreshBuffDisplay(void* this_ptr, void* not_used)
@@ -463,6 +516,23 @@ int __fastcall EQAPP_DETOUR_CLootWnd__Deactivate(void* this_ptr, void* not_used)
     return result;
 }
 
+int __fastcall EQAPP_DETOUR_CContainerMgr__OpenContainer(void* this_ptr, void* not_used, EQ::EQ_Container_ptr a1, int a2)
+{
+    // a1 = contaienr
+    // a2 = inventorySlotIndex
+
+    if (g_bExit == 1)
+    {
+        return EQAPP_REAL_CContainerMgr__OpenContainer(this_ptr, a1, a2);
+    }
+
+    int result = EQAPP_REAL_CContainerMgr__OpenContainer(this_ptr, a1, a2);
+
+    ////std::cout << "[CContainerMgr__OpenContainer] inventorySlotIndex: " << a2 << std::endl;
+
+    return result;
+}
+
 int __cdecl EQAPP_DETOUR_HandleMouseWheel(int a1)
 {
     // a1 = delta
@@ -499,6 +569,16 @@ int __cdecl EQAPP_DETOUR_ProcessMouseEvent(void)
     if (g_bExit == 1)
     {
         return EQAPP_REAL_ProcessMouseEvent();
+    }
+
+    DIMOUSESTATE mouseState;
+    HRESULT result = EQ_CLASS_POINTER_DInputMouse->GetDeviceState(sizeof(DIMOUSESTATE), (LPVOID)&mouseState);
+    if (result != DIERR_INPUTLOST && result != DIERR_NOTACQUIRED)
+    {
+        if (mouseState.rgbButtons[DINPUT_MOUSE_BUTTON_4] & 0x80)
+        {
+            EQ_OpenAllContainers();
+        }
     }
 
     return EQAPP_REAL_ProcessMouseEvent();

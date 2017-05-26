@@ -36,13 +36,9 @@ std::vector<EQApp::ESPSpawn> g_ESPSpawnList;
 uint32_t g_ESPSpawnListTimer = 0;
 uint32_t g_ESPSpawnListTimerDelay = 1000;
 
-std::vector<std::string> g_ESPNamedSpawnList =
-{
-    "Soulbinder",
-    "Banker",
-    "Priest of Discord",
-};
-
+void EQAPP_ESP_DoorSpawns();
+void EQAPP_ESP_GroundSpawns();
+void EQAPP_ESP_Spawns();
 void EQAPP_ESP_UpdateSpawnList();
 void EQAPP_ESP_Execute();
 
@@ -99,12 +95,15 @@ void EQAPP_ESP_UpdateSpawnList()
 
         espSpawn.ShowAtAnyDistance = true;
 
-        for (auto& name : g_ESPNamedSpawnList)
+        if (g_namedSpawnsIsEnabled == true)
         {
-            if (espSpawn.Name.find(name) != std::string::npos)
+            for (auto& name : g_namedSpawnsList)
             {
-                espSpawn.ShowAtAnyDistance = false;
-                break;
+                if (espSpawn.Name.find(name) != std::string::npos)
+                {
+                    espSpawn.ShowAtAnyDistance = false;
+                    break;
+                }
             }
         }
 
@@ -138,7 +137,7 @@ void EQAPP_ESP_UpdateSpawnList()
 
         espSpawn.TextColor = EQ_TEXT_COLOR_WHITE;
 
-        if (espSpawn.Type == EQ_SPAWN_TYPE_PLAYER)
+        if (espSpawn.Type == EQ_SPAWN_TYPE_PLAYER || espSpawn.Type == EQ_SPAWN_TYPE_PLAYER_CORPSE)
         {
             espSpawn.TextColor = EQ_TEXT_COLOR_RED;
         }
@@ -146,7 +145,7 @@ void EQAPP_ESP_UpdateSpawnList()
         {
             espSpawn.TextColor = EQ_TEXT_COLOR_CYAN;
         }
-        else
+        else if (espSpawn.Type == EQ_SPAWN_TYPE_NPC_CORPSE)
         {
             espSpawn.TextColor = EQ_TEXT_COLOR_YELLOW;
         }
@@ -211,7 +210,87 @@ void EQAPP_ESP_UpdateSpawnList()
     }
 }
 
-void EQAPP_ESP_Execute()
+void EQAPP_ESP_DoorSpawns()
+{
+    auto door = EQ_GetFirstDoorSpawn();
+    while (door != NULL)
+    {
+        std::string doorName = door->Name;
+
+        auto it = EQ_STRING_MAP_DOOR_SPAWN_NAME.find(doorName);
+        if (it == EQ_STRING_MAP_DOOR_SPAWN_NAME.end())
+        {
+            door = door->Next;
+            continue;
+        }
+        else
+        {
+            doorName = it->second;
+        }
+
+        EQ::Location doorLocation;
+        doorLocation.X = door->X;
+        doorLocation.Y = door->Y;
+        doorLocation.Z = door->Z;
+
+        uint32_t screenX = 0;
+        uint32_t screenY = 0;
+        if (EQ_WorldSpaceToScreenSpace(doorLocation, screenX, screenY) == false)
+        {
+            door = door->Next;
+            continue;
+        }
+
+        std::stringstream doorText;
+        doorText << "@ " << doorName;
+
+        EQ_DrawText(doorText.str().c_str(), screenX, screenY, EQ_TEXT_COLOR_WHITE);
+
+        door = door->Next;
+    }
+}
+
+void EQAPP_ESP_GroundSpawns()
+{
+    auto groundSpawn = EQ_GetFirstGroundSpawn();
+    while (groundSpawn != NULL)
+    {
+        std::string groundSpawnName = groundSpawn->ActorDef;
+
+        auto it = EQ_STRING_MAP_GROUND_SPAWN_NAME.find(groundSpawnName);
+        if (it == EQ_STRING_MAP_GROUND_SPAWN_NAME.end())
+        {
+            groundSpawn = groundSpawn->Next;
+            continue;
+        }
+        else
+        {
+            groundSpawnName = it->second;
+        }
+
+        EQ::Location groundSpawnLocation;
+        groundSpawnLocation.X = groundSpawn->X;
+        groundSpawnLocation.Y = groundSpawn->Y;
+        groundSpawnLocation.Z = groundSpawn->Z;
+
+        uint32_t screenX = 0;
+        uint32_t screenY = 0;
+        if (EQ_WorldSpaceToScreenSpace(groundSpawnLocation, screenX, screenY) == false)
+        {
+            groundSpawn = groundSpawn->Next;
+            continue;
+        }
+
+        std::stringstream groundSpawnText;
+        groundSpawnText << "# " << groundSpawnName;
+
+        EQ_DrawText(groundSpawnText.str().c_str(), screenX, screenY, EQ_TEXT_COLOR_WHITE);
+
+        groundSpawn = groundSpawn->Next;
+    }
+}
+
+void EQAPP_ESP_Spawns()
 {
     EQAPP_ESP_UpdateSpawnList();
 
@@ -236,5 +315,12 @@ void EQAPP_ESP_Execute()
 
         EQ_DrawText(spawn.Text.c_str(), screenX, screenY, spawn.TextColor);
     }
+}
+
+void EQAPP_ESP_Execute()
+{
+    EQAPP_ESP_DoorSpawns();
+    EQAPP_ESP_GroundSpawns();
+    EQAPP_ESP_Spawns();
 }
 

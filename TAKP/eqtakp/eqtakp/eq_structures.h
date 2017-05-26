@@ -307,7 +307,7 @@ typedef struct _ItemContainer
 /* 0x010F */ uint8_t SizeCapacity;
 /* 0x0110 */ uint8_t WeightReduction; // percent
 /* ...... */ 
-} ItemContainer, *ItemContainer_ptr;
+} ItemContainer, *ItemContainer_ptr, EQ_Container, *EQ_Container_ptr;
 
 typedef struct _ItemBook
 {
@@ -1108,6 +1108,17 @@ typedef struct _CInvSlot
 /* 0x000C */ uint32_t SlotID;
 /* ...... */
 } CInvSlot, *CInvSlot_ptr;
+
+typedef struct _CBazaarSearchWndBazaarMsg
+{
+    uint16_t Action; // 7 or 12
+    uint16_t ItemQuantity;
+    uint16_t ItemID;
+    uint16_t SpawnIDArrayIndex;
+    uint32_t ItemValue; // price in copper
+    char ItemName[64];
+/* ...... */
+} CBazaarSearchWndBazaarMsg, *CBazaarSearchWndBazaarMsg_ptr;
 
 } // namespace EQ
 

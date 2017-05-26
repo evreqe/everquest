@@ -25,13 +25,12 @@ void EQAPP_BuffTimers_RefreshBuffDisplay(void* this_ptr)
             continue;
         }
 
-        std::string buffTimeText = EQ_GetTickTimeString(buffTicks);EQ_GetTickTimeString(buffTicks);
+        std::string buffTimeText = EQ_GetTickTimeString(buffTicks);
 
         std::stringstream ssBuffTimeText;
         ssBuffTimeText << " (" << buffTimeText << ")";
 
         EQ::CsidlScreenWnd_ptr buffButtonWnd = (EQ::CsidlScreenWnd_ptr)buffWindow->BuffButtonWnd[i];
-
         if (buffButtonWnd != NULL)
         {
             if (buffButtonWnd->Window.ToolTipText != NULL)
@@ -63,7 +62,6 @@ void EQAPP_BuffTimers_PostDraw(void* this_ptr)
         std::string buffTimeText = EQ_GetTickTimeString(buffTicks);
 
         EQ::CsidlScreenWnd_ptr buffButtonWnd = (EQ::CsidlScreenWnd_ptr)buffWindow->BuffButtonWnd[i];
-
         if (buffButtonWnd != NULL)
         {
             if (buffButtonWnd->Window.ToolTipText != NULL && buffButtonWnd->Window.Font != NULL)

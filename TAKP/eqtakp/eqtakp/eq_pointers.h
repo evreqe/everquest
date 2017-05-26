@@ -6,6 +6,16 @@
 
 /* structures */
 
+#define EQ_ADDRESS_STRUCTURE_SPAWN_ID_ARRAY 0x0078C47C
+
+uint32_t* EQ_POINTER_SpawnIDArray_ptr = (uint32_t*)EQ_ADDRESS_STRUCTURE_SPAWN_ID_ARRAY;
+#define EQ_POINTER_SpawnIDArray (*EQ_POINTER_SpawnIDArray_ptr)
+
+#define EQ_ADDRESS_STRUCTURE_COMMAND_LIST 0x00609AF8
+
+EQ::CommandList* EQ_POINTER_CommandList_ptr = (EQ::CommandList*)EQ_ADDRESS_STRUCTURE_COMMAND_LIST;
+#define EQ_POINTER_CommandList (*EQ_POINTER_CommandList_ptr)
+
 #define EQ_ADDRESS_STRUCTURE_GUILD_LIST 0x007F9C94
 
 EQ::GuildList* EQ_POINTER_GuildList_ptr = (EQ::GuildList*)EQ_ADDRESS_STRUCTURE_GUILD_LIST;
@@ -57,6 +67,13 @@ EQClass::EQWorldData** EQ_CLASS_POINTER_EQWorldData_pptr = (EQClass::EQWorldData
 
 #define EQ_ADDRESS_POINTER_EqSoundManager 0x0063DEA8
 
+/* CContainerMgr */
+
+#define EQ_ADDRESS_POINTER_CContainerMgr 0x0063D6B8
+
+EQClass::CContainerMgr** EQ_CLASS_POINTER_CContainerMgr_pptr = (EQClass::CContainerMgr**)EQ_ADDRESS_POINTER_CContainerMgr;
+#define EQ_CLASS_POINTER_CContainerMgr (*EQ_CLASS_POINTER_CContainerMgr_pptr)
+
 /* SpellManager */
 
 #define EQ_ADDRESS_POINTER_SpellManager 0x00805CB0
@@ -95,7 +112,7 @@ EQClass::CEverQuest** EQ_CLASS_POINTER_CEverQuest_pptr = (EQClass::CEverQuest**)
 
 /* EQPlayer */
 
-#define EQ_ADDRESS_POINTER_FIRST_SPAWN 0x007F9498
+#define EQ_ADDRESS_POINTER_FIRST_SPAWN 0x007F9498 // spawn list
 
 #define EQ_ADDRESS_POINTER_PLAYER_SPAWN        0x007F94CC
 #define EQ_ADDRESS_POINTER_TARGET_SPAWN        0x007F94EC
@@ -140,10 +157,17 @@ EQ::EQPlayer** EQ_POINTER_GamemasterSpawn_pptr = (EQ::EQPlayer**)EQ_ADDRESS_POIN
 
 /* GroundSpawn */
 
-#define EQ_ADDRESS_POINTER_FIRST_GROUND_SPAWN 0x007F949C
+#define EQ_ADDRESS_POINTER_FIRST_GROUND_SPAWN 0x007F949C // ground spawn list
 
 EQ::GroundSpawn** EQ_POINTER_FirstGroundSpawn_pptr = (EQ::GroundSpawn**)EQ_ADDRESS_POINTER_FIRST_GROUND_SPAWN;
 #define EQ_POINTER_FirstGroundSpawn (*EQ_POINTER_FirstGroundSpawn_pptr)
+
+/* DoorSpawn */
+
+#define EQ_ADDRESS_POINTER_FIRST_DOOR_SPAWN 0x007F94B8 // door list
+
+EQ::DoorSpawn** EQ_POINTER_FirstDoorSpawn_pptr = (EQ::DoorSpawn**)EQ_ADDRESS_POINTER_FIRST_DOOR_SPAWN;
+#define EQ_POINTER_FirstDoorSpawn (*EQ_POINTER_FirstDoorSpawn_pptr)
 
 /* EQ_Character */
 
@@ -171,6 +195,13 @@ EQ::CXWndManager** EQ_POINTER_CXWndManager_pptr = (EQ::CXWndManager**)EQ_ADDRESS
 
 EQClass::CXWndManager** EQ_CLASS_POINTER_CXWndManager_pptr = (EQClass::CXWndManager**)EQ_ADDRESS_POINTER_CXWndManager;
 #define EQ_CLASS_POINTER_CXWndManager (*EQ_CLASS_POINTER_CXWndManager_pptr)
+
+/* CBazaarSearchWnd */
+
+#define EQ_ADDRESS_POINTER_CBazaarSearchWnd 0x0063D674
+
+EQClass::CBazaarSearchWnd** EQ_CLASS_POINTER_CBazaarSearchWnd_pptr = (EQClass::CBazaarSearchWnd**)EQ_ADDRESS_POINTER_CBazaarSearchWnd;
+#define EQ_CLASS_POINTER_CBazaarSearchWnd (*EQ_CLASS_POINTER_CBazaarSearchWnd_pptr)
 
 /* CBuffWindow */
 
