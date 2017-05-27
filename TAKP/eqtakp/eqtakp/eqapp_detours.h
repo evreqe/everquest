@@ -5,6 +5,8 @@ void EQAPP_Detours_Remove();
 
 EQ_FUNCTION_TYPE_DrawNetStatus EQAPP_REAL_DrawNetStatus = NULL;
 
+EQ_FUNCTION_TYPE_CXWndManager__DrawWindows EQAPP_REAL_CXWndManager__DrawWindows = NULL;
+
 EQ_FUNCTION_TYPE_CEverQuest__InterpretCmd EQAPP_REAL_CEverQuest__InterpretCmd = NULL;
 
 EQ_FUNCTION_TYPE_CEverQuest__dsp_chat EQAPP_REAL_CEverQuest__dsp_chat = NULL;
@@ -51,6 +53,8 @@ EQ_FUNCTION_TYPE_ProcessMovementKeys EQAPP_REAL_ProcessMovementKeys = NULL;
 EQ_FUNCTION_TYPE_AutoInventory EQAPP_REAL_AutoInventory = NULL;
 
 int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short a3, unsigned short a4, unsigned short a5, int a6, unsigned short a7, unsigned long a8, long a9, unsigned long a10);
+
+int __fastcall EQAPP_DETOUR_CXWndManager__DrawWindows(void* this_ptr, void* not_used);
 
 int __fastcall EQAPP_DETOUR_CEverQuest__InterpretCmd(void* this_ptr, void* not_used, class EQPlayer* a1, char* a2);
 
@@ -99,6 +103,10 @@ void EQAPP_Detours_Add()
 {
     EQ_MACRO_AddDetour(DrawNetStatus);
 
+    EQ_MACRO_AddDetour(CXWndManager__DrawWindows);
+
+    EQ_MACRO_AddDetour(CEverQuest__InterpretCmd);
+
     EQ_MACRO_AddDetour(EQ_Character__eqspa_movement_rate);
 
     EQ_MACRO_AddDetour(EQ_Character__CastSpell);
@@ -127,6 +135,10 @@ void EQAPP_Detours_Add()
 void EQAPP_Detours_Remove()
 {
     EQ_MACRO_RemoveDetour(DrawNetStatus);
+
+    EQ_MACRO_RemoveDetour(CXWndManager__DrawWindows);
+
+    EQ_MACRO_RemoveDetour(CEverQuest__InterpretCmd);
 
     EQ_MACRO_RemoveDetour(EQ_Character__eqspa_movement_rate);
 
@@ -186,33 +198,22 @@ int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short
         EQAPP_Map_Load();
         EQAPP_AutoLoot_Load();
         EQAPP_NamedSpawns_Load();
+    }
 
-        if (zoneID == EQ_ZONE_ID_FIELDOFBONE)
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn != NULL)
+    {
+        if (playerSpawn->Actor->IsTrader == 1)
         {
-            auto playerSpawn = EQ_GetPlayerSpawn();
-            if (playerSpawn != NULL)
+            HWND window = EQ_GetWindow();
+
+            LPWSTR windowTitle = L"";
+            GetWindowTextW(window, windowTitle, 256);
+
+            if (wcscmp(windowTitle, g_windowTitleTrader) == 0)
             {
-                if (playerSpawn->Class == EQ_CLASS_WARRIOR)
-                {
-                    g_alwaysAttackIsEnabled = true;
-                }
+                SetWindowTextW(window, g_windowTitleTrader);
             }
-        }
-        else
-        {
-            g_alwaysAttackIsEnabled = false;
-        }
-    }
-
-    if (g_mapIsEnabled == true)
-    {
-        EQAPP_Map_Execute();
-    }
-    else
-    {
-        if (g_ESPIsEnabled == true)
-        {
-            EQAPP_ESP_Execute();
         }
     }
 
@@ -258,26 +259,11 @@ int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short
                 if (EQ_CLASS_POINTER_DInputMouse->Acquire() == DI_OK)
                 {
                     SetCapture(GetForegroundWindow());
-                    EQ_WriteChatText("Mouse Acquired.");
+                    //std::cout << "Mouse Acquired." << std::endl;
                 }
             }
         }
     }
-/*
-        else
-        {
-            DIMOUSESTATE mouseState;
-            HRESULT result = EQ_CLASS_POINTER_DInputMouse->GetDeviceState(sizeof(DIMOUSESTATE), (LPVOID)&mouseState);
-            if (result == DI_OK)
-            {
-                EQ_CLASS_POINTER_DInputMouse->Unacquire();
-                ReleaseCapture();
-
-                EQ_WriteChatText("Mouse UnAcquired.");
-            }
-        }
-    }
-*/
 
     // redraw the mouse cursor
     uint32_t mouseClickState = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_CLICK_STATE);
@@ -289,6 +275,94 @@ int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short
     EQAPP_Console_Print();
 
     return EQAPP_REAL_DrawNetStatus(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
+}
+
+int __fastcall EQAPP_DETOUR_CXWndManager__DrawWindows(void* this_ptr, void* not_used)
+{
+    if (g_bExit == 1)
+    {
+        return EQAPP_REAL_CXWndManager__DrawWindows(this_ptr);
+    }
+
+    if (EQ_IsInGame() == false)
+    {
+        return EQAPP_REAL_CXWndManager__DrawWindows(this_ptr);
+    }
+
+    if (g_mapIsEnabled == true)
+    {
+        EQAPP_Map_Execute();
+    }
+    else
+    {
+        if (g_ESPIsEnabled == true)
+        {
+            EQAPP_ESP_Execute();
+        }
+    }
+
+    return EQAPP_REAL_CXWndManager__DrawWindows(this_ptr);
+}
+
+int __fastcall EQAPP_DETOUR_CEverQuest__InterpretCmd(void* this_ptr, void* not_used, class EQPlayer* a1, char* a2)
+{
+    // a1 = spawn
+    // a2 = command text
+
+    if (g_bExit == 1)
+    {
+        return EQAPP_REAL_CEverQuest__InterpretCmd(this_ptr, a1, a2);
+    }
+
+    if (g_interpretCmdIsEnabled == true)
+    {
+        if (a1 == NULL || a2 == NULL)
+        {
+            return EQAPP_REAL_CEverQuest__InterpretCmd(this_ptr, a1, a2);
+        }
+
+        std::string commandText = a2;
+
+        if (commandText.size() == 0)
+        {
+            return 1;
+        }
+
+        std::string firstTwoCharacters = commandText.substr(0, 2);
+        if (firstTwoCharacters == "//")
+        {
+            EQAPP_InterpretCmd_Execute(commandText);
+            return 1;
+        }
+        else
+        {
+            if (commandText.find("//") != std::string::npos)
+            {
+                return 1;
+            }
+
+            if (commandText.find("/") != std::string::npos)
+            {
+                for (auto& cmd : g_interpretCmdList)
+                {
+                    if (commandText.find(cmd) != std::string::npos)
+                    {
+                        return 1;
+                    }
+                }
+            }
+
+            for (auto& cmd : g_interpretCmdList)
+            {
+                if (commandText == cmd)
+                {
+                    return 1;
+                }
+            }
+        }
+    }
+
+    return EQAPP_REAL_CEverQuest__InterpretCmd(this_ptr, a1, a2);
 }
 
 int __fastcall EQAPP_DETOUR_EQ_Character__eqspa_movement_rate(void* this_ptr, void* not_used, short a1)
@@ -526,11 +600,9 @@ int __fastcall EQAPP_DETOUR_CContainerMgr__OpenContainer(void* this_ptr, void* n
         return EQAPP_REAL_CContainerMgr__OpenContainer(this_ptr, a1, a2);
     }
 
-    int result = EQAPP_REAL_CContainerMgr__OpenContainer(this_ptr, a1, a2);
-
     ////std::cout << "[CContainerMgr__OpenContainer] inventorySlotIndex: " << a2 << std::endl;
 
-    return result;
+    return EQAPP_REAL_CContainerMgr__OpenContainer(this_ptr, a1, a2);
 }
 
 int __cdecl EQAPP_DETOUR_HandleMouseWheel(int a1)
@@ -543,11 +615,6 @@ int __cdecl EQAPP_DETOUR_HandleMouseWheel(int a1)
     }
 
     if (EQ_IsInGame() == false)
-    {
-        return EQAPP_REAL_HandleMouseWheel(a1);
-    }
-
-    if (EQ_IsNetStatusEnabled() == false)
     {
         return EQAPP_REAL_HandleMouseWheel(a1);
     }

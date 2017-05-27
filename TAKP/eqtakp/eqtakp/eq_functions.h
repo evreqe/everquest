@@ -114,6 +114,8 @@ bool EQ_IsWindowVisible(uint32_t windowAddressPointer);
 bool EQ_LootItemByName(std::string name);
 void EQ_OpenAllContainers();
 void EQ_CloseAllContainers();
+EQ::Spawn_ptr EQ_GetNearestSpawn(int spawnType, float maxDistance = 200.0f);
+void EQ_SetTargetSpawn(EQ::Spawn_ptr spawn);
 
 template <class T>
 void EQ_Log(const char* text, T number)
@@ -1254,4 +1256,77 @@ void EQ_CloseAllContainers()
     EQ_CLASS_POINTER_CContainerMgr->CloseAllContainers();
 }
 
+EQ::Spawn_ptr EQ_GetNearestSpawn(int spawnType, float maxDistance)
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return NULL;
+    }
+
+    uint16_t spawnID = 0;
+
+    float shortestDistance = 0.0f;
+
+    EQ::Spawn_ptr spawn = NULL;
+
+    spawn = EQ_GetFirstSpawn();
+    while (spawn)
+    {
+        if (spawn == playerSpawn || spawn->Actor->IsInvisible == 1)
+        {
+            spawn = spawn->Next;
+            continue;
+        }
+
+        if (spawn->Type != spawnType && spawnType != EQ_SPAWN_TYPE_ANY_CORPSE)
+        {
+            spawn = spawn->Next;
+            continue;
+        }
+
+        if (spawnType == EQ_SPAWN_TYPE_ANY_CORPSE)
+        {
+            if (spawn->Type != EQ_SPAWN_TYPE_NPC_CORPSE && spawn->Type != EQ_SPAWN_TYPE_PLAYER_CORPSE)
+            {
+                spawn = spawn->Next;
+                continue;
+            }
+        }
+
+        float spawnDistance = EQ_CalculateDistance(playerSpawn->X, playerSpawn->Y, spawn->X, spawn->Y);
+        if (spawnDistance > maxDistance)
+        {
+            spawn = spawn->Next;
+            continue;
+        }
+
+        if (shortestDistance == 0.0f)
+        {
+            shortestDistance = spawnDistance;
+        }
+
+        if (spawnDistance <= shortestDistance)
+        {
+            shortestDistance = spawnDistance;
+
+            spawnID = spawn->SpawnID;
+        }
+
+        spawn = spawn->Next;
+    }
+
+    spawn = EQ_GetFirstSpawn();
+    while (spawn)
+    {
+        if (spawn->SpawnID == spawnID)
+        {
+            return spawn;
+        }
+
+        spawn = spawn->Next;
+    }
+
+    return NULL;
+}
 

@@ -2,12 +2,14 @@
 
 const char* g_applicationName = "eqtakp";
 
+LPCWSTR g_windowTitleTrader = L"EQTrader";
+
 volatile int g_bLoaded = 0;
 volatile int g_bExit = 0;
 
 int g_killSwitchKey = VK_PAUSE;
 
-int g_zoneID = 0;
+uint32_t g_zoneID = 0;
 
 std::mt19937 g_randomEngine((uint32_t)std::chrono::high_resolution_clock::now().time_since_epoch().count());
 

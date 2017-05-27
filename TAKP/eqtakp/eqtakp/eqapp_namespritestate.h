@@ -96,7 +96,8 @@ bool EQAPP_NameSpriteState_Execute(class EQPlayer* a1)
         {
             replacementText << "[" << (int)spawn->Level << "] ";
 
-            if (spawn == targetSpawn && hpPercent > 0 && hpPercent < 100)
+            //if (spawn == targetSpawn && hpPercent > 0 && hpPercent < 100)
+            if (hpPercent > 0 && hpPercent < 100)
             {
                 replacementText << hpPercent << "% - ";
             }

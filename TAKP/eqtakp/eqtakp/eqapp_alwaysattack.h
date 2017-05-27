@@ -2,7 +2,14 @@
 
 bool g_alwaysAttackIsEnabled = false;
 
+void EQAPP_AlwaysAttack_Toggle();
 void EQAPP_AlwaysAttack_Execute();
+
+void EQAPP_AlwaysAttack_Toggle()
+{
+    EQ_ToggleBool(g_alwaysAttackIsEnabled);
+    EQAPP_PrintBool("Always Attack", g_alwaysAttackIsEnabled);
+}
 
 void EQAPP_AlwaysAttack_Execute()
 {
@@ -35,4 +42,5 @@ void EQAPP_AlwaysAttack_Execute()
 
     EQ_SetAutoAttack(true);
 }
+
 

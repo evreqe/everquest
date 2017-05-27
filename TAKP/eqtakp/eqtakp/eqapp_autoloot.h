@@ -5,10 +5,17 @@ std::vector<std::string> g_autoLootList;
 uint32_t g_autoLootTimer = 0;
 uint32_t g_autoLootTimerDelay = 250;
 
+void EQAPP_AutoLoot_Toggle();
 void EQAPP_AutoLoot_Load();
 void EQAPP_AutoLoot_Execute();
 void EQAPP_AutoLoot_Add(std::string itemName);
 void EQAPP_AutoLoot_Remove(std::string itemName);
+
+void EQAPP_AutoLoot_Toggle()
+{
+    EQ_ToggleBool(g_autoLootIsEnabled);
+    EQAPP_PrintBool("Auto Loot", g_autoLootIsEnabled);
+}
 
 void EQAPP_AutoLoot_Load()
 {

@@ -54,14 +54,14 @@
 
 #include "eqapp.h"
 #include "eqapp_functions.h"
-
+//
 #include "eqapp_console.h"
 #include "eqapp_ini.h"
 #include "eqapp_memory.h"
-
+//
 #include "eqapp_autoloot.h"
 #include "eqapp_namedspawns.h"
-
+//
 #include "eqapp_speedhack.h"
 #include "eqapp_alwaysattack.h"
 #include "eqapp_bufftimers.h"
@@ -75,10 +75,12 @@
 #include "eqapp_useskills.h"
 #include "eqapp_foodanddrink.h"
 #include "eqapp_spellset.h"
-
+//
 #include "eqapp_map.h"
 #include "eqapp_esp.h"
-
+//
+#include "eqapp_interpretcmd.h"
+//
 #include "eqapp_detours.h"
 
 void EQAPP_Load()

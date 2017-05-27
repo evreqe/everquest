@@ -4,7 +4,14 @@ bool g_speedHackIsEnabled = true;
 
 float g_speedHackModifier = EQ_MOVEMENT_SPEED_MODIFIER_SPIRIT_OF_WOLF;
 
+void EQAPP_SpeedHack_Toggle();
 void EQAPP_SpeedHack_Execute();
+
+void EQAPP_SpeedHack_Toggle()
+{
+    EQ_ToggleBool(g_speedHackIsEnabled);
+    EQAPP_PrintBool("Speed Hack", g_speedHackIsEnabled);
+}
 
 void EQAPP_SpeedHack_Execute()
 {
@@ -24,4 +31,6 @@ void EQAPP_SpeedHack_Execute()
         }
     }
 }
+
+
 

@@ -335,15 +335,17 @@ public:
 class EQClass::CXWndManager
 {
 public:
-    int CXWndManager::DrawCursor() const;
-    int CXWndManager::DrawWindows() const;
+    int CXWndManager::DrawCursor();
+    int CXWndManager::DrawWindows();
 };
 
 #define EQ_ADDRESS_FUNCTION_CXWndManager__DrawCursor 0x0059E320
-EQ_MACRO_FunctionAtAddress(int EQClass::CXWndManager::DrawCursor() const, EQ_ADDRESS_FUNCTION_CXWndManager__DrawCursor);
+EQ_MACRO_FunctionAtAddress(int EQClass::CXWndManager::DrawCursor(), EQ_ADDRESS_FUNCTION_CXWndManager__DrawCursor);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CXWndManager__DrawCursor)(void* this_ptr);
 
 #define EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows 0x0059E000
-EQ_MACRO_FunctionAtAddress(int EQClass::CXWndManager::DrawWindows() const, EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows);
+EQ_MACRO_FunctionAtAddress(int EQClass::CXWndManager::DrawWindows(), EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CXWndManager__DrawWindows)(void* this_ptr);
 
 /* CXWnd */
 

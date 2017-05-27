@@ -118,18 +118,7 @@ bool EQAPP_IsForegroundWindowCurrentProcessId()
 
 void EQAPP_PrintBool(const char* text, bool& b)
 {
-    std::cout << text << ": ";
-
-    if (b == true)
-    {
-        std::cout << "On";
-    }
-    else
-    {
-        std::cout << "Off";
-    }
-
-    std::cout << std::endl;
+    std::cout << text << ": " << (b ? "On" : "Off") << std::endl;
 }
 
 void EQAPP_PrintErrorMessage(const char* functionName, std::string text)

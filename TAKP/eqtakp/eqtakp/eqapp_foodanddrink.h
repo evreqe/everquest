@@ -2,7 +2,14 @@
 
 bool g_foodAndDrinkIsEnabled = true;
 
+void EQAPP_FoodAndDrink_Toggle();
 void EQAPP_FoodAndDrink_Execute();
+
+void EQAPP_FoodAndDrink_Toggle()
+{
+    EQ_ToggleBool(g_foodAndDrinkIsEnabled);
+    EQAPP_PrintBool("Food and Drink", g_foodAndDrinkIsEnabled);
+}
 
 void EQAPP_FoodAndDrink_Execute()
 {

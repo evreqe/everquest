@@ -71,6 +71,7 @@ uint32_t g_mapBackgroundColor = EQ_TOOLTIP_TEXT_BACKGROUND_COLOR;
 float g_mapSpawnDistanceMax = 400.0f;
 float g_mapSpawnDistanceZMax = 100.0f;
 
+void EQAPP_Map_Toggle();
 bool EQAPP_Map_Load();
 bool EQAPP_Map_LoadFile(const std::string& filename, int layer);
 void EQAPP_Map_RecalculateScreenCoordinates();
@@ -84,6 +85,12 @@ void EQAPP_Map_SetZoom(float zoom);
 void EQAPP_Map_ResetZoom();
 void EQAPP_Map_Center();
 void EQAPP_Map_Execute(); // draw
+
+void EQAPP_Map_Toggle()
+{
+    EQ_ToggleBool(g_mapIsEnabled);
+    EQAPP_PrintBool("Map", g_mapIsEnabled);
+}
 
 bool EQAPP_Map_Load()
 {
@@ -648,4 +655,5 @@ void EQAPP_Map_Execute()
     EQ_DrawLineEx(&mapArrowLineB, g_mapArrowColor);
     EQ_DrawLineEx(&mapArrowLineC, g_mapArrowColor);
 }
+
 

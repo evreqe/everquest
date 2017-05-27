@@ -36,11 +36,18 @@ std::vector<EQApp::ESPSpawn> g_ESPSpawnList;
 uint32_t g_ESPSpawnListTimer = 0;
 uint32_t g_ESPSpawnListTimerDelay = 1000;
 
+void EQAPP_ESP_Toggle();
+void EQAPP_ESP_UpdateSpawnList();
 void EQAPP_ESP_DoorSpawns();
 void EQAPP_ESP_GroundSpawns();
 void EQAPP_ESP_Spawns();
-void EQAPP_ESP_UpdateSpawnList();
 void EQAPP_ESP_Execute();
+
+void EQAPP_ESP_Toggle()
+{
+    EQ_ToggleBool(g_ESPIsEnabled);
+    EQAPP_PrintBool("ESP", g_ESPIsEnabled);
+}
 
 void EQAPP_ESP_UpdateSpawnList()
 {

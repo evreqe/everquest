@@ -52,7 +52,7 @@ bool EQAPP_NameSpriteTint_Execute(class EQPlayer* a1)
         return false;
     }
 
-    if (spawn == playerSpawn)
+    if ((spawn == playerSpawn) || (spawn->PetOwnerSpawnID == playerSpawn->SpawnID))
     {
         color.R = 255;
         color.G = 128;
