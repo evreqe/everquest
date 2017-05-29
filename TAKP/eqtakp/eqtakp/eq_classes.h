@@ -201,7 +201,7 @@ class EQClass::EQPlayer
 {
 public:
     void EQPlayer::ChangeHeight(float height);
-    void EQPlayer::ChangePosition(unsigned char standingState);
+    void EQPlayer::ChangePosition(uint8_t standingState);
     void EQPlayer::FacePlayer(class EQPlayer* spawn);
 };
 
@@ -209,7 +209,8 @@ public:
 EQ_MACRO_FunctionAtAddress(void EQClass::EQPlayer::ChangeHeight(float), EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight);
 
 #define EQ_ADDRESS_FUNCTION_EQPlayer__ChangePosition 0x0050BE3C
-EQ_MACRO_FunctionAtAddress(void EQClass::EQPlayer::ChangePosition(unsigned char standingState), EQ_ADDRESS_FUNCTION_EQPlayer__ChangePosition);
+EQ_MACRO_FunctionAtAddress(void EQClass::EQPlayer::ChangePosition(uint8_t standingState), EQ_ADDRESS_FUNCTION_EQPlayer__ChangePosition);
+typedef signed int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__ChangePosition)(void* this_ptr, uint8_t standingState);
 
 #define EQ_ADDRESS_FUNCTION_EQPlayer__FacePlayer 0x00508120
 EQ_MACRO_FunctionAtAddress(void EQClass::EQPlayer::FacePlayer(class EQPlayer* spawn), EQ_ADDRESS_FUNCTION_EQPlayer__FacePlayer);
@@ -543,7 +544,7 @@ public:
     void CSpellBookWnd::Activate();
     char* CSpellBookWnd::UpdateSpellBookDisplay();
     bool CSpellBookWnd::StartSpellMemorization(int spellBookIndex, int spellGemIndex, bool unknown);
-    int CSpellBookWnd::FinishMemorizing(int spellGemIndex, short spellID);
+    int CSpellBookWnd::FinishMemorizing(int spellGemIndex, uint16_t spellID);
     int CSpellBookWnd::GetSpellMemTicksLeft();
 };
 
@@ -560,8 +561,8 @@ EQ_MACRO_FunctionAtAddress(bool EQClass::CSpellBookWnd::StartSpellMemorization(i
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CSpellBookWnd__StartSpellMemorization)(void* this_ptr, int spellBookIndex, int spellGemIndex, bool unknown);
 
 #define EQ_ADDRESS_FUNCTION_CSpellBookWnd__FinishMemorizing 0x00434B38
-EQ_MACRO_FunctionAtAddress(int EQClass::CSpellBookWnd::FinishMemorizing(int spellGemIndex, short spellID), EQ_ADDRESS_FUNCTION_CSpellBookWnd__FinishMemorizing);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CSpellBookWnd__FinishMemorizing)(void* this_ptr, int spellGemIndex, short spellID);
+EQ_MACRO_FunctionAtAddress(int EQClass::CSpellBookWnd::FinishMemorizing(int spellGemIndex, uint16_t spellID), EQ_ADDRESS_FUNCTION_CSpellBookWnd__FinishMemorizing);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CSpellBookWnd__FinishMemorizing)(void* this_ptr, int spellGemIndex, uint16_t spellID);
 
 #define EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellMemTicksLeft 0x00434C05
 EQ_MACRO_FunctionAtAddress(int EQClass::CSpellBookWnd::GetSpellMemTicksLeft(), EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellMemTicksLeft);

@@ -11,6 +11,8 @@ EQ_FUNCTION_TYPE_CEverQuest__InterpretCmd EQAPP_REAL_CEverQuest__InterpretCmd = 
 
 EQ_FUNCTION_TYPE_CEverQuest__dsp_chat EQAPP_REAL_CEverQuest__dsp_chat = NULL;
 
+EQ_FUNCTION_TYPE_EQPlayer__ChangePosition EQAPP_REAL_EQPlayer__ChangePosition = NULL;
+
 EQ_FUNCTION_TYPE_EQ_Character__eqspa_movement_rate EQAPP_REAL_EQ_Character__eqspa_movement_rate = NULL;
 
 EQ_FUNCTION_TYPE_EQ_Character__CastSpell EQAPP_REAL_EQ_Character__CastSpell = NULL;
@@ -58,6 +60,8 @@ int __fastcall EQAPP_DETOUR_CXWndManager__DrawWindows(void* this_ptr, void* not_
 
 int __fastcall EQAPP_DETOUR_CEverQuest__InterpretCmd(void* this_ptr, void* not_used, class EQPlayer* a1, char* a2);
 
+int __fastcall EQAPP_DETOUR_EQPlayer__ChangePosition(void* this_ptr, void* not_used, uint8_t a1);
+
 int __fastcall EQAPP_DETOUR_EQ_Character__eqspa_movement_rate(void* this_ptr, void* not_used, short a1);
 
 int __fastcall EQAPP_DETOUR_EQ_Character__CastSpell(void* this_ptr, void* not_used, unsigned char a1, short a2, EQ::Item** a3, short a4);
@@ -79,7 +83,7 @@ int __fastcall EQAPP_DETOUR_CItemDisplayWnd__SetItem(void* this_ptr, void* not_u
 int __fastcall EQAPP_DETOUR_CItemDisplayWnd__SetSpell(void* this_ptr, void* not_used, short a1, bool a2, int a3);
 
 int __fastcall EQAPP_DETOUR_CSpellBookWnd__StartSpellMemorization(void* this_ptr, void* not_used, int a1, int a2, bool a3);
-int __fastcall EQAPP_DETOUR_CSpellBookWnd__FinishMemorizing(void* this_ptr, void* not_used, int a1, short a2);
+int __fastcall EQAPP_DETOUR_CSpellBookWnd__FinishMemorizing(void* this_ptr, void* not_used, int a1, uint16_t a2);
 
 int __fastcall EQAPP_DETOUR_CLootWnd__Deactivate(void* this_ptr, void* not_used);
 
@@ -113,6 +117,7 @@ void EQAPP_Detours_Add()
 
     EQ_MACRO_AddDetour(CDisplay__SetNameSpriteState);
     EQ_MACRO_AddDetour(CDisplay__SetNameSpriteTint);
+
     EQ_MACRO_AddDetour(CDisplay__ToggleView);
 
     EQ_MACRO_AddDetour(CBazaarSearchWnd__HandleBazaarMsg);
@@ -122,6 +127,9 @@ void EQAPP_Detours_Add()
     
     EQ_MACRO_AddDetour(CItemDisplayWnd__SetItem);
     EQ_MACRO_AddDetour(CItemDisplayWnd__SetSpell);
+
+    EQ_MACRO_AddDetour(CSpellBookWnd__StartSpellMemorization);
+    EQ_MACRO_AddDetour(CSpellBookWnd__FinishMemorizing);
 
     EQ_MACRO_AddDetour(CLootWnd__Deactivate);
 
@@ -144,8 +152,11 @@ void EQAPP_Detours_Remove()
 
     EQ_MACRO_RemoveDetour(EQ_Character__CastSpell);
 
+
+
     EQ_MACRO_RemoveDetour(CDisplay__SetNameSpriteState);
     EQ_MACRO_RemoveDetour(CDisplay__SetNameSpriteTint);
+
     EQ_MACRO_RemoveDetour(CDisplay__ToggleView);
 
     EQ_MACRO_RemoveDetour(CBazaarSearchWnd__HandleBazaarMsg);
@@ -155,6 +166,9 @@ void EQAPP_Detours_Remove()
     
     EQ_MACRO_RemoveDetour(CItemDisplayWnd__SetItem);
     EQ_MACRO_RemoveDetour(CItemDisplayWnd__SetSpell);
+
+    EQ_MACRO_RemoveDetour(CSpellBookWnd__StartSpellMemorization);
+    EQ_MACRO_RemoveDetour(CSpellBookWnd__FinishMemorizing);
 
     EQ_MACRO_RemoveDetour(CLootWnd__Deactivate);
 
@@ -187,7 +201,15 @@ int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short
         return EQAPP_REAL_DrawNetStatus(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
     }
 
-    EQ_DrawText("EQTAKP", 200, 6, EQ_TEXT_COLOR_PINK);
+    std::stringstream displayText;
+    displayText << "EQTAKP";
+
+    if (g_alwaysAttackIsEnabled == true)
+    {
+        displayText << "\nAlways Attack: On";
+    }
+
+    EQ_DrawText(displayText.str().c_str(), 200, 6, EQ_TEXT_COLOR_WHITE);
 
     // on changed zone event
     auto zoneID = EQ_GetZoneID();
@@ -195,26 +217,17 @@ int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short
     {
         g_zoneID = zoneID;
 
+        g_alwaysAttackIsEnabled = false;
+
         EQAPP_Map_Load();
+        EQAPP_NetworkStats_Load();
         EQAPP_AutoLoot_Load();
         EQAPP_NamedSpawns_Load();
     }
 
-    auto playerSpawn = EQ_GetPlayerSpawn();
-    if (playerSpawn != NULL)
+    if (g_networkStatsIsEnabled == true)
     {
-        if (playerSpawn->Actor->IsTrader == 1)
-        {
-            HWND window = EQ_GetWindow();
-
-            LPWSTR windowTitle = L"";
-            GetWindowTextW(window, windowTitle, 256);
-
-            if (wcscmp(windowTitle, g_windowTitleTrader) == 0)
-            {
-                SetWindowTextW(window, g_windowTitleTrader);
-            }
-        }
+        EQAPP_NetworkStats_Execute();
     }
 
     if (g_autoLootIsEnabled == true)
@@ -301,6 +314,11 @@ int __fastcall EQAPP_DETOUR_CXWndManager__DrawWindows(void* this_ptr, void* not_
         }
     }
 
+    if (g_networkStatsIsEnabled == true)
+    {
+        EQAPP_NetworkStats_Draw();
+    }
+
     return EQAPP_REAL_CXWndManager__DrawWindows(this_ptr);
 }
 
@@ -363,6 +381,30 @@ int __fastcall EQAPP_DETOUR_CEverQuest__InterpretCmd(void* this_ptr, void* not_u
     }
 
     return EQAPP_REAL_CEverQuest__InterpretCmd(this_ptr, a1, a2);
+}
+
+int __fastcall EQAPP_DETOUR_EQPlayer__ChangePosition(void* this_ptr, void* not_used, uint8_t a1)
+{
+    // this_ptr = spawn
+    // a1 = standingState
+
+    if (g_bExit == 1)
+    {
+        return EQAPP_REAL_EQPlayer__ChangePosition(this_ptr, a1);
+    }
+
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if ((playerSpawn != NULL) && ((EQ::Spawn_ptr)this_ptr == playerSpawn))
+    {
+        if (a1 != EQ_STANDING_STATE_SITTING)
+        {
+            g_bIsMemorizingSpell = false;
+
+            EQAPP_SpellSet_StopMemorizing();
+        }
+    }
+
+    return EQAPP_REAL_EQPlayer__ChangePosition(this_ptr, a1);
 }
 
 int __fastcall EQAPP_DETOUR_EQ_Character__eqspa_movement_rate(void* this_ptr, void* not_used, short a1)
@@ -572,6 +614,44 @@ int __fastcall EQAPP_DETOUR_CItemDisplayWnd__SetSpell(void* this_ptr, void* not_
 
     return result;
 };
+
+int __fastcall EQAPP_DETOUR_CSpellBookWnd__StartSpellMemorization(void* this_ptr, void* not_used, int a1, int a2, bool a3)
+{
+    // a1 = 
+    // a2 = 
+    // a3 = 
+
+    if (g_bExit == 1)
+    {
+        return EQAPP_REAL_CSpellBookWnd__StartSpellMemorization(this_ptr, a1, a2, a3);
+    }
+
+    g_bIsMemorizingSpell = true;
+
+    return EQAPP_REAL_CSpellBookWnd__StartSpellMemorization(this_ptr, a1, a2, a3);
+}
+
+int __fastcall EQAPP_DETOUR_CSpellBookWnd__FinishMemorizing(void* this_ptr, void* not_used, int a1, uint16_t a2)
+{
+    // a1 = 
+    // a2 = spellID
+
+    if (g_bExit == 1)
+    {
+        return EQAPP_REAL_CSpellBookWnd__FinishMemorizing(this_ptr, a1, a2);
+    }
+
+    int result = EQAPP_REAL_CSpellBookWnd__FinishMemorizing(this_ptr, a1, a2);
+
+    g_bIsMemorizingSpell = false;
+
+    if (g_spellSetIsMemorizingInProgress == true)
+    {
+        EQAPP_SpellSet_Memorize();
+    }
+
+    return result;
+}
 
 int __fastcall EQAPP_DETOUR_CLootWnd__Deactivate(void* this_ptr, void* not_used)
 {

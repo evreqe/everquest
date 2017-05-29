@@ -18,6 +18,7 @@ void EQAPP_PrintDebugMessage(const char* functionName, std::string text);
 void EQAPP_PlaySound(const char* filename);
 void EQAPP_Beep();
 void EQAPP_BeepEx(UINT beepType);
+bool EQAPP_FileExists(const char *fileName);
 void EQAPP_DeleteFileContents(const char* filename);
 void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list);
 
@@ -146,6 +147,12 @@ void EQAPP_BeepEx(UINT beepType)
     MessageBeep(beepType);
 }
 
+bool EQAPP_FileExists(const char *fileName)
+{
+    std::ifstream file(fileName);
+    return file.good();
+}
+
 void EQAPP_DeleteFileContents(const char* filename)
 {
     std::fstream file;
@@ -199,4 +206,6 @@ uint32_t EQAPP_GetRandomNumberLowHigh(uint32_t low, uint32_t high)
 
     return uid(g_randomEngine, uidpt);
 }
+
+
 

@@ -453,7 +453,7 @@ typedef struct _Character
 /* 0x00AE */ uint8_t Unknown00AE[438];
 /* 0x0264 */ struct _Buff Buff[EQ_NUM_BUFFS];
 /* 0x02FA */ uint8_t Unknown02FA[1080];
-/* 0x0732 */ uint16_t SpellBook[EQ_NUM_SPELL_BOOK_SPELLS];
+/* 0x0732 */ uint16_t SpellBook[EQ_NUM_SPELL_BOOK_SPELLS]; // array of spell ids
 /* 0x0926 */ uint8_t Unknown0926[524];
 
 // 0x09A6 // uint16_t Unknown9A6; // equals 20000?

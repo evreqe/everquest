@@ -1,16 +1,17 @@
 #include <algorithm>
+#include <chrono>
 #include <fstream>
+#include <functional>
 #include <iomanip>
 #include <iostream>
+#include <locale>
 #include <map>
 #include <memory>
+#include <random>
 #include <string>
 #include <sstream>
 #include <unordered_map>
 #include <vector>
-#include <chrono>
-#include <random>
-#include <functional>
 
 #include <cstdio>
 #include <cstdlib>
@@ -62,6 +63,7 @@
 #include "eqapp_autoloot.h"
 #include "eqapp_namedspawns.h"
 //
+#include "eqapp_networkstats.h"
 #include "eqapp_speedhack.h"
 #include "eqapp_alwaysattack.h"
 #include "eqapp_bufftimers.h"
@@ -96,16 +98,12 @@ void EQAPP_Load()
         EQ_UpdateLight(EQ_POINTER_PlayerCharacter);
 
         EQAPP_Map_Load();
+        EQAPP_NetworkStats_Load();
         EQAPP_AutoLoot_Load();
         EQAPP_NamedSpawns_Load();
     }
 
     //EQ_CLASS_POINTER_DInputMouse->SetCooperativeLevel(EQ_GetWindow(), DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
-
-    //std::fstream myFile("eqtakp/test.txt", std::fstream::in | std::fstream::out | std::fstream::binary | std::fstream::trunc);
-    //myFile.seekg(0);
-    //myFile.write((char*)EQ_POINTER_PlayerSpawn, sizeof(EQ::Spawn));
-    //myFile.close();
 
     g_bLoaded = 1;
 

@@ -119,5 +119,8 @@
     <ClInclude Include="eqapp_interpretcmd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="eqapp_networkstats.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

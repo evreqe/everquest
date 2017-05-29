@@ -8,7 +8,10 @@ std::vector<std::string> g_interpretCmdList =
     "AutoLoot",
     "ESP",
     "FoodAndDrink",
+    "LoadSpellSet",
+    "SaveSpellSet",
     "Map",
+    "NetworkStats",
     "Speed",
     "TargetCorpse",
     "TargetAnyCorpse",
@@ -51,9 +54,28 @@ void EQAPP_InterpretCmd_Execute(std::string commandText)
         return;
     }
 
+    if (commandText == "//LoadSpellSet")
+    {
+        EQAPP_SpellSet_Load();
+        EQAPP_SpellSet_StartMemorizing();
+        return;
+    }
+
+    if (commandText == "//SaveSpellSet")
+    {
+        EQAPP_SpellSet_Save();
+        return;
+    }
+
     if (commandText == "//Map")
     {
         EQAPP_Map_Toggle();
+        return;
+    }
+
+    if (commandText == "//NetworkStats")
+    {
+        EQAPP_NetworkStats_Toggle();
         return;
     }
 

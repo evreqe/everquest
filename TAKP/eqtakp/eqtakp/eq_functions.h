@@ -116,6 +116,9 @@ void EQ_OpenAllContainers();
 void EQ_CloseAllContainers();
 EQ::Spawn_ptr EQ_GetNearestSpawn(int spawnType, float maxDistance = 200.0f);
 void EQ_SetTargetSpawn(EQ::Spawn_ptr spawn);
+signed int EQ_GetSpellBookSpellIndexBySpellID(uint16_t spellID);
+EQ::Spawn_ptr EQ_GetSpawnByName(std::string spawnName);
+EQ::Spawn_ptr EQ_GetPlayerPetSpawn();
 
 template <class T>
 void EQ_Log(const char* text, T number)
@@ -1330,3 +1333,72 @@ EQ::Spawn_ptr EQ_GetNearestSpawn(int spawnType, float maxDistance)
     return NULL;
 }
 
+signed int EQ_GetSpellBookSpellIndexBySpellID(uint16_t spellID)
+{
+    if (spellID == EQ_SPELL_ID_NULL)
+    {
+        return -1;
+    }
+
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return -1;
+    }
+
+    for (size_t i = 0; i < EQ_NUM_SPELL_BOOK_SPELLS; i++)
+    {
+        uint16_t spellBookSpellID = playerSpawn->Character->SpellBook[i];
+        if (spellBookSpellID == spellID)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+EQ::Spawn_ptr EQ_GetSpawnByName(std::string spawnName)
+{
+    auto spawn = EQ_GetFirstSpawn();
+    while (spawn != NULL)
+    {
+        std::string name = EQ_CLASS_POINTER_CEverQuest->trimName(spawn->Name);
+        if (name.size() == 0)
+        {
+            spawn = spawn->Next;
+            continue;
+        }
+
+        if (spawnName == name)
+        {
+            return spawn;
+        }
+
+        spawn = spawn->Next;
+    }
+
+    return NULL;
+}
+
+EQ::Spawn_ptr EQ_GetPlayerPetSpawn()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return NULL;
+    }
+
+    auto spawn = EQ_GetFirstSpawn();
+    while (spawn != NULL)
+    {
+        if (spawn->PetOwnerSpawnID == playerSpawn->SpawnID)
+        {
+            return spawn;
+        }
+
+        spawn = spawn->Next;
+    }
+
+    return NULL;
+}

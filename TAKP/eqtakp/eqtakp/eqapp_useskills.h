@@ -22,7 +22,7 @@ void EQAPP_UseSkills_Execute()
     {
         ////EQ_UseSkill(EQ_SKILL_SENSE_HEADING, NULL);
 
-        if (EQ_IsAutoAttackEnabled() == false)
+        if (EQ_IsAutoAttackEnabled() == false && playerSpawn->StandingState == EQ_STANDING_STATE_STANDING)
         {
             EQ_UseSkill(EQ_SKILL_FORAGE, NULL);
 
@@ -33,22 +33,26 @@ void EQAPP_UseSkills_Execute()
         }
     }
 
-    if (playerSpawn->Class == EQ_CLASS_WARRIOR)
+    if (EQ_IsAutoAttackEnabled() == true)
     {
-        if (EQ_IsAutoAttackEnabled() == true)
+        auto targetSpawn = EQ_GetTargetSpawn();
+        if (targetSpawn != NULL && targetSpawn != playerSpawn)
         {
-            auto targetSpawn = EQ_GetTargetSpawn();
-            if (targetSpawn != NULL && targetSpawn != playerSpawn)
+            float targetSpawnDistance = EQ_CalculateDistance(playerSpawn->X, playerSpawn->Y, targetSpawn->X, targetSpawn->Y);
+
+            float targetSpawnMeleeDistance = EQ_get_melee_range((EQClass::EQPlayer*)playerSpawn, (EQClass::EQPlayer*)targetSpawn);
+
+            if (targetSpawnDistance <= targetSpawnMeleeDistance)
             {
-                float targetSpawnDistance = EQ_CalculateDistance(playerSpawn->X, playerSpawn->Y, targetSpawn->X, targetSpawn->Y);
-
-                float targetSpawnMeleeDistance = EQ_get_melee_range((EQClass::EQPlayer*)playerSpawn, (EQClass::EQPlayer*)targetSpawn);
-
-                if (targetSpawnDistance <= targetSpawnMeleeDistance)
+                if (playerSpawn->Class == EQ_CLASS_WARRIOR)
                 {
                     EQ_UseSkill(EQ_SKILL_TAUNT, (EQClass::EQPlayer*)targetSpawn);
                     EQ_UseSkill(EQ_SKILL_KICK, (EQClass::EQPlayer*)targetSpawn);
                     EQ_UseSkill(EQ_SKILL_DISARM, (EQClass::EQPlayer*)targetSpawn);
+                }
+                else if (playerSpawn->Class == EQ_CLASS_ROGUE)
+                {
+                    EQ_UseSkill(EQ_SKILL_BACKSTAB, (EQClass::EQPlayer*)targetSpawn);
                 }
             }
         }
