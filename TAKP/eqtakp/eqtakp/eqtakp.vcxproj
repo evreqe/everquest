@@ -124,6 +124,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>D:\Code\!libraries\detours;D:\Code\!libraries\directx8sdk\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -154,7 +155,10 @@
     <ClInclude Include="eqapp_changeheight.h" />
     <ClInclude Include="eqapp_console.h" />
     <ClInclude Include="eqapp_detours.h" />
+    <ClInclude Include="eqapp_drawdistance.h" />
     <ClInclude Include="eqapp_esp.h" />
+    <ClInclude Include="eqapp_extendedtargets.h" />
+    <ClInclude Include="eqapp_extramousebuttons.h" />
     <ClInclude Include="eqapp_foodanddrink.h" />
     <ClInclude Include="eqapp_functions.h" />
     <ClInclude Include="eqapp_hidecorpselooted.h" />
@@ -167,6 +171,7 @@
     <ClInclude Include="eqapp_namespritestate.h" />
     <ClInclude Include="eqapp_namespritetint.h" />
     <ClInclude Include="eqapp_networkstats.h" />
+    <ClInclude Include="eqapp_neverfrozen.h" />
     <ClInclude Include="eqapp_speedhack.h" />
     <ClInclude Include="eqapp_spellset.h" />
     <ClInclude Include="eqapp_standwhencastspell.h" />

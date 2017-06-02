@@ -5,10 +5,10 @@ bool g_itemDisplayIsEnabled = true;
 bool g_itemDisplayItemsIsEnabled = true;
 bool g_itemDisplaySpellsIsEnabled = true;
 
-void EQAPP_ItemDisplay_SetItem(EQ::Item_ptr item);
-void EQAPP_ItemDisplay_SetSpell(short spellID, bool hasDescription);
+void EQAPP_ItemDisplay_HandleEvent_CItemDisplayWnd__SetItem(EQ::Item_ptr item);
+void EQAPP_ItemDisplay_HandleEvent_CItemDisplayWnd__SetSpell(uint16_t spellID, bool hasDescription);
 
-void EQAPP_ItemDisplay_SetItem(EQ::Item_ptr item)
+void EQAPP_ItemDisplay_HandleEvent_CItemDisplayWnd__SetItem(EQ::Item_ptr item)
 {
     if (item == NULL || EQ_POINTER_CItemDisplayWnd->DisplayText == NULL)
     {
@@ -81,7 +81,7 @@ void EQAPP_ItemDisplay_SetItem(EQ::Item_ptr item)
     EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, "</c>");
 }
 
-void EQAPP_ItemDisplay_SetSpell(short spellID, bool hasDescription)
+void EQAPP_ItemDisplay_HandleEvent_CItemDisplayWnd__SetSpell(uint16_t spellID, bool hasDescription)
 {
     if (spellID == EQ_SPELL_ID_NULL)
     {

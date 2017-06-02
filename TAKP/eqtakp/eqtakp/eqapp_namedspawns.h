@@ -1,9 +1,17 @@
 #pragma once
 
 bool g_namedSpawnsIsEnabled = true;
+
 std::vector<std::string> g_namedSpawnsList;
 
+void EQAPP_NamedSpawns_Toggle();
 void EQAPP_NamedSpawns_Load();
+
+void EQAPP_NamedSpawns_Toggle()
+{
+    EQ_ToggleBool(g_namedSpawnsIsEnabled);
+    EQAPP_PrintBool("Named Spawns", g_namedSpawnsIsEnabled);
+}
 
 void EQAPP_NamedSpawns_Load()
 {

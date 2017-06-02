@@ -22,13 +22,16 @@ void EQAPP_UseSkills_Execute()
     {
         ////EQ_UseSkill(EQ_SKILL_SENSE_HEADING, NULL);
 
-        if (EQ_IsAutoAttackEnabled() == false && playerSpawn->StandingState == EQ_STANDING_STATE_STANDING)
+        if (playerSpawn->Character->Skill[EQ_SKILL_FORAGE] > 1)
         {
-            EQ_UseSkill(EQ_SKILL_FORAGE, NULL);
-
-            if (playerSpawn->Character->CursorItem != NULL)
+            if (EQ_IsAutoAttackEnabled() == false && playerSpawn->StandingState == EQ_STANDING_STATE_STANDING)
             {
-                EQ_AutoInventory(playerSpawn->Character, &playerSpawn->Character->CursorItem, 0);
+                EQ_UseSkill(EQ_SKILL_FORAGE, NULL);
+
+                if (playerSpawn->Character->CursorItem != NULL)
+                {
+                    EQ_AutoInventory(playerSpawn->Character, &playerSpawn->Character->CursorItem, 0);
+                }
             }
         }
     }

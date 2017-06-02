@@ -6,7 +6,7 @@
 
 /* structures */
 
-#define EQ_ADDRESS_STRUCTURE_SPAWN_ID_ARRAY 0x0078C47C
+#define EQ_ADDRESS_STRUCTURE_SPAWN_ID_ARRAY 0x0078C47C // g_pEQP_IDArray
 
 uint32_t* EQ_POINTER_SpawnIDArray_ptr = (uint32_t*)EQ_ADDRESS_STRUCTURE_SPAWN_ID_ARRAY;
 #define EQ_POINTER_SpawnIDArray (*EQ_POINTER_SpawnIDArray_ptr)

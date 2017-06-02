@@ -4,8 +4,8 @@ namespace EQApp
 {
     typedef struct _ESPSpawn
     {
-        EQ::Spawn_ptr SpawnInfo;
-        uint16_t ID;
+        EQ::Spawn_ptr Spawn;
+        uint16_t SpawnID;
         std::string Name;
         std::string LastName;
         EQ::Location Location;
@@ -21,6 +21,7 @@ namespace EQApp
         int HPMax;
         bool ShowAtAnyDistance = false;
         bool IsTarget = false;
+        bool IsYourPet = false;
         bool IsGroupMember = false;
         std::string Text;
         uint32_t TextColor = EQ_TEXT_COLOR_WHITE;
@@ -30,9 +31,10 @@ namespace EQApp
 bool g_ESPIsEnabled = true;
 
 float g_ESPSpawnDistanceMax = 400.0f;
-float g_ESPSpawnDistanceZMax = 100.0f;
+float g_ESPSpawnDistanceZMax = 50.0f;
 
 std::vector<EQApp::ESPSpawn> g_ESPSpawnList;
+
 uint32_t g_ESPSpawnListTimer = 0;
 uint32_t g_ESPSpawnListTimerDelay = 1000;
 
@@ -77,9 +79,9 @@ void EQAPP_ESP_UpdateSpawnList()
 
         EQApp::ESPSpawn espSpawn;
 
-        espSpawn.SpawnInfo = spawn;
+        espSpawn.Spawn = spawn;
 
-        espSpawn.ID = spawn->SpawnID;
+        espSpawn.SpawnID = spawn->SpawnID;
 
         espSpawn.Name = EQ_CLASS_POINTER_CEverQuest->trimName(spawn->Name);
         espSpawn.LastName = spawn->LastName;
@@ -100,7 +102,12 @@ void EQAPP_ESP_UpdateSpawnList()
         espSpawn.Distance = EQ_CalculateDistance(spawn->X, spawn->Y, playerSpawn->X, playerSpawn->Y);
         espSpawn.DistanceZ = std::fabsf(spawn->Z - playerSpawn->Z);
 
-        espSpawn.ShowAtAnyDistance = true;
+        espSpawn.ShowAtAnyDistance = false;
+
+        if (spawn->PetOwnerSpawnID == playerSpawn->SpawnID)
+        {
+            espSpawn.IsYourPet = true;
+        }
 
         if (g_namedSpawnsIsEnabled == true)
         {
@@ -108,25 +115,25 @@ void EQAPP_ESP_UpdateSpawnList()
             {
                 if (espSpawn.Name.find(name) != std::string::npos)
                 {
-                    espSpawn.ShowAtAnyDistance = false;
+                    espSpawn.ShowAtAnyDistance = true;
                     break;
                 }
             }
         }
 
-        if (spawn == targetSpawn || espSpawn.Type == EQ_SPAWN_TYPE_PLAYER || espSpawn.Type == EQ_SPAWN_TYPE_PLAYER_CORPSE)
+        if (spawn == targetSpawn || espSpawn.Type == EQ_SPAWN_TYPE_PLAYER || espSpawn.Type == EQ_SPAWN_TYPE_PLAYER_CORPSE || espSpawn.IsYourPet == true)
         {
-            espSpawn.ShowAtAnyDistance = false;
+            espSpawn.ShowAtAnyDistance = true;
         }
 
         if (EQ_IsKeyPressedControl() == true)
         {
-            espSpawn.ShowAtAnyDistance = false;
+            espSpawn.ShowAtAnyDistance = true;
         }
 
-        if (espSpawn.ShowAtAnyDistance == true)
+        if (espSpawn.ShowAtAnyDistance == false)
         {
-            if (EQ_IsZoneVertical() == true)
+            if (EQ_IsZoneInList(EQ_ZONE_ID_LIST_VERTICAL) == true)
             {
                 if (espSpawn.DistanceZ > g_ESPSpawnDistanceZMax)
                 {
@@ -144,7 +151,7 @@ void EQAPP_ESP_UpdateSpawnList()
 
         espSpawn.TextColor = EQ_TEXT_COLOR_WHITE;
 
-        if (espSpawn.Type == EQ_SPAWN_TYPE_PLAYER || espSpawn.Type == EQ_SPAWN_TYPE_PLAYER_CORPSE)
+        if (espSpawn.Type == EQ_SPAWN_TYPE_PLAYER || espSpawn.Type == EQ_SPAWN_TYPE_PLAYER_CORPSE || espSpawn.IsYourPet == true)
         {
             espSpawn.TextColor = EQ_TEXT_COLOR_RED;
         }
@@ -301,26 +308,26 @@ void EQAPP_ESP_Spawns()
 {
     EQAPP_ESP_UpdateSpawnList();
 
-    for (auto& spawn : g_ESPSpawnList)
+    for (auto& espSpawn : g_ESPSpawnList)
     {
-        if (spawn.SpawnInfo != NULL)
+        if (espSpawn.Spawn != NULL)
         {
-            if (spawn.SpawnInfo->SpawnID == spawn.ID)
+            if (espSpawn.Spawn->SpawnID == espSpawn.SpawnID)
             {
-                spawn.Location.X = spawn.SpawnInfo->X;
-                spawn.Location.Y = spawn.SpawnInfo->Y;
-                spawn.Location.Z = spawn.SpawnInfo->Z;
+                espSpawn.Location.X = espSpawn.Spawn->X;
+                espSpawn.Location.Y = espSpawn.Spawn->Y;
+                espSpawn.Location.Z = espSpawn.Spawn->Z;
             }
         }
 
         uint32_t screenX = 0;
         uint32_t screenY = 0;
-        if (EQ_WorldSpaceToScreenSpace(spawn.Location, screenX, screenY) == false)
+        if (EQ_WorldSpaceToScreenSpace(espSpawn.Location, screenX, screenY) == false)
         {
             continue;
         }
 
-        EQ_DrawText(spawn.Text.c_str(), screenX, screenY, spawn.TextColor);
+        EQ_DrawText(espSpawn.Text.c_str(), screenX, screenY, espSpawn.TextColor);
     }
 }
 

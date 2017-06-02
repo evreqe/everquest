@@ -716,6 +716,7 @@ typedef struct _Actor
 /* 0x00C0 */ uint8_t Unknown00C0[196];
 /* 0x0184 */ uint32_t Animation;
 /* 0x0188 */ uint8_t Unknown0188[44];
+// 0x0198 // uint8_t Unknown0198;
 /* 0x01B4 */ uint32_t IsInvisible; // NPCs only? used by /hidecorpse command
 /* 0x01B8 */ uint8_t Unknown01B8[168];
 /* 0x0260 */ uint32_t IsHoldingBoth;
@@ -736,7 +737,12 @@ typedef struct _Actor
 /* 0x0294 */ struct _ModelBone* ModelBoneRightPoint;
 /* 0x0298 */ struct _ModelBone* ModelBoneLeftPoint;
 /* 0x029C */ struct _ModelBone* ModelBoneShieldPoint;
-/* 0x02A0 */ uint8_t Unknown02A0[128];
+/* 0x02A0 */ uint8_t Unknown02A0[68];
+/* 0x02E4 */ struct _Spawn* FollowedSpawn;
+/* 0x02E8 */ float HeadingWhileFollowing;
+/* 0x02EC */ uint8_t Unknown02EC;
+/* 0x02F0 */ float FollowedSpawnDistance;
+/* 0x02F4 */ uint8_t Unknown02E8[44];
 /* 0x0320 */ uint8_t MovementType; // EQ_MOVEMENT_TYPE_x
 /* 0x0321 */ uint8_t Unknown0321[12];
 /* 0x032D */ uint8_t IsMovingTimer; // 0 = Moving, 1-6 = Recently Stopped Moving, 200 = Not Moving
@@ -805,7 +811,7 @@ typedef struct _Spawn
 /* 0x0108 */ uint8_t IsLinkDead; // LD
 /* 0x0109 */ uint8_t IsGameMaster; // GM
 /* 0x010A */ uint16_t LevitationState; // EQ_LEVITATION_STATE_x
-/* 0x010C */ uint32_t TargetType; // EQ_SPAWN_TARGET_TYPE_x
+/* 0x010C */ uint32_t TargetType; // EQ_SPAWN_TARGET_TYPE_x ; values can be 11, 65, 67, 60
 /* 0x0110 */ uint32_t Unknown0110;
 /* 0x0114 */ uint32_t AnonymousState; // EQ_ANONYMOUS_STATE_x ; /anonymous and /roleplay
 /* 0x0118 */ uint32_t Unknown0118;
@@ -1114,7 +1120,7 @@ typedef struct _CBazaarSearchWndBazaarMsg
     uint16_t Action; // 7 or 12
     uint16_t ItemQuantity;
     uint16_t ItemID;
-    uint16_t SpawnIDArrayIndex;
+    uint16_t SpawnID;
     uint32_t ItemValue; // price in copper
     char ItemName[64];
 /* ...... */

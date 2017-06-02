@@ -13,7 +13,9 @@ namespace EQApp
 }
 
 bool g_memoryIsEnabled = true;
+
 std::vector<EQApp::Memory> g_memoryList;
+
 uint32_t g_memoryFilesMax = 255;
 uint32_t g_memoryAddressesMax = 8;
 

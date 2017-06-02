@@ -20,10 +20,13 @@ namespace EQApp
 }
 
 bool g_networkStatsIsEnabled = true;
+
 std::vector<std::string> g_networkStatsPlayerList;
 std::vector<EQApp::NetworkStats> g_networkStatsList;
+
 uint32_t g_networkStatsDrawX = 8;
 uint32_t g_networkStatsDrawY = 100;
+
 uint32_t g_networkStatsTimer = 0;
 uint32_t g_networkStatsTimerDelay = 1000;
 

@@ -30,7 +30,7 @@ unsigned int g_mapNumLayers = 3;
 unsigned int g_mapNumLinesDrawn = 0;
 unsigned int g_mapNumLinesMax = 3500;
 
-float g_mapX = 5.0f;
+float g_mapX = 4.0f;
 float g_mapY = 64.0f;
 
 float g_mapWidth  = 400.0f;
@@ -68,7 +68,7 @@ float g_mapArrowRadius = 20.0f;
 uint32_t g_mapBorderColor = 0xFF646464;
 uint32_t g_mapBackgroundColor = EQ_TOOLTIP_TEXT_BACKGROUND_COLOR;
 
-float g_mapSpawnDistanceMax = 400.0f;
+float g_mapSpawnDistanceMax = 1000.0f;
 float g_mapSpawnDistanceZMax = 100.0f;
 
 void EQAPP_Map_Toggle();
@@ -80,7 +80,7 @@ void EQAPP_Map_ZoomOut();
 void EQAPP_Map_ZoomIn();
 void EQAPP_Map_MouseWheelZoomOut();
 void EQAPP_Map_MouseWheelZoomIn();
-void EQAPP_Map_HandleMouseWheel(int mouseWheelDelta);
+void EQAPP_Map_HandleEvent_HandleMouseWheel(int mouseWheelDelta);
 void EQAPP_Map_SetZoom(float zoom);
 void EQAPP_Map_ResetZoom();
 void EQAPP_Map_Center();
@@ -90,6 +90,11 @@ void EQAPP_Map_Toggle()
 {
     EQ_ToggleBool(g_mapIsEnabled);
     EQAPP_PrintBool("Map", g_mapIsEnabled);
+
+    if (g_mapIsEnabled == true)
+    {
+        EQAPP_Map_RecalculateScreenCoordinates();
+    }
 }
 
 bool EQAPP_Map_Load()
@@ -297,20 +302,20 @@ void EQAPP_Map_MouseWheelZoomIn()
     }
 }
 
-void EQAPP_Map_HandleMouseWheel(int mouseWheelDelta)
+void EQAPP_Map_HandleEvent_HandleMouseWheel(int mouseWheelDelta)
 {
-    uint32_t mouseX = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_X);
-    uint32_t mouseY = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_Y);
-
-    bool isMouseInsideMapWindow = EQ_IsPointInsideRectangle
-    (
-        mouseX, mouseY,
-        (int)g_mapX,     (int)g_mapY,
-        (int)g_mapWidth, (int)g_mapHeight
-    );
-
     if (g_mapIsEnabled == true)
     {
+        uint32_t mouseX = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_X);
+        uint32_t mouseY = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_Y);
+
+        bool isMouseInsideMapWindow = EQ_IsPointInsideRectangle
+        (
+            mouseX, mouseY,
+            (int)g_mapX,     (int)g_mapY,
+            (int)g_mapWidth, (int)g_mapHeight
+        );
+
         if (isMouseInsideMapWindow == true)
         {
             if (mouseWheelDelta == EQ_MOUSE_WHEEL_DELTA_UP)
@@ -322,20 +327,6 @@ void EQAPP_Map_HandleMouseWheel(int mouseWheelDelta)
                 EQAPP_Map_MouseWheelZoomOut();
             }
         }
-        else
-        {
-            if (mouseWheelDelta == EQ_MOUSE_WHEEL_DELTA_UP)
-            {
-                g_mapIsEnabled = false;
-            }
-        }
-    }
-    else
-    {
-            if (mouseWheelDelta == EQ_MOUSE_WHEEL_DELTA_DOWN)
-            {
-                g_mapIsEnabled = true;
-            }
     }
 }
 
@@ -479,7 +470,7 @@ void EQAPP_Map_Execute()
 
         if (useDistance == true)
         {
-            if (EQ_IsZoneVertical() == true)
+            if (EQ_IsZoneInList(EQ_ZONE_ID_LIST_VERTICAL) == true)
             {
                 if (spawnDistanceZ > g_mapSpawnDistanceZMax)
                 {

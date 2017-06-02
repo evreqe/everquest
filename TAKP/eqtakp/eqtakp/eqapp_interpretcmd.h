@@ -2,21 +2,30 @@
 
 bool g_interpretCmdIsEnabled = true;
 
-std::vector<std::string> g_interpretCmdList =
+std::map<std::string, std::function<void()>> g_interpretCmdList =
 {
-    "AlwaysAttack",
-    "AutoLoot",
-    "ESP",
-    "FoodAndDrink",
-    "LoadSpellSet",
-    "SaveSpellSet",
-    "Map",
-    "NetworkStats",
-    "Speed",
-    "TargetCorpse",
-    "TargetAnyCorpse",
-    "TargetPlayerCorpse",
-    "TargetNPCCorpse",
+    {"//AlwaysAttack",          &EQAPP_AlwaysAttack_Toggle},
+    {"//AutoLoot",              &EQAPP_AutoLoot_Toggle},
+    {"//DrawDistance",          &EQAPP_DrawDistance_Toggle},
+    {"//ESP",                   &EQAPP_ESP_Toggle},
+    {"//ExtendedTargets",       &EQAPP_ExtendedTargets_Toggle},
+    {"//FoodAndDrink",          &EQAPP_FoodAndDrink_Toggle},
+    {"//HideCorpseLooted",      &EQAPP_HideCorpseLooted_Toggle},
+    {"//LoadSpellSet",          &EQAPP_SpellSet_LoadAndStartMemorizing},
+    {"//SaveSpellSet",          &EQAPP_SpellSet_Save},
+    {"//Map",                   &EQAPP_Map_Toggle},
+    {"//NamedSpawns",           &EQAPP_NamedSpawns_Toggle},
+    {"//NetworkStats",          &EQAPP_NetworkStats_Toggle},
+    {"//NeverFrozen",           &EQAPP_NeverFrozen_Toggle},
+    {"//Speed",                 &EQAPP_SpeedHack_Toggle},
+    {"//TargetPlayer",          &EQAPP_TargetNearestPlayer},
+    {"//TargetNPC",             &EQAPP_TargetNearestNPC},
+    {"//TargetPlayerPet",       &EQAPP_TargetNearestPlayerPet},
+    {"//TargetNPCPet",          &EQAPP_TargetNearestNPCPet},
+    {"//TargetCorpse",          &EQAPP_TargetNearestAnyCorpse},
+    {"//TargetAnyCorpse",       &EQAPP_TargetNearestAnyCorpse},
+    {"//TargetPlayerCorpse",    &EQAPP_TargetNearestPlayerCorpse},
+    {"//TargetNPCCorpse",       &EQAPP_TargetNearestNPCCorpse},
 };
 
 void EQAPP_InterpretCmd_Execute(std::string commandText);
@@ -30,91 +39,22 @@ void EQAPP_InterpretCmd_Execute(std::string commandText)
 
     std::cout << "InterpretCmd: " << commandText << std::endl;
 
-    if (commandText == "//AlwaysAttack")
+    if (commandText == "Commands")
     {
-        EQAPP_AlwaysAttack_Toggle();
-        return;
-    }
+        std::cout << "Command List: " << std::endl;
 
-    if (commandText == "//AutoLoot")
-    {
-        EQAPP_AutoLoot_Toggle();
-        return;
-    }
-
-    if (commandText == "//ESP")
-    {
-        EQAPP_ESP_Toggle();
-        return;
-    }
-
-    if (commandText == "//FoodAndDrink")
-    {
-        EQAPP_FoodAndDrink_Toggle();
-        return;
-    }
-
-    if (commandText == "//LoadSpellSet")
-    {
-        EQAPP_SpellSet_Load();
-        EQAPP_SpellSet_StartMemorizing();
-        return;
-    }
-
-    if (commandText == "//SaveSpellSet")
-    {
-        EQAPP_SpellSet_Save();
-        return;
-    }
-
-    if (commandText == "//Map")
-    {
-        EQAPP_Map_Toggle();
-        return;
-    }
-
-    if (commandText == "//NetworkStats")
-    {
-        EQAPP_NetworkStats_Toggle();
-        return;
-    }
-
-    if (commandText == "//Speed")
-    {
-        EQAPP_SpeedHack_Toggle();
-        return;
-    }
-
-    if (commandText == "//TargetCorpse" || commandText == "//TargetAnyCorpse")
-    {
-        auto nearestSpawn = EQ_GetNearestSpawn(EQ_SPAWN_TYPE_ANY_CORPSE, 100.0f);
-        if (nearestSpawn != NULL)
+        for (auto& cmd : g_interpretCmdList)
         {
-            EQ_SetTargetSpawn(nearestSpawn);
+            std::cout << cmd.first << std::endl;
         }
 
         return;
     }
 
-    if (commandText == "//TargetPlayerCorpse")
+    auto cmd = g_interpretCmdList.find(commandText);
+    if (cmd != g_interpretCmdList.end())
     {
-        auto nearestSpawn = EQ_GetNearestSpawn(EQ_SPAWN_TYPE_PLAYER_CORPSE, 100.0f);
-        if (nearestSpawn != NULL)
-        {
-            EQ_SetTargetSpawn(nearestSpawn);
-        }
-
-        return;
-    }
-
-    if (commandText == "//TargetNPCCorpse")
-    {
-        auto nearestSpawn = EQ_GetNearestSpawn(EQ_SPAWN_TYPE_NPC_CORPSE, 100.0f);
-        if (nearestSpawn != NULL)
-        {
-            EQ_SetTargetSpawn(nearestSpawn);
-        }
-
+        cmd->second();
         return;
     }
 }

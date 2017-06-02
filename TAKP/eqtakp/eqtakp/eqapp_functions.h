@@ -15,6 +15,10 @@ void EQAPP_PrintBool(const char* text, bool& b);
 void EQAPP_PrintErrorMessage(const char* functionName, std::string text);
 void EQAPP_PrintDebugMessage(const char* functionName, std::string text);
 
+void EQAPP_Mouse_Load();
+void EQAPP_Mouse_Unload();
+void EQAPP_Mouse_Acquire();
+
 void EQAPP_PlaySound(const char* filename);
 void EQAPP_Beep();
 void EQAPP_BeepEx(UINT beepType);
@@ -23,6 +27,14 @@ void EQAPP_DeleteFileContents(const char* filename);
 void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list);
 
 uint32_t EQAPP_GetRandomNumber(uint32_t low, uint32_t high);
+
+void EQAPP_TargetNearestPlayer();
+void EQAPP_TargetNearestPlayerPet();
+void EQAPP_TargetNearestNPC();
+void EQAPP_TargetNearestNPCPet();
+void EQAPP_TargetNearestAnyCorpse();
+void EQAPP_TargetNearestPlayerCorpse();
+void EQAPP_TargetNearestNPCCorpse();
 
 template <class T>
 void EQAPP_Log(const char* text, T number)
@@ -132,6 +144,42 @@ void EQAPP_PrintDebugMessage(const char* functionName, std::string text)
     std::cout << "[DEBUG] " << functionName << ": " << text << std::endl;
 }
 
+void EQAPP_Mouse_Load()
+{
+    EQ_CLASS_POINTER_DInputMouse->SetDataFormat(&c_dfDIMouse2);
+    //EQ_CLASS_POINTER_DInputMouse->SetCooperativeLevel(EQ_GetWindow(), DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
+}
+
+void EQAPP_Mouse_Unload()
+{
+    EQ_CLASS_POINTER_DInputMouse->SetDataFormat(&c_dfDIMouse);
+    //EQ_CLASS_POINTER_DInputMouse->SetCooperativeLevel(EQ_GetWindow(), DISCL_BACKGROUND | DISCL_EXCLUSIVE);
+}
+
+void EQAPP_Mouse_Acquire()
+{
+    if (EQ_CLASS_POINTER_IDirectInput8 == NULL || EQ_CLASS_POINTER_DInputMouse == NULL)
+    {
+        return;
+    }
+
+    if (EQAPP_IsForegroundWindowCurrentProcessId() == false)
+    {
+        return;
+    }
+
+    DIMOUSESTATE2 mouseState;
+    HRESULT result = EQ_CLASS_POINTER_DInputMouse->GetDeviceState(sizeof(DIMOUSESTATE2), (LPVOID)&mouseState);
+    if (result == DIERR_INPUTLOST || result == DIERR_NOTACQUIRED)
+    {
+        if (EQ_CLASS_POINTER_DInputMouse->Acquire() == DI_OK)
+        {
+            SetCapture(GetForegroundWindow());
+            //std::cout << "Mouse Acquired." << std::endl;
+        }
+    }
+}
+
 void EQAPP_PlaySound(const char* filename)
 {
     PlaySoundA(filename, 0, SND_FILENAME | SND_NODEFAULT | SND_ASYNC);
@@ -207,5 +255,67 @@ uint32_t EQAPP_GetRandomNumberLowHigh(uint32_t low, uint32_t high)
     return uid(g_randomEngine, uidpt);
 }
 
+void EQAPP_TargetNearestPlayer()
+{
+    auto spawn = EQ_GetNearestSpawn(EQ_SPAWN_TYPE_PLAYER, 400.0f, 20.0f);
+    if (spawn != NULL)
+    {
+        EQ_SetTargetSpawn(spawn);
+    }
+}
+
+void EQAPP_TargetNearestNPC()
+{
+    auto spawn = EQ_GetNearestSpawn(EQ_SPAWN_TYPE_NPC, 400.0f, 20.0f);
+    if (spawn != NULL)
+    {
+        EQ_SetTargetSpawn(spawn);
+    }
+}
+
+void EQAPP_TargetNearestPlayerPet()
+{
+    auto spawn = EQ_GetNearestSpawn(EQ_SPAWN_TYPE_PLAYER_PET, 400.0f, 20.0f);
+    if (spawn != NULL)
+    {
+        EQ_SetTargetSpawn(spawn);
+    }
+}
+
+void EQAPP_TargetNearestNPCPet()
+{
+    auto spawn = EQ_GetNearestSpawn(EQ_SPAWN_TYPE_NPC_PET, 400.0f, 20.0f);
+    if (spawn != NULL)
+    {
+        EQ_SetTargetSpawn(spawn);
+    }
+}
+
+void EQAPP_TargetNearestAnyCorpse()
+{
+    auto spawn = EQ_GetNearestSpawn(EQ_SPAWN_TYPE_ANY_CORPSE, 400.0f, 20.0f);
+    if (spawn != NULL)
+    {
+        EQ_SetTargetSpawn(spawn);
+    }
+}
+
+void EQAPP_TargetNearestPlayerCorpse()
+{
+    auto spawn = EQ_GetNearestSpawn(EQ_SPAWN_TYPE_PLAYER_CORPSE, 400.0f, 20.0f);
+    if (spawn != NULL)
+    {
+        EQ_SetTargetSpawn(spawn);
+    }
+}
+
+void EQAPP_TargetNearestNPCCorpse()
+{
+    auto spawn = EQ_GetNearestSpawn(EQ_SPAWN_TYPE_NPC_CORPSE, 400.0f, 20.0f);
+    if (spawn != NULL)
+    {
+        EQ_SetTargetSpawn(spawn);
+    }
+}
 
 

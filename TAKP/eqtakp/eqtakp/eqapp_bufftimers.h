@@ -4,10 +4,10 @@ bool g_buffTimersIsEnabled = true;
 
 unsigned int g_buffTimersFontSize = 1;
 
-void EQAPP_BuffTimers_RefreshBuffDisplay(void* this_ptr);
-void EQAPP_BuffTimers_PostDraw(void* this_ptr);
+void EQAPP_BuffTimers_HandleEvent_CBuffWindow__RefreshBuffDisplay(void* this_ptr);
+void EQAPP_BuffTimers_HandleEvent_CBuffWindow__PostDraw(void* this_ptr);
 
-void EQAPP_BuffTimers_RefreshBuffDisplay(void* this_ptr)
+void EQAPP_BuffTimers_HandleEvent_CBuffWindow__RefreshBuffDisplay(void* this_ptr)
 {
     EQ::CBuffWindow_ptr buffWindow = (EQ::CBuffWindow_ptr)this_ptr;
 
@@ -41,7 +41,7 @@ void EQAPP_BuffTimers_RefreshBuffDisplay(void* this_ptr)
     }
 }
 
-void EQAPP_BuffTimers_PostDraw(void* this_ptr)
+void EQAPP_BuffTimers_HandleEvent_CBuffWindow__PostDraw(void* this_ptr)
 {
     EQ::CBuffWindow_ptr buffWindow = (EQ::CBuffWindow_ptr)this_ptr;
 

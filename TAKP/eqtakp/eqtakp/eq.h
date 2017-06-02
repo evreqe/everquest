@@ -106,6 +106,8 @@
 #define EQ_SPAWN_TYPE_NPC           1
 #define EQ_SPAWN_TYPE_NPC_CORPSE    2
 #define EQ_SPAWN_TYPE_PLAYER_CORPSE 3
+#define EQ_SPAWN_TYPE_PLAYER_PET    252 // custom unique value for pets
+#define EQ_SPAWN_TYPE_NPC_PET       253 // custom unique value for pets
 #define EQ_SPAWN_TYPE_ANY_CORPSE    254 // custom unique value for hide corpse looted
 
 #define EQ_SPAWN_TARGET_TYPE_CAN_TARGET     0x00
@@ -1007,6 +1009,10 @@
 #define EQ_BAZAAR_COLUMN_INDEX_PRICE     2
 #define EQ_BAZAAR_COLUMN_INDEX_SELLER    3
 
+#define EQ_ADDRESS_FOLLOW_DISTANCE 0x005E3840 // float
+#define EQ_ADDRESS_FOLLOW_DISTANCE_ADD_1 0x005E44D4 // float
+#define EQ_ADDRESS_FOLLOW_DISTANCE_ADD_2 0x005E86D0 // float
+
 const char* EQ_STRING_PROCESS_NAME = "eqgame.exe";
 
 const float EQ_PI = 3.14159265358979f;
@@ -1017,6 +1023,12 @@ const float EQ_HEADING_MAX_HALVED = 256.0f;
 const float EQ_CAMERA_PITCH_DEFAULT = -8.5f; // 119.5 + 8.5 = 128 everquest degrees = 90 degrees
 const float EQ_CAMERA_PITCH_MIN     = -119.5f;
 const float EQ_CAMERA_PITCH_MAX     =  119.5f;
+
+const float EQ_FOLLOW_DISTANCE_MIN     = 5.0f;
+const float EQ_FOLLOW_DISTANCE_DEFAULT = 20.0f;
+
+const float EQ_FOLLOW_DISTANCE_ADD_1_DEFAULT = 15.0f;
+const float EQ_FOLLOW_DISTANCE_ADD_2_DEFAULT = 30.0f;
 
 // EQ_Character::eqspa_movement_rate
 const float EQ_MOVEMENT_SPEED_MODIFIER_AA_RUN_1       = 0.08f;
@@ -1104,8 +1116,10 @@ std::unordered_map<std::string, std::string> EQ_STRING_MAP_DOOR_SPAWN_NAME =
     {"FAYLEVATOR",    "Faydark Elevator"},
 };
 
+typedef std::vector<uint32_t> EQ_ZoneIDList_t;
+
 // zones that have multiple levels going up and down
-std::vector<uint32_t> EQ_ZONE_ID_LIST_VERTICAL =
+EQ_ZoneIDList_t EQ_ZONE_ID_LIST_VERTICAL =
 {
     EQ_ZONE_ID_BEFALLEN,
     EQ_ZONE_ID_BLACKBURROW,
@@ -1113,8 +1127,16 @@ std::vector<uint32_t> EQ_ZONE_ID_LIST_VERTICAL =
     EQ_ZONE_ID_KURN,
 };
 
+// zones that are indoors
+EQ_ZoneIDList_t EQ_ZONE_ID_LIST_INDOORS =
+{
+    EQ_ZONE_ID_BEFALLEN,
+    EQ_ZONE_ID_HIGHKEEP,
+    EQ_ZONE_ID_KURN,
+};
+
 // zones that are safe cities with mostly no monsters
-std::vector<uint32_t> EQ_ZONE_ID_LIST_CITY =
+EQ_ZoneIDList_t EQ_ZONE_ID_LIST_CITY =
 {
     EQ_ZONE_ID_POKNOWLEDGE,
     EQ_ZONE_ID_NEXUS,

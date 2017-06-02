@@ -1,9 +1,10 @@
 #pragma once
 
-bool g_foodAndDrinkIsEnabled = true;
+bool g_foodAndDrinkIsEnabled = false;
 
 void EQAPP_FoodAndDrink_Toggle();
 void EQAPP_FoodAndDrink_Execute();
+void EQAPP_FoodAndDrink_Load();
 
 void EQAPP_FoodAndDrink_Toggle()
 {
@@ -19,15 +20,13 @@ void EQAPP_FoodAndDrink_Execute()
         return;
     }
 
-    if (EQ_IsZoneCity() == true)
-    {
-        playerSpawn->Character->Hunger = 32000;
-        playerSpawn->Character->Thirst = 32000;
-    }
-    //else
-    //{
-        //playerSpawn->Character->Hunger = 3500;
-        //playerSpawn->Character->Thirst = 3500;
-    //}
+    playerSpawn->Character->Hunger = 32000;
+    playerSpawn->Character->Thirst = 32000;
 }
+
+void EQAPP_FoodAndDrink_Load()
+{
+    g_foodAndDrinkIsEnabled = (EQ_IsZoneInList(EQ_ZONE_ID_LIST_CITY) == true);
+}
+
 

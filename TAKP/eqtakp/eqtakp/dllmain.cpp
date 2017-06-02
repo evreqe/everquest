@@ -32,6 +32,7 @@
 
 #include <d3d8.h>
 #pragma comment(lib, "d3d8.lib")
+#pragma comment(lib, "dxguid.lib")
 
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
@@ -77,9 +78,14 @@
 #include "eqapp_useskills.h"
 #include "eqapp_foodanddrink.h"
 #include "eqapp_spellset.h"
+#include "eqapp_drawdistance.h"
+#include "eqapp_neverfrozen.h"
 //
+#include "eqapp_extendedtargets.h"
 #include "eqapp_map.h"
 #include "eqapp_esp.h"
+//
+#include "eqapp_extramousebuttons.h"
 //
 #include "eqapp_interpretcmd.h"
 //
@@ -89,21 +95,16 @@ void EQAPP_Load()
 {
     EQ_WriteChatText("Loading...");
 
+    EQAPP_Mouse_Load();
+
     EQAPP_Memory_Load();
 
     if (EQ_IsInGame() == true)
     {
         g_zoneID = EQ_GetZoneID();
 
-        EQ_UpdateLight(EQ_POINTER_PlayerCharacter);
-
-        EQAPP_Map_Load();
-        EQAPP_NetworkStats_Load();
-        EQAPP_AutoLoot_Load();
-        EQAPP_NamedSpawns_Load();
+        EQAPP_Detours_OnZoneChanged_Load();
     }
-
-    //EQ_CLASS_POINTER_DInputMouse->SetCooperativeLevel(EQ_GetWindow(), DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
 
     g_bLoaded = 1;
 
@@ -114,9 +115,9 @@ void EQAPP_Unload()
 {
     EQ_WriteChatText("Unloading...");
 
-    //EQ_CLASS_POINTER_DInputMouse->SetCooperativeLevel(EQ_GetWindow(), DISCL_BACKGROUND | DISCL_EXCLUSIVE);
-
     EQAPP_Memory_Unload();
+
+    EQAPP_Mouse_Unload();
 
     g_bExit = 1;
 }

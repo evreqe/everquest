@@ -74,7 +74,7 @@ std::string EQ_GetGuildNameByID(int guildID);
 uint32_t EQ_GetStringSpriteFontTexture();
 uint32_t EQ_GetTimer();
 bool EQ_HasTimePassed(uint32_t& timer, uint32_t& delay);
-EQ::Spawn_ptr EQ_GetSpawnFromIDArray(uint32_t index);
+EQ::Spawn_ptr EQ_GetSpawnByID(uint16_t spawnID);
 EQ::Spawn_ptr EQ_GetFirstSpawn();
 EQ::GroundSpawn_ptr EQ_GetFirstGroundSpawn();
 EQ::DoorSpawn_ptr EQ_GetFirstDoorSpawn();
@@ -105,8 +105,7 @@ void EQ_UseSkill(uint8_t skillID, EQClass::EQPlayer* targetSpawn);
 HWND EQ_GetWindow();
 int EQ_GetLineClipValue(float x, float y, float minX, float minY, float maxX, float maxY);
 bool EQ_LineClip(EQ::Line_ptr line, float minX, float minY, float maxX, float maxY);
-bool EQ_IsZoneVertical();
-bool EQ_IsZoneCity();
+bool EQ_IsZoneInList(EQ_ZoneIDList_t& zoneIDList);
 void EQ_SetCameraView(uint8_t cameraView);
 std::string EQ_GetZoneShortName();
 std::string EQ_GetZoneLongName();
@@ -114,11 +113,12 @@ bool EQ_IsWindowVisible(uint32_t windowAddressPointer);
 bool EQ_LootItemByName(std::string name);
 void EQ_OpenAllContainers();
 void EQ_CloseAllContainers();
-EQ::Spawn_ptr EQ_GetNearestSpawn(int spawnType, float maxDistance = 200.0f);
+EQ::Spawn_ptr EQ_GetNearestSpawn(int spawnType, float maxDistance, float maxDistanceZ);
 void EQ_SetTargetSpawn(EQ::Spawn_ptr spawn);
 signed int EQ_GetSpellBookSpellIndexBySpellID(uint16_t spellID);
 EQ::Spawn_ptr EQ_GetSpawnByName(std::string spawnName);
 EQ::Spawn_ptr EQ_GetPlayerPetSpawn();
+void EQ_DrawMouseCursor();
 
 template <class T>
 void EQ_Log(const char* text, T number)
@@ -231,6 +231,8 @@ typedef int (__cdecl* EQ_FUNCTION_TYPE_GetKey)(void);
 #define EQ_ADDRESS_FUNCTION_get_bearing 0x004F3777
 
 #define EQ_ADDRESS_FUNCTION_ExecuteCmd 0x0054050C
+EQ_MACRO_FunctionAtAddress(int __cdecl EQ_ExecuteCmd(uint32_t ID, int isActive, int zero), EQ_ADDRESS_FUNCTION_ExecuteCmd);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_ExecuteCmd)(uint32_t ID, int isActive, int zero);
 
 #define EQ_ADDRESS_FUNCTION_send_message 0x0054E51A
 
@@ -832,9 +834,9 @@ bool EQ_HasTimePassed(uint32_t& timer, uint32_t& delay)
     return false;
 }
 
-EQ::Spawn_ptr EQ_GetSpawnFromIDArray(uint32_t index)
+EQ::Spawn_ptr EQ_GetSpawnByID(uint16_t spawnID)
 {
-    uint32_t spawnAddress = *(&EQ_POINTER_SpawnIDArray + index);
+    uint32_t spawnAddress = *(&EQ_POINTER_SpawnIDArray + spawnID);
 
     return (EQ::Spawn_ptr)spawnAddress;
 }
@@ -1116,26 +1118,11 @@ bool EQ_LineClip(EQ::Line_ptr line, float minX, float minY, float maxX, float ma
     return bDrawLine;
 }
 
-bool EQ_IsZoneVertical()
+bool EQ_IsZoneInList(EQ_ZoneIDList_t& zoneIDList)
 {
     auto zoneID = EQ_GetZoneID();
 
-    for (auto& ID : EQ_ZONE_ID_LIST_VERTICAL)
-    {
-        if (zoneID == ID)
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-bool EQ_IsZoneCity()
-{
-    auto zoneID = EQ_GetZoneID();
-
-    for (auto& ID : EQ_ZONE_ID_LIST_CITY)
+    for (auto& ID : zoneIDList)
     {
         if (zoneID == ID)
         {
@@ -1259,7 +1246,7 @@ void EQ_CloseAllContainers()
     EQ_CLASS_POINTER_CContainerMgr->CloseAllContainers();
 }
 
-EQ::Spawn_ptr EQ_GetNearestSpawn(int spawnType, float maxDistance)
+EQ::Spawn_ptr EQ_GetNearestSpawn(int spawnType, float maxDistance, float maxDistanceZ)
 {
     auto playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)
@@ -1276,16 +1263,59 @@ EQ::Spawn_ptr EQ_GetNearestSpawn(int spawnType, float maxDistance)
     spawn = EQ_GetFirstSpawn();
     while (spawn)
     {
+        if (EQ_CastRay((EQClass::EQPlayer*)playerSpawn, spawn->Y, spawn->X, spawn->Z) != 1)
+        {
+            spawn = spawn->Next;
+            continue;
+        }
+
+        auto targetSpawn = EQ_GetTargetSpawn();
+        if (spawn == targetSpawn)
+        {
+            spawn = spawn->Next;
+            continue;
+        }
+
         if (spawn == playerSpawn || spawn->Actor->IsInvisible == 1)
         {
             spawn = spawn->Next;
             continue;
         }
 
-        if (spawn->Type != spawnType && spawnType != EQ_SPAWN_TYPE_ANY_CORPSE)
+        if
+        (
+            spawn->Type != spawnType &&
+            spawnType != EQ_SPAWN_TYPE_PLAYER_PET &&
+            spawnType != EQ_SPAWN_TYPE_NPC_PET &&
+            spawnType != EQ_SPAWN_TYPE_ANY_CORPSE)
         {
             spawn = spawn->Next;
             continue;
+        }
+
+        if (spawnType == EQ_SPAWN_TYPE_PLAYER_PET || spawnType == EQ_SPAWN_TYPE_NPC_PET)
+        {
+            if (spawn->PetOwnerSpawnID == 0)
+            {
+                spawn = spawn->Next;
+                continue;
+            }
+
+            EQ::Spawn_ptr spawnPetOwner = EQ_GetSpawnByID(spawn->PetOwnerSpawnID);
+            if (spawnPetOwner != NULL)
+            {
+                if (spawnType == EQ_SPAWN_TYPE_PLAYER_PET && spawnPetOwner->Type != EQ_SPAWN_TYPE_PLAYER)
+                {
+                    spawn = spawn->Next;
+                    continue;
+                }
+
+                if (spawnType == EQ_SPAWN_TYPE_NPC_PET && spawnPetOwner->Type != EQ_SPAWN_TYPE_NPC)
+                {
+                    spawn = spawn->Next;
+                    continue;
+                }
+            }
         }
 
         if (spawnType == EQ_SPAWN_TYPE_ANY_CORPSE)
@@ -1299,6 +1329,13 @@ EQ::Spawn_ptr EQ_GetNearestSpawn(int spawnType, float maxDistance)
 
         float spawnDistance = EQ_CalculateDistance(playerSpawn->X, playerSpawn->Y, spawn->X, spawn->Y);
         if (spawnDistance > maxDistance)
+        {
+            spawn = spawn->Next;
+            continue;
+        }
+
+        float spawnDistanceZ = std::fabsf(spawn->Z - playerSpawn->Z);
+        if (spawnDistanceZ > 20.0f)
         {
             spawn = spawn->Next;
             continue;
@@ -1319,15 +1356,10 @@ EQ::Spawn_ptr EQ_GetNearestSpawn(int spawnType, float maxDistance)
         spawn = spawn->Next;
     }
 
-    spawn = EQ_GetFirstSpawn();
-    while (spawn)
+    spawn = EQ_GetSpawnByID(spawnID);
+    if (spawn != NULL)
     {
-        if (spawn->SpawnID == spawnID)
-        {
-            return spawn;
-        }
-
-        spawn = spawn->Next;
+        return spawn;
     }
 
     return NULL;
@@ -1401,4 +1433,13 @@ EQ::Spawn_ptr EQ_GetPlayerPetSpawn()
     }
 
     return NULL;
+}
+
+void EQ_DrawMouseCursor()
+{
+    uint32_t mouseClickState = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_CLICK_STATE);
+    if (mouseClickState != EQ_MOUSE_CLICK_STATE_RIGHT) // do not draw the cursor while mouse looking
+    {
+        EQ_CLASS_POINTER_CXWndManager->DrawCursor();
+    }
 }

@@ -21,14 +21,19 @@ void EQAPP_SpeedHack_Execute()
         return;
     }
 
-    auto zoneID = EQ_GetZoneID();
-
-    if (EQ_POINTER_Zone.Type != EQ_ZONE_TYPE_INDOORS && zoneID != EQ_ZONE_ID_KURN)
+    if (EQ_POINTER_Zone.Type == EQ_ZONE_TYPE_INDOORS)
     {
-        if (playerSpawn->Actor->MovementSpeedModifier < g_speedHackModifier)
-        {
-            playerSpawn->Actor->MovementSpeedModifier = g_speedHackModifier;
-        }
+        return;
+    }
+
+    if (EQ_IsZoneInList(EQ_ZONE_ID_LIST_INDOORS) == true)
+    {
+        return;
+    }
+
+    if (playerSpawn->Actor->MovementSpeedModifier < g_speedHackModifier)
+    {
+        playerSpawn->Actor->MovementSpeedModifier = g_speedHackModifier;
     }
 }
 

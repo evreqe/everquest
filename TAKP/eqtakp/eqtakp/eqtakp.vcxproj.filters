@@ -122,5 +122,17 @@
     <ClInclude Include="eqapp_networkstats.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="eqapp_drawdistance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_extramousebuttons.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_neverfrozen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_extendedtargets.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

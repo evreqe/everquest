@@ -18,7 +18,9 @@ void EQAPP_SpellSet_Load();
 void EQAPP_SpellSet_Save();
 void EQAPP_SpellSet_StartMemorizing();
 void EQAPP_SpellSet_StopMemorizing();
+void EQAPP_SpellSet_LoadAndStartMemorizing();
 void EQAPP_SpellSet_Memorize();
+void EQAPP_SpellSet_HandleEvent_EQPlayer__ChangePosition(void* this_ptr, uint8_t standingState);
 
 void EQAPP_SpellSet_Load()
 {
@@ -45,6 +47,8 @@ void EQAPP_SpellSet_Load()
 
     std::stringstream filePath;
     filePath << g_applicationName << "/spellsets/" << spawnName << ".ini";
+
+    std::cout << "Loading spell set from file: " << filePath.str() << std::endl;
 
     if (EQAPP_FileExists(filePath.str().c_str()) == false)
     {
@@ -103,6 +107,8 @@ void EQAPP_SpellSet_Save()
     filePath << g_applicationName << "/spellsets/" << spawnName << ".ini";
 
     std::string filePathStr = filePath.str();
+
+    std::cout << "Saving spell set to file: " << filePathStr << std::endl;
 
     std::fstream file;
     file.open(filePathStr.c_str(), std::fstream::in | std::fstream::out | std::fstream::trunc);
@@ -175,6 +181,12 @@ void EQAPP_SpellSet_StopMemorizing()
     g_spellSetIsMemorizingInProgress = false;
 }
 
+void EQAPP_SpellSet_LoadAndStartMemorizing()
+{
+    EQAPP_SpellSet_Load();
+    EQAPP_SpellSet_StartMemorizing();
+}
+
 void EQAPP_SpellSet_Memorize()
 {
     if (g_spellSetList.size() == 0)
@@ -245,4 +257,19 @@ void EQAPP_SpellSet_Memorize()
         EQAPP_SpellSet_StopMemorizing();
     }
 }
+
+void EQAPP_SpellSet_HandleEvent_EQPlayer__ChangePosition(void* this_ptr, uint8_t standingState)
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if ((playerSpawn != NULL) && ((EQ::Spawn_ptr)this_ptr == playerSpawn))
+    {
+        if (standingState != EQ_STANDING_STATE_SITTING)
+        {
+            g_bIsMemorizingSpell = false;
+
+            EQAPP_SpellSet_StopMemorizing();
+        }
+    }
+}
+
 

@@ -1,7 +1,9 @@
 #pragma once
 
 bool g_autoLootIsEnabled = true;
+
 std::vector<std::string> g_autoLootList;
+
 uint32_t g_autoLootTimer = 0;
 uint32_t g_autoLootTimerDelay = 250;
 
@@ -50,6 +52,7 @@ void EQAPP_AutoLoot_Execute()
         if (result == true)
         {
             std::cout << "Auto Loot item name: " << itemName << std::endl;
+            break;
         }
     }
 }
