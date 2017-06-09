@@ -7,7 +7,14 @@ uint32_t g_changeHeightTimerDelay = 1000;
 
 float g_changeHeightMaximumHeight = 5.0f;
 
+void EQAPP_ChangeHeight_Toggle();
 void EQAPP_ChangeHeight_Execute();
+
+void EQAPP_ChangeHeight_Toggle()
+{
+    EQ_ToggleBool(g_changeHeightIsEnabled);
+    EQAPP_PrintBool("Change Height", g_changeHeightIsEnabled);
+}
 
 void EQAPP_ChangeHeight_Execute()
 {

@@ -7,7 +7,14 @@ uint32_t g_maxSkillsTimerDelay = 1000;
 
 uint16_t g_maxSkillsValue = 250;
 
+void EQAPP_MaxSkills_Toggle();
 void EQAPP_MaxSkills_Execute();
+
+void EQAPP_MaxSkills_Toggle()
+{
+    EQ_ToggleBool(g_maxSkillsIsEnabled);
+    EQAPP_PrintBool("Max Skills", g_maxSkillsIsEnabled);
+}
 
 void EQAPP_MaxSkills_Execute()
 {

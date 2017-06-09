@@ -48,7 +48,7 @@ void EQAPP_AutoLoot_Execute()
 
     for (auto& itemName : g_autoLootList)
     {
-        bool result = EQ_LootItemByName(itemName);
+        bool result = EQ_LootItemByName(itemName, false);
         if (result == true)
         {
             std::cout << "Auto Loot item name: " << itemName << std::endl;

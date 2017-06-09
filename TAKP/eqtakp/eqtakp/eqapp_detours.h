@@ -211,6 +211,8 @@ void EQAPP_Detours_OnZoneChanged_Load()
 
     g_alwaysAttackIsEnabled = false;
 
+    EQAPP_Mouse_Load();
+
     EQAPP_Map_Load();
     EQAPP_ExtendedTargets_Load();
     EQAPP_NetworkStats_Load();
@@ -247,6 +249,11 @@ int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short
     if (g_alwaysAttackIsEnabled == true)
     {
         displayText << "\nAlways Attack: On";
+    }
+
+    if (g_foodAndDrinkIsEnabled == true)
+    {
+        displayText << "\nFood and Drink: On";
     }
 
     EQ_DrawText(displayText.str().c_str(), 200, 6, EQ_TEXT_COLOR_WHITE);
@@ -336,7 +343,8 @@ int __fastcall EQAPP_DETOUR_CXWndManager__DrawWindows(void* this_ptr, void* not_
 
     if (g_networkStatsIsEnabled == true)
     {
-        EQAPP_NetworkStats_Draw();
+        EQAPP_NetworkStats_DrawText();
+        EQAPP_NetworkStats_DrawBars();
     }
 
     return EQAPP_REAL_CXWndManager__DrawWindows(this_ptr);
@@ -435,22 +443,36 @@ int __fastcall EQAPP_DETOUR_EQPlayer__FollowPlayerAI(void* this_ptr, void* not_u
     }
 
     // follow NPCs closer
-
     auto thisSpawn = (EQ::Spawn_ptr)this_ptr;
-    if (thisSpawn != NULL)
+    if (thisSpawn != NULL && thisSpawn->Actor != NULL)
     {
         auto playerSpawn = EQ_GetPlayerSpawn();
         if ((playerSpawn != NULL) && (thisSpawn == playerSpawn))
         {
-            if (thisSpawn->Actor != NULL)
+            auto followedSpawn = thisSpawn->Actor->FollowedSpawn;
+            if (followedSpawn != NULL)
             {
-                if (thisSpawn->Actor->FollowedSpawn != NULL)
+                if (followedSpawn->Type != EQ_SPAWN_TYPE_PLAYER)
                 {
-                    if (thisSpawn->Actor->FollowedSpawn->Type != EQ_SPAWN_TYPE_PLAYER)
+                    EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_ADD_1, 0.0f);
+                    EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_ADD_2, 0.0f);
+
+                    if (followedSpawn->MovementSpeed > 0.0f)
                     {
-                        EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE, 5.0f);
-                        EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_ADD_1, 0.0f);
-                        EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_ADD_2, 0.0f);
+                        float followedSpawnDistance = EQ_CalculateDistance(followedSpawn->X, followedSpawn->Y, playerSpawn->X, playerSpawn->Y);
+
+                        float followedSpawnMeleeDistance = EQ_get_melee_range((EQClass::EQPlayer*)playerSpawn, (EQClass::EQPlayer*)followedSpawn);
+
+                        float maximumFollowDistance = followedSpawnMeleeDistance * 0.4f;
+                        if (maximumFollowDistance < 5.0f)
+                        {
+                            maximumFollowDistance = 5.0f;
+                        }
+
+                        if (followedSpawnDistance < maximumFollowDistance)
+                        {
+                            playerSpawn->Actor->MovementSpeedModifier = -10000.0f;
+                        }
                     }
                 }
             }
@@ -459,7 +481,6 @@ int __fastcall EQAPP_DETOUR_EQPlayer__FollowPlayerAI(void* this_ptr, void* not_u
 
     int result = EQAPP_REAL_EQPlayer__FollowPlayerAI(this_ptr);
 
-    EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE, EQ_FOLLOW_DISTANCE_DEFAULT);
     EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_ADD_1, EQ_FOLLOW_DISTANCE_ADD_1_DEFAULT);
     EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_ADD_2, EQ_FOLLOW_DISTANCE_ADD_2_DEFAULT);
 

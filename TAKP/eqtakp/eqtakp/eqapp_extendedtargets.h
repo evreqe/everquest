@@ -13,6 +13,7 @@ namespace EQApp
         int Class;
         std::string ClassShortName;
         bool IsTarget = false;
+        bool IsPet = false;
         bool IsYourPet = false;
         bool IsGroupMember = false;
         std::string Text;
@@ -34,15 +35,20 @@ uint32_t g_extendedTargetsSpawnListTimerDelay = 1000;
 size_t g_extendedTargetsNumSpawns = 10;
 
 float g_extendedTargetsSpawnDistanceMax = 100.0f;
-float g_extendedTargetsSpawnDistanceZMax = 20.0f;
+float g_extendedTargetsSpawnDistanceZMax = 10.0f;
 
 uint32_t g_extendedTargetsFontHeight = 1;
 
+float g_extendedTargetsDefaultX = 4.0f;
+float g_extendedTargetsDefaultY = 412.0f;
+
 float g_extendedTargetsX = 4.0f;
-float g_extendedTargetsY = 408.0f;
+float g_extendedTargetsY = 412.0f;
 
 float g_extendedTargetsWidth  = 200.0f;
 float g_extendedTargetsHeight = 200.0f;
+
+uint32_t g_extendedTargetsBackgroundColorARGB = 0x80000000;
 
 void EQAPP_ExtendedTargets_Toggle();
 void EQAPP_ExtendedTargets_Load();
@@ -76,8 +82,8 @@ void EQAPP_ExtendedTargets_RecalculateScreenCoordinates()
     uint32_t resolutionWidth = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_RESOLUTION_WIDTH);
     uint32_t resolutionHeight = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_RESOLUTION_HEIGHT);
 
-    g_extendedTargetsX = (float)resolutionWidth - 4.0f - g_extendedTargetsWidth;
-    g_extendedTargetsY = (float)(412.0f + g_extendedTargetsFontHeight); // 4.0f + g_mapHeight + 8.0f + fontHeight;
+    g_extendedTargetsX = (float)resolutionWidth - g_extendedTargetsDefaultX - g_extendedTargetsWidth;
+    g_extendedTargetsY = (float)(g_extendedTargetsDefaultY + g_extendedTargetsFontHeight); // 4.0f + g_mapHeight + 8.0f + fontHeight;
 }
 
 void EQAPP_ExtendedTargets_UpdateSpawnList()
@@ -162,6 +168,11 @@ void EQAPP_ExtendedTargets_UpdateSpawnList()
         etSpawn.Class = spawn->Class;
         etSpawn.ClassShortName = EQ_GetClassShortName(spawn->Class);
 
+        if (spawn->PetOwnerSpawnID != 0)
+        {
+            etSpawn.IsPet = true;
+        }
+
         if (spawn->PetOwnerSpawnID == playerSpawn->SpawnID)
         {
             etSpawn.IsYourPet = true;
@@ -218,6 +229,11 @@ void EQAPP_ExtendedTargets_UpdateSpawnList()
 
         if (etSpawn.Type == EQ_SPAWN_TYPE_NPC)
         {
+            if (etSpawn.IsPet == true)
+            {
+                etText << " (Pet)";
+            }
+
             if (etSpawn.Class == EQ_CLASS_BANKER)
             {
                 etText << " (Banker)";
@@ -228,8 +244,10 @@ void EQAPP_ExtendedTargets_UpdateSpawnList()
             }
             else if ((etSpawn.Class >= EQ_CLASS_GUILDMASTER_BEGIN) && (etSpawn.Class <= EQ_CLASS_GUILDMASTER_END))
             {
-                etText << " (" << etSpawn.ClassShortName << " Guildmaster)";
+                etText << " (Trainer)";
             }
+
+            etText << "    0x" << std::hex << etSpawn.SpawnID << std::dec;
         }
 
         etSpawn.Text = etText.str();
@@ -251,6 +269,17 @@ void EQAPP_ExtendedTargets_Execute()
 {
     EQAPP_ExtendedTargets_UpdateSpawnList();
 
+    size_t numExtendedTargets = g_extendedTargetsSpawnList.size() + 1;
+
+    EQ_DrawRectangle
+    (
+        (float)g_extendedTargetsX - 4.0f,
+        (float)(g_extendedTargetsY - g_extendedTargetsFontHeight),
+        (float)g_extendedTargetsWidth,
+        (float)(numExtendedTargets * g_extendedTargetsFontHeight),
+        g_extendedTargetsBackgroundColorARGB, true
+    );
+
     std::string etText = "Extended Targets: ";
     EQ_DrawText(etText.c_str(), (int)g_extendedTargetsX, (int)(g_extendedTargetsY - g_extendedTargetsFontHeight), EQ_TEXT_COLOR_WHITE);
 
@@ -261,7 +290,10 @@ void EQAPP_ExtendedTargets_Execute()
     {
         if (EQ_IsPointInsideRectangle(mouseX, mouseY, (int)etSpawn.X, (int)etSpawn.Y, (int)etSpawn.Width, (int)etSpawn.Height) == true)
         {
-            EQ_DrawRectangle((float)etSpawn.X, (float)etSpawn.Y, (float)etSpawn.Width, (float)etSpawn.Height, EQ_TOOLTIP_TEXT_BACKGROUND_COLOR, true);
+            if (EQ_IsMouseLookEnabled() == false)
+            {
+                EQ_DrawRectangle((float)etSpawn.X, (float)etSpawn.Y, (float)etSpawn.Width, (float)etSpawn.Height, EQ_TOOLTIP_TEXT_BACKGROUND_COLOR, true);
+            }
         }
 
         EQ_DrawText(etSpawn.Text.c_str(), etSpawn.X, etSpawn.Y, etSpawn.TextColor);

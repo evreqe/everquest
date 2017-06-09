@@ -511,7 +511,14 @@ void EQAPP_Map_Execute()
             textColor = EQ_TEXT_COLOR_PINK;
         }
 
-        EQ_DrawText("+", (int)spawnMapX, (int)spawnMapY, textColor);
+        std::string spawnText = "+";
+
+        if (spawn->MovementSpeed > 0.0f)
+        {
+            spawnText = "*";
+        }
+
+        EQ_DrawText(spawnText.c_str(), (int)spawnMapX, (int)spawnMapY, textColor);
 
         if (EQ_IsMouseHoveringOverCXWnd() == false)
         {
@@ -521,7 +528,19 @@ void EQAPP_Map_Execute()
             if (EQ_IsPointInsideRectangle(mouseX, mouseY, (int)(spawnMapX + 1) - 4, (int)(spawnMapY + 6) - 4, 8, 8) == true)
             {
                 std::stringstream spawnText;
-                spawnText << "+ " << EQ_CLASS_POINTER_CEverQuest->trimName(spawn->Name);
+
+                if (spawn->MovementSpeed > 0.0f)
+                {
+                    spawnText << "* ";
+                }
+                else
+                {
+                    spawnText << "+ ";
+                }
+
+                spawnText << "[" << spawn->Level << "] ";
+
+                spawnText << EQ_CLASS_POINTER_CEverQuest->trimName(spawn->Name);
 
                 EQ_DrawTooltipText(spawnText.str().c_str(), mouseX + EQ_MOUSE_CURSOR_WIDTH + 1, mouseY, EQ_ADDRESS_POINTER_FONT_ARIAL14);
             }

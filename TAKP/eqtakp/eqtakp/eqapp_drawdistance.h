@@ -19,7 +19,7 @@ void EQAPP_DrawDistance_Toggle()
 
 void EQAPP_DrawDistance_Load()
 {
-    //
+    // TODO
 }
 
 void EQAPP_DrawDistance_Execute()

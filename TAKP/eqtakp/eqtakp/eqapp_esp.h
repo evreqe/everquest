@@ -11,6 +11,7 @@ namespace EQApp
         EQ::Location Location;
         float Distance;
         float DistanceZ;
+        float MovementSpeed;
         int Level;
         int Type;
         int Class;
@@ -31,7 +32,7 @@ namespace EQApp
 bool g_ESPIsEnabled = true;
 
 float g_ESPSpawnDistanceMax = 400.0f;
-float g_ESPSpawnDistanceZMax = 50.0f;
+float g_ESPSpawnDistanceZMax = 10.0f;
 
 std::vector<EQApp::ESPSpawn> g_ESPSpawnList;
 
@@ -40,9 +41,9 @@ uint32_t g_ESPSpawnListTimerDelay = 1000;
 
 void EQAPP_ESP_Toggle();
 void EQAPP_ESP_UpdateSpawnList();
-void EQAPP_ESP_DoorSpawns();
-void EQAPP_ESP_GroundSpawns();
-void EQAPP_ESP_Spawns();
+void EQAPP_ESP_DrawDoorSpawns();
+void EQAPP_ESP_DrawGroundSpawns();
+void EQAPP_ESP_DrawSpawns();
 void EQAPP_ESP_Execute();
 
 void EQAPP_ESP_Toggle()
@@ -101,6 +102,8 @@ void EQAPP_ESP_UpdateSpawnList()
 
         espSpawn.Distance = EQ_CalculateDistance(spawn->X, spawn->Y, playerSpawn->X, playerSpawn->Y);
         espSpawn.DistanceZ = std::fabsf(spawn->Z - playerSpawn->Z);
+
+        espSpawn.MovementSpeed = spawn->MovementSpeed;
 
         espSpawn.ShowAtAnyDistance = false;
 
@@ -196,6 +199,11 @@ void EQAPP_ESP_UpdateSpawnList()
 
         espText << "] ";
 
+        if (espSpawn.MovementSpeed > 0.0f)
+        {
+            espText << "* ";
+        }
+
         espText << espSpawn.Name;
 
         espText << " (" << (int)espSpawn.Distance << ")";
@@ -224,7 +232,7 @@ void EQAPP_ESP_UpdateSpawnList()
     }
 }
 
-void EQAPP_ESP_DoorSpawns()
+void EQAPP_ESP_DrawDoorSpawns()
 {
     auto door = EQ_GetFirstDoorSpawn();
     while (door != NULL)
@@ -264,7 +272,7 @@ void EQAPP_ESP_DoorSpawns()
     }
 }
 
-void EQAPP_ESP_GroundSpawns()
+void EQAPP_ESP_DrawGroundSpawns()
 {
     auto groundSpawn = EQ_GetFirstGroundSpawn();
     while (groundSpawn != NULL)
@@ -304,7 +312,7 @@ void EQAPP_ESP_GroundSpawns()
     }
 }
 
-void EQAPP_ESP_Spawns()
+void EQAPP_ESP_DrawSpawns()
 {
     EQAPP_ESP_UpdateSpawnList();
 
@@ -333,8 +341,8 @@ void EQAPP_ESP_Spawns()
 
 void EQAPP_ESP_Execute()
 {
-    EQAPP_ESP_DoorSpawns();
-    EQAPP_ESP_GroundSpawns();
-    EQAPP_ESP_Spawns();
+    EQAPP_ESP_DrawDoorSpawns();
+    EQAPP_ESP_DrawGroundSpawns();
+    EQAPP_ESP_DrawSpawns();
 }
 

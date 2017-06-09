@@ -65,6 +65,7 @@ void EQ_DrawLine(float x1, float y1, float x2, float y2, uint32_t colorARGB);
 void EQ_DrawLineEx(EQ::Line_ptr line, uint32_t colorARGB);
 void EQ_DrawRectangle(float x, float y, float width, float height, uint32_t colorARGB, bool isFilled = false);
 bool EQ_WorldSpaceToScreenSpace(EQ::Location location, uint32_t &screenX, uint32_t &screenY);
+bool EQ_WorldSpaceToScreenSpaceFloat(EQ::Location location, float &screenX, float &screenY);
 void EQ_WriteChatText(const char* text);
 void EQ_CalculateTickTime(int ticks, int& hours, int& minutes, int& seconds);
 std::string EQ_GetTickTimeString(int ticks);
@@ -110,7 +111,7 @@ void EQ_SetCameraView(uint8_t cameraView);
 std::string EQ_GetZoneShortName();
 std::string EQ_GetZoneLongName();
 bool EQ_IsWindowVisible(uint32_t windowAddressPointer);
-bool EQ_LootItemByName(std::string name);
+bool EQ_LootItemByName(std::string name, bool bNoDrop);
 void EQ_OpenAllContainers();
 void EQ_CloseAllContainers();
 EQ::Spawn_ptr EQ_GetNearestSpawn(int spawnType, float maxDistance, float maxDistanceZ);
@@ -118,6 +119,7 @@ void EQ_SetTargetSpawn(EQ::Spawn_ptr spawn);
 signed int EQ_GetSpellBookSpellIndexBySpellID(uint16_t spellID);
 EQ::Spawn_ptr EQ_GetSpawnByName(std::string spawnName);
 EQ::Spawn_ptr EQ_GetPlayerPetSpawn();
+bool EQ_IsMouseLookEnabled();
 void EQ_DrawMouseCursor();
 
 template <class T>
@@ -667,6 +669,19 @@ bool EQ_WorldSpaceToScreenSpace(EQ::Location location, uint32_t &screenX, uint32
     return result != EQ_GRAPHICS_DLL_WORLD_SPACE_TO_SCREEN_SPACE_RESULT_FAILURE;
 }
 
+bool EQ_WorldSpaceToScreenSpaceFloat(EQ::Location location, float &screenX, float &screenY)
+{
+    uint32_t cameraData = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CAMERA_DATA);
+
+    float resultX = 0.0f;
+    float resultY = 0.0f;
+    uint32_t result = EQGraphicsDLL__t3dWorldSpaceToScreenSpace(cameraData, &location, &resultX, &resultY);
+
+    screenX = resultX;
+    screenY = resultY;
+
+    return result != EQ_GRAPHICS_DLL_WORLD_SPACE_TO_SCREEN_SPACE_RESULT_FAILURE;
+}
 
 void EQ_WriteChatText(const char* text)
 {
@@ -1171,7 +1186,7 @@ bool EQ_IsWindowVisible(uint32_t windowAddressPointer)
     return false;
 }
 
-bool EQ_LootItemByName(std::string name)
+bool EQ_LootItemByName(std::string name, bool bNoDrop)
 {
     if (EQ_IsWindowVisible(EQ_ADDRESS_POINTER_CLootWnd) == false)
     {
@@ -1182,12 +1197,24 @@ bool EQ_LootItemByName(std::string name)
 
     for (size_t i = 0; i < EQ_NUM_LOOT_WINDOW_SLOTS; i++)
     {
-        if (EQ_POINTER_CLootWnd->Item[i] == NULL)
+        auto item = EQ_POINTER_CLootWnd->Item[i];
+        if (item == NULL)
         {
             continue;
         }
 
-        std::string itemName = EQ_POINTER_CLootWnd->Item[i]->Name;
+        if (item->IsContainer == 1)
+        {
+            continue;
+        }
+
+        uint8_t itemNoDrop = item->NoDrop;
+        if (itemNoDrop == EQ_ITEM_NO_DROP_TRUE && bNoDrop == false)
+        {
+            continue;
+        }
+
+        std::string itemName = item->Name;
         if (itemName.size() == 0)
         {
             continue;
@@ -1198,7 +1225,6 @@ bool EQ_LootItemByName(std::string name)
             EQ_CLASS_POINTER_CLootWnd->RequestLootSlot(i, true);
 
             result = true;
-
             break;
         }
     }
@@ -1435,11 +1461,18 @@ EQ::Spawn_ptr EQ_GetPlayerPetSpawn()
     return NULL;
 }
 
+bool EQ_IsMouseLookEnabled()
+{
+    uint32_t state = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_LOOK_STATE);
+
+    return (state == EQ_MOUSE_LOOK_STATE_TRUE);
+}
+
 void EQ_DrawMouseCursor()
 {
-    uint32_t mouseClickState = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_CLICK_STATE);
-    if (mouseClickState != EQ_MOUSE_CLICK_STATE_RIGHT) // do not draw the cursor while mouse looking
+    if (EQ_IsMouseLookEnabled() == false)
     {
         EQ_CLASS_POINTER_CXWndManager->DrawCursor();
     }
 }
+

@@ -10,10 +10,27 @@
 #define EQ_ADDRESS_IS_NOT_TYPING_IN_CHAT 0x0079856C // uint8_t
 #define EQ_ADDRESS_IS_INSPECT_ENABLED 0x007CF28C // uint8_t ; /inspect on/off ; /toggleinspect
 #define EQ_ADDRESS_IS_SHOW_NPC_NAMES_ENABLED 0x0063D6CC // uint8_t ; Options -> Display -> Show NPC Names
+#define EQ_ADDRESS_IS_RUN_ENABLED 0x0079856D // uint8_t ; 0 = Walk, 1 = Run
 
 #define EQ_ADDRESS_DINPUT_ROOT            0x8092DC
 #define EQ_ADDRESS_DINPUT_DEVICE_KEYBOARD 0x8092E0
 #define EQ_ADDRESS_DINPUT_DEVICE_MOUSE    0x8092E4
+
+#define EQ_ADDRESS_DINPUT_DEVICE_MOUSE_DIOBJECTDATAFORMAT 0x005EA6FC
+// used in EQ function 0x0055B60C that initalizes the direct input mouse
+// IDirectInputDevice8::SetDataFormat() is (DINPUT_DEVICE_MOUSE + 0x2C)()
+// ONLY allows for 3 mouse buttons in this state (DIMOUSESTATE / c_dfDIMouse)
+// 0x005EA6FC 24    0x18    // uint32_t
+// 0x005EA700 16    0x10    // uint32_t
+// 0x005EA704 2     0x02    // uint32_t
+// 0x005EA708 16    0x10    // uint32_t
+// 0x005EA70C 7     0x07    // uint32_t
+// allows for 7 mouse buttons in this state (DIMOUSESTATE2 / c_dfDIMouse2)
+// 0x005EA6FC 24    0x18    // uint32_t
+// 0x005EA700 16    0x10    // uint32_t
+// 0x005EA704 2     0x02    // uint32_t
+// 0x005EA708 20    0x14    // uint32_t
+// 0x005EA70C 11    0x0B    // uint32_t
 
 #define EQ_ADDRESS_IS_KEY_PRESSED_SHIFT   0x0080931C // uint32_t
 #define EQ_ADDRESS_IS_KEY_PRESSED_CONTROL 0x00809320 // uint32_t
@@ -1123,8 +1140,11 @@ EQ_ZoneIDList_t EQ_ZONE_ID_LIST_VERTICAL =
 {
     EQ_ZONE_ID_BEFALLEN,
     EQ_ZONE_ID_BLACKBURROW,
+    EQ_ZONE_ID_CRYSTAL,
     EQ_ZONE_ID_HIGHKEEP,
     EQ_ZONE_ID_KURN,
+    EQ_ZONE_ID_UNREST,
+    EQ_ZONE_ID_WARRENS,
 };
 
 // zones that are indoors

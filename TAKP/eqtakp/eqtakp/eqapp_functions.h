@@ -17,6 +17,7 @@ void EQAPP_PrintDebugMessage(const char* functionName, std::string text);
 
 void EQAPP_Mouse_Load();
 void EQAPP_Mouse_Unload();
+void EQAPP_Mouse_Unacquire();
 void EQAPP_Mouse_Acquire();
 
 void EQAPP_PlaySound(const char* filename);
@@ -27,6 +28,9 @@ void EQAPP_DeleteFileContents(const char* filename);
 void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list);
 
 uint32_t EQAPP_GetRandomNumber(uint32_t low, uint32_t high);
+
+float EQAPP_GetTargetMeleeDistance();
+void EQAPP_PrintTargetMeleeDistance();
 
 void EQAPP_TargetNearestPlayer();
 void EQAPP_TargetNearestPlayerPet();
@@ -146,14 +150,41 @@ void EQAPP_PrintDebugMessage(const char* functionName, std::string text)
 
 void EQAPP_Mouse_Load()
 {
+    // allow 7 mouse buttons
+    EQ_WriteMemoryProtected<uint32_t>(EQ_ADDRESS_DINPUT_DEVICE_MOUSE_DIOBJECTDATAFORMAT + 0x00, 0x18);
+    EQ_WriteMemoryProtected<uint32_t>(EQ_ADDRESS_DINPUT_DEVICE_MOUSE_DIOBJECTDATAFORMAT + 0x04, 0x10);
+    EQ_WriteMemoryProtected<uint32_t>(EQ_ADDRESS_DINPUT_DEVICE_MOUSE_DIOBJECTDATAFORMAT + 0x08, 0x02);
+    EQ_WriteMemoryProtected<uint32_t>(EQ_ADDRESS_DINPUT_DEVICE_MOUSE_DIOBJECTDATAFORMAT + 0x0C, 0x14);
+    EQ_WriteMemoryProtected<uint32_t>(EQ_ADDRESS_DINPUT_DEVICE_MOUSE_DIOBJECTDATAFORMAT + 0x10, 0x0B);
+
+    EQ_CLASS_POINTER_DInputMouse->Unacquire();
+
     EQ_CLASS_POINTER_DInputMouse->SetDataFormat(&c_dfDIMouse2);
-    //EQ_CLASS_POINTER_DInputMouse->SetCooperativeLevel(EQ_GetWindow(), DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
+    ////EQ_CLASS_POINTER_DInputMouse->SetCooperativeLevel(EQ_GetWindow(), DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
+
+    EQ_CLASS_POINTER_DInputMouse->Acquire();
 }
 
 void EQAPP_Mouse_Unload()
 {
+    // only allow 3 mouse buttons
+    EQ_WriteMemoryProtected<uint32_t>(EQ_ADDRESS_DINPUT_DEVICE_MOUSE_DIOBJECTDATAFORMAT + 0x00, 0x18);
+    EQ_WriteMemoryProtected<uint32_t>(EQ_ADDRESS_DINPUT_DEVICE_MOUSE_DIOBJECTDATAFORMAT + 0x04, 0x10);
+    EQ_WriteMemoryProtected<uint32_t>(EQ_ADDRESS_DINPUT_DEVICE_MOUSE_DIOBJECTDATAFORMAT + 0x08, 0x02);
+    EQ_WriteMemoryProtected<uint32_t>(EQ_ADDRESS_DINPUT_DEVICE_MOUSE_DIOBJECTDATAFORMAT + 0x0C, 0x10);
+    EQ_WriteMemoryProtected<uint32_t>(EQ_ADDRESS_DINPUT_DEVICE_MOUSE_DIOBJECTDATAFORMAT + 0x10, 0x07);
+
+    EQ_CLASS_POINTER_DInputMouse->Unacquire();
+
     EQ_CLASS_POINTER_DInputMouse->SetDataFormat(&c_dfDIMouse);
-    //EQ_CLASS_POINTER_DInputMouse->SetCooperativeLevel(EQ_GetWindow(), DISCL_BACKGROUND | DISCL_EXCLUSIVE);
+    ////EQ_CLASS_POINTER_DInputMouse->SetCooperativeLevel(EQ_GetWindow(), DISCL_BACKGROUND | DISCL_EXCLUSIVE);
+
+    EQ_CLASS_POINTER_DInputMouse->Acquire();
+}
+
+void EQAPP_Mouse_Unacquire()
+{
+    EQ_CLASS_POINTER_DInputMouse->Unacquire();
 }
 
 void EQAPP_Mouse_Acquire()
@@ -172,10 +203,12 @@ void EQAPP_Mouse_Acquire()
     HRESULT result = EQ_CLASS_POINTER_DInputMouse->GetDeviceState(sizeof(DIMOUSESTATE2), (LPVOID)&mouseState);
     if (result == DIERR_INPUTLOST || result == DIERR_NOTACQUIRED)
     {
+        EQ_CLASS_POINTER_DInputMouse->SetDataFormat(&c_dfDIMouse2);
+
         if (EQ_CLASS_POINTER_DInputMouse->Acquire() == DI_OK)
         {
             SetCapture(GetForegroundWindow());
-            //std::cout << "Mouse Acquired." << std::endl;
+            ////std::cout << "Mouse Acquired." << std::endl;
         }
     }
 }
@@ -253,6 +286,28 @@ uint32_t EQAPP_GetRandomNumberLowHigh(uint32_t low, uint32_t high)
     std::uniform_int_distribution<uint32_t>::param_type uidpt(low, high);
 
     return uid(g_randomEngine, uidpt);
+}
+
+float EQAPP_GetTargetMeleeDistance()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return -1.0f;
+    }
+
+    auto targetSpawn = EQ_GetTargetSpawn();
+    if (targetSpawn == NULL)
+    {
+        return -1.0f;
+    }
+
+    return EQ_get_melee_range((EQClass::EQPlayer*)playerSpawn, (EQClass::EQPlayer*)targetSpawn);
+}
+
+void EQAPP_PrintTargetMeleeDistance()
+{
+    std::cout << "Target Melee Distance: " << EQAPP_GetTargetMeleeDistance() << std::endl;
 }
 
 void EQAPP_TargetNearestPlayer()
