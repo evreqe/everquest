@@ -71,7 +71,7 @@ void EQ_CalculateTickTime(int ticks, int& hours, int& minutes, int& seconds);
 std::string EQ_GetTickTimeString(int ticks);
 void EQ_CalculateItemCost(int cost, int& platinum, int& gold, int& silver, int& copper);
 std::string EQ_GetItemCostString(int cost);
-std::string EQ_GetGuildNameByID(int guildID);
+std::string EQ_GetGuildNameByID(uint16_t guildID);
 uint32_t EQ_GetStringSpriteFontTexture();
 uint32_t EQ_GetTimer();
 bool EQ_HasTimePassed(uint32_t& timer, uint32_t& delay);
@@ -99,8 +99,8 @@ void EQ_SetTargetSpawn(EQ::Spawn_ptr spawn);
 bool EQ_IsSpawnGroupMember(EQ::Spawn_ptr spawn);
 EQ::Mouse EQ_GetMouse();
 void EQ_SetMousePosition(int x, int y);
-void EQ_UseItem(int slotID);
-std::string EQ_GetClassShortName(int classValue);
+void EQ_UseItem(uint32_t slotID);
+std::string EQ_GetClassShortName(uint32_t classValue);
 uint32_t EQ_GetZoneID();
 void EQ_UseSkill(uint8_t skillID, EQClass::EQPlayer* targetSpawn);
 HWND EQ_GetWindow();
@@ -114,8 +114,9 @@ bool EQ_IsWindowVisible(uint32_t windowAddressPointer);
 bool EQ_LootItemByName(std::string name, bool bNoDrop);
 void EQ_OpenAllContainers();
 void EQ_CloseAllContainers();
-EQ::Spawn_ptr EQ_GetNearestSpawn(int spawnType, float maxDistance, float maxDistanceZ);
+EQ::Spawn_ptr EQ_GetNearestSpawn(uint8_t spawnType, float maxDistance, float maxDistanceZ);
 void EQ_SetTargetSpawn(EQ::Spawn_ptr spawn);
+uint16_t EQ_GetSpellIDBySpellName(std::string spellName);
 signed int EQ_GetSpellBookSpellIndexBySpellID(uint16_t spellID);
 EQ::Spawn_ptr EQ_GetSpawnByName(std::string spawnName);
 EQ::Spawn_ptr EQ_GetPlayerPetSpawn();
@@ -260,20 +261,20 @@ void EQ_ToggleBool(bool& b)
 
 float EQ_CalculateDistance(float x1, float y1, float x2, float y2)
 {
-    return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
+    return std::sqrt(std::pow(x2 - x1, 2) + std::pow(y2 - y1, 2));
 }
 
 float EQ_CalculateDistance3D(float x1, float y1, float z1, float x2, float y2, float z2)
 {
-    return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2) + pow(z2 - z1, 2));
+    return std::sqrt(std::pow(x2 - x1, 2) + std::pow(y2 - y1, 2) + std::pow(z2 - z1, 2));
 }
 
 void EQ_Rotate2D(float cx, float cy, float& x, float& y, float angle)
 {
     float radians = angle * (EQ_PI / EQ_HEADING_MAX_HALVED); // 512 / 2 = 256
 
-    float c = cosf(radians);
-    float s = sinf(radians);
+    float c = std::cosf(radians);
+    float s = std::sinf(radians);
 
     float nx = (c * (x - cx)) - (s * (y - cy)) + cx;
     float ny = (s * (x - cx)) + (c * (y - cy)) + cy;
@@ -816,7 +817,7 @@ std::string EQ_GetItemCostString(int cost)
     return buffer.str();
 }
 
-std::string EQ_GetGuildNameByID(int guildID)
+std::string EQ_GetGuildNameByID(uint16_t guildID)
 {
     if (guildID == EQ_GUILD_ID_NULL)
     {
@@ -989,7 +990,7 @@ void EQ_SetMousePosition(int x, int y)
     EQ_WriteMemory<uint32_t>(EQ_ADDRESS_MOUSE_Y, y);
 }
 
-void EQ_UseItem(int slotID)
+void EQ_UseItem(uint32_t slotID)
 {
     if (slotID >= EQ_INVENTORY_SLOT_FIRST && slotID <= EQ_INVENTORY_SLOT_LAST)
     {
@@ -1004,7 +1005,7 @@ void EQ_UseItem(int slotID)
     }
 }
 
-std::string EQ_GetClassShortName(int classValue)
+std::string EQ_GetClassShortName(uint32_t classValue)
 {
     if ((classValue > EQ_NUM_CLASSES) || ((size_t)classValue > EQ_STRING_LIST_CLASS_SHORT_NAME.size()))
     {
@@ -1027,7 +1028,7 @@ void EQ_UseSkill(uint8_t skillID, EQClass::EQPlayer* targetSpawn)
         return;
     }
 
-    if (playerSpawn->Character->Skill[skillID] > 0)
+    if (playerSpawn->Character->Skill[skillID] != EQ_SKILL_NULL)
     {
         EQ_CLASS_POINTER_PlayerCharacter->UseSkill(skillID, NULL);
     }
@@ -1197,6 +1198,13 @@ bool EQ_LootItemByName(std::string name, bool bNoDrop)
 
     for (size_t i = 0; i < EQ_NUM_LOOT_WINDOW_SLOTS; i++)
     {
+        auto lootWindowAddress = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CLootWnd);
+        auto itemAddress = EQ_ReadMemory<uint32_t>(lootWindowAddress + EQ_OFFSET_CLootWnd_FIRST_ITEM + (i * 4));
+        if (itemAddress == NULL)
+        {
+            continue;
+        }
+
         auto item = EQ_POINTER_CLootWnd->Item[i];
         if (item == NULL)
         {
@@ -1247,18 +1255,20 @@ void EQ_OpenAllContainers()
 
     for (size_t i = 0; i < EQ_NUM_INVENTORY_PACK_SLOTS; i++)
     {
-        if (playerSpawn->Character->InventoryPackItem[i] == NULL)
+        auto inventoryPackItem = playerSpawn->Character->InventoryPackItem[i];
+
+        if (inventoryPackItem == NULL)
         {
             continue;
         }
 
-        bool isContainer = (playerSpawn->Character->InventoryPackItem[i]->IsContainer == 1);
+        bool isContainer = (inventoryPackItem->IsContainer == 1);
         if (isContainer == false)
         {
             continue;
         }
 
-        EQ_CLASS_POINTER_CContainerMgr->OpenContainer((EQ::EQ_Container_ptr)playerSpawn->Character->InventoryPackItem[i], i + (EQ_NUM_INVENTORY_SLOTS + 1));
+        EQ_CLASS_POINTER_CContainerMgr->OpenContainer((EQ::EQ_Container_ptr)inventoryPackItem, i + (EQ_NUM_INVENTORY_SLOTS + 1));
     }
 }
 
@@ -1272,7 +1282,7 @@ void EQ_CloseAllContainers()
     EQ_CLASS_POINTER_CContainerMgr->CloseAllContainers();
 }
 
-EQ::Spawn_ptr EQ_GetNearestSpawn(int spawnType, float maxDistance, float maxDistanceZ)
+EQ::Spawn_ptr EQ_GetNearestSpawn(uint8_t spawnType, float maxDistance, float maxDistanceZ)
 {
     auto playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)
@@ -1389,6 +1399,56 @@ EQ::Spawn_ptr EQ_GetNearestSpawn(int spawnType, float maxDistance, float maxDist
     }
 
     return NULL;
+}
+
+uint16_t EQ_GetSpellIDBySpellName(std::string spellName)
+{
+    if (spellName.size() == 0)
+    {
+        return EQ_SPELL_ID_NULL;
+    }
+
+    std::string spellScrollText = "Spell: ";
+    std::string ancientSpellScrollText = "Ancient: ";
+
+    bool isSpellScroll = false;
+    bool isAncientSpellScroll = false;
+
+    if (spellName.find(spellScrollText) != std::string::npos)
+    {
+        isSpellScroll = true;
+    }
+
+    if (spellName.find(ancientSpellScrollText) != std::string::npos)
+    {
+        isAncientSpellScroll = true;
+    }
+
+    for (uint16_t i = 0; i < EQ_NUM_SPELLS; i++)
+    {
+        std::string spellListSpellName = EQ_POINTER_SpellList->Spell[i]->Name;
+        if (spellListSpellName.size() == 0)
+        {
+            continue;
+        }
+
+        if (isSpellScroll == true)
+        {
+            spellListSpellName.insert(0, spellScrollText);
+        }
+
+        if (isAncientSpellScroll == true)
+        {
+            spellListSpellName.insert(0, ancientSpellScrollText);
+        }
+
+        if (spellListSpellName == spellName)
+        {
+            return i;
+        }
+    }
+
+    return EQ_SPELL_ID_NULL;
 }
 
 signed int EQ_GetSpellBookSpellIndexBySpellID(uint16_t spellID)

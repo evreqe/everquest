@@ -34,8 +34,17 @@ void EQAPP_ItemDisplay_HandleEvent_CItemDisplayWnd__SetItem(EQ::Item_ptr item)
         EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
     }
 
-    if (item->Common.SpellID != 0)
+    if (item->Common.SpellID != 0 && item->Common.SpellID != EQ_SPELL_ID_NULL)
     {
+        auto spell = EQ_POINTER_SpellList->Spell[item->Common.SpellID];
+        if (spell != NULL)
+        {
+            buffer.str(std::string());
+            buffer << "Spell ID: " << spell->ID << " (" << spell->Name << ")<BR>";
+
+            EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
+        }
+
         if (item->Common.SpellID == EQ_SPELL_ID_HASTE)
         {
             buffer.str(std::string());
@@ -61,6 +70,23 @@ void EQAPP_ItemDisplay_HandleEvent_CItemDisplayWnd__SetItem(EQ::Item_ptr item)
             }
 
             EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
+        }
+    }
+
+    std::string itemName = item->Name;
+    if ((itemName.find("Spell: ") != std::string::npos) || (itemName.find("Ancient: ") != std::string::npos))
+    {
+        uint16_t spellID = item->Common.SpellID; //EQ_GetSpellIDBySpellName(itemName);
+        if (spellID != EQ_SPELL_ID_NULL)
+        {
+            signed int spellBookIndex = EQ_GetSpellBookSpellIndexBySpellID(spellID);
+            if (spellBookIndex != -1)
+            {
+                buffer.str(std::string());
+                buffer << "This spell is already scribed in your spell book.<BR>";
+
+                EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
+            }
         }
     }
 

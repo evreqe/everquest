@@ -10,22 +10,18 @@ EQ_FUNCTION_TYPE_DrawNetStatus EQAPP_REAL_DrawNetStatus = NULL;
 EQ_FUNCTION_TYPE_CXWndManager__DrawWindows EQAPP_REAL_CXWndManager__DrawWindows = NULL;
 
 EQ_FUNCTION_TYPE_CEverQuest__InterpretCmd EQAPP_REAL_CEverQuest__InterpretCmd = NULL;
-
 EQ_FUNCTION_TYPE_CEverQuest__dsp_chat EQAPP_REAL_CEverQuest__dsp_chat = NULL;
 
 EQ_FUNCTION_TYPE_EQPlayer__ChangePosition EQAPP_REAL_EQPlayer__ChangePosition = NULL;
 EQ_FUNCTION_TYPE_EQPlayer__FollowPlayerAI EQAPP_REAL_EQPlayer__FollowPlayerAI = NULL;
 
 EQ_FUNCTION_TYPE_EQ_Character__eqspa_movement_rate EQAPP_REAL_EQ_Character__eqspa_movement_rate = NULL;
-
 EQ_FUNCTION_TYPE_EQ_Character__CastSpell EQAPP_REAL_EQ_Character__CastSpell = NULL;
 
 EQ_FUNCTION_TYPE_CDisplay__CreatePlayerActor EQAPP_REAL_CDisplay__CreatePlayerActor = NULL;
 EQ_FUNCTION_TYPE_CDisplay__DeleteActor EQAPP_REAL_CDisplay__DeleteActor = NULL;
-
 EQ_FUNCTION_TYPE_CDisplay__SetNameSpriteState EQAPP_REAL_CDisplay__SetNameSpriteState = NULL;
 EQ_FUNCTION_TYPE_CDisplay__SetNameSpriteTint EQAPP_REAL_CDisplay__SetNameSpriteTint = NULL;
-
 EQ_FUNCTION_TYPE_CDisplay__ToggleView EQAPP_REAL_CDisplay__ToggleView = NULL;
 
 EQ_FUNCTION_TYPE_CBazaarSearchWnd__HandleBazaarMsg EQAPP_REAL_CBazaarSearchWnd__HandleBazaarMsg = NULL;
@@ -38,8 +34,11 @@ EQ_FUNCTION_TYPE_CItemDisplayWnd__SetSpell EQAPP_REAL_CItemDisplayWnd__SetSpell 
 
 EQ_FUNCTION_TYPE_CSpellBookWnd__StartSpellMemorization EQAPP_REAL_CSpellBookWnd__StartSpellMemorization = NULL;
 EQ_FUNCTION_TYPE_CSpellBookWnd__FinishMemorizing EQAPP_REAL_CSpellBookWnd__FinishMemorizing = NULL;
+EQ_FUNCTION_TYPE_CSpellBookWnd__TurnToPage EQAPP_REAL_CSpellBookWnd__TurnToPage = NULL;
 
 EQ_FUNCTION_TYPE_CLootWnd__Deactivate EQAPP_REAL_CLootWnd__Deactivate = NULL;
+
+EQ_FUNCTION_TYPE_CMerchantWnd__PostDraw EQAPP_REAL_CMerchantWnd__PostDraw = NULL;
 
 EQ_FUNCTION_TYPE_CContainerMgr__OpenContainer EQAPP_REAL_CContainerMgr__OpenContainer = NULL;
 
@@ -47,16 +46,11 @@ EQ_FUNCTION_TYPE_CEverQuest__LMouseDown EQAPP_REAL_CEverQuest__LMouseDown = NULL
 EQ_FUNCTION_TYPE_CEverQuest__LMouseUp EQAPP_REAL_CEverQuest__LMouseUp = NULL;
 
 EQ_FUNCTION_TYPE_HandleMouseWheel EQAPP_REAL_HandleMouseWheel = NULL;
-
 EQ_FUNCTION_TYPE_ProcessMouseEvent EQAPP_REAL_ProcessMouseEvent = NULL;
-
 EQ_FUNCTION_TYPE_ProcessKeyDown EQAPP_REAL_ProcessKeyDown = NULL;
 EQ_FUNCTION_TYPE_ProcessKeyUp EQAPP_REAL_ProcessKeyUp = NULL;
-
 EQ_FUNCTION_TYPE_ProcessMovementKeys EQAPP_REAL_ProcessMovementKeys = NULL;
-
 EQ_FUNCTION_TYPE_AutoInventory EQAPP_REAL_AutoInventory = NULL;
-
 EQ_FUNCTION_TYPE_ExecuteCmd EQAPP_REAL_ExecuteCmd = NULL;
 
 int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short a3, unsigned short a4, unsigned short a5, int a6, unsigned short a7, unsigned long a8, long a9, unsigned long a10);
@@ -87,8 +81,11 @@ int __fastcall EQAPP_DETOUR_CItemDisplayWnd__SetSpell(void* this_ptr, void* not_
 
 int __fastcall EQAPP_DETOUR_CSpellBookWnd__StartSpellMemorization(void* this_ptr, void* not_used, int a1, uint8_t a2, bool a3);
 int __fastcall EQAPP_DETOUR_CSpellBookWnd__FinishMemorizing(void* this_ptr, void* not_used, uint8_t a1, uint16_t a2);
+int __fastcall EQAPP_DETOUR_CSpellBookWnd__TurnToPage(void* this_ptr, void* not_used, signed int a1);
 
 int __fastcall EQAPP_DETOUR_CLootWnd__Deactivate(void* this_ptr, void* not_used);
+
+int __fastcall EQAPP_DETOUR_CMerchantWnd__PostDraw(void* this_ptr, void* not_used);
 
 int __fastcall EQAPP_DETOUR_CContainerMgr__OpenContainer(void* this_ptr, void* not_used, EQ::EQ_Container_ptr a1, int a2);
 
@@ -96,16 +93,11 @@ int __fastcall EQAPP_DETOUR_CEverQuest__LMouseDown(void* this_ptr, void* not_use
 int __fastcall EQAPP_DETOUR_CEverQuest__LMouseUp(void* this_ptr, void* not_used, uint16_t a1, uint16_t a2);
 
 int __cdecl EQAPP_DETOUR_HandleMouseWheel(int a1);
-
 int __cdecl EQAPP_DETOUR_ProcessMouseEvent(void);
-
 int __cdecl EQAPP_DETOUR_ProcessKeyDown(int a1);
 int __cdecl EQAPP_DETOUR_ProcessKeyUp(int a1);
-
 int __cdecl EQAPP_DETOUR_ProcessMovementKeys(int a1);
-
 int __cdecl EQAPP_DETOUR_AutoInventory(EQ::Character_ptr a1, EQ::Item** a2, short a3);
-
 int __cdecl EQAPP_DETOUR_ExecuteCmd(uint32_t a1, int a2, int a3);
 
 void EQAPP_Detours_Add()
@@ -136,8 +128,11 @@ void EQAPP_Detours_Add()
 
     EQ_MACRO_AddDetour(CSpellBookWnd__StartSpellMemorization);
     EQ_MACRO_AddDetour(CSpellBookWnd__FinishMemorizing);
+    EQ_MACRO_AddDetour(CSpellBookWnd__TurnToPage);
 
     EQ_MACRO_AddDetour(CLootWnd__Deactivate);
+
+    EQ_MACRO_AddDetour(CMerchantWnd__PostDraw);
 
     ////EQ_MACRO_AddDetour(CContainerMgr__OpenContainer);
 
@@ -145,9 +140,7 @@ void EQAPP_Detours_Add()
     EQ_MACRO_AddDetour(CEverQuest__LMouseUp);
 
     EQ_MACRO_AddDetour(HandleMouseWheel);
-
     EQ_MACRO_AddDetour(ProcessMouseEvent);
-
     EQ_MACRO_AddDetour(ExecuteCmd);
 }
 
@@ -179,8 +172,11 @@ void EQAPP_Detours_Remove()
 
     EQ_MACRO_RemoveDetour(CSpellBookWnd__StartSpellMemorization);
     EQ_MACRO_RemoveDetour(CSpellBookWnd__FinishMemorizing);
+    EQ_MACRO_RemoveDetour(CSpellBookWnd__TurnToPage);
 
     EQ_MACRO_RemoveDetour(CLootWnd__Deactivate);
+
+    EQ_MACRO_RemoveDetour(CMerchantWnd__PostDraw);
 
     ////EQ_MACRO_RemoveDetour(CContainerMgr__OpenContainer);
 
@@ -188,9 +184,7 @@ void EQAPP_Detours_Remove()
     EQ_MACRO_RemoveDetour(CEverQuest__LMouseUp);
 
     EQ_MACRO_RemoveDetour(HandleMouseWheel);
-
     EQ_MACRO_RemoveDetour(ProcessMouseEvent);
-
     EQ_MACRO_RemoveDetour(ExecuteCmd);
 }
 
@@ -463,10 +457,10 @@ int __fastcall EQAPP_DETOUR_EQPlayer__FollowPlayerAI(void* this_ptr, void* not_u
 
                         float followedSpawnMeleeDistance = EQ_get_melee_range((EQClass::EQPlayer*)playerSpawn, (EQClass::EQPlayer*)followedSpawn);
 
-                        float maximumFollowDistance = followedSpawnMeleeDistance * 0.4f;
-                        if (maximumFollowDistance < 5.0f)
+                        float maximumFollowDistance = followedSpawnMeleeDistance * 0.3f;
+                        if (maximumFollowDistance < 1.0f)
                         {
-                            maximumFollowDistance = 5.0f;
+                            maximumFollowDistance = 1.0f;
                         }
 
                         if (followedSpawnDistance < maximumFollowDistance)
@@ -733,6 +727,37 @@ int __fastcall EQAPP_DETOUR_CSpellBookWnd__FinishMemorizing(void* this_ptr, void
     return result;
 }
 
+int __fastcall EQAPP_DETOUR_CSpellBookWnd__TurnToPage(void* this_ptr, void* not_used, signed int a1)
+{
+    // a1 = pageNumber
+
+    if (g_bExit == 1)
+    {
+        return EQAPP_REAL_CSpellBookWnd__TurnToPage(this_ptr, a1);
+    }
+
+    // spell book loops around between first pages and last pages
+
+    if (EQ_IsWindowVisible(EQ_ADDRESS_POINTER_CSpellBookWnd) == true)
+    {
+        signed int lastPageNumber = EQ_NUM_SPELL_BOOK_PAGES - 2;
+
+        if (a1 > lastPageNumber)
+        {
+            a1 = 0;
+        }
+        else
+        {
+            if (a1 < 0)
+            {
+                a1 = lastPageNumber;
+            }
+        }
+    }
+
+    return EQAPP_REAL_CSpellBookWnd__TurnToPage(this_ptr, a1);
+}
+
 int __fastcall EQAPP_DETOUR_CLootWnd__Deactivate(void* this_ptr, void* not_used)
 {
     if (g_bExit == 1)
@@ -745,6 +770,28 @@ int __fastcall EQAPP_DETOUR_CLootWnd__Deactivate(void* this_ptr, void* not_used)
     if (g_hideCorpseLootedIsEnabled == true)
     {
         EQAPP_HideCorpseLooted_Execute();
+    }
+
+    return result;
+}
+
+int __fastcall EQAPP_DETOUR_CMerchantWnd__PostDraw(void* this_ptr, void* not_used)
+{
+    if (g_bExit == 1)
+    {
+        return EQAPP_REAL_CMerchantWnd__PostDraw(this_ptr);
+    }
+
+    if (g_merchantWindowIsEnabled == true)
+    {
+        EQAPP_MerchantWindow_AppendSpellLevelToToolTipText(this_ptr);
+    }
+
+    int result = EQAPP_REAL_CMerchantWnd__PostDraw(this_ptr);
+
+    if (g_merchantWindowIsEnabled == true)
+    {
+        EQAPP_MerchantWindow_HandleEvent_CMerchantWnd__PostDraw(this_ptr);
     }
 
     return result;

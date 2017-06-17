@@ -59,14 +59,14 @@ float g_mapZoomMaximum    = 0.01f;
 
 float g_mapMouseWheelZoomMultiplier = 0.5f; // mouse wheel zoom speed
 
-uint32_t g_mapCenterLineColor = 0xFFFF00FF;
+uint32_t g_mapCenterLineColorARGB = 0xFFFF00FF;
 float g_mapCenterLineSize = 4.0f;
 
-uint32_t g_mapArrowColor = 0xFFFF00FF;
+uint32_t g_mapArrowColorARGB = 0xFFFF00FF;
 float g_mapArrowRadius = 20.0f;
 
-uint32_t g_mapBorderColor = 0xFF646464;
-uint32_t g_mapBackgroundColor = EQ_TOOLTIP_TEXT_BACKGROUND_COLOR;
+uint32_t g_mapBorderColorARGB = 0xFF646464;
+uint32_t g_mapBackgroundColorARGB = EQ_TOOLTIP_TEXT_BACKGROUND_COLOR;
 
 float g_mapSpawnDistanceMax = 1000.0f;
 float g_mapSpawnDistanceZMax = 100.0f;
@@ -365,8 +365,8 @@ void EQAPP_Map_Execute()
 
     auto targetSpawn = EQ_GetTargetSpawn();
 
-    EQ_DrawRectangle(g_mapX, g_mapY, g_mapWidth, g_mapHeight, g_mapBackgroundColor, true);
-    EQ_DrawRectangle(g_mapX, g_mapY, g_mapWidth, g_mapHeight, g_mapBorderColor);
+    EQ_DrawRectangle(g_mapX, g_mapY, g_mapWidth, g_mapHeight, g_mapBackgroundColorARGB, true);
+    EQ_DrawRectangle(g_mapX, g_mapY, g_mapWidth, g_mapHeight, g_mapBorderColorARGB);
 
     g_mapNumLinesDrawn = 0;
 
@@ -538,7 +538,7 @@ void EQAPP_Map_Execute()
                     spawnText << "+ ";
                 }
 
-                spawnText << "[" << spawn->Level << "] ";
+                spawnText << "[" << (int)spawn->Level << "] ";
 
                 spawnText << EQ_CLASS_POINTER_CEverQuest->trimName(spawn->Name);
 
@@ -565,8 +565,8 @@ void EQAPP_Map_Execute()
     mapCenterLineVertical.Y2 = playerMapY + g_mapCenterLineSize;
     mapCenterLineVertical.Z2 = 1.0f;
 
-    EQ_DrawLineEx(&mapCenterLineHorizontal, g_mapCenterLineColor);
-    EQ_DrawLineEx(&mapCenterLineVertical,   g_mapCenterLineColor);
+    EQ_DrawLineEx(&mapCenterLineHorizontal, g_mapCenterLineColorARGB);
+    EQ_DrawLineEx(&mapCenterLineVertical,   g_mapCenterLineColorARGB);
 
     float playerHeadingC = playerSpawn->Heading;
 
@@ -661,9 +661,9 @@ void EQAPP_Map_Execute()
     mapArrowLineC.Y2 = mapArrowCY;
     mapArrowLineC.Z2 = 1.0f;
 
-    EQ_DrawLineEx(&mapArrowLineA, g_mapArrowColor);
-    EQ_DrawLineEx(&mapArrowLineB, g_mapArrowColor);
-    EQ_DrawLineEx(&mapArrowLineC, g_mapArrowColor);
+    EQ_DrawLineEx(&mapArrowLineA, g_mapArrowColorARGB);
+    EQ_DrawLineEx(&mapArrowLineB, g_mapArrowColorARGB);
+    EQ_DrawLineEx(&mapArrowLineC, g_mapArrowColorARGB);
 }
 
 

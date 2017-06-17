@@ -36,6 +36,7 @@ namespace EQClass
     class CHotButtonWnd;
     class CItemDisplayWnd;
     class CLootWnd;
+    class CMerchantWnd;
     class CSpellBookWnd;
     class CTextEntryWnd;
     class CTrackingWnd;
@@ -546,6 +547,18 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CLootWnd__Deactivate)(void* this_ptr);
 #define EQ_ADDRESS_FUNCTION_CLootWnd__RequestLootSlot 0x00426B02
 EQ_MACRO_FunctionAtAddress(void EQClass::CLootWnd::RequestLootSlot(int slotIndex, bool autoLoot), EQ_ADDRESS_FUNCTION_CLootWnd__RequestLootSlot);
 
+/* CMerchantWnd */
+
+class EQClass::CMerchantWnd : public EQClass::CSidlScreenWnd
+{
+public:
+    void CMerchantWnd::PostDraw();
+};
+
+#define EQ_ADDRESS_FUNCTION_CMerchantWnd__PostDraw 0x004270DC
+EQ_MACRO_FunctionAtAddress(void EQClass::CMerchantWnd::PostDraw(), EQ_ADDRESS_FUNCTION_CMerchantWnd__PostDraw);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CMerchantWnd__PostDraw)(void* this_ptr);
+
 /* CSpellBookWnd */
 
 class EQClass::CSpellBookWnd : public EQClass::CSidlScreenWnd
@@ -556,13 +569,14 @@ public:
     bool CSpellBookWnd::StartSpellMemorization(int spellBookIndex, uint8_t spellGemIndex, bool unknown);
     int CSpellBookWnd::FinishMemorizing(uint8_t spellGemIndex, uint16_t spellID);
     int CSpellBookWnd::GetSpellMemTicksLeft();
+    void CSpellBookWnd::TurnToPage(signed int pageNumber);
 };
 
 #define EQ_ADDRESS_FUNCTION_CSpellBookWnd__Activate 0x0043441F
 EQ_MACRO_FunctionAtAddress(void EQClass::CSpellBookWnd::Activate(), EQ_ADDRESS_FUNCTION_CSpellBookWnd__Activate);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CSpellBookWnd__Activate)(void* this_ptr);
 
-#define EQ_ADDRESS_FUNCTION_CSpellBookWnd__UpdateSpellBookDisplay 0x004343E7
+#define EQ_ADDRESS_FUNCTION_CSpellBookWnd__UpdateSpellBookDisplay 0x004352FF
 EQ_MACRO_FunctionAtAddress(char* EQClass::CSpellBookWnd::UpdateSpellBookDisplay(), EQ_ADDRESS_FUNCTION_CSpellBookWnd__UpdateSpellBookDisplay);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CSpellBookWnd__UpdateSpellBookDisplay)(void* this_ptr);
 
@@ -577,6 +591,10 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CSpellBookWnd__FinishMemorizing)(void*
 #define EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellMemTicksLeft 0x00434C05
 EQ_MACRO_FunctionAtAddress(int EQClass::CSpellBookWnd::GetSpellMemTicksLeft(), EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellMemTicksLeft);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CSpellBookWnd__GetSpellMemTicksLeft)(void* this_ptr);
+
+#define EQ_ADDRESS_FUNCTION_CSpellBookWnd__TurnToPage 0x004352C8
+EQ_MACRO_FunctionAtAddress(void EQClass::CSpellBookWnd::TurnToPage(signed int pageNumber), EQ_ADDRESS_FUNCTION_CSpellBookWnd__TurnToPage);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CSpellBookWnd__TurnToPage)(void* this_ptr, signed int pageNumber);
 
 /* CTrackingWnd */
 

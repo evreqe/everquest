@@ -250,6 +250,16 @@ EQ::CLootWnd** EQ_POINTER_CLootWnd_pptr = (EQ::CLootWnd**)EQ_ADDRESS_POINTER_CLo
 EQClass::CLootWnd** EQ_CLASS_POINTER_CLootWnd_pptr = (EQClass::CLootWnd**)EQ_ADDRESS_POINTER_CLootWnd;
 #define EQ_CLASS_POINTER_CLootWnd (*EQ_CLASS_POINTER_CLootWnd_pptr)
 
+/* CMerchantWnd */
+
+#define EQ_ADDRESS_POINTER_CMerchantWnd 0x0063D664
+
+EQ::CMerchantWnd** EQ_POINTER_CMerchantWnd_pptr = (EQ::CMerchantWnd**)EQ_ADDRESS_POINTER_CMerchantWnd;
+#define EQ_POINTER_CMerchantWnd (*EQ_POINTER_CMerchantWnd_pptr)
+
+EQClass::CMerchantWnd** EQ_CLASS_POINTER_CMerchantWnd_pptr = (EQClass::CMerchantWnd**)EQ_ADDRESS_POINTER_CMerchantWnd;
+#define EQ_CLASS_POINTER_CMerchantWnd (*EQ_CLASS_POINTER_CMerchantWnd_pptr)
+
 /* CSpellBookWnd */
 
 #define EQ_ADDRESS_POINTER_CSpellBookWnd 0x0063D64C

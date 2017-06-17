@@ -61,8 +61,11 @@
 #define EQ_NUM_INVENTORY_PACK_SLOTS 8 // bags
 #define EQ_NUM_INVENTORY_BANK_SLOTS 8
 #define EQ_NUM_INVENTORY_SLOTS_TOTAL // 21 + 8 + 8, inventory + bags + bank
+#define EQ_NUM_MERCHANT_SLOTS 80
 #define EQ_NUM_SKILLS 74
-#define EQ_NUM_SPELL_BOOK_SPELLS 250
+#define EQ_NUM_SPELL_BOOK_SPELLS 256 // 0-255, 32 pages with 8 spells each
+#define EQ_NUM_SPELL_BOOK_SPELLS_PER_PAGE 8
+#define EQ_NUM_SPELL_BOOK_PAGES 32
 #define EQ_NUM_SPAWNS 8192
 #define EQ_NUM_GUILDS 512
 #define EQ_NUM_LOOT_WINDOW_SLOTS 30
@@ -158,6 +161,8 @@
 
 #define EQ_SPELL_ID_NULL 0xFFFF // uint16_t
 #define EQ_SPELL_ID_HASTE 998 // uint16_t
+
+#define EQ_SPELL_LEVEL_NEEDED_CANNOT_USE 0xFF // uint8_t
 
 #define EQ_BUFF_TYPE_DETRIMENTAL           0
 #define EQ_BUFF_TYPE_BENEFICIAL            1
@@ -363,7 +368,10 @@
 #define EQ_SKILL_TAUNT                  73
 #define EQ_SKILL_FRENZY                 74
 #define EQ_SKILL_GENERIC_TRADESKILL     75
+//
 #define EQ_SKILL_SLAM                   111
+//
+#define EQ_SKILL_NULL                   255
 
 #define EQ_TEXT_COLOR_BLACK       0x00
 #define EQ_TEXT_COLOR_GRAY        0x01

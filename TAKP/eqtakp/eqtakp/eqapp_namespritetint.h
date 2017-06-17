@@ -65,8 +65,8 @@ bool EQAPP_NameSpriteTint_Execute(class EQPlayer* a1)
         if (spawn->Class == EQ_CLASS_BANKER)
         {
             color.R = 0;
-            color.G = 128;
-            color.B = 0;
+            color.G = 255;
+            color.B = 64;
             spawn->Actor->ModelBoneHeadPoint->StringSprite->Color = color;
         }
         else if (spawn->Class == EQ_CLASS_MERCHANT)

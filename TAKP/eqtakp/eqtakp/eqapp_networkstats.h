@@ -168,13 +168,13 @@ void EQAPP_NetworkStats_DrawBar(EQApp::NetworkStats& networkStats, EQ::Spawn_ptr
     else
     {
         // transparent background
-        EQ_DrawRectangle(screenX, screenY, g_networkStatsDrawBarWidth, 8.0f, g_networkStatsDrawBarBackgroundColorARGB, true);
+        EQ_DrawRectangle(screenX, screenY, g_networkStatsDrawBarWidth, g_networkStatsDrawBarHeight, g_networkStatsDrawBarBackgroundColorARGB, true);
 
         // red hp
-        EQ_DrawRectangle(screenX, screenY, HPWidth, 8.0f, g_networkStatsDrawBarHPColorARGB, true);
+        EQ_DrawRectangle(screenX, screenY, HPWidth, g_networkStatsDrawBarHeight, g_networkStatsDrawBarHPColorARGB, true);
 
         // black hp border
-        EQ_DrawRectangle(screenX, screenY, g_networkStatsDrawBarWidth, 8.0f, g_networkStatsDrawBarBorderColorARGB, false);
+        EQ_DrawRectangle(screenX, screenY, g_networkStatsDrawBarWidth, g_networkStatsDrawBarHeight, g_networkStatsDrawBarBorderColorARGB, false);
     }
 }
 

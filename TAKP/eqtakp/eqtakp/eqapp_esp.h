@@ -24,6 +24,7 @@ namespace EQApp
         bool IsTarget = false;
         bool IsYourPet = false;
         bool IsGroupMember = false;
+        bool IsInvisible = false;
         std::string Text;
         uint32_t TextColor = EQ_TEXT_COLOR_WHITE;
     } ESPSpawn, *ESPSpawn_ptr;
@@ -105,6 +106,11 @@ void EQAPP_ESP_UpdateSpawnList()
 
         espSpawn.MovementSpeed = spawn->MovementSpeed;
 
+        if (spawn->Actor->IsInvisible == 1)
+        {
+            espSpawn.IsInvisible = true;
+        }
+
         espSpawn.ShowAtAnyDistance = false;
 
         if (spawn->PetOwnerSpawnID == playerSpawn->SpawnID)
@@ -129,7 +135,7 @@ void EQAPP_ESP_UpdateSpawnList()
             espSpawn.ShowAtAnyDistance = true;
         }
 
-        if (EQ_IsKeyPressedControl() == true)
+        if (EQ_IsMouseLookEnabled() == true)
         {
             espSpawn.ShowAtAnyDistance = true;
         }
@@ -164,7 +170,14 @@ void EQAPP_ESP_UpdateSpawnList()
         }
         else if (espSpawn.Type == EQ_SPAWN_TYPE_NPC_CORPSE)
         {
-            espSpawn.TextColor = EQ_TEXT_COLOR_YELLOW;
+            if (espSpawn.IsInvisible == false)
+            {
+                espSpawn.TextColor = EQ_TEXT_COLOR_YELLOW;
+            }
+            else
+            {
+                espSpawn.TextColor = EQ_TEXT_COLOR_GRAY;
+            }
         }
 
         if (EQ_IsSpawnGroupMember(spawn) == true)

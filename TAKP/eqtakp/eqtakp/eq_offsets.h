@@ -11,3 +11,12 @@
 /* CEverQuest */
 
 #define EQ_OFFSET_CEverQuest_GAME_STATE 0x5AC // uint32_t
+
+/* CLootWnd */
+
+#define EQ_OFFSET_CLootWnd_FIRST_ITEM 0x1B8
+
+/* CMerchantWnd */
+
+#define EQ_OFFSET_CMerchantWnd_FIRST_ITEM 0x140
+

@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <bitset>
 #include <chrono>
 #include <fstream>
 #include <functional>
@@ -68,6 +69,7 @@
 #include "eqapp_speedhack.h"
 #include "eqapp_alwaysattack.h"
 #include "eqapp_bufftimers.h"
+#include "eqapp_merchantwindow.h"
 #include "eqapp_itemdisplay.h"
 #include "eqapp_hidecorpselooted.h"
 #include "eqapp_namespritestate.h"

@@ -381,7 +381,7 @@ typedef struct _Spell
 /* 0x009A */ uint8_t ZoneType2;
 /* 0x009B */ uint8_t EnvironmentType;
 /* 0x009C */ uint8_t TimeOfDay;
-/* 0x009D */ uint8_t Level[15]; // minimum level to cast for each class
+/* 0x009D */ uint8_t Level[15]; // minimum level to cast for each class, [class - 1], 0xFF = CANNOT USE
 /* 0x00AC */ uint8_t Unknown0192[36];
 /* 0x00D0 */ char* Name;        // [32]
 /* 0x00D4 */ char* Target;      // [16]
@@ -454,10 +454,7 @@ typedef struct _Character
 /* 0x0264 */ struct _Buff Buff[EQ_NUM_BUFFS];
 /* 0x02FA */ uint8_t Unknown02FA[1080];
 /* 0x0732 */ uint16_t SpellBook[EQ_NUM_SPELL_BOOK_SPELLS]; // array of spell ids
-/* 0x0926 */ uint8_t Unknown0926[524];
-
-// 0x09A6 // uint16_t Unknown9A6; // equals 20000?
-
+/* 0x0932 */ uint8_t Unknown0932[512];
 /* 0x0B32 */ uint16_t MemorizedSpell[EQ_NUM_SPELL_GEMS]; // spell gem spell ids
 /* 0x0B42 */ uint8_t Unknown0B42[14];
 /* 0x0B50 */ uint16_t Unknown0B50;
@@ -1075,6 +1072,15 @@ typedef struct _CXWnd
 /* 0x0138 */
 } CXWnd, *CXWnd_ptr;
 
+typedef struct _CInvSlot
+{
+/* 0x0000 */ uint32_t Unknown0000;
+/* 0x0004 */ uint32_t Unknown0004;
+/* 0x0008 */ uint32_t Unknown0008;
+/* 0x000C */ uint32_t SlotID;
+/* ...... */
+} CInvSlot, *CInvSlot_ptr;
+
 typedef struct _CItemDisplayWnd
 {
 /* 0x0000 */ struct _CsidlScreenWnd CSidlScreenWnd;
@@ -1106,14 +1112,15 @@ typedef struct _CLootWnd
 /* ...... */
 } CLootWnd, *CLootWnd_ptr;
 
-typedef struct _CInvSlot
+typedef struct _CMerchantWnd
 {
-/* 0x0000 */ uint32_t Unknown0000;
-/* 0x0004 */ uint32_t Unknown0004;
-/* 0x0008 */ uint32_t Unknown0008;
-/* 0x000C */ uint32_t SlotID;
+/* 0x0000 */ struct _CsidlScreenWnd CsidlScreenWnd;
+/* 0x0138 */ uint8_t Unknown0138[2];
+/* 0x0140 */ struct _Item* Item[EQ_NUM_MERCHANT_SLOTS];
+/* 0x0280 */ uint8_t Unknown0280[28];
+/* 0x029C */ struct _CsidlScreenWnd* MerchantSlotWnd[EQ_NUM_MERCHANT_SLOTS];
 /* ...... */
-} CInvSlot, *CInvSlot_ptr;
+} CMerchantWnd, *CMerchantWnd_ptr;
 
 typedef struct _CBazaarSearchWndBazaarMsg
 {

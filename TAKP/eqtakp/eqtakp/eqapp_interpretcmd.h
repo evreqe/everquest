@@ -38,6 +38,14 @@ std::map<std::string, std::function<void()>> g_interpretCmdList =
     {"//TargetPlayerCorpse",        &EQAPP_TargetNearestPlayerCorpse},
     {"//TargetNPCCorpse",           &EQAPP_TargetNearestNPCCorpse},
     {"//UseSkills",                 &EQAPP_UseSkills_Toggle},
+    {"//UseSkillsBackstab",         &EQAPP_UseSkills_Toggle_Backstab},
+    {"//UseSkillsBash",             &EQAPP_UseSkills_Toggle_Bash},
+    {"//UseSkillsDisarm",           &EQAPP_UseSkills_Toggle_Disarm},
+    {"//UseSkillsForage",           &EQAPP_UseSkills_Toggle_Forage},
+    {"//UseSkillsKick",             &EQAPP_UseSkills_Toggle_Kick},
+    {"//UseSkillsSenseHeading",     &EQAPP_UseSkills_Toggle_SenseHeading},
+    {"//UseSkillsSlam",             &EQAPP_UseSkills_Toggle_Slam},
+    {"//UseSkillsTaunt",            &EQAPP_UseSkills_Toggle_Taunt},
 };
 
 void EQAPP_InterpretCmd_Execute(std::string commandText);

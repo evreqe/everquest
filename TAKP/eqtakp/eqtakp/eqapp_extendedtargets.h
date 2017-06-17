@@ -48,6 +48,7 @@ float g_extendedTargetsY = 412.0f;
 float g_extendedTargetsWidth  = 200.0f;
 float g_extendedTargetsHeight = 200.0f;
 
+uint32_t g_extendedTargetsBorderColorARGB     = 0xFF646464;
 uint32_t g_extendedTargetsBackgroundColorARGB = 0x80000000;
 
 void EQAPP_ExtendedTargets_Toggle();
@@ -269,15 +270,29 @@ void EQAPP_ExtendedTargets_Execute()
 {
     EQAPP_ExtendedTargets_UpdateSpawnList();
 
-    size_t numExtendedTargets = g_extendedTargetsSpawnList.size() + 1;
+    if (g_extendedTargetsSpawnList.size() == 0)
+    {
+        return;
+    }
+
+    size_t numExtendedTargets = g_extendedTargetsSpawnList.size();
 
     EQ_DrawRectangle
     (
         (float)g_extendedTargetsX - 4.0f,
         (float)(g_extendedTargetsY - g_extendedTargetsFontHeight),
         (float)g_extendedTargetsWidth,
-        (float)(numExtendedTargets * g_extendedTargetsFontHeight),
+        (float)((numExtendedTargets + 1) * g_extendedTargetsFontHeight),
         g_extendedTargetsBackgroundColorARGB, true
+    );
+
+    EQ_DrawRectangle
+    (
+        (float)g_extendedTargetsX - 4.0f,
+        (float)(g_extendedTargetsY - g_extendedTargetsFontHeight),
+        (float)g_extendedTargetsWidth,
+        (float)((numExtendedTargets + 1) * g_extendedTargetsFontHeight),
+        g_extendedTargetsBorderColorARGB, false
     );
 
     std::string etText = "Extended Targets: ";
@@ -290,7 +305,7 @@ void EQAPP_ExtendedTargets_Execute()
     {
         if (EQ_IsPointInsideRectangle(mouseX, mouseY, (int)etSpawn.X, (int)etSpawn.Y, (int)etSpawn.Width, (int)etSpawn.Height) == true)
         {
-            if (EQ_IsMouseLookEnabled() == false)
+            if (EQ_IsMouseHoveringOverCXWnd() == false && EQ_IsMouseLookEnabled() == false)
             {
                 EQ_DrawRectangle((float)etSpawn.X, (float)etSpawn.Y, (float)etSpawn.Width, (float)etSpawn.Height, EQ_TOOLTIP_TEXT_BACKGROUND_COLOR, true);
             }
