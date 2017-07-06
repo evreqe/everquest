@@ -5,6 +5,7 @@ bool g_changeHeightIsEnabled = true;
 uint32_t g_changeHeightTimer = 0;
 uint32_t g_changeHeightTimerDelay = 1000;
 
+float g_changeHeightMinimumHeight = 1.0f;
 float g_changeHeightMaximumHeight = 5.0f;
 
 void EQAPP_ChangeHeight_Toggle();
@@ -30,7 +31,12 @@ void EQAPP_ChangeHeight_Execute()
         {
             if (spawn->Height > g_changeHeightMaximumHeight)
             {
-                ((EQClass::EQPlayer*)spawn)->ChangeHeight(g_changeHeightMaximumHeight);
+                EQ_SetSpawnHeight(spawn, g_changeHeightMaximumHeight);
+            }
+
+            if (spawn->Height < g_changeHeightMinimumHeight)
+            {
+                EQ_SetSpawnHeight(spawn, g_changeHeightMinimumHeight);
             }
         }
 

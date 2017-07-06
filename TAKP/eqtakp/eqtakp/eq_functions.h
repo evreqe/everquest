@@ -118,10 +118,16 @@ EQ::Spawn_ptr EQ_GetNearestSpawn(uint8_t spawnType, float maxDistance, float max
 void EQ_SetTargetSpawn(EQ::Spawn_ptr spawn);
 uint16_t EQ_GetSpellIDBySpellName(std::string spellName);
 signed int EQ_GetSpellBookSpellIndexBySpellID(uint16_t spellID);
+signed int EQ_GetSpellGemIndexBySpellID(uint16_t spellID);
 EQ::Spawn_ptr EQ_GetSpawnByName(std::string spawnName);
 EQ::Spawn_ptr EQ_GetPlayerPetSpawn();
 bool EQ_IsMouseLookEnabled();
 void EQ_DrawMouseCursor();
+uint32_t EQ_GetPlayerManaPercent();
+void EQ_SetSpawnStandingState(EQ::Spawn_ptr spawn, uint8_t standingState);
+void EQ_SetSpawnHeight(EQ::Spawn_ptr spawn, float height);
+std::string EQ_GetSpawnName(EQ::Spawn_ptr spawn);
+bool EQ_IsPlayerCastingSpell();
 
 template <class T>
 void EQ_Log(const char* text, T number)
@@ -252,6 +258,9 @@ EQ_MACRO_FunctionAtAddress(float __cdecl EQ_get_melee_range(class EQClass::EQPla
 #define EQ_ADDRESS_FUNCTION_UpdateLight 0x004F0C7B
 EQ_MACRO_FunctionAtAddress(int __cdecl EQ_UpdateLight(EQ::Character_ptr character), EQ_ADDRESS_FUNCTION_UpdateLight);
 
+#define EQ_ADDRESS_FUNCTION_GetSpellCastingTime 0x00435F28
+EQ_MACRO_FunctionAtAddress(signed int __cdecl EQ_GetSpellCastingTime(void), EQ_ADDRESS_FUNCTION_GetSpellCastingTime);
+
 /* functions */
 
 void EQ_ToggleBool(bool& b)
@@ -344,12 +353,23 @@ void EQ_CXStr_Append(EQ::CXStr** cxstr, const char* text)
 
 bool EQ_IsInGame()
 {
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return false;
+    }
+
     if (EQ_POINTER_CEverQuest == NULL)
     {
         return false;
     }
 
-    return (EQ_POINTER_CEverQuest->GameState == EQ_GAME_STATE_IN_GAME);
+    if (EQ_POINTER_CEverQuest->GameState != EQ_GAME_STATE_IN_GAME)
+    {
+        return false;
+    }
+
+    return true;
 }
 
 bool EQ_IsAutoAttackEnabled()
@@ -1256,7 +1276,6 @@ void EQ_OpenAllContainers()
     for (size_t i = 0; i < EQ_NUM_INVENTORY_PACK_SLOTS; i++)
     {
         auto inventoryPackItem = playerSpawn->Character->InventoryPackItem[i];
-
         if (inventoryPackItem == NULL)
         {
             continue;
@@ -1401,6 +1420,16 @@ EQ::Spawn_ptr EQ_GetNearestSpawn(uint8_t spawnType, float maxDistance, float max
     return NULL;
 }
 
+EQ::Spell_ptr EQ_GetSpellByID(uint16_t spellID)
+{
+    if (spellID == EQ_SPELL_ID_NULL)
+    {
+        return NULL;
+    }
+
+    return EQ_POINTER_SpellList->Spell[spellID];
+}
+
 uint16_t EQ_GetSpellIDBySpellName(std::string spellName)
 {
     if (spellName.size() == 0)
@@ -1464,10 +1493,35 @@ signed int EQ_GetSpellBookSpellIndexBySpellID(uint16_t spellID)
         return -1;
     }
 
-    for (size_t i = 0; i < EQ_NUM_SPELL_BOOK_SPELLS; i++)
+    for (signed int i = 0; i < EQ_NUM_SPELL_BOOK_SPELLS; i++)
     {
-        uint16_t spellBookSpellID = playerSpawn->Character->SpellBook[i];
+        auto spellBookSpellID = playerSpawn->Character->SpellBook[i];
         if (spellBookSpellID == spellID)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+signed int EQ_GetSpellGemIndexBySpellID(uint16_t spellID)
+{
+    if (spellID == EQ_SPELL_ID_NULL)
+    {
+        return -1;
+    }
+
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return -1;
+    }
+
+    for (size_t i = 0; i < EQ_NUM_SPELL_GEMS; i++)
+    {
+        auto memorizedSpellID = playerSpawn->Character->MemorizedSpell[i];
+        if (memorizedSpellID == spellID)
         {
             return i;
         }
@@ -1481,7 +1535,7 @@ EQ::Spawn_ptr EQ_GetSpawnByName(std::string spawnName)
     auto spawn = EQ_GetFirstSpawn();
     while (spawn != NULL)
     {
-        std::string name = EQ_CLASS_POINTER_CEverQuest->trimName(spawn->Name);
+        std::string name = EQ_GetSpawnName(spawn);
         if (name.size() == 0)
         {
             spawn = spawn->Next;
@@ -1535,4 +1589,82 @@ void EQ_DrawMouseCursor()
         EQ_CLASS_POINTER_CXWndManager->DrawCursor();
     }
 }
+
+uint32_t EQ_GetPlayerManaPercent()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return 0;
+    }
+
+    auto manaCurrent = playerSpawn->Character->Mana;
+    auto manaMax     = EQ_CLASS_POINTER_PlayerCharacter->Max_Mana();
+
+    if (manaCurrent == 0 || manaMax == 0)
+    {
+        return 0;
+    }
+
+    uint32_t manaPercent = (uint32_t)(((float)manaCurrent / (float)manaMax) * 100.0f);
+
+    return manaPercent;
+}
+
+void EQ_SetSpawnStandingState(EQ::Spawn_ptr spawn, uint8_t standingState)
+{
+    if (spawn == NULL)
+    {
+        return;
+    }
+
+    ((EQClass::EQPlayer*)spawn)->ChangePosition(standingState);
+}
+
+void EQ_SetSpawnHeight(EQ::Spawn_ptr spawn, float height)
+{
+    if (spawn == NULL)
+    {
+        return;
+    }
+
+    ((EQClass::EQPlayer*)spawn)->ChangeHeight(height);
+}
+
+std::string EQ_GetSpawnName(EQ::Spawn_ptr spawn)
+{
+    if (spawn->Name == NULL || spawn->Name[0] == '\0')
+    {
+        return std::string();
+    }
+
+    if (strlen(spawn->Name) == 0)
+    {
+        return std::string();
+    }
+
+    return EQ_CLASS_POINTER_CEverQuest->trimName(spawn->Name);
+}
+
+bool EQ_IsPlayerCastingSpell()
+{
+    return (EQ_GetSpellCastingTime() != -1);
+}
+
+bool EQ_DoesSpawnExist(EQ::Spawn_ptr spawn)
+{
+    auto spawnEx = EQ_GetFirstSpawn();
+    while (spawnEx)
+    {
+        if (spawnEx == spawn)
+        {
+            return true;
+        }
+
+        spawnEx = spawnEx->Next;
+    }
+
+    return false;
+}
+
 

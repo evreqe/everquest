@@ -39,7 +39,7 @@ void EQAPP_SpellSet_Load()
 
     g_spellSetList.clear();
 
-    std::string spawnName = EQ_CLASS_POINTER_CEverQuest->trimName(playerSpawn->Name);
+    std::string spawnName = EQ_GetSpawnName(playerSpawn);
     if (spawnName.size() == 0)
     {
         return;
@@ -97,7 +97,7 @@ void EQAPP_SpellSet_Save()
         return;
     }
 
-    std::string spawnName = EQ_CLASS_POINTER_CEverQuest->trimName(playerSpawn->Name);
+    std::string spawnName = EQ_GetSpawnName(playerSpawn);
     if (spawnName.size() == 0)
     {
         return;

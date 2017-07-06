@@ -68,7 +68,7 @@ float g_mapArrowRadius = 20.0f;
 uint32_t g_mapBorderColorARGB = 0xFF646464;
 uint32_t g_mapBackgroundColorARGB = EQ_TOOLTIP_TEXT_BACKGROUND_COLOR;
 
-float g_mapSpawnDistanceMax = 1000.0f;
+float g_mapSpawnDistanceMax = 2000.0f;
 float g_mapSpawnDistanceZMax = 100.0f;
 
 void EQAPP_Map_Toggle();
@@ -89,7 +89,7 @@ void EQAPP_Map_Execute(); // draw
 void EQAPP_Map_Toggle()
 {
     EQ_ToggleBool(g_mapIsEnabled);
-    EQAPP_PrintBool("Map", g_mapIsEnabled);
+    ////EQAPP_PrintBool("Map", g_mapIsEnabled);
 
     if (g_mapIsEnabled == true)
     {
@@ -540,7 +540,7 @@ void EQAPP_Map_Execute()
 
                 spawnText << "[" << (int)spawn->Level << "] ";
 
-                spawnText << EQ_CLASS_POINTER_CEverQuest->trimName(spawn->Name);
+                spawnText << EQ_GetSpawnName(spawn);
 
                 EQ_DrawTooltipText(spawnText.str().c_str(), mouseX + EQ_MOUSE_CURSOR_WIDTH + 1, mouseY, EQ_ADDRESS_POINTER_FONT_ARIAL14);
             }

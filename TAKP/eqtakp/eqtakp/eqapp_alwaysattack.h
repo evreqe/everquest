@@ -24,6 +24,20 @@ void EQAPP_AlwaysAttack_Execute()
         return;
     }
 
+    auto bankerSpawn = EQ_GetBankerSpawn();
+    if (bankerSpawn != NULL)
+    {
+        EQ_SetAutoAttack(false);
+        return;
+    }
+
+    auto merchantSpawn = EQ_GetMerchantSpawn();
+    if (merchantSpawn != NULL)
+    {
+        EQ_SetAutoAttack(false);
+        return;
+    }
+
     auto targetSpawn = EQ_GetTargetSpawn();
     if (targetSpawn == NULL || targetSpawn == playerSpawn)
     {

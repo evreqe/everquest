@@ -21,12 +21,21 @@
 #include <cmath>
 #include <ctime>
 
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+
 #include <windows.h>
 #include <mmsystem.h>
 #pragma comment(lib, "winmm.lib")
 #include <tlhelp32.h>
 #include <fcntl.h>
 #include <io.h>
+
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <iphlpapi.h>
+#pragma comment(lib, "ws2_32.lib")
 
 #include <psapi.h>
 #pragma comment(lib, "psapi.lib")
@@ -58,13 +67,22 @@
 #include "eqapp.h"
 #include "eqapp_functions.h"
 //
+#include "eqapp_gui_classes.h"
+#include "eqapp_gui_base.h"
+#include "eqapp_gui_button.h"
+#include "eqapp_gui_menu.h"
+#include "eqapp_gui_menuitem.h"
+#include "eqapp_gui.h"
+//
 #include "eqapp_console.h"
 #include "eqapp_ini.h"
 #include "eqapp_memory.h"
 //
+#include "eqapp_autoinventory.h"
 #include "eqapp_autoloot.h"
 #include "eqapp_namedspawns.h"
 //
+#include "eqapp_autofollow.h"
 #include "eqapp_networkstats.h"
 #include "eqapp_speedhack.h"
 #include "eqapp_alwaysattack.h"
@@ -82,12 +100,20 @@
 #include "eqapp_spellset.h"
 #include "eqapp_drawdistance.h"
 #include "eqapp_neverfrozen.h"
+#include "eqapp_trainspells.h"
+#include "eqapp_spawnalert.h"
 //
 #include "eqapp_extendedtargets.h"
 #include "eqapp_map.h"
 #include "eqapp_esp.h"
 //
 #include "eqapp_extramousebuttons.h"
+//
+#include "eqapp_boxchat.h"
+//
+#include "eqapp_mainmenu.h"
+#include "eqapp_hudtext.h"
+//
 //
 #include "eqapp_interpretcmd.h"
 //
@@ -100,6 +126,8 @@ void EQAPP_Load()
     EQAPP_Mouse_Load();
 
     EQAPP_Memory_Load();
+
+    EQAPP_MainMenu_Load();
 
     if (EQ_IsInGame() == true)
     {
@@ -120,6 +148,8 @@ void EQAPP_Unload()
     EQAPP_Memory_Unload();
 
     EQAPP_Mouse_Unload();
+
+    EQAPP_BoxChat_Unload();
 
     g_bExit = 1;
 }

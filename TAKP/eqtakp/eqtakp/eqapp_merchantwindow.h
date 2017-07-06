@@ -4,8 +4,15 @@ bool g_merchantWindowIsEnabled = true;
 
 unsigned int g_merchantWindowFontSize = 1;
 
+void EQAPP_MerchantWindow_Toggle();
 void EQAPP_MerchantWindow_AppendSpellLevelToToolTipText(void* this_ptr);
 void EQAPP_MerchantWindow_HandleEvent_CMerchantWnd__PostDraw(void* this_ptr);
+
+void EQAPP_MerchantWindow_Toggle()
+{
+    EQ_ToggleBool(g_merchantWindowIsEnabled);
+    EQAPP_PrintBool("Merchant Window", g_merchantWindowIsEnabled);
+}
 
 void EQAPP_MerchantWindow_AppendSpellLevelToToolTipText(void* this_ptr)
 {
@@ -15,7 +22,7 @@ void EQAPP_MerchantWindow_AppendSpellLevelToToolTipText(void* this_ptr)
         return;
     }
 
-    auto playerClass = playerSpawn->Class;
+    uint8_t playerClass = playerSpawn->Class;
     if (playerClass == EQ_CLASS_UNKNOWN || playerClass == EQ_CLASS_WARRIOR || playerClass == EQ_CLASS_MONK || playerClass == EQ_CLASS_ROGUE)
     {
         return;
@@ -29,17 +36,10 @@ void EQAPP_MerchantWindow_AppendSpellLevelToToolTipText(void* this_ptr)
 
     for (size_t i = 0; i < EQ_NUM_MERCHANT_SLOTS; i++)
     {
-        auto merchantWindowAddress = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CMerchantWnd);
-        auto itemAddress = EQ_ReadMemory<uint32_t>(merchantWindowAddress + EQ_OFFSET_CMerchantWnd_FIRST_ITEM + (i * 4));
-        if (itemAddress == NULL)
-        {
-            break;
-        }
-
-        auto item = merchantWindow->Item[i];
+        EQ::Item_ptr item = merchantWindow->Item[i];
         if (item == NULL)
         {
-            continue;
+            break;
         }
 
         std::string itemName = item->Name;
@@ -59,13 +59,13 @@ void EQAPP_MerchantWindow_AppendSpellLevelToToolTipText(void* this_ptr)
             continue;
         }
 
-        auto spell = EQ_POINTER_SpellList->Spell[spellID];
+        EQ::Spell_ptr spell = EQ_POINTER_SpellList->Spell[spellID];
         if (spell == NULL)
         {
             continue;
         }
 
-        int spellLevelNeeded = (int)spell->Level[playerSpawn->Class - 1];
+        int spellLevelNeeded = (int)spell->Level[playerClass - 1];
         if (spellLevelNeeded == EQ_SPELL_LEVEL_NEEDED_CANNOT_USE)
         {
             continue;
@@ -91,7 +91,15 @@ void EQAPP_MerchantWindow_AppendSpellLevelToToolTipText(void* this_ptr)
         if (originalToolTipText.find("(") == std::string::npos)
         {
             std::stringstream newToolTipText;
-            newToolTipText << originalToolTipText << " (" << spellLevelNeeded << ")";
+            newToolTipText << originalToolTipText << " (" << spellLevelNeeded;
+
+            signed int spellBookIndex = EQ_GetSpellBookSpellIndexBySpellID(spellID);
+            if (spellBookIndex != -1)
+            {
+                newToolTipText << "*";
+            }
+
+            newToolTipText << ")";
 
             EQ_CXStr_Set(&merchantSlotWnd->Window.ToolTipText, newToolTipText.str().c_str());
         }
@@ -111,7 +119,7 @@ void EQAPP_MerchantWindow_HandleEvent_CMerchantWnd__PostDraw(void* this_ptr)
         return;
     }
 
-    auto playerClass = playerSpawn->Class;
+    uint8_t playerClass = playerSpawn->Class;
     if (playerClass == EQ_CLASS_UNKNOWN || playerClass == EQ_CLASS_WARRIOR || playerClass == EQ_CLASS_MONK || playerClass == EQ_CLASS_ROGUE)
     {
         return;
@@ -125,14 +133,7 @@ void EQAPP_MerchantWindow_HandleEvent_CMerchantWnd__PostDraw(void* this_ptr)
 
     for (size_t i = 0; i < EQ_NUM_MERCHANT_SLOTS; i++)
     {
-        auto merchantWindowAddress = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CMerchantWnd);
-        auto itemAddress = EQ_ReadMemory<uint32_t>(merchantWindowAddress + EQ_OFFSET_CMerchantWnd_FIRST_ITEM + (i * 4));
-        if (itemAddress == NULL)
-        {
-            break;
-        }
-
-        auto item = merchantWindow->Item[i];
+        EQ::Item_ptr item = merchantWindow->Item[i];
         if (item == NULL)
         {
             break;
@@ -155,13 +156,13 @@ void EQAPP_MerchantWindow_HandleEvent_CMerchantWnd__PostDraw(void* this_ptr)
             continue;
         }
 
-        auto spell = EQ_POINTER_SpellList->Spell[spellID];
+        EQ::Spell_ptr spell = EQ_POINTER_SpellList->Spell[spellID];
         if (spell == NULL)
         {
             continue;
         }
 
-        int spellLevelNeeded = (int)spell->Level[playerSpawn->Class - 1];
+        int spellLevelNeeded = (int)spell->Level[playerClass - 1];
         if (spellLevelNeeded == EQ_SPELL_LEVEL_NEEDED_CANNOT_USE)
         {
             continue;
@@ -210,6 +211,12 @@ void EQAPP_MerchantWindow_HandleEvent_CMerchantWnd__PostDraw(void* this_ptr)
 
         std::stringstream newToolTipText;
         newToolTipText << spellLevelNeeded;
+
+        signed int spellBookIndex = EQ_GetSpellBookSpellIndexBySpellID(spellID);
+        if (spellBookIndex != -1)
+        {
+            newToolTipText << "*";
+        }
 
         merchantSlotWnd->Window.Font->Size = g_merchantWindowFontSize;
 

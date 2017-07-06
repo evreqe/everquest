@@ -360,7 +360,7 @@ typedef struct _Spell
 /* 0x0020 */ uint32_t DurationFormula;
 /* 0x0024 */ uint32_t Duration;
 /* 0x0028 */ uint32_t AOEDuration;
-/* 0x002C */ uint16_t Mana;
+/* 0x002C */ uint16_t ManaCost;
 /* 0x002E */ short Base[12];
 /* 0x0046 */ short Max[12];
 /* 0x005E */ uint16_t BookIcon;
@@ -1115,9 +1115,11 @@ typedef struct _CLootWnd
 typedef struct _CMerchantWnd
 {
 /* 0x0000 */ struct _CsidlScreenWnd CsidlScreenWnd;
-/* 0x0138 */ uint8_t Unknown0138[2];
+/* 0x0138 */ uint8_t Unknown0138[8];
 /* 0x0140 */ struct _Item* Item[EQ_NUM_MERCHANT_SLOTS];
-/* 0x0280 */ uint8_t Unknown0280[28];
+/* 0x0280 */ uint8_t Unknown0280[4];
+/* 0x0284 */ int32_t SelectedSlotID; // -1 is NULL
+/* 0x0288 */ uint8_t Unknown0288[20];
 /* 0x029C */ struct _CsidlScreenWnd* MerchantSlotWnd[EQ_NUM_MERCHANT_SLOTS];
 /* ...... */
 } CMerchantWnd, *CMerchantWnd_ptr;

@@ -30,7 +30,7 @@ void EQAPP_AutoLoot_Load()
 
 void EQAPP_AutoLoot_Execute()
 {
-    if (g_autoLootIsEnabled == false || g_autoLootList.size() == 0)
+    if (g_autoLootList.size() == 0)
     {
         return;
     }

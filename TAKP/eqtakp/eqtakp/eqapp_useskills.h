@@ -26,25 +26,25 @@ void EQAPP_UseSkills_Toggle()
 void EQAPP_UseSkills_Toggle_SenseHeading()
 {
     EQ_ToggleBool(g_useSkillsSenseHeadingIsEnabled);
-    EQAPP_PrintBool("Use Skills (SenseHeading): ", g_useSkillsSenseHeadingIsEnabled);
+    EQAPP_PrintBool("Use Skills (Sense Heading)", g_useSkillsSenseHeadingIsEnabled);
 }
 
 void EQAPP_UseSkills_Toggle_Forage()
 {
     EQ_ToggleBool(g_useSkillsForageIsEnabled);
-    EQAPP_PrintBool("Use Skills (Forage): ", g_useSkillsForageIsEnabled);
+    EQAPP_PrintBool("Use Skills (Forage)", g_useSkillsForageIsEnabled);
 }
 
 void EQAPP_UseSkills_Toggle_Taunt()
 {
     EQ_ToggleBool(g_useSkillsTauntIsEnabled);
-    EQAPP_PrintBool("Use Skills (Taunt): ", g_useSkillsTauntIsEnabled);
+    EQAPP_PrintBool("Use Skills (Taunt)", g_useSkillsTauntIsEnabled);
 }
 
 void EQAPP_UseSkills_Toggle_Kick()
 {
     EQ_ToggleBool(g_useSkillsKickIsEnabled);
-    EQAPP_PrintBool("Use Skills (Kick): ", g_useSkillsKickIsEnabled);
+    EQAPP_PrintBool("Use Skills (Kick)", g_useSkillsKickIsEnabled);
 
     if (g_useSkillsKickIsEnabled == true)
     {
@@ -56,7 +56,7 @@ void EQAPP_UseSkills_Toggle_Kick()
 void EQAPP_UseSkills_Toggle_Bash()
 {
     EQ_ToggleBool(g_useSkillsBashIsEnabled);
-    EQAPP_PrintBool("Use Skills (Bash): ", g_useSkillsBashIsEnabled);
+    EQAPP_PrintBool("Use Skills (Bash)", g_useSkillsBashIsEnabled);
 
     if (g_useSkillsBashIsEnabled == true)
     {
@@ -68,7 +68,7 @@ void EQAPP_UseSkills_Toggle_Bash()
 void EQAPP_UseSkills_Toggle_Slam()
 {
     EQ_ToggleBool(g_useSkillsSlamIsEnabled);
-    EQAPP_PrintBool("Use Skills (Slam): ", g_useSkillsSlamIsEnabled);
+    EQAPP_PrintBool("Use Skills (Slam)", g_useSkillsSlamIsEnabled);
 
     if (g_useSkillsSlamIsEnabled == true)
     {
@@ -115,10 +115,7 @@ void EQAPP_UseSkills_Execute()
             {
                 EQ_UseSkill(EQ_SKILL_FORAGE, NULL);
 
-                if (playerSpawn->Character->CursorItem != NULL)
-                {
-                    EQ_AutoInventory(playerSpawn->Character, &playerSpawn->Character->CursorItem, 0);
-                }
+                EQAPP_AutoInventory_Execute();
             }
         }
     }

@@ -27,13 +27,19 @@ namespace EQApp
         bool IsInvisible = false;
         std::string Text;
         uint32_t TextColor = EQ_TEXT_COLOR_WHITE;
+        uint32_t FontPointer = EQ_ADDRESS_POINTER_FONT_ARIAL14;
     } ESPSpawn, *ESPSpawn_ptr;
 }
 
 bool g_ESPIsEnabled = true;
 
+bool g_ESPShowSpawnID = false;
+
 float g_ESPSpawnDistanceMax = 400.0f;
 float g_ESPSpawnDistanceZMax = 10.0f;
+
+uint32_t g_ESPFontPointerDefault = EQ_ADDRESS_POINTER_FONT_ARIAL14;
+uint32_t g_ESPFontPointerFarAway = EQ_ADDRESS_POINTER_FONT_ARIAL12;
 
 std::vector<EQApp::ESPSpawn> g_ESPSpawnList;
 
@@ -51,6 +57,12 @@ void EQAPP_ESP_Toggle()
 {
     EQ_ToggleBool(g_ESPIsEnabled);
     EQAPP_PrintBool("ESP", g_ESPIsEnabled);
+}
+
+void EQAPP_ESP_ShowSpawnID_Toggle()
+{
+    EQ_ToggleBool(g_ESPShowSpawnID);
+    EQAPP_PrintBool("ESP Show Spawn ID", g_ESPShowSpawnID);
 }
 
 void EQAPP_ESP_UpdateSpawnList()
@@ -85,7 +97,7 @@ void EQAPP_ESP_UpdateSpawnList()
 
         espSpawn.SpawnID = spawn->SpawnID;
 
-        espSpawn.Name = EQ_CLASS_POINTER_CEverQuest->trimName(spawn->Name);
+        espSpawn.Name = EQ_GetSpawnName(spawn);
         espSpawn.LastName = spawn->LastName;
 
         espSpawn.Location.X = spawn->X;
@@ -106,12 +118,19 @@ void EQAPP_ESP_UpdateSpawnList()
 
         espSpawn.MovementSpeed = spawn->MovementSpeed;
 
+        espSpawn.FontPointer = g_ESPFontPointerDefault;
+
+        espSpawn.ShowAtAnyDistance = false;
+
         if (spawn->Actor->IsInvisible == 1)
         {
             espSpawn.IsInvisible = true;
         }
 
-        espSpawn.ShowAtAnyDistance = false;
+        if (espSpawn.Distance > (g_ESPSpawnDistanceMax * 0.5f))
+        {
+            espSpawn.FontPointer = g_ESPFontPointerFarAway;
+        }
 
         if (spawn->PetOwnerSpawnID == playerSpawn->SpawnID)
         {
@@ -237,6 +256,11 @@ void EQAPP_ESP_UpdateSpawnList()
             }
         }
 
+        if (g_ESPShowSpawnID == true)
+        {
+            espText << "\n(ID: 0x" << std::hex << espSpawn.SpawnID << std::dec << ")";
+        }
+
         espSpawn.Text = espText.str();
 
         g_ESPSpawnList.push_back(espSpawn);
@@ -251,6 +275,11 @@ void EQAPP_ESP_DrawDoorSpawns()
     while (door != NULL)
     {
         std::string doorName = door->Name;
+        if (doorName.size() == 0)
+        {
+            door = door->Next;
+            continue;
+        }
 
         auto it = EQ_STRING_MAP_DOOR_SPAWN_NAME.find(doorName);
         if (it == EQ_STRING_MAP_DOOR_SPAWN_NAME.end())
@@ -291,6 +320,11 @@ void EQAPP_ESP_DrawGroundSpawns()
     while (groundSpawn != NULL)
     {
         std::string groundSpawnName = groundSpawn->ActorDef;
+        if (groundSpawnName.size() == 0)
+        {
+            groundSpawn = groundSpawn->Next;
+            continue;
+        }
 
         auto it = EQ_STRING_MAP_GROUND_SPAWN_NAME.find(groundSpawnName);
         if (it == EQ_STRING_MAP_GROUND_SPAWN_NAME.end())
@@ -348,12 +382,17 @@ void EQAPP_ESP_DrawSpawns()
             continue;
         }
 
-        EQ_DrawText(espSpawn.Text.c_str(), screenX, screenY, espSpawn.TextColor);
+        EQ_DrawTextEx(espSpawn.Text.c_str(), screenX, screenY, espSpawn.TextColor, espSpawn.FontPointer);
     }
 }
 
 void EQAPP_ESP_Execute()
 {
+    if (EQ_IsKeyPressedControl() == true)
+    {
+        return;
+    }
+
     EQAPP_ESP_DrawDoorSpawns();
     EQAPP_ESP_DrawGroundSpawns();
     EQAPP_ESP_DrawSpawns();

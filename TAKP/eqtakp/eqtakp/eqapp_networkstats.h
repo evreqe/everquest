@@ -309,7 +309,7 @@ void EQAPP_NetworkStats_Write()
         return;
     }
 
-    std::string spawnName = EQ_CLASS_POINTER_CEverQuest->trimName(playerSpawn->Name);
+    std::string spawnName = EQ_GetSpawnName(playerSpawn);
     if (spawnName.size() == 0)
     {
         return;
@@ -348,7 +348,7 @@ void EQAPP_NetworkStats_Write()
     auto playerPetSpawn = EQ_GetPlayerPetSpawn();
     if (playerPetSpawn != NULL)
     {
-        std::string spawnPetName = EQ_CLASS_POINTER_CEverQuest->trimName(playerPetSpawn->Name);
+        std::string spawnPetName = EQ_GetSpawnName(playerPetSpawn);
         if (spawnPetName.size() != 0)
         {
             networkStats.SpawnHasPet = 1;

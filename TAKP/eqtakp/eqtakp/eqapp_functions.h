@@ -6,6 +6,8 @@ template <class T>
 void EQAPP_Log(const char* text, T number);
 
 void EQAPP_String_ReplaceAll(std::string& subject, const std::string& search, const std::string& replace);
+bool EQAPP_String_StartsWith(std::string& subject, const std::string& search);
+std::string EQAPP_String_GetBetween(std::string& subject, const std::string& begin, const std::string& end);
 
 void EQAPP_EnableDebugPrivileges();
 DWORD EQAPP_GetModuleBaseAddress(const wchar_t* moduleName);
@@ -60,6 +62,28 @@ void EQAPP_String_ReplaceAll(std::string& subject, const std::string& search, co
          subject.replace(position, search.length(), replace);
          position += replace.length();
     }
+}
+
+bool EQAPP_String_StartsWith(std::string& subject, const std::string& search)
+{
+    return (subject.compare(0, search.size(), search) == 0);
+}
+
+std::string EQAPP_String_GetBetween(std::string& subject, const std::string& begin, const std::string& end)
+{
+    std::size_t beginPosition;
+    if ((beginPosition = subject.find(begin)) != std::string::npos)
+    {
+        beginPosition = beginPosition + begin.length();
+
+        std::size_t endPosition;
+        if ((endPosition = subject.find(end, beginPosition)) != std::string::npos && endPosition != beginPosition)
+        {
+            return subject.substr(beginPosition, endPosition - beginPosition);
+        }
+    }
+
+    return std::string();
 }
 
 void EQAPP_EnableDebugPrivileges()
@@ -280,7 +304,7 @@ void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list)
     file.close();
 }
 
-uint32_t EQAPP_GetRandomNumberLowHigh(uint32_t low, uint32_t high)
+uint32_t EQAPP_GetRandomNumber(uint32_t low, uint32_t high)
 {
     std::uniform_int_distribution<uint32_t> uid;
     std::uniform_int_distribution<uint32_t>::param_type uidpt(low, high);
@@ -372,5 +396,6 @@ void EQAPP_TargetNearestNPCCorpse()
         EQ_SetTargetSpawn(spawn);
     }
 }
+
 
 

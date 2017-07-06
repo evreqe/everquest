@@ -11,7 +11,7 @@ void EQAPP_StandWhenCastSpell_Execute()
     {
         if (playerSpawn->StandingState == EQ_STANDING_STATE_SITTING)
         {
-            ((EQClass::EQPlayer*)playerSpawn)->ChangePosition(EQ_STANDING_STATE_STANDING);
+            EQ_SetSpawnStandingState(playerSpawn, EQ_STANDING_STATE_STANDING);
         }
     }
 }

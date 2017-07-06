@@ -147,10 +147,13 @@
     <ClCompile Include="dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="eqapp_autofollow.h" />
+    <ClInclude Include="eqapp_autoinventory.h" />
     <ClInclude Include="eq.h" />
     <ClInclude Include="eqapp.h" />
     <ClInclude Include="eqapp_alwaysattack.h" />
     <ClInclude Include="eqapp_autoloot.h" />
+    <ClInclude Include="eqapp_boxchat.h" />
     <ClInclude Include="eqapp_bufftimers.h" />
     <ClInclude Include="eqapp_changeheight.h" />
     <ClInclude Include="eqapp_console.h" />
@@ -161,14 +164,18 @@
     <ClInclude Include="eqapp_extramousebuttons.h" />
     <ClInclude Include="eqapp_foodanddrink.h" />
     <ClInclude Include="eqapp_functions.h" />
+    <ClInclude Include="eqapp_gui.h" />
     <ClInclude Include="eqapp_gui_base.h" />
     <ClInclude Include="eqapp_gui_button.h" />
+    <ClInclude Include="eqapp_gui_classes.h" />
     <ClInclude Include="eqapp_gui_menu.h" />
     <ClInclude Include="eqapp_gui_menuitem.h" />
     <ClInclude Include="eqapp_hidecorpselooted.h" />
+    <ClInclude Include="eqapp_hudtext.h" />
     <ClInclude Include="eqapp_ini.h" />
     <ClInclude Include="eqapp_interpretcmd.h" />
     <ClInclude Include="eqapp_itemdisplay.h" />
+    <ClInclude Include="eqapp_mainmenu.h" />
     <ClInclude Include="eqapp_map.h" />
     <ClInclude Include="eqapp_memory.h" />
     <ClInclude Include="eqapp_merchantwindow.h" />
@@ -177,10 +184,12 @@
     <ClInclude Include="eqapp_namespritetint.h" />
     <ClInclude Include="eqapp_networkstats.h" />
     <ClInclude Include="eqapp_neverfrozen.h" />
+    <ClInclude Include="eqapp_spawnalert.h" />
     <ClInclude Include="eqapp_speedhack.h" />
     <ClInclude Include="eqapp_spellset.h" />
     <ClInclude Include="eqapp_standwhencastspell.h" />
     <ClInclude Include="eqapp_maxskills.h" />
+    <ClInclude Include="eqapp_trainspells.h" />
     <ClInclude Include="eqapp_useskills.h" />
     <ClInclude Include="eq_classes.h" />
     <ClInclude Include="eq_functions.h" />

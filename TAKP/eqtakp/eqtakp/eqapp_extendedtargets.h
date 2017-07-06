@@ -161,7 +161,7 @@ void EQAPP_ExtendedTargets_UpdateSpawnList()
         etSpawn.Spawn = spawn;
         etSpawn.SpawnID = spawn->SpawnID;
 
-        etSpawn.Name = EQ_CLASS_POINTER_CEverQuest->trimName(spawn->Name);
+        etSpawn.Name = EQ_GetSpawnName(spawn);
         etSpawn.LastName = spawn->LastName;
 
         etSpawn.Level = spawn->Level;
@@ -298,12 +298,11 @@ void EQAPP_ExtendedTargets_Execute()
     std::string etText = "Extended Targets: ";
     EQ_DrawText(etText.c_str(), (int)g_extendedTargetsX, (int)(g_extendedTargetsY - g_extendedTargetsFontHeight), EQ_TEXT_COLOR_WHITE);
 
-    uint32_t mouseX = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_X);
-    uint32_t mouseY = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_Y);
+    EQ::Mouse mouse = EQ_GetMouse();
 
     for (auto& etSpawn : g_extendedTargetsSpawnList)
     {
-        if (EQ_IsPointInsideRectangle(mouseX, mouseY, (int)etSpawn.X, (int)etSpawn.Y, (int)etSpawn.Width, (int)etSpawn.Height) == true)
+        if (EQ_IsPointInsideRectangle(mouse.X, mouse.Y, (int)etSpawn.X, (int)etSpawn.Y, (int)etSpawn.Width, (int)etSpawn.Height) == true)
         {
             if (EQ_IsMouseHoveringOverCXWnd() == false && EQ_IsMouseLookEnabled() == false)
             {

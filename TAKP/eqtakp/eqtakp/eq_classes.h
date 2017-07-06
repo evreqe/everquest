@@ -41,7 +41,7 @@ namespace EQClass
     class CTextEntryWnd;
     class CTrackingWnd;
     class CTradeWnd;
-}
+} // namespace EQClass
 
 /* StringTable */
 
@@ -231,32 +231,32 @@ typedef signed int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__FollowPlayerAI)(void*
 class EQClass::EQ_Character
 {
 public:
-    unsigned short EQ_Character::Max_Mana();
+    uint16_t EQ_Character::Max_Mana();
     void EQ_Character::eqspa_movement_rate(short unknown);
-    int EQ_Character::CastSpell(uint8_t gemIndex, uint16_t spellID, EQ::Item** item, uint16_t unknown);
-    int EQ_Character::StopSpellCast(uint8_t gemIndex, uint16_t spellID);
-    int EQ_Character::StopSpellCast(uint8_t gemIndex);
+    int EQ_Character::CastSpell(uint8_t spellGemIndex, uint16_t spellID, EQ::Item** item, uint16_t unknown);
+    int EQ_Character::StopSpellCast(uint8_t spellGemIndex, uint16_t spellID);
+    int EQ_Character::StopSpellCast(uint8_t spellGemIndex);
     int EQ_Character::UseSkill(uint8_t skillID, class EQPlayer* targetSpawn);
 };
 
 #define EQ_ADDRESS_FUNCTION_EQ_Character__Max_Mana 0x004B9483
-EQ_MACRO_FunctionAtAddress(unsigned short EQClass::EQ_Character::Max_Mana(), EQ_ADDRESS_FUNCTION_EQ_Character__Max_Mana);
+EQ_MACRO_FunctionAtAddress(uint16_t EQClass::EQ_Character::Max_Mana(), EQ_ADDRESS_FUNCTION_EQ_Character__Max_Mana);
 
 #define EQ_ADDRESS_FUNCTION_EQ_Character__eqspa_movement_rate 0x004CAABA
 EQ_MACRO_FunctionAtAddress(void EQClass::EQ_Character::eqspa_movement_rate(short unknown), EQ_ADDRESS_FUNCTION_EQ_Character__eqspa_movement_rate);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__eqspa_movement_rate)(void* this_ptr, short unknown);
 
 #define EQ_ADDRESS_FUNCTION_EQ_Character__CastSpell 0x004C483B
-typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__CastSpell)(void* this_ptr, uint8_t gemIndex, uint16_t spellID, EQ::Item** item, uint16_t unknown);
-EQ_MACRO_FunctionAtAddress(int EQClass::EQ_Character::CastSpell(uint8_t gemIndex, uint16_t spellID, EQ::Item** item, uint16_t unknown), EQ_ADDRESS_FUNCTION_EQ_Character__CastSpell);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__CastSpell)(void* this_ptr, uint8_t spellGemIndex, uint16_t spellID, EQ::Item** item, uint16_t unknown);
+EQ_MACRO_FunctionAtAddress(int EQClass::EQ_Character::CastSpell(uint8_t spellGemIndex, uint16_t spellID, EQ::Item** item, uint16_t unknown), EQ_ADDRESS_FUNCTION_EQ_Character__CastSpell);
 
 #define EQ_ADDRESS_FUNCTION_EQ_Character__StopSpellCast 0x004CB510
-typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__StopSpellCast)(void* this_ptr, uint8_t gemIndex, uint16_t spellID);
-EQ_MACRO_FunctionAtAddress(int EQClass::EQ_Character::StopSpellCast(uint8_t gemIndex, uint16_t spellID), EQ_ADDRESS_FUNCTION_EQ_Character__StopSpellCast);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__StopSpellCast)(void* this_ptr, uint8_t spellGemIndex, uint16_t spellID);
+EQ_MACRO_FunctionAtAddress(int EQClass::EQ_Character::StopSpellCast(uint8_t spellGemIndex, uint16_t spellID), EQ_ADDRESS_FUNCTION_EQ_Character__StopSpellCast);
 
 #define EQ_ADDRESS_FUNCTION_EQ_Character__StopSpellCast__2 0x004CB4E8
-typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__StopSpellCast__2)(void* this_ptr, uint8_t gemIndex);
-EQ_MACRO_FunctionAtAddress(int EQClass::EQ_Character::StopSpellCast(uint8_t gemIndex), EQ_ADDRESS_FUNCTION_EQ_Character__StopSpellCast__2);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__StopSpellCast__2)(void* this_ptr, uint8_t spellGemIndex);
+EQ_MACRO_FunctionAtAddress(int EQClass::EQ_Character::StopSpellCast(uint8_t spellGemIndex), EQ_ADDRESS_FUNCTION_EQ_Character__StopSpellCast__2);
 
 #define EQ_ADDRESS_FUNCTION_EQ_Character__UseSkill 0x004BDF2F
 typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__UseSkill)(void* this_ptr, uint8_t skillID, class EQPlayer* targetSpawn);
