@@ -55,7 +55,6 @@ bool EQ_IsKeyPressedAlt();
 bool EQ_IsKeyPressedShift();
 bool EQ_IsMouseHoveringOverCXWnd();
 void EQ_SetAutoAttack(bool bEnabled);
-void EQ_SetFreeCamera(bool bEnabled);
 uint32_t EQ_GetFontTextHeight(uint32_t fontPointer);
 size_t EQ_GetFontTextWidth(const char* text, uint32_t fontPointer);
 void EQ_DrawTooltipText(const char* text, int x, int y, uint32_t fontPointer);
@@ -128,6 +127,8 @@ void EQ_SetSpawnStandingState(EQ::Spawn_ptr spawn, uint8_t standingState);
 void EQ_SetSpawnHeight(EQ::Spawn_ptr spawn, float height);
 std::string EQ_GetSpawnName(EQ::Spawn_ptr spawn);
 bool EQ_IsPlayerCastingSpell();
+EQ::Camera_ptr EQ_GetCamera();
+void EQ_FixHeading(float& heading);
 
 template <class T>
 void EQ_Log(const char* text, T number)
@@ -427,56 +428,6 @@ void EQ_SetAutoAttack(bool bEnabled)
     {
         EQ_WriteMemory<uint8_t>(EQ_ADDRESS_IS_AUTO_ATTACK_ENABLED, 0x00);
     }
-}
-
-void EQ_SetFreeCamera(bool bEnabled)
-{
-    uint32_t baseAddress = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_EQGraphicsDLL__t3dSetCameraLocation);
-
-    if (bEnabled == true)
-    {
-        uint32_t address = 0;
-        DWORD oldProtection = 0;
-        DWORD tempProtection = 0;
-
-        address = baseAddress + 0x4B; // Camera Y
-        VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, 2, PAGE_EXECUTE_READWRITE, &oldProtection);
-        WriteProcessMemory(GetCurrentProcess(), (LPVOID)address, "\x90\x90", 2, 0);
-        VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, 2, oldProtection, &tempProtection);
-
-        address = baseAddress + 0x50; // Camera X
-        VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, 3, PAGE_EXECUTE_READWRITE, &oldProtection);
-        WriteProcessMemory(GetCurrentProcess(), (LPVOID)address, "\x90\x90\x90", 3, 0);
-        VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, 3, oldProtection, &tempProtection);
-
-        address = baseAddress + 0x56; // Camera Z
-        VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, 3, PAGE_EXECUTE_READWRITE, &oldProtection);
-        WriteProcessMemory(GetCurrentProcess(), (LPVOID)address, "\x90\x90\x90", 3, 0);
-        VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, 3, oldProtection, &tempProtection);
-    }
-    else
-    {
-        uint32_t address = 0;
-        DWORD oldProtection = 0;
-        DWORD tempProtection = 0;
-
-        address = baseAddress + 0x4B; // Camera Y
-        VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, 2, PAGE_EXECUTE_READWRITE, &oldProtection);
-        WriteProcessMemory(GetCurrentProcess(), (LPVOID)address, "\x89\x01", 2, 0);
-        VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, 2, oldProtection, &tempProtection);
-
-        address = baseAddress + 0x50; // Camera X
-        VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, 3, PAGE_EXECUTE_READWRITE, &oldProtection);
-        WriteProcessMemory(GetCurrentProcess(), (LPVOID)address, "\x89\x41\x04", 3, 0);
-        VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, 3, oldProtection, &tempProtection);
-
-        address = baseAddress + 0x56; // Camera Z
-        VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, 3, PAGE_EXECUTE_READWRITE, &oldProtection);
-        WriteProcessMemory(GetCurrentProcess(), (LPVOID)address, "\x89\x51\x08", 3, 0);
-        VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, 3, oldProtection, &tempProtection);
-    }
-
-    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_CAMERA_VIEW, EQ_CAMERA_VIEW_FIRST_PERSON);
 }
 
 uint32_t EQ_GetFontTextHeight(uint32_t fontPointer)
@@ -1666,5 +1617,20 @@ bool EQ_DoesSpawnExist(EQ::Spawn_ptr spawn)
 
     return false;
 }
+
+EQ::Camera_ptr EQ_GetCamera()
+{
+    return EQ_ReadMemory<EQ::Camera_ptr>(EQ_ADDRESS_POINTER_Camera);
+}
+
+void EQ_FixHeading(float& heading)
+{
+    if (heading < 0.0f)
+    {
+        heading = heading + EQ_HEADING_MAX;
+    }
+}
+
+
 
 

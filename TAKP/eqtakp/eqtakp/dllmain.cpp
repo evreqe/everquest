@@ -102,6 +102,7 @@
 #include "eqapp_neverfrozen.h"
 #include "eqapp_trainspells.h"
 #include "eqapp_spawnalert.h"
+#include "eqapp_freecamera.h"
 //
 #include "eqapp_extendedtargets.h"
 #include "eqapp_map.h"
@@ -144,6 +145,8 @@ void EQAPP_Load()
 void EQAPP_Unload()
 {
     EQ_WriteChatText("Unloading...");
+
+    EQAPP_FreeCamera_SetEnabled(false);
 
     EQAPP_Memory_Unload();
 

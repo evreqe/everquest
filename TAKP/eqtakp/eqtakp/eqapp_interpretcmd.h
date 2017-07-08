@@ -14,6 +14,7 @@ std::map<std::string, std::function<void()>> g_interpretCmdList =
     {"//ESPShowSpawnID",            &EQAPP_ESP_ShowSpawnID_Toggle},
     {"//ExtendedTargets",           &EQAPP_ExtendedTargets_Toggle},
     {"//FoodAndDrink",              &EQAPP_FoodAndDrink_Toggle},
+    {"//FreeCamera",                &EQAPP_FreeCamera_Toggle},
     {"//GetTargetMeleeDistance",    &EQAPP_PrintTargetMeleeDistance},
     {"//HideCorpseLooted",          &EQAPP_HideCorpseLooted_Toggle},
     {"//HUDText",                   &EQAPP_HUDText_Toggle},

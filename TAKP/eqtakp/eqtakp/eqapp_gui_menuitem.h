@@ -135,7 +135,10 @@ void GUIMenuItem::Draw()
 
     //EQ_DrawRectangle((float)this->GetX(), (float)this->GetY(), (float)this->GetWidth() + 4.0f, (float)this->GetHeight(), this->GetBackgroundColor(), true);
 
-    EQ_DrawRectangle((float)menu->GetX(), (float)this->GetY(), (float)menu->GetWidth() + 4.0f, (float)this->GetHeight() + 1.0f, this->GetBackgroundColor(), true);
+    if (this->IsMouseOver() == true)
+    {
+        EQ_DrawRectangle((float)menu->GetX(), (float)this->GetY(), (float)menu->GetWidth() + 4.0f, (float)this->GetHeight() + 1.0f, this->GetBackgroundColor(), true);
+    }
 
     EQ_DrawText(this->GetText().c_str(), this->GetX() + 3, this->GetY(), this->GetTextColor());
 }

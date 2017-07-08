@@ -163,6 +163,7 @@
     <ClInclude Include="eqapp_extendedtargets.h" />
     <ClInclude Include="eqapp_extramousebuttons.h" />
     <ClInclude Include="eqapp_foodanddrink.h" />
+    <ClInclude Include="eqapp_freecamera.h" />
     <ClInclude Include="eqapp_functions.h" />
     <ClInclude Include="eqapp_gui.h" />
     <ClInclude Include="eqapp_gui_base.h" />

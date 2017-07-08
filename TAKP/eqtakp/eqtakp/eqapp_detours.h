@@ -143,6 +143,8 @@ void EQAPP_Detours_Add()
 
     EQ_MACRO_AddDetour(HandleMouseWheel);
     EQ_MACRO_AddDetour(ProcessMouseEvent);
+    EQ_MACRO_AddDetour(ProcessKeyDown);
+    EQ_MACRO_AddDetour(ProcessKeyUp);
     EQ_MACRO_AddDetour(ExecuteCmd);
 }
 
@@ -189,6 +191,8 @@ void EQAPP_Detours_Remove()
 
     EQ_MACRO_RemoveDetour(HandleMouseWheel);
     EQ_MACRO_RemoveDetour(ProcessMouseEvent);
+    EQ_MACRO_RemoveDetour(ProcessKeyDown);
+    EQ_MACRO_RemoveDetour(ProcessKeyUp);
     EQ_MACRO_RemoveDetour(ExecuteCmd);
 }
 
@@ -210,6 +214,8 @@ void EQAPP_Detours_OnZoneChanged_Load()
     EQ_UpdateLight(EQ_POINTER_PlayerCharacter);
 
     g_alwaysAttackIsEnabled = false;
+
+    EQAPP_FreeCamera_SetEnabled(false);
 
     ////EQAPP_BoxChat_Load();
 
@@ -255,6 +261,11 @@ int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short
     if (g_GUIIsEnabled == true)
     {
         EQAPP_GUI_Execute();
+    }
+
+    if (g_freeCameraIsEnabled == true)
+    {
+        EQAPP_FreeCamera_Execute();
     }
 
     if (g_boxChatIsEnabled == true)
@@ -430,15 +441,23 @@ int __fastcall EQAPP_DETOUR_EQPlayer__ChangePosition(void* this_ptr, void* not_u
         return EQAPP_REAL_EQPlayer__ChangePosition(this_ptr, a1);
     }
 
-    // never frozen
-    if (g_neverFrozenIsEnabled == true)
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn != NULL && playerSpawn == (EQ::Spawn_ptr)this_ptr)
     {
-        EQAPP_NeverFrozen_HandleEvent_EQPlayer__ChangePosition(this_ptr, a1);
-    }
+        if (g_freeCameraIsEnabled == true)
+        {
+            EQAPP_FreeCamera_SetEnabled(false);
+        }
 
-    if (g_spellSetIsEnabled == true)
-    {
-        EQAPP_SpellSet_HandleEvent_EQPlayer__ChangePosition(this_ptr, a1);
+        if (g_neverFrozenIsEnabled == true)
+        {
+            EQAPP_NeverFrozen_HandleEvent_EQPlayer__ChangePosition(this_ptr, a1);
+        }
+
+        if (g_spellSetIsEnabled == true)
+        {
+            EQAPP_SpellSet_HandleEvent_EQPlayer__ChangePosition(this_ptr, a1);
+        }
     }
 
     return EQAPP_REAL_EQPlayer__ChangePosition(this_ptr, a1);
@@ -966,6 +985,46 @@ int __cdecl EQAPP_DETOUR_ProcessMouseEvent(void)
     return EQAPP_REAL_ProcessMouseEvent();
 }
 
+int __cdecl EQAPP_DETOUR_ProcessKeyDown(int a1)
+{
+    // a1 = Key ID
+
+    if (g_bExit == 1)
+    {
+        return EQAPP_REAL_ProcessKeyDown(a1);
+    }
+
+    if (g_freeCameraIsEnabled == true)
+    {
+        if (a1 == EQ_KEY_UP_ARROW || a1 == EQ_KEY_DOWN_ARROW || a1 == EQ_KEY_LEFT_ARROW || a1 == EQ_KEY_RIGHT_ARROW)
+        {
+            return EQAPP_REAL_ProcessKeyDown(NULL);
+        }
+    }
+
+    return EQAPP_REAL_ProcessKeyDown(a1);
+}
+
+int __cdecl EQAPP_DETOUR_ProcessKeyUp(int a1)
+{
+    // a1 = Key ID
+
+    if (g_bExit == 1)
+    {
+        return EQAPP_REAL_ProcessKeyUp(a1);
+    }
+
+    if (g_freeCameraIsEnabled == true)
+    {
+        if (a1 == EQ_KEY_UP_ARROW || a1 == EQ_KEY_DOWN_ARROW || a1 == EQ_KEY_LEFT_ARROW || a1 == EQ_KEY_RIGHT_ARROW)
+        {
+            return EQAPP_REAL_ProcessKeyUp(NULL);
+        }
+    }
+
+    return EQAPP_REAL_ProcessKeyUp(a1);
+}
+
 int __cdecl EQAPP_DETOUR_ExecuteCmd(uint32_t a1, int a2, int a3)
 {
     // a1 = ID
@@ -984,6 +1043,26 @@ int __cdecl EQAPP_DETOUR_ExecuteCmd(uint32_t a1, int a2, int a3)
             for (auto& menu : g_GUIMenuList)
             {
                 menu->SetEnabled(false);
+            }
+        }
+    }
+
+    if (g_freeCameraIsEnabled == true)
+    {
+        if (a2 == 1 && a3 == 0)
+        {
+            if
+            (
+                a1 == EQ_EXECUTECMD_TOGGLECAM  ||
+                a1 == EQ_EXECUTECMD_FORWARD    ||
+                a1 == EQ_EXECUTECMD_BACK       ||
+                a1 == EQ_EXECUTECMD_LEFT       ||
+                a1 == EQ_EXECUTECMD_RIGHT      ||
+                a1 == EQ_EXECUTECMD_JUMP       ||
+                a1 == EQ_EXECUTECMD_AUTORUN
+            )
+            {
+                return EQAPP_REAL_ExecuteCmd(NULL, 0, 0);
             }
         }
     }
