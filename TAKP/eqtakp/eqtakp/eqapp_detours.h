@@ -52,6 +52,8 @@ EQ_FUNCTION_TYPE_ProcessKeyUp EQAPP_REAL_ProcessKeyUp = NULL;
 EQ_FUNCTION_TYPE_ProcessMovementKeys EQAPP_REAL_ProcessMovementKeys = NULL;
 EQ_FUNCTION_TYPE_AutoInventory EQAPP_REAL_AutoInventory = NULL;
 EQ_FUNCTION_TYPE_ExecuteCmd EQAPP_REAL_ExecuteCmd = NULL;
+EQ_FUNCTION_TYPE_CollisionCallbackForMove EQAPP_REAL_CollisionCallbackForMove = NULL;
+EQ_FUNCTION_TYPE_do_target EQAPP_REAL_do_target = NULL;
 
 int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short a3, unsigned short a4, unsigned short a5, int a6, unsigned short a7, unsigned long a8, long a9, unsigned long a10);
 
@@ -99,6 +101,8 @@ int __cdecl EQAPP_DETOUR_ProcessKeyUp(int a1);
 int __cdecl EQAPP_DETOUR_ProcessMovementKeys(int a1);
 int __cdecl EQAPP_DETOUR_AutoInventory(EQ::Character_ptr a1, EQ::Item** a2, short a3);
 int __cdecl EQAPP_DETOUR_ExecuteCmd(uint32_t a1, int a2, int a3);
+int __cdecl EQAPP_DETOUR_CollisionCallbackForMove(EQ::ActorInstance_ptr a1, EQ::Spawn_ptr a2);
+int __cdecl EQAPP_DETOUR_do_target(class EQClass::EQPlayer* a1, const char* a2);
 
 void EQAPP_Detours_Add()
 {
@@ -146,6 +150,8 @@ void EQAPP_Detours_Add()
     EQ_MACRO_AddDetour(ProcessKeyDown);
     EQ_MACRO_AddDetour(ProcessKeyUp);
     EQ_MACRO_AddDetour(ExecuteCmd);
+    EQ_MACRO_AddDetour(CollisionCallbackForMove);
+    EQ_MACRO_AddDetour(do_target);
 }
 
 void EQAPP_Detours_Remove()
@@ -194,6 +200,8 @@ void EQAPP_Detours_Remove()
     EQ_MACRO_RemoveDetour(ProcessKeyDown);
     EQ_MACRO_RemoveDetour(ProcessKeyUp);
     EQ_MACRO_RemoveDetour(ExecuteCmd);
+    EQ_MACRO_RemoveDetour(CollisionCallbackForMove);
+    EQ_MACRO_RemoveDetour(do_target);
 }
 
 void EQAPP_Detours_OnZoneChanged_Event()
@@ -447,6 +455,11 @@ int __fastcall EQAPP_DETOUR_EQPlayer__ChangePosition(void* this_ptr, void* not_u
         if (g_freeCameraIsEnabled == true)
         {
             EQAPP_FreeCamera_SetEnabled(false);
+        }
+
+        if (g_trainSpellsIsEnabled == true)
+        {
+            EQAPP_TrainSpells_Toggle();
         }
 
         if (g_neverFrozenIsEnabled == true)
@@ -1082,3 +1095,80 @@ int __cdecl EQAPP_DETOUR_ExecuteCmd(uint32_t a1, int a2, int a3)
 
     return EQAPP_REAL_ExecuteCmd(a1, a2, a3);
 }
+
+int __cdecl EQAPP_DETOUR_CollisionCallbackForMove(EQ::ActorInstance_ptr a1, EQ::Spawn_ptr a2)
+{
+    // a2 = spawn that collides with actor instance
+    // a1 = actor instance of actor that spawn has collided into
+
+    if (g_bExit == 1)
+    {
+        return EQAPP_REAL_CollisionCallbackForMove(a1, a2);
+    }
+
+    if (g_collisionIsEnabled == true)
+    {
+        EQAPP_Collision_HandleEvent_CollisionCallbackForMove(a1, a2);
+    }
+
+    int result = EQAPP_REAL_CollisionCallbackForMove(a1, a2);
+
+    EQ_SetActorCollision(true);
+
+    return result;
+}
+
+int __cdecl EQAPP_DETOUR_do_target(class EQClass::EQPlayer* a1, const char* a2)
+{
+    // a1 = spawn
+    // a2 = targetSpawnName
+
+    if (g_bExit == 1)
+    {
+        return EQAPP_REAL_do_target(a1, a2);
+    }
+
+    if (a2 != NULL)
+    {
+        std::string targetSpawnName = a2;
+        if (targetSpawnName.size() != 0)
+        {
+            auto playerSpawn = EQ_GetPlayerSpawn();
+
+            auto spawn = EQ_GetFirstSpawn();
+            while (spawn != NULL)
+            {
+                if (spawn == playerSpawn)
+                {
+                    spawn = spawn->Next;
+                    continue;
+                }
+
+                if (spawn->Type != EQ_SPAWN_TYPE_PLAYER)
+                {
+                    spawn = spawn->Next;
+                    continue;
+                }
+
+                std::string spawnName = EQ_GetSpawnName(spawn);
+                if (spawnName.size() == 0)
+                {
+                    spawn = spawn->Next;
+                    continue;
+                }
+
+                if (spawnName == targetSpawnName)
+                {
+                    EQ_SetTargetSpawn(spawn);
+                    return 1;
+                }
+
+                spawn = spawn->Next;
+            }
+        }
+    }
+
+    return EQAPP_REAL_do_target(a1, a2);
+}
+
+

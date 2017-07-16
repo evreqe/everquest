@@ -63,7 +63,10 @@ void EQAPP_FreeCamera_SetEnabled(bool bEnabled)
         VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, 3, oldProtection, &tempProtection);
     }
 
-    EQ_SetCameraView(EQ_CAMERA_VIEW_FIRST_PERSON);
+    if (bEnabled == true)
+    {
+        EQ_SetCameraView(EQ_CAMERA_VIEW_FIRST_PERSON);
+    }
 
     g_freeCameraIsEnabled = bEnabled;
     EQAPP_PrintBool("Free Camera", g_freeCameraIsEnabled);

@@ -5,6 +5,8 @@
 #include "eqapp_gui_base.h"
 #include "eqapp_gui_menu.h"
 
+bool g_GUIMenuItemIsCheckedFalse = false;
+
 namespace EQApp
 {
 
@@ -20,6 +22,11 @@ public:
 
     bool* GetBoolPointer();
     void SetBoolPointer(bool& b);
+
+    bool IsChecked();
+
+    bool IsSeparator();
+    void SetIsSeparator(bool b);
 
     EQApp::GUIMenu* GetParentMenu();
     void SetParentMenu(EQApp::GUIMenu* menu);
@@ -39,7 +46,9 @@ private:
 
     std::function<void()> m_functionLeftClick;
 
-    bool* m_bool_ptr = NULL; // isChecked
+    bool m_isSeparator;
+
+    bool* m_bool_ptr;
 
 }; // class GUIMenuItem
 
@@ -47,6 +56,10 @@ GUIMenuItem::GUIMenuItem()
 {
     m_parentMenu = NULL;
     m_subMenu = NULL;
+
+    m_isSeparator = false;
+
+    this->SetBoolPointer(g_GUIMenuItemIsCheckedFalse);
 }
 
 GUIMenuItem::~GUIMenuItem()
@@ -72,6 +85,21 @@ bool* GUIMenuItem::GetBoolPointer()
 void GUIMenuItem::SetBoolPointer(bool& b)
 {
     m_bool_ptr = &b;
+}
+
+bool GUIMenuItem::IsChecked()
+{
+    return (*this->GetBoolPointer() == true);
+}
+
+bool GUIMenuItem::IsSeparator()
+{
+    return m_isSeparator;
+}
+
+void GUIMenuItem::SetIsSeparator(bool b)
+{
+    m_isSeparator = b;
 }
 
 EQApp::GUIMenu* GUIMenuItem::GetParentMenu()
@@ -119,7 +147,7 @@ void GUIMenuItem::OnProcessFrame()
 
     bool isMouseOver = EQ_IsPointInsideRectangle(mouse.X, mouse.Y, this->GetX(), this->GetY(), this->GetWidth(), this->GetHeight());
 
-    if (EQ_IsMouseHoveringOverCXWnd() == false && EQ_IsMouseLookEnabled() == false)
+    if (EQ_IsMouseHoveringOverCXWnd() == false && EQ_IsMouseLookEnabled() == false && this->IsSeparator() == false)
     {
         this->SetMouseOver(isMouseOver);
     }
@@ -133,9 +161,7 @@ void GUIMenuItem::Draw()
 {
     EQApp::GUIBase* menu = (EQApp::GUIBase*)this->GetParentMenu();
 
-    //EQ_DrawRectangle((float)this->GetX(), (float)this->GetY(), (float)this->GetWidth() + 4.0f, (float)this->GetHeight(), this->GetBackgroundColor(), true);
-
-    if (this->IsMouseOver() == true)
+    if (this->IsMouseOver() == true && this->IsSeparator() == false)
     {
         EQ_DrawRectangle((float)menu->GetX(), (float)this->GetY(), (float)menu->GetWidth() + 4.0f, (float)this->GetHeight() + 1.0f, this->GetBackgroundColor(), true);
     }

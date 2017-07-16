@@ -50,11 +50,13 @@ bool EQ_IsNetStatusEnabled();
 bool EQ_IsNotTypingInChat();
 bool EQ_IsInspectEnabled();
 bool EQ_IsShowNPCNamesEnabled();
+bool EQ_IsActorCollisionEnabled();
 bool EQ_IsKeyPressedControl();
 bool EQ_IsKeyPressedAlt();
 bool EQ_IsKeyPressedShift();
 bool EQ_IsMouseHoveringOverCXWnd();
 void EQ_SetAutoAttack(bool bEnabled);
+void EQ_SetActorCollision(bool bEnabled);
 uint32_t EQ_GetFontTextHeight(uint32_t fontPointer);
 size_t EQ_GetFontTextWidth(const char* text, uint32_t fontPointer);
 void EQ_DrawTooltipText(const char* text, int x, int y, uint32_t fontPointer);
@@ -262,6 +264,14 @@ EQ_MACRO_FunctionAtAddress(int __cdecl EQ_UpdateLight(EQ::Character_ptr characte
 #define EQ_ADDRESS_FUNCTION_GetSpellCastingTime 0x00435F28
 EQ_MACRO_FunctionAtAddress(signed int __cdecl EQ_GetSpellCastingTime(void), EQ_ADDRESS_FUNCTION_GetSpellCastingTime);
 
+#define EQ_ADDRESS_FUNCTION_CollisionCallbackForMove 0x0050418B
+EQ_MACRO_FunctionAtAddress(signed int __cdecl EQ_CollisionCallbackForMove(EQ::ActorInstance_ptr actorInstance, EQ::Spawn_ptr spawn), EQ_ADDRESS_FUNCTION_CollisionCallbackForMove);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_CollisionCallbackForMove)(EQ::ActorInstance_ptr actorInstance, EQ::Spawn_ptr spawn);
+
+#define EQ_ADDRESS_FUNCTION_do_target 0x004FD9A7
+EQ_MACRO_FunctionAtAddress(int __cdecl EQ_do_target(class EQClass::EQPlayer* spawn, const char* spawnName), EQ_ADDRESS_FUNCTION_do_target);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_do_target)(class EQClass::EQPlayer* spawn, const char* spawnName);
+
 /* functions */
 
 void EQ_ToggleBool(bool& b)
@@ -398,6 +408,11 @@ bool EQ_IsShowNPCNamesEnabled()
     return (EQ_ReadMemory<uint8_t>(EQ_ADDRESS_IS_SHOW_NPC_NAMES_ENABLED) == 1);
 }
 
+bool EQ_IsActorCollisionEnabled()
+{
+    return (EQ_ReadMemory<uint8_t>(EQ_ADDRESS_IS_ACTOR_COLLISION_ENABLED) == 1);
+}
+
 bool EQ_IsKeyPressedControl()
 {
     return (EQ_ReadMemory<uint32_t>(EQ_ADDRESS_IS_KEY_PRESSED_CONTROL) == 1);
@@ -427,6 +442,18 @@ void EQ_SetAutoAttack(bool bEnabled)
     else
     {
         EQ_WriteMemory<uint8_t>(EQ_ADDRESS_IS_AUTO_ATTACK_ENABLED, 0x00);
+    }
+}
+
+void EQ_SetActorCollision(bool bEnabled)
+{
+    if (bEnabled == true)
+    {
+        EQ_WriteMemory<uint8_t>(EQ_ADDRESS_IS_ACTOR_COLLISION_ENABLED, 0x01);
+    }
+    else
+    {
+        EQ_WriteMemory<uint8_t>(EQ_ADDRESS_IS_ACTOR_COLLISION_ENABLED, 0x00);
     }
 }
 

@@ -25,6 +25,7 @@ namespace EQApp
         bool IsYourPet = false;
         bool IsGroupMember = false;
         bool IsInvisible = false;
+        bool IsLinkDead = false;
         std::string Text;
         uint32_t TextColor = EQ_TEXT_COLOR_WHITE;
         uint32_t FontPointer = EQ_ADDRESS_POINTER_FONT_ARIAL14;
@@ -34,6 +35,7 @@ namespace EQApp
 bool g_ESPIsEnabled = true;
 
 bool g_ESPShowSpawnID = false;
+bool g_ESPShowStandingState = true;
 
 float g_ESPSpawnDistanceMax = 400.0f;
 float g_ESPSpawnDistanceZMax = 10.0f;
@@ -125,6 +127,11 @@ void EQAPP_ESP_UpdateSpawnList()
         if (spawn->Actor->IsInvisible == 1)
         {
             espSpawn.IsInvisible = true;
+        }
+
+        if (spawn->IsLinkDead == 1)
+        {
+            espSpawn.IsLinkDead = true;
         }
 
         if (espSpawn.Distance > (g_ESPSpawnDistanceMax * 0.5f))
@@ -254,6 +261,30 @@ void EQAPP_ESP_UpdateSpawnList()
             {
                 espText << "\n(" << espSpawn.ClassShortName << " Guildmaster)";
             }
+        }
+
+        if (g_ESPShowStandingState == true)
+        {
+            if (espSpawn.Type == EQ_SPAWN_TYPE_PLAYER)
+            {
+                if (espSpawn.StandingState == EQ_STANDING_STATE_FEIGN_DEATH)
+                {
+                    espText << "\n*Feign Death*";
+                }
+                else if (espSpawn.StandingState == EQ_STANDING_STATE_LOOTING)
+                {
+                    espText << "\n*Looting*";
+                }
+                else if (espSpawn.StandingState == EQ_STANDING_STATE_FROZEN)
+                {
+                    espText << "\n*Frozen*";
+                }
+            }
+        }
+
+        if (espSpawn.Type == EQ_SPAWN_TYPE_PLAYER && espSpawn.IsLinkDead == true)
+        {
+            espText << "\n*Link Dead*";
         }
 
         if (g_ESPShowSpawnID == true)

@@ -2,6 +2,8 @@
 
 bool g_nameSpriteStateIsEnabled = true;
 
+bool g_nameSpriteStateRemoveLastNames = true;
+
 bool EQAPP_NameSpriteState_Execute(class EQPlayer* a1);
 
 bool EQAPP_NameSpriteState_Execute(class EQPlayer* a1)
@@ -56,6 +58,14 @@ bool EQAPP_NameSpriteState_Execute(class EQPlayer* a1)
     if (playerSpawn == NULL)
     {
         return false;
+    }
+
+    if (g_nameSpriteStateRemoveLastNames == true)
+    {
+        if (spawn->Type == EQ_SPAWN_TYPE_PLAYER)
+        {
+            spawn->LastName[0] = '\0';
+        }
     }
 
     auto targetSpawn = EQ_GetTargetSpawn();

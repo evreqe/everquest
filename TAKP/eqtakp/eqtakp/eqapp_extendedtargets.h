@@ -32,7 +32,7 @@ std::vector<EQApp::ExtendedTargetsSpawn> g_extendedTargetsSpawnList;
 uint32_t g_extendedTargetsSpawnListTimer = 0;
 uint32_t g_extendedTargetsSpawnListTimerDelay = 1000;
 
-size_t g_extendedTargetsNumSpawns = 10;
+size_t g_extendedTargetsNumSpawns = 15;
 
 float g_extendedTargetsSpawnDistanceMax = 100.0f;
 float g_extendedTargetsSpawnDistanceZMax = 10.0f;

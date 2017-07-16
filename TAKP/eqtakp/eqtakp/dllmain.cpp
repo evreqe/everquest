@@ -103,6 +103,7 @@
 #include "eqapp_trainspells.h"
 #include "eqapp_spawnalert.h"
 #include "eqapp_freecamera.h"
+#include "eqapp_collision.h"
 //
 #include "eqapp_extendedtargets.h"
 #include "eqapp_map.h"
@@ -161,23 +162,23 @@ DWORD WINAPI EQAPP_ThreadLoop(LPVOID param)
 {
     while (g_bExit == 0)
     {
-        Sleep(1000);
+        Sleep(100);
     }
 
     // wait for the console to unload
     while (g_bConsole == 1)
     {
-        Sleep(1000);
+        Sleep(100);
     }
 
-    Sleep(1000);
+    Sleep(100);
 
     EQAPP_Detours_Remove();
 
     TerminateThread(EQAPP_ThreadLoad, 0);
     TerminateThread(EQAPP_ThreadConsole, 0);
 
-    Sleep(1000);
+    Sleep(100);
 
     FreeLibraryAndExitThread(g_module, 0);
     return 0;

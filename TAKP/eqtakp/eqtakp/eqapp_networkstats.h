@@ -17,6 +17,8 @@ namespace EQApp
         char SpawnPetName[30];
         uint16_t SpawnPetHPCurrent;
         uint16_t SpawnPetHPMax;
+        uint16_t BuffSpellID[EQ_NUM_BUFFS];
+        uint16_t BuffTicks[EQ_NUM_BUFFS];
     } NetworkStats, *NetworkStats_ptr;
 }
 
@@ -37,6 +39,9 @@ uint32_t g_networkStatsDrawBarManaColorARGB       = 0x800080FF;
 
 uint32_t g_networkStatsDrawTextX = 8;
 uint32_t g_networkStatsDrawTextY = 64;
+
+uint32_t g_networkStatsDrawTextBuffsX = 100;
+uint32_t g_networkStatsDrawTextBuffsY = 300;
 
 uint32_t g_networkStatsTimer = 0;
 uint32_t g_networkStatsTimerDelay = 1000;
@@ -252,6 +257,57 @@ void EQAPP_NetworkStats_DrawText()
     }
 
     EQ_DrawText(drawText.str().c_str(), g_networkStatsDrawTextX, g_networkStatsDrawTextY, EQ_TEXT_COLOR_WHITE);
+
+    uint32_t drawTextBuffsX = g_networkStatsDrawTextBuffsX;
+    uint32_t drawTextBuffsY = g_networkStatsDrawTextBuffsY;
+
+    for (auto& networkStats : g_networkStatsList)
+    {
+        if (networkStats.SpawnID == playerSpawn->SpawnID)
+        {
+            continue;
+        }
+
+        bool hasBuffs = false;
+
+        for (size_t i = 0; i < EQ_NUM_BUFFS; i++)
+        {
+            if (networkStats.BuffSpellID[i] > 0 && networkStats.BuffSpellID[i] < EQ_NUM_SPELLS)
+            {
+                hasBuffs = true;
+                break;
+            }
+        }
+
+        if (hasBuffs == false)
+        {
+            continue;
+        }
+
+        std::stringstream drawTextBuffs;
+
+        drawTextBuffs << networkStats.SpawnName << "\n";
+        
+        for (size_t i = 0; i < EQ_NUM_BUFFS; i++)
+        {
+            if (networkStats.BuffSpellID[i] > 0 && networkStats.BuffSpellID[i] < EQ_NUM_SPELLS)
+            {
+                auto spell = EQ_GetSpellByID(networkStats.BuffSpellID[i]);
+                if (spell == NULL)
+                {
+                    continue;
+                }
+
+                drawTextBuffs << i + 1 << ": " << spell->Name << "\n";
+            }
+        }
+
+        drawTextBuffs << "\n";
+
+        EQ_DrawTextEx(drawTextBuffs.str().c_str(), drawTextBuffsX, drawTextBuffsY, EQ_TEXT_COLOR_WHITE, EQ_ADDRESS_POINTER_FONT_ARIAL12);
+
+        drawTextBuffsX += 150;
+    }
 }
 
 void EQAPP_NetworkStats_Execute()
@@ -362,6 +418,12 @@ void EQAPP_NetworkStats_Write()
         }
     }
 
+    for (size_t i = 0; i < EQ_NUM_BUFFS; i++)
+    {
+        networkStats.BuffSpellID[i] = playerSpawn->Character->Buff[i].SpellID;
+        networkStats.BuffTicks[i] = playerSpawn->Character->Buff[i].Ticks;
+    }
+
     file.seekg(0, std::fstream::beg);
     file.write((char*)&networkStats, sizeof(networkStats));
     file.close();
@@ -373,6 +435,12 @@ EQApp::NetworkStats EQAPP_NetworkStats_Read(std::string spawnName)
     networkStats.ErrorCode   = 1;
     networkStats.SpawnDistance = 0.0f;
     networkStats.SpawnHasPet = 0;
+
+    for (size_t i = 0; i < EQ_NUM_BUFFS; i++)
+    {
+        networkStats.BuffSpellID[i] = 0;
+        networkStats.BuffTicks[i] = 0;
+    }
 
     if (spawnName.size() == 0)
     {

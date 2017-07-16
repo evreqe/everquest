@@ -614,6 +614,23 @@ typedef struct _ModelBoneChildren
 /* 0x0000 */ struct _ModelBone* Child[EQ_NUM_MODEL_BONE_CHILDREN];
 } ModelBoneChildren, *ModelBoneChildren_ptr;
 
+typedef struct _ActorDefinition
+{
+/* 0x0000 */ uint32_t MagicNumber;
+/* 0x0004 */ uint8_t MagicNumber2;
+/* 0x0005 */ uint8_t MagicNumber3;
+/* 0x0006 */ uint8_t MagicNumber4;
+/* 0x0007 */ uint8_t MagicNumber5;
+/* 0x0008 */ char* Name; // [20]
+/* 0x000C */ uint8_t MagicNumber6; // 1 = Objects/Doors/Rocks/, 17 = Players/NPCs
+/* 0x000D */ uint8_t MagicNumber7;
+/* 0x000E */ uint8_t MagicNumber8;
+/* 0x000F */ uint8_t MagicNumber9; // 0 = Door, 4 = Objects/Rocks
+/* 0x0010 */ uint32_t MagicNumber10;
+/* 0x0014 */ uint32_t MagicNumber11; // always 1
+/* ...... */ 
+} ActorrDefinition, *ActorDefinition_ptr;
+
 typedef struct _ActorCollision
 {
 /* 0x0000 */ uint32_t CollisionVolumeType;
@@ -625,7 +642,7 @@ typedef struct _ActorCollision
 // T3D_tagACTORINSTANCE
 typedef struct _ActorInstance
 {
-/* 0x0000 */ uint32_t Unknown0000;
+/* 0x0000 */ uint32_t MagicNumber; // == 24
 /* 0x0004 */ uint32_t Unknown0004;
 /* 0x0008 */ uint32_t Unknown0008;
 /* 0x000C */ uint32_t Unknown000C;
@@ -646,6 +663,7 @@ union
 /* 0x0060 */ struct _Spawn* UserData;
 /* 0x0060 */ struct _Spawn* Spawn;
 };
+/* 0x0064 */ struct _ActorDefinition* ActorDefinition;
 /* ...... */ 
 } ActorInstance, *ActorInstance_ptr;
 
@@ -753,7 +771,7 @@ typedef struct _Actor
 // sizeof 0x168
 typedef struct _Spawn
 {
-/* 0x0000 */ uint8_t Unknown0000; // always equals 0x03
+/* 0x0000 */ uint8_t MagicNumber; // == 3
 /* 0x0001 */ char Name[30]; // [0x1E]
 /* 0x001F */ uint8_t Unknown001F[37];
 /* 0x0044 */ uint32_t ZoneID; // EQ_ZONE_ID_x

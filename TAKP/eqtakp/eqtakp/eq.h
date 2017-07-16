@@ -11,6 +11,7 @@
 #define EQ_ADDRESS_IS_INSPECT_ENABLED 0x007CF28C // uint8_t ; /inspect on/off ; /toggleinspect
 #define EQ_ADDRESS_IS_SHOW_NPC_NAMES_ENABLED 0x0063D6CC // uint8_t ; Options -> Display -> Show NPC Names
 #define EQ_ADDRESS_IS_RUN_ENABLED 0x0079856D // uint8_t ; 0 = Walk, 1 = Run
+#define EQ_ADDRESS_IS_ACTOR_COLLISION_ENABLED 0x79856E // uint8_t ; walk through or collide with players, npcs, doors
 
 #define EQ_ADDRESS_DINPUT_ROOT            0x8092DC
 #define EQ_ADDRESS_DINPUT_DEVICE_KEYBOARD 0x8092E0
@@ -135,6 +136,8 @@
 #define EQ_SPAWN_TARGET_TYPE_CANNOT_TARGET  0x41
 
 #define EQ_ADDRESS_POINTER_CAMERA_DATA 0x0063B924 // pass this as first argument to graphics DLL world space to screen space funtion
+
+#define EQ_ADDRESS_POINTER_CAMERA_ACTOR_INSTANCE 0x0063BE88 // pCamActor
 
 // all three camera view values must be set to same value at same time or client will crash
 #define EQ_ADDRESS_CAMERA_VIEW       0x0063BE68 // uint32_t ; EQ_CAMERA_VIEW_x

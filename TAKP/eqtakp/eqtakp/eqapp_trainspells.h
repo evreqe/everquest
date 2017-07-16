@@ -40,6 +40,7 @@ void EQAPP_TrainSpells_Execute()
     {
         std::cout << __FUNCTION__ << ": Spell Name size is zero." << std::endl;
         std::cout << __FUNCTION__ << ": Spell Name has NOT been set." << std::endl;
+
         return;
     }
 

@@ -9,6 +9,8 @@ std::map<std::string, std::function<void()>> g_interpretCmdList =
     {"//AutoLoot",                  &EQAPP_AutoLoot_Toggle},
     {"//LoadAutoLoot",              &EQAPP_AutoLoot_Load},
     {"//ChangeHeight",              &EQAPP_ChangeHeight_Toggle},
+    {"//Collision",                 &EQAPP_Collision_Toggle},
+    {"//CollisionDebug",            &EQAPP_Collision_Debug_Toggle},
     {"//DrawDistance",              &EQAPP_DrawDistance_Toggle},
     {"//ESP",                       &EQAPP_ESP_Toggle},
     {"//ESPShowSpawnID",            &EQAPP_ESP_ShowSpawnID_Toggle},
@@ -90,7 +92,7 @@ void EQAPP_InterpretCmd_Execute(std::string commandText)
         return;
     }
 
-    if (EQAPP_String_StartsWith(commandText, "//TrainSpell ") == true)
+    if (EQAPP_String_StartsWith(commandText, "//TrainSpells ") == true)
     {
         if (EQAPP_InterpretCmd_HasQuotes(commandText) == false)
         {

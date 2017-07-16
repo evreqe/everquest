@@ -51,10 +51,13 @@ bool EQAPP_GUI_HandleEvent_CEverQuest__LMouseUp(uint16_t mouseX, uint16_t mouseY
 
         for (auto& menuItem : *menu->GetMenuItemList())
         {
-            if (EQ_IsPointInsideRectangle(mouseX, mouseY, menuItem.GetX(), menuItem.GetY(), menuItem.GetWidth(), menuItem.GetHeight()) == true)
+            if (menuItem.IsSeparator() == false)
             {
-                menuItem.OnLeftClick();
-                return true;
+                if (EQ_IsPointInsideRectangle(mouseX, mouseY, menuItem.GetX(), menuItem.GetY(), menuItem.GetWidth(), menuItem.GetHeight()) == true)
+                {
+                    menuItem.OnLeftClick();
+                    return true;
+                }
             }
         }
 
