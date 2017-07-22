@@ -21,6 +21,7 @@ void EQAPP_SpellSet_StopMemorizing();
 void EQAPP_SpellSet_LoadAndStartMemorizing();
 void EQAPP_SpellSet_Memorize();
 void EQAPP_SpellSet_HandleEvent_EQPlayer__ChangePosition(void* this_ptr, uint8_t standingState);
+void EQAPP_SpellSet_HandleEvent_CSpellBookWnd__FinishMemorizing(void* this_ptr, uint8_t spellGemIndex, uint16_t spellID);
 
 void EQAPP_SpellSet_Load()
 {
@@ -269,6 +270,14 @@ void EQAPP_SpellSet_HandleEvent_EQPlayer__ChangePosition(void* this_ptr, uint8_t
 
             EQAPP_SpellSet_StopMemorizing();
         }
+    }
+}
+
+void EQAPP_SpellSet_HandleEvent_CSpellBookWnd__FinishMemorizing(void* this_ptr, uint8_t spellGemIndex, uint16_t spellID)
+{
+    if (g_spellSetIsMemorizingInProgress == true)
+    {
+        EQAPP_SpellSet_Memorize();
     }
 }
 

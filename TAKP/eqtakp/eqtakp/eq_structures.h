@@ -621,7 +621,7 @@ typedef struct _ActorDefinition
 /* 0x0005 */ uint8_t MagicNumber3;
 /* 0x0006 */ uint8_t MagicNumber4;
 /* 0x0007 */ uint8_t MagicNumber5;
-/* 0x0008 */ char* Name; // [20]
+/* 0x0008 */ char* Name; // [20], x_ACTORDEF
 /* 0x000C */ uint8_t MagicNumber6; // 1 = Objects/Doors/Rocks/, 17 = Players/NPCs
 /* 0x000D */ uint8_t MagicNumber7;
 /* 0x000E */ uint8_t MagicNumber8;

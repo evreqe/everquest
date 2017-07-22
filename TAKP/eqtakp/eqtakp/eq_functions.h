@@ -109,6 +109,7 @@ int EQ_GetLineClipValue(float x, float y, float minX, float minY, float maxX, fl
 bool EQ_LineClip(EQ::Line_ptr line, float minX, float minY, float maxX, float maxY);
 bool EQ_IsZoneInList(EQ_ZoneIDList_t& zoneIDList);
 void EQ_SetCameraView(uint8_t cameraView);
+uint32_t EQ_GetCameraView();
 std::string EQ_GetZoneShortName();
 std::string EQ_GetZoneLongName();
 bool EQ_IsWindowVisible(uint32_t windowAddressPointer);
@@ -131,6 +132,7 @@ std::string EQ_GetSpawnName(EQ::Spawn_ptr spawn);
 bool EQ_IsPlayerCastingSpell();
 EQ::Camera_ptr EQ_GetCamera();
 void EQ_FixHeading(float& heading);
+uint32_t EQ_GetNumPlayersInZone();
 
 template <class T>
 void EQ_Log(const char* text, T number)
@@ -1149,9 +1151,14 @@ bool EQ_IsZoneInList(EQ_ZoneIDList_t& zoneIDList)
 
 void EQ_SetCameraView(uint8_t cameraView)
 {
-    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_CAMERA_VIEW, cameraView);
-    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_CAMERA_VIEW_EX, cameraView);
+    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_CAMERA_VIEW, (uint32_t)cameraView);
+    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_CAMERA_VIEW_EX, (uint32_t)cameraView);
     EQ_WriteMemory<uint8_t>(EQ_ADDRESS_CAMERA_VIEW_EX_EX, cameraView);
+}
+
+uint32_t EQ_GetCameraView()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_CAMERA_VIEW);
 }
 
 std::string EQ_GetZoneShortName()
@@ -1657,6 +1664,25 @@ void EQ_FixHeading(float& heading)
         heading = heading + EQ_HEADING_MAX;
     }
 }
+
+uint32_t EQ_GetNumPlayersInZone()
+{
+    uint32_t numPlayers = 0;
+
+    auto spawn = EQ_GetFirstSpawn();
+    while (spawn)
+    {
+        if (spawn->Type == EQ_SPAWN_TYPE_PLAYER)
+        {
+            numPlayers++;
+        }
+
+        spawn = spawn->Next;
+    }
+
+    return numPlayers;
+}
+
 
 
 

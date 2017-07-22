@@ -4,16 +4,23 @@ bool g_nameSpriteTintIsEnabled = true;
 
 static int g_nameSpriteTintFlash = 0;
 
-bool EQAPP_NameSpriteTint_Execute(class EQPlayer* a1);
+void EQAPP_NameSpriteTint_Toggle();
+bool EQAPP_NameSpriteTint_HandleEvent_CDisplay__SetNameSpriteTint(void* this_ptr, class EQPlayer* player);
 
-bool EQAPP_NameSpriteTint_Execute(class EQPlayer* a1)
+void EQAPP_NameSpriteTint_Toggle()
+{
+    EQ_ToggleBool(g_nameSpriteTintIsEnabled);
+    EQAPP_PrintBool("Name Sprite Tint", g_nameSpriteTintIsEnabled);
+}
+
+bool EQAPP_NameSpriteTint_HandleEvent_CDisplay__SetNameSpriteTint(void* this_ptr, class EQPlayer* player)
 {
     if (EQ_IsInGame() == false)
     {
         return false;
     }
 
-    EQ::Spawn_ptr spawn = (EQ::Spawn_ptr)a1;
+    EQ::Spawn_ptr spawn = (EQ::Spawn_ptr)player;
     if (spawn == NULL)
     {
         return false;

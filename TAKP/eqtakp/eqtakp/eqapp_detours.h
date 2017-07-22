@@ -261,11 +261,6 @@ int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short
 
     EQAPP_Detours_OnZoneChanged_Event();
 
-    if (g_HUDTextIsEnabled == true && g_mainMenuGUIMenu.IsEnabled() == false)
-    {
-        EQAPP_HUDText_Execute();
-    }
-
     if (g_GUIIsEnabled == true)
     {
         EQAPP_GUI_Execute();
@@ -364,6 +359,11 @@ int __fastcall EQAPP_DETOUR_CXWndManager__DrawWindows(void* this_ptr, void* not_
         {
             EQAPP_ESP_Execute();
         }
+
+        if (g_namedSpawnsIsEnabled == true)
+        {
+            EQAPP_NamedSpawns_Execute();
+        }
     }
 
     if (g_networkStatsIsEnabled == true)
@@ -372,12 +372,17 @@ int __fastcall EQAPP_DETOUR_CXWndManager__DrawWindows(void* this_ptr, void* not_
         EQAPP_NetworkStats_DrawBars();
     }
 
+    if (g_HUDTextIsEnabled == true && g_mainMenuGUIMenu.IsOpen() == false)
+    {
+        EQAPP_HUDText_Execute();
+    }
+
     return EQAPP_REAL_CXWndManager__DrawWindows(this_ptr);
 }
 
 int __fastcall EQAPP_DETOUR_CEverQuest__InterpretCmd(void* this_ptr, void* not_used, class EQPlayer* a1, char* a2)
 {
-    // a1 = spawn
+    // a1 = player
     // a2 = command text
 
     if (g_bExit == 1)
@@ -387,52 +392,10 @@ int __fastcall EQAPP_DETOUR_CEverQuest__InterpretCmd(void* this_ptr, void* not_u
 
     if (g_interpretCmdIsEnabled == true)
     {
-        if (a1 == NULL || a2 == NULL)
-        {
-            return EQAPP_REAL_CEverQuest__InterpretCmd(this_ptr, a1, a2);
-        }
-
-        std::string commandText = a2;
-
-        if (commandText.size() == 0)
+        bool result = EQAPP_InterpretCmd_HandleEvent_CEverQuest__InterpretCmd(this_ptr, a1, a2);
+        if (result == true)
         {
             return 1;
-        }
-
-        std::string firstTwoCharacters = commandText.substr(0, 2);
-        if (firstTwoCharacters == "//")
-        {
-            EQAPP_InterpretCmd_Execute(commandText);
-            return 1;
-        }
-        else
-        {
-            if (commandText.find("//") != std::string::npos)
-            {
-                return 1;
-            }
-
-            if (commandText.find("/") != std::string::npos)
-            {
-                for (auto& cmd : g_interpretCmdList)
-                {
-                    std::string cmdText = cmd.first;
-                    std::string cmdTextStripped = cmdText.substr(2, cmdText.size());
-
-                    if (commandText.find(cmdTextStripped) != std::string::npos)
-                    {
-                        return 1;
-                    }
-                }
-            }
-
-            for (auto& cmd : g_interpretCmdList)
-            {
-                if (commandText == cmd.first)
-                {
-                    return 1;
-                }
-            }
         }
     }
 
@@ -483,50 +446,14 @@ int __fastcall EQAPP_DETOUR_EQPlayer__FollowPlayerAI(void* this_ptr, void* not_u
         return EQAPP_REAL_EQPlayer__FollowPlayerAI(this_ptr);
     }
 
-    // follow NPCs closer
     if (g_autoFollowIsEnabled == true)
     {
-        auto thisSpawn = (EQ::Spawn_ptr)this_ptr;
-        if (thisSpawn != NULL && thisSpawn->Actor != NULL)
-        {
-            auto playerSpawn = EQ_GetPlayerSpawn();
-            if ((playerSpawn != NULL) && (thisSpawn == playerSpawn))
-            {
-                auto followedSpawn = thisSpawn->Actor->FollowedSpawn;
-                if (followedSpawn != NULL)
-                {
-                    if (followedSpawn->Type != EQ_SPAWN_TYPE_PLAYER)
-                    {
-                        if (followedSpawn->MovementSpeed > 0.0f)
-                        {
-                            EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_ADD_1, 0.0f);
-                            EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_ADD_2, 0.0f);
-
-                            float followedSpawnDistance = EQ_CalculateDistance(followedSpawn->X, followedSpawn->Y, playerSpawn->X, playerSpawn->Y);
-
-                            float followedSpawnMeleeDistance = EQ_get_melee_range((EQClass::EQPlayer*)playerSpawn, (EQClass::EQPlayer*)followedSpawn);
-
-                            float maximumFollowDistance = followedSpawnMeleeDistance * 0.3f;
-                            if (maximumFollowDistance < 1.0f)
-                            {
-                                maximumFollowDistance = 1.0f;
-                            }
-
-                            if (followedSpawnDistance < maximumFollowDistance)
-                            {
-                                playerSpawn->Actor->MovementSpeedModifier = -10000.0f;
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        EQAPP_AutoFollow_HandleEvent__EQPlayer__FollowPlayerAI(this_ptr);
     }
 
     int result = EQAPP_REAL_EQPlayer__FollowPlayerAI(this_ptr);
 
-    EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_ADD_1, EQ_FOLLOW_DISTANCE_ADD_1_DEFAULT);
-    EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_ADD_2, EQ_FOLLOW_DISTANCE_ADD_2_DEFAULT);
+    EQAPP_AutoFollow_SetFollowDistanceToDefault();
 
     return result;
 }
@@ -544,7 +471,7 @@ int __fastcall EQAPP_DETOUR_EQ_Character__eqspa_movement_rate(void* this_ptr, vo
 
     if (g_speedHackIsEnabled == true)
     {
-        EQAPP_SpeedHack_Execute();
+        EQAPP_SpeedHack_HandleEvent_EQ_Character__eqspa_movement_rate(this_ptr, a1);
     }
 
     return result;
@@ -555,16 +482,16 @@ int __fastcall EQAPP_DETOUR_EQ_Character__CastSpell(void* this_ptr, void* not_us
     // a1 = spellGemIndex
     // a2 = spellID
     // a3 = item
-    // a4 = unknown, always -1
+    // a4 = unknown, always equals -1
 
     if (g_bExit == 1)
     {
         return EQAPP_REAL_EQ_Character__CastSpell(this_ptr, a1, a2, a3, a4);
     }
 
-    if (g_standWhenCastSpellIsEnabled == true)
+    if (g_autoStandIsEnabled == true && g_autoStandWhenCastSpellIsEnabled == true)
     {
-        EQAPP_StandWhenCastSpell_Execute();
+        EQAPP_AutoStand_HandleEvent_EQ_Character__CastSpell(this_ptr, a1, a2, a3, a4);
     }
 
     return EQAPP_REAL_EQ_Character__CastSpell(this_ptr, a1, a2, a3, a4);
@@ -572,24 +499,19 @@ int __fastcall EQAPP_DETOUR_EQ_Character__CastSpell(void* this_ptr, void* not_us
 
 int __fastcall EQAPP_DETOUR_CDisplay__CreatePlayerActor(void* this_ptr, void* not_used, class EQPlayer* a1)
 {
-    // a1 = spawn
+    // a1 = player
 
     if (g_bExit == 1)
     {
         return EQAPP_REAL_CDisplay__CreatePlayerActor(this_ptr, a1);
     }
 
-    int result = EQAPP_REAL_CDisplay__CreatePlayerActor(this_ptr, a1);
-
     if (g_spawnAlertIsEnabled == true)
     {
-        if (a1 != NULL)
-        {
-           EQAPP_SpawnAlert_HandleEvent_CDisplay__CreatePlayerActor(a1);
-        }
+        EQAPP_SpawnAlert_HandleEvent_CDisplay__CreatePlayerActor(a1);
     }
 
-    return result;
+    return EQAPP_REAL_CDisplay__CreatePlayerActor(this_ptr, a1);
 }
 
 int __fastcall EQAPP_DETOUR_CDisplay__DeleteActor(void* this_ptr, void* not_used, EQ::ActorInstance_ptr a1)
@@ -603,10 +525,7 @@ int __fastcall EQAPP_DETOUR_CDisplay__DeleteActor(void* this_ptr, void* not_used
 
     if (g_spawnAlertIsEnabled == true)
     {
-        if (a1 != NULL)
-        {
-            EQAPP_SpawnAlert_HandleEvent_CDisplay__DeleteActor(a1);
-        }
+        EQAPP_SpawnAlert_HandleEvent_CDisplay__DeleteActor(a1);
     }
 
     return EQAPP_REAL_CDisplay__DeleteActor(this_ptr, a1);
@@ -614,7 +533,7 @@ int __fastcall EQAPP_DETOUR_CDisplay__DeleteActor(void* this_ptr, void* not_used
 
 int __fastcall EQAPP_DETOUR_CDisplay__SetNameSpriteState(void* this_ptr, void* not_used, class EQPlayer* a1, bool a2)
 {
-    // a1 = spawn
+    // a1 = player
     // a2 = show
 
     if (g_bExit == 1)
@@ -626,7 +545,7 @@ int __fastcall EQAPP_DETOUR_CDisplay__SetNameSpriteState(void* this_ptr, void* n
 
     if (g_nameSpriteStateIsEnabled == true && a2 != 0)
     {
-        if (EQAPP_NameSpriteState_Execute(a1) == false)
+        if (EQAPP_NameSpriteState_HandleEvent_CDisplay__SetNameSpriteState(this_ptr, a1, a2) == false)
         {
             return result;
         }
@@ -639,7 +558,7 @@ int __fastcall EQAPP_DETOUR_CDisplay__SetNameSpriteState(void* this_ptr, void* n
 
 int __fastcall EQAPP_DETOUR_CDisplay__SetNameSpriteTint(void* this_ptr, void* not_used, class EQPlayer* a1)
 {
-    // a1 = spawn
+    // a1 = player
 
     if (g_bExit == 1)
     {
@@ -650,7 +569,7 @@ int __fastcall EQAPP_DETOUR_CDisplay__SetNameSpriteTint(void* this_ptr, void* no
 
     if (g_nameSpriteTintIsEnabled == true)
     {
-        if (EQAPP_NameSpriteTint_Execute(a1) == false)
+        if (EQAPP_NameSpriteTint_HandleEvent_CDisplay__SetNameSpriteTint(this_ptr, a1) == false)
         {
             return result;
         }
@@ -666,11 +585,9 @@ int __fastcall EQAPP_DETOUR_CDisplay__ToggleView(void* this_ptr, void* not_used)
         return EQAPP_REAL_CDisplay__ToggleView(this_ptr);
     }
 
-    uint32_t cameraView = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_CAMERA_VIEW);
-
-    if (cameraView == EQ_CAMERA_VIEW_FIRST_PERSON || cameraView == EQ_CAMERA_VIEW_THIRD_PERSON_1 || cameraView == EQ_CAMERA_VIEW_THIRD_PERSON_2)
+    if (g_toggleViewIsEnabled == true)
     {
-        EQ_SetCameraView(EQ_CAMERA_VIEW_THIRD_PERSON_3);
+        EQAPP_ToggleView_HandleEvent_CDisplay__ToggleView(this_ptr);
     }
 
     return EQAPP_REAL_CDisplay__ToggleView(this_ptr);
@@ -811,9 +728,9 @@ int __fastcall EQAPP_DETOUR_CSpellBookWnd__FinishMemorizing(void* this_ptr, void
 
     g_bIsMemorizingSpell = false;
 
-    if (g_spellSetIsMemorizingInProgress == true)
+    if (g_spellSetIsEnabled == true)
     {
-        EQAPP_SpellSet_Memorize();
+        EQAPP_SpellSet_HandleEvent_CSpellBookWnd__FinishMemorizing(this_ptr, a1, a2);
     }
 
     return result;
@@ -828,23 +745,9 @@ int __fastcall EQAPP_DETOUR_CSpellBookWnd__TurnToPage(void* this_ptr, void* not_
         return EQAPP_REAL_CSpellBookWnd__TurnToPage(this_ptr, a1);
     }
 
-    // spell book loops around between first pages and last pages
-
-    if (EQ_IsWindowVisible(EQ_ADDRESS_POINTER_CSpellBookWnd) == true)
+    if (g_spellBookWindowIsEnabled == true)
     {
-        signed int lastPageNumber = EQ_NUM_SPELL_BOOK_PAGES - 2;
-
-        if (a1 > lastPageNumber)
-        {
-            a1 = 0;
-        }
-        else
-        {
-            if (a1 < 0)
-            {
-                a1 = lastPageNumber;
-            }
-        }
+        a1 = EQAPP_SpellBookWindow_HandleEvent__CSpellBookWnd__TurnToPage(this_ptr, a1);
     }
 
     return EQAPP_REAL_CSpellBookWnd__TurnToPage(this_ptr, a1);
@@ -861,7 +764,7 @@ int __fastcall EQAPP_DETOUR_CLootWnd__Deactivate(void* this_ptr, void* not_used)
 
     if (g_hideCorpseLootedIsEnabled == true)
     {
-        EQAPP_HideCorpseLooted_Execute();
+        EQAPP_HideCorpseLooted_HandleEvent_CLootWnd__Deactivate(this_ptr);
     }
 
     return result;
@@ -911,7 +814,7 @@ int __fastcall EQAPP_DETOUR_CEverQuest__LMouseDown(void* this_ptr, void* not_use
         return EQAPP_REAL_CEverQuest__LMouseDown(this_ptr, a1, a2);
     }
 
-    //
+    ////std::cout << "CEverQuest__LMouseDown()" << std::endl;
 
     return EQAPP_REAL_CEverQuest__LMouseDown(this_ptr, a1, a2);
 }
@@ -971,9 +874,10 @@ int __cdecl EQAPP_DETOUR_HandleMouseWheel(int a1)
         return EQAPP_REAL_HandleMouseWheel(a1);
     }
 
-    int mouseWheelDelta = a1;
-
-    EQAPP_Map_HandleEvent_HandleMouseWheel(mouseWheelDelta);
+    if (g_mapIsEnabled == true)
+    {
+        EQAPP_Map_HandleEvent_HandleMouseWheel(a1);
+    }
 
     return EQAPP_REAL_HandleMouseWheel(a1);
 }
@@ -992,7 +896,7 @@ int __cdecl EQAPP_DETOUR_ProcessMouseEvent(void)
 
     if (g_extraMouseButtonsIsEnabled == true)
     {
-        EQAPP_ExtraMouseButtons_Execute();
+        EQAPP_ExtraMouseButtons_HandleEvent_ProcessMouseEvent();
     }
 
     return EQAPP_REAL_ProcessMouseEvent();
@@ -1000,7 +904,7 @@ int __cdecl EQAPP_DETOUR_ProcessMouseEvent(void)
 
 int __cdecl EQAPP_DETOUR_ProcessKeyDown(int a1)
 {
-    // a1 = Key ID
+    // a1 = keyID
 
     if (g_bExit == 1)
     {
@@ -1009,7 +913,8 @@ int __cdecl EQAPP_DETOUR_ProcessKeyDown(int a1)
 
     if (g_freeCameraIsEnabled == true)
     {
-        if (a1 == EQ_KEY_UP_ARROW || a1 == EQ_KEY_DOWN_ARROW || a1 == EQ_KEY_LEFT_ARROW || a1 == EQ_KEY_RIGHT_ARROW)
+        bool result = EQAPP_FreeCamera_HandleEvent_ProcessKey(a1);
+        if (result == true)
         {
             return EQAPP_REAL_ProcessKeyDown(NULL);
         }
@@ -1029,7 +934,8 @@ int __cdecl EQAPP_DETOUR_ProcessKeyUp(int a1)
 
     if (g_freeCameraIsEnabled == true)
     {
-        if (a1 == EQ_KEY_UP_ARROW || a1 == EQ_KEY_DOWN_ARROW || a1 == EQ_KEY_LEFT_ARROW || a1 == EQ_KEY_RIGHT_ARROW)
+        bool result = EQAPP_FreeCamera_HandleEvent_ProcessKey(a1);
+        if (result == true)
         {
             return EQAPP_REAL_ProcessKeyUp(NULL);
         }
@@ -1040,7 +946,7 @@ int __cdecl EQAPP_DETOUR_ProcessKeyUp(int a1)
 
 int __cdecl EQAPP_DETOUR_ExecuteCmd(uint32_t a1, int a2, int a3)
 {
-    // a1 = ID
+    // a1 = commandID
     // a2 = isActive
     // a3 = zero
 
@@ -1051,32 +957,15 @@ int __cdecl EQAPP_DETOUR_ExecuteCmd(uint32_t a1, int a2, int a3)
 
     if (g_GUIIsEnabled == true)
     {
-        if (a1 == EQ_EXECUTECMD_ESCAPE && a2 == 1 && a3 == 0)
-        {
-            for (auto& menu : g_GUIMenuList)
-            {
-                menu->SetEnabled(false);
-            }
-        }
+        EQAPP_GUI_HandleEvent_ExecuteCmd(a1, a2, a3);
     }
 
     if (g_freeCameraIsEnabled == true)
     {
-        if (a2 == 1 && a3 == 0)
+        bool result = EQAPP_FreeCamera_HandleEvent_ExecuteCmd(a1, a2, a3);
+        if (result == true)
         {
-            if
-            (
-                a1 == EQ_EXECUTECMD_TOGGLECAM  ||
-                a1 == EQ_EXECUTECMD_FORWARD    ||
-                a1 == EQ_EXECUTECMD_BACK       ||
-                a1 == EQ_EXECUTECMD_LEFT       ||
-                a1 == EQ_EXECUTECMD_RIGHT      ||
-                a1 == EQ_EXECUTECMD_JUMP       ||
-                a1 == EQ_EXECUTECMD_AUTORUN
-            )
-            {
-                return EQAPP_REAL_ExecuteCmd(NULL, 0, 0);
-            }
+            return EQAPP_REAL_ExecuteCmd(NULL, 0, 0);
         }
     }
 
@@ -1120,51 +1009,20 @@ int __cdecl EQAPP_DETOUR_CollisionCallbackForMove(EQ::ActorInstance_ptr a1, EQ::
 
 int __cdecl EQAPP_DETOUR_do_target(class EQClass::EQPlayer* a1, const char* a2)
 {
-    // a1 = spawn
-    // a2 = targetSpawnName
+    // a1 = player
+    // a2 = findSpawnName
 
     if (g_bExit == 1)
     {
         return EQAPP_REAL_do_target(a1, a2);
     }
 
-    if (a2 != NULL)
+    if (g_doTargetIsEnabled == true)
     {
-        std::string targetSpawnName = a2;
-        if (targetSpawnName.size() != 0)
+        bool result = EQAPP_DoTarget_HandleEvent_do_target(a1, a2);
+        if (result == true)
         {
-            auto playerSpawn = EQ_GetPlayerSpawn();
-
-            auto spawn = EQ_GetFirstSpawn();
-            while (spawn != NULL)
-            {
-                if (spawn == playerSpawn)
-                {
-                    spawn = spawn->Next;
-                    continue;
-                }
-
-                if (spawn->Type != EQ_SPAWN_TYPE_PLAYER)
-                {
-                    spawn = spawn->Next;
-                    continue;
-                }
-
-                std::string spawnName = EQ_GetSpawnName(spawn);
-                if (spawnName.size() == 0)
-                {
-                    spawn = spawn->Next;
-                    continue;
-                }
-
-                if (spawnName == targetSpawnName)
-                {
-                    EQ_SetTargetSpawn(spawn);
-                    return 1;
-                }
-
-                spawn = spawn->Next;
-            }
+            return 1;
         }
     }
 

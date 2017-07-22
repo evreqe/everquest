@@ -5,7 +5,7 @@ bool g_speedHackIsEnabled = true;
 float g_speedHackModifier = EQ_MOVEMENT_SPEED_MODIFIER_SPIRIT_OF_WOLF;
 
 void EQAPP_SpeedHack_Toggle();
-void EQAPP_SpeedHack_Execute();
+void EQAPP_SpeedHack_HandleEvent_EQ_Character__eqspa_movement_rate(void* this_ptr, short unknown);
 void EQAPP_SpeedHack_SetSpeedRun1();
 void EQAPP_SpeedHack_SetSpeedRun2();
 void EQAPP_SpeedHack_SetSpeedRun3();
@@ -18,20 +18,10 @@ void EQAPP_SpeedHack_Toggle()
     EQAPP_PrintBool("Speed Hack", g_speedHackIsEnabled);
 }
 
-void EQAPP_SpeedHack_Execute()
+void EQAPP_SpeedHack_HandleEvent_EQ_Character__eqspa_movement_rate(void* this_ptr, short unknown)
 {
     auto playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)
-    {
-        return;
-    }
-
-    if (EQ_POINTER_Zone.Type == EQ_ZONE_TYPE_INDOORS)
-    {
-        return;
-    }
-
-    if (EQ_IsZoneInList(EQ_ZONE_ID_LIST_INDOORS) == true)
     {
         return;
     }

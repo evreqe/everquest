@@ -84,6 +84,7 @@ void EQAPP_Map_HandleEvent_HandleMouseWheel(int mouseWheelDelta);
 void EQAPP_Map_SetZoom(float zoom);
 void EQAPP_Map_ResetZoom();
 void EQAPP_Map_Center();
+bool EQAPP_Map_IsMouseOver();
 void EQAPP_Map_Execute(); // draw
 
 void EQAPP_Map_Toggle()
@@ -304,28 +305,25 @@ void EQAPP_Map_MouseWheelZoomIn()
 
 void EQAPP_Map_HandleEvent_HandleMouseWheel(int mouseWheelDelta)
 {
-    if (g_mapIsEnabled == true)
+    uint32_t mouseX = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_X);
+    uint32_t mouseY = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_Y);
+
+    bool isMouseInsideMapWindow = EQ_IsPointInsideRectangle
+    (
+        mouseX, mouseY,
+        (int)g_mapX,     (int)g_mapY,
+        (int)g_mapWidth, (int)g_mapHeight
+    );
+
+    if (isMouseInsideMapWindow == true)
     {
-        uint32_t mouseX = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_X);
-        uint32_t mouseY = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_Y);
-
-        bool isMouseInsideMapWindow = EQ_IsPointInsideRectangle
-        (
-            mouseX, mouseY,
-            (int)g_mapX,     (int)g_mapY,
-            (int)g_mapWidth, (int)g_mapHeight
-        );
-
-        if (isMouseInsideMapWindow == true)
+        if (mouseWheelDelta == EQ_MOUSE_WHEEL_DELTA_UP)
         {
-            if (mouseWheelDelta == EQ_MOUSE_WHEEL_DELTA_UP)
-            {
-                EQAPP_Map_MouseWheelZoomIn();
-            }
-            else if (mouseWheelDelta == EQ_MOUSE_WHEEL_DELTA_DOWN)
-            {
-                EQAPP_Map_MouseWheelZoomOut();
-            }
+            EQAPP_Map_MouseWheelZoomIn();
+        }
+        else if (mouseWheelDelta == EQ_MOUSE_WHEEL_DELTA_DOWN)
+        {
+            EQAPP_Map_MouseWheelZoomOut();
         }
     }
 }
@@ -344,6 +342,14 @@ void EQAPP_Map_Center()
 {
     g_mapOffsetX = 0.0f;
     g_mapOffsetY = 0.0f;
+}
+
+bool EQAPP_Map_IsMouseOver()
+{
+    uint32_t mouseX = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_X);
+    uint32_t mouseY = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_Y);
+
+    return (EQ_IsPointInsideRectangle(mouseX, mouseY, (int)(g_mapX), (int)(g_mapY), (int)g_mapWidth, (int)g_mapHeight) == true);
 }
 
 void EQAPP_Map_Execute()
@@ -525,24 +531,41 @@ void EQAPP_Map_Execute()
             uint32_t mouseX = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_X);
             uint32_t mouseY = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_Y);
 
-            if (EQ_IsPointInsideRectangle(mouseX, mouseY, (int)(spawnMapX + 1) - 4, (int)(spawnMapY + 6) - 4, 8, 8) == true)
+            if (EQAPP_Map_IsMouseOver() == true)
             {
-                std::stringstream spawnText;
-
-                if (spawn->MovementSpeed > 0.0f)
+                if (EQ_IsPointInsideRectangle(mouseX, mouseY, (int)(spawnMapX + 1) - 4, (int)(spawnMapY + 6) - 4, 8, 8) == true)
                 {
-                    spawnText << "* ";
+                    std::stringstream spawnText;
+
+                    if (spawn->MovementSpeed > 0.0f)
+                    {
+                        spawnText << "* ";
+                    }
+                    else
+                    {
+                        spawnText << "+ ";
+                    }
+
+                    spawnText << "[" << (int)spawn->Level << "] ";
+
+                    spawnText << EQ_GetSpawnName(spawn);
+
+                    uint32_t spawnTextFont = EQ_ADDRESS_POINTER_FONT_ARIAL14;
+
+                    uint32_t spawnTextX = mouseX + EQ_MOUSE_CURSOR_WIDTH + 1;
+                    uint32_t spawnTextY = mouseY;
+
+                    uint32_t spawnTextWidth = EQ_GetFontTextWidth(spawnText.str().c_str(), spawnTextFont);
+
+                    uint32_t resolutionWidth = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_RESOLUTION_WIDTH);
+
+                    if ((spawnTextX + spawnTextWidth) > resolutionWidth)
+                    {
+                        spawnTextX = mouseX - spawnTextWidth - 1;
+                    }
+
+                    EQ_DrawTooltipText(spawnText.str().c_str(), spawnTextX, spawnTextY, spawnTextFont);
                 }
-                else
-                {
-                    spawnText << "+ ";
-                }
-
-                spawnText << "[" << (int)spawn->Level << "] ";
-
-                spawnText << EQ_GetSpawnName(spawn);
-
-                EQ_DrawTooltipText(spawnText.str().c_str(), mouseX + EQ_MOUSE_CURSOR_WIDTH + 1, mouseY, EQ_ADDRESS_POINTER_FONT_ARIAL14);
             }
         }
 

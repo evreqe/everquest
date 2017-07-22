@@ -2,18 +2,32 @@
 
 bool g_nameSpriteStateIsEnabled = true;
 
-bool g_nameSpriteStateRemoveLastNames = true;
+bool g_nameSpriteStateRemoveLastNamesIsEnabled = true;
 
-bool EQAPP_NameSpriteState_Execute(class EQPlayer* a1);
+void EQAPP_NameSpriteState_Toggle();
+void EQAPP_NameSpriteState_RemoveLastNames_Toggle();
+bool EQAPP_NameSpriteState_HandleEvent_CDisplay__SetNameSpriteState(void* this_ptr, class EQPlayer* player, bool show);
 
-bool EQAPP_NameSpriteState_Execute(class EQPlayer* a1)
+void EQAPP_NameSpriteState_Toggle()
+{
+    EQ_ToggleBool(g_nameSpriteStateIsEnabled);
+    EQAPP_PrintBool("Name Sprite State", g_nameSpriteStateIsEnabled);
+}
+
+void EQAPP_NameSpriteState_RemoveLastNames_Toggle()
+{
+    EQ_ToggleBool(g_nameSpriteStateRemoveLastNamesIsEnabled);
+    EQAPP_PrintBool("Name Sprite State Remove Last Names", g_nameSpriteStateRemoveLastNamesIsEnabled);
+}
+
+bool EQAPP_NameSpriteState_HandleEvent_CDisplay__SetNameSpriteState(void* this_ptr, class EQPlayer* player, bool show)
 {
     if (EQ_IsInGame() == false)
     {
         return false;
     }
 
-    EQ::Spawn_ptr spawn = (EQ::Spawn_ptr)a1;
+    EQ::Spawn_ptr spawn = (EQ::Spawn_ptr)player;
     if (spawn == NULL)
     {
         return false;
@@ -60,7 +74,7 @@ bool EQAPP_NameSpriteState_Execute(class EQPlayer* a1)
         return false;
     }
 
-    if (g_nameSpriteStateRemoveLastNames == true)
+    if (g_nameSpriteStateRemoveLastNamesIsEnabled == true)
     {
         if (spawn->Type == EQ_SPAWN_TYPE_PLAYER)
         {
@@ -112,6 +126,11 @@ bool EQAPP_NameSpriteState_Execute(class EQPlayer* a1)
             }
 
             replacementText << nameSpriteText;
+
+            if (spawn->PetOwnerSpawnID != 0)
+            {
+                replacementText << "\n(Pet)";
+            }
 
             if (spawn->Class == EQ_CLASS_BANKER)
             {

@@ -7,6 +7,8 @@ float g_freeCameraMultiplier = 1.0f;
 void EQAPP_FreeCamera_Toggle();
 void EQAPP_FreeCamera_SetEnabled(bool bEnabled);
 void EQAPP_FreeCamera_Execute();
+bool EQAPP_FreeCamera_HandleEvent_ProcessKey(int keyID);
+bool EQAPP_FreeCamera_HandleEvent_ExecuteCmd(uint32_t commandID, int isActive, int zero);
 
 void EQAPP_FreeCamera_Toggle()
 {
@@ -30,6 +32,8 @@ void EQAPP_FreeCamera_SetEnabled(bool bEnabled)
 
     if (bEnabled == true)
     {
+        // NOP the instructions so that the game will not update the camera position
+
         address = baseAddress + 0x4B; // Camera Y
         VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, 2, PAGE_EXECUTE_READWRITE, &oldProtection);
         WriteProcessMemory(GetCurrentProcess(), (LPVOID)address, "\x90\x90", 2, 0);
@@ -47,6 +51,8 @@ void EQAPP_FreeCamera_SetEnabled(bool bEnabled)
     }
     else
     {
+        // restore the instructions to their default values
+
         address = baseAddress + 0x4B; // Camera Y
         VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, 2, PAGE_EXECUTE_READWRITE, &oldProtection);
         WriteProcessMemory(GetCurrentProcess(), (LPVOID)address, "\x89\x01", 2, 0);
@@ -69,6 +75,7 @@ void EQAPP_FreeCamera_SetEnabled(bool bEnabled)
     }
 
     g_freeCameraIsEnabled = bEnabled;
+
     EQAPP_PrintBool("Free Camera", g_freeCameraIsEnabled);
 }
 
@@ -227,3 +234,38 @@ void EQAPP_FreeCamera_Execute()
         camera->Z = cameraZ;
     }
 }
+
+bool EQAPP_FreeCamera_HandleEvent_ProcessKey(int keyID)
+{
+    if (keyID == EQ_KEY_UP_ARROW || keyID == EQ_KEY_DOWN_ARROW || keyID == EQ_KEY_LEFT_ARROW || keyID == EQ_KEY_RIGHT_ARROW || keyID == EQ_KEY_NUMLOCK)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool EQAPP_FreeCamera_HandleEvent_ExecuteCmd(uint32_t commandID, int isActive, int zero)
+{
+    if (isActive != 1 && zero != 0)
+    {
+        return false;
+    }
+
+    if
+    (
+        commandID == EQ_EXECUTECMD_TOGGLECAM  ||
+        commandID == EQ_EXECUTECMD_FORWARD    ||
+        commandID == EQ_EXECUTECMD_BACK       ||
+        commandID == EQ_EXECUTECMD_LEFT       ||
+        commandID == EQ_EXECUTECMD_RIGHT      ||
+        commandID == EQ_EXECUTECMD_JUMP       ||
+        commandID == EQ_EXECUTECMD_AUTORUN
+    )
+    {
+        return true;
+    }
+
+    return false;
+}
+

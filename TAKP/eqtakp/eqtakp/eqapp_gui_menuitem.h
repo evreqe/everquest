@@ -147,13 +147,20 @@ void GUIMenuItem::OnProcessFrame()
 
     bool isMouseOver = EQ_IsPointInsideRectangle(mouse.X, mouse.Y, this->GetX(), this->GetY(), this->GetWidth(), this->GetHeight());
 
-    if (EQ_IsMouseHoveringOverCXWnd() == false && EQ_IsMouseLookEnabled() == false && this->IsSeparator() == false)
+    if (this->IsEnabled() == false)
     {
-        this->SetMouseOver(isMouseOver);
+        this->SetMouseOver(false);
     }
     else
     {
-        this->SetMouseOver(false);
+        if (EQ_IsMouseHoveringOverCXWnd() == false && EQ_IsMouseLookEnabled() == false && this->IsSeparator() == false)
+        {
+            this->SetMouseOver(isMouseOver);
+        }
+        else
+        {
+            this->SetMouseOver(false);
+        }
     }
 }
 

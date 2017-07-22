@@ -159,6 +159,7 @@
     <ClInclude Include="eqapp_collision.h" />
     <ClInclude Include="eqapp_console.h" />
     <ClInclude Include="eqapp_detours.h" />
+    <ClInclude Include="eqapp_dotarget.h" />
     <ClInclude Include="eqapp_drawdistance.h" />
     <ClInclude Include="eqapp_esp.h" />
     <ClInclude Include="eqapp_extendedtargets.h" />
@@ -188,9 +189,11 @@
     <ClInclude Include="eqapp_neverfrozen.h" />
     <ClInclude Include="eqapp_spawnalert.h" />
     <ClInclude Include="eqapp_speedhack.h" />
+    <ClInclude Include="eqapp_spellbookwindow.h" />
     <ClInclude Include="eqapp_spellset.h" />
-    <ClInclude Include="eqapp_standwhencastspell.h" />
+    <ClInclude Include="eqapp_autostand.h" />
     <ClInclude Include="eqapp_maxskills.h" />
+    <ClInclude Include="eqapp_toggleview.h" />
     <ClInclude Include="eqapp_trainspells.h" />
     <ClInclude Include="eqapp_useskills.h" />
     <ClInclude Include="eq_classes.h" />

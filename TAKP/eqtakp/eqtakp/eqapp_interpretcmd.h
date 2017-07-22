@@ -2,6 +2,11 @@
 
 bool g_interpretCmdIsEnabled = true;
 
+void EQAPP_InterpretCmd_NULL()
+{
+    //
+}
+
 std::map<std::string, std::function<void()>> g_interpretCmdList =
 {
     {"//AlwaysAttack",              &EQAPP_AlwaysAttack_Toggle},
@@ -17,7 +22,7 @@ std::map<std::string, std::function<void()>> g_interpretCmdList =
     {"//ExtendedTargets",           &EQAPP_ExtendedTargets_Toggle},
     {"//FoodAndDrink",              &EQAPP_FoodAndDrink_Toggle},
     {"//FreeCamera",                &EQAPP_FreeCamera_Toggle},
-    {"//GetTargetMeleeDistance",    &EQAPP_PrintTargetMeleeDistance},
+    {"//PrintTargetMeleeDistance",  &EQAPP_PrintTargetMeleeDistance},
     {"//HideCorpseLooted",          &EQAPP_HideCorpseLooted_Toggle},
     {"//HUDText",                   &EQAPP_HUDText_Toggle},
     {"//LoadSpellSet",              &EQAPP_SpellSet_LoadAndStartMemorizing},
@@ -28,6 +33,8 @@ std::map<std::string, std::function<void()>> g_interpretCmdList =
     {"//MerchantWindow",            &EQAPP_MerchantWindow_Toggle},
     {"//NamedSpawns",               &EQAPP_NamedSpawns_Toggle},
     {"//LoadNamedSpawns",           &EQAPP_NamedSpawns_Load},
+    {"//NameSpriteState",           &EQAPP_NameSpriteState_Toggle},
+    {"//NameSpriteTint",            &EQAPP_NameSpriteTint_Toggle},
     {"//NetworkStats",              &EQAPP_NetworkStats_Toggle},
     {"//NeverFrozen",               &EQAPP_NeverFrozen_Toggle},
     {"//SpawnAlert",                &EQAPP_SpawnAlert_Toggle},
@@ -55,10 +62,66 @@ std::map<std::string, std::function<void()>> g_interpretCmdList =
     {"//UseSkillsSenseHeading",     &EQAPP_UseSkills_Toggle_SenseHeading},
     {"//UseSkillsSlam",             &EQAPP_UseSkills_Toggle_Slam},
     {"//UseSkillsTaunt",            &EQAPP_UseSkills_Toggle_Taunt},
+
+    {"//Commands",                  &EQAPP_InterpretCmd_NULL},
+    {"//Help",                      &EQAPP_InterpretCmd_NULL},
 };
 
+bool EQAPP_InterpretCmd_HandleEvent_CEverQuest__InterpretCmd(void* this_ptr, class EQPlayer* player, char* commandText_);
 bool EQAPP_InterpretCmd_HasQuotes(const std::string& commandText);
 void EQAPP_InterpretCmd_Execute(std::string commandText);
+
+bool EQAPP_InterpretCmd_HandleEvent_CEverQuest__InterpretCmd(void* this_ptr, class EQPlayer* player, char* commandText_)
+{
+    if (player == NULL || commandText_ == NULL)
+    {
+        return true;
+    }
+
+    std::string commandText = commandText_;
+    if (commandText.size() == 0)
+    {
+        return true;
+    }
+
+    std::string firstTwoCharacters = commandText.substr(0, 2);
+    if (firstTwoCharacters == "//")
+    {
+        EQAPP_InterpretCmd_Execute(commandText);
+        return true;
+    }
+    else
+    {
+        if (commandText.find("//") != std::string::npos)
+        {
+            return true;
+        }
+
+        if (commandText.find("/") != std::string::npos)
+        {
+            for (auto& cmd : g_interpretCmdList)
+            {
+                std::string cmdText = cmd.first;
+                std::string cmdTextStripped = cmdText.substr(2, cmdText.size());
+
+                if (commandText.find(cmdTextStripped) != std::string::npos)
+                {
+                    return true;
+                }
+            }
+        }
+
+        for (auto& cmd : g_interpretCmdList)
+        {
+            if (commandText == cmd.first)
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
 
 bool EQAPP_InterpretCmd_HasQuotes(const std::string& commandText)
 {
@@ -80,7 +143,7 @@ void EQAPP_InterpretCmd_Execute(std::string commandText)
 
     std::cout << "InterpretCmd: " << commandText << std::endl;
 
-    if (commandText == "//Commands")
+    if (commandText == "//Help" || commandText == "//Commands")
     {
         std::cout << "Command List: " << std::endl;
 
@@ -234,6 +297,7 @@ void EQAPP_InterpretCmd_Execute(std::string commandText)
         return;
     }
 
+    // handle interpret command list functions
     auto cmd = g_interpretCmdList.find(commandText);
     if (cmd != g_interpretCmdList.end())
     {

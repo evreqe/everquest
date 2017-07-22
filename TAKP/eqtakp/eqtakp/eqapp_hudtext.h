@@ -18,6 +18,12 @@ void EQAPP_HUDText_Execute()
 {
     std::stringstream text;
 
+    uint32_t numPlayersInZone = EQ_GetNumPlayersInZone();
+    if (numPlayersInZone > 0)
+    {
+        text << "Players in Zone: " << numPlayersInZone << "\n";
+    }
+
     if (g_boxChatIsConnected == true)
     {
         text << "Box Chat is connected.\n";

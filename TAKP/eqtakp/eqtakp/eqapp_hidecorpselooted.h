@@ -3,7 +3,7 @@
 bool g_hideCorpseLootedIsEnabled = true;
 
 void EQAPP_HideCorpseLooted_Toggle();
-void EQAPP_HideCorpseLooted_Execute();
+void EQAPP_HideCorpseLooted_HandleEvent_CLootWnd__Deactivate(void* this_ptr);
 
 void EQAPP_HideCorpseLooted_Toggle()
 {
@@ -11,7 +11,7 @@ void EQAPP_HideCorpseLooted_Toggle()
     EQAPP_PrintBool("Hide Corpse Looted", g_hideCorpseLootedIsEnabled);
 }
 
-void EQAPP_HideCorpseLooted_Execute()
+void EQAPP_HideCorpseLooted_HandleEvent_CLootWnd__Deactivate(void* this_ptr)
 {
     auto corpseSpawn = EQ_GetCorpseSpawn();
     if (corpseSpawn == NULL)

@@ -92,20 +92,6 @@ void EQAPP_SpawnAlert_HandleEvent_CDisplay__CreatePlayerActor(class EQPlayer* pl
         return;
     }
 
-    // already spawned
-    if (spawn->Type == EQ_SPAWN_TYPE_PLAYER)
-    {
-        if (EQ_DoesSpawnExist(spawn) == true)
-        {
-            return;
-        }
-    }
-
-    if (EQ_IsSpawnGroupMember(spawn) == true)
-    {
-        return;
-    }
-
     EQAPP_SpawnAlert_PrintAlertMessage(spawn, false);
 }
 
@@ -127,13 +113,33 @@ void EQAPP_SpawnAlert_HandleEvent_CDisplay__DeleteActor(EQ::ActorInstance_ptr ac
         return;
     }
 
-    EQ::Spawn_ptr spawn = actorInstance->Spawn;
-    if (spawn == NULL || spawn == playerSpawn)
+    if (actorInstance->MagicNumber != 24 || actorInstance == (EQ::ActorInstance_ptr)EQ_ADDRESS_POINTER_CAMERA_ACTOR_INSTANCE)
     {
         return;
     }
 
-    if (EQ_IsSpawnGroupMember(spawn) == true)
+    if (actorInstance->ActorDefinition == NULL)
+    {
+        return;
+    }
+
+    if (actorInstance->ActorDefinition->MagicNumber6 != 17)
+    {
+        return;
+    }
+
+    if (actorInstance->UserData == NULL)
+    {
+        return;
+    }
+
+    if (actorInstance->UserData->MagicNumber != 3)
+    {
+        return;
+    }
+
+    EQ::Spawn_ptr spawn = actorInstance->Spawn;
+    if (spawn == NULL || spawn == playerSpawn)
     {
         return;
     }

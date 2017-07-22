@@ -86,9 +86,6 @@
     <ClInclude Include="eqapp_namespritestate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="eqapp_standwhencastspell.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="eqapp_esp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -180,6 +177,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_collision.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_dotarget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_spellbookwindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_autostand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_toggleview.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

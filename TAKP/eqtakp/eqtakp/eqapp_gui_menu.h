@@ -13,9 +13,9 @@ public:
     GUIMenu();
     ~GUIMenu();
 
-    void Toggle();
-    void SetEnabled(bool bEnable);
-    bool IsEnabled();
+    void ToggleOpen();
+    void SetOpen(bool bOpen);
+    bool IsOpen();
     void AddMenuItem(EQApp::GUIMenuItem menuItem);
     void RemoveMenuItems();
     std::vector<EQApp::GUIMenuItem>* GetMenuItemList();
@@ -26,7 +26,7 @@ public:
 private:
     std::vector<EQApp::GUIMenuItem> m_menuItemList;
 
-    bool m_isEnabled;
+    bool m_isOpen;
 
     uint32_t m_menuItemsTextWidth;
     uint32_t m_menuItemsTextHeight;
@@ -35,7 +35,7 @@ private:
 
 GUIMenu::GUIMenu()
 {
-    m_isEnabled = false;
+    m_isOpen = false;
 
     m_menuItemsTextWidth = 0;
     m_menuItemsTextHeight = 0;
@@ -46,19 +46,19 @@ GUIMenu::~GUIMenu()
     //
 }
 
-void GUIMenu::Toggle()
+void GUIMenu::ToggleOpen()
 {
-    m_isEnabled = !m_isEnabled;
+    m_isOpen = !m_isOpen;
 }
 
-void GUIMenu::SetEnabled(bool bEnable)
+void GUIMenu::SetOpen(bool bOpen)
 {
-    m_isEnabled = bEnable;
+    m_isOpen = bOpen;
 }
 
-bool GUIMenu::IsEnabled()
+bool GUIMenu::IsOpen()
 {
-    return m_isEnabled;
+    return m_isOpen;
 }
 
 void GUIMenu::AddMenuItem(EQApp::GUIMenuItem menuItem)
@@ -107,13 +107,20 @@ void GUIMenu::OnProcessFrame()
 
     bool isMouseOver = EQ_IsPointInsideRectangle(mouse.X, mouse.Y, this->GetX(), this->GetY(), this->GetWidth(), this->GetHeight());
 
-    if (EQ_IsMouseHoveringOverCXWnd() == false && EQ_IsMouseLookEnabled() == false)
+    if (this->IsEnabled() == false)
     {
-        this->SetMouseOver(isMouseOver);
+        this->SetMouseOver(false);
     }
     else
     {
-        this->SetMouseOver(false);
+        if (EQ_IsMouseHoveringOverCXWnd() == false && EQ_IsMouseLookEnabled() == false)
+        {
+            this->SetMouseOver(isMouseOver);
+        }
+        else
+        {
+            this->SetMouseOver(false);
+        }
     }
 }
 

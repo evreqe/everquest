@@ -13,9 +13,17 @@ void EQAPP_Collision_Toggle()
     EQ_ToggleBool(g_collisionIsEnabled);
     EQAPP_PrintBool("Collision", g_collisionIsEnabled);
 
-    if (g_collisionIsEnabled == false)
+    if (g_collisionIsEnabled == true)
+    {
+        EQ_SetActorCollision(false);
+
+        std::cout << "You can now walk through doors and players/npcs." << std::endl;
+    }
+    else
     {
         EQ_SetActorCollision(true);
+
+        std::cout << "Collision with doors and players/npcs returned to normal." << std::endl;
     }
 }
 

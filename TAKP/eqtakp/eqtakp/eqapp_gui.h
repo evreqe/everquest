@@ -7,27 +7,35 @@ std::vector<EQApp::GUIMenu*> g_GUIMenuList;
 
 void EQAPP_GUI_Execute();
 bool EQAPP_GUI_HandleEvent_CEverQuest__LMouseUp(uint16_t mouseX, uint16_t mouseY);
+void EQAPP_GUI_HandleEvent_ExecuteCmd(uint32_t commandID, int isActive, int zero);
 
 void EQAPP_GUI_Execute()
 {
     for (auto& button : g_GUIButtonList)
     {
+        if (button->IsVisible() == false)
+        {
+            continue;
+        }
+
         button->OnProcessFrame();
         button->Draw();
     }
 
     for (auto& menu : g_GUIMenuList)
     {
-        //for (auto& menuItem : *menu.GetMenuItemList())
-        //{
-            //std::cout << "menu item text: " << menuItem.GetText() << std::endl;
-        //}
-
-        if (menu->IsEnabled() == true)
+        if (menu->IsVisible() == false)
         {
-            menu->OnProcessFrame();
-            menu->Draw();
+            continue;
         }
+
+        if (menu->IsOpen() == false)
+        {
+            continue;
+        }
+
+        menu->OnProcessFrame();
+        menu->Draw();
     }
 }
 
@@ -35,6 +43,16 @@ bool EQAPP_GUI_HandleEvent_CEverQuest__LMouseUp(uint16_t mouseX, uint16_t mouseY
 {
     for (auto& button : g_GUIButtonList)
     {
+        if (button->IsEnabled() == false)
+        {
+            continue;
+        }
+
+        if (button->IsVisible() == false)
+        {
+            continue;
+        }
+
         if (EQ_IsPointInsideRectangle(mouseX, mouseY, button->GetX(), button->GetY(), button->GetWidth(), button->GetHeight()) == true)
         {
             button->OnLeftClick();
@@ -49,9 +67,19 @@ bool EQAPP_GUI_HandleEvent_CEverQuest__LMouseUp(uint16_t mouseX, uint16_t mouseY
             continue;
         }
 
+        if (menu->IsVisible() == false)
+        {
+            continue;
+        }
+
+        if (menu->IsOpen() == false)
+        {
+            continue;
+        }
+
         for (auto& menuItem : *menu->GetMenuItemList())
         {
-            if (menuItem.IsSeparator() == false)
+            if (menuItem.IsEnabled() == true && menuItem.IsVisible() == true && menuItem.IsSeparator() == false)
             {
                 if (EQ_IsPointInsideRectangle(mouseX, mouseY, menuItem.GetX(), menuItem.GetY(), menuItem.GetWidth(), menuItem.GetHeight()) == true)
                 {
@@ -65,11 +93,28 @@ bool EQAPP_GUI_HandleEvent_CEverQuest__LMouseUp(uint16_t mouseX, uint16_t mouseY
 
     for (auto& menu : g_GUIMenuList)
     {
-        menu->SetEnabled(false);
+        menu->SetOpen(false);
     }
 
     return false;
 }
+
+void EQAPP_GUI_HandleEvent_ExecuteCmd(uint32_t commandID, int isActive, int zero)
+{
+    if (isActive != 1 && zero != 0)
+    {
+        return;
+    }
+
+    if (commandID == EQ_EXECUTECMD_ESCAPE)
+    {
+        for (auto& menu : g_GUIMenuList)
+        {
+            menu->SetOpen(false);
+        }
+    }
+}
+
 
 
 

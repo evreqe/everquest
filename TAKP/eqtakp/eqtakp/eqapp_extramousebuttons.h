@@ -5,9 +5,9 @@ bool g_extraMouseButtonsIsEnabled = true;
 uint32_t g_extraMouseButtonsTimer = 0;
 uint32_t g_extraMouseButtonsTimerDelay = 250;
 
-void EQAPP_ExtraMouseButtons_Execute();
+void EQAPP_ExtraMouseButtons_HandleEvent_ProcessMouseEvent();
 
-void EQAPP_ExtraMouseButtons_Execute()
+void EQAPP_ExtraMouseButtons_HandleEvent_ProcessMouseEvent()
 {
     auto currentTime = EQ_GetTimer();
     if ((currentTime - g_extraMouseButtonsTimer) < g_extraMouseButtonsTimerDelay)
