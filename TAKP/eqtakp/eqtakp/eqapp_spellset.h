@@ -14,8 +14,10 @@ bool g_spellSetIsEnabled = true;
 bool g_spellSetIsMemorizingInProgress = false;
 std::vector<EQApp::SpellSetData> g_spellSetList;
 
-void EQAPP_SpellSet_Load();
-void EQAPP_SpellSet_Save();
+void EQAPP_SpellSet_Load(const std::string& spellSetName);
+void EQAPP_SpellSet_Save(const std::string& spellSetName);
+void EQAPP_SpellSet_Load_Default();
+void EQAPP_SpellSet_Save_Default();
 void EQAPP_SpellSet_StartMemorizing();
 void EQAPP_SpellSet_StopMemorizing();
 void EQAPP_SpellSet_LoadAndStartMemorizing();
@@ -23,7 +25,7 @@ void EQAPP_SpellSet_Memorize();
 void EQAPP_SpellSet_HandleEvent_EQPlayer__ChangePosition(void* this_ptr, uint8_t standingState);
 void EQAPP_SpellSet_HandleEvent_CSpellBookWnd__FinishMemorizing(void* this_ptr, uint8_t spellGemIndex, uint16_t spellID);
 
-void EQAPP_SpellSet_Load()
+void EQAPP_SpellSet_Load(const std::string& spellSetName)
 {
     if (EQ_IsInGame() == false)
     {
@@ -36,18 +38,23 @@ void EQAPP_SpellSet_Load()
         return;
     }
 
-    EQAPP_SpellSet_StopMemorizing();
-
-    g_spellSetList.clear();
-
     std::string spawnName = EQ_GetSpawnName(playerSpawn);
     if (spawnName.size() == 0)
     {
         return;
     }
 
+    if (spellSetName.size() == 0)
+    {
+        return;
+    }
+
+    EQAPP_SpellSet_StopMemorizing();
+
+    g_spellSetList.clear();
+
     std::stringstream filePath;
-    filePath << g_applicationName << "/spellsets/" << spawnName << ".ini";
+    filePath << g_applicationName << "/spellsets/" << spawnName << "_" << spellSetName << ".ini";
 
     std::cout << "Loading spell set from file: " << filePath.str() << std::endl;
 
@@ -85,7 +92,7 @@ void EQAPP_SpellSet_Load()
     }
 }
 
-void EQAPP_SpellSet_Save()
+void EQAPP_SpellSet_Save(const std::string& spellSetName)
 {
     if (EQ_IsInGame() == false)
     {
@@ -104,8 +111,13 @@ void EQAPP_SpellSet_Save()
         return;
     }
 
+    if (spellSetName.size() == 0)
+    {
+        return;
+    }
+
     std::stringstream filePath;
-    filePath << g_applicationName << "/spellsets/" << spawnName << ".ini";
+    filePath << g_applicationName << "/spellsets/" << spawnName << "_" << spellSetName << ".ini";
 
     std::string filePathStr = filePath.str();
 
@@ -146,6 +158,16 @@ void EQAPP_SpellSet_Save()
     file.close();
 }
 
+void EQAPP_SpellSet_Load_Default()
+{
+    EQAPP_SpellSet_Load("Default");
+}
+
+void EQAPP_SpellSet_Save_Default()
+{
+    EQAPP_SpellSet_Save("Default");
+}
+
 void EQAPP_SpellSet_StartMemorizing()
 {
     if (g_spellSetList.size() == 0)
@@ -184,7 +206,7 @@ void EQAPP_SpellSet_StopMemorizing()
 
 void EQAPP_SpellSet_LoadAndStartMemorizing()
 {
-    EQAPP_SpellSet_Load();
+    EQAPP_SpellSet_Load_Default();
     EQAPP_SpellSet_StartMemorizing();
 }
 

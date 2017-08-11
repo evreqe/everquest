@@ -6,8 +6,16 @@ bool g_namedSpawnsIsEnabled = true;
 
 std::vector<std::string> g_namedSpawnsList;
 
+std::vector<std::string> g_namedSpawnsInZoneList;
+std::unordered_map<std::string, uint32_t> g_namedSpawnsInZoneMap; // spawnName, count
+
+std::stringstream g_namedSpawnsDrawText;
+
 uint32_t g_namedSpawnsX = 1200;
 uint32_t g_namedSpawnsY = 4;
+
+uint32_t g_namedSpawnsTimer = 0;
+uint32_t g_namedSpawnsTimerDelay = 1000;
 
 void EQAPP_NamedSpawns_Toggle();
 void EQAPP_NamedSpawns_Load();
@@ -39,10 +47,10 @@ void EQAPP_NamedSpawns_Load()
     EQAPP_ReadFileToList(filePath.str().c_str(), g_namedSpawnsList);
 }
 
-void EQAPP_NamedSpawns_Execute()
+void EQAPP_NamedSpawns_Update()
 {
-    std::vector<std::string> namedSpawnsList;
-    std::unordered_map<std::string, uint32_t> namedSpawnsMap;
+    g_namedSpawnsInZoneList.clear();
+    g_namedSpawnsInZoneMap.clear();
 
     auto spawn = EQ_GetFirstSpawn();
     while (spawn != NULL)
@@ -64,7 +72,7 @@ void EQAPP_NamedSpawns_Execute()
         {
             if (spawnName.find(name) != std::string::npos)
             {
-                namedSpawnsList.push_back(spawnName);
+                g_namedSpawnsInZoneList.push_back(spawnName);
                 break;
             }
         }
@@ -72,41 +80,55 @@ void EQAPP_NamedSpawns_Execute()
         spawn = spawn->Next;
     }
 
-    if (namedSpawnsList.size() == 0)
+    if (g_namedSpawnsInZoneList.size() == 0)
     {
         return;
     }
 
-    for (auto& name : namedSpawnsList)
+    for (auto& name : g_namedSpawnsInZoneList)
     {
-        auto it = namedSpawnsMap.find(name);
-        if (it != namedSpawnsMap.end())
+        auto it = g_namedSpawnsInZoneMap.find(name);
+        if (it != g_namedSpawnsInZoneMap.end())
         {
             it->second++;
         }
         else
         {
-            namedSpawnsMap.insert(std::make_pair(name, 1));
+            g_namedSpawnsInZoneMap.insert(std::make_pair(name, 1));
         }
     }
 
-    std::stringstream drawText;
+    g_namedSpawnsDrawText.str(std::string());
+    g_namedSpawnsDrawText.clear();
 
-    drawText << "Named Spawns:\n";
+    g_namedSpawnsDrawText << "Named Spawns:\n";
 
-    for (auto& it : namedSpawnsMap)
+    for (auto& it : g_namedSpawnsInZoneMap)
     {
-        drawText << it.first;
+        g_namedSpawnsDrawText << it.first;
 
         if (it.second > 1)
         {
-            drawText << " (" << it.second << ")";
+            g_namedSpawnsDrawText << " (" << it.second << ")";
         }
 
-        drawText << "\n";
+        g_namedSpawnsDrawText << "\n";
+    }
+}
+
+void EQAPP_NamedSpawns_Execute()
+{
+    if (EQ_HasTimePassed(g_namedSpawnsTimer, g_namedSpawnsTimerDelay) == true)
+    {
+        EQAPP_NamedSpawns_Update();
     }
 
-    EQ_DrawText(drawText.str().c_str(), g_namedSpawnsX, g_namedSpawnsY, EQ_TEXT_COLOR_WHITE);
+    if (g_namedSpawnsInZoneMap.size() == 0)
+    {
+        return;
+    }
+
+    EQ_DrawText(g_namedSpawnsDrawText.str().c_str(), g_namedSpawnsX, g_namedSpawnsY, EQ_TEXT_COLOR_WHITE);
 }
 
 

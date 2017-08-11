@@ -400,8 +400,8 @@ typedef struct _SpellList
     struct _Spell* Spell[EQ_NUM_SPELLS];
 } SpellList, *SpellList_ptr, SpellManager, *SpellManager_ptr;
 
-// 21 inventory slots
-typedef struct _Inventory
+// 21 inventory equipment slots
+typedef struct _InventoryEquipment
 {
 /* 00 */ struct _Item* EarLeft;
 /* 01 */ struct _Item* Head;
@@ -424,7 +424,7 @@ typedef struct _Inventory
 /* 18 */ struct _Item* Feet;
 /* 19 */ struct _Item* Waist;
 /* 20 */ struct _Item* Ammo;
-} Inventory, *Inventory_ptr;
+} InventoryEquipment, *InventoryEquipment_ptr;
 
 // class EQ_Character
 typedef struct _Character
@@ -465,10 +465,10 @@ typedef struct _Character
 /* 0x0B60 */ float Unknown0060;
 /* 0x0B64 */ uint8_t StandingState; // EQ_STANDING_STATE_x
 /* 0x0B65 */ uint8_t Unknown0B65[3];
-/* 0x0B68 */ uint32_t Platinum;
-/* 0x0B6C */ uint32_t Gold;
-/* 0x0B70 */ uint32_t Silver;
-/* 0x0B74 */ uint32_t Copper;
+/* 0x0B68 */ uint32_t InventoryPlatinum;
+/* 0x0B6C */ uint32_t InventoryGold;
+/* 0x0B70 */ uint32_t InventorySilver;
+/* 0x0B74 */ uint32_t InventoryCopper;
 /* 0x0B78 */ uint32_t BankPlatinum;
 /* 0x0B7C */ uint32_t BankGold;
 /* 0x0B80 */ uint32_t BankSilver;
@@ -499,8 +499,8 @@ typedef struct _Character
 /* 0x0D78 */ struct _Item* CursorItem;
 union
 {
-/* 0x0D7C */ struct _Inventory Inventory;
-/* 0x0D7C */ struct _Item* InventoryItem[EQ_NUM_INVENTORY_SLOTS];
+/* 0x0D7C */ struct _InventoryEquipment InventoryEquipment;
+/* 0x0D7C */ struct _Item* InventoryEquipmentItem[EQ_NUM_INVENTORY_EQUIPMENT_SLOTS];
 };
 /* 0x0DD0 */ struct _Item* InventoryPackItem[EQ_NUM_INVENTORY_PACK_SLOTS];
 /* 0x0DF0 */ uint8_t Unknown0DF0[116];
@@ -605,7 +605,7 @@ typedef struct _ModelBone
 /* 0x0084 */ float Z;
 /* 0x0088 */ uint8_t Unknown0088[96];
 /* 0x00E8 */ uint32_t NumChildren;
-/* 0x00EC */ struct _ModelBoneChildren* ChildrenBones;
+/* 0x00EC */ struct _ModelBoneChildren* ChildBones;
 /* ...... */ 
 } ModelBone, *ModelBone_ptr;
 
@@ -1142,7 +1142,7 @@ typedef struct _CMerchantWnd
 /* ...... */
 } CMerchantWnd, *CMerchantWnd_ptr;
 
-typedef struct _CBazaarSearchWndBazaarMsg
+typedef struct _CBazaarSearchWndBazaarMessage
 {
     uint16_t Action; // 7 or 12
     uint16_t ItemQuantity;
@@ -1151,7 +1151,14 @@ typedef struct _CBazaarSearchWndBazaarMsg
     uint32_t ItemValue; // price in copper
     char ItemName[64];
 /* ...... */
-} CBazaarSearchWndBazaarMsg, *CBazaarSearchWndBazaarMsg_ptr;
+} CBazaarSearchWndBazaarMessage, *CBazaarSearchWndBazaarMessage_ptr;
+
+typedef struct _CEverQuestStartCastingMessage
+{
+    uint16_t SpawnID;
+    uint16_t SpellID;
+    uint32_t SpellCastTime;
+} CEverQuestStartCastingMessage, *CEverQuestStartCastingMessage_ptr;
 
 } // namespace EQ
 

@@ -1,39 +1,39 @@
 #pragma once
 
-bool g_collisionIsEnabled = false;
+bool g_collisionHackIsEnabled = false;
 
-bool g_collisionDebugIsEnabled = false;
+bool g_collisionHackDebugIsEnabled = false;
 
-void EQAPP_Collision_Toggle();
-void EQAPP_Collision_Debug_Toggle();
-void EQAPP_Collision_HandleEvent_CollisionCallbackForMove(EQ::ActorInstance_ptr actorInstance, EQ::Spawn_ptr spawn);
+void EQAPP_CollisionHack_Toggle();
+void EQAPP_CollisionHack_Debug_Toggle();
+void EQAPP_CollisionHack_HandleEvent_CollisionCallbackForMove(EQ::ActorInstance_ptr actorInstance, EQ::Spawn_ptr spawn);
 
-void EQAPP_Collision_Toggle()
+void EQAPP_CollisionHack_Toggle()
 {
-    EQ_ToggleBool(g_collisionIsEnabled);
-    EQAPP_PrintBool("Collision", g_collisionIsEnabled);
+    EQ_ToggleBool(g_collisionHackIsEnabled);
+    EQAPP_PrintBool("Collision Hack", g_collisionHackIsEnabled);
 
-    if (g_collisionIsEnabled == true)
+    if (g_collisionHackIsEnabled == true)
     {
         EQ_SetActorCollision(false);
 
-        std::cout << "You can now walk through doors and players/npcs." << std::endl;
+        std::cout << "You can now walk through players/npcs and doors and climb over most objects." << std::endl;
     }
     else
     {
         EQ_SetActorCollision(true);
 
-        std::cout << "Collision with doors and players/npcs returned to normal." << std::endl;
+        std::cout << "Collision has been restored to normal." << std::endl;
     }
 }
 
-void EQAPP_Collision_Debug_Toggle()
+void EQAPP_CollisionHack_Debug_Toggle()
 {
-    EQ_ToggleBool(g_collisionDebugIsEnabled);
-    EQAPP_PrintBool("Collision Debug", g_collisionDebugIsEnabled);
+    EQ_ToggleBool(g_collisionHackDebugIsEnabled);
+    EQAPP_PrintBool("Collision Hack Debug", g_collisionHackDebugIsEnabled);
 }
 
-void EQAPP_Collision_HandleEvent_CollisionCallbackForMove(EQ::ActorInstance_ptr actorInstance, EQ::Spawn_ptr spawn)
+void EQAPP_CollisionHack_HandleEvent_CollisionCallbackForMove(EQ::ActorInstance_ptr actorInstance, EQ::Spawn_ptr spawn)
 {
     if (actorInstance == NULL || spawn == NULL)
     {
@@ -56,9 +56,9 @@ void EQAPP_Collision_HandleEvent_CollisionCallbackForMove(EQ::ActorInstance_ptr 
         return;
     }
 
-    if (g_collisionDebugIsEnabled == true)
+    if (g_collisionHackDebugIsEnabled == true)
     {
-        std::cout << "Collision Debug:" << std::endl;
+        std::cout << "Collision Hack Debug:" << std::endl;
         std::cout << "Name: " << actorInstance->ActorDefinition->Name << std::endl;
         std::cout << "Y: " << actorInstance->WorldY << std::endl;
         std::cout << "X: " << actorInstance->WorldX << std::endl;

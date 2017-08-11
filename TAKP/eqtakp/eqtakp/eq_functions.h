@@ -660,12 +660,14 @@ bool EQ_WorldSpaceToScreenSpace(EQ::Location location, uint32_t &screenX, uint32
     screenX = (uint32_t)resultX;
     screenY = (uint32_t)resultY;
 
-    //uint32_t resolutionWidth = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_RESOLUTION_WIDTH);
-    //uint32_t resolutionHeight = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_RESOLUTION_HEIGHT);
-    //if (screenX < 0) return false;
-    //if (screenY < 0) return false;
-    //if (screenX > resolutionWidth) return false;
-    //if (screenY > resolutionHeight) return false;
+/*
+    uint32_t resolutionWidth = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_RESOLUTION_WIDTH);
+    uint32_t resolutionHeight = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_RESOLUTION_HEIGHT);
+    if (screenX < 0) return false;
+    if (screenY < 0) return false;
+    if (screenX > resolutionWidth) return false;
+    if (screenY > resolutionHeight) return false;
+*/
 
     return result != EQ_GRAPHICS_DLL_WORLD_SPACE_TO_SCREEN_SPACE_RESULT_FAILURE;
 }
@@ -680,6 +682,15 @@ bool EQ_WorldSpaceToScreenSpaceFloat(EQ::Location location, float &screenX, floa
 
     screenX = resultX;
     screenY = resultY;
+
+/*
+    uint32_t resolutionWidth = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_RESOLUTION_WIDTH);
+    uint32_t resolutionHeight = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_RESOLUTION_HEIGHT);
+    if (screenX < 0) return false;
+    if (screenY < 0) return false;
+    if (screenX > resolutionWidth) return false;
+    if (screenY > resolutionHeight) return false;
+*/
 
     return result != EQ_GRAPHICS_DLL_WORLD_SPACE_TO_SCREEN_SPACE_RESULT_FAILURE;
 }
@@ -1272,7 +1283,7 @@ void EQ_OpenAllContainers()
             continue;
         }
 
-        EQ_CLASS_POINTER_CContainerMgr->OpenContainer((EQ::EQ_Container_ptr)inventoryPackItem, i + (EQ_NUM_INVENTORY_SLOTS + 1));
+        EQ_CLASS_POINTER_CContainerMgr->OpenContainer((EQ::EQ_Container_ptr)inventoryPackItem, i + (EQ_NUM_INVENTORY_EQUIPMENT_SLOTS + 1));
     }
 }
 

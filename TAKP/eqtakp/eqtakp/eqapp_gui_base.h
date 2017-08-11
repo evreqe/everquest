@@ -52,6 +52,7 @@ private:
     uint32_t m_borderColorARGB;
     uint32_t m_backgroundColorARGB;
     uint32_t m_textColor;
+    uint32_t m_mouseClickBackgroundColorARGB;
     uint32_t m_mouseOverBorderColorARGB;
     uint32_t m_mouseOverBackgroundColorARGB;
     uint32_t m_mouseOverTextColor;
@@ -69,6 +70,7 @@ GUIBase::GUIBase()
     m_borderColorARGB = 0xFF646464;
     m_backgroundColorARGB = 0x80000000;
     m_textColor = EQ_TEXT_COLOR_WHITE;
+    m_mouseClickBackgroundColorARGB = 0xFFFF0000;
     m_mouseOverBorderColorARGB = 0xFF646464;
     m_mouseOverBackgroundColorARGB = 0xFF000000;
     m_mouseOverTextColor = EQ_TEXT_COLOR_YELLOW;
@@ -97,6 +99,15 @@ uint32_t GUIBase::GetBorderColor()
 
 uint32_t GUIBase::GetBackgroundColor()
 {
+    if (m_mouseOver == true)
+    {
+        EQ::Mouse mouse = EQ_GetMouse();
+        if (mouse.ClickState == EQ_MOUSE_CLICK_STATE_LEFT)
+        {
+            return m_mouseClickBackgroundColorARGB;
+        }
+    }
+
     return m_mouseOver == false ? m_backgroundColorARGB : m_mouseOverBackgroundColorARGB;
 }
 

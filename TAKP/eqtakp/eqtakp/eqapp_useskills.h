@@ -3,18 +3,19 @@
 bool g_useSkillsIsEnabled = true;
 
 bool g_useSkillsSenseHeadingIsEnabled = false;
-bool g_useSkillsForageIsEnabled = true;
-bool g_useSkillsTauntIsEnabled = true;
-bool g_useSkillsKickIsEnabled = true;
+bool g_useSkillsForageIsEnabled = false;
+bool g_useSkillsTauntIsEnabled = false;
+bool g_useSkillsKickIsEnabled = false;
 bool g_useSkillsBashIsEnabled = false;
 bool g_useSkillsSlamIsEnabled = false;
-bool g_useSkillsDisarmIsEnabled = true;
+bool g_useSkillsDisarmIsEnabled = false;
 bool g_useSkillsBackstabIsEnabled = false;
 
 uint32_t g_useSkillsTimer = 0;
 uint32_t g_useSkillsTimerDelay = 1000;
 
 void EQAPP_UseSkills_Toggle();
+void EQAPP_UseSkills_Load();
 void EQAPP_UseSkills_Execute();
 
 void EQAPP_UseSkills_Toggle()
@@ -89,6 +90,52 @@ void EQAPP_UseSkills_Toggle_Backstab()
     EQAPP_PrintBool("Use Skills (Backstab): ", g_useSkillsBackstabIsEnabled);
 }
 
+void EQAPP_UseSkills_Load()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    if (playerSpawn->Class == EQ_CLASS_WARRIOR || playerSpawn->Class == EQ_CLASS_PALADIN || playerSpawn->Class == EQ_CLASS_SHADOWKNIGHT)
+    {
+        g_useSkillsTauntIsEnabled = true;
+    }
+
+    if (playerSpawn->Class == EQ_CLASS_WARRIOR)
+    {
+        g_useSkillsKickIsEnabled = true;
+    }
+
+    if (playerSpawn->Class == EQ_CLASS_ROGUE)
+    {
+        g_useSkillsBackstabIsEnabled = true;
+    }
+
+    if
+    (
+        playerSpawn->Class == EQ_CLASS_SHADOWKNIGHT ||
+        playerSpawn->Class == EQ_CLASS_PALADIN      ||
+        playerSpawn->Class == EQ_CLASS_CLERIC       ||
+        playerSpawn->Class == EQ_CLASS_SHAMAN
+    )
+    {
+        if (playerSpawn->Race == EQ_RACE_BARBARIAN || playerSpawn->Race == EQ_RACE_OGRE || playerSpawn->Race == EQ_RACE_TROLL)
+        {
+            g_useSkillsKickIsEnabled = false;
+            g_useSkillsBashIsEnabled = false;
+            g_useSkillsSlamIsEnabled = true;
+        }
+        else
+        {
+            g_useSkillsKickIsEnabled = false;
+            g_useSkillsBashIsEnabled = true;
+            g_useSkillsSlamIsEnabled = false;
+        }
+    }
+}
+
 void EQAPP_UseSkills_Execute()
 {
     if (EQ_HasTimePassed(g_useSkillsTimer, g_useSkillsTimerDelay) == false)
@@ -102,21 +149,18 @@ void EQAPP_UseSkills_Execute()
         return;
     }
 
-    if (playerSpawn->IsAwayFromKeyboard == 1)
+    if (g_useSkillsSenseHeadingIsEnabled == true)
     {
-        if (g_useSkillsSenseHeadingIsEnabled == true)
-        {
-            EQ_UseSkill(EQ_SKILL_SENSE_HEADING, NULL);
-        }
+        EQ_UseSkill(EQ_SKILL_SENSE_HEADING, NULL);
+    }
 
+    if (g_useSkillsForageIsEnabled == true)
+    {
         if (EQ_IsAutoAttackEnabled() == false && playerSpawn->StandingState == EQ_STANDING_STATE_STANDING)
         {
-            if (g_useSkillsForageIsEnabled == true)
-            {
-                EQ_UseSkill(EQ_SKILL_FORAGE, NULL);
+            EQ_UseSkill(EQ_SKILL_FORAGE, NULL);
 
-                EQAPP_AutoInventory_Execute();
-            }
+            EQAPP_AutoInventory_Execute();
         }
     }
 
@@ -143,7 +187,6 @@ void EQAPP_UseSkills_Execute()
 
                 if (g_useSkillsDisarmIsEnabled == true)
                 {
-
                     EQ_UseSkill(EQ_SKILL_DISARM, (EQClass::EQPlayer*)targetSpawn);
                 }
 
@@ -153,13 +196,13 @@ void EQAPP_UseSkills_Execute()
                     {
                         EQ_UseSkill(EQ_SKILL_TAUNT, (EQClass::EQPlayer*)targetSpawn);
                     }
+                }
 
-                    if (playerSpawn->Race == EQ_RACE_BARBARIAN || playerSpawn->Race == EQ_RACE_OGRE || playerSpawn->Race == EQ_RACE_TROLL)
+                if (playerSpawn->Race == EQ_RACE_BARBARIAN || playerSpawn->Race == EQ_RACE_OGRE || playerSpawn->Race == EQ_RACE_TROLL)
+                {
+                    if (g_useSkillsSlamIsEnabled == true)
                     {
-                        if (g_useSkillsSlamIsEnabled == true)
-                        {
-                            EQ_UseSkill(EQ_SKILL_SLAM, (EQClass::EQPlayer*)targetSpawn);
-                        }
+                        EQ_UseSkill(EQ_SKILL_SLAM, (EQClass::EQPlayer*)targetSpawn);
                     }
                 }
 

@@ -13,11 +13,13 @@ std::map<std::string, std::function<void()>> g_interpretCmdList =
     {"//AutoInventory",             &EQAPP_AutoInventory_Execute},
     {"//AutoLoot",                  &EQAPP_AutoLoot_Toggle},
     {"//LoadAutoLoot",              &EQAPP_AutoLoot_Load},
+    {"//Bank",                      &EQAPP_PrintBankInventory},
     {"//ChangeHeight",              &EQAPP_ChangeHeight_Toggle},
-    {"//Collision",                 &EQAPP_Collision_Toggle},
-    {"//CollisionDebug",            &EQAPP_Collision_Debug_Toggle},
+    {"//Collision",                 &EQAPP_CollisionHack_Toggle},
+    {"//CollisionDebug",            &EQAPP_CollisionHack_Debug_Toggle},
     {"//DrawDistance",              &EQAPP_DrawDistance_Toggle},
     {"//ESP",                       &EQAPP_ESP_Toggle},
+    {"//ESPSkeletons",              &EQAPP_ESP_Skeletons_Toggle},
     {"//ESPShowSpawnID",            &EQAPP_ESP_ShowSpawnID_Toggle},
     {"//ExtendedTargets",           &EQAPP_ExtendedTargets_Toggle},
     {"//FoodAndDrink",              &EQAPP_FoodAndDrink_Toggle},
@@ -26,8 +28,11 @@ std::map<std::string, std::function<void()>> g_interpretCmdList =
     {"//HideCorpseLooted",          &EQAPP_HideCorpseLooted_Toggle},
     {"//HUDText",                   &EQAPP_HUDText_Toggle},
     {"//LoadSpellSet",              &EQAPP_SpellSet_LoadAndStartMemorizing},
-    {"//SaveSpellSet",              &EQAPP_SpellSet_Save},
+    {"//SaveSpellSet",              &EQAPP_SpellSet_Save_Default},
     {"//Map",                       &EQAPP_Map_Toggle},
+    {"//MapLines",                  &EQAPP_Map_Lines_Toggle},
+    {"//MapLabels",                 &EQAPP_Map_Labels_Toggle},
+    {"//MapSpawns",                 &EQAPP_Map_Spawns_Toggle},
     {"//LoadMap",                   &EQAPP_Map_Load},
     {"//MaxSkills",                 &EQAPP_MaxSkills_Toggle},
     {"//MerchantWindow",            &EQAPP_MerchantWindow_Toggle},
@@ -62,6 +67,7 @@ std::map<std::string, std::function<void()>> g_interpretCmdList =
     {"//UseSkillsSenseHeading",     &EQAPP_UseSkills_Toggle_SenseHeading},
     {"//UseSkillsSlam",             &EQAPP_UseSkills_Toggle_Slam},
     {"//UseSkillsTaunt",            &EQAPP_UseSkills_Toggle_Taunt},
+    {"//WriteInventory",            &EQAPP_WriteInventoryToFile},
 
     {"//Commands",                  &EQAPP_InterpretCmd_NULL},
     {"//Help",                      &EQAPP_InterpretCmd_NULL},
@@ -293,6 +299,44 @@ void EQAPP_InterpretCmd_Execute(std::string commandText)
         }
 
         std::cout << "Change Height Max: " << std::fixed << std::setprecision(1) << height << std::endl;
+
+        return;
+    }
+
+    if (EQAPP_String_StartsWith(commandText, "//LoadSpellSet ") == true)
+    {
+        if (EQAPP_InterpretCmd_HasQuotes(commandText) == false)
+        {
+            return;
+        }
+
+        std::string spellSetName = EQAPP_String_GetBetween(commandText, "\"", "\"");
+        if (spellSetName.size() == 0)
+        {
+            std::cout << "InterpretCmd Error: Spell set name not not found." << std::endl;
+            return;
+        }
+
+        EQAPP_SpellSet_Load(spellSetName);
+
+        return;
+    }
+
+    if (EQAPP_String_StartsWith(commandText, "//SaveSpellSet ") == true)
+    {
+        if (EQAPP_InterpretCmd_HasQuotes(commandText) == false)
+        {
+            return;
+        }
+
+        std::string spellSetName = EQAPP_String_GetBetween(commandText, "\"", "\"");
+        if (spellSetName.size() == 0)
+        {
+            std::cout << "InterpretCmd Error: Spell set name not not found." << std::endl;
+            return;
+        }
+
+        EQAPP_SpellSet_Save(spellSetName);
 
         return;
     }

@@ -176,9 +176,6 @@
     <ClInclude Include="eqapp_freecamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="eqapp_collision.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="eqapp_dotarget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -189,6 +186,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_toggleview.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_startcasting.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_collisionhack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_skillsmenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

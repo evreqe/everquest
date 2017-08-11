@@ -15,15 +15,23 @@ void EQAPP_ItemDisplay_HandleEvent_CItemDisplayWnd__SetItem(EQ::Item_ptr item)
         return;
     }
 
+    if (EQ_POINTER_CItemDisplayWnd->DisplayText->Length == 0)
+    {
+        return;
+    }
+
+    std::string itemName = item->Name;
+    if (itemName.size() == 0)
+    {
+        return;
+    }
+
     EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, "<BR><c \"#FF00FF\">");
 
     std::stringstream ssItemIDText;
     ssItemIDText << "ID: " << item->ID << " (0x" << std::hex << item->ID << std::dec << ")<BR>";
 
     EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, ssItemIDText.str().c_str());
-
-    std::string itemName = item->Name;
-    auto itemSpellID = item->Common.SpellID;
 
     std::stringstream buffer;
 
@@ -37,56 +45,60 @@ void EQAPP_ItemDisplay_HandleEvent_CItemDisplayWnd__SetItem(EQ::Item_ptr item)
         EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
     }
 
-    if (itemSpellID != 0 && itemSpellID != EQ_SPELL_ID_NULL)
+    if (item->IsContainer == 0)
     {
-        auto spell = EQ_GetSpellByID(itemSpellID);
-        if (spell != NULL)
+        uint16_t itemSpellID = item->Common.SpellID;
+        if (itemSpellID != 0 && itemSpellID != EQ_SPELL_ID_NULL)
         {
-            buffer.str(std::string());
-            buffer << "Spell ID: " << spell->ID << " (" << spell->Name << ")<BR>";
-
-            EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
-        }
-
-        if (itemSpellID == EQ_SPELL_ID_HASTE)
-        {
-            buffer.str(std::string());
-            buffer << "Haste: " << (int)((item->Common.Haste) + 1) << "%<BR>";
-
-            EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
-        }
-        else
-        {
-            buffer.str(std::string());
-
-            if (item->Common.EffectFlag == EQ_ITEM_EFFECT_FLAG_COMBAT)
-            {
-                buffer << "Procs at Level: " << (int)item->Common.CastingLevel << "<BR>";
-            }
-            else if (item->Common.EffectFlag == EQ_ITEM_EFFECT_FLAG_WORN)
-            {
-                buffer << "Effective at Level: " << (int)item->Common.CastingLevel << "<BR>";
-            }
-            else if (item->Common.EffectFlag == EQ_ITEM_EFFECT_FLAG_MUST_EQUIP)
-            {
-                buffer << "Cast at Level: " << (int)item->Common.CastingLevel << "<BR>";
-            }
-
-            EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
-        }
-    }
-
-    if ((itemName.find("Spell: ") != std::string::npos) || (itemName.find("Ancient: ") != std::string::npos))
-    {
-        if (itemSpellID != EQ_SPELL_ID_NULL)
-        {
-            auto spellBookIndex = EQ_GetSpellBookSpellIndexBySpellID(itemSpellID);
-            if (spellBookIndex != -1)
+            auto spell = EQ_GetSpellByID(itemSpellID);
+            if (spell != NULL)
             {
                 buffer.str(std::string());
-                buffer << "This spell is already scribed in your spell book.<BR>";
+                buffer << "Spell ID: " << spell->ID << " (" << spell->Name << ")<BR>";
 
                 EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
+            }
+
+            if (itemSpellID == EQ_SPELL_ID_HASTE)
+            {
+                buffer.str(std::string());
+                buffer << "Haste: " << (int)((item->Common.Haste) + 1) << "%<BR>";
+
+                EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
+            }
+            else
+            {
+                buffer.str(std::string());
+
+                if (item->Common.EffectFlag == EQ_ITEM_EFFECT_FLAG_COMBAT)
+                {
+                    buffer << "Procs at Level: " << (int)item->Common.CastingLevel << "<BR>";
+                }
+                else if (item->Common.EffectFlag == EQ_ITEM_EFFECT_FLAG_WORN)
+                {
+                    buffer << "Effective at Level: " << (int)item->Common.CastingLevel << "<BR>";
+                }
+                else if (item->Common.EffectFlag == EQ_ITEM_EFFECT_FLAG_MUST_EQUIP)
+                {
+                    buffer << "Cast at Level: " << (int)item->Common.CastingLevel << "<BR>";
+                }
+
+                EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
+            }
+        }
+
+        if ((itemName.find("Spell: ") != std::string::npos) || (itemName.find("Ancient: ") != std::string::npos))
+        {
+            if (itemSpellID != EQ_SPELL_ID_NULL)
+            {
+                auto spellBookIndex = EQ_GetSpellBookSpellIndexBySpellID(itemSpellID);
+                if (spellBookIndex != -1)
+                {
+                    buffer.str(std::string());
+                    buffer << "This spell is already scribed in your spell book.<BR>";
+
+                    EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
+                }
             }
         }
     }

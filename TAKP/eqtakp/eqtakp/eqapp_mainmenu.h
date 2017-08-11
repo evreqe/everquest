@@ -55,11 +55,11 @@ void EQAPP_MainMenu_CreateMenu()
     g_mainMenuGUIMenuItemAutoLoot.SetFunctionLeftClick(&EQAPP_AutoLoot_Toggle);
     g_mainMenuGUIMenuItemAutoLoot.SetBoolPointer(g_autoLootIsEnabled);
 
-    EQApp::GUIMenuItem g_mainMenuGUIMenuItemCollision;
-    g_mainMenuGUIMenuItemCollision.SetText("Collision");
-    g_mainMenuGUIMenuItemCollision.FitToText();
-    g_mainMenuGUIMenuItemCollision.SetFunctionLeftClick(&EQAPP_Collision_Toggle);
-    g_mainMenuGUIMenuItemCollision.SetBoolPointer(g_collisionIsEnabled);
+    EQApp::GUIMenuItem g_mainMenuGUIMenuItemCollisionHack;
+    g_mainMenuGUIMenuItemCollisionHack.SetText("Collision Hack");
+    g_mainMenuGUIMenuItemCollisionHack.FitToText();
+    g_mainMenuGUIMenuItemCollisionHack.SetFunctionLeftClick(&EQAPP_CollisionHack_Toggle);
+    g_mainMenuGUIMenuItemCollisionHack.SetBoolPointer(g_collisionHackIsEnabled);
 
     EQApp::GUIMenuItem g_mainMenuGUIMenuItemESP;
     g_mainMenuGUIMenuItemESP.SetText("ESP");
@@ -109,15 +109,25 @@ void EQAPP_MainMenu_CreateMenu()
     g_mainMenuGUIMenuItemTrainSpells.SetFunctionLeftClick(&EQAPP_TrainSpells_Toggle);
     g_mainMenuGUIMenuItemTrainSpells.SetBoolPointer(g_trainSpellsIsEnabled);
 
+    EQApp::GUIMenuItem g_mainMenuGUIMenuItemPrintBankInventory;
+    g_mainMenuGUIMenuItemPrintBankInventory.SetText("Print Bank Inventory");
+    g_mainMenuGUIMenuItemPrintBankInventory.FitToText();
+    g_mainMenuGUIMenuItemPrintBankInventory.SetFunctionLeftClick(&EQAPP_PrintBankInventory);
+
+    EQApp::GUIMenuItem g_mainMenuGUIMenuItemWriteInventoryToFile;
+    g_mainMenuGUIMenuItemWriteInventoryToFile.SetText("Write Inventory to File");
+    g_mainMenuGUIMenuItemWriteInventoryToFile.FitToText();
+    g_mainMenuGUIMenuItemWriteInventoryToFile.SetFunctionLeftClick(&EQAPP_WriteInventoryToFile);
+
     EQApp::GUIMenuItem g_mainMenuGUIMenuItemLoadSpellSet;
-    g_mainMenuGUIMenuItemLoadSpellSet.SetText("Load Spellset");
+    g_mainMenuGUIMenuItemLoadSpellSet.SetText("Load Default Spellset");
     g_mainMenuGUIMenuItemLoadSpellSet.FitToText();
-    g_mainMenuGUIMenuItemLoadSpellSet.SetFunctionLeftClick(&EQAPP_SpellSet_Load);
+    g_mainMenuGUIMenuItemLoadSpellSet.SetFunctionLeftClick(&EQAPP_SpellSet_Load_Default);
 
     EQApp::GUIMenuItem g_mainMenuGUIMenuItemSaveSpellSet;
-    g_mainMenuGUIMenuItemSaveSpellSet.SetText("Save Spellset");
+    g_mainMenuGUIMenuItemSaveSpellSet.SetText("Save Default Spellset");
     g_mainMenuGUIMenuItemSaveSpellSet.FitToText();
-    g_mainMenuGUIMenuItemSaveSpellSet.SetFunctionLeftClick(&EQAPP_SpellSet_Save);
+    g_mainMenuGUIMenuItemSaveSpellSet.SetFunctionLeftClick(&EQAPP_SpellSet_Save_Default);
 
     EQApp::GUIMenuItem g_mainMenuGUIMenuItemUnload;
     g_mainMenuGUIMenuItemUnload.SetText("Unload");
@@ -126,7 +136,7 @@ void EQAPP_MainMenu_CreateMenu()
 
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemAlwaysAttack);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemAutoLoot);
-    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemCollision);
+    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemCollisionHack);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemESP);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemExtendedTargets);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemFoodAndDrink);
@@ -135,6 +145,11 @@ void EQAPP_MainMenu_CreateMenu()
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemSpawnAlert);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemSpeedHack);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemTrainSpells);
+
+    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemSeparator);
+
+    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemPrintBankInventory);
+    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemWriteInventoryToFile);
 
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemSeparator);
 

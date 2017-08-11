@@ -156,7 +156,7 @@
     <ClInclude Include="eqapp_boxchat.h" />
     <ClInclude Include="eqapp_bufftimers.h" />
     <ClInclude Include="eqapp_changeheight.h" />
-    <ClInclude Include="eqapp_collision.h" />
+    <ClInclude Include="eqapp_collisionhack.h" />
     <ClInclude Include="eqapp_console.h" />
     <ClInclude Include="eqapp_detours.h" />
     <ClInclude Include="eqapp_dotarget.h" />
@@ -187,12 +187,14 @@
     <ClInclude Include="eqapp_namespritetint.h" />
     <ClInclude Include="eqapp_networkstats.h" />
     <ClInclude Include="eqapp_neverfrozen.h" />
+    <ClInclude Include="eqapp_skillsmenu.h" />
     <ClInclude Include="eqapp_spawnalert.h" />
     <ClInclude Include="eqapp_speedhack.h" />
     <ClInclude Include="eqapp_spellbookwindow.h" />
     <ClInclude Include="eqapp_spellset.h" />
     <ClInclude Include="eqapp_autostand.h" />
     <ClInclude Include="eqapp_maxskills.h" />
+    <ClInclude Include="eqapp_startcasting.h" />
     <ClInclude Include="eqapp_toggleview.h" />
     <ClInclude Include="eqapp_trainspells.h" />
     <ClInclude Include="eqapp_useskills.h" />

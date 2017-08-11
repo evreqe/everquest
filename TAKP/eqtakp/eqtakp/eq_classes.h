@@ -153,6 +153,7 @@ public:
     int CEverQuest::MoveToZone(int zoneID, char* text, int destinationType, int zoneRequestReason);
     int CEverQuest::LootCorpse(class EQPlayer* player, int unknown);
     void CEverQuest::DropHeldItemOnGround(bool showDropMessage);
+    void CEverQuest::StartCasting(EQ::CEverQuestStartCastingMessage_ptr message);
 };
 
 #define EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd 0x0054572F
@@ -200,6 +201,10 @@ typedef signed int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__LootCorpse)(void* t
 #define EQ_ADDRESS_FUNCTION_CEverQuest__DropHeldItemOnGround 0x00530D7E
 EQ_MACRO_FunctionAtAddress(void EQClass::CEverQuest::DropHeldItemOnGround(bool showDropMessage), EQ_ADDRESS_FUNCTION_CEverQuest__DropHeldItemOnGround);
 typedef signed int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__DropHeldItemOnGround)(void* this_ptr, bool showDropMessage);
+
+#define EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting 0x0052CBE7
+EQ_MACRO_FunctionAtAddress(void EQClass::CEverQuest::StartCasting(EQ::CEverQuestStartCastingMessage_ptr message), EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__StartCasting)(void* this_ptr, EQ::CEverQuestStartCastingMessage_ptr message);
 
 /* EQPlayer */
 
@@ -456,7 +461,7 @@ public:
     void CBazaarSearchWnd::Deactivate();
     void CBazaarSearchWnd::doQuery();
     char* CBazaarSearchWnd::GetPriceString(uint32_t itemValue);
-    void CBazaarSearchWnd::HandleBazaarMsg(EQ::CBazaarSearchWndBazaarMsg_ptr message);
+    void CBazaarSearchWnd::HandleBazaarMsg(EQ::CBazaarSearchWndBazaarMessage_ptr message);
     void CBazaarSearchWnd::SortItemList(uint32_t columnIndex); // 1 = Item Name, 2 = Price, 3 = Seller
     void CBazaarSearchWnd::UpdateComboButtons();
     void CBazaarSearchWnd::UpdatePlayerCombo(); // update traders
@@ -466,8 +471,8 @@ public:
 EQ_MACRO_FunctionAtAddress(char* EQClass::CBazaarSearchWnd::GetPriceString(uint32_t itemValue), EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__GetPriceString);
 
 #define EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__HandleBazaarMsg 0x004060B5
-EQ_MACRO_FunctionAtAddress(void EQClass::CBazaarSearchWnd::HandleBazaarMsg(EQ::CBazaarSearchWndBazaarMsg_ptr message), EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__HandleBazaarMsg);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarSearchWnd__HandleBazaarMsg)(void* this_ptr, EQ::CBazaarSearchWndBazaarMsg_ptr message);
+EQ_MACRO_FunctionAtAddress(void EQClass::CBazaarSearchWnd::HandleBazaarMsg(EQ::CBazaarSearchWndBazaarMessage_ptr message), EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__HandleBazaarMsg);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarSearchWnd__HandleBazaarMsg)(void* this_ptr, EQ::CBazaarSearchWndBazaarMessage_ptr message);
 
 /* CBuffWindow */
 
@@ -570,6 +575,7 @@ public:
     int CSpellBookWnd::FinishMemorizing(uint8_t spellGemIndex, uint16_t spellID);
     int CSpellBookWnd::GetSpellMemTicksLeft();
     void CSpellBookWnd::TurnToPage(signed int pageNumber);
+    void CSpellBookWnd::HandleKeys(uint32_t keyID, bool unknown);
 };
 
 #define EQ_ADDRESS_FUNCTION_CSpellBookWnd__Activate 0x0043441F
@@ -595,6 +601,10 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CSpellBookWnd__GetSpellMemTicksLeft)(v
 #define EQ_ADDRESS_FUNCTION_CSpellBookWnd__TurnToPage 0x004352C8
 EQ_MACRO_FunctionAtAddress(void EQClass::CSpellBookWnd::TurnToPage(signed int pageNumber), EQ_ADDRESS_FUNCTION_CSpellBookWnd__TurnToPage);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CSpellBookWnd__TurnToPage)(void* this_ptr, signed int pageNumber);
+
+#define EQ_ADDRESS_FUNCTION_CSpellBookWnd__HandleKeys 0x004346AF
+EQ_MACRO_FunctionAtAddress(void EQClass::CSpellBookWnd::HandleKeys(uint32_t keyID, bool unknown), EQ_ADDRESS_FUNCTION_CSpellBookWnd__HandleKeys);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CSpellBookWnd__HandleKeys)(void* this_ptr, uint32_t keyID, bool unknown);
 
 /* CTrackingWnd */
 

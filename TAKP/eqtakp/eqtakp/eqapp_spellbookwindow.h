@@ -3,6 +3,7 @@
 bool g_spellBookWindowIsEnabled = true;
 
 signed int EQAPP_SpellBookWindow_HandleEvent__CSpellBookWnd__TurnToPage(void* this_ptr, signed int pageNumber);
+void EQAPP_SpellBookWindow_HandleEvent__CSpellBookWnd__HandleKeys(void* this_ptr, uint32_t keyID, bool unknown);
 
 signed int EQAPP_SpellBookWindow_HandleEvent__CSpellBookWnd__TurnToPage(void* this_ptr, signed int pageNumber)
 {
@@ -30,3 +31,17 @@ signed int EQAPP_SpellBookWindow_HandleEvent__CSpellBookWnd__TurnToPage(void* th
 
     return pageNumber;
 }
+
+void EQAPP_SpellBookWindow_HandleEvent__CSpellBookWnd__HandleKeys(void* this_ptr, uint32_t keyID, bool unknown)
+{
+    if (EQ_IsWindowVisible(EQ_ADDRESS_POINTER_CSpellBookWnd) == false)
+    {
+        return;
+    }
+
+    if (keyID == EQ_KEY_DOWN_ARROW || keyID == EQ_KEY_UP_ARROW)
+    {
+        EQ_CLASS_POINTER_CSpellBookWnd->TurnToPage(0);
+    }
+}
+

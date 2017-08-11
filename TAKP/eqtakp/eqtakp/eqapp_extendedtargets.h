@@ -39,10 +39,10 @@ float g_extendedTargetsSpawnDistanceZMax = 10.0f;
 
 uint32_t g_extendedTargetsFontHeight = 1;
 
-float g_extendedTargetsDefaultX = 4.0f;
+float g_extendedTargetsDefaultX = 8.0f;
 float g_extendedTargetsDefaultY = 412.0f;
 
-float g_extendedTargetsX = 4.0f;
+float g_extendedTargetsX = 8.0f;
 float g_extendedTargetsY = 412.0f;
 
 float g_extendedTargetsWidth  = 200.0f;
@@ -84,7 +84,7 @@ void EQAPP_ExtendedTargets_RecalculateScreenCoordinates()
     uint32_t resolutionHeight = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_RESOLUTION_HEIGHT);
 
     g_extendedTargetsX = (float)resolutionWidth - g_extendedTargetsDefaultX - g_extendedTargetsWidth;
-    g_extendedTargetsY = (float)(g_extendedTargetsDefaultY + g_extendedTargetsFontHeight); // 4.0f + g_mapHeight + 8.0f + fontHeight;
+    g_extendedTargetsY = (float)(g_extendedTargetsDefaultY + g_extendedTargetsFontHeight);
 }
 
 void EQAPP_ExtendedTargets_UpdateSpawnList()
@@ -101,8 +101,6 @@ void EQAPP_ExtendedTargets_UpdateSpawnList()
     {
         return;
     }
-
-    auto targetSpawn = EQ_GetTargetSpawn();
 
     std::vector<std::pair<float, uint16_t>> spawnDistanceList; // float distance, uint16_t spawnID
 
@@ -128,11 +126,23 @@ void EQAPP_ExtendedTargets_UpdateSpawnList()
             continue;
         }
 
+
         float spawnDistanceZ = std::fabsf(spawn->Z - playerSpawn->Z);
-        if (spawnDistanceZ > g_extendedTargetsSpawnDistanceZMax)
+        if (spawn->Height < g_extendedTargetsSpawnDistanceZMax)
         {
-            spawn = spawn->Next;
-            continue;
+            if (spawnDistanceZ > g_extendedTargetsSpawnDistanceZMax)
+            {
+                spawn = spawn->Next;
+                continue;
+            }
+        }
+        else
+        {
+            if (spawnDistanceZ > (spawn->Height * 2.0f))
+            {
+                spawn = spawn->Next;
+                continue;
+            }
         }
 
         spawnDistanceList.push_back(std::make_pair(spawnDistance, spawn->SpawnID));
@@ -201,6 +211,7 @@ void EQAPP_ExtendedTargets_UpdateSpawnList()
             etSpawn.TextColor = EQ_TEXT_COLOR_LIGHT_GREEN;
         }
 
+        auto targetSpawn = EQ_GetTargetSpawn();
         if (spawn == targetSpawn)
         {
             etSpawn.IsTarget = true;

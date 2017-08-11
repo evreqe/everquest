@@ -72,6 +72,12 @@ void EQAPP_FreeCamera_SetEnabled(bool bEnabled)
     if (bEnabled == true)
     {
         EQ_SetCameraView(EQ_CAMERA_VIEW_FIRST_PERSON);
+
+        auto playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn != NULL)
+        {
+            EQ_SetSpawnStandingState(playerSpawn, EQ_STANDING_STATE_STANDING);
+        }
     }
 
     g_freeCameraIsEnabled = bEnabled;

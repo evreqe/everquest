@@ -42,6 +42,9 @@ void EQAPP_TargetNearestAnyCorpse();
 void EQAPP_TargetNearestPlayerCorpse();
 void EQAPP_TargetNearestNPCCorpse();
 
+void EQAPP_PrintBankInventory();
+void EQAPP_WriteInventoryToFile();
+
 template <class T>
 void EQAPP_Log(const char* text, T number)
 {
@@ -395,6 +398,290 @@ void EQAPP_TargetNearestNPCCorpse()
     {
         EQ_SetTargetSpawn(spawn);
     }
+}
+
+void EQAPP_PrintBankInventory()
+{
+    if (EQ_IsInGame() == false)
+    {
+        return;
+    }
+
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    std::cout << "Bank:" << std::endl;
+
+    bool bIsBankEmpty = true;
+
+    std::cout << (int)playerSpawn->Character->BankPlatinum << "p "
+              << (int)playerSpawn->Character->BankGold     << "g "
+              << (int)playerSpawn->Character->BankSilver   << "s "
+              << (int)playerSpawn->Character->BankCopper   << "c"
+              << std::endl;
+
+    for (size_t i = 0; i < EQ_NUM_INVENTORY_BANK_SLOTS; i++)
+    {
+        EQ::Item_ptr item = (EQ::Item_ptr)playerSpawn->Character->InventoryBankItem[i];
+        if (item == NULL)
+        {
+            continue;
+        }
+        else
+        {
+            bIsBankEmpty = false;
+        }
+
+        std::cout << i + 1 << ": " << item->Name;
+
+        if (item->IsContainer == 0)
+        {
+            if (item->Common.IsStackable == 1 && item->Common.StackCount > 1)
+            {
+                std::cout << " x " << (int)item->Common.StackCount;
+            }
+        }
+
+        std::cout << std::endl;
+
+        if (item->IsContainer == 1)
+        {
+            for (size_t j = 0; j < EQ_NUM_CONTAINER_SLOTS; j++)
+            {
+                EQ::Item_ptr containerItem = (EQ::Item_ptr)playerSpawn->Character->InventoryBankItem[i]->Container.Item[j];
+                if (containerItem == NULL)
+                {
+                    continue;
+                }
+
+                std::cout << "- " << containerItem->Name;
+
+                if (containerItem->IsContainer == 0)
+                {
+                    if (containerItem->Common.IsStackable == 1 && containerItem->Common.StackCount > 1)
+                    {
+                        std::cout << " x " << (int)containerItem->Common.StackCount;
+                    }
+                }
+
+                std::cout << std::endl;
+            }
+        }
+    }
+
+    if (bIsBankEmpty == true)
+    {
+        std::cout << "Your bank is empty." << std::endl;
+    }
+}
+
+void EQAPP_WriteInventoryToFile()
+{
+if (EQ_IsInGame() == false)
+    {
+        return;
+    }
+
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    std::string spawnName = EQ_GetSpawnName(playerSpawn);
+    if (spawnName.size() == 0)
+    {
+        return;
+    }
+
+    std::stringstream filePath;
+    filePath << g_applicationName << "/inventory/" << spawnName << ".ini";
+
+    std::string filePathStr = filePath.str();
+
+    std::cout << "Saving inventory to file: " << filePathStr << std::endl;
+
+    std::fstream file;
+    file.open(filePathStr.c_str(), std::fstream::in | std::fstream::out | std::fstream::trunc);
+    if (file.is_open() == false)
+    {
+        std::stringstream ss;
+        ss << "failed to open file: " << filePathStr;
+
+        EQAPP_PrintErrorMessage(__FUNCTION__, ss.str());
+        return;
+    }
+
+    file << "---------- BANK ----------" << std::endl;
+
+    bool bIsBankEmpty = true;
+
+    file << "Platinum: " << (int)playerSpawn->Character->BankPlatinum << std::endl;
+    file << "Gold: " << (int)playerSpawn->Character->BankGold << std::endl;
+    file << "Silver: " << (int)playerSpawn->Character->BankSilver << std::endl;
+    file << "Copper: " << (int)playerSpawn->Character->BankCopper << std::endl;
+
+    for (size_t i = 0; i < EQ_NUM_INVENTORY_BANK_SLOTS; i++)
+    {
+        EQ::Item_ptr item = (EQ::Item_ptr)playerSpawn->Character->InventoryBankItem[i];
+        if (item == NULL)
+        {
+            continue;
+        }
+        else
+        {
+            bIsBankEmpty = false;
+        }
+
+        file << i + 1 << ": " << item->Name;
+
+        if (item->IsContainer == 0)
+        {
+            if (item->Common.IsStackable == 1 && item->Common.StackCount > 1)
+            {
+                file << " x " << (int)item->Common.StackCount;
+            }
+        }
+
+        file << std::endl;
+
+        if (item->IsContainer == 1)
+        {
+            for (size_t j = 0; j < EQ_NUM_CONTAINER_SLOTS; j++)
+            {
+                EQ::Item_ptr containerItem = (EQ::Item_ptr)playerSpawn->Character->InventoryBankItem[i]->Container.Item[j];
+                if (containerItem == NULL)
+                {
+                    continue;
+                }
+
+                file << "- " << containerItem->Name;
+
+                if (containerItem->IsContainer == 0)
+                {
+                    if (containerItem->Common.IsStackable == 1 && containerItem->Common.StackCount > 1)
+                    {
+                        file << " x " << (int)containerItem->Common.StackCount;
+                    }
+                }
+
+                file << std::endl;
+            }
+        }
+    }
+
+    if (bIsBankEmpty == true)
+    {
+        file << "Your bank is empty." << std::endl;
+    }
+
+    file << std::endl;
+
+    file << "---------- INVENTORY ----------" << std::endl;
+
+    file << "Platinum: " << (int)playerSpawn->Character->InventoryPlatinum << std::endl;
+    file << "Gold: " << (int)playerSpawn->Character->InventoryGold << std::endl;
+    file << "Silver: " << (int)playerSpawn->Character->InventorySilver << std::endl;
+    file << "Copper: " << (int)playerSpawn->Character->InventoryCopper << std::endl;
+
+    for (size_t i = 0; i < EQ_NUM_INVENTORY_PACK_SLOTS; i++)
+    {
+        EQ::Item_ptr item = (EQ::Item_ptr)playerSpawn->Character->InventoryPackItem[i];
+        if (item == NULL)
+        {
+            continue;
+        }
+
+        file << i + 1 << ": " << item->Name;
+
+        if (item->IsContainer == 0)
+        {
+            if (item->Common.IsStackable == 1 && item->Common.StackCount > 1)
+            {
+                file << " x " << (int)item->Common.StackCount;
+            }
+        }
+
+        file << std::endl;
+
+        if (item->IsContainer == 1)
+        {
+            for (size_t j = 0; j < EQ_NUM_CONTAINER_SLOTS; j++)
+            {
+                EQ::Item_ptr containerItem = (EQ::Item_ptr)playerSpawn->Character->InventoryPackItem[i]->Container.Item[j];
+                if (containerItem == NULL)
+                {
+                    continue;
+                }
+
+                file << "- " << containerItem->Name;
+
+                if (containerItem->IsContainer == 0)
+                {
+                    if (containerItem->Common.IsStackable == 1 && containerItem->Common.StackCount > 1)
+                    {
+                        file << " x " << (int)containerItem->Common.StackCount;
+                    }
+                }
+
+                file << std::endl;
+            }
+        }
+    }
+
+    file << std::endl;
+
+    file << "---------- EQUIPMENT ----------" << std::endl;
+
+    for (size_t i = 0; i < EQ_NUM_INVENTORY_EQUIPMENT_SLOTS; i++)
+    {
+        EQ::Item_ptr item = (EQ::Item_ptr)playerSpawn->Character->InventoryEquipmentItem[i];
+        if (item == NULL)
+        {
+            continue;
+        }
+
+        file << EQ_STRING_MAP_INVENTORY_EQUIPMENT_NAME[i] << ": " << item->Name;
+
+        if (item->IsContainer == 0)
+        {
+            if (item->Common.IsStackable == 1 && item->Common.StackCount > 1)
+            {
+                file << " x " << (int)item->Common.StackCount;
+            }
+        }
+
+        file << std::endl;
+
+        if (item->IsContainer == 1)
+        {
+            for (size_t j = 0; j < EQ_NUM_CONTAINER_SLOTS; j++)
+            {
+                EQ::Item_ptr containerItem = (EQ::Item_ptr)playerSpawn->Character->InventoryEquipmentItem[i]->Container.Item[j];
+                if (containerItem == NULL)
+                {
+                    continue;
+                }
+
+                file << "- " << containerItem->Name;
+
+                if (containerItem->IsContainer == 0)
+                {
+                    if (containerItem->Common.IsStackable == 1 && containerItem->Common.StackCount > 1)
+                    {
+                        file << " x " << (int)containerItem->Common.StackCount;
+                    }
+                }
+
+                file << std::endl;
+            }
+        }
+    }
+
+    file.close();
 }
 
 

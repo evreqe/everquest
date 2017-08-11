@@ -58,8 +58,8 @@
 #define EQ_NUM_SPELLS 4000
 #define EQ_NUM_SPELL_GEMS 8
 #define EQ_NUM_GROUP_MEMBERS 5
-#define EQ_NUM_INVENTORY_SLOTS 21
-#define EQ_NUM_INVENTORY_PACK_SLOTS 8 // bags
+#define EQ_NUM_INVENTORY_EQUIPMENT_SLOTS 21
+#define EQ_NUM_INVENTORY_PACK_SLOTS 8 // bags or backpacks
 #define EQ_NUM_INVENTORY_BANK_SLOTS 8
 #define EQ_NUM_INVENTORY_SLOTS_TOTAL // 21 + 8 + 8, inventory + bags + bank
 #define EQ_NUM_MERCHANT_SLOTS 80
@@ -1141,7 +1141,32 @@ std::unordered_map<std::string, std::string> EQ_STRING_MAP_DOOR_SPAWN_NAME =
     {"POKTGDPORT500", "The Great Divide"},
     {"POKTNPORT500",  "The Nexus"},
 
-    {"FAYLEVATOR",    "Faydark Elevator"},
+    ////{"FAYLEVATOR",    "Faydark Elevator"},
+};
+
+std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_INVENTORY_EQUIPMENT_NAME =
+{
+    {0, "Left Ear"},
+    {1, "Head"},
+    {2, "Face"},
+    {3, "Right Ear"},
+    {4, "Neck"},
+    {5, "Shoulders"},
+    {6, "Arms"},
+    {7, "Back"},
+    {8, "Left Wrist"},
+    {9, "Right Wrist"},
+    {10, "Ranged"},
+    {11, "Hands"},
+    {12, "Primary"},
+    {13, "Secondary"},
+    {14, "Right Ring"},
+    {15, "Left Ring"},
+    {16, "Chest"},
+    {17, "Legs"},
+    {18, "Feet"},
+    {19, "Waist"},
+    {20, "Ammo"},
 };
 
 typedef std::vector<uint32_t> EQ_ZoneIDList_t;

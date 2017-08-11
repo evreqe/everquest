@@ -105,8 +105,9 @@
 #include "eqapp_trainspells.h"
 #include "eqapp_spawnalert.h"
 #include "eqapp_freecamera.h"
-#include "eqapp_collision.h"
+#include "eqapp_collisionhack.h"
 #include "eqapp_toggleview.h"
+#include "eqapp_startcasting.h"
 //
 #include "eqapp_extendedtargets.h"
 #include "eqapp_map.h"
@@ -117,6 +118,7 @@
 #include "eqapp_boxchat.h"
 //
 #include "eqapp_mainmenu.h"
+#include "eqapp_skillsmenu.h"
 #include "eqapp_hudtext.h"
 //
 //
@@ -132,7 +134,10 @@ void EQAPP_Load()
 
     EQAPP_Memory_Load();
 
+    EQAPP_UseSkills_Load();
+
     EQAPP_MainMenu_Load();
+    EQAPP_SkillsMenu_Load();
 
     if (EQ_IsInGame() == true)
     {
