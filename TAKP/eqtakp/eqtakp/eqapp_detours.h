@@ -18,6 +18,7 @@ EQ_FUNCTION_TYPE_EQPlayer__FollowPlayerAI EQAPP_REAL_EQPlayer__FollowPlayerAI = 
 EQ_FUNCTION_TYPE_EQ_Character__eqspa_movement_rate EQAPP_REAL_EQ_Character__eqspa_movement_rate = NULL;
 EQ_FUNCTION_TYPE_EQ_Character__CastSpell EQAPP_REAL_EQ_Character__CastSpell = NULL;
 
+EQ_FUNCTION_TYPE_CDisplay__CreateActor EQAPP_REAL_CDisplay__CreateActor = NULL;
 EQ_FUNCTION_TYPE_CDisplay__CreatePlayerActor EQAPP_REAL_CDisplay__CreatePlayerActor = NULL;
 EQ_FUNCTION_TYPE_CDisplay__DeleteActor EQAPP_REAL_CDisplay__DeleteActor = NULL;
 EQ_FUNCTION_TYPE_CDisplay__SetNameSpriteState EQAPP_REAL_CDisplay__SetNameSpriteState = NULL;
@@ -57,6 +58,8 @@ EQ_FUNCTION_TYPE_ExecuteCmd EQAPP_REAL_ExecuteCmd = NULL;
 EQ_FUNCTION_TYPE_CollisionCallbackForMove EQAPP_REAL_CollisionCallbackForMove = NULL;
 EQ_FUNCTION_TYPE_do_target EQAPP_REAL_do_target = NULL;
 
+EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dCreateActorEx EQAPP_REAL_EQGraphicsDLL__t3dCreateActorEx = NULL;
+
 int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short a3, unsigned short a4, unsigned short a5, int a6, unsigned short a7, unsigned long a8, long a9, unsigned long a10);
 
 int __fastcall EQAPP_DETOUR_CXWndManager__DrawWindows(void* this_ptr, void* not_used);
@@ -69,13 +72,14 @@ int __fastcall EQAPP_DETOUR_EQPlayer__FollowPlayerAI(void* this_ptr, void* not_u
 int __fastcall EQAPP_DETOUR_EQ_Character__eqspa_movement_rate(void* this_ptr, void* not_used, short a1);
 int __fastcall EQAPP_DETOUR_EQ_Character__CastSpell(void* this_ptr, void* not_used, uint8_t a1, uint16_t a2, EQ::Item** a3, uint16_t a4);
 
+int __fastcall EQAPP_DETOUR_CDisplay__CreateActor(void* this_ptr, void* not_used, char* name, float a2, float a3, float a4, float a5, float a6, float a7, int a8, int a9);
 int __fastcall EQAPP_DETOUR_CDisplay__CreatePlayerActor(void* this_ptr, void* not_used, class EQPlayer* a1);
 int __fastcall EQAPP_DETOUR_CDisplay__DeleteActor(void* this_ptr, void* not_used, EQ::ActorInstance_ptr a1);
 int __fastcall EQAPP_DETOUR_CDisplay__SetNameSpriteState(void* this_ptr, void* not_used, class EQPlayer* a1, bool a2);
 int __fastcall EQAPP_DETOUR_CDisplay__SetNameSpriteTint(void* this_ptr, void* not_used, class EQPlayer* a1);
 int __fastcall EQAPP_DETOUR_CDisplay__ToggleView(void* this_ptr, void* not_used);
 
-int __fastcall EQAPP_DETOUR_CBazaarSearchWnd__HandleBazaarMsg(void* this_ptr, void* not_used, EQ::CBazaarSearchWndBazaarMessage_ptr message);
+int __fastcall EQAPP_DETOUR_CBazaarSearchWnd__HandleBazaarMsg(void* this_ptr, void* not_used, EQ::CBazaarSearchWndResultMessage_ptr message);
 
 int __fastcall EQAPP_DETOUR_CBuffWindow__RefreshBuffDisplay(void* this_ptr, void* not_used);
 int __fastcall EQAPP_DETOUR_CBuffWindow__PostDraw(void* this_ptr, void* not_used);
@@ -108,6 +112,8 @@ int __cdecl EQAPP_DETOUR_ExecuteCmd(uint32_t a1, int a2, int a3);
 int __cdecl EQAPP_DETOUR_CollisionCallbackForMove(EQ::ActorInstance_ptr a1, EQ::Spawn_ptr a2);
 int __cdecl EQAPP_DETOUR_do_target(class EQClass::EQPlayer* a1, const char* a2);
 
+int __cdecl EQAPP_DETOUR_EQGraphicsDLL__t3dCreateActorEx(int a1, EQ::ActorDefinition_ptr a2, char* a3, int a4, int a5, int a6, float a7, float a8, int a9, int a10);
+
 void EQAPP_Detours_Add()
 {
     EQ_MACRO_AddDetour(DrawNetStatus);
@@ -122,6 +128,7 @@ void EQAPP_Detours_Add()
     EQ_MACRO_AddDetour(EQ_Character__eqspa_movement_rate);
     EQ_MACRO_AddDetour(EQ_Character__CastSpell);
 
+    EQ_MACRO_AddDetour(CDisplay__CreateActor);
     EQ_MACRO_AddDetour(CDisplay__CreatePlayerActor);
     EQ_MACRO_AddDetour(CDisplay__DeleteActor);
     EQ_MACRO_AddDetour(CDisplay__SetNameSpriteState);
@@ -158,6 +165,11 @@ void EQAPP_Detours_Add()
     EQ_MACRO_AddDetour(ExecuteCmd);
     EQ_MACRO_AddDetour(CollisionCallbackForMove);
     EQ_MACRO_AddDetour(do_target);
+
+    uint32_t EQ_ADDRESS_FUNCTION_EQGraphicsDLL__t3dCreateActorEx = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_EQGraphicsDLL__t3dCreateActorEx);
+
+    EQAPP_REAL_EQGraphicsDLL__t3dCreateActorEx =
+        (EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dCreateActorEx)DetourFunction((PBYTE)EQ_ADDRESS_FUNCTION_EQGraphicsDLL__t3dCreateActorEx, (PBYTE)EQAPP_DETOUR_EQGraphicsDLL__t3dCreateActorEx);
 }
 
 void EQAPP_Detours_Remove()
@@ -174,6 +186,7 @@ void EQAPP_Detours_Remove()
     EQ_MACRO_RemoveDetour(EQ_Character__eqspa_movement_rate);
     EQ_MACRO_RemoveDetour(EQ_Character__CastSpell);
 
+    EQ_MACRO_RemoveDetour(CDisplay__CreateActor);
     EQ_MACRO_RemoveDetour(CDisplay__CreatePlayerActor);
     EQ_MACRO_RemoveDetour(CDisplay__DeleteActor);
     EQ_MACRO_RemoveDetour(CDisplay__SetNameSpriteState);
@@ -210,6 +223,8 @@ void EQAPP_Detours_Remove()
     EQ_MACRO_RemoveDetour(ExecuteCmd);
     EQ_MACRO_RemoveDetour(CollisionCallbackForMove);
     EQ_MACRO_RemoveDetour(do_target);
+
+    DetourRemove((PBYTE)EQAPP_REAL_EQGraphicsDLL__t3dCreateActorEx, (PBYTE)EQAPP_DETOUR_EQGraphicsDLL__t3dCreateActorEx);
 }
 
 void EQAPP_Detours_OnZoneChanged_Event()
@@ -289,6 +304,11 @@ int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short
     if (g_drawDistanceIsEnabled == true)
     {
         EQAPP_DrawDistance_Execute();
+    }
+
+    if (g_spawnCastSpellIsEnabled == true)
+    {
+        EQAPP_SpawnCastSpell_Execute();
     }
 
     if (g_autoLootIsEnabled == true)
@@ -517,6 +537,24 @@ int __fastcall EQAPP_DETOUR_EQ_Character__CastSpell(void* this_ptr, void* not_us
     return EQAPP_REAL_EQ_Character__CastSpell(this_ptr, a1, a2, a3, a4);
 }
 
+int __fastcall EQAPP_DETOUR_CDisplay__CreateActor(void* this_ptr, void* not_used, char* name, float a1, float a2, float a3, float a4, float a5, float a6, int a7, int a8)
+{
+    // a1 = name
+
+    if (g_bExit == 1)
+    {
+        return EQAPP_REAL_CDisplay__CreateActor(this_ptr, name, a1, a2, a3, a4, a5, a6, a7, a8);
+    }
+
+    // remove doors in POK zone
+    //if (strstr(name, "POKDOOR") != NULL)
+    //{
+        //return 0;
+    //}
+
+    return EQAPP_REAL_CDisplay__CreateActor(this_ptr, name, a1, a2, a3, a4, a5, a6, a7, a8);
+}
+
 int __fastcall EQAPP_DETOUR_CDisplay__CreatePlayerActor(void* this_ptr, void* not_used, class EQPlayer* a1)
 {
     // a1 = player
@@ -613,7 +651,7 @@ int __fastcall EQAPP_DETOUR_CDisplay__ToggleView(void* this_ptr, void* not_used)
     return EQAPP_REAL_CDisplay__ToggleView(this_ptr);
 }
 
-int __fastcall EQAPP_DETOUR_CBazaarSearchWnd__HandleBazaarMsg(void* this_ptr, void* not_used, EQ::CBazaarSearchWndBazaarMessage_ptr message)
+int __fastcall EQAPP_DETOUR_CBazaarSearchWnd__HandleBazaarMsg(void* this_ptr, void* not_used, EQ::CBazaarSearchWndResultMessage_ptr message)
 {
     if (g_bExit == 1)
     {
@@ -905,6 +943,11 @@ int __fastcall EQAPP_DETOUR_CEverQuest__StartCasting(void* this_ptr, void* not_u
         EQAPP_StartCasting_HandleEvent_CEverQuest__StartCasting(this_ptr, a1);
     }
 
+    if (g_spawnCastSpellIsEnabled == true)
+    {
+        EQAPP_SpawnCastSpell_HandleEvent_CEverQuest__StartCasting(this_ptr, a1);
+    }
+
     return EQAPP_REAL_CEverQuest__StartCasting(this_ptr, a1);
 }
 
@@ -1082,4 +1125,74 @@ int __cdecl EQAPP_DETOUR_do_target(class EQClass::EQPlayer* a1, const char* a2)
     return EQAPP_REAL_do_target(a1, a2);
 }
 
+int __cdecl EQAPP_DETOUR_EQGraphicsDLL__t3dCreateActorEx(int a1, EQ::ActorDefinition_ptr a2, char* a3, int a4, int a5, int a6, float a7, float a8, int a9, int a10)
+{
+    if (g_bExit == 1)
+    {
+        return EQAPP_REAL_EQGraphicsDLL__t3dCreateActorEx(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
+    }
 
+/*
+    EQAPP_Log("EQGraphicsDLL__t3dCreateActorEx", 0);
+    EQAPP_Log("a1", a1);
+    EQAPP_Log("a2", a2);
+    EQAPP_Log("a3", a3);
+    EQAPP_Log("a4", a4);
+    EQAPP_Log("a5", a5);
+    EQAPP_Log("a6", a6);
+    EQAPP_Log("a7", a7);
+    EQAPP_Log("a8", a8);
+    EQAPP_Log("a9", a9);
+    EQAPP_Log("a10", a10);
+*/
+
+    int result = EQAPP_REAL_EQGraphicsDLL__t3dCreateActorEx(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
+
+    EQ::ActorInstance_ptr actorInstance = (EQ::ActorInstance_ptr)result;
+
+    if (a2 != NULL && actorInstance != NULL)
+    {
+        std::string actorDef = a2->Name;
+        if (actorDef.size() != 0)
+        {
+            //EQAPP_Log(actorDef.c_str(), (int)a2->MagicNumber6);
+
+            if (EQ_GetZoneID() == EQ_ZONE_ID_POKNOWLEDGE)
+            {
+                bool bFound = false;
+
+                if (actorDef.find("POKBANNER") != std::string::npos)
+                {
+                    bFound = true;
+                }
+
+                if (actorDef.find("POKFLAG") != std::string::npos)
+                {
+                    bFound = true;
+                }
+
+                if (actorDef.find("LAMP") != std::string::npos)
+                {
+                    bFound = true;
+                }
+
+                if (actorDef.find("TORCH") != std::string::npos)
+                {
+                    bFound = true;
+                }
+
+                if (actorDef.find("SCONCE") != std::string::npos)
+                {
+                    bFound = true;
+                }
+
+                if (bFound == true)
+                {
+                    EQGraphicsDLL__t3dDestroyActor(EQ_POINTER_CDisplay->Unknown0004, actorInstance);
+                }
+            }
+        }
+    }
+
+    return result;
+}

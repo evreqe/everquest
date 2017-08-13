@@ -9,9 +9,19 @@ const char* EQ_STRING_GRAPHICS_DLL_NAME_LOWERCASE = "eqgfx_dx8.dll";
 
 #define EQ_ADDRESS_POINTER_EQGraphicsDLL__t3dSetCameraLocation 0x007F9AE4
 
+#define EQ_ADDRESS_POINTER_EQGraphicsDLL__t3dCreateActorEx 0x007F98B4
+
 #define EQ_GRAPHICS_DLL_DEFERRED_2D_ITEMS_MAX 4000 // t3dDefer...
 
 #define EQ_GRAPHICS_DLL_WORLD_SPACE_TO_SCREEN_SPACE_RESULT_FAILURE 0xFFFF3D3E // world space to screen space failed because the location is not on screen
+
+// create actor ex
+typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dCreateActorEx)(int a1, EQ::ActorDefinition_ptr a2, char* a3, int a4, int a5, int a6, float a7, float a8, int a9, int a10);
+EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dCreateActorEx EQGraphicsDLL__t3dCreateActorEx;
+
+// destroy actor
+typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dDestroyActor)(int a1, EQ::ActorInstance_ptr a2);
+EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dDestroyActor EQGraphicsDLL__t3dDestroyActor;
 
 // world space to screen space
 typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dWorldSpaceToScreenSpace)(uint32_t cameraDataPointer, EQ::Location*, float* resultX, float* resultY);
@@ -33,6 +43,18 @@ bool EQ_GraphicsDLL_LoadFunctions()
 {
     HINSTANCE graphicsDLL = LoadLibraryA(EQ_STRING_GRAPHICS_DLL_NAME);
     if (graphicsDLL == NULL)
+    {
+        return false;
+    }
+
+    EQGraphicsDLL__t3dCreateActorEx = (EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dCreateActorEx)GetProcAddress(graphicsDLL, "t3dCreateActorEx");
+    if (EQGraphicsDLL__t3dCreateActorEx == NULL)
+    {
+        return false;
+    }
+
+    EQGraphicsDLL__t3dDestroyActor = (EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dDestroyActor)GetProcAddress(graphicsDLL, "t3dDestroyActor");
+    if (EQGraphicsDLL__t3dDestroyActor == NULL)
     {
         return false;
     }

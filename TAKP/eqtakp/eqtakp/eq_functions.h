@@ -101,6 +101,7 @@ bool EQ_IsSpawnGroupMember(EQ::Spawn_ptr spawn);
 EQ::Mouse EQ_GetMouse();
 void EQ_SetMousePosition(int x, int y);
 void EQ_UseItem(uint32_t slotID);
+std::string EQ_GetClassName(uint32_t classValue);
 std::string EQ_GetClassShortName(uint32_t classValue);
 uint32_t EQ_GetZoneID();
 void EQ_UseSkill(uint8_t skillID, EQClass::EQPlayer* targetSpawn);
@@ -108,7 +109,7 @@ HWND EQ_GetWindow();
 int EQ_GetLineClipValue(float x, float y, float minX, float minY, float maxX, float maxY);
 bool EQ_LineClip(EQ::Line_ptr line, float minX, float minY, float maxX, float maxY);
 bool EQ_IsZoneInList(EQ_ZoneIDList_t& zoneIDList);
-void EQ_SetCameraView(uint8_t cameraView);
+void EQ_SetCameraView(uint32_t cameraView);
 uint32_t EQ_GetCameraView();
 std::string EQ_GetZoneShortName();
 std::string EQ_GetZoneLongName();
@@ -1016,6 +1017,16 @@ void EQ_UseItem(uint32_t slotID)
     }
 }
 
+std::string EQ_GetClassName(uint32_t classValue)
+{
+    if ((classValue > EQ_NUM_CLASSES) || ((size_t)classValue > EQ_STRING_LIST_CLASS_NAME.size()))
+    {
+        return "Unknown";
+    }
+
+    return EQ_STRING_LIST_CLASS_NAME.at(classValue);
+}
+
 std::string EQ_GetClassShortName(uint32_t classValue)
 {
     if ((classValue > EQ_NUM_CLASSES) || ((size_t)classValue > EQ_STRING_LIST_CLASS_SHORT_NAME.size()))
@@ -1160,11 +1171,11 @@ bool EQ_IsZoneInList(EQ_ZoneIDList_t& zoneIDList)
     return false;
 }
 
-void EQ_SetCameraView(uint8_t cameraView)
+void EQ_SetCameraView(uint32_t cameraView)
 {
-    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_CAMERA_VIEW, (uint32_t)cameraView);
-    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_CAMERA_VIEW_EX, (uint32_t)cameraView);
-    EQ_WriteMemory<uint8_t>(EQ_ADDRESS_CAMERA_VIEW_EX_EX, cameraView);
+    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_CAMERA_VIEW, cameraView);
+    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_CAMERA_VIEW_EX, cameraView);
+    EQ_WriteMemory<uint8_t>(EQ_ADDRESS_CAMERA_VIEW_EX_EX, (uint8_t)cameraView);
 }
 
 uint32_t EQ_GetCameraView()

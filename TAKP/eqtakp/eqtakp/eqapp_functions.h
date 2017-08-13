@@ -435,7 +435,13 @@ void EQAPP_PrintBankInventory()
             bIsBankEmpty = false;
         }
 
-        std::cout << i + 1 << ": " << item->Name;
+        std::string itemName = item->Name;
+        if (itemName.size() == 0)
+        {
+            continue;
+        }
+
+        std::cout << "- " << itemName;
 
         if (item->IsContainer == 0)
         {
@@ -457,7 +463,13 @@ void EQAPP_PrintBankInventory()
                     continue;
                 }
 
-                std::cout << "- " << containerItem->Name;
+                std::string containerItemName = containerItem->Name;
+                if (containerItemName.size() == 0)
+                {
+                    continue;
+                }
+
+                std::cout << "- " << containerItemName;
 
                 if (containerItem->IsContainer == 0)
                 {
@@ -536,7 +548,13 @@ if (EQ_IsInGame() == false)
             bIsBankEmpty = false;
         }
 
-        file << i + 1 << ": " << item->Name;
+        std::string itemName = item->Name;
+        if (itemName.size() == 0)
+        {
+            continue;
+        }
+
+        file << i + 1 << ": " << itemName;
 
         if (item->IsContainer == 0)
         {
@@ -558,7 +576,13 @@ if (EQ_IsInGame() == false)
                     continue;
                 }
 
-                file << "- " << containerItem->Name;
+                std::string containerItemName = containerItem->Name;
+                if (containerItemName.size() == 0)
+                {
+                    continue;
+                }
+
+                file << "- " << containerItemName;
 
                 if (containerItem->IsContainer == 0)
                 {
@@ -595,7 +619,13 @@ if (EQ_IsInGame() == false)
             continue;
         }
 
-        file << i + 1 << ": " << item->Name;
+        std::string itemName = item->Name;
+        if (itemName.size() == 0)
+        {
+            continue;
+        }
+
+        file << i + 1 << ": " << itemName;
 
         if (item->IsContainer == 0)
         {
@@ -617,7 +647,13 @@ if (EQ_IsInGame() == false)
                     continue;
                 }
 
-                file << "- " << containerItem->Name;
+                std::string containerItemName = containerItem->Name;
+                if (containerItemName.size() == 0)
+                {
+                    continue;
+                }
+
+                file << "- " << containerItemName;
 
                 if (containerItem->IsContainer == 0)
                 {
@@ -644,7 +680,13 @@ if (EQ_IsInGame() == false)
             continue;
         }
 
-        file << EQ_STRING_MAP_INVENTORY_EQUIPMENT_NAME[i] << ": " << item->Name;
+        std::string itemName = item->Name;
+        if (itemName.size() == 0)
+        {
+            continue;
+        }
+
+        file << EQ_STRING_MAP_INVENTORY_EQUIPMENT_NAME[i] << ": " << itemName;
 
         if (item->IsContainer == 0)
         {
@@ -666,7 +708,13 @@ if (EQ_IsInGame() == false)
                     continue;
                 }
 
-                file << "- " << containerItem->Name;
+                std::string containerItemName = containerItem->Name;
+                if (containerItemName.size() == 0)
+                {
+                    continue;
+                }
+
+                file << "- " << containerItemName;
 
                 if (containerItem->IsContainer == 0)
                 {

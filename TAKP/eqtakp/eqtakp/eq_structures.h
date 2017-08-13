@@ -952,7 +952,9 @@ typedef struct _Viewport
 
 typedef struct _CDisplay
 {
-/* 0x0000 */ uint8_t Unknown0000[64];
+/* 0x0000 */ uint32_t Unknown0000;
+/* 0x0004 */ uint32_t Unknown0004; // actor or viewactor
+/* 0x0008 */ uint8_t Unknown0008[56];
 /* 0x0040 */ uint8_t IsCursorItem; // when you pick up and hold an item on your mouse cursor
 /* 0x0041 */ uint8_t Unknown0041;
 /* 0x0042 */ uint8_t IsCursorHotkey; // when you pick up and hold a hotkey button on your mouse cursor
@@ -1142,7 +1144,7 @@ typedef struct _CMerchantWnd
 /* ...... */
 } CMerchantWnd, *CMerchantWnd_ptr;
 
-typedef struct _CBazaarSearchWndBazaarMessage
+typedef struct _CBazaarSearchWndResultMessage
 {
     uint16_t Action; // 7 or 12
     uint16_t ItemQuantity;
@@ -1151,7 +1153,7 @@ typedef struct _CBazaarSearchWndBazaarMessage
     uint32_t ItemValue; // price in copper
     char ItemName[64];
 /* ...... */
-} CBazaarSearchWndBazaarMessage, *CBazaarSearchWndBazaarMessage_ptr;
+} CBazaarSearchWndResultMessage, *CBazaarSearchWndResultMessage_ptr;
 
 typedef struct _CEverQuestStartCastingMessage
 {

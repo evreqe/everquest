@@ -79,6 +79,7 @@ public:
     int __cdecl CDisplay::SetNameSpriteState(class EQPlayer* player, bool show);
     int __cdecl CDisplay::SetNameSpriteTint(class EQPlayer* player);
     void CDisplay::CreatePlayerActor(class EQPlayer* player);
+    void CDisplay::CreateActor(char* name, float a1, float a2, float a3, float a4, float a5, float a6, int a7, int a8);
     void CDisplay::DeleteActor(EQ::ActorInstance_ptr actorInstance);
     void CDisplay::SetViewActor(EQ::ActorInstance_ptr actorInstance);
     int CDisplay::ToggleView();
@@ -111,6 +112,10 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__SetNameSpriteState)(void* th
 #define EQ_ADDRESS_FUNCTION_CDisplay__SetNameSpriteTint 0x004B114D
 EQ_MACRO_FunctionAtAddress(int EQClass::CDisplay::SetNameSpriteTint(class EQPlayer* player), EQ_ADDRESS_FUNCTION_CDisplay__SetNameSpriteTint);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__SetNameSpriteTint)(void* this_ptr, class EQPlayer* player);
+
+#define EQ_ADDRESS_FUNCTION_CDisplay__CreateActor 0x004B0120
+EQ_MACRO_FunctionAtAddress(void EQClass::CDisplay::CreateActor(char* name, float a1, float a2, float a3, float a4, float a5, float a6, int a7, int a8), EQ_ADDRESS_FUNCTION_CDisplay__CreateActor);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__CreateActor)(void* this_ptr, char* name, float a1, float a2, float a3, float a4, float a5, float a6, int a7, int a8);
 
 #define EQ_ADDRESS_FUNCTION_CDisplay__CreatePlayerActor 0x004ADF2C
 EQ_MACRO_FunctionAtAddress(void EQClass::CDisplay::CreatePlayerActor(class EQPlayer* player), EQ_ADDRESS_FUNCTION_CDisplay__CreatePlayerActor);
@@ -461,7 +466,7 @@ public:
     void CBazaarSearchWnd::Deactivate();
     void CBazaarSearchWnd::doQuery();
     char* CBazaarSearchWnd::GetPriceString(uint32_t itemValue);
-    void CBazaarSearchWnd::HandleBazaarMsg(EQ::CBazaarSearchWndBazaarMessage_ptr message);
+    void CBazaarSearchWnd::HandleBazaarMsg(EQ::CBazaarSearchWndResultMessage_ptr message);
     void CBazaarSearchWnd::SortItemList(uint32_t columnIndex); // 1 = Item Name, 2 = Price, 3 = Seller
     void CBazaarSearchWnd::UpdateComboButtons();
     void CBazaarSearchWnd::UpdatePlayerCombo(); // update traders
@@ -471,8 +476,8 @@ public:
 EQ_MACRO_FunctionAtAddress(char* EQClass::CBazaarSearchWnd::GetPriceString(uint32_t itemValue), EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__GetPriceString);
 
 #define EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__HandleBazaarMsg 0x004060B5
-EQ_MACRO_FunctionAtAddress(void EQClass::CBazaarSearchWnd::HandleBazaarMsg(EQ::CBazaarSearchWndBazaarMessage_ptr message), EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__HandleBazaarMsg);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarSearchWnd__HandleBazaarMsg)(void* this_ptr, EQ::CBazaarSearchWndBazaarMessage_ptr message);
+EQ_MACRO_FunctionAtAddress(void EQClass::CBazaarSearchWnd::HandleBazaarMsg(EQ::CBazaarSearchWndResultMessage_ptr message), EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__HandleBazaarMsg);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarSearchWnd__HandleBazaarMsg)(void* this_ptr, EQ::CBazaarSearchWndResultMessage_ptr message);
 
 /* CBuffWindow */
 

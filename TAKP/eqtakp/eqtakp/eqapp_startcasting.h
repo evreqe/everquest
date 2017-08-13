@@ -2,11 +2,11 @@
 
 bool g_startCastingisEnabled = true;
 
-void EQAPP_StartCasting_HandleEvent_CEverQuest__StartCasting(void* this_ptr, EQ::CEverQuestStartCastingMessage_ptr a1);
+void EQAPP_StartCasting_HandleEvent_CEverQuest__StartCasting(void* this_ptr, EQ::CEverQuestStartCastingMessage_ptr message);
 
-void EQAPP_StartCasting_HandleEvent_CEverQuest__StartCasting(void* this_ptr, EQ::CEverQuestStartCastingMessage_ptr a1)
+void EQAPP_StartCasting_HandleEvent_CEverQuest__StartCasting(void* this_ptr, EQ::CEverQuestStartCastingMessage_ptr message)
 {
-    auto spawn = EQ_GetSpawnByID(a1->SpawnID);
+    auto spawn = EQ_GetSpawnByID(message->SpawnID);
     if (spawn == NULL)
     {
         return;
@@ -23,12 +23,12 @@ void EQAPP_StartCasting_HandleEvent_CEverQuest__StartCasting(void* this_ptr, EQ:
         return;
     }
 
-    if (a1->SpellID == EQ_SPELL_ID_NULL)
+    if (message->SpellID == EQ_SPELL_ID_NULL)
     {
         return;
     }
 
-    auto spell = EQ_GetSpellByID(a1->SpellID);
+    auto spell = EQ_GetSpellByID(message->SpellID);
     if (spell == NULL)
     {
         return;

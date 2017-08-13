@@ -469,6 +469,27 @@ void EQAPP_ESP_UpdateSpawnList()
             espText << "\n(ID: 0x" << std::hex << espSpawn.SpawnID << std::dec << ")";
         }
 
+        if (g_spawnCastSpellIsEnabled == true && g_spawnCastSpellESPIsEnabled == true)
+        {
+            for (auto& spawnCastSpell : g_spawnCastSpellList)
+            {
+                if (spawnCastSpell->Spawn == spawn)
+                {
+                    espText << "\n(" << spawnCastSpell->SpellName << ")";
+
+                    if (spawnCastSpell->SpellCastTimeCountdown > 0)
+                    {
+                        float spellCastTimeCurrentFloat = (float)(spawnCastSpell->SpellCastTimeCountdown / 1000.0f);
+
+                        espText.precision(1);
+                        espText << " " << std::fixed << spellCastTimeCurrentFloat;
+                    }
+
+                    break;
+                }
+            }
+        }
+
         espSpawn.Text = espText.str();
 
         g_ESPSpawnList.push_back(espSpawn);

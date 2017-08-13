@@ -197,5 +197,8 @@
     <ClInclude Include="eqapp_skillsmenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="eqapp_spawncastspell.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -106,6 +106,8 @@ void EQAPP_UseSkills_Load()
     if (playerSpawn->Class == EQ_CLASS_WARRIOR)
     {
         g_useSkillsKickIsEnabled = true;
+        g_useSkillsBashIsEnabled = false;
+        g_useSkillsSlamIsEnabled = false;
     }
 
     if (playerSpawn->Class == EQ_CLASS_ROGUE)

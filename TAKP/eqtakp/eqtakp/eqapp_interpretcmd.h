@@ -234,7 +234,7 @@ void EQAPP_InterpretCmd_Execute(std::string commandText)
         std::string heightStr = EQAPP_String_GetBetween(commandText, "\"", "\"");
         if (heightStr.size() == 0)
         {
-            std::cout << "InterpretCmd Error: Height not not found." << std::endl;
+            std::cout << "InterpretCmd Error: Height not found." << std::endl;
             return;
         }
 
@@ -263,7 +263,7 @@ void EQAPP_InterpretCmd_Execute(std::string commandText)
         std::string heightStr = EQAPP_String_GetBetween(commandText, "\"", "\"");
         if (heightStr.size() == 0)
         {
-            std::cout << "InterpretCmd Error: Height not not found." << std::endl;
+            std::cout << "InterpretCmd Error: Height not found." << std::endl;
             return;
         }
 
@@ -288,7 +288,7 @@ void EQAPP_InterpretCmd_Execute(std::string commandText)
         std::string heightStr = EQAPP_String_GetBetween(commandText, "\"", "\"");
         if (heightStr.size() == 0)
         {
-            std::cout << "InterpretCmd Error: Height not not found." << std::endl;
+            std::cout << "InterpretCmd Error: Height not found." << std::endl;
             return;
         }
 
@@ -313,7 +313,7 @@ void EQAPP_InterpretCmd_Execute(std::string commandText)
         std::string spellSetName = EQAPP_String_GetBetween(commandText, "\"", "\"");
         if (spellSetName.size() == 0)
         {
-            std::cout << "InterpretCmd Error: Spell set name not not found." << std::endl;
+            std::cout << "InterpretCmd Error: Spell set name not found." << std::endl;
             return;
         }
 
@@ -332,7 +332,7 @@ void EQAPP_InterpretCmd_Execute(std::string commandText)
         std::string spellSetName = EQAPP_String_GetBetween(commandText, "\"", "\"");
         if (spellSetName.size() == 0)
         {
-            std::cout << "InterpretCmd Error: Spell set name not not found." << std::endl;
+            std::cout << "InterpretCmd Error: Spell set name not found." << std::endl;
             return;
         }
 

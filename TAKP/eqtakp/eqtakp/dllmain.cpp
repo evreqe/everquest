@@ -108,6 +108,7 @@
 #include "eqapp_collisionhack.h"
 #include "eqapp_toggleview.h"
 #include "eqapp_startcasting.h"
+#include "eqapp_spawncastspell.h"
 //
 #include "eqapp_extendedtargets.h"
 #include "eqapp_map.h"

@@ -931,6 +931,7 @@
 #define EQ_ZONE_TYPE_OUTDOORS 0x02
 #define EQ_ZONE_TYPE_ANY      0xFF
 
+// equipment
 #define EQ_INVENTORY_SLOT_EAR_LEFT    0
 #define EQ_INVENTORY_SLOT_HEAD        1
 #define EQ_INVENTORY_SLOT_FACE        2
@@ -952,6 +953,7 @@
 #define EQ_INVENTORY_SLOT_FEET        18
 #define EQ_INVENTORY_SLOT_WAIST       19
 #define EQ_INVENTORY_SLOT_AMMO        20
+// pack
 #define EQ_INVENTORY_SLOT_BAG1        21
 #define EQ_INVENTORY_SLOT_BAG2        22
 #define EQ_INVENTORY_SLOT_BAG3        23
@@ -1063,6 +1065,43 @@ const float EQ_MOVEMENT_SPEED_MODIFIER_AA_RUN_1       = 0.08f;
 const float EQ_MOVEMENT_SPEED_MODIFIER_AA_RUN_2       = 0.14f;
 const float EQ_MOVEMENT_SPEED_MODIFIER_AA_RUN_3       = 0.21f;
 const float EQ_MOVEMENT_SPEED_MODIFIER_SPIRIT_OF_WOLF = 0.30f;
+
+std::vector<std::string> EQ_STRING_LIST_CLASS_NAME =
+{
+    "Unknown",
+    "Warrior",
+    "Cleric",
+    "Paladin",
+    "Ranger",
+    "Shadowknight",
+    "Druid",
+    "Monk",
+    "Bard",
+    "Rogue",
+    "Shaman",
+    "Necromancer",
+    "Wizard",
+    "Magician",
+    "Enchanter",
+    "Beastlord",
+    "Banker",
+    "Warrior",
+    "Cleric",
+    "Paladin",
+    "Ranger",
+    "Shadowknight",
+    "Druid",
+    "Monk",
+    "Bard",
+    "Rogue",
+    "Shaman",
+    "Necromancer",
+    "Wizard",
+    "Magician",
+    "Enchanter",
+    "Beastlord",
+    "Merchant",
+};
 
 std::vector<std::string> EQ_STRING_LIST_CLASS_SHORT_NAME =
 {
@@ -1199,8 +1238,10 @@ EQ_ZoneIDList_t EQ_ZONE_ID_LIST_CITY =
     EQ_ZONE_ID_BAZAAR,
     EQ_ZONE_ID_FELWITHEA,
     EQ_ZONE_ID_FELWITHEB,
+    EQ_ZONE_ID_GROBB,
     EQ_ZONE_ID_HALAS,
-    EQ_ZONE_ID_RIVERVALE
+    EQ_ZONE_ID_OGGOK,
+    EQ_ZONE_ID_RIVERVALE,
 };
 
 // font glyph sizes use ASCII table indexes

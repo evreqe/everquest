@@ -15,4 +15,3 @@ void EQAPP_ToggleView_HandleEvent_CDisplay__ToggleView(void* this_ptr)
         EQ_SetCameraView(EQ_CAMERA_VIEW_THIRD_PERSON_3);
     }
 }
-
