@@ -1,14 +1,14 @@
 #pragma once
 
-bool g_itemDisplayIsEnabled = true;
+bool g_itemDisplayWindowIsEnabled = true;
 
-bool g_itemDisplayItemsIsEnabled = true;
-bool g_itemDisplaySpellsIsEnabled = true;
+bool g_itemDisplayWindowItemsIsEnabled = true;
+bool g_itemDisplayWindowSpellsIsEnabled = true;
 
-void EQAPP_ItemDisplay_HandleEvent_CItemDisplayWnd__SetItem(EQ::Item_ptr item);
-void EQAPP_ItemDisplay_HandleEvent_CItemDisplayWnd__SetSpell(uint16_t spellID, bool hasDescription);
+void EQAPP_ItemDisplayWindow_HandleEvent_CItemDisplayWnd__SetItem(void* this_ptr, EQ::Item_ptr item, bool unknown);
+void EQAPP_ItemDisplayWindow_HandleEvent_CItemDisplayWnd__SetSpell(void* this_ptr, uint16_t spellID, bool hasDescription, int unknown);
 
-void EQAPP_ItemDisplay_HandleEvent_CItemDisplayWnd__SetItem(EQ::Item_ptr item)
+void EQAPP_ItemDisplayWindow_HandleEvent_CItemDisplayWnd__SetItem(void* this_ptr, EQ::Item_ptr item, bool unknown)
 {
     if (item == NULL || EQ_POINTER_CItemDisplayWnd->DisplayText == NULL)
     {
@@ -87,7 +87,7 @@ void EQAPP_ItemDisplay_HandleEvent_CItemDisplayWnd__SetItem(EQ::Item_ptr item)
             }
         }
 
-        if ((itemName.find("Spell: ") != std::string::npos) || (itemName.find("Ancient: ") != std::string::npos))
+        if ((itemName.find("Spell:") != std::string::npos) || (itemName.find("Ancient:") != std::string::npos)|| (itemName.find("Song:") != std::string::npos))
         {
             if (itemSpellID != EQ_SPELL_ID_NULL)
             {
@@ -120,7 +120,7 @@ void EQAPP_ItemDisplay_HandleEvent_CItemDisplayWnd__SetItem(EQ::Item_ptr item)
     EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, "</c>");
 }
 
-void EQAPP_ItemDisplay_HandleEvent_CItemDisplayWnd__SetSpell(uint16_t spellID, bool hasDescription)
+void EQAPP_ItemDisplayWindow_HandleEvent_CItemDisplayWnd__SetSpell(void* this_ptr, uint16_t spellID, bool hasDescription, int unknown)
 {
     if (spellID == EQ_SPELL_ID_NULL)
     {

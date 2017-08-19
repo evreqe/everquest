@@ -90,7 +90,7 @@
 #include "eqapp_dotarget.h"
 #include "eqapp_spellbookwindow.h"
 #include "eqapp_merchantwindow.h"
-#include "eqapp_itemdisplay.h"
+#include "eqapp_itemdisplaywindow.h"
 #include "eqapp_hidecorpselooted.h"
 #include "eqapp_namespritestate.h"
 #include "eqapp_namespritetint.h"
@@ -120,6 +120,7 @@
 //
 #include "eqapp_mainmenu.h"
 #include "eqapp_skillsmenu.h"
+#include "eqapp_espmenu.h"
 #include "eqapp_hudtext.h"
 //
 //
@@ -139,6 +140,7 @@ void EQAPP_Load()
 
     EQAPP_MainMenu_Load();
     EQAPP_SkillsMenu_Load();
+    EQAPP_ESPMenu_Load();
 
     if (EQ_IsInGame() == true)
     {

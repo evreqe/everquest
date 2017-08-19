@@ -56,8 +56,8 @@ float g_mapOriginY = g_mapY + (g_mapHeight * 0.5f);
 float g_mapOffsetX = 0.0f;
 float g_mapOffsetY = 0.0f;
 
-float g_mapHeightFilterLow  = 100.0f; // z axis
-float g_mapHeightFilterHigh = 100.0f; // z axis
+float g_mapHeightFilterLow  = 10.0f; // z axis
+float g_mapHeightFilterHigh = 10.0f; // z axis
 
 float g_mapZoom           = 1.0f;
 float g_mapZoomMultiplier = 0.05f; // zoom speed
@@ -77,7 +77,7 @@ uint32_t g_mapBorderColorARGB = 0xFF646464;
 uint32_t g_mapBackgroundColorARGB = EQ_TOOLTIP_TEXT_BACKGROUND_COLOR;
 
 float g_mapSpawnDistanceMax = 2000.0f;
-float g_mapSpawnDistanceZMax = 100.0f;
+float g_mapSpawnDistanceZMax = 2000.0f;
 
 void EQAPP_Map_Toggle();
 void EQAPP_Map_Lines_Toggle();
@@ -92,6 +92,7 @@ void EQAPP_Map_ZoomIn();
 void EQAPP_Map_MouseWheelZoomOut();
 void EQAPP_Map_MouseWheelZoomIn();
 void EQAPP_Map_HandleEvent_HandleMouseWheel(int mouseWheelDelta);
+void EQAPP_Map_Scroll(signed int speedX, signed int speedY);
 void EQAPP_Map_SetZoom(float zoom);
 void EQAPP_Map_ResetZoom();
 void EQAPP_Map_Center();
@@ -106,6 +107,7 @@ void EQAPP_Map_Toggle()
     if (g_mapIsEnabled == true)
     {
         EQAPP_Map_RecalculateScreenCoordinates();
+        EQAPP_Map_Center();
     }
 }
 
@@ -155,6 +157,8 @@ bool EQAPP_Map_Load()
 */
 
     EQAPP_Map_RecalculateScreenCoordinates();
+    EQAPP_Map_ResetZoom();
+    EQAPP_Map_Center();
 
     return true;
 }
@@ -267,9 +271,6 @@ void EQAPP_Map_RecalculateScreenCoordinates()
     g_mapX = ((float)resolutionWidth - 12.0f) - g_mapWidth;
     g_mapY = 4.0f;
 
-    g_mapOffsetX = 0.0f;
-    g_mapOffsetY = 0.0f;
-
     g_mapMinX = g_mapX;
     g_mapMaxX = g_mapX + g_mapWidth;
 
@@ -347,6 +348,31 @@ void EQAPP_Map_HandleEvent_HandleMouseWheel(int mouseWheelDelta)
     }
 }
 
+void EQAPP_Map_Scroll(signed int speedX, signed int speedY)
+{
+    if (speedX != 0)
+    {
+        float addX = (float)speedX;
+        if (g_mapZoom != 0.0f)
+        {
+            addX = addX / g_mapZoom;
+        }
+
+        g_mapOffsetX += addX;
+    }
+
+    if (speedY != 0)
+    {
+        float addY= (float)speedY;
+        if (g_mapZoom != 0.0f)
+        {
+            addY = addY / g_mapZoom;
+        }
+
+        g_mapOffsetY += addY;
+    }
+}
+
 void EQAPP_Map_SetZoom(float zoom)
 {
     g_mapZoom = zoom;
@@ -382,6 +408,18 @@ void EQAPP_Map_Execute()
     if (playerSpawn == NULL)
     {
         return;
+    }
+
+    auto mouse = EQ_GetMouse();
+    if (mouse.ClickState == EQ_MOUSE_CLICK_STATE_LEFT)
+    {
+        if (EQAPP_Map_IsMouseOver() == true)
+        {
+            if (mouse.SpeedX != 0 || mouse.SpeedY != 0)
+            {
+                EQAPP_Map_Scroll(mouse.SpeedX, mouse.SpeedY);
+            }
+        }
     }
 
     EQ::Location playerLocation;
@@ -743,5 +781,6 @@ void EQAPP_Map_Execute()
     EQ_DrawLineEx(&mapArrowLineB, g_mapArrowColorARGB);
     EQ_DrawLineEx(&mapArrowLineC, g_mapArrowColorARGB);
 }
+
 
 

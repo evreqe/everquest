@@ -10,6 +10,7 @@
 #include <windows.h>
 
 #include "eq.h"
+#include "eq_memory.h"
 #include "eq_macros.h"
 #include "eq_structures.h"
 #include "eq_classes.h"
@@ -18,21 +19,6 @@
 
 template <class T>
 void EQ_Log(const char* text, T number);
-
-template <class T>
-T EQ_ReadMemory(uintptr_t address);
-
-template <class T>
-void EQ_WriteMemory(uintptr_t address, T value);
-
-template <class T>
-T EQ_ReadMemoryProtected(uint32_t address);
-
-template <class T>
-void EQ_WriteMemoryProtected(uint32_t address, T value);
-
-void EQ_ReadMemoryString(uint32_t address, size_t size, char result[]);
-void EQ_WriteMemoryString(uint32_t address, const char* value);
 
 void EQ_ToggleBool(bool& b);
 float EQ_CalculateDistance(float x1, float y1, float x2, float y2);
@@ -142,82 +128,6 @@ void EQ_Log(const char* text, T number)
     file.open("Logs/eqlog.txt", std::ios::out | std::ios::app);
     file << "[" << __TIME__ << "] " << text << " (" << number << ")" << " Hex(" << std::hex << number << std::dec << ")" << std::endl;
     file.close();
-}
-
-template <class T>
-T EQ_ReadMemory(uintptr_t address)
-{
-#ifdef _DEBUG
-    EQ_Log("EQ_ReadMemory address: ", address);
-#endif
-
-    T* buffer = (T*)address;
-    return (*buffer);
-}
-
-template <class T>
-void EQ_WriteMemory(uintptr_t address, T value)
-{
-#ifdef _DEBUG
-    EQ_Log("EQ_WriteMemory address: ", address);
-#endif
-
-    T* buffer = (T*)address;
-    *buffer = value;
-}
-
-template <class T>
-T EQ_ReadMemoryProtected(uint32_t address)
-{
-    DWORD oldProtect;
-    VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, sizeof(T), PAGE_READWRITE, &oldProtect);
-
-    T* buffer = (T*)address;
-
-    VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, sizeof(T), oldProtect, &oldProtect);
-
-    return (*buffer);
-}
-
-template <class T>
-void EQ_WriteMemoryProtected(uint32_t address, T value)
-{
-    DWORD oldProtect;
-    VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, sizeof(value), PAGE_READWRITE, &oldProtect);
-
-    T* buffer = (T*)address;
-    *buffer = value;
-
-    VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, sizeof(value), oldProtect, &oldProtect);
-}
-
-void EQ_ReadMemoryString(uint32_t address, size_t size, char result[])
-{
-    char* buffer = new char[size + 1];
-
-    for (size_t i = 0; i < size; i++)
-    {
-        buffer[i] = *(unsigned char*)(address + i);
-    }
-
-    result = buffer;
-
-    delete[] buffer;
-}
-
-void EQ_WriteMemoryString(uint32_t address, const char* value)
-{
-    size_t length = strlen(value);
-
-    size_t j = 0;
-
-    for (size_t i = 0; i < length; i++)
-    {
-        *(unsigned char*)(address + j) = value[i];
-        j++;
-    }
-
-    *(unsigned char*)(address + j) = '\0';
 }
 
 /* game's functions */
@@ -988,6 +898,8 @@ EQ::Mouse EQ_GetMouse()
 
     mouse.X = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_X);
     mouse.Y = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_Y);
+    mouse.SpeedX = EQ_ReadMemory<signed int>(EQ_ADDRESS_MOUSE_SPEED_X);
+    mouse.SpeedY = EQ_ReadMemory<signed int>(EQ_ADDRESS_MOUSE_SPEED_Y);
     mouse.ClickState = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_CLICK_STATE);
     mouse.LookState = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_LOOK_STATE);
     mouse.LeftClickTimer = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_MOUSE_TIMER_LEFT_CLICK);
@@ -1444,11 +1356,13 @@ uint16_t EQ_GetSpellIDBySpellName(std::string spellName)
         return EQ_SPELL_ID_NULL;
     }
 
-    std::string spellScrollText = "Spell: ";
-    std::string ancientSpellScrollText = "Ancient: ";
+    std::string spellScrollText = "Spell:";
+    std::string ancientSpellScrollText = "Ancient:";
+    std::string songScrollText = "Song:";
 
     bool isSpellScroll = false;
     bool isAncientSpellScroll = false;
+    bool isSongScroll = false;
 
     if (spellName.find(spellScrollText) != std::string::npos)
     {
@@ -1458,6 +1372,11 @@ uint16_t EQ_GetSpellIDBySpellName(std::string spellName)
     if (spellName.find(ancientSpellScrollText) != std::string::npos)
     {
         isAncientSpellScroll = true;
+    }
+
+    if (spellName.find(songScrollText) != std::string::npos)
+    {
+        isSongScroll = true;
     }
 
     for (uint16_t i = 0; i < EQ_NUM_SPELLS; i++)
@@ -1476,6 +1395,11 @@ uint16_t EQ_GetSpellIDBySpellName(std::string spellName)
         if (isAncientSpellScroll == true)
         {
             spellListSpellName.insert(0, ancientSpellScrollText);
+        }
+
+        if (isSongScroll == true)
+        {
+            spellListSpellName.insert(0, songScrollText);
         }
 
         if (spellListSpellName == spellName)

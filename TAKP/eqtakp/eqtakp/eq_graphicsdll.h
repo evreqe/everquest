@@ -15,6 +15,14 @@ const char* EQ_STRING_GRAPHICS_DLL_NAME_LOWERCASE = "eqgfx_dx8.dll";
 
 #define EQ_GRAPHICS_DLL_WORLD_SPACE_TO_SCREEN_SPACE_RESULT_FAILURE 0xFFFF3D3E // world space to screen space failed because the location is not on screen
 
+#define EQ_GRAPHICS_DLL_NUM_VISIBLE_ACTORS_MAX 4096
+
+#define EQ_GRAPHICS_DLL_OFFSET_VISIBLE_ACTORS_LIST 0x873278
+
+#define EQ_GRAPHICS_DLL_VISIBLE_ACTOR_SIZE 0x10
+
+#define EQ_GRAPHICS_DLL_VISIBLE_ACTOR_OFFSET_ACTOR_INSTANCE 0x10
+
 // create actor ex
 typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dCreateActorEx)(int a1, EQ::ActorDefinition_ptr a2, char* a3, int a4, int a5, int a6, float a7, float a8, int a9, int a10);
 EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dCreateActorEx EQGraphicsDLL__t3dCreateActorEx;
@@ -38,6 +46,14 @@ EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dDeferRect EQGraphicsDLL__t3dDeferRect; // eqg
 // draw quad (filled rectangle)
 typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dDeferQuad)(EQ::Rect*, uint32_t colorARGB);
 EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dDeferQuad EQGraphicsDLL__t3dDeferQuad; // eqgfx_dx8.dll+40820
+
+uint32_t EQ_GraphicsDLL_GetBaseAddress();
+bool EQ_GraphicsDLL_LoadFunctions();
+
+uint32_t EQ_GraphicsDLL_GetBaseAddress()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_GRAPHICS_DLL_POINTER_BASE);
+}
 
 bool EQ_GraphicsDLL_LoadFunctions()
 {

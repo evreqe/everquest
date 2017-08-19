@@ -2,6 +2,8 @@
 
 bool g_trainSpellsIsEnabled = false;
 
+bool g_trainSpellsDebugIsEnabled = false;
+
 bool g_trainSpellsShouldSit = false;
 
 uint32_t g_trainSpellsTimer = 0;
@@ -14,7 +16,9 @@ uint32_t g_trainSpellsStandAtManaPercent = 90;
 std::string g_trainSpellsSpellName;
 
 void EQAPP_TrainSpells_Toggle();
+void EQAPP_TrainSpells_Debug_Toggle();
 void EQAPP_TrainSpells_Execute();
+void EQAPP_TrainSpells_HandleEvent_CEverQuest__dsp_chat(void* this_ptr, const char* text, uint16_t textColor, bool filtered);
 
 void EQAPP_TrainSpells_Toggle()
 {
@@ -29,6 +33,12 @@ void EQAPP_TrainSpells_Toggle()
     }
 }
 
+void EQAPP_TrainSpells_Debug_Toggle()
+{
+    EQ_ToggleBool(g_trainSpellsDebugIsEnabled);
+    EQAPP_PrintBool("Train Spells Debug", g_trainSpellsDebugIsEnabled);
+}
+
 void EQAPP_TrainSpells_Execute()
 {
     if (EQ_HasTimePassed(g_trainSpellsTimer, g_trainSpellsTimerDelay) == false)
@@ -38,8 +48,11 @@ void EQAPP_TrainSpells_Execute()
 
     if (g_trainSpellsSpellName.size() == 0)
     {
-        std::cout << __FUNCTION__ << ": Spell Name size is zero." << std::endl;
-        std::cout << __FUNCTION__ << ": Spell Name has NOT been set." << std::endl;
+        if (g_trainSpellsDebugIsEnabled == true)
+        {
+            std::cout << __FUNCTION__ << ": Spell Name size is zero." << std::endl;
+            std::cout << __FUNCTION__ << ": Spell Name has NOT been set." << std::endl;
+        }
 
         return;
     }
@@ -47,40 +60,63 @@ void EQAPP_TrainSpells_Execute()
     auto playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)
     {
-        std::cout << __FUNCTION__ << ": Player Spawn is NULL." << std::endl;
+        if (g_trainSpellsDebugIsEnabled == true)
+        {
+            std::cout << __FUNCTION__ << ": Player Spawn is NULL." << std::endl;
+        }
+
         return;
     }
 
     auto playerClass = playerSpawn->Class;
     if (playerClass == EQ_CLASS_WARRIOR || playerClass == EQ_CLASS_MONK || playerClass == EQ_CLASS_ROGUE)
     {
-        std::cout << __FUNCTION__ << ": Player Class is NOT a caster." << std::endl;
+        if (g_trainSpellsDebugIsEnabled == true)
+        {
+            std::cout << __FUNCTION__ << ": Player Class is NOT a caster." << std::endl;
+        }
+
         return;
     }
 
-    std::cout << __FUNCTION__ << ": Spell Name: " << g_trainSpellsSpellName << std::endl;
+    if (g_trainSpellsDebugIsEnabled == true)
+    {
+        std::cout << __FUNCTION__ << ": Spell Name: " << g_trainSpellsSpellName << std::endl;
+    }
 
     auto spellID = EQ_GetSpellIDBySpellName(g_trainSpellsSpellName);
     if (spellID == EQ_SPELL_ID_NULL)
     {
-        std::cout << __FUNCTION__ << ": Spell ID is NULL in EQ_GetSpellIDBySpellName() result." << std::endl;
-        std::cout << __FUNCTION__ << ": Spell with that name does not exist!" << std::endl;
+        if (g_trainSpellsDebugIsEnabled == true)
+        {
+            std::cout << __FUNCTION__ << ": Spell ID is NULL in EQ_GetSpellIDBySpellName() result." << std::endl;
+            std::cout << __FUNCTION__ << ": Spell with that name does not exist!" << std::endl;
+        }
+
         return;
     }
 
     auto spell = EQ_GetSpellByID(spellID);
     if (spell == NULL)
     {
-        std::cout << __FUNCTION__ << ": Spell is NULL in EQ_GetSpellByID() result." << std::endl;
-        std::cout << __FUNCTION__ << ": Spell was NOT found in the spell list!" << std::endl;
+        if (g_trainSpellsDebugIsEnabled == true)
+        {
+            std::cout << __FUNCTION__ << ": Spell is NULL in EQ_GetSpellByID() result." << std::endl;
+            std::cout << __FUNCTION__ << ": Spell was NOT found in the spell list!" << std::endl;
+        }
+
         return;
     }
 
     auto spellGemIndex = EQ_GetSpellGemIndexBySpellID(spellID);
     if (spellGemIndex == -1)
     {
-        std::cout << __FUNCTION__ << ": Spell Gem Index is -1 in EQ_GetSpellGemIndexBySpellID() result." << std::endl;
-        std::cout << __FUNCTION__ << ": Spell is NOT memorized!" << std::endl;
+        if (g_trainSpellsDebugIsEnabled == true)
+        {
+            std::cout << __FUNCTION__ << ": Spell Gem Index is -1 in EQ_GetSpellGemIndexBySpellID() result." << std::endl;
+            std::cout << __FUNCTION__ << ": Spell is NOT memorized!" << std::endl;
+        }
+
         return;
     }
 
@@ -92,17 +128,23 @@ void EQAPP_TrainSpells_Execute()
         g_trainSpellsTimerDelay = g_trainSpellsTimerDelayDefault;
     }
 
-     std::cout << __FUNCTION__ << ": Timer Delay: " << g_trainSpellsTimerDelay << std::endl;
+    if (g_trainSpellsDebugIsEnabled == true)
+    {
+        std::cout << __FUNCTION__ << ": Timer Delay: " << g_trainSpellsTimerDelay << std::endl;
+    }
 
     auto playerMana = playerSpawn->Character->Mana;
     auto playerManaMax = EQ_CLASS_POINTER_PlayerCharacter->Max_Mana();
     auto playerManaPercent = EQ_GetPlayerManaPercent();
 
-    std::cout << __FUNCTION__ << ": Player Mana: " << playerMana << std::endl;
-    std::cout << __FUNCTION__ << ": Player Mana Max: " << playerManaMax << std::endl;
-    std::cout << __FUNCTION__ << ": Player Mana Percent: " << playerManaPercent << std::endl;
+    if (g_trainSpellsDebugIsEnabled == true)
+    {
+        std::cout << __FUNCTION__ << ": Player Mana: " << playerMana << std::endl;
+        std::cout << __FUNCTION__ << ": Player Mana Max: " << playerManaMax << std::endl;
+        std::cout << __FUNCTION__ << ": Player Mana Percent: " << playerManaPercent << std::endl;
 
-    std::cout << __FUNCTION__ << ": Spell Casting Time: " << EQ_GetSpellCastingTime() << std::endl;
+        std::cout << __FUNCTION__ << ": Spell Casting Time: " << EQ_GetSpellCastingTime() << std::endl;
+    }
 
     if (playerManaPercent <= g_trainSpellsSitAtManaPercent || playerMana < spell->ManaCost)
     {
@@ -125,6 +167,22 @@ void EQAPP_TrainSpells_Execute()
 
             EQ_CLASS_POINTER_PlayerCharacter->CastSpell(spellGemIndex, spellID, NULL, -1);
         }
+    }
+}
+
+void EQAPP_TrainSpells_HandleEvent_CEverQuest__dsp_chat(void* this_ptr, const char* text, uint16_t textColor, bool filtered)
+{
+    if (text == NULL)
+    {
+        return;
+    }
+
+    if (strcmp(text, "Your spell fizzles!") == 0)
+    {
+        g_trainSpellsTimer = EQ_GetTimer();
+        g_trainSpellsTimerDelay = 0;
+
+        EQAPP_TrainSpells_Execute();
     }
 }
 

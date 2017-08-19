@@ -2,15 +2,19 @@
 
 bool g_spawnAlertIsEnabled = false;
 
+std::vector<uint16_t> g_spawnAlertSpawnIDList;
+
 void EQAPP_SpawnAlert_Toggle();
 void EQAPP_SpawnAlert_PrintAlertMessage(EQ::Spawn_ptr spawn, bool bDespawn);
-void EQAPP_SpawnAlert_HandleEvent_CDisplay__CreatePlayerActor(class EQPlayer* player);
-void EQAPP_SpawnAlert_HandleEvent_CDisplay__DeleteActor(EQ::ActorInstance_ptr actorInstance);
+void EQAPP_SpawnAlert_HandleEvent_CDisplay__CreatePlayerActor(void* this_ptr, class EQPlayer* player);
+void EQAPP_SpawnAlert_HandleEvent_CDisplay__DeleteActor(void* this_ptr, EQ::ActorInstance_ptr actorInstance);
 
 void EQAPP_SpawnAlert_Toggle()
 {
     EQ_ToggleBool(g_spawnAlertIsEnabled);
     EQAPP_PrintBool("Spawn Alert", g_spawnAlertIsEnabled);
+
+    g_spawnAlertSpawnIDList.clear();
 }
 
 void EQAPP_SpawnAlert_PrintAlertMessage(EQ::Spawn_ptr spawn, bool bDespawn)
@@ -28,7 +32,7 @@ void EQAPP_SpawnAlert_PrintAlertMessage(EQ::Spawn_ptr spawn, bool bDespawn)
 
     std::stringstream spawnText;
 
-    spawnText << spawnName;
+    spawnText << "[Spawn Alert] " << spawnName;
 
     if (spawn->Type == EQ_SPAWN_TYPE_PLAYER)
     {
@@ -46,6 +50,22 @@ void EQAPP_SpawnAlert_PrintAlertMessage(EQ::Spawn_ptr spawn, bool bDespawn)
         if (bDespawn == false)
         {
             spawnText << " spawned.";
+
+            bool bAlreadyExists = false;
+
+            for (auto& spawnID : g_spawnAlertSpawnIDList)
+            {
+                if (spawnID == spawn->SpawnID)
+                {
+                    bAlreadyExists = true;
+                    break;
+                }
+            }
+
+            if (bAlreadyExists == false)
+            {
+                g_spawnAlertSpawnIDList.push_back(spawn->SpawnID);
+            }
         }
         else
         {
@@ -68,7 +88,7 @@ void EQAPP_SpawnAlert_PrintAlertMessage(EQ::Spawn_ptr spawn, bool bDespawn)
     std::cout << spawnText.str() << std::endl;
 }
 
-void EQAPP_SpawnAlert_HandleEvent_CDisplay__CreatePlayerActor(class EQPlayer* player)
+void EQAPP_SpawnAlert_HandleEvent_CDisplay__CreatePlayerActor(void* this_ptr, class EQPlayer* player)
 {
     if (EQ_IsInGame() == false)
     {
@@ -95,7 +115,7 @@ void EQAPP_SpawnAlert_HandleEvent_CDisplay__CreatePlayerActor(class EQPlayer* pl
     EQAPP_SpawnAlert_PrintAlertMessage(spawn, false);
 }
 
-void EQAPP_SpawnAlert_HandleEvent_CDisplay__DeleteActor(EQ::ActorInstance_ptr actorInstance)
+void EQAPP_SpawnAlert_HandleEvent_CDisplay__DeleteActor(void* this_ptr, EQ::ActorInstance_ptr actorInstance)
 {
     if (EQ_IsInGame() == false)
     {

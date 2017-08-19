@@ -11,6 +11,8 @@ void EQAPP_Console_Print();
 
 void EQAPP_Console_Load()
 {
+    setvbuf(stdout, 0, _IOLBF, 4096);
+
     // redirect cout to stringstream
     g_consoleStreamBuffer = std::cout.rdbuf(g_consoleStringStream.rdbuf());
 

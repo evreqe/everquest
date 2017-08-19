@@ -51,6 +51,8 @@ typedef struct _Mouse
 {
     uint32_t X;
     uint32_t Y;
+    signed int SpeedX;
+    signed int SpeedY;
     uint32_t ClickState;
     uint32_t LookState;
     uint32_t LeftClickTimer;
@@ -646,8 +648,8 @@ typedef struct _ActorInstance
 /* 0x0004 */ uint32_t Unknown0004;
 /* 0x0008 */ uint32_t Unknown0008;
 /* 0x000C */ uint32_t Unknown000C;
-/* 0x0010 */ float WorldX;
-/* 0x0014 */ float WorldY;
+/* 0x0010 */ float WorldY;
+/* 0x0014 */ float WorldX;
 /* 0x0018 */ float WorldZ;
 /* 0x001C */ uint32_t Unknown001C;
 /* 0x0020 */ uint32_t Unknown0020;
@@ -734,10 +736,10 @@ typedef struct _Actor
 // 0x0198 // uint8_t Unknown0198;
 /* 0x01B4 */ uint32_t IsInvisible; // NPCs only? used by /hidecorpse command
 /* 0x01B8 */ uint8_t Unknown01B8[168];
-/* 0x0260 */ uint32_t IsHoldingBoth;
-/* 0x0264 */ uint32_t IsHoldingSecondary;
-/* 0x0268 */ uint32_t IsHoldingPrimary;
-/* 0x026C */ uint8_t Unknown026C[4];
+/* 0x0260 */ uint32_t Unknown0260;
+/* 0x0264 */ uint32_t HasPrimaryAndSecondary;
+/* 0x0268 */ uint32_t PrimaryItemType;
+/* 0x026C */ uint32_t SecondaryItemType;
 /* 0x0270 */ uint8_t Unknown0270[4];
 /* 0x0274 */ uint8_t Unknown0274[4];
 /* 0x0278 */ uint8_t Unknown0278[4];

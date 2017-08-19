@@ -71,9 +71,6 @@
     <ClInclude Include="eqapp_bufftimers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="eqapp_itemdisplay.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="eqapp_hidecorpselooted.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -198,6 +195,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_spawncastspell.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_itemdisplaywindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eq_memory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_espmenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

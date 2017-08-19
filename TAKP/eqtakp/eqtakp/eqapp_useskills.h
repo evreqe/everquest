@@ -15,6 +15,14 @@ uint32_t g_useSkillsTimer = 0;
 uint32_t g_useSkillsTimerDelay = 1000;
 
 void EQAPP_UseSkills_Toggle();
+void EQAPP_UseSkills_SenseHeading_Toggle();
+void EQAPP_UseSkills_Forage_Toggle();
+void EQAPP_UseSkills_Taunt_Toggle();
+void EQAPP_UseSkills_Kick_Toggle();
+void EQAPP_UseSkills_Bash_Toggle();
+void EQAPP_UseSkills_Slam_Toggle();
+void EQAPP_UseSkills_Disarm_Toggle();
+void EQAPP_UseSkills_Backstab_Toggle();
 void EQAPP_UseSkills_Load();
 void EQAPP_UseSkills_Execute();
 
@@ -24,25 +32,25 @@ void EQAPP_UseSkills_Toggle()
     EQAPP_PrintBool("Use Skills", g_useSkillsIsEnabled);
 }
 
-void EQAPP_UseSkills_Toggle_SenseHeading()
+void EQAPP_UseSkills_SenseHeading_Toggle()
 {
     EQ_ToggleBool(g_useSkillsSenseHeadingIsEnabled);
     EQAPP_PrintBool("Use Skills (Sense Heading)", g_useSkillsSenseHeadingIsEnabled);
 }
 
-void EQAPP_UseSkills_Toggle_Forage()
+void EQAPP_UseSkills_Forage_Toggle()
 {
     EQ_ToggleBool(g_useSkillsForageIsEnabled);
     EQAPP_PrintBool("Use Skills (Forage)", g_useSkillsForageIsEnabled);
 }
 
-void EQAPP_UseSkills_Toggle_Taunt()
+void EQAPP_UseSkills_Taunt_Toggle()
 {
     EQ_ToggleBool(g_useSkillsTauntIsEnabled);
     EQAPP_PrintBool("Use Skills (Taunt)", g_useSkillsTauntIsEnabled);
 }
 
-void EQAPP_UseSkills_Toggle_Kick()
+void EQAPP_UseSkills_Kick_Toggle()
 {
     EQ_ToggleBool(g_useSkillsKickIsEnabled);
     EQAPP_PrintBool("Use Skills (Kick)", g_useSkillsKickIsEnabled);
@@ -54,7 +62,7 @@ void EQAPP_UseSkills_Toggle_Kick()
     }
 }
 
-void EQAPP_UseSkills_Toggle_Bash()
+void EQAPP_UseSkills_Bash_Toggle()
 {
     EQ_ToggleBool(g_useSkillsBashIsEnabled);
     EQAPP_PrintBool("Use Skills (Bash)", g_useSkillsBashIsEnabled);
@@ -66,7 +74,7 @@ void EQAPP_UseSkills_Toggle_Bash()
     }
 }
 
-void EQAPP_UseSkills_Toggle_Slam()
+void EQAPP_UseSkills_Slam_Toggle()
 {
     EQ_ToggleBool(g_useSkillsSlamIsEnabled);
     EQAPP_PrintBool("Use Skills (Slam)", g_useSkillsSlamIsEnabled);
@@ -78,13 +86,13 @@ void EQAPP_UseSkills_Toggle_Slam()
     }
 }
 
-void EQAPP_UseSkills_Toggle_Disarm()
+void EQAPP_UseSkills_Disarm_Toggle()
 {
     EQ_ToggleBool(g_useSkillsDisarmIsEnabled);
     EQAPP_PrintBool("Use Skills (Disarm): ", g_useSkillsDisarmIsEnabled);
 }
 
-void EQAPP_UseSkills_Toggle_Backstab()
+void EQAPP_UseSkills_Backstab_Toggle()
 {
     EQ_ToggleBool(g_useSkillsBackstabIsEnabled);
     EQAPP_PrintBool("Use Skills (Backstab): ", g_useSkillsBackstabIsEnabled);

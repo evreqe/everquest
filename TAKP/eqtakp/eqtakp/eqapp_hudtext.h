@@ -39,6 +39,16 @@ void EQAPP_HUDText_Execute()
         text << "Food and Drink: On\n";
     }
 
+    if (g_freeCameraIsEnabled == true)
+    {
+        text << "Free Camera: On\n";
+    }
+
+    if (g_collisionHackIsEnabled == true)
+    {
+        text << "Collision Hack: On\n";
+    }
+
     if (g_trainSpellsIsEnabled == true)
     {
         text << "Train Spells: On\n";

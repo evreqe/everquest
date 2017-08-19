@@ -39,7 +39,7 @@ void EQAPP_MerchantWindow_AppendSpellLevelToToolTipText(void* this_ptr)
         EQ::Item_ptr item = merchantWindow->Item[i];
         if (item == NULL)
         {
-            break;
+            continue;
         }
 
         std::string itemName = item->Name;
@@ -48,7 +48,7 @@ void EQAPP_MerchantWindow_AppendSpellLevelToToolTipText(void* this_ptr)
             continue;
         }
 
-        if ((itemName.find("Spell: ") == std::string::npos) && (itemName.find("Ancient: ") == std::string::npos))
+        if ((itemName.find("Spell:") == std::string::npos) && (itemName.find("Ancient:") == std::string::npos) && (itemName.find("Song:") == std::string::npos))
         {
             continue;
         }
@@ -136,7 +136,7 @@ void EQAPP_MerchantWindow_HandleEvent_CMerchantWnd__PostDraw(void* this_ptr)
         EQ::Item_ptr item = merchantWindow->Item[i];
         if (item == NULL)
         {
-            break;
+            continue;
         }
 
         std::string itemName = item->Name;
@@ -145,7 +145,7 @@ void EQAPP_MerchantWindow_HandleEvent_CMerchantWnd__PostDraw(void* this_ptr)
             continue;
         }
 
-        if ((itemName.find("Spell: ") == std::string::npos) && (itemName.find("Ancient: ") == std::string::npos))
+        if ((itemName.find("Spell:") == std::string::npos) && (itemName.find("Ancient:") == std::string::npos) && (itemName.find("Song:") == std::string::npos))
         {
             continue;
         }

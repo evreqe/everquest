@@ -20,8 +20,11 @@ namespace EQApp
         int StandingState;
         int HPCurrent;
         int HPMax;
+        int PrimaryItemType;
+        int SecondaryItemType;
         bool ShowAtAnyDistance = false;
         bool IsNamedSpawn = false;
+        bool IsNewSpawn = false;
         bool IsTarget = false;
         bool IsPet = false;
         bool IsYourPet = false;
@@ -29,6 +32,9 @@ namespace EQApp
         bool IsInvisible = false;
         bool IsLinkDead = false;
         bool IsFollowed = false;
+        bool IsHoldingPrimaryItem = false;
+        bool IsHoldingSecondaryItem = false;
+        bool IsTrader = false;
         std::string Text;
         uint32_t TextColor = EQ_TEXT_COLOR_WHITE;
         uint32_t FontPointer = EQ_ADDRESS_POINTER_FONT_ARIAL14;
@@ -38,18 +44,23 @@ namespace EQApp
 
 bool g_ESPIsEnabled = true;
 
+bool g_ESPSpawnsIsEnabled = true;
+bool g_ESPSpawnSkeletonsIsEnabled = false;
+bool g_ESPGroundSpawnsIsEnabled = true;
+bool g_ESPDoorSpawnsIsEnabled = true;
+bool g_ESPActorsIsEnabled = false;
+
 bool g_ESPShowSpawnID = false;
-bool g_ESPShowStandingState = true;
+bool g_ESPShowSpawnStandingState = true;
+bool g_ESPShowSpawnWeapon = false;
 
 float g_ESPSpawnDistanceMax = 400.0f;
 float g_ESPSpawnDistanceZMax = 10.0f;
 
-bool g_ESPSkeletonsIsEnabled = false;
+float g_ESPSpawnSkeletonsDistanceMax = 100.0f;
 
-float g_ESPSkeletonsDistanceMax = 100.0f;
-
-uint32_t g_ESPSkeletonsNumBoneLinesDrawn = 0;
-uint32_t g_ESPSkeletonsNumBoneLinesMax = 200;
+uint32_t g_ESPSpawnSkeletonsNumBoneLinesDrawn = 0;
+uint32_t g_ESPSpawnSkeletonsNumBoneLinesMax = 200;
 
 uint32_t g_ESPFontPointerDefault = EQ_ADDRESS_POINTER_FONT_ARIAL14;
 uint32_t g_ESPFontPointerFarAway = EQ_ADDRESS_POINTER_FONT_ARIAL12;
@@ -60,8 +71,13 @@ uint32_t g_ESPSpawnListTimer = 0;
 uint32_t g_ESPSpawnListTimerDelay = 1000;
 
 void EQAPP_ESP_Toggle();
-void EQAPP_ESP_Skeletons_Toggle();
+void EQAPP_ESP_Spawns_Toggle();
+void EQAPP_ESP_GroundSpawns_Toggle();
+void EQAPP_ESP_DoorSpawns_Toggle();
+void EQAPP_ESP_Actors_Toggle();
+void EQAPP_ESP_SpawnSkeletons_Toggle();
 void EQAPP_ESP_ShowSpawnID_Toggle();
+void EQAPP_ESP_ShowSpawnWeapon_Toggle();
 void EQAPP_ESP_DrawLineBetweenBones(EQ::ModelBone_ptr bone1, EQ::ModelBone_ptr bone2, uint32_t lineColorARGB);
 void EQAPP_ESP_DrawSkeleton(EQ::ModelBone_ptr bone, uint32_t lineColorARGB);
 void EQAPP_ESP_DrawSkeletonForSpawn(EQ::Spawn_ptr spawn, uint32_t lineColorARGB);
@@ -70,6 +86,7 @@ void EQAPP_ESP_UpdateSpawnList();
 void EQAPP_ESP_DrawDoorSpawns();
 void EQAPP_ESP_DrawGroundSpawns();
 void EQAPP_ESP_DrawSpawns();
+void EQAPP_ESP_DrawActors();
 void EQAPP_ESP_Execute();
 
 void EQAPP_ESP_Toggle()
@@ -78,16 +95,46 @@ void EQAPP_ESP_Toggle()
     EQAPP_PrintBool("ESP", g_ESPIsEnabled);
 }
 
-void EQAPP_ESP_Skeletons_Toggle()
+void EQAPP_ESP_Spawns_Toggle()
 {
-    EQ_ToggleBool(g_ESPSkeletonsIsEnabled);
-    EQAPP_PrintBool("ESP Skeletons", g_ESPSkeletonsIsEnabled);
+    EQ_ToggleBool(g_ESPSpawnsIsEnabled);
+    EQAPP_PrintBool("ESP Spawns", g_ESPSpawnsIsEnabled);
+}
+
+void EQAPP_ESP_GroundSpawns_Toggle()
+{
+    EQ_ToggleBool(g_ESPGroundSpawnsIsEnabled);
+    EQAPP_PrintBool("ESP Ground Spawns", g_ESPGroundSpawnsIsEnabled);
+}
+
+void EQAPP_ESP_DoorSpawns_Toggle()
+{
+    EQ_ToggleBool(g_ESPDoorSpawnsIsEnabled);
+    EQAPP_PrintBool("ESP Door Spawns", g_ESPDoorSpawnsIsEnabled);
+}
+
+void EQAPP_ESP_Actors_Toggle()
+{
+    EQ_ToggleBool(g_ESPActorsIsEnabled);
+    EQAPP_PrintBool("ESP Actors", g_ESPActorsIsEnabled);
+}
+
+void EQAPP_ESP_SpawnSkeletons_Toggle()
+{
+    EQ_ToggleBool(g_ESPSpawnSkeletonsIsEnabled);
+    EQAPP_PrintBool("ESP Spawn Skeletons", g_ESPSpawnSkeletonsIsEnabled);
 }
 
 void EQAPP_ESP_ShowSpawnID_Toggle()
 {
     EQ_ToggleBool(g_ESPShowSpawnID);
     EQAPP_PrintBool("ESP Show Spawn ID", g_ESPShowSpawnID);
+}
+
+void EQAPP_ESP_ShowSpawnWeapon_Toggle()
+{
+    EQ_ToggleBool(g_ESPShowSpawnWeapon);
+    EQAPP_PrintBool("ESP Show Spawn Weapon", g_ESPShowSpawnWeapon);
 }
 
 void EQAPP_ESP_DrawLineBetweenBones(EQ::ModelBone_ptr bone1, EQ::ModelBone_ptr bone2, uint32_t lineColorARGB)
@@ -129,7 +176,7 @@ void EQAPP_ESP_DrawLineBetweenBones(EQ::ModelBone_ptr bone1, EQ::ModelBone_ptr b
 
     EQGraphicsDLL__t3dDeferLine(&line, lineColorARGB);
 
-    g_ESPSkeletonsNumBoneLinesDrawn++;
+    g_ESPSpawnSkeletonsNumBoneLinesDrawn++;
 }
 
 void EQAPP_ESP_DrawSkeleton(EQ::ModelBone_ptr bone, uint32_t lineColorARGB)
@@ -258,6 +305,8 @@ void EQAPP_ESP_UpdateSpawnList()
         espSpawn.StandingState = spawn->StandingState;
         espSpawn.HPCurrent = spawn->HPCurrent;
         espSpawn.HPMax = spawn->HPMax;
+        espSpawn.PrimaryItemType = spawn->Actor->PrimaryItemType;
+        espSpawn.SecondaryItemType = spawn->Actor->SecondaryItemType;
 
         espSpawn.Distance = EQ_CalculateDistance(spawn->X, spawn->Y, playerSpawn->X, playerSpawn->Y);
         espSpawn.DistanceZ = std::fabsf(spawn->Z - playerSpawn->Z);
@@ -271,6 +320,21 @@ void EQAPP_ESP_UpdateSpawnList()
         if (spawn->Actor->IsInvisible == 1)
         {
             espSpawn.IsInvisible = true;
+        }
+
+        if (spawn->Actor->PrimaryItemType != 0)
+        {
+            espSpawn.IsHoldingPrimaryItem = true;
+        }
+
+        if (spawn->Actor->SecondaryItemType != 0)
+        {
+            espSpawn.IsHoldingSecondaryItem = true;
+        }
+
+        if (spawn->Actor->IsTrader == 1)
+        {
+            espSpawn.IsTrader = true;
         }
 
         if (spawn->IsLinkDead == 1)
@@ -301,6 +365,18 @@ void EQAPP_ESP_UpdateSpawnList()
                 {
                     espSpawn.IsNamedSpawn = true;
                     espSpawn.ShowAtAnyDistance = true;
+                    break;
+                }
+            }
+        }
+
+        if (g_spawnAlertIsEnabled == true)
+        {
+            for (auto& spawnID : g_spawnAlertSpawnIDList)
+            {
+                if (spawnID == espSpawn.SpawnID)
+                {
+                    espSpawn.IsNewSpawn = true;
                     break;
                 }
             }
@@ -440,7 +516,49 @@ void EQAPP_ESP_UpdateSpawnList()
             espText << "\n*Following*";
         }
 
-        if (g_ESPShowStandingState == true)
+        if (g_ESPShowSpawnWeapon == true)
+        {
+            if (espSpawn.IsHoldingPrimaryItem == true)
+            {
+                espText << "\n*Primary: ";
+
+                auto it = EQ_STRING_MAP_ITEM_TYPE_NAME.find(espSpawn.PrimaryItemType);
+                if (it == EQ_STRING_MAP_ITEM_TYPE_NAME.end())
+                {
+                    espText << espSpawn.PrimaryItemType;
+                }
+                else
+                {
+                    espText << it->second;
+                }
+
+                espText << "*";
+            }
+
+            if (espSpawn.IsHoldingSecondaryItem == true)
+            {
+                espText << "\n*Secondary: ";
+
+                auto it = EQ_STRING_MAP_ITEM_TYPE_NAME.find(espSpawn.SecondaryItemType);
+                if (it == EQ_STRING_MAP_ITEM_TYPE_NAME.end())
+                {
+                    espText << espSpawn.SecondaryItemType;
+                }
+                else
+                {
+                    espText << it->second;
+                }
+
+                espText << "*";
+            }
+        }
+
+        if (espSpawn.IsNewSpawn == true)
+        {
+            espText << "\n*New Spawn*";
+        }
+
+        if (g_ESPShowSpawnStandingState == true)
         {
             if (espSpawn.Type == EQ_SPAWN_TYPE_PLAYER)
             {
@@ -452,14 +570,14 @@ void EQAPP_ESP_UpdateSpawnList()
                 {
                     espText << "\n*Looting*";
                 }
-                else if (espSpawn.StandingState == EQ_STANDING_STATE_FROZEN)
+                else if (espSpawn.StandingState == EQ_STANDING_STATE_FROZEN && espSpawn.IsLinkDead == false)
                 {
                     espText << "\n*Frozen*";
                 }
             }
         }
 
-        if (espSpawn.Type == EQ_SPAWN_TYPE_PLAYER && espSpawn.IsLinkDead == true)
+        if (espSpawn.IsLinkDead == true && espSpawn.Type == EQ_SPAWN_TYPE_PLAYER)
         {
             espText << "\n*Link Dead*";
         }
@@ -473,6 +591,11 @@ void EQAPP_ESP_UpdateSpawnList()
         {
             for (auto& spawnCastSpell : g_spawnCastSpellList)
             {
+                if (spawnCastSpell->Spawn == NULL)
+                {
+                    continue;
+                }
+
                 if (spawnCastSpell->Spawn == spawn)
                 {
                     espText << "\n(" << spawnCastSpell->SpellName << ")";
@@ -592,7 +715,7 @@ void EQAPP_ESP_DrawGroundSpawns()
 
 void EQAPP_ESP_DrawSpawns()
 {
-    g_ESPSkeletonsNumBoneLinesDrawn = 0;
+    g_ESPSpawnSkeletonsNumBoneLinesDrawn = 0;
 
     EQAPP_ESP_UpdateSpawnList();
 
@@ -603,6 +726,14 @@ void EQAPP_ESP_DrawSpawns()
             continue;
         }
 
+        if (EQ_IsKeyPressedShift() == true)
+        {
+            if (espSpawn.IsNamedSpawn == false)
+            {
+                continue;
+            }
+        }
+
         if (espSpawn.Spawn->SpawnID == espSpawn.SpawnID)
         {
             espSpawn.Location.X = espSpawn.Spawn->X;
@@ -610,11 +741,11 @@ void EQAPP_ESP_DrawSpawns()
             espSpawn.Location.Z = espSpawn.Spawn->Z;
         }
 
-        if (g_ESPSkeletonsIsEnabled == true)
+        if (g_ESPSpawnSkeletonsIsEnabled == true)
         {
-            if (g_ESPSkeletonsNumBoneLinesDrawn < g_ESPSkeletonsNumBoneLinesMax)
+            if (g_ESPSpawnSkeletonsNumBoneLinesDrawn < g_ESPSpawnSkeletonsNumBoneLinesMax)
             {
-                if (espSpawn.Distance < g_ESPSkeletonsDistanceMax)
+                if (espSpawn.Distance < g_ESPSpawnSkeletonsDistanceMax)
                 {
                     EQAPP_ESP_DrawSkeletonForSpawn(espSpawn.Spawn, espSpawn.SkeletonLineColorARGB);
                 }
@@ -632,6 +763,69 @@ void EQAPP_ESP_DrawSpawns()
     }
 }
 
+void EQAPP_ESP_DrawActors()
+{
+    uint32_t baseAddress = EQ_GraphicsDLL_GetBaseAddress();
+    if (baseAddress == NULL)
+    {
+        return;
+    }
+
+    for (size_t i = 0; i < EQ_GRAPHICS_DLL_NUM_VISIBLE_ACTORS_MAX; i++)
+    {
+        uint32_t visibleActor = EQ_ReadMemory<uint32_t>((baseAddress + EQ_GRAPHICS_DLL_OFFSET_VISIBLE_ACTORS_LIST) + (i * EQ_GRAPHICS_DLL_VISIBLE_ACTOR_SIZE));
+        if (visibleActor == NULL)
+        {
+            break;
+        }
+
+        EQ::ActorInstance_ptr actorInstance = (EQ::ActorInstance_ptr)EQ_ReadMemory<uint32_t>(visibleActor + EQ_GRAPHICS_DLL_VISIBLE_ACTOR_OFFSET_ACTOR_INSTANCE);
+        if (actorInstance == NULL)
+        {
+            continue;
+        }
+
+        if (actorInstance->MagicNumber != 24 || actorInstance == (EQ::ActorInstance_ptr)EQ_ADDRESS_POINTER_CAMERA_ACTOR_INSTANCE)
+        {
+            continue;
+        }
+
+        if (actorInstance->ActorDefinition == NULL)
+        {
+            continue;
+        }
+
+        std::string actorName = actorInstance->ActorDefinition->Name;
+        if (actorName.size() == 0)
+        {
+            continue;
+        }
+
+        if (actorName.find("POK") != std::string::npos)
+        {
+            EQGraphicsDLL__t3dDestroyActor(EQ_POINTER_CDisplay->Unknown0004, actorInstance);
+            break;
+        }
+
+        EQ::Location actorLocation;
+        actorLocation.Y = actorInstance->WorldY;
+        actorLocation.X = actorInstance->WorldX;
+        actorLocation.Z = actorInstance->WorldZ;
+
+        uint32_t screenX = 0;
+        uint32_t screenY = 0;
+        if (EQ_WorldSpaceToScreenSpace(actorLocation, screenX, screenY) == false)
+        {
+            continue;
+        }
+
+        std::stringstream actorText;
+        actorText << "& " << actorName;
+
+        EQ_DrawText(actorText.str().c_str(), screenX, screenY, EQ_TEXT_COLOR_WHITE);
+    }
+}
+
 void EQAPP_ESP_Execute()
 {
     if (EQ_IsKeyPressedControl() == true)
@@ -639,8 +833,25 @@ void EQAPP_ESP_Execute()
         return;
     }
 
-    EQAPP_ESP_DrawDoorSpawns();
-    EQAPP_ESP_DrawGroundSpawns();
-    EQAPP_ESP_DrawSpawns();
+    if (g_ESPActorsIsEnabled == true)
+    {
+        EQAPP_ESP_DrawActors();
+    }
+
+    if (g_ESPDoorSpawnsIsEnabled == true)
+    {
+        EQAPP_ESP_DrawDoorSpawns();
+    }
+
+    if (g_ESPGroundSpawnsIsEnabled == true)
+    {
+        EQAPP_ESP_DrawGroundSpawns();
+    }
+
+    if (g_ESPSpawnsIsEnabled == true)
+    {
+        EQAPP_ESP_DrawSpawns();
+    }
 }
+
 

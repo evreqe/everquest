@@ -118,6 +118,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;EQTAKP_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>D:\Code\!libraries\detours;D:\Code\!libraries\directx8sdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -162,6 +163,7 @@
     <ClInclude Include="eqapp_dotarget.h" />
     <ClInclude Include="eqapp_drawdistance.h" />
     <ClInclude Include="eqapp_esp.h" />
+    <ClInclude Include="eqapp_espmenu.h" />
     <ClInclude Include="eqapp_extendedtargets.h" />
     <ClInclude Include="eqapp_extramousebuttons.h" />
     <ClInclude Include="eqapp_foodanddrink.h" />
@@ -177,7 +179,7 @@
     <ClInclude Include="eqapp_hudtext.h" />
     <ClInclude Include="eqapp_ini.h" />
     <ClInclude Include="eqapp_interpretcmd.h" />
-    <ClInclude Include="eqapp_itemdisplay.h" />
+    <ClInclude Include="eqapp_itemdisplaywindow.h" />
     <ClInclude Include="eqapp_mainmenu.h" />
     <ClInclude Include="eqapp_map.h" />
     <ClInclude Include="eqapp_memory.h" />
@@ -203,6 +205,7 @@
     <ClInclude Include="eq_functions.h" />
     <ClInclude Include="eq_graphicsdll.h" />
     <ClInclude Include="eq_macros.h" />
+    <ClInclude Include="eq_memory.h" />
     <ClInclude Include="eq_offsets.h" />
     <ClInclude Include="eq_pointers.h" />
     <ClInclude Include="eq_structures.h" />
