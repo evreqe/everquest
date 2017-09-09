@@ -21,6 +21,7 @@ std::map<std::string, std::function<void()>> g_interpretCmdList =
     {"//ESP",                       &EQAPP_ESP_Toggle},
     {"//ESPSpawnSkeletons",         &EQAPP_ESP_SpawnSkeletons_Toggle},
     {"//ESPShowSpawnID",            &EQAPP_ESP_ShowSpawnID_Toggle},
+    {"//ESPShowSpawnRace",          &EQAPP_ESP_ShowSpawnRace_Toggle},
     {"//ESPShowSpawnWeapon",        &EQAPP_ESP_ShowSpawnWeapon_Toggle},
     {"//ExtendedTargets",           &EQAPP_ExtendedTargets_Toggle},
     {"//FoodAndDrink",              &EQAPP_FoodAndDrink_Toggle},
@@ -43,6 +44,7 @@ std::map<std::string, std::function<void()>> g_interpretCmdList =
     {"//NameSpriteTint",            &EQAPP_NameSpriteTint_Toggle},
     {"//NetworkStats",              &EQAPP_NetworkStats_Toggle},
     {"//NeverFrozen",               &EQAPP_NeverFrozen_Toggle},
+    {"//ReplaceRaces",              &EQAPP_ReplaceRaces_Toggle},
     {"//SpawnAlert",                &EQAPP_SpawnAlert_Toggle},
     {"//Speed",                     &EQAPP_SpeedHack_Toggle},
     {"//SpeedRun1",                 &EQAPP_SpeedHack_SetSpeedRun1},
@@ -61,6 +63,7 @@ std::map<std::string, std::function<void()>> g_interpretCmdList =
     {"//TrainSpells",               &EQAPP_TrainSpells_Toggle},
     {"//TrainSpellsDebug",          &EQAPP_TrainSpells_Debug_Toggle},
     {"//UseSkills",                 &EQAPP_UseSkills_Toggle},
+    {"//UseSkillsRoundKick",        &EQAPP_UseSkills_RoundKick_Toggle},
     {"//UseSkillsBackstab",         &EQAPP_UseSkills_Backstab_Toggle},
     {"//UseSkillsBash",             &EQAPP_UseSkills_Bash_Toggle},
     {"//UseSkillsDisarm",           &EQAPP_UseSkills_Disarm_Toggle},
@@ -158,6 +161,19 @@ void EQAPP_InterpretCmd_Execute(std::string commandText)
         for (auto& cmd : g_interpretCmdList)
         {
             std::cout << cmd.first << std::endl;
+        }
+
+        return;
+    }
+
+    if (commandText == "//Test")
+    {
+        auto playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn != NULL)
+        {
+            auto player = (EQClass::EQPlayer*)playerSpawn;
+
+            EQ_CLASS_POINTER_CDisplay->UpdateItemSlot(player, 7, "IT145", true);
         }
 
         return;

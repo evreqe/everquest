@@ -46,7 +46,7 @@ bool EQAPP_NameSpriteTint_HandleEvent_CDisplay__SetNameSpriteTint(void* this_ptr
         return false;
     }
 
-    if (spawn->Actor->ModelBoneHeadPoint->StringSprite->ID == 0)
+    if (spawn->Actor->ModelBoneHeadPoint->StringSprite->ID == 0xFFFFFFFF)
     {
         return false;
     }

@@ -11,8 +11,8 @@ std::unordered_map<std::string, uint32_t> g_namedSpawnsInZoneMap; // spawnName, 
 
 std::stringstream g_namedSpawnsDrawText;
 
-uint32_t g_namedSpawnsX = 1200;
-uint32_t g_namedSpawnsY = 4;
+uint32_t g_namedSpawnsDrawTextX = 1200;
+uint32_t g_namedSpawnsDrawTextY = 4;
 
 uint32_t g_namedSpawnsTimer = 0;
 uint32_t g_namedSpawnsTimerDelay = 1000;
@@ -128,7 +128,7 @@ void EQAPP_NamedSpawns_Execute()
         return;
     }
 
-    EQ_DrawText(g_namedSpawnsDrawText.str().c_str(), g_namedSpawnsX, g_namedSpawnsY, EQ_TEXT_COLOR_WHITE);
+    EQ_DrawText(g_namedSpawnsDrawText.str().c_str(), g_namedSpawnsDrawTextX, g_namedSpawnsDrawTextY, EQ_COLOR_ARGB_WHITE);
 }
 
 

@@ -33,6 +33,7 @@ void EQ_CXStr_Append(EQ::CXStr** cxstr, const char* text);
 bool EQ_IsInGame();
 bool EQ_IsAutoAttackEnabled();
 bool EQ_IsNetStatusEnabled();
+bool EQ_IsRunEnabled();
 bool EQ_IsNotTypingInChat();
 bool EQ_IsInspectEnabled();
 bool EQ_IsShowNPCNamesEnabled();
@@ -42,22 +43,23 @@ bool EQ_IsKeyPressedAlt();
 bool EQ_IsKeyPressedShift();
 bool EQ_IsMouseHoveringOverCXWnd();
 void EQ_SetAutoAttack(bool bEnabled);
+void EQ_SetRun(bool bEnabled);
 void EQ_SetActorCollision(bool bEnabled);
 uint32_t EQ_GetFontTextHeight(uint32_t fontPointer);
 size_t EQ_GetFontTextWidth(const char* text, uint32_t fontPointer);
 void EQ_DrawTooltipText(const char* text, int x, int y, uint32_t fontPointer);
-void EQ_DrawText(const char* text, int x, int y, int textColor);
-void EQ_DrawTextEx(const char* text, int x, int y, int textColor, uint32_t fontPointer);
+void EQ_DrawText(const char* text, int x, int y, uint32_t colorARGB);
+void EQ_DrawTextEx(const char* text, int x, int y, uint32_t colorARGB, uint32_t fontPointer);
 void EQ_DrawLine(float x1, float y1, float x2, float y2, uint32_t colorARGB);
 void EQ_DrawLineEx(EQ::Line_ptr line, uint32_t colorARGB);
 void EQ_DrawRectangle(float x, float y, float width, float height, uint32_t colorARGB, bool isFilled = false);
 bool EQ_WorldSpaceToScreenSpace(EQ::Location location, uint32_t &screenX, uint32_t &screenY);
 bool EQ_WorldSpaceToScreenSpaceFloat(EQ::Location location, float &screenX, float &screenY);
 void EQ_WriteChatText(const char* text);
-void EQ_CalculateTickTime(int ticks, int& hours, int& minutes, int& seconds);
-std::string EQ_GetTickTimeString(int ticks);
-void EQ_CalculateItemCost(int cost, int& platinum, int& gold, int& silver, int& copper);
-std::string EQ_GetItemCostString(int cost);
+void EQ_CalculateTickTime(uint32_t ticks, uint32_t& hours, uint32_t& minutes, uint32_t& seconds);
+std::string EQ_GetTickTimeString(uint32_t ticks);
+void EQ_CalculateItemCost(uint32_t cost, uint32_t& platinum, uint32_t& gold, uint32_t& silver, uint32_t& copper);
+std::string EQ_GetItemCostString(uint32_t cost);
 std::string EQ_GetGuildNameByID(uint16_t guildID);
 uint32_t EQ_GetStringSpriteFontTexture();
 uint32_t EQ_GetTimer();
@@ -120,6 +122,7 @@ bool EQ_IsPlayerCastingSpell();
 EQ::Camera_ptr EQ_GetCamera();
 void EQ_FixHeading(float& heading);
 uint32_t EQ_GetNumPlayersInZone();
+bool EQ_IsSpawnBehindSpawn(EQ::Spawn_ptr spawn1, EQ::Spawn_ptr spawn2);
 
 template <class T>
 void EQ_Log(const char* text, T number)
@@ -306,6 +309,11 @@ bool EQ_IsNetStatusEnabled()
     return (EQ_ReadMemory<uint8_t>(EQ_ADDRESS_IS_NET_STATUS_ENABLED) == 1);
 }
 
+bool EQ_IsRunEnabled()
+{
+    return (EQ_ReadMemory<uint8_t>(EQ_ADDRESS_IS_RUN_ENABLED) == 1);
+}
+
 bool EQ_IsNotTypingInChat()
 {
     return (EQ_ReadMemory<uint8_t>(EQ_ADDRESS_IS_NOT_TYPING_IN_CHAT) == 1);
@@ -355,6 +363,18 @@ void EQ_SetAutoAttack(bool bEnabled)
     else
     {
         EQ_WriteMemory<uint8_t>(EQ_ADDRESS_IS_AUTO_ATTACK_ENABLED, 0x00);
+    }
+}
+
+void EQ_SetRun(bool bEnabled)
+{
+    if (bEnabled == true)
+    {
+        EQ_WriteMemory<uint8_t>(EQ_ADDRESS_IS_RUN_ENABLED, 0x01);
+    }
+    else
+    {
+        EQ_WriteMemory<uint8_t>(EQ_ADDRESS_IS_RUN_ENABLED, 0x00);
     }
 }
 
@@ -482,26 +502,28 @@ void EQ_DrawTooltipText(const char* text, int x, int y, uint32_t fontPointer)
     textWidth = textWidth + 1;
 
     int textX = x - 1;
+    int textY = y;
 
-    EQ_DrawRectangle((float)textX, (float)y, (float)textWidth, (float)fontHeight, EQ_TOOLTIP_TEXT_BACKGROUND_COLOR, true);
+    EQ_DrawRectangle((float)textX, (float)textY, (float)textWidth, (float)fontHeight, EQ_COLOR_ARGB_TOOLTIP_TEXT_BACKGROUND, true);
 
-    uint32_t font = EQ_ReadMemory<uint32_t>(fontPointer);
-
-    EQ_CLASS_POINTER_CDisplay->WriteTextHD2(text, x, y, EQ_TEXT_COLOR_WHITE, font);
+    EQ_DrawTextEx(text, textX, textY, EQ_COLOR_ARGB_WHITE, fontPointer);
 }
 
-void EQ_DrawText(const char* text, int x, int y, int textColor)
-{
-    uint32_t font = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_FONT_ARIAL14);
-
-    EQ_CLASS_POINTER_CDisplay->WriteTextHD2(text, x, y, textColor, font);
-}
-
-void EQ_DrawTextEx(const char* text, int x, int y, int textColor, uint32_t fontPointer)
+void EQ_DrawTextEx(const char* text, int x, int y, uint32_t colorARGB, uint32_t fontPointer)
 {
     uint32_t font = EQ_ReadMemory<uint32_t>(fontPointer);
 
-    EQ_CLASS_POINTER_CDisplay->WriteTextHD2(text, x, y, textColor, font);
+    EQ::XYZ xyz;
+    xyz.X = (float)x;
+    xyz.Y = (float)y;
+    xyz.Z = 0.0f;
+
+    EQGraphicsDLL__t3dDeferTextA(text, font, &xyz, colorARGB, 0);
+}
+
+void EQ_DrawText(const char* text, int x, int y, uint32_t colorARGB)
+{
+    EQ_DrawTextEx(text, x, y, colorARGB, EQ_ADDRESS_POINTER_FONT_ARIAL14);
 }
 
 void EQ_DrawLine(float x1, float y1, float x2, float y2, uint32_t colorARGB)
@@ -611,34 +633,38 @@ void EQ_WriteChatText(const char* text)
     EQ_CLASS_POINTER_CEverQuest->dsp_chat(text);
 }
 
-void EQ_CalculateTickTime(int ticks, int& hours, int& minutes, int& seconds)
+void EQ_CalculateTickTime(uint32_t ticks, uint32_t& hours, uint32_t& minutes, uint32_t& seconds)
 {
-    if (ticks > 0)
+    if (ticks == 0)
     {
-        seconds = ticks * 3;
+        hours = 0;
+        minutes = 0;
+        seconds = 0;
+        return;
+    }
+
+    seconds = ticks * 3;
+
+    if (seconds > 0)
+    {
+        hours = seconds / (60 * 60);
+
+        seconds = seconds - hours * (60 * 60);
 
         if (seconds > 0)
         {
-            hours = seconds / (60 * 60);
+            minutes = seconds / 60;
 
-            seconds = seconds - hours * (60 * 60);
-
-            if (seconds > 0)
-            {
-                minutes = seconds / 60;
-
-                seconds = seconds - minutes * 60;
-            }
+            seconds = seconds - minutes * 60;
         }
     }
 }
 
-std::string EQ_GetTickTimeString(int ticks)
+std::string EQ_GetTickTimeString(uint32_t ticks)
 {
-    int hours = 0;
-    int minutes = 0;
-    int seconds = 0;
-
+    uint32_t hours = 0;
+    uint32_t minutes = 0;
+    uint32_t seconds = 0;
     EQ_CalculateTickTime(ticks, hours, minutes, seconds);
 
     std::stringstream buffer;
@@ -669,34 +695,43 @@ std::string EQ_GetTickTimeString(int ticks)
     return buffer.str();
 }
 
-void EQ_CalculateItemCost(int cost, int& platinum, int& gold, int& silver, int& copper)
+void EQ_CalculateItemCost(uint32_t cost, uint32_t& platinum, uint32_t& gold, uint32_t& silver, uint32_t& copper)
 {
     // cost is in total copper value of item
 
-    if (cost < 0)
+    if (cost == 0)
     {
+        platinum = 0;
+        gold = 0;
+        silver = 0;
+        copper = 0;
         return;
     }
 
     platinum = cost / 1000;
     cost     = cost % 1000;
 
-    gold     = cost / 100;
-    cost     = cost % 100;
+    if (cost > 0)
+    {
+        gold = cost / 100;
+        cost = cost % 100;
 
-    silver   = cost / 10;
-    cost     = cost % 10;
+        if (cost > 0)
+        {
+            silver = cost / 10;
+            cost   = cost % 10;
 
-    copper   = cost;
+            copper = cost;
+        }
+    }
 }
 
-std::string EQ_GetItemCostString(int cost)
+std::string EQ_GetItemCostString(uint32_t cost)
 {
-    int platinum = 0;
-    int gold = 0;
-    int silver = 0;
-    int copper = 0;
-
+    uint32_t platinum = 0;
+    uint32_t gold = 0;
+    uint32_t silver = 0;
+    uint32_t copper = 0;
     EQ_CalculateItemCost(cost, platinum, gold, silver, copper);
 
     std::stringstream buffer;
@@ -881,6 +916,12 @@ void EQ_SetTargetSpawn(EQ::Spawn_ptr spawn)
 
 bool EQ_IsSpawnGroupMember(EQ::Spawn_ptr spawn)
 {
+    uint32_t groupCount = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_GROUP_COUNT);
+    if (groupCount == 0)
+    {
+        return false;
+    }
+
     for (size_t i = 0; i < EQ_NUM_GROUP_MEMBERS; i++)
     {
         if (spawn == EQ_POINTER_GroupList.GroupMember[i])
@@ -1627,6 +1668,21 @@ uint32_t EQ_GetNumPlayersInZone()
     }
 
     return numPlayers;
+}
+
+bool EQ_IsSpawnBehindSpawn(EQ::Spawn_ptr spawn1, EQ::Spawn_ptr spawn2)
+{
+    float heading1 = spawn1->Heading;
+    float heading2 = spawn2->Heading;
+
+    float headingDifference = std::fabsf(heading1 - heading2);
+
+    if (headingDifference <= 64.0f) // 512 / 4 = 64
+    {
+        return true;
+    }
+
+    return false;
 }
 
 

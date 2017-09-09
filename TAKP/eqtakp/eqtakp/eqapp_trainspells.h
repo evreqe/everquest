@@ -18,7 +18,7 @@ std::string g_trainSpellsSpellName;
 void EQAPP_TrainSpells_Toggle();
 void EQAPP_TrainSpells_Debug_Toggle();
 void EQAPP_TrainSpells_Execute();
-void EQAPP_TrainSpells_HandleEvent_CEverQuest__dsp_chat(void* this_ptr, const char* text, uint16_t textColor, bool filtered);
+void EQAPP_TrainSpells_HandleEvent_CEverQuest__dsp_chat(void* this_ptr, const char* text, int textColor, bool filtered);
 
 void EQAPP_TrainSpells_Toggle()
 {
@@ -170,7 +170,7 @@ void EQAPP_TrainSpells_Execute()
     }
 }
 
-void EQAPP_TrainSpells_HandleEvent_CEverQuest__dsp_chat(void* this_ptr, const char* text, uint16_t textColor, bool filtered)
+void EQAPP_TrainSpells_HandleEvent_CEverQuest__dsp_chat(void* this_ptr, const char* text, int textColor, bool filtered)
 {
     if (text == NULL)
     {

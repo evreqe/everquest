@@ -91,6 +91,12 @@ void EQAPP_MainMenu_CreateMenu()
     g_mainMenuGUIMenuItemMap.SetFunctionLeftClick(&EQAPP_Map_Toggle);
     g_mainMenuGUIMenuItemMap.SetBoolPointer(g_mapIsEnabled);
 
+    EQApp::GUIMenuItem g_mainMenuGUIMenuItemReplaceRaces;
+    g_mainMenuGUIMenuItemReplaceRaces.SetText("Replace Races");
+    g_mainMenuGUIMenuItemReplaceRaces.FitToText();
+    g_mainMenuGUIMenuItemReplaceRaces.SetFunctionLeftClick(&EQAPP_ReplaceRaces_Toggle);
+    g_mainMenuGUIMenuItemReplaceRaces.SetBoolPointer(g_replaceRacesIsEnabled);
+
     EQApp::GUIMenuItem g_mainMenuGUIMenuItemSpawnAlert;
     g_mainMenuGUIMenuItemSpawnAlert.SetText("Spawn Alert");
     g_mainMenuGUIMenuItemSpawnAlert.FitToText();
@@ -142,6 +148,7 @@ void EQAPP_MainMenu_CreateMenu()
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemFoodAndDrink);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemFreeCamera);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemMap);
+    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemReplaceRaces);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemSpawnAlert);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemSpeedHack);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemTrainSpells);

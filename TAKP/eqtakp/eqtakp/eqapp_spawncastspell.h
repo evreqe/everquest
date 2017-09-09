@@ -24,7 +24,11 @@ uint32_t g_spawnCastSpellMinimumCastTime = 3000;
 uint32_t g_spawnCastSpellCountdownTimer = 0;
 uint32_t g_spawnCastSpellCountdownTimerDelay = 100;
 
+uint32_t g_spawnCastSpellDrawTextX = 1200;
+uint32_t g_spawnCastSpellDrawTextY = 500;
+
 void EQAPP_SpawnCastSpell_Execute();
+void EQAPP_SpawnCastSpell_DrawText();
 void EQAPP_SpawnCastSpell_HandleEvent_CEverQuest__StartCasting(void* this_ptr, EQ::CEverQuestStartCastingMessage_ptr message);
 
 void EQAPP_SpawnCastSpell_Execute()
@@ -89,6 +93,40 @@ void EQAPP_SpawnCastSpell_Execute()
             continue;
         }
     }
+}
+
+void EQAPP_SpawnCastSpell_DrawText()
+{
+    if (g_spawnCastSpellList.size() == 0)
+    {
+        return;
+    }
+
+    std::stringstream drawText;
+
+    for (auto& spawnCastSpell : g_spawnCastSpellList)
+    {
+        if (spawnCastSpell == nullptr)
+        {
+            continue;
+        }
+
+        auto spawn = spawnCastSpell->Spawn;
+        if (spawn == NULL)
+        {
+            continue;
+        }
+
+        std::string spawnName = EQ_GetSpawnName(spawnCastSpell->Spawn);
+        if (spawnName.size() == 0)
+        {
+            continue;
+        }
+
+        drawText << spawnName << " (" << spawnCastSpell->SpellName << ")\n";
+    }
+
+    EQ_DrawText(drawText.str().c_str(), g_spawnCastSpellDrawTextX, g_spawnCastSpellDrawTextY, EQ_COLOR_ARGB_WHITE);
 }
 
 void EQAPP_SpawnCastSpell_HandleEvent_CEverQuest__StartCasting(void* this_ptr, EQ::CEverQuestStartCastingMessage_ptr message)

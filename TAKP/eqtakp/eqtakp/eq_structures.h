@@ -21,6 +21,13 @@ typedef struct _Location
     float Z;
 } Location, *Location_ptr;
 
+typedef struct _XYZ
+{
+    float X;
+    float Y;
+    float Z;
+} XYZ, *XYZ_ptr;
+
 typedef struct _Line
 {
     float X1;
@@ -646,7 +653,7 @@ typedef struct _ActorInstance
 {
 /* 0x0000 */ uint32_t MagicNumber; // == 24
 /* 0x0004 */ uint32_t Unknown0004;
-/* 0x0008 */ uint32_t Unknown0008;
+/* 0x0008 */ uint32_t Unknown0008; // points to parent
 /* 0x000C */ uint32_t Unknown000C;
 /* 0x0010 */ float WorldY;
 /* 0x0014 */ float WorldX;
@@ -1163,6 +1170,24 @@ typedef struct _CEverQuestStartCastingMessage
     uint16_t SpellID;
     uint32_t SpellCastTime;
 } CEverQuestStartCastingMessage, *CEverQuestStartCastingMessage_ptr;
+
+// illusions
+typedef struct _ChangeForm
+{
+/* 0x00 */ uint16_t SpawnID = 0xFFFF;
+/* 0x02 */ uint16_t Race = EQ_RACE_HUMAN;
+/* 0x04 */ uint8_t Gender = EQ_GENDER_MALE;
+/* 0x05 */ uint8_t Texture = 0xFF;
+/* 0x06 */ uint8_t HelmetTexture = 0;
+/* 0x07 */ uint8_t Unknown07 = 0xFF; // always equals 0xFF
+/* 0x08 */ uint16_t Face = 0;
+/* 0x0A */ uint8_t HairType= 0xFF;
+/* 0x0B */ uint8_t HairColor= 0xFF;
+/* 0x0C */ uint8_t BeardType= 0xFF;
+/* 0x0D */ uint8_t BeardColor= 0xFF;
+/* 0x0E */ uint16_t Size = 6;
+/* 0x10 */ uint32_t Unknown10 = 0xFFFFFFFF; // always equals -1
+} ChangeForm, *ChangeForm_ptr;
 
 } // namespace EQ
 

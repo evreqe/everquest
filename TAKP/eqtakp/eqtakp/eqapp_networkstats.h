@@ -256,7 +256,7 @@ void EQAPP_NetworkStats_DrawText()
         drawText << "\n";
     }
 
-    EQ_DrawText(drawText.str().c_str(), g_networkStatsDrawTextX, g_networkStatsDrawTextY, EQ_TEXT_COLOR_WHITE);
+    EQ_DrawText(drawText.str().c_str(), g_networkStatsDrawTextX, g_networkStatsDrawTextY, EQ_COLOR_ARGB_WHITE);
 
     uint32_t drawTextBuffsX = g_networkStatsDrawTextBuffsX;
     uint32_t drawTextBuffsY = g_networkStatsDrawTextBuffsY;
@@ -304,7 +304,7 @@ void EQAPP_NetworkStats_DrawText()
 
         drawTextBuffs << "\n";
 
-        EQ_DrawTextEx(drawTextBuffs.str().c_str(), drawTextBuffsX, drawTextBuffsY, EQ_TEXT_COLOR_WHITE, EQ_ADDRESS_POINTER_FONT_ARIAL12);
+        EQ_DrawTextEx(drawTextBuffs.str().c_str(), drawTextBuffsX, drawTextBuffsY, EQ_COLOR_ARGB_WHITE, EQ_ADDRESS_POINTER_FONT_ARIAL12);
 
         drawTextBuffsX += 150;
     }
@@ -361,6 +361,11 @@ void EQAPP_NetworkStats_Write()
 
     auto playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    if (playerSpawn->Type != EQ_SPAWN_TYPE_PLAYER)
     {
         return;
     }

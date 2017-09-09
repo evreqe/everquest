@@ -85,6 +85,7 @@ public:
     int CDisplay::ToggleView();
     void CDisplay::NewUIProcessEscape();
     EQ::Spawn_ptr CDisplay::GetNearestPlayerInView(float maxDistance, uint8_t spawnType);
+    int CDisplay::UpdateItemSlot(class EQPlayer* player, uint8_t itemSlot, char* itemDef, bool clientSideOnly);
 };
 
 #define EQ_ADDRESS_FUNCTION_CDisplay__Render_World 0x004AA8BC
@@ -141,13 +142,17 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__NewUIProcessEscape)(void* th
 EQ_MACRO_FunctionAtAddress(EQ::Spawn_ptr EQClass::CDisplay::GetNearestPlayerInView(float maxDistance, uint8_t spawnType), EQ_ADDRESS_FUNCTION_CDisplay__GetNearestPlayerInView);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__GetNearestPlayerInView)(void* this_ptr, float maxDistance, uint8_t spawnType);
 
+#define EQ_ADDRESS_FUNCTION_CDisplay__UpdateItemSlot 0x004A9EB3
+EQ_MACRO_FunctionAtAddress(int EQClass::CDisplay::UpdateItemSlot(class EQPlayer* player, uint8_t itemSlot, char* itemDef, bool clientSideOnly), EQ_ADDRESS_FUNCTION_CDisplay__UpdateItemSlot);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__UpdateItemSlot)(void* this_ptr, class EQPlayer* player, uint8_t itemSlot, char* itemDef, bool clientSideOnly);
+
 /* CEverQuest */
 
 class EQClass::CEverQuest
 {
 public:
     void CEverQuest::InterpretCmd(class EQPlayer* player, char* text);
-    void CEverQuest::dsp_chat(const char* text, uint16_t textColor, bool filtered);
+    void CEverQuest::dsp_chat(const char* text, int textColor, bool filtered);
     void CEverQuest::dsp_chat(const char* text);
     int __cdecl CEverQuest::LMouseDown(uint16_t x, uint16_t y);
     int __cdecl CEverQuest::LMouseUp(uint16_t x, uint16_t y);
@@ -159,6 +164,7 @@ public:
     int CEverQuest::LootCorpse(class EQPlayer* player, int unknown);
     void CEverQuest::DropHeldItemOnGround(bool showDropMessage);
     void CEverQuest::StartCasting(EQ::CEverQuestStartCastingMessage_ptr message);
+    int CEverQuest::EnterZone(int unknown);
 };
 
 #define EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd 0x0054572F
@@ -166,8 +172,8 @@ EQ_MACRO_FunctionAtAddress(void EQClass::CEverQuest::InterpretCmd(class EQPlayer
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__InterpretCmd)(void* this_ptr, class EQPlayer* player, char* text);
 
 #define EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat 0x00537F99
-EQ_MACRO_FunctionAtAddress(void EQClass::CEverQuest::dsp_chat(const char* text, uint16_t textColor, bool filtered), EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__dsp_chat)(void* this_ptr, const char* text, uint16_t textColor, bool filtered);
+EQ_MACRO_FunctionAtAddress(void EQClass::CEverQuest::dsp_chat(const char* text, int textColor, bool filtered), EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__dsp_chat)(void* this_ptr, const char* text, int textColor, bool filtered);
 
 #define EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat__2 0x005380FD
 EQ_MACRO_FunctionAtAddress(void EQClass::CEverQuest::dsp_chat(const char* text), EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat__2);
@@ -191,13 +197,13 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__RMouseUp)(void* this_ptr, 
 #define EQ_ADDRESS_FUNCTION_CEverQuest__trimName 0x00537D39
 EQ_MACRO_FunctionAtAddress(char* EQClass::CEverQuest::trimName(char* spawnName), EQ_ADDRESS_FUNCTION_CEverQuest__trimName);
 
-#define EQ_ADDRESS_FUNCTION_CEverQuest__MoveToZone 0x005460B5
-EQ_MACRO_FunctionAtAddress(int EQClass::CEverQuest::MoveToZone(char* zoneShortName, char* text, int destinationType, int zoneRequestReason), EQ_ADDRESS_FUNCTION_CEverQuest__MoveToZone);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__MoveToZone)(void* this_ptr, char* zoneShortName, char* text, int destinationType, int zoneRequestReason);
+#define EQ_ADDRESS_FUNCTION_CEverQuest__MoveToZone 0x00546081
+EQ_MACRO_FunctionAtAddress(int EQClass::CEverQuest::MoveToZone(int zoneID, char* text, int destinationType, int zoneRequestReason), EQ_ADDRESS_FUNCTION_CEverQuest__MoveToZone);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__MoveToZone)(void* this_ptr, int zoneId, char* text, int destinationType, int zoneRequestReason);
 
-#define EQ_ADDRESS_FUNCTION_CEverQuest__MoveToZone__2 0x00546081
-EQ_MACRO_FunctionAtAddress(int EQClass::CEverQuest::MoveToZone(int zoneID, char* text, int destinationType, int zoneRequestReason), EQ_ADDRESS_FUNCTION_CEverQuest__MoveToZone__2);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__MoveToZone2)(void* this_ptr, int zoneId, char* text, int destinationType, int zoneRequestReason);
+#define EQ_ADDRESS_FUNCTION_CEverQuest__MoveToZone__2 0x005460B5
+EQ_MACRO_FunctionAtAddress(int EQClass::CEverQuest::MoveToZone(char* zoneShortName, char* text, int destinationType, int zoneRequestReason), EQ_ADDRESS_FUNCTION_CEverQuest__MoveToZone__2);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__MoveToZone__2)(void* this_ptr, char* zoneShortName, char* text, int destinationType, int zoneRequestReason);
 
 #define EQ_ADDRESS_FUNCTION_CEverQuest__LootCorpse 0x00547808
 EQ_MACRO_FunctionAtAddress(int EQClass::CEverQuest::LootCorpse(class EQPlayer* player, int unknown), EQ_ADDRESS_FUNCTION_CEverQuest__LootCorpse);
@@ -211,6 +217,10 @@ typedef signed int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__DropHeldItemOnGroun
 EQ_MACRO_FunctionAtAddress(void EQClass::CEverQuest::StartCasting(EQ::CEverQuestStartCastingMessage_ptr message), EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__StartCasting)(void* this_ptr, EQ::CEverQuestStartCastingMessage_ptr message);
 
+#define EQ_ADDRESS_FUNCTION_CEverQuest__EnterZone 0x0053D2C4
+EQ_MACRO_FunctionAtAddress(int EQClass::CEverQuest::EnterZone(int unknown), EQ_ADDRESS_FUNCTION_CEverQuest__EnterZone);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__EnterZone)(void* this_ptr, int unknown);
+
 /* EQPlayer */
 
 class EQClass::EQPlayer
@@ -220,6 +230,7 @@ public:
     void EQPlayer::ChangePosition(uint8_t standingState);
     void EQPlayer::FacePlayer(class EQPlayer* player);
     void EQPlayer::FollowPlayerAI();
+    void EQPlayer::do_change_form(EQ::ChangeForm_ptr changeForm);
 };
 
 #define EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight 0x0050C160
@@ -235,6 +246,10 @@ EQ_MACRO_FunctionAtAddress(void EQClass::EQPlayer::FacePlayer(class EQPlayer* pl
 #define EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI 0x00507B08
 EQ_MACRO_FunctionAtAddress(void EQClass::EQPlayer::FollowPlayerAI(), EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI);
 typedef signed int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__FollowPlayerAI)(void* this_ptr);
+
+#define EQ_ADDRESS_FUNCTION_EQPlayer__do_change_form 0x005074FA
+EQ_MACRO_FunctionAtAddress(void EQClass::EQPlayer::do_change_form(EQ::ChangeForm_ptr changeForm), EQ_ADDRESS_FUNCTION_EQPlayer__do_change_form);
+typedef signed int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__do_change_form)(void* this_ptr, EQ::ChangeForm_ptr changeForm);
 
 /* EQ_Character */
 

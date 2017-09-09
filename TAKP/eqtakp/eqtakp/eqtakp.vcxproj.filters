@@ -206,5 +206,20 @@
     <ClInclude Include="eqapp_espmenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="eqapp_bardtwist.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_mapmenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_replaceraces.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_autogroup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_destroyactors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

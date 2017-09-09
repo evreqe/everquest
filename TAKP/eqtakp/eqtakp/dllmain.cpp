@@ -83,6 +83,7 @@
 #include "eqapp_namedspawns.h"
 //
 #include "eqapp_autofollow.h"
+#include "eqapp_autogroup.h"
 #include "eqapp_networkstats.h"
 #include "eqapp_speedhack.h"
 #include "eqapp_alwaysattack.h"
@@ -109,6 +110,9 @@
 #include "eqapp_toggleview.h"
 #include "eqapp_startcasting.h"
 #include "eqapp_spawncastspell.h"
+#include "eqapp_bardtwist.h"
+#include "eqapp_replaceraces.h"
+#include "eqapp_destroyactors.h"
 //
 #include "eqapp_extendedtargets.h"
 #include "eqapp_map.h"
@@ -121,6 +125,7 @@
 #include "eqapp_mainmenu.h"
 #include "eqapp_skillsmenu.h"
 #include "eqapp_espmenu.h"
+#include "eqapp_mapmenu.h"
 #include "eqapp_hudtext.h"
 //
 //
@@ -141,6 +146,7 @@ void EQAPP_Load()
     EQAPP_MainMenu_Load();
     EQAPP_SkillsMenu_Load();
     EQAPP_ESPMenu_Load();
+    EQAPP_MapMenu_Load();
 
     if (EQ_IsInGame() == true)
     {

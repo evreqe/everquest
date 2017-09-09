@@ -11,11 +11,13 @@
 #define EQ_ADDRESS_IS_INSPECT_ENABLED 0x007CF28C // uint8_t ; /inspect on/off ; /toggleinspect
 #define EQ_ADDRESS_IS_SHOW_NPC_NAMES_ENABLED 0x0063D6CC // uint8_t ; Options -> Display -> Show NPC Names
 #define EQ_ADDRESS_IS_RUN_ENABLED 0x0079856D // uint8_t ; 0 = Walk, 1 = Run
-#define EQ_ADDRESS_IS_ACTOR_COLLISION_ENABLED 0x79856E // uint8_t ; walk through or collide with players, npcs, doors
+#define EQ_ADDRESS_IS_ACTOR_COLLISION_ENABLED 0x0079856E // uint8_t ; walk through or collide with players, npcs, doors
 
-#define EQ_ADDRESS_DINPUT_ROOT            0x8092DC
-#define EQ_ADDRESS_DINPUT_DEVICE_KEYBOARD 0x8092E0
-#define EQ_ADDRESS_DINPUT_DEVICE_MOUSE    0x8092E4
+#define EQ_ADDRESS_GROUP_COUNT 0x007912B0 // number of players currently in group
+
+#define EQ_ADDRESS_DINPUT_ROOT            0x008092DC
+#define EQ_ADDRESS_DINPUT_DEVICE_KEYBOARD 0x008092E0
+#define EQ_ADDRESS_DINPUT_DEVICE_MOUSE    0x008092E4
 
 #define EQ_ADDRESS_DINPUT_DEVICE_MOUSE_DIOBJECTDATAFORMAT 0x005EA6FC
 // used in EQ function 0x0055B60C that initalizes the direct input mouse
@@ -39,8 +41,6 @@
 
 #define EQ_ADDRESS_IS_CAPSLOCK_ENABLED 0x00809324 // uint32_t
 #define EQ_ADDRESS_IS_NUMLOCK_ENABLED  0x00809328 // uint32_t
-
-#define EQ_TOOLTIP_TEXT_BACKGROUND_COLOR 0xC8000080 // ARGB 0xAARRGGBB
 
 #define EQ_FONT_SIZE_DEFAULT 3
 
@@ -119,6 +119,12 @@
 #define EQ_ITEM_EFFECT_FLAG_WORN       2
 #define EQ_ITEM_EFFECT_FLAG_MUST_EQUIP 4
 
+#define EQ_ITEM_MATERIAL_NONE    0
+#define EQ_ITEM_MATERIAL_LEATHER 1
+#define EQ_ITEM_MATERIAL_CHAIN   2
+#define EQ_ITEM_MATERIAL_PLATE   3
+#define EQ_ITEM_MATERIAL_SILK    4
+
 #define EQ_BUFF_TYPE_DETRIMENTAL           0
 #define EQ_BUFF_TYPE_BENEFICIAL            1
 #define EQ_BUFF_TYPE_BENEFICIAL_GROUP_ONLY 2
@@ -190,6 +196,14 @@
 #define EQ_RACE_IKSAR     128
 #define EQ_RACE_VAH_SHIR  130
 #define EQ_RACE_FROGLOK   330
+//
+#define EQ_RACE_WEREWOLF 14
+#define EQ_RACE_WOLF 42
+#define EQ_RACE_BEAR 43
+#define EQ_RACE_SKELETON 60
+#define EQ_RACE_INVISIBLE_MAN 127
+#define EQ_RACE_SARNAK_SKELETON 155
+#define EQ_RACE_IKSAR_SKELETON 161
 
 #define EQ_CLASS_UNKNOWN                  0
 #define EQ_CLASS_WARRIOR                  1
@@ -376,27 +390,63 @@
 //
 #define EQ_SKILL_NULL                   255
 
-#define EQ_TEXT_COLOR_BLACK       0x00
-#define EQ_TEXT_COLOR_GRAY        0x01
-#define EQ_TEXT_COLOR_GREEN       0x02
-#define EQ_TEXT_COLOR_GRAY2       0x03
-#define EQ_TEXT_COLOR_BLUE        0x04
-#define EQ_TEXT_COLOR_PINK        0x05
-#define EQ_TEXT_COLOR_GRAY3       0x06
-#define EQ_TEXT_COLOR_WHITE       0x07
-#define EQ_TEXT_COLOR_GRAY4       0x08
-#define EQ_TEXT_COLOR_GRAY5       0x09
-#define EQ_TEXT_COLOR_WHITE2      0x0A
-#define EQ_TEXT_COLOR_GRAY6       0x0B
-#define EQ_TEXT_COLOR_LIGHT_GRAY  0x0C
-#define EQ_TEXT_COLOR_RED         0x0D
-#define EQ_TEXT_COLOR_LIGHT_GREEN 0x0E
-#define EQ_TEXT_COLOR_YELLOW      0x0F
-#define EQ_TEXT_COLOR_LIGHT_BLUE  0x10
-#define EQ_TEXT_COLOR_GRAY7       0x11
-#define EQ_TEXT_COLOR_CYAN        0x12
-#define EQ_TEXT_COLOR_GRAY8       0x13
-#define EQ_TEXT_COLOR_BLACK2      0x14
+#define EQ_TEXT_COLOR_BLACK       0
+#define EQ_TEXT_COLOR_GRAY        1
+#define EQ_TEXT_COLOR_GREEN       2
+#define EQ_TEXT_COLOR_GRAY2       3
+#define EQ_TEXT_COLOR_BLUE        4
+#define EQ_TEXT_COLOR_PINK        5
+#define EQ_TEXT_COLOR_GRAY3       6
+#define EQ_TEXT_COLOR_WHITE       7
+#define EQ_TEXT_COLOR_GRAY4       8
+#define EQ_TEXT_COLOR_GRAY5       9
+#define EQ_TEXT_COLOR_WHITE2      10
+#define EQ_TEXT_COLOR_GRAY6       11
+#define EQ_TEXT_COLOR_LIGHT_GRAY  12
+#define EQ_TEXT_COLOR_RED         13
+#define EQ_TEXT_COLOR_LIGHT_GREEN 14
+#define EQ_TEXT_COLOR_YELLOW      15
+#define EQ_TEXT_COLOR_LIGHT_BLUE  16
+#define EQ_TEXT_COLOR_GRAY7       17
+#define EQ_TEXT_COLOR_CYAN        18
+#define EQ_TEXT_COLOR_GRAY8       19
+#define EQ_TEXT_COLOR_BLACK2      20
+
+// based on HTML specification color names (Web colors)
+#define EQ_COLOR_ARGB_WHITE      0xFFFFFFFF
+#define EQ_COLOR_ARGB_SILVER     0xFFC0C0C0 // light gray
+#define EQ_COLOR_ARGB_GRAY       0xFF808080
+#define EQ_COLOR_ARGB_BLACK      0xFF000000
+#define EQ_COLOR_ARGB_RED        0xFFFF0000
+#define EQ_COLOR_ARGB_MAROON     0xFF800000 // dark red
+#define EQ_COLOR_ARGB_YELLOW     0xFFFFFF00
+#define EQ_COLOR_ARGB_OLIVE      0xFF808000 // dark yellow
+#define EQ_COLOR_ARGB_LIME       0xFF00FF00 // light green
+#define EQ_COLOR_ARGB_GREEN      0xFF008000 // dark green
+#define EQ_COLOR_ARGB_AQUA       0xFF00FFFF // light blue or cyan
+#define EQ_COLOR_ARGB_TEAL       0xFF008080 // dark aqua
+#define EQ_COLOR_ARGB_BLUE       0xFF0000FF
+#define EQ_COLOR_ARGB_NAVY       0xFF000080 // dark blue
+#define EQ_COLOR_ARGB_FUCHSIA    0xFFFF00FF // dark pink
+#define EQ_COLOR_ARGB_PURPLE     0xFF800080
+
+// custom colors
+#define EQ_COLOR_ARGB_GRAY_DARK      0xFF404040
+#define EQ_COLOR_ARGB_PINK           0xFFFF80FF
+#define EQ_COLOR_ARGB_MAGENTA        0xFFFF0080 // RED_BLUE
+#define EQ_COLOR_ARGB_ORANGE         0xFFFF8000 // RED_GREEN
+#define EQ_COLOR_ARGB_RED_GREEN      0xFFFF8000
+#define EQ_COLOR_ARGB_RED_BLUE       0xFFFF0080
+#define EQ_COLOR_ARGB_GREEN_RED      0xFF80FF00
+#define EQ_COLOR_ARGB_GREEN_BLUE     0xFF00FF80
+#define EQ_COLOR_ARGB_BLUE_RED       0xFF8000FF
+#define EQ_COLOR_ARGB_BLUE_GREEN     0xFF0080FF
+#define EQ_COLOR_ARGB_RED_WHITE      0xFFFF8080
+#define EQ_COLOR_ARGB_GREEN_WHITE    0xFF80FF80
+#define EQ_COLOR_ARGB_BLUE_WHITE     0xFF8080FF
+#define EQ_COLOR_ARGB_YELLOW_WHITE   0xFFFFFF80
+
+#define EQ_COLOR_ARGB_TOOLTIP_TEXT_BACKGROUND 0xC8000080
 
 // ExecuteCmd() function
 #define EQ_EXECUTECMD_NULL                      0
@@ -931,6 +981,11 @@
 #define EQ_ZONE_TYPE_OUTDOORS 0x02
 #define EQ_ZONE_TYPE_ANY      0xFF
 
+// CDisplay::UpdateItemSlot()
+#define EQ_ITEM_SLOT_HEAD      0
+#define EQ_ITEM_SLOT_PRIMARY   7
+#define EQ_ITEM_SLOT_SECONDARY 8
+
 // equipment
 #define EQ_INVENTORY_SLOT_EAR_LEFT    0
 #define EQ_INVENTORY_SLOT_HEAD        1
@@ -1179,6 +1234,8 @@ std::unordered_map<std::string, std::string> EQ_STRING_MAP_DOOR_SPAWN_NAME =
     {"POKSHPORT500",  "Shar Vahl"},
     {"POKTGDPORT500", "The Great Divide"},
     {"POKTNPORT500",  "The Nexus"},
+
+    {"TELECRYS200",   "Crystal Caverns"},
 
     ////{"FAYLEVATOR",    "Faydark Elevator"},
 };

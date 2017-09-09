@@ -10,6 +10,7 @@ bool g_useSkillsBashIsEnabled = false;
 bool g_useSkillsSlamIsEnabled = false;
 bool g_useSkillsDisarmIsEnabled = false;
 bool g_useSkillsBackstabIsEnabled = false;
+bool g_useSkillsRoundKickIsEnabled = false;
 
 uint32_t g_useSkillsTimer = 0;
 uint32_t g_useSkillsTimerDelay = 1000;
@@ -23,6 +24,7 @@ void EQAPP_UseSkills_Bash_Toggle();
 void EQAPP_UseSkills_Slam_Toggle();
 void EQAPP_UseSkills_Disarm_Toggle();
 void EQAPP_UseSkills_Backstab_Toggle();
+void EQAPP_UseSkills_RoundKick_Toggle();
 void EQAPP_UseSkills_Load();
 void EQAPP_UseSkills_Execute();
 
@@ -98,6 +100,12 @@ void EQAPP_UseSkills_Backstab_Toggle()
     EQAPP_PrintBool("Use Skills (Backstab): ", g_useSkillsBackstabIsEnabled);
 }
 
+void EQAPP_UseSkills_RoundKick_Toggle()
+{
+    EQ_ToggleBool(g_useSkillsRoundKickIsEnabled);
+    EQAPP_PrintBool("Use Skills (RoundKick): ", g_useSkillsRoundKickIsEnabled);
+}
+
 void EQAPP_UseSkills_Load()
 {
     auto playerSpawn = EQ_GetPlayerSpawn();
@@ -105,6 +113,16 @@ void EQAPP_UseSkills_Load()
     {
         return;
     }
+
+    g_useSkillsSenseHeadingIsEnabled = false;
+    g_useSkillsForageIsEnabled = false;
+    g_useSkillsTauntIsEnabled = false;
+    g_useSkillsKickIsEnabled = false;
+    g_useSkillsBashIsEnabled = false;
+    g_useSkillsSlamIsEnabled = false;
+    g_useSkillsDisarmIsEnabled = false;
+    g_useSkillsBackstabIsEnabled = false;
+    g_useSkillsRoundKickIsEnabled = false;
 
     if (playerSpawn->Class == EQ_CLASS_WARRIOR || playerSpawn->Class == EQ_CLASS_PALADIN || playerSpawn->Class == EQ_CLASS_SHADOWKNIGHT)
     {
@@ -116,11 +134,6 @@ void EQAPP_UseSkills_Load()
         g_useSkillsKickIsEnabled = true;
         g_useSkillsBashIsEnabled = false;
         g_useSkillsSlamIsEnabled = false;
-    }
-
-    if (playerSpawn->Class == EQ_CLASS_ROGUE)
-    {
-        g_useSkillsBackstabIsEnabled = true;
     }
 
     if
@@ -143,6 +156,19 @@ void EQAPP_UseSkills_Load()
             g_useSkillsBashIsEnabled = true;
             g_useSkillsSlamIsEnabled = false;
         }
+    }
+
+    if (playerSpawn->Class == EQ_CLASS_ROGUE)
+    {
+        g_useSkillsBackstabIsEnabled = true;
+    }
+
+    if (playerSpawn->Class == EQ_CLASS_MONK)
+    {
+        g_useSkillsRoundKickIsEnabled = true;
+        g_useSkillsKickIsEnabled = false;
+        g_useSkillsBashIsEnabled = false;
+        g_useSkillsSlamIsEnabled = false;
     }
 }
 
@@ -220,7 +246,21 @@ void EQAPP_UseSkills_Execute()
                 {
                     if (g_useSkillsBackstabIsEnabled == true)
                     {
-                        EQ_UseSkill(EQ_SKILL_BACKSTAB, (EQClass::EQPlayer*)targetSpawn);
+                        if (targetSpawnDistance <= 10.0f)
+                        {
+                            if (EQ_IsSpawnBehindSpawn(playerSpawn, targetSpawn) == true)
+                            {
+                                EQ_UseSkill(EQ_SKILL_BACKSTAB, (EQClass::EQPlayer*)targetSpawn);
+                            }
+                        }
+                    }
+                }
+
+                if (playerSpawn->Class == EQ_CLASS_MONK)
+                {
+                    if (g_useSkillsRoundKickIsEnabled == true)
+                    {
+                        EQ_UseSkill(EQ_SKILL_ROUND_KICK, (EQClass::EQPlayer*)targetSpawn);
                     }
                 }
             }

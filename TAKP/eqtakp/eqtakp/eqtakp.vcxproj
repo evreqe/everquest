@@ -149,16 +149,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="eqapp_autofollow.h" />
+    <ClInclude Include="eqapp_autogroup.h" />
     <ClInclude Include="eqapp_autoinventory.h" />
     <ClInclude Include="eq.h" />
     <ClInclude Include="eqapp.h" />
     <ClInclude Include="eqapp_alwaysattack.h" />
     <ClInclude Include="eqapp_autoloot.h" />
+    <ClInclude Include="eqapp_bardtwist.h" />
     <ClInclude Include="eqapp_boxchat.h" />
     <ClInclude Include="eqapp_bufftimers.h" />
     <ClInclude Include="eqapp_changeheight.h" />
     <ClInclude Include="eqapp_collisionhack.h" />
     <ClInclude Include="eqapp_console.h" />
+    <ClInclude Include="eqapp_destroyactors.h" />
     <ClInclude Include="eqapp_detours.h" />
     <ClInclude Include="eqapp_dotarget.h" />
     <ClInclude Include="eqapp_drawdistance.h" />
@@ -182,6 +185,7 @@
     <ClInclude Include="eqapp_itemdisplaywindow.h" />
     <ClInclude Include="eqapp_mainmenu.h" />
     <ClInclude Include="eqapp_map.h" />
+    <ClInclude Include="eqapp_mapmenu.h" />
     <ClInclude Include="eqapp_memory.h" />
     <ClInclude Include="eqapp_merchantwindow.h" />
     <ClInclude Include="eqapp_namedspawns.h" />
@@ -189,6 +193,7 @@
     <ClInclude Include="eqapp_namespritetint.h" />
     <ClInclude Include="eqapp_networkstats.h" />
     <ClInclude Include="eqapp_neverfrozen.h" />
+    <ClInclude Include="eqapp_replaceraces.h" />
     <ClInclude Include="eqapp_skillsmenu.h" />
     <ClInclude Include="eqapp_spawnalert.h" />
     <ClInclude Include="eqapp_spawncastspell.h" />

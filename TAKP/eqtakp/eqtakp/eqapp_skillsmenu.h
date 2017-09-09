@@ -79,6 +79,12 @@ void EQAPP_SkillsMenu_CreateMenu()
     g_skillsMenuGUIMenuItemBackstab.SetFunctionLeftClick(&EQAPP_UseSkills_Backstab_Toggle);
     g_skillsMenuGUIMenuItemBackstab.SetBoolPointer(g_useSkillsBackstabIsEnabled);
 
+    EQApp::GUIMenuItem g_skillsMenuGUIMenuItemRoundKick;
+    g_skillsMenuGUIMenuItemRoundKick.SetText("Round Kick");
+    g_skillsMenuGUIMenuItemRoundKick.FitToText();
+    g_skillsMenuGUIMenuItemRoundKick.SetFunctionLeftClick(&EQAPP_UseSkills_RoundKick_Toggle);
+    g_skillsMenuGUIMenuItemRoundKick.SetBoolPointer(g_useSkillsRoundKickIsEnabled);
+
     EQApp::GUIMenuItem g_skillsMenuGUIMenuItemForage;
     g_skillsMenuGUIMenuItemForage.SetText("Forage");
     g_skillsMenuGUIMenuItemForage.FitToText();
@@ -100,6 +106,10 @@ void EQAPP_SkillsMenu_CreateMenu()
     g_skillsMenuGUIMenu.AddMenuItem(g_skillsMenuGUIMenuItemSeparator);
 
     g_skillsMenuGUIMenu.AddMenuItem(g_skillsMenuGUIMenuItemBackstab);
+
+    g_skillsMenuGUIMenu.AddMenuItem(g_skillsMenuGUIMenuItemSeparator);
+
+    g_skillsMenuGUIMenu.AddMenuItem(g_skillsMenuGUIMenuItemRoundKick);
 
     g_skillsMenuGUIMenu.AddMenuItem(g_skillsMenuGUIMenuItemSeparator);
 

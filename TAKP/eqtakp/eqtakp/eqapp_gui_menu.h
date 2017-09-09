@@ -143,7 +143,7 @@ void GUIMenu::Draw()
         //if (*menuItem.GetBoolPointer() == true)
         if (menuItem.IsChecked() == true)
         {
-            EQ_DrawText("*", drawX + 8, drawY, EQ_TEXT_COLOR_WHITE);
+            EQ_DrawText("*", drawX + 8, drawY, EQ_COLOR_ARGB_WHITE);
         }
 
         drawY += menuItem.GetHeight() + 1;

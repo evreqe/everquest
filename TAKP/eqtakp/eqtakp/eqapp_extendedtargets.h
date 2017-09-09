@@ -16,8 +16,9 @@ namespace EQApp
         bool IsPet = false;
         bool IsYourPet = false;
         bool IsGroupMember = false;
+        bool IsTrader = false;
         std::string Text;
-        uint32_t TextColor = EQ_TEXT_COLOR_WHITE;
+        uint32_t TextColorARGB = EQ_COLOR_ARGB_WHITE;
         uint32_t X;
         uint32_t Y;
         uint32_t Width;
@@ -48,7 +49,7 @@ float g_extendedTargetsY = 412.0f;
 float g_extendedTargetsWidth  = 200.0f;
 float g_extendedTargetsHeight = 200.0f;
 
-uint32_t g_extendedTargetsBorderColorARGB     = 0xFF646464;
+uint32_t g_extendedTargetsBorderColorARGB     = EQ_COLOR_ARGB_GRAY;
 uint32_t g_extendedTargetsBackgroundColorARGB = 0x80000000;
 
 void EQAPP_ExtendedTargets_Toggle();
@@ -189,26 +190,37 @@ void EQAPP_ExtendedTargets_UpdateSpawnList()
             etSpawn.IsYourPet = true;
         }
 
-        etSpawn.TextColor = EQ_TEXT_COLOR_WHITE;
+        etSpawn.TextColorARGB = EQ_COLOR_ARGB_WHITE;
 
-        if (etSpawn.Type == EQ_SPAWN_TYPE_PLAYER || etSpawn.Type == EQ_SPAWN_TYPE_PLAYER_CORPSE || etSpawn.IsYourPet == true)
+        if (etSpawn.Type == EQ_SPAWN_TYPE_PLAYER || etSpawn.IsYourPet == true)
         {
-            etSpawn.TextColor = EQ_TEXT_COLOR_RED;
+            etSpawn.TextColorARGB = EQ_COLOR_ARGB_RED;
+        }
+        else if (etSpawn.Type == EQ_SPAWN_TYPE_PLAYER_CORPSE)
+        {
+            etSpawn.TextColorARGB = EQ_COLOR_ARGB_MAROON;
         }
         else if (etSpawn.Type == EQ_SPAWN_TYPE_NPC)
         {
-            etSpawn.TextColor = EQ_TEXT_COLOR_CYAN;
+            etSpawn.TextColorARGB = EQ_COLOR_ARGB_AQUA;
         }
         else if (etSpawn.Type == EQ_SPAWN_TYPE_NPC_CORPSE)
         {
-            etSpawn.TextColor = EQ_TEXT_COLOR_YELLOW;
+            etSpawn.TextColorARGB = EQ_COLOR_ARGB_YELLOW;
+        }
+
+        if (spawn->Actor->IsTrader == 1)
+        {
+            etSpawn.IsTrader = true;
+
+            etSpawn.TextColorARGB = EQ_COLOR_ARGB_PINK;
         }
 
         if (EQ_IsSpawnGroupMember(spawn) == true)
         {
             etSpawn.IsGroupMember = true;
 
-            etSpawn.TextColor = EQ_TEXT_COLOR_LIGHT_GREEN;
+            etSpawn.TextColorARGB = EQ_COLOR_ARGB_LIME;
         }
 
         auto targetSpawn = EQ_GetTargetSpawn();
@@ -216,7 +228,7 @@ void EQAPP_ExtendedTargets_UpdateSpawnList()
         {
             etSpawn.IsTarget = true;
 
-            etSpawn.TextColor = EQ_TEXT_COLOR_PINK;
+            etSpawn.TextColorARGB = EQ_COLOR_ARGB_FUCHSIA;
         }
 
         std::stringstream etText;
@@ -307,7 +319,7 @@ void EQAPP_ExtendedTargets_Execute()
     );
 
     std::string etText = "Extended Targets: ";
-    EQ_DrawText(etText.c_str(), (int)g_extendedTargetsX, (int)(g_extendedTargetsY - g_extendedTargetsFontHeight), EQ_TEXT_COLOR_WHITE);
+    EQ_DrawText(etText.c_str(), (int)g_extendedTargetsX, (int)(g_extendedTargetsY - g_extendedTargetsFontHeight), EQ_COLOR_ARGB_WHITE);
 
     EQ::Mouse mouse = EQ_GetMouse();
 
@@ -317,11 +329,11 @@ void EQAPP_ExtendedTargets_Execute()
         {
             if (EQ_IsMouseHoveringOverCXWnd() == false && EQ_IsMouseLookEnabled() == false)
             {
-                EQ_DrawRectangle((float)etSpawn.X, (float)etSpawn.Y, (float)etSpawn.Width, (float)etSpawn.Height, EQ_TOOLTIP_TEXT_BACKGROUND_COLOR, true);
+                EQ_DrawRectangle((float)etSpawn.X, (float)etSpawn.Y, (float)etSpawn.Width, (float)etSpawn.Height, EQ_COLOR_ARGB_TOOLTIP_TEXT_BACKGROUND, true);
             }
         }
 
-        EQ_DrawText(etSpawn.Text.c_str(), etSpawn.X, etSpawn.Y, etSpawn.TextColor);
+        EQ_DrawText(etSpawn.Text.c_str(), etSpawn.X, etSpawn.Y, etSpawn.TextColorARGB);
     }
 }
 

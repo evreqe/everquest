@@ -26,6 +26,18 @@ void EQAPP_ItemDisplayWindow_HandleEvent_CItemDisplayWnd__SetItem(void* this_ptr
         return;
     }
 
+    std::stringstream itemFilename;
+    itemFilename << "items/" << item->ID << ".txt";
+
+    std::string itemFileContents = EQAPP_ReadFileContents(itemFilename.str().c_str());
+    if (itemFileContents.size() != 0)
+    {
+        std::stringstream itemFileText;
+        itemFileText << "<BR>" << itemFileContents << "<BR>";
+
+        EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, itemFileText.str().c_str());
+    }
+
     EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, "<BR><c \"#FF00FF\">");
 
     std::stringstream ssItemIDText;
@@ -103,21 +115,30 @@ void EQAPP_ItemDisplayWindow_HandleEvent_CItemDisplayWnd__SetItem(void* this_ptr
         }
     }
 
-/*
-    uint32_t itemAddressEx = (int)&item;
-    uint32_t itemAddress = EQ_ReadMemory<uint32_t>(itemAddressEx);
-
-    buffer.str(std::string());
-    buffer << "Address: 0x" << std::hex << itemAddress << std::dec << "<BR>";
-    for (size_t i = 0xE4; i < 1024; i++)
-    {
-        buffer << std::hex << i << std::dec << ": " << (int)EQ_ReadMemory<uint8_t>(itemAddress + i) << "<BR>";
-    }
-
-    EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
-*/
-
     EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, "</c>");
+
+    if (item->IsContainer == 0)
+    {
+        uint16_t itemSpellID = item->Common.SpellID;
+        if (itemSpellID != 0 && itemSpellID != EQ_SPELL_ID_NULL)
+        {
+            auto spell = EQ_GetSpellByID(itemSpellID);
+            if (spell != NULL)
+            {
+                std::stringstream spellFilename;
+                spellFilename << "spells/" << spell->ID << ".txt";
+
+                std::string spellFileContents = EQAPP_ReadFileContents(spellFilename.str().c_str());
+                if (spellFileContents.size() != 0)
+                {
+                    std::stringstream spellFileText;
+                    spellFileText << "<BR><c \"#FFFF00\">" << spell->Name << "</c><BR>" << spellFileContents << "<BR>";
+
+                    EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, spellFileText.str().c_str());
+                }
+            }
+        }
+    }
 }
 
 void EQAPP_ItemDisplayWindow_HandleEvent_CItemDisplayWnd__SetSpell(void* this_ptr, uint16_t spellID, bool hasDescription, int unknown)
@@ -132,6 +153,18 @@ void EQAPP_ItemDisplayWindow_HandleEvent_CItemDisplayWnd__SetSpell(void* this_pt
     if (spell == NULL || EQ_POINTER_CItemDisplayWnd->DisplayText == NULL)
     {
         return;
+    }
+
+    std::stringstream spellFilename;
+    spellFilename << "spells/" << spell->ID << ".txt";
+
+    std::string spellFileContents = EQAPP_ReadFileContents(spellFilename.str().c_str());
+    if (spellFileContents.size() != 0)
+    {
+        std::stringstream spellFileText;
+        spellFileText << "<BR>" << spellFileContents << "<BR>";
+
+        EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, spellFileText.str().c_str());
     }
 
     EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, "<BR><c \"#FF00FF\">");

@@ -27,6 +27,11 @@ bool g_mapSpawnsIsEnabled = true;
 
 bool g_mapHeightFilterIsEnabled = false;
 
+bool g_mapLayer0IsEnabled = true;
+bool g_mapLayer1IsEnabled = false;
+bool g_mapLayer2IsEnabled = false;
+bool g_mapLayer3IsEnabled = false;
+
 std::vector<EQApp::MapLine> g_mapLineList;
 std::vector<EQApp::MapLabel> g_mapLabelList;
 
@@ -67,35 +72,37 @@ float g_mapZoomMaximum    = 0.01f;
 
 float g_mapMouseWheelZoomMultiplier = 0.5f; // mouse wheel zoom speed
 
-uint32_t g_mapCenterLineColorARGB = 0xFFFF00FF;
+uint32_t g_mapCenterLineColorARGB = EQ_COLOR_ARGB_FUCHSIA;
 float g_mapCenterLineSize = 4.0f;
 
-uint32_t g_mapArrowColorARGB = 0xFFFF00FF;
+uint32_t g_mapArrowColorARGB = EQ_COLOR_ARGB_FUCHSIA;
 float g_mapArrowRadius = 20.0f;
 
-uint32_t g_mapBorderColorARGB = 0xFF646464;
-uint32_t g_mapBackgroundColorARGB = EQ_TOOLTIP_TEXT_BACKGROUND_COLOR;
+uint32_t g_mapBorderColorARGB = EQ_COLOR_ARGB_GRAY;
+uint32_t g_mapBackgroundColorARGB = EQ_COLOR_ARGB_TOOLTIP_TEXT_BACKGROUND;
 
-float g_mapSpawnDistanceMax = 2000.0f;
-float g_mapSpawnDistanceZMax = 2000.0f;
+float g_mapSpawnDistanceMax = 20000.0f;
+float g_mapSpawnDistanceZMax = 20.0f;
 
 void EQAPP_Map_Toggle();
 void EQAPP_Map_Lines_Toggle();
 void EQAPP_Map_Labels_Toggle();
 void EQAPP_Map_Spawns_Toggle();
+void EQAPP_Map_HeightFilter_Toggle();
 bool EQAPP_Map_Load();
-bool EQAPP_Map_LoadFile(const std::string& filename, int layer);
+bool EQAPP_Map_LoadFile(const std::string& filename, uint32_t layer);
 void EQAPP_Map_RecalculateScreenCoordinates();
 void EQAPP_Map_ConvertWorldLocationToScreenPosition(float x, float y, float& screenX, float& screenY);
 void EQAPP_Map_ZoomOut();
 void EQAPP_Map_ZoomIn();
 void EQAPP_Map_MouseWheelZoomOut();
 void EQAPP_Map_MouseWheelZoomIn();
-void EQAPP_Map_HandleEvent_HandleMouseWheel(int mouseWheelDelta);
+void EQAPP_Map_HandleEvent_HandleMouseWheel(signed int mouseWheelDelta);
 void EQAPP_Map_Scroll(signed int speedX, signed int speedY);
 void EQAPP_Map_SetZoom(float zoom);
 void EQAPP_Map_ResetZoom();
 void EQAPP_Map_Center();
+bool EQAPP_Map_IsPointInsideMap(uint32_t x, uint32_t y);
 bool EQAPP_Map_IsMouseOver();
 void EQAPP_Map_Execute(); // draw
 
@@ -127,6 +134,12 @@ void EQAPP_Map_Spawns_Toggle()
 {
     EQ_ToggleBool(g_mapSpawnsIsEnabled);
     EQAPP_PrintBool("Map Spawns", g_mapSpawnsIsEnabled);
+}
+
+void EQAPP_Map_HeightFilter_Toggle()
+{
+    EQ_ToggleBool(g_mapHeightFilterIsEnabled);
+    EQAPP_PrintBool("Map Height Filter", g_mapHeightFilterIsEnabled);
 }
 
 bool EQAPP_Map_Load()
@@ -163,7 +176,7 @@ bool EQAPP_Map_Load()
     return true;
 }
 
-bool EQAPP_Map_LoadFile(const std::string& filename, int layer)
+bool EQAPP_Map_LoadFile(const std::string& filename, uint32_t layer)
 {
     std::ifstream file(filename.c_str());
     if (file.is_open() == false)
@@ -333,7 +346,7 @@ void EQAPP_Map_MouseWheelZoomIn()
     }
 }
 
-void EQAPP_Map_HandleEvent_HandleMouseWheel(int mouseWheelDelta)
+void EQAPP_Map_HandleEvent_HandleMouseWheel(signed int mouseWheelDelta)
 {
     if (EQAPP_Map_IsMouseOver() == true)
     {
@@ -413,7 +426,7 @@ void EQAPP_Map_Execute()
     auto mouse = EQ_GetMouse();
     if (mouse.ClickState == EQ_MOUSE_CLICK_STATE_LEFT)
     {
-        if (EQAPP_Map_IsMouseOver() == true)
+        if (EQAPP_Map_IsMouseOver() == true && EQ_IsMouseHoveringOverCXWnd() == false)
         {
             if (mouse.SpeedX != 0 || mouse.SpeedY != 0)
             {
@@ -517,7 +530,7 @@ void EQAPP_Map_Execute()
                 continue;
             }
 
-            EQ_DrawTextEx(mapLabel.Text.c_str(), (int)labelX, (int)labelY, EQ_TEXT_COLOR_WHITE, EQ_ADDRESS_POINTER_FONT_ARIAL12);
+            EQ_DrawTextEx(mapLabel.Text.c_str(), (int)labelX, (int)labelY, EQ_COLOR_ARGB_WHITE, EQ_ADDRESS_POINTER_FONT_ARIAL12);
 
             g_mapNumLabelsDrawn++;
         }
@@ -561,14 +574,20 @@ void EQAPP_Map_Execute()
 
             bool useDistance = true;
 
-            if (spawn == targetSpawn || spawn->Type == EQ_SPAWN_TYPE_PLAYER || spawn->Type == EQ_SPAWN_TYPE_PLAYER_CORPSE)
+            if
+            (
+                spawn == targetSpawn ||
+                EQ_IsSpawnGroupMember(spawn) == true ||
+                spawn->Type == EQ_SPAWN_TYPE_PLAYER ||
+                spawn->Type == EQ_SPAWN_TYPE_PLAYER_CORPSE
+            )
             {
                 useDistance = false;
             }
 
             if (useDistance == true)
             {
-                if (EQ_IsZoneInList(EQ_ZONE_ID_LIST_VERTICAL) == true)
+                if (g_mapHeightFilterIsEnabled == true)
                 {
                     if (spawnDistanceZ > g_mapSpawnDistanceZMax)
                     {
@@ -584,29 +603,33 @@ void EQAPP_Map_Execute()
                 }
             }
 
-            int textColor = EQ_TEXT_COLOR_WHITE;
+            uint32_t textColorARGB = EQ_COLOR_ARGB_WHITE;
 
             if (spawn->Type == EQ_SPAWN_TYPE_PLAYER)
             {
-                textColor = EQ_TEXT_COLOR_RED;
+                textColorARGB = EQ_COLOR_ARGB_RED;
+            }
+            else if (spawn->Type == EQ_SPAWN_TYPE_PLAYER_CORPSE)
+            {
+                textColorARGB = EQ_COLOR_ARGB_MAROON;
             }
             else if (spawn->Type == EQ_SPAWN_TYPE_NPC)
             {
-                textColor = EQ_TEXT_COLOR_CYAN;
+                textColorARGB = EQ_COLOR_ARGB_AQUA;
             }
-            else
+            else if (spawn->Type == EQ_SPAWN_TYPE_NPC_CORPSE)
             {
-                textColor = EQ_TEXT_COLOR_YELLOW;
+                textColorARGB = EQ_COLOR_ARGB_YELLOW;
             }
 
             if (EQ_IsSpawnGroupMember(spawn) == true)
             {
-                textColor = EQ_TEXT_COLOR_LIGHT_GREEN;
+                textColorARGB = EQ_COLOR_ARGB_LIME;
             }
 
             if (spawn == targetSpawn)
             {
-                textColor = EQ_TEXT_COLOR_PINK;
+                textColorARGB = EQ_COLOR_ARGB_FUCHSIA;
             }
 
             std::string spawnText = "+";
@@ -616,7 +639,7 @@ void EQAPP_Map_Execute()
                 spawnText = "*";
             }
 
-            EQ_DrawText(spawnText.c_str(), (int)spawnMapX, (int)spawnMapY, textColor);
+            EQ_DrawText(spawnText.c_str(), (int)spawnMapX, (int)spawnMapY, textColorARGB);
 
             if (EQ_IsMouseHoveringOverCXWnd() == false)
             {

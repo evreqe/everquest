@@ -55,5 +55,5 @@ void EQAPP_HUDText_Execute()
         text << "Train Spell: " << g_trainSpellsSpellName << "\n";
     }
 
-    EQ_DrawText(text.str().c_str(), g_HUDTextX, g_HUDTextY, EQ_TEXT_COLOR_WHITE);
+    EQ_DrawText(text.str().c_str(), g_HUDTextX, g_HUDTextY, EQ_COLOR_ARGB_WHITE);
 }

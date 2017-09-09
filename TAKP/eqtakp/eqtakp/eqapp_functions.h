@@ -27,6 +27,7 @@ void EQAPP_Beep();
 void EQAPP_BeepEx(UINT beepType);
 bool EQAPP_FileExists(const char *fileName);
 void EQAPP_DeleteFileContents(const char* filename);
+std::string EQAPP_ReadFileContents(const char* filename);
 void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list);
 
 uint32_t EQAPP_GetRandomNumber(uint32_t low, uint32_t high);
@@ -167,11 +168,21 @@ void EQAPP_PrintBool(const char* text, bool& b)
 
 void EQAPP_PrintErrorMessage(const char* functionName, std::string text)
 {
+    if (g_bErrorMessageIsEnabled == false)
+    {
+        return;
+    }
+
     std::cout << "[ERROR] " << functionName << ": " << text << std::endl;
 }
 
 void EQAPP_PrintDebugMessage(const char* functionName, std::string text)
 {
+    if (g_bDebugMessageIsEnabled == false)
+    {
+        return;
+    }
+
     std::cout << "[DEBUG] " << functionName << ": " << text << std::endl;
 }
 
@@ -181,8 +192,8 @@ void EQAPP_Mouse_Load()
     EQ_WriteMemoryProtected<uint32_t>(EQ_ADDRESS_DINPUT_DEVICE_MOUSE_DIOBJECTDATAFORMAT + 0x00, 0x18);
     EQ_WriteMemoryProtected<uint32_t>(EQ_ADDRESS_DINPUT_DEVICE_MOUSE_DIOBJECTDATAFORMAT + 0x04, 0x10);
     EQ_WriteMemoryProtected<uint32_t>(EQ_ADDRESS_DINPUT_DEVICE_MOUSE_DIOBJECTDATAFORMAT + 0x08, 0x02);
-    EQ_WriteMemoryProtected<uint32_t>(EQ_ADDRESS_DINPUT_DEVICE_MOUSE_DIOBJECTDATAFORMAT + 0x0C, 0x14);
-    EQ_WriteMemoryProtected<uint32_t>(EQ_ADDRESS_DINPUT_DEVICE_MOUSE_DIOBJECTDATAFORMAT + 0x10, 0x0B);
+    EQ_WriteMemoryProtected<uint32_t>(EQ_ADDRESS_DINPUT_DEVICE_MOUSE_DIOBJECTDATAFORMAT + 0x0C, 0x14); // 0x14
+    EQ_WriteMemoryProtected<uint32_t>(EQ_ADDRESS_DINPUT_DEVICE_MOUSE_DIOBJECTDATAFORMAT + 0x10, 0x0B); // 0x0B
 
     EQ_CLASS_POINTER_DInputMouse->Unacquire();
 
@@ -198,8 +209,8 @@ void EQAPP_Mouse_Unload()
     EQ_WriteMemoryProtected<uint32_t>(EQ_ADDRESS_DINPUT_DEVICE_MOUSE_DIOBJECTDATAFORMAT + 0x00, 0x18);
     EQ_WriteMemoryProtected<uint32_t>(EQ_ADDRESS_DINPUT_DEVICE_MOUSE_DIOBJECTDATAFORMAT + 0x04, 0x10);
     EQ_WriteMemoryProtected<uint32_t>(EQ_ADDRESS_DINPUT_DEVICE_MOUSE_DIOBJECTDATAFORMAT + 0x08, 0x02);
-    EQ_WriteMemoryProtected<uint32_t>(EQ_ADDRESS_DINPUT_DEVICE_MOUSE_DIOBJECTDATAFORMAT + 0x0C, 0x10);
-    EQ_WriteMemoryProtected<uint32_t>(EQ_ADDRESS_DINPUT_DEVICE_MOUSE_DIOBJECTDATAFORMAT + 0x10, 0x07);
+    EQ_WriteMemoryProtected<uint32_t>(EQ_ADDRESS_DINPUT_DEVICE_MOUSE_DIOBJECTDATAFORMAT + 0x0C, 0x10); // 0x10
+    EQ_WriteMemoryProtected<uint32_t>(EQ_ADDRESS_DINPUT_DEVICE_MOUSE_DIOBJECTDATAFORMAT + 0x10, 0x07); // 0x07
 
     EQ_CLASS_POINTER_DInputMouse->Unacquire();
 
@@ -266,6 +277,31 @@ void EQAPP_DeleteFileContents(const char* filename)
     std::fstream file;
     file.open(filename, std::fstream::out | std::fstream::trunc);
     file.close();
+}
+
+std::string EQAPP_ReadFileContents(const char* filename)
+{
+    std::stringstream filePath;
+    filePath << g_applicationName << "/" << filename;
+
+    std::string filePathStr = filePath.str();
+
+    std::fstream file;
+    file.open(filePathStr.c_str(), std::fstream::in);
+    if (file.is_open() == false)
+    {
+        std::stringstream ss;
+        ss << "failed to open file: " << filePathStr;
+
+        EQAPP_PrintErrorMessage(__FUNCTION__, ss.str());
+        return std::string();
+    }
+
+    std::string fileContents((std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>()));
+
+    file.close();
+
+    return fileContents;
 }
 
 void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list)
@@ -531,10 +567,10 @@ if (EQ_IsInGame() == false)
 
     bool bIsBankEmpty = true;
 
-    file << "Platinum: " << (int)playerSpawn->Character->BankPlatinum << std::endl;
-    file << "Gold: " << (int)playerSpawn->Character->BankGold << std::endl;
-    file << "Silver: " << (int)playerSpawn->Character->BankSilver << std::endl;
-    file << "Copper: " << (int)playerSpawn->Character->BankCopper << std::endl;
+    file << "Platinum: " << (uint32_t)playerSpawn->Character->BankPlatinum << std::endl;
+    file << "Gold: " << (uint32_t)playerSpawn->Character->BankGold << std::endl;
+    file << "Silver: " << (uint32_t)playerSpawn->Character->BankSilver << std::endl;
+    file << "Copper: " << (uint32_t)playerSpawn->Character->BankCopper << std::endl;
 
     for (size_t i = 0; i < EQ_NUM_INVENTORY_BANK_SLOTS; i++)
     {
@@ -606,10 +642,10 @@ if (EQ_IsInGame() == false)
 
     file << "---------- INVENTORY ----------" << std::endl;
 
-    file << "Platinum: " << (int)playerSpawn->Character->InventoryPlatinum << std::endl;
-    file << "Gold: " << (int)playerSpawn->Character->InventoryGold << std::endl;
-    file << "Silver: " << (int)playerSpawn->Character->InventorySilver << std::endl;
-    file << "Copper: " << (int)playerSpawn->Character->InventoryCopper << std::endl;
+    file << "Platinum: " << (uint32_t)playerSpawn->Character->InventoryPlatinum << std::endl;
+    file << "Gold: " << (uint32_t)playerSpawn->Character->InventoryGold << std::endl;
+    file << "Silver: " << (uint32_t)playerSpawn->Character->InventorySilver << std::endl;
+    file << "Copper: " << (uint32_t)playerSpawn->Character->InventoryCopper << std::endl;
 
     for (size_t i = 0; i < EQ_NUM_INVENTORY_PACK_SLOTS; i++)
     {

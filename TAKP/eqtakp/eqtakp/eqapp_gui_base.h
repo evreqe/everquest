@@ -34,10 +34,10 @@ public:
     void SetEnabled(bool b);
     void SetBorderColor(uint32_t colorARGB);
     void SetBackgroundColor(uint32_t colorARGB);
-    void SetTextColor(uint32_t textColor);
+    void SetTextColor(uint32_t colorARGB);
     void SetMouseOverBorderColor(uint32_t colorARGB);
     void SetMouseOverBackgroundColor(uint32_t colorARGB);
-    void SetMouseOverTextColor(uint32_t textColor);
+    void SetMouseOverTextColor(uint32_t colorARGB);
 
 private:
     uint32_t m_x;
@@ -51,12 +51,12 @@ private:
     bool m_isEnabled;
     uint32_t m_borderColorARGB;
     uint32_t m_backgroundColorARGB;
-    uint32_t m_textColor;
+    uint32_t m_textColorARGB;
     uint32_t m_mouseClickBackgroundColorARGB;
     uint32_t m_mouseOverBorderColorARGB;
     uint32_t m_mouseOverBackgroundColorARGB;
-    uint32_t m_mouseOverTextColor;
-    uint32_t m_disabledTextColor;
+    uint32_t m_mouseOverTextColorARGB;
+    uint32_t m_disabledTextColorARGB;
 
 }; // class GUIBase
 
@@ -69,12 +69,12 @@ GUIBase::GUIBase()
     m_isEnabled = true;
     m_borderColorARGB = 0xFF646464;
     m_backgroundColorARGB = 0x80000000;
-    m_textColor = EQ_TEXT_COLOR_WHITE;
+    m_textColorARGB = EQ_COLOR_ARGB_WHITE;
     m_mouseClickBackgroundColorARGB = 0xFFFF0000;
     m_mouseOverBorderColorARGB = 0xFF646464;
     m_mouseOverBackgroundColorARGB = 0xFF000000;
-    m_mouseOverTextColor = EQ_TEXT_COLOR_YELLOW;
-    m_disabledTextColor = EQ_TEXT_COLOR_GRAY;
+    m_mouseOverTextColorARGB = EQ_COLOR_ARGB_YELLOW;
+    m_disabledTextColorARGB = EQ_COLOR_ARGB_GRAY;
 }
 
 GUIBase::~GUIBase()
@@ -115,10 +115,10 @@ uint32_t GUIBase::GetTextColor()
 {
     if (m_isEnabled == false)
     {
-        return m_disabledTextColor;
+        return m_disabledTextColorARGB;
     }
 
-    return m_mouseOver == false ? m_textColor : m_mouseOverTextColor;
+    return m_mouseOver == false ? m_textColorARGB : m_mouseOverTextColorARGB;
 }
 
 void GUIBase::SetX(uint32_t x) { m_x = x; }
@@ -132,10 +132,10 @@ void GUIBase::SetVisible(bool b) { m_isVisible = b; }
 void GUIBase::SetEnabled(bool b) { m_isEnabled = b; }
 void GUIBase::SetBorderColor(uint32_t colorARGB) { m_borderColorARGB = colorARGB; }
 void GUIBase::SetBackgroundColor(uint32_t colorARGB) { m_backgroundColorARGB = colorARGB; }
-void GUIBase::SetTextColor(uint32_t textColor) { m_textColor = textColor; }
+void GUIBase::SetTextColor(uint32_t colorARGB) { m_textColorARGB = colorARGB; }
 void GUIBase::SetMouseOverBorderColor(uint32_t colorARGB) { m_mouseOverBorderColorARGB = colorARGB; }
 void GUIBase::SetMouseOverBackgroundColor(uint32_t colorARGB) { m_mouseOverBackgroundColorARGB = colorARGB; }
-void GUIBase::SetMouseOverTextColor(uint32_t textColor) { m_mouseOverTextColor = textColor; }
+void GUIBase::SetMouseOverTextColor(uint32_t colorARGB) { m_mouseOverTextColorARGB = colorARGB; }
 
 } // namespace EQApp
 
