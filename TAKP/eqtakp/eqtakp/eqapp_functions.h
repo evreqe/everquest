@@ -477,7 +477,12 @@ void EQAPP_PrintBankInventory()
             continue;
         }
 
-        std::cout << "- " << itemName;
+        if (item->IsContainer == 0)
+        {
+            std::cout << "- ";
+        }
+
+        std::cout << itemName;
 
         if (item->IsContainer == 0)
         {

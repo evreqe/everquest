@@ -20,6 +20,8 @@
     __asm{jmp eax};\
 }
 
+#define EQ_MACRO_DefineDetour(functionName) EQ_FUNCTION_TYPE_##functionName EQAPP_REAL_##functionName = NULL
+
 #define EQ_MACRO_AddDetour(functionName) EQAPP_REAL_##functionName =\
 (EQ_FUNCTION_TYPE_##functionName)DetourFunction((PBYTE)EQ_ADDRESS_FUNCTION_##functionName, (PBYTE)EQAPP_DETOUR_##functionName)
 

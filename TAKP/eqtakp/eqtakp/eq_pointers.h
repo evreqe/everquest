@@ -200,6 +200,9 @@ EQClass::CXWndManager** EQ_CLASS_POINTER_CXWndManager_pptr = (EQClass::CXWndMana
 
 #define EQ_ADDRESS_POINTER_CBazaarSearchWnd 0x0063D674
 
+EQ::CBazaarSearchWnd** EQ_POINTER_CBazaarSearchWnd_pptr = (EQ::CBazaarSearchWnd**)EQ_ADDRESS_POINTER_CBazaarSearchWnd;
+#define EQ_POINTER_CBazaarSearchWnd (*EQ_POINTER_CBazaarSearchWnd_pptr)
+
 EQClass::CBazaarSearchWnd** EQ_CLASS_POINTER_CBazaarSearchWnd_pptr = (EQClass::CBazaarSearchWnd**)EQ_ADDRESS_POINTER_CBazaarSearchWnd;
 #define EQ_CLASS_POINTER_CBazaarSearchWnd (*EQ_CLASS_POINTER_CBazaarSearchWnd_pptr)
 

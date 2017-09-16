@@ -92,6 +92,7 @@
 #include "eqapp_spellbookwindow.h"
 #include "eqapp_merchantwindow.h"
 #include "eqapp_itemdisplaywindow.h"
+#include "eqapp_bazaarsearchwindow.h"
 #include "eqapp_hidecorpselooted.h"
 #include "eqapp_namespritestate.h"
 #include "eqapp_namespritetint.h"
@@ -113,6 +114,7 @@
 #include "eqapp_bardtwist.h"
 #include "eqapp_replaceraces.h"
 #include "eqapp_destroyactors.h"
+#include "eqapp_enteringzone.h"
 //
 #include "eqapp_extendedtargets.h"
 #include "eqapp_map.h"

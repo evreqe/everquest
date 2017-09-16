@@ -35,6 +35,16 @@ void EQAPP_DestroyActors_HandleEvent_EQGraphicsDLL__t3dCreateActorEx(EQ::ActorIn
         return;
     }
 
+    if (actorInstance->MagicNumber != 24 || actorInstance == (EQ::ActorInstance_ptr)EQ_ADDRESS_POINTER_CAMERA_ACTOR_INSTANCE)
+    {
+        return;
+    }
+
+    if (actorInstance->ActorDefinition == NULL)
+    {
+        return;
+    }
+
     std::string actorDef = actorDefinition->Name;
     if (actorDef.size() == 0)
     {

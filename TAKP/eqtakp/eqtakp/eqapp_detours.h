@@ -8,64 +8,66 @@ void EQAPP_Detours_Remove();
 void EQAPP_Detours_OnZoneChanged_Event();
 void EQAPP_Detours_OnZoneChanged_Load();
 
-EQ_FUNCTION_TYPE_DrawNetStatus EQAPP_REAL_DrawNetStatus = NULL;
+EQ_MACRO_DefineDetour(DrawNetStatus);
 
-EQ_FUNCTION_TYPE_CXWndManager__DrawWindows EQAPP_REAL_CXWndManager__DrawWindows = NULL;
+EQ_MACRO_DefineDetour(CXWndManager__DrawWindows);
 
-EQ_FUNCTION_TYPE_CEverQuest__InterpretCmd EQAPP_REAL_CEverQuest__InterpretCmd = NULL;
-EQ_FUNCTION_TYPE_CEverQuest__dsp_chat EQAPP_REAL_CEverQuest__dsp_chat = NULL;
-EQ_FUNCTION_TYPE_CEverQuest__LMouseDown EQAPP_REAL_CEverQuest__LMouseDown = NULL;
-EQ_FUNCTION_TYPE_CEverQuest__LMouseUp EQAPP_REAL_CEverQuest__LMouseUp = NULL;
-EQ_FUNCTION_TYPE_CEverQuest__StartCasting EQAPP_REAL_CEverQuest__StartCasting = NULL;
-EQ_FUNCTION_TYPE_CEverQuest__MoveToZone EQAPP_REAL_CEverQuest__MoveToZone = NULL;
-EQ_FUNCTION_TYPE_CEverQuest__MoveToZone__2 EQAPP_REAL_CEverQuest__MoveToZone__2 = NULL;
-EQ_FUNCTION_TYPE_CEverQuest__EnterZone EQAPP_REAL_CEverQuest__EnterZone = NULL;
+EQ_MACRO_DefineDetour(CEverQuest__InterpretCmd);
+EQ_MACRO_DefineDetour(CEverQuest__dsp_chat);
+EQ_MACRO_DefineDetour(CEverQuest__LMouseDown);
+EQ_MACRO_DefineDetour(CEverQuest__LMouseUp);
+EQ_MACRO_DefineDetour(CEverQuest__StartCasting);
+EQ_MACRO_DefineDetour(CEverQuest__MoveToZone);
+EQ_MACRO_DefineDetour(CEverQuest__MoveToZone__2);
+EQ_MACRO_DefineDetour(CEverQuest__EnterZone);
 
-EQ_FUNCTION_TYPE_EQPlayer__ChangePosition EQAPP_REAL_EQPlayer__ChangePosition = NULL;
-EQ_FUNCTION_TYPE_EQPlayer__FollowPlayerAI EQAPP_REAL_EQPlayer__FollowPlayerAI = NULL;
-EQ_FUNCTION_TYPE_EQPlayer__do_change_form EQAPP_REAL_EQPlayer__do_change_form = NULL;
+EQ_MACRO_DefineDetour(EQPlayer__ChangePosition);
+EQ_MACRO_DefineDetour(EQPlayer__FollowPlayerAI);
+EQ_MACRO_DefineDetour(EQPlayer__do_change_form);
 
-EQ_FUNCTION_TYPE_EQ_Character__eqspa_movement_rate EQAPP_REAL_EQ_Character__eqspa_movement_rate = NULL;
-EQ_FUNCTION_TYPE_EQ_Character__CastSpell EQAPP_REAL_EQ_Character__CastSpell = NULL;
+EQ_MACRO_DefineDetour(EQ_Character__eqspa_movement_rate);
+EQ_MACRO_DefineDetour(EQ_Character__CastSpell);
 
-EQ_FUNCTION_TYPE_CDisplay__CreateActor EQAPP_REAL_CDisplay__CreateActor = NULL;
-EQ_FUNCTION_TYPE_CDisplay__CreatePlayerActor EQAPP_REAL_CDisplay__CreatePlayerActor = NULL;
-EQ_FUNCTION_TYPE_CDisplay__DeleteActor EQAPP_REAL_CDisplay__DeleteActor = NULL;
-EQ_FUNCTION_TYPE_CDisplay__SetNameSpriteState EQAPP_REAL_CDisplay__SetNameSpriteState = NULL;
-EQ_FUNCTION_TYPE_CDisplay__SetNameSpriteTint EQAPP_REAL_CDisplay__SetNameSpriteTint = NULL;
-EQ_FUNCTION_TYPE_CDisplay__ToggleView EQAPP_REAL_CDisplay__ToggleView = NULL;
-EQ_FUNCTION_TYPE_CDisplay__UpdateItemSlot EQAPP_REAL_CDisplay__UpdateItemSlot = NULL;
+EQ_MACRO_DefineDetour(CDisplay__CreateActor);
+EQ_MACRO_DefineDetour(CDisplay__CreatePlayerActor);
+EQ_MACRO_DefineDetour(CDisplay__DeleteActor);
+EQ_MACRO_DefineDetour(CDisplay__SetNameSpriteState);
+EQ_MACRO_DefineDetour(CDisplay__SetNameSpriteTint);
+EQ_MACRO_DefineDetour(CDisplay__ToggleView);
+EQ_MACRO_DefineDetour(CDisplay__UpdateItemSlot);
 
-EQ_FUNCTION_TYPE_CBazaarSearchWnd__HandleBazaarMsg EQAPP_REAL_CBazaarSearchWnd__HandleBazaarMsg = NULL;
+EQ_MACRO_DefineDetour(CBazaarSearchWnd__HandleBazaarMsg);
 
-EQ_FUNCTION_TYPE_CBuffWindow__RefreshBuffDisplay EQAPP_REAL_CBuffWindow__RefreshBuffDisplay = NULL;
-EQ_FUNCTION_TYPE_CBuffWindow__PostDraw EQAPP_REAL_CBuffWindow__PostDraw = NULL;
+EQ_MACRO_DefineDetour(CBuffWindow__RefreshBuffDisplay);
+EQ_MACRO_DefineDetour(CBuffWindow__PostDraw);
 
-EQ_FUNCTION_TYPE_CItemDisplayWnd__SetItem EQAPP_REAL_CItemDisplayWnd__SetItem = NULL;
-EQ_FUNCTION_TYPE_CItemDisplayWnd__SetSpell EQAPP_REAL_CItemDisplayWnd__SetSpell = NULL;
+EQ_MACRO_DefineDetour(CItemDisplayWnd__SetItem);
+EQ_MACRO_DefineDetour(CItemDisplayWnd__SetSpell);
 
-EQ_FUNCTION_TYPE_CSpellBookWnd__StartSpellMemorization EQAPP_REAL_CSpellBookWnd__StartSpellMemorization = NULL;
-EQ_FUNCTION_TYPE_CSpellBookWnd__FinishMemorizing EQAPP_REAL_CSpellBookWnd__FinishMemorizing = NULL;
-EQ_FUNCTION_TYPE_CSpellBookWnd__TurnToPage EQAPP_REAL_CSpellBookWnd__TurnToPage = NULL;
-EQ_FUNCTION_TYPE_CSpellBookWnd__HandleKeys EQAPP_REAL_CSpellBookWnd__HandleKeys = NULL;
+EQ_MACRO_DefineDetour(CSpellBookWnd__StartSpellMemorization);
+EQ_MACRO_DefineDetour(CSpellBookWnd__FinishMemorizing);
+EQ_MACRO_DefineDetour(CSpellBookWnd__TurnToPage);
+EQ_MACRO_DefineDetour(CSpellBookWnd__HandleKeys);
 
-EQ_FUNCTION_TYPE_CLootWnd__Deactivate EQAPP_REAL_CLootWnd__Deactivate = NULL;
+EQ_MACRO_DefineDetour(CLootWnd__Deactivate);
 
-EQ_FUNCTION_TYPE_CMerchantWnd__PostDraw EQAPP_REAL_CMerchantWnd__PostDraw = NULL;
+EQ_MACRO_DefineDetour(CMerchantWnd__PostDraw);
 
-EQ_FUNCTION_TYPE_CContainerMgr__OpenContainer EQAPP_REAL_CContainerMgr__OpenContainer = NULL;
+EQ_MACRO_DefineDetour(CListWnd__SetItemText);
 
-EQ_FUNCTION_TYPE_HandleMouseWheel EQAPP_REAL_HandleMouseWheel = NULL;
-EQ_FUNCTION_TYPE_ProcessMouseEvent EQAPP_REAL_ProcessMouseEvent = NULL;
-EQ_FUNCTION_TYPE_ProcessKeyDown EQAPP_REAL_ProcessKeyDown = NULL;
-EQ_FUNCTION_TYPE_ProcessKeyUp EQAPP_REAL_ProcessKeyUp = NULL;
-EQ_FUNCTION_TYPE_ProcessMovementKeys EQAPP_REAL_ProcessMovementKeys = NULL;
-EQ_FUNCTION_TYPE_AutoInventory EQAPP_REAL_AutoInventory = NULL;
-EQ_FUNCTION_TYPE_ExecuteCmd EQAPP_REAL_ExecuteCmd = NULL;
-EQ_FUNCTION_TYPE_CollisionCallbackForMove EQAPP_REAL_CollisionCallbackForMove = NULL;
-EQ_FUNCTION_TYPE_do_target EQAPP_REAL_do_target = NULL;
+EQ_MACRO_DefineDetour(CContainerMgr__OpenContainer);
 
-EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dCreateActorEx EQAPP_REAL_EQGraphicsDLL__t3dCreateActorEx = NULL;
+EQ_MACRO_DefineDetour(HandleMouseWheel);
+EQ_MACRO_DefineDetour(ProcessMouseEvent);
+EQ_MACRO_DefineDetour(ProcessKeyDown);
+EQ_MACRO_DefineDetour(ProcessKeyUp);
+EQ_MACRO_DefineDetour(ProcessMovementKeys);
+EQ_MACRO_DefineDetour(AutoInventory);
+EQ_MACRO_DefineDetour(ExecuteCmd);
+EQ_MACRO_DefineDetour(CollisionCallbackForMove);
+EQ_MACRO_DefineDetour(do_target);
+
+EQ_MACRO_DefineDetour(EQGraphicsDLL__t3dCreateActorEx);
 
 int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short a3, unsigned short a4, unsigned short a5, int a6, unsigned short a7, unsigned long a8, long a9, unsigned long a10);
 
@@ -111,6 +113,8 @@ int __fastcall EQAPP_DETOUR_CSpellBookWnd__HandleKeys(void* this_ptr, void* not_
 int __fastcall EQAPP_DETOUR_CLootWnd__Deactivate(void* this_ptr, void* not_used);
 
 int __fastcall EQAPP_DETOUR_CMerchantWnd__PostDraw(void* this_ptr, void* not_used);
+
+int __fastcall EQAPP_DETOUR_CListWnd__SetItemText(void* this_ptr, void* not_used, int a1, int a2, EQ::CXStr_ptr a3);
 
 int __fastcall EQAPP_DETOUR_CContainerMgr__OpenContainer(void* this_ptr, void* not_used, EQ::EQ_Container_ptr a1, int a2);
 
@@ -166,6 +170,8 @@ void EQAPP_Detours_Add()
 
     EQ_MACRO_AddDetour(CMerchantWnd__PostDraw);
 
+    EQ_MACRO_AddDetour(CListWnd__SetItemText);
+
     ////EQ_MACRO_AddDetour(CContainerMgr__OpenContainer);
 
     EQ_MACRO_AddDetour(CEverQuest__dsp_chat);
@@ -184,7 +190,7 @@ void EQAPP_Detours_Add()
     EQ_MACRO_AddDetour(CollisionCallbackForMove);
     EQ_MACRO_AddDetour(do_target);
 
-    uint32_t EQ_ADDRESS_FUNCTION_EQGraphicsDLL__t3dCreateActorEx = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_EQGraphicsDLL__t3dCreateActorEx);
+    EQ_ADDRESS_FUNCTION_EQGraphicsDLL__t3dCreateActorEx = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_EQGraphicsDLL__t3dCreateActorEx);
 
     EQAPP_REAL_EQGraphicsDLL__t3dCreateActorEx =
     (EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dCreateActorEx)DetourFunction
@@ -233,6 +239,8 @@ void EQAPP_Detours_Remove()
     EQ_MACRO_RemoveDetour(CLootWnd__Deactivate);
 
     EQ_MACRO_RemoveDetour(CMerchantWnd__PostDraw);
+
+    EQ_MACRO_RemoveDetour(CListWnd__SetItemText);
 
     ////EQ_MACRO_RemoveDetour(CContainerMgr__OpenContainer);
 
@@ -285,7 +293,6 @@ void EQAPP_Detours_OnZoneChanged_Event()
             EQAPP_UseSkills_Load();
         }
     }
-    
 }
 
 void EQAPP_Detours_OnZoneChanged_Load()
@@ -299,6 +306,8 @@ void EQAPP_Detours_OnZoneChanged_Load()
     EQ_UpdateLight(EQ_POINTER_PlayerCharacter);
 
     g_alwaysAttackIsEnabled = false;
+
+    g_spawnAlertNewSpawnIDList.clear();
 
     EQAPP_FreeCamera_SetEnabled(false);
 
@@ -314,6 +323,7 @@ void EQAPP_Detours_OnZoneChanged_Load()
     EQAPP_AutoLoot_Load();
     EQAPP_NamedSpawns_Load();
     EQAPP_FoodAndDrink_Load();
+    EQAPP_BazaarSearchWindow_LoadItemNames();
 }
 
 int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short a3, unsigned short a4, unsigned short a5, int a6, unsigned short a7, unsigned long a8, long a9, unsigned long a10)
@@ -363,6 +373,11 @@ int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short
     if (g_spawnCastSpellIsEnabled == true)
     {
         EQAPP_SpawnCastSpell_Execute();
+    }
+
+    if (g_autoGroupIsEnabled == true)
+    {
+        EQAPP_AutoGroup_Execute();
     }
 
     if (g_autoLootIsEnabled == true)
@@ -608,9 +623,11 @@ int __fastcall EQAPP_DETOUR_CEverQuest__MoveToZone(void* this_ptr, void* not_use
         return EQAPP_REAL_CEverQuest__MoveToZone(this_ptr, a1, a2, a3, a4);
     }
 
-    //
+    int result = EQAPP_REAL_CEverQuest__MoveToZone(this_ptr, a1, a2, a3, a4);
 
-    return EQAPP_REAL_CEverQuest__MoveToZone(this_ptr, a1, a2, a3, a4);
+    EQAPP_EnteringZone_HandleEvent_CEverQuest__MoveToZone(this_ptr, a1, a2, a3, a4);
+
+    return result;
 }
 
 int __fastcall EQAPP_DETOUR_CEverQuest__MoveToZone__2(void* this_ptr, void* not_used, char* a1, char* a2, int a3, int a4)
@@ -1167,6 +1184,27 @@ int __fastcall EQAPP_DETOUR_CMerchantWnd__PostDraw(void* this_ptr, void* not_use
     if (g_merchantWindowIsEnabled == true)
     {
         EQAPP_MerchantWindow_HandleEvent_CMerchantWnd__PostDraw(this_ptr);
+    }
+
+    return result;
+}
+
+int __fastcall EQAPP_DETOUR_CListWnd__SetItemText(void* this_ptr, void* not_used, int a1, int a2, EQ::CXStr_ptr a3)
+{
+    // a1 = index
+    // a2 = column
+    // a3 = text
+
+    if (g_bExit == 1)
+    {
+        return EQAPP_REAL_CListWnd__SetItemText(this_ptr, a1, a2, a3);
+    }
+
+    int result = EQAPP_REAL_CListWnd__SetItemText(this_ptr, a1, a2, a3);
+
+    if (g_bazaarSearchWindowIsEnabled == true)
+    {
+        EQAPP_BazaarSearchWindow_HandleEvent_CListWnd__SetItemText(this_ptr, a1, a2, a3);
     }
 
     return result;

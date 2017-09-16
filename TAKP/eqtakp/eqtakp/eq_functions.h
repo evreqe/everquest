@@ -1677,7 +1677,10 @@ bool EQ_IsSpawnBehindSpawn(EQ::Spawn_ptr spawn1, EQ::Spawn_ptr spawn2)
 
     float headingDifference = std::fabsf(heading1 - heading2);
 
-    if (headingDifference <= 64.0f) // 512 / 4 = 64
+    // use 512 / 8 = 64 for tighter angle
+    // use 512 / 4 = 128 for wider angle
+
+    if (headingDifference <= 64.0f)
     {
         return true;
     }

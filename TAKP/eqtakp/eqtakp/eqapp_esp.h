@@ -391,9 +391,9 @@ void EQAPP_ESP_UpdateSpawnList()
             }
         }
 
-        if (g_spawnAlertIsEnabled == true)
+        if (g_spawnAlertIsEnabled == true && g_spawnAlertShowNewSpawn == true)
         {
-            for (auto& spawnID : g_spawnAlertSpawnIDList)
+            for (auto& spawnID : g_spawnAlertNewSpawnIDList)
             {
                 if (spawnID == espSpawn.SpawnID)
                 {
@@ -458,26 +458,29 @@ void EQAPP_ESP_UpdateSpawnList()
             }
         }
 
-        if (espSpawn.IsTrader == true)
+        if (espSpawn.Type != EQ_SPAWN_TYPE_PLAYER_CORPSE && espSpawn.Type != EQ_SPAWN_TYPE_NPC_CORPSE)
         {
-            espSpawn.TextColorARGB = EQ_COLOR_ARGB_PINK;
-            espSpawn.SkeletonLineColorARGB = EQ_COLOR_ARGB_WHITE;
-        }
+            if (espSpawn.IsTrader == true)
+            {
+                espSpawn.TextColorARGB = EQ_COLOR_ARGB_PINK;
+                espSpawn.SkeletonLineColorARGB = EQ_COLOR_ARGB_WHITE;
+            }
 
-        if (EQ_IsSpawnGroupMember(spawn) == true)
-        {
-            espSpawn.IsGroupMember = true;
+            if (EQ_IsSpawnGroupMember(spawn) == true)
+            {
+                espSpawn.IsGroupMember = true;
 
-            espSpawn.TextColorARGB = EQ_COLOR_ARGB_LIME;
-            espSpawn.SkeletonLineColorARGB = EQ_COLOR_ARGB_GREEN;
-        }
+                espSpawn.TextColorARGB = EQ_COLOR_ARGB_LIME;
+                espSpawn.SkeletonLineColorARGB = EQ_COLOR_ARGB_GREEN;
+            }
 
-        if (espSpawn.IsNamedSpawn == true)
-        {
-            espSpawn.FontPointer = EQ_ADDRESS_POINTER_FONT_ARIAL16;
+            if (espSpawn.IsNamedSpawn == true)
+            {
+                espSpawn.FontPointer = EQ_ADDRESS_POINTER_FONT_ARIAL16;
 
-            espSpawn.TextColorARGB = EQ_COLOR_ARGB_GREEN_BLUE;
-            espSpawn.SkeletonLineColorARGB = EQ_COLOR_ARGB_WHITE;
+                espSpawn.TextColorARGB = EQ_COLOR_ARGB_GREEN_BLUE;
+                espSpawn.SkeletonLineColorARGB = EQ_COLOR_ARGB_WHITE;
+            }
         }
 
         if (spawn == targetSpawn)

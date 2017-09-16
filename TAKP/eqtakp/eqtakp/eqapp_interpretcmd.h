@@ -10,10 +10,11 @@ void EQAPP_InterpretCmd_NULL()
 std::map<std::string, std::function<void()>> g_interpretCmdList =
 {
     {"//AlwaysAttack",              &EQAPP_AlwaysAttack_Toggle},
-    {"//AutoInventory",             &EQAPP_AutoInventory_Execute},
+    {"//AutoGroup",                 &EQAPP_AutoGroup_Toggle},
     {"//AutoLoot",                  &EQAPP_AutoLoot_Toggle},
     {"//LoadAutoLoot",              &EQAPP_AutoLoot_Load},
     {"//Bank",                      &EQAPP_PrintBankInventory},
+    {"//LoadBazaarSearchItemNames", &EQAPP_BazaarSearchWindow_LoadItemNames},
     {"//ChangeHeight",              &EQAPP_ChangeHeight_Toggle},
     {"//Collision",                 &EQAPP_CollisionHack_Toggle},
     {"//CollisionDebug",            &EQAPP_CollisionHack_Debug_Toggle},
@@ -46,6 +47,10 @@ std::map<std::string, std::function<void()>> g_interpretCmdList =
     {"//NeverFrozen",               &EQAPP_NeverFrozen_Toggle},
     {"//ReplaceRaces",              &EQAPP_ReplaceRaces_Toggle},
     {"//SpawnAlert",                &EQAPP_SpawnAlert_Toggle},
+    {"//SpawnAlertShowNewSpawn",    &EQAPP_SpawnAlert_ShowNewSpawn_Toggle},
+    {"//SpawnAlertShowPlayer",      &EQAPP_SpawnAlert_ShowPlayer_Toggle},
+    {"//SpawnAlertShowNPC",         &EQAPP_SpawnAlert_ShowNPC_Toggle},
+    {"//SpawnAlertShowCorpse",      &EQAPP_SpawnAlert_ShowCorpse_Toggle},
     {"//Speed",                     &EQAPP_SpeedHack_Toggle},
     {"//SpeedRun1",                 &EQAPP_SpeedHack_SetSpeedRun1},
     {"//SpeedRun2",                 &EQAPP_SpeedHack_SetSpeedRun2},

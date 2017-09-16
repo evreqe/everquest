@@ -156,6 +156,7 @@
     <ClInclude Include="eqapp_alwaysattack.h" />
     <ClInclude Include="eqapp_autoloot.h" />
     <ClInclude Include="eqapp_bardtwist.h" />
+    <ClInclude Include="eqapp_bazaarsearchwindow.h" />
     <ClInclude Include="eqapp_boxchat.h" />
     <ClInclude Include="eqapp_bufftimers.h" />
     <ClInclude Include="eqapp_changeheight.h" />
@@ -165,6 +166,7 @@
     <ClInclude Include="eqapp_detours.h" />
     <ClInclude Include="eqapp_dotarget.h" />
     <ClInclude Include="eqapp_drawdistance.h" />
+    <ClInclude Include="eqapp_enteringzone.h" />
     <ClInclude Include="eqapp_esp.h" />
     <ClInclude Include="eqapp_espmenu.h" />
     <ClInclude Include="eqapp_extendedtargets.h" />

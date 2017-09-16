@@ -209,18 +209,21 @@ void EQAPP_ExtendedTargets_UpdateSpawnList()
             etSpawn.TextColorARGB = EQ_COLOR_ARGB_YELLOW;
         }
 
-        if (spawn->Actor->IsTrader == 1)
+        if (etSpawn.Type != EQ_SPAWN_TYPE_PLAYER_CORPSE && etSpawn.Type != EQ_SPAWN_TYPE_NPC_CORPSE)
         {
-            etSpawn.IsTrader = true;
+            if (spawn->Actor->IsTrader == 1)
+            {
+                etSpawn.IsTrader = true;
 
-            etSpawn.TextColorARGB = EQ_COLOR_ARGB_PINK;
-        }
+                etSpawn.TextColorARGB = EQ_COLOR_ARGB_PINK;
+            }
 
-        if (EQ_IsSpawnGroupMember(spawn) == true)
-        {
-            etSpawn.IsGroupMember = true;
+            if (EQ_IsSpawnGroupMember(spawn) == true)
+            {
+                etSpawn.IsGroupMember = true;
 
-            etSpawn.TextColorARGB = EQ_COLOR_ARGB_LIME;
+                etSpawn.TextColorARGB = EQ_COLOR_ARGB_LIME;
+            }
         }
 
         auto targetSpawn = EQ_GetTargetSpawn();

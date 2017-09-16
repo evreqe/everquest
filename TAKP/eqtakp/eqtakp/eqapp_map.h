@@ -665,6 +665,18 @@ void EQAPP_Map_Execute()
 
                         spawnText << EQ_GetSpawnName(spawn);
 
+                        if (spawn->Type == EQ_SPAWN_TYPE_PLAYER)
+                        {
+                            spawnText << " (Player)";
+                        }
+                        else
+                        {
+                            if (spawn->PetOwnerSpawnID != 0)
+                            {
+                                spawnText << " (Pet)";
+                            }
+                        }
+
                         uint32_t spawnTextFont = EQ_ADDRESS_POINTER_FONT_ARIAL14;
 
                         uint32_t spawnTextX = mouseX + EQ_MOUSE_CURSOR_WIDTH + 1;

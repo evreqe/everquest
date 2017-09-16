@@ -748,7 +748,10 @@ typedef struct _Actor
 /* 0x0268 */ uint32_t PrimaryItemType;
 /* 0x026C */ uint32_t SecondaryItemType;
 /* 0x0270 */ uint8_t Unknown0270[4];
-/* 0x0274 */ uint8_t Unknown0274[4];
+/* 0x0274 */ uint8_t IsInvitedToGroup;
+/* 0x0275 */ uint8_t Unknown0275;
+/* 0x0276 */ uint8_t Unknown0276;
+/* 0x0277 */ uint8_t Unknown0277;
 /* 0x0278 */ uint8_t Unknown0278[4];
 /* 0x027C */ uint16_t CastingSpellID;
 /* 0x027E */ uint8_t CastingSpellGemNumber; // 255 = Bard Singing
@@ -1101,6 +1104,12 @@ typedef struct _CXWnd
 /* 0x0138 */
 } CXWnd, *CXWnd_ptr;
 
+typedef struct _CListWnd
+{
+/* 0x0000 */ uint8_t Unknown0000[256];
+/* 0x0100 */ uint32_t Count;
+} CListWnd, *CListWnd_ptr;
+
 typedef struct _CInvSlot
 {
 /* 0x0000 */ uint32_t Unknown0000;
@@ -1152,6 +1161,14 @@ typedef struct _CMerchantWnd
 /* 0x029C */ struct _CsidlScreenWnd* MerchantSlotWnd[EQ_NUM_MERCHANT_SLOTS];
 /* ...... */
 } CMerchantWnd, *CMerchantWnd_ptr;
+
+typedef struct _CBazaarSearchWnd
+{
+/* 0x0000 */ struct _CsidlScreenWnd CsidlScreenWnd;
+/* 0x0138 */ uint8_t Unknown0138[14420];
+/* 0x398C */ struct _CListWnd* SearchListWnd;
+/* ...... */
+} CBazaarSearchWnd, *CBazaarSearchWnd_ptr;
 
 typedef struct _CBazaarSearchWndResultMessage
 {

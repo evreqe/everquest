@@ -27,6 +27,7 @@ namespace EQClass
     class CXWnd;
     class CSidlScreenWnd;
     class CButtonWnd;
+    class CListWnd;
     class CContainerWnd;
     class CContainerMgr;
 
@@ -59,10 +60,12 @@ EQ_MACRO_FunctionAtAddress(char* EQClass::StringTable::getString(unsigned long I
 class EQClass::EQWorldData
 {
 public:
-    //
+    char* EQWorldData::GetFullZoneName(uint32_t zoneID, char* result);
 };
 
 #define EQ_ADDRESS_FUNCTION_EQWorldData__GetFullZoneName 0x00523E49
+EQ_MACRO_FunctionAtAddress(char* EQClass::EQWorldData::GetFullZoneName(uint32_t zoneID, char* result), EQ_ADDRESS_FUNCTION_EQWorldData__GetFullZoneName);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQWorldData__GetFullZoneName)(void* this_ptr, uint32_t zoneID, char* result);
 
 #define EQ_ADDRESS_FUNCTION_EQWorldData__GetZoneNameFromIndex 0x00523F73
 
@@ -165,6 +168,9 @@ public:
     void CEverQuest::DropHeldItemOnGround(bool showDropMessage);
     void CEverQuest::StartCasting(EQ::CEverQuestStartCastingMessage_ptr message);
     int CEverQuest::EnterZone(int unknown);
+    int CEverQuest::Invite();
+    void CEverQuest::Follow();
+    void CEverQuest::Disband();
 };
 
 #define EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd 0x0054572F
@@ -221,6 +227,18 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__StartCasting)(void* this_p
 EQ_MACRO_FunctionAtAddress(int EQClass::CEverQuest::EnterZone(int unknown), EQ_ADDRESS_FUNCTION_CEverQuest__EnterZone);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__EnterZone)(void* this_ptr, int unknown);
 
+#define EQ_ADDRESS_FUNCTION_CEverQuest__Invite 0x005302C1
+EQ_MACRO_FunctionAtAddress(int EQClass::CEverQuest::Invite(), EQ_ADDRESS_FUNCTION_CEverQuest__Invite);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__Invite)(void* this_ptr);
+
+#define EQ_ADDRESS_FUNCTION_CEverQuest__Follow 0x0053069C
+EQ_MACRO_FunctionAtAddress(void EQClass::CEverQuest::Follow(), EQ_ADDRESS_FUNCTION_CEverQuest__Follow);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__Follow)(void* this_ptr);
+
+#define EQ_ADDRESS_FUNCTION_CEverQuest__Disband 0x00530829
+EQ_MACRO_FunctionAtAddress(void EQClass::CEverQuest::Disband(), EQ_ADDRESS_FUNCTION_CEverQuest__Disband);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__Disband)(void* this_ptr);
+
 /* EQPlayer */
 
 class EQClass::EQPlayer
@@ -231,6 +249,7 @@ public:
     void EQPlayer::FacePlayer(class EQPlayer* player);
     void EQPlayer::FollowPlayerAI();
     void EQPlayer::do_change_form(EQ::ChangeForm_ptr changeForm);
+    bool EQPlayer::IsInvited();
 };
 
 #define EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight 0x0050C160
@@ -250,6 +269,10 @@ typedef signed int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__FollowPlayerAI)(void*
 #define EQ_ADDRESS_FUNCTION_EQPlayer__do_change_form 0x005074FA
 EQ_MACRO_FunctionAtAddress(void EQClass::EQPlayer::do_change_form(EQ::ChangeForm_ptr changeForm), EQ_ADDRESS_FUNCTION_EQPlayer__do_change_form);
 typedef signed int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__do_change_form)(void* this_ptr, EQ::ChangeForm_ptr changeForm);
+
+#define EQ_ADDRESS_FUNCTION_EQPlayer__IsInvited 0x0050C209
+EQ_MACRO_FunctionAtAddress(bool EQClass::EQPlayer::IsInvited(), EQ_ADDRESS_FUNCTION_EQPlayer__IsInvited);
+typedef signed int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__IsInvited)(void* this_ptr);
 
 /* EQ_Character */
 
@@ -418,6 +441,23 @@ class EQClass::CButtonWnd
 public:
     //
 };
+
+/* CListWnd */
+
+class EQClass::CListWnd
+{
+public:
+    void CListWnd::SetItemText(int index, int column, EQ::CXStr_ptr text);
+    int CListWnd::SetItemColor(int index, int column, uint32_t colorARGB);
+};
+
+#define EQ_ADDRESS_FUNCTION_CListWnd__SetItemText 0x00579DC0
+EQ_MACRO_FunctionAtAddress(void EQClass::CListWnd::SetItemText(int index, int column, EQ::CXStr_ptr text), EQ_ADDRESS_FUNCTION_CListWnd__SetItemText);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CListWnd__SetItemText)(void* this_ptr, int index, int column, EQ::CXStr_ptr text);
+
+#define EQ_ADDRESS_FUNCTION_CListWnd__SetItemColor 0x00579EB0
+EQ_MACRO_FunctionAtAddress(int EQClass::CListWnd::SetItemColor(int index, int column, uint32_t colorARGB), EQ_ADDRESS_FUNCTION_CListWnd__SetItemColor);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CListWnd__SetItemColor)(void* this_ptr, int index, int column, uint32_t colorARGB);
 
 /* CContainerWnd */
 

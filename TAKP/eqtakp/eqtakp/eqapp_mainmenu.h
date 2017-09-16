@@ -49,6 +49,12 @@ void EQAPP_MainMenu_CreateMenu()
     g_mainMenuGUIMenuItemAlwaysAttack.SetFunctionLeftClick(&EQAPP_AlwaysAttack_Toggle);
     g_mainMenuGUIMenuItemAlwaysAttack.SetBoolPointer(g_alwaysAttackIsEnabled);
 
+    EQApp::GUIMenuItem g_mainMenuGUIMenuItemAutoGroup;
+    g_mainMenuGUIMenuItemAutoGroup.SetText("Auto Group");
+    g_mainMenuGUIMenuItemAutoGroup.FitToText();
+    g_mainMenuGUIMenuItemAutoGroup.SetFunctionLeftClick(&EQAPP_AutoGroup_Toggle);
+    g_mainMenuGUIMenuItemAutoGroup.SetBoolPointer(g_autoGroupIsEnabled);
+
     EQApp::GUIMenuItem g_mainMenuGUIMenuItemAutoLoot;
     g_mainMenuGUIMenuItemAutoLoot.SetText("Auto Loot");
     g_mainMenuGUIMenuItemAutoLoot.FitToText();
@@ -125,6 +131,16 @@ void EQAPP_MainMenu_CreateMenu()
     g_mainMenuGUIMenuItemWriteInventoryToFile.FitToText();
     g_mainMenuGUIMenuItemWriteInventoryToFile.SetFunctionLeftClick(&EQAPP_WriteInventoryToFile);
 
+    EQApp::GUIMenuItem g_mainMenuGUIMenuItemLoadNamedSpawns;
+    g_mainMenuGUIMenuItemLoadNamedSpawns.SetText("Load Named Spawns");
+    g_mainMenuGUIMenuItemLoadNamedSpawns.FitToText();
+    g_mainMenuGUIMenuItemLoadNamedSpawns.SetFunctionLeftClick(&EQAPP_NamedSpawns_Load);
+
+    EQApp::GUIMenuItem g_mainMenuGUIMenuItemLoadBazaarSearchItemNames;
+    g_mainMenuGUIMenuItemLoadBazaarSearchItemNames.SetText("Load Bazaar Search Item Names");
+    g_mainMenuGUIMenuItemLoadBazaarSearchItemNames.FitToText();
+    g_mainMenuGUIMenuItemLoadBazaarSearchItemNames.SetFunctionLeftClick(&EQAPP_BazaarSearchWindow_LoadItemNames);
+
     EQApp::GUIMenuItem g_mainMenuGUIMenuItemLoadSpellSet;
     g_mainMenuGUIMenuItemLoadSpellSet.SetText("Load Default Spellset");
     g_mainMenuGUIMenuItemLoadSpellSet.FitToText();
@@ -141,6 +157,7 @@ void EQAPP_MainMenu_CreateMenu()
     g_mainMenuGUIMenuItemUnload.SetFunctionLeftClick(&EQAPP_Unload);
 
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemAlwaysAttack);
+    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemAutoGroup);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemAutoLoot);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemCollisionHack);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemESP);
@@ -157,6 +174,11 @@ void EQAPP_MainMenu_CreateMenu()
 
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemPrintBankInventory);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemWriteInventoryToFile);
+
+    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemSeparator);
+
+    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemLoadNamedSpawns);
+    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemLoadBazaarSearchItemNames);
 
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemSeparator);
 
