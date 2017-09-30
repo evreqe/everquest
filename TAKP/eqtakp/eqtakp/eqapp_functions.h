@@ -17,6 +17,8 @@ void EQAPP_PrintBool(const char* text, bool& b);
 void EQAPP_PrintErrorMessage(const char* functionName, std::string text);
 void EQAPP_PrintDebugMessage(const char* functionName, std::string text);
 
+bool EQAPP_IsKeyDown(int vkKey);
+
 void EQAPP_Mouse_Load();
 void EQAPP_Mouse_Unload();
 void EQAPP_Mouse_Unacquire();
@@ -184,6 +186,16 @@ void EQAPP_PrintDebugMessage(const char* functionName, std::string text)
     }
 
     std::cout << "[DEBUG] " << functionName << ": " << text << std::endl;
+}
+
+bool EQAPP_IsKeyDown(int vkKey)
+{
+    if (GetAsyncKeyState(vkKey) & 0x8000)
+    {
+        return true;
+    }
+
+    return false;
 }
 
 void EQAPP_Mouse_Load()
@@ -551,7 +563,7 @@ if (EQ_IsInGame() == false)
     }
 
     std::stringstream filePath;
-    filePath << g_applicationName << "/inventory/" << spawnName << ".ini";
+    filePath << g_applicationName << "/inventory/" << spawnName << ".txt";
 
     std::string filePathStr = filePath.str();
 

@@ -204,7 +204,7 @@ int main(int argc , char *argv[])
 
                         if (textTokens.size() == 2)
                         {
-                            if (textTokens.at(0) == "$Name")
+                            if (textTokens.at(0) == "$ConnectName")
                             {
                                 std::string name = textTokens.at(1);
 

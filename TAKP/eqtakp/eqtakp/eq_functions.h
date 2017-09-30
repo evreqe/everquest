@@ -38,6 +38,7 @@ bool EQ_IsNotTypingInChat();
 bool EQ_IsInspectEnabled();
 bool EQ_IsShowNPCNamesEnabled();
 bool EQ_IsActorCollisionEnabled();
+bool EQ_IsUseVisActorListEnabled();
 bool EQ_IsKeyPressedControl();
 bool EQ_IsKeyPressedAlt();
 bool EQ_IsKeyPressedShift();
@@ -45,6 +46,7 @@ bool EQ_IsMouseHoveringOverCXWnd();
 void EQ_SetAutoAttack(bool bEnabled);
 void EQ_SetRun(bool bEnabled);
 void EQ_SetActorCollision(bool bEnabled);
+void EQ_SetUseVisActorList(bool bEnabled);
 uint32_t EQ_GetFontTextHeight(uint32_t fontPointer);
 size_t EQ_GetFontTextWidth(const char* text, uint32_t fontPointer);
 void EQ_DrawTooltipText(const char* text, int x, int y, uint32_t fontPointer);
@@ -334,6 +336,11 @@ bool EQ_IsActorCollisionEnabled()
     return (EQ_ReadMemory<uint8_t>(EQ_ADDRESS_IS_ACTOR_COLLISION_ENABLED) == 1);
 }
 
+bool EQ_IsUseVisActorListEnabled()
+{
+    return (EQ_ReadMemory<uint8_t>(EQ_ADDRESS_IS_USE_VIS_ACTOR_LIST_ENABLED) == 1);
+}
+
 bool EQ_IsKeyPressedControl()
 {
     return (EQ_ReadMemory<uint32_t>(EQ_ADDRESS_IS_KEY_PRESSED_CONTROL) == 1);
@@ -387,6 +394,18 @@ void EQ_SetActorCollision(bool bEnabled)
     else
     {
         EQ_WriteMemory<uint8_t>(EQ_ADDRESS_IS_ACTOR_COLLISION_ENABLED, 0x00);
+    }
+}
+
+void EQ_SetUseVisActorList(bool bEnabled)
+{
+    if (bEnabled == true)
+    {
+        EQ_WriteMemory<uint8_t>(EQ_ADDRESS_IS_USE_VIS_ACTOR_LIST_ENABLED, 0x01);
+    }
+    else
+    {
+        EQ_WriteMemory<uint8_t>(EQ_ADDRESS_IS_USE_VIS_ACTOR_LIST_ENABLED, 0x00);
     }
 }
 

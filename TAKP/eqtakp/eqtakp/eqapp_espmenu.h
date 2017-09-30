@@ -12,6 +12,8 @@ void EQAPP_ESPMenu_CreateMenu();
 void EQAPP_ESPMenu_Toggle()
 {
     g_ESPMenuGUIMenu.ToggleOpen();
+
+    EQAPP_GUI_CloseAllMenusExcept(&g_ESPMenuGUIMenu);
 }
 
 void EQAPP_ESPMenu_Load()
@@ -22,7 +24,7 @@ void EQAPP_ESPMenu_Load()
 
 void EQAPP_ESPMenu_CreateButton()
 {
-    g_ESPMenuGUIButton.SetX(600);
+    g_ESPMenuGUIButton.SetX(400);
     g_ESPMenuGUIButton.SetY(6);
 
     g_ESPMenuGUIButton.SetWidth(64);
@@ -38,6 +40,12 @@ void EQAPP_ESPMenu_CreateButton()
 
 void EQAPP_ESPMenu_CreateMenu()
 {
+    EQApp::GUIMenuItem g_ESPMenuGUIMenuItemToggle;
+    g_ESPMenuGUIMenuItemToggle.SetText("Toggle");
+    g_ESPMenuGUIMenuItemToggle.FitToText();
+    g_ESPMenuGUIMenuItemToggle.SetFunctionLeftClick(&EQAPP_ESP_Toggle);
+    g_ESPMenuGUIMenuItemToggle.SetBoolPointer(g_ESPIsEnabled);
+
     EQApp::GUIMenuItem g_ESPMenuGUIMenuItemSeparator;
     g_ESPMenuGUIMenuItemSeparator.SetText("--------------------");
     g_ESPMenuGUIMenuItemSeparator.FitToText();
@@ -90,6 +98,10 @@ void EQAPP_ESPMenu_CreateMenu()
     g_ESPMenuGUIMenuItemShowSpawnWeapon.FitToText();
     g_ESPMenuGUIMenuItemShowSpawnWeapon.SetFunctionLeftClick(&EQAPP_ESP_ShowSpawnWeapon_Toggle);
     g_ESPMenuGUIMenuItemShowSpawnWeapon.SetBoolPointer(g_ESPShowSpawnWeapon);
+
+    g_ESPMenuGUIMenu.AddMenuItem(g_ESPMenuGUIMenuItemToggle);
+
+    g_ESPMenuGUIMenu.AddMenuItem(g_ESPMenuGUIMenuItemSeparator);
 
     g_ESPMenuGUIMenu.AddMenuItem(g_ESPMenuGUIMenuItemSpawns);
     g_ESPMenuGUIMenu.AddMenuItem(g_ESPMenuGUIMenuItemGroundSpawns);

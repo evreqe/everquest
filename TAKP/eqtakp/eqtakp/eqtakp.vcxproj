@@ -119,6 +119,9 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;EQTAKP_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>D:\Code\!libraries\detours;D:\Code\!libraries\directx8sdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <MultiProcessorCompilation>
+      </MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -126,6 +129,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>D:\Code\!libraries\detours;D:\Code\!libraries\directx8sdk\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -181,6 +187,7 @@
     <ClInclude Include="eqapp_gui_menu.h" />
     <ClInclude Include="eqapp_gui_menuitem.h" />
     <ClInclude Include="eqapp_hidecorpselooted.h" />
+    <ClInclude Include="eqapp_hotbuttonkeys.h" />
     <ClInclude Include="eqapp_hudtext.h" />
     <ClInclude Include="eqapp_ini.h" />
     <ClInclude Include="eqapp_interpretcmd.h" />
@@ -189,6 +196,7 @@
     <ClInclude Include="eqapp_map.h" />
     <ClInclude Include="eqapp_mapmenu.h" />
     <ClInclude Include="eqapp_memory.h" />
+    <ClInclude Include="eqapp_memorymenu.h" />
     <ClInclude Include="eqapp_merchantwindow.h" />
     <ClInclude Include="eqapp_namedspawns.h" />
     <ClInclude Include="eqapp_namespritestate.h" />
@@ -208,6 +216,7 @@
     <ClInclude Include="eqapp_toggleview.h" />
     <ClInclude Include="eqapp_trainspells.h" />
     <ClInclude Include="eqapp_useskills.h" />
+    <ClInclude Include="eqapp_wallhack.h" />
     <ClInclude Include="eq_classes.h" />
     <ClInclude Include="eq_functions.h" />
     <ClInclude Include="eq_graphicsdll.h" />

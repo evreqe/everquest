@@ -68,6 +68,9 @@ EQ_MACRO_DefineDetour(CollisionCallbackForMove);
 EQ_MACRO_DefineDetour(do_target);
 
 EQ_MACRO_DefineDetour(EQGraphicsDLL__t3dCreateActorEx);
+EQ_MACRO_DefineDetour(EQGraphicsDLL__t3dRenderDeferredPolygons);
+
+EQ_MACRO_DefineDetour(EQIDirect3DDevice8__DrawIndexedPrimitive);
 
 int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short a3, unsigned short a4, unsigned short a5, int a6, unsigned short a7, unsigned long a8, long a9, unsigned long a10);
 
@@ -129,6 +132,9 @@ int __cdecl EQAPP_DETOUR_CollisionCallbackForMove(EQ::ActorInstance_ptr a1, EQ::
 int __cdecl EQAPP_DETOUR_do_target(class EQClass::EQPlayer* a1, const char* a2);
 
 int __cdecl EQAPP_DETOUR_EQGraphicsDLL__t3dCreateActorEx(int a1, EQ::ActorDefinition_ptr a2, char* a3, int a4, int a5, int a6, float a7, float a8, int a9, int a10);
+int __cdecl EQAPP_DETOUR_EQGraphicsDLL__t3dRenderDeferredPolygons(void);
+
+HRESULT __stdcall EQAPP_DETOUR_EQIDirect3DDevice8__DrawIndexedPrimitive(LPDIRECT3DDEVICE8 Device, D3DPRIMITIVETYPE Type, UINT MinIndex, UINT NumVertices, UINT StartIndex, UINT PrimitiveCount);
 
 void EQAPP_Detours_Add()
 {
@@ -190,6 +196,8 @@ void EQAPP_Detours_Add()
     EQ_MACRO_AddDetour(CollisionCallbackForMove);
     EQ_MACRO_AddDetour(do_target);
 
+    uint32_t graphicsDLLBaseAddress = EQ_GraphicsDLL_GetBaseAddress();
+
     EQ_ADDRESS_FUNCTION_EQGraphicsDLL__t3dCreateActorEx = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_EQGraphicsDLL__t3dCreateActorEx);
 
     EQAPP_REAL_EQGraphicsDLL__t3dCreateActorEx =
@@ -198,6 +206,25 @@ void EQAPP_Detours_Add()
         (PBYTE)EQ_ADDRESS_FUNCTION_EQGraphicsDLL__t3dCreateActorEx,
         (PBYTE)EQAPP_DETOUR_EQGraphicsDLL__t3dCreateActorEx
     );
+
+/*
+    EQ_ADDRESS_FUNCTION_EQGraphicsDLL__t3dRenderDeferredPolygons = graphicsDLLBaseAddress + EQ_GRAPHICS_DLL_OFFSET_EQGraphicsDLL__t3dRenderDeferredPolygons;
+
+    EQAPP_REAL_EQGraphicsDLL__t3dRenderDeferredPolygons =
+    (EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dRenderDeferredPolygons)DetourFunction
+    (
+        (PBYTE)EQ_ADDRESS_FUNCTION_EQGraphicsDLL__t3dRenderDeferredPolygons,
+        (PBYTE)EQAPP_DETOUR_EQGraphicsDLL__t3dRenderDeferredPolygons
+    );
+*/
+
+    EQAPP_REAL_EQIDirect3DDevice8__DrawIndexedPrimitive =
+    (EQ_FUNCTION_TYPE_EQIDirect3DDevice8__DrawIndexedPrimitive)DetourFunction
+    (
+        (PBYTE)EQ_VTABLE_IDirect3DDevice8[71],
+        (PBYTE)EQAPP_DETOUR_EQIDirect3DDevice8__DrawIndexedPrimitive
+    );
+
 }
 
 void EQAPP_Detours_Remove()
@@ -265,6 +292,21 @@ void EQAPP_Detours_Remove()
         (PBYTE)EQAPP_REAL_EQGraphicsDLL__t3dCreateActorEx,
         (PBYTE)EQAPP_DETOUR_EQGraphicsDLL__t3dCreateActorEx
     );
+
+/*
+    DetourRemove
+    (
+        (PBYTE)EQAPP_REAL_EQGraphicsDLL__t3dRenderDeferredPolygons,
+        (PBYTE)EQAPP_DETOUR_EQGraphicsDLL__t3dRenderDeferredPolygons
+    );
+*/
+
+    DetourRemove
+    (
+        (PBYTE)EQAPP_REAL_EQIDirect3DDevice8__DrawIndexedPrimitive,
+        (PBYTE)EQAPP_DETOUR_EQIDirect3DDevice8__DrawIndexedPrimitive
+    );
+
 }
 
 void EQAPP_Detours_OnZoneChanged_Event()
@@ -299,7 +341,8 @@ void EQAPP_Detours_OnZoneChanged_Load()
 {
     ////std::cout << "Zone changed..." << std::endl;
 
-    EQ_GraphicsDLL_EnableHardwareTNL();
+    EQ_GraphicsDLL_SetUseTNL(true);
+    EQ_GraphicsDLL_SetUseUmbra(true);
 
     EQAPP_WriteInventoryToFile();
 
@@ -310,6 +353,8 @@ void EQAPP_Detours_OnZoneChanged_Load()
     g_spawnAlertNewSpawnIDList.clear();
 
     EQAPP_FreeCamera_SetEnabled(false);
+
+    EQ_SetUseVisActorList(false);
 
     EQ_SetRun(true);
 
@@ -324,6 +369,8 @@ void EQAPP_Detours_OnZoneChanged_Load()
     EQAPP_NamedSpawns_Load();
     EQAPP_FoodAndDrink_Load();
     EQAPP_BazaarSearchWindow_LoadItemNames();
+
+    EQAPP_DestroyActors_Load(EQ_POINTER_Zone.ShortName);
 }
 
 int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short a3, unsigned short a4, unsigned short a5, int a6, unsigned short a7, unsigned long a8, long a9, unsigned long a10)
@@ -350,6 +397,11 @@ int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short
 
     EQAPP_Detours_OnZoneChanged_Event();
 
+    if (g_hotButtonKeysIsEnabled == true)
+    {
+        EQAPP_HotButtonKeys_Execute();
+    }
+
     if (g_freeCameraIsEnabled == true)
     {
         EQAPP_FreeCamera_Execute();
@@ -368,6 +420,11 @@ int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short
     if (g_drawDistanceIsEnabled == true)
     {
         EQAPP_DrawDistance_Execute();
+    }
+
+    if (g_destroyActorsIsEnabled == true)
+    {
+        EQAPP_DestroyActors_Execute();
     }
 
     if (g_spawnCastSpellIsEnabled == true)
@@ -418,6 +475,11 @@ int __cdecl EQAPP_DETOUR_DrawNetStatus(int a1, unsigned short a2, unsigned short
     if (g_trainSpellsIsEnabled == true)
     {
         EQAPP_TrainSpells_Execute();
+    }
+
+    if (g_destroyActorsIsEnabled == true)
+    {
+        EQAPP_DestroyActors_Execute();
     }
 
     // mouse fix
@@ -747,6 +809,15 @@ int __fastcall EQAPP_DETOUR_EQPlayer__do_change_form(void* this_ptr, void* not_u
     std::cout << "[EQPlayer__do_change_form] Unknown10: " << (int)a1->Unknown10 << std::endl;
     std::cout << "--------------------------------------------------" << std::endl;
 */
+
+    if (g_replaceRacesIsEnabled == true)
+    {
+        bool result = EQAPP_ReplaceRaces_HandleEvent_EQPlayer__do_change_form(this_ptr, a1);
+        if (result == true)
+        {
+            return 0;
+        }
+    }
 
     return EQAPP_REAL_EQPlayer__do_change_form(this_ptr, a1);
 }
@@ -1442,3 +1513,88 @@ int __cdecl EQAPP_DETOUR_EQGraphicsDLL__t3dCreateActorEx(int a1, EQ::ActorDefini
 
     return result;
 }
+
+int __cdecl EQAPP_DETOUR_EQGraphicsDLL__t3dRenderDeferredPolygons(void)
+{
+    if (g_bExit == 1)
+    {
+        return EQAPP_REAL_EQGraphicsDLL__t3dRenderDeferredPolygons();
+    }
+
+    //// old wallhack
+
+    ////EQ_CLASS_POINTER_IDirect3DDevice8->SetRenderState(D3DRS_ZENABLE, FALSE);
+
+    int result = EQAPP_REAL_EQGraphicsDLL__t3dRenderDeferredPolygons();
+
+    ////EQ_CLASS_POINTER_IDirect3DDevice8->SetRenderState(D3DRS_ZENABLE, TRUE);
+
+    return result;
+}
+
+HRESULT __stdcall EQAPP_DETOUR_EQIDirect3DDevice8__DrawIndexedPrimitive(LPDIRECT3DDEVICE8 Device, D3DPRIMITIVETYPE Type, UINT MinIndex, UINT NumVertices, UINT StartIndex, UINT PrimitiveCount)
+{
+    if (g_bExit == 1)
+    {
+        return EQAPP_REAL_EQIDirect3DDevice8__DrawIndexedPrimitive(Device, Type, MinIndex, NumVertices, StartIndex, PrimitiveCount);
+    }
+
+    if (g_wallHackIsEnabled == true)
+    {
+        LPDIRECT3DVERTEXBUFFER8 streamData;
+        UINT stride = 0;
+
+        if (Device->GetStreamSource(0, &streamData, &stride) == D3D_OK)
+        {
+            streamData->Release();
+        }
+
+        //std::cout << "Stride: " << stride << std::endl;
+
+        //std::cout << "MinIndex: " << MinIndex << std::endl;
+        //std::cout << "NumVertices: " << NumVertices << std::endl;
+        //std::cout << "StartIndex: " << StartIndex << std::endl;
+        //std::cout << "PrimitiveCount: " << PrimitiveCount << std::endl;
+
+        // 24 = World
+        // 32 = Actors
+
+        if (stride == 24)
+        {
+            EQ_CLASS_POINTER_IDirect3DDevice8->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+            EQ_CLASS_POINTER_IDirect3DDevice8->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCCOLOR);
+            EQ_CLASS_POINTER_IDirect3DDevice8->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCCOLOR);
+
+            //EQ_CLASS_POINTER_IDirect3DDevice8->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+        }
+
+        if (stride == 32)
+        {
+            //EQ_CLASS_POINTER_IDirect3DDevice8->SetRenderState(D3DRS_ZENABLE, FALSE);
+            EQ_CLASS_POINTER_IDirect3DDevice8->SetRenderState(D3DRS_ZFUNC, D3DCMP_NOTEQUAL);
+        }
+
+        int result = EQAPP_REAL_EQIDirect3DDevice8__DrawIndexedPrimitive(Device, Type, MinIndex, NumVertices, StartIndex, PrimitiveCount);
+
+        if (stride == 24)
+        {
+            EQ_CLASS_POINTER_IDirect3DDevice8->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+            EQ_CLASS_POINTER_IDirect3DDevice8->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+            //EQ_CLASS_POINTER_IDirect3DDevice8->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+        }
+
+        if (stride == 32)
+        {
+            //EQ_CLASS_POINTER_IDirect3DDevice8->SetRenderState(D3DRS_ZENABLE, TRUE);
+            EQ_CLASS_POINTER_IDirect3DDevice8->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
+        }
+
+        return result;
+    }
+
+    return EQAPP_REAL_EQIDirect3DDevice8__DrawIndexedPrimitive(Device, Type, MinIndex, NumVertices, StartIndex, PrimitiveCount);
+}
+
+
+

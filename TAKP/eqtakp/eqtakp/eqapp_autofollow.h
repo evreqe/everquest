@@ -2,9 +2,6 @@
 
 bool g_autoFollowIsEnabled = true;
 
-uint32_t g_autoFollowTimer = 0;
-uint32_t g_autoFollowTimerDelay = 100;
-
 void EQAPP_AutoFollow_SetFollowDistanceToDefault();
 void EQAPP_AutoFollow_SetFollowDistanceToZero();
 void EQAPP_AutoFollow_HandleEvent__EQPlayer__FollowPlayerAI(void* this_ptr);
@@ -23,13 +20,6 @@ void EQAPP_AutoFollow_SetFollowDistanceToZero()
 
 void EQAPP_AutoFollow_HandleEvent__EQPlayer__FollowPlayerAI(void* this_ptr)
 {
-    bool hasTimePassed = false;
-
-    if (EQ_HasTimePassed(g_autoFollowTimer, g_autoFollowTimerDelay) == true)
-    {
-        hasTimePassed = true;
-    }
-
     auto thisSpawn = (EQ::Spawn_ptr)this_ptr;
     if (thisSpawn == NULL || thisSpawn->Actor == NULL)
     {
@@ -55,21 +45,19 @@ void EQAPP_AutoFollow_HandleEvent__EQPlayer__FollowPlayerAI(void* this_ptr)
 
     EQAPP_AutoFollow_SetFollowDistanceToZero();
 
-    if (hasTimePassed == true)
+    if (followedSpawn->MovementSpeed != 0.0f)
     {
-        if (followedSpawn->MovementSpeed > 0.0f)
+        float followedSpawnDistance = EQ_CalculateDistance(followedSpawn->X, followedSpawn->Y, playerSpawn->X, playerSpawn->Y);
+
+        if (followedSpawnDistance <= 10.0f)
         {
-            float followedSpawnDistance = EQ_CalculateDistance(followedSpawn->X, followedSpawn->Y, playerSpawn->X, playerSpawn->Y);
+            playerSpawn->Actor->MovementSpeedModifier = -0.1f;
 
-            if (followedSpawnDistance > 10.0f && followedSpawnDistance < 20.0f)
-            {
-                playerSpawn->Actor->MovementSpeedModifier = 0.0f;
-            }
-
-            if (followedSpawnDistance < 10.0f)
-            {
-                playerSpawn->Actor->MovementSpeedModifier = -1.0f;
-            }
+            playerSpawn->MovementSpeed = 0.0f;
+            playerSpawn->MovementSpeedX = 0.0f;
+            playerSpawn->MovementSpeedY = 0.0f;
+            playerSpawn->MovementSpeedZ = 0.0f;
+            playerSpawn->MovementSpeedHeading = 0.0f;
         }
     }
 }

@@ -29,6 +29,22 @@ void EQAPP_HUDText_Execute()
         text << "Box Chat is connected.\n";
     }
 
+    if (g_hotButtonKeysIsEnabled == true)
+    {
+        if (g_hotButtonKeysModifier == VK_ALT)
+        {
+            text << "Hot Button Keys: ALT\n";
+        }
+        else if (g_hotButtonKeysModifier == VK_CONTROL)
+        {
+            text << "Hot Button Keys: CONTROL\n";
+        }
+        else if (g_hotButtonKeysModifier == VK_SHIFT)
+        {
+            text << "Hot Button Keys: SHIFT\n";
+        }
+    }
+
     if (g_alwaysAttackIsEnabled == true)
     {
         text << "Always Attack: On\n";

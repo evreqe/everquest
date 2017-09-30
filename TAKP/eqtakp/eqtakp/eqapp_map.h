@@ -538,6 +538,8 @@ void EQAPP_Map_Execute()
 
     if (g_mapSpawnsIsEnabled == true)
     {
+        uint32_t numSpawnsMouseOver = 0;
+
         auto spawn = EQ_GetFirstSpawn();
         while (spawn != NULL)
         {
@@ -677,12 +679,15 @@ void EQAPP_Map_Execute()
                             }
                         }
 
+                        const char* spawnTextC = spawnText.str().c_str();
+
                         uint32_t spawnTextFont = EQ_ADDRESS_POINTER_FONT_ARIAL14;
 
                         uint32_t spawnTextX = mouseX + EQ_MOUSE_CURSOR_WIDTH + 1;
                         uint32_t spawnTextY = mouseY;
 
-                        uint32_t spawnTextWidth = EQ_GetFontTextWidth(spawnText.str().c_str(), spawnTextFont);
+                        uint32_t spawnTextWidth = EQ_GetFontTextWidth(spawnTextC, spawnTextFont);
+                        uint32_t spawnTextHeight = EQ_GetFontTextHeight(spawnTextFont);
 
                         uint32_t resolutionWidth = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_RESOLUTION_WIDTH);
 
@@ -691,7 +696,14 @@ void EQAPP_Map_Execute()
                             spawnTextX = mouseX - spawnTextWidth - 1;
                         }
 
-                        EQ_DrawTooltipText(spawnText.str().c_str(), spawnTextX, spawnTextY, spawnTextFont);
+                        if (numSpawnsMouseOver > 0)
+                        {
+                            spawnTextY = spawnTextY + (numSpawnsMouseOver * spawnTextHeight);
+                        }
+
+                        EQ_DrawTooltipText(spawnTextC, spawnTextX, spawnTextY, spawnTextFont);
+
+                        numSpawnsMouseOver++;
                     }
                 }
             }

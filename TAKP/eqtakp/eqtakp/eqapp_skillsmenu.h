@@ -12,6 +12,8 @@ void EQAPP_SkillsMenu_CreateMenu();
 void EQAPP_SkillsMenu_Toggle()
 {
     g_skillsMenuGUIMenu.ToggleOpen();
+
+    EQAPP_GUI_CloseAllMenusExcept(&g_skillsMenuGUIMenu);
 }
 
 void EQAPP_SkillsMenu_Load()
@@ -22,7 +24,7 @@ void EQAPP_SkillsMenu_Load()
 
 void EQAPP_SkillsMenu_CreateButton()
 {
-    g_skillsMenuGUIButton.SetX(400);
+    g_skillsMenuGUIButton.SetX(300);
     g_skillsMenuGUIButton.SetY(6);
 
     g_skillsMenuGUIButton.SetWidth(64);
@@ -38,6 +40,12 @@ void EQAPP_SkillsMenu_CreateButton()
 
 void EQAPP_SkillsMenu_CreateMenu()
 {
+    EQApp::GUIMenuItem g_skillsMenuGUIMenuItemToggle;
+    g_skillsMenuGUIMenuItemToggle.SetText("Toggle");
+    g_skillsMenuGUIMenuItemToggle.FitToText();
+    g_skillsMenuGUIMenuItemToggle.SetFunctionLeftClick(&EQAPP_UseSkills_Toggle);
+    g_skillsMenuGUIMenuItemToggle.SetBoolPointer(g_useSkillsIsEnabled);
+
     EQApp::GUIMenuItem g_skillsMenuGUIMenuItemSeparator;
     g_skillsMenuGUIMenuItemSeparator.SetText("--------------------");
     g_skillsMenuGUIMenuItemSeparator.FitToText();
@@ -96,6 +104,10 @@ void EQAPP_SkillsMenu_CreateMenu()
     g_skillsMenuGUIMenuItemSenseHeading.FitToText();
     g_skillsMenuGUIMenuItemSenseHeading.SetFunctionLeftClick(&EQAPP_UseSkills_SenseHeading_Toggle);
     g_skillsMenuGUIMenuItemSenseHeading.SetBoolPointer(g_useSkillsSenseHeadingIsEnabled);
+
+    g_skillsMenuGUIMenu.AddMenuItem(g_skillsMenuGUIMenuItemToggle);
+
+    g_skillsMenuGUIMenu.AddMenuItem(g_skillsMenuGUIMenuItemSeparator);
 
     g_skillsMenuGUIMenu.AddMenuItem(g_skillsMenuGUIMenuItemTaunt);
     g_skillsMenuGUIMenu.AddMenuItem(g_skillsMenuGUIMenuItemKick);

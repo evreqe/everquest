@@ -12,6 +12,8 @@ void EQAPP_MapMenu_CreateMenu();
 void EQAPP_MapMenu_Toggle()
 {
     g_mapMenuGUIMenu.ToggleOpen();
+
+    EQAPP_GUI_CloseAllMenusExcept(&g_mapMenuGUIMenu);
 }
 
 void EQAPP_MapMenu_Load()
@@ -22,7 +24,7 @@ void EQAPP_MapMenu_Load()
 
 void EQAPP_MapMenu_CreateButton()
 {
-    g_mapMenuGUIButton.SetX(800);
+    g_mapMenuGUIButton.SetX(500);
     g_mapMenuGUIButton.SetY(6);
 
     g_mapMenuGUIButton.SetWidth(64);
@@ -38,6 +40,12 @@ void EQAPP_MapMenu_CreateButton()
 
 void EQAPP_MapMenu_CreateMenu()
 {
+    EQApp::GUIMenuItem g_mapMenuGUIMenuItemToggle;
+    g_mapMenuGUIMenuItemToggle.SetText("Toggle");
+    g_mapMenuGUIMenuItemToggle.FitToText();
+    g_mapMenuGUIMenuItemToggle.SetFunctionLeftClick(&EQAPP_Map_Toggle);
+    g_mapMenuGUIMenuItemToggle.SetBoolPointer(g_mapIsEnabled);
+
     EQApp::GUIMenuItem g_mapMenuGUIMenuItemSeparator;
     g_mapMenuGUIMenuItemSeparator.SetText("--------------------");
     g_mapMenuGUIMenuItemSeparator.FitToText();
@@ -66,6 +74,10 @@ void EQAPP_MapMenu_CreateMenu()
     g_mapMenuGUIMenuItemHeightFilter.FitToText();
     g_mapMenuGUIMenuItemHeightFilter.SetFunctionLeftClick(&EQAPP_Map_HeightFilter_Toggle);
     g_mapMenuGUIMenuItemHeightFilter.SetBoolPointer(g_mapHeightFilterIsEnabled);
+
+    g_mapMenuGUIMenu.AddMenuItem(g_mapMenuGUIMenuItemToggle);
+
+    g_mapMenuGUIMenu.AddMenuItem(g_mapMenuGUIMenuItemSeparator);
 
     g_mapMenuGUIMenu.AddMenuItem(g_mapMenuGUIMenuItemLines);
     g_mapMenuGUIMenu.AddMenuItem(g_mapMenuGUIMenuItemLabels);

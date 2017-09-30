@@ -20,7 +20,17 @@ void EQAPP_BazaarSearchWindow_LoadItemNames()
 
 void EQAPP_BazaarSearchWindow_HandleEvent_CListWnd__SetItemText(void* this_ptr, int index, int column, EQ::CXStr_ptr text)
 {
+    if (EQ_IsInGame() == false)
+    {
+        return;
+    }
+
     if (this_ptr == NULL)
+    {
+        return;
+    }
+
+    if (EQ_IsWindowVisible(EQ_ADDRESS_POINTER_CBazaarSearchWnd) == false)
     {
         return;
     }

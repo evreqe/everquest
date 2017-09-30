@@ -91,6 +91,7 @@ void EQAPP_ESP_UpdateSpawnList();
 void EQAPP_ESP_DrawDoorSpawns();
 void EQAPP_ESP_DrawGroundSpawns();
 void EQAPP_ESP_DrawSpawns();
+void EQAPP_ESP_DrawActorList(uint32_t offsetActorList);
 void EQAPP_ESP_DrawActors();
 void EQAPP_ESP_Execute();
 
@@ -793,7 +794,7 @@ void EQAPP_ESP_DrawSpawns()
     }
 }
 
-void EQAPP_ESP_DrawActors()
+void EQAPP_ESP_DrawActorList(uint32_t offsetActorList)
 {
     uint32_t baseAddress = EQ_GraphicsDLL_GetBaseAddress();
     if (baseAddress == NULL)
@@ -801,15 +802,15 @@ void EQAPP_ESP_DrawActors()
         return;
     }
 
-    for (size_t i = 0; i < EQ_GRAPHICS_DLL_NUM_VISIBLE_ZONE_ACTORS_MAX; i++)
+    for (size_t i = 0; i < EQ_GRAPHICS_DLL_NUM_ACTOR_LIST_ACTORS_MAX; i++)
     {
-        uint32_t visibleZoneActor = EQ_ReadMemory<uint32_t>((baseAddress + EQ_GRAPHICS_DLL_OFFSET_VISIBLE_ZONE_ACTORS_LIST) + (i * EQ_GRAPHICS_DLL_VISIBLE_ZONE_ACTOR_SIZE));
-        if (visibleZoneActor == NULL)
+        uint32_t actorListActor = EQ_ReadMemory<uint32_t>((baseAddress + offsetActorList) + (i * EQ_GRAPHICS_DLL_ACTOR_LIST_ACTOR_SIZE));
+        if (actorListActor == NULL)
         {
             break;
         }
 
-        EQ::ActorInstance_ptr actorInstance = (EQ::ActorInstance_ptr)EQ_ReadMemory<uint32_t>(visibleZoneActor + EQ_GRAPHICS_DLL_VISIBLE_ZONE_ACTOR_OFFSET_ACTOR_INSTANCE);
+        EQ::ActorInstance_ptr actorInstance = (EQ::ActorInstance_ptr)EQ_ReadMemory<uint32_t>(actorListActor + EQ_GRAPHICS_DLL_ACTOR_LIST_ACTOR_OFFSET_ACTOR_INSTANCE);
         if (actorInstance == NULL)
         {
             continue;
@@ -825,17 +826,11 @@ void EQAPP_ESP_DrawActors()
             continue;
         }
 
-        std::string actorName = actorInstance->ActorDefinition->Name;
-        if (actorName.size() == 0)
+        std::string actorDef = actorInstance->ActorDefinition->Name;
+        if (actorDef.size() == 0)
         {
             continue;
         }
-
-        ////if (actorName.find("POK") != std::string::npos)
-        ////{
-            ////EQGraphicsDLL__t3dDestroyActor(EQ_POINTER_CDisplay->Unknown0004, actorInstance);
-            ////continue;
-        ////}
 
         EQ::Location actorLocation;
         actorLocation.Y = actorInstance->WorldY;
@@ -850,10 +845,16 @@ void EQAPP_ESP_DrawActors()
         }
 
         std::stringstream actorText;
-        actorText << "& " << actorName;
+        actorText << "& " << actorDef;
 
         EQ_DrawText(actorText.str().c_str(), screenX, screenY, EQ_COLOR_ARGB_WHITE);
     }
+}
+
+void EQAPP_ESP_DrawActors()
+{
+    EQAPP_ESP_DrawActorList(EQ_GRAPHICS_DLL_OFFSET_ACTOR_LIST_STATIC);
+    EQAPP_ESP_DrawActorList(EQ_GRAPHICS_DLL_OFFSET_ACTOR_LIST_DYNAMIC);
 }
 
 void EQAPP_ESP_Execute()

@@ -227,5 +227,14 @@
     <ClInclude Include="eqapp_bazaarsearchwindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="eqapp_memorymenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_hotbuttonkeys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_wallhack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

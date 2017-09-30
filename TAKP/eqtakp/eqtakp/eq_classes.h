@@ -89,6 +89,7 @@ public:
     void CDisplay::NewUIProcessEscape();
     EQ::Spawn_ptr CDisplay::GetNearestPlayerInView(float maxDistance, uint8_t spawnType);
     int CDisplay::UpdateItemSlot(class EQPlayer* player, uint8_t itemSlot, char* itemDef, bool clientSideOnly);
+    void CDisplay::SpurtBloodOnDag(EQ::ModelBone_ptr bone);
 };
 
 #define EQ_ADDRESS_FUNCTION_CDisplay__Render_World 0x004AA8BC
@@ -148,6 +149,10 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__GetNearestPlayerInView)(void
 #define EQ_ADDRESS_FUNCTION_CDisplay__UpdateItemSlot 0x004A9EB3
 EQ_MACRO_FunctionAtAddress(int EQClass::CDisplay::UpdateItemSlot(class EQPlayer* player, uint8_t itemSlot, char* itemDef, bool clientSideOnly), EQ_ADDRESS_FUNCTION_CDisplay__UpdateItemSlot);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__UpdateItemSlot)(void* this_ptr, class EQPlayer* player, uint8_t itemSlot, char* itemDef, bool clientSideOnly);
+
+#define EQ_ADDRESS_FUNCTION_CDisplay__SpurtBloodOnDag 0x004B166D
+EQ_MACRO_FunctionAtAddress(void EQClass::CDisplay::SpurtBloodOnDag(EQ::ModelBone_ptr bone), EQ_ADDRESS_FUNCTION_CDisplay__SpurtBloodOnDag);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__SpurtBloodOnDag)(void* this_ptr, EQ::ModelBone_ptr bone);
 
 /* CEverQuest */
 

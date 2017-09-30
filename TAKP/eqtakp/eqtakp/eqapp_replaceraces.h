@@ -1,12 +1,13 @@
 #pragma once
 
-bool g_replaceRacesIsEnabled = false;
+bool g_replaceRacesIsEnabled = true;
 
 uint32_t g_replaceRacesTimer = 0;
 uint32_t g_replaceRacesTimerDelay = 3000;
 
 void EQAPP_ReplaceRaces_Toggle();
 void EQAPP_ReplaceRaces_Execute();
+bool EQAPP_ReplaceRaces_HandleEvent_EQPlayer__do_change_form(void* this_ptr, EQ::ChangeForm_ptr changeForm);
 
 void EQAPP_ReplaceRaces_Toggle()
 {
@@ -50,7 +51,7 @@ void EQAPP_ReplaceRaces_Execute()
             changeForm.HairColor = 255;
             changeForm.BeardType = 255;
             changeForm.BeardColor = 255;
-            changeForm.Size = 6;
+            changeForm.Size = 5;
             changeForm.Unknown10 = -1;
 
             ((EQClass::EQPlayer*)spawn)->do_change_form(&changeForm);
@@ -58,5 +59,22 @@ void EQAPP_ReplaceRaces_Execute()
 
         spawn = spawn->Next;
     }
+}
+
+bool EQAPP_ReplaceRaces_HandleEvent_EQPlayer__do_change_form(void* this_ptr, EQ::ChangeForm_ptr changeForm)
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn != NULL && playerSpawn == (EQ::Spawn_ptr)this_ptr)
+    {
+        if (changeForm != NULL)
+        {
+            if (changeForm->Race == EQ_RACE_WOLF || changeForm->Race == EQ_RACE_BEAR)
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 

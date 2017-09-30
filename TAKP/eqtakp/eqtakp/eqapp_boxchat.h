@@ -20,12 +20,17 @@ WSADATA g_boxChatWSAData;
 SOCKET g_boxChatConnectSocket;
 fd_set g_boxChatFDSetRead;
 
+struct addrinfo* g_boxChatAddressInfoResult = NULL;
+struct addrinfo* g_boxChatAddressInfo_ptr = NULL;
+struct addrinfo g_boxChatAddressInfoHints;
+
 void EQAPP_BoxChat_Toggle();
 void EQAPP_BoxChat_Load();
 void EQAPP_BoxChat_Unload();
 bool EQAPP_BoxChat_Connect();
 void EQAPP_BoxChat_Disconnect();
 void EQAPP_BoxChat_Execute();
+bool EQAPP_BoxChat_SendText(std::string text);
 
 void EQAPP_BoxChat_Toggle()
 {
@@ -58,14 +63,10 @@ bool EQAPP_BoxChat_Connect()
 
     g_boxChatIsConnected = false;
 
-    struct addrinfo* addrinfo_result = NULL;
-    struct addrinfo* addrinfo_ptr    = NULL;
-    struct addrinfo addrinfo_hints;
-
-    ZeroMemory(&addrinfo_hints, sizeof(addrinfo_hints));
-    addrinfo_hints.ai_family   = AF_INET;
-    addrinfo_hints.ai_socktype = SOCK_STREAM;
-    addrinfo_hints.ai_protocol = IPPROTO_TCP;
+    ZeroMemory(&g_boxChatAddressInfoHints, sizeof(g_boxChatAddressInfoHints));
+    g_boxChatAddressInfoHints.ai_family   = AF_INET;
+    g_boxChatAddressInfoHints.ai_socktype = SOCK_STREAM;
+    g_boxChatAddressInfoHints.ai_protocol = IPPROTO_TCP;
 
     if (strlen(g_boxChatServerIPAddress) == 0)
     {
@@ -77,63 +78,57 @@ bool EQAPP_BoxChat_Connect()
         strncpy_s(g_boxChatServerPort, sizeof(g_boxChatServerPort), EQBCS_PORT_NUMBER, _TRUNCATE);
     }
 
-    if (getaddrinfo(g_boxChatServerIPAddress, g_boxChatServerPort, &addrinfo_hints, &addrinfo_result) != 0)
+    if (getaddrinfo(g_boxChatServerIPAddress, g_boxChatServerPort, &g_boxChatAddressInfoHints, &g_boxChatAddressInfoResult) != 0)
     {
-        freeaddrinfo(addrinfo_result);
-
+        freeaddrinfo(g_boxChatAddressInfoResult);
         EQAPP_BoxChat_Disconnect();
         return false;
     }
 
-    addrinfo_ptr = addrinfo_result;
+    g_boxChatAddressInfo_ptr = g_boxChatAddressInfoResult;
 
-    g_boxChatConnectSocket = socket(addrinfo_ptr->ai_family, addrinfo_ptr->ai_socktype, addrinfo_ptr->ai_protocol);
+    g_boxChatConnectSocket = socket(g_boxChatAddressInfo_ptr->ai_family, g_boxChatAddressInfo_ptr->ai_socktype, g_boxChatAddressInfo_ptr->ai_protocol);
 
     if (g_boxChatConnectSocket == INVALID_SOCKET)
     {
-        freeaddrinfo(addrinfo_result);
-
+        freeaddrinfo(g_boxChatAddressInfoResult);
         EQAPP_BoxChat_Disconnect();
         return false;
     }
 
-    if (connect(g_boxChatConnectSocket, addrinfo_ptr->ai_addr, (int)addrinfo_ptr->ai_addrlen) != SOCKET_ERROR)
+    if (connect(g_boxChatConnectSocket, g_boxChatAddressInfo_ptr->ai_addr, (int)g_boxChatAddressInfo_ptr->ai_addrlen) != SOCKET_ERROR)
     {
         if (g_boxChatConnectSocket != INVALID_SOCKET)
         {
             auto playerSpawn = EQ_GetPlayerSpawn();
             if (playerSpawn == NULL)
             {
-                freeaddrinfo(addrinfo_result);
-
+                freeaddrinfo(g_boxChatAddressInfoResult);
                 EQAPP_BoxChat_Disconnect();
                 return false;
             }
 
             std::stringstream ssConnectMessage;
-            ssConnectMessage << "$Name " << EQ_GetSpawnName(playerSpawn) << "\n";
+            ssConnectMessage << "$ConnectName " << EQ_GetSpawnName(playerSpawn) << "\n";
 
             std::string strConnectMessage = ssConnectMessage.str();
 
             if (send(g_boxChatConnectSocket, strConnectMessage.c_str(), strConnectMessage.size(), 0) == SOCKET_ERROR)
             {
-                freeaddrinfo(addrinfo_result);
-
+                freeaddrinfo(g_boxChatAddressInfoResult);
                 EQAPP_BoxChat_Disconnect();
                 return false;
             }
 
             std::cout << "Box Chat connected." << std::endl;
 
-            freeaddrinfo(addrinfo_result);
-
+            freeaddrinfo(g_boxChatAddressInfoResult);
             g_boxChatIsConnected = true;
             return true;
         }
     }
 
-    freeaddrinfo(addrinfo_result);
-
+    freeaddrinfo(g_boxChatAddressInfoResult);
     EQAPP_BoxChat_Disconnect();
     return false;
 }
@@ -161,12 +156,18 @@ void EQAPP_BoxChat_Execute()
 
     if (EQ_HasTimePassed(g_boxChatKeepAliveTimer, g_boxChatKeepAliveTimerDelay) == true)
     {
-        std::string keepAliveMessage = "$KeepAlive\n";
-
-        if (send(g_boxChatConnectSocket, keepAliveMessage.c_str(), keepAliveMessage.size(), 0) == SOCKET_ERROR)
-        {
-            EQAPP_BoxChat_Disconnect();
-        }
+        EQAPP_BoxChat_SendText("$KeepAlive\n");
     }
+}
+
+bool EQAPP_BoxChat_SendText(std::string text)
+{
+    if (send(g_boxChatConnectSocket, text.c_str(), text.size(), 0) == SOCKET_ERROR)
+    {
+        EQAPP_BoxChat_Disconnect();
+        return false;
+    }
+
+    return true;
 }
 

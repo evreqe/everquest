@@ -98,7 +98,7 @@ void EQAPP_FreeCamera_Execute()
         return;
     }
 
-    if (GetAsyncKeyState(VK_UP) & 0x8000)
+    if (EQAPP_IsKeyDown(VK_UP) == true)
     {
         float cameraY = camera->Y;
         float cameraX = camera->X;
@@ -134,7 +134,7 @@ void EQAPP_FreeCamera_Execute()
         camera->Z = cameraZ;
     }
 
-    if (GetAsyncKeyState(VK_DOWN) & 0x8000)
+    if (EQAPP_IsKeyDown(VK_DOWN) == true)
     {
         float cameraY = camera->Y;
         float cameraX = camera->X;
@@ -170,7 +170,7 @@ void EQAPP_FreeCamera_Execute()
         camera->Z = cameraZ;
     }
 
-    if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+    if (EQAPP_IsKeyDown(VK_LEFT) == true)
     {
         float cameraY = camera->Y;
         float cameraX = camera->X;
@@ -204,7 +204,7 @@ void EQAPP_FreeCamera_Execute()
         camera->Z = cameraZ;
     }
 
-    if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+    if (EQAPP_IsKeyDown(VK_RIGHT) == true)
     {
         float cameraY = camera->Y;
         float cameraX = camera->X;

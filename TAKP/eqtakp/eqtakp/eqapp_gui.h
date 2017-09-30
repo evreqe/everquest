@@ -8,6 +8,8 @@ std::vector<EQApp::GUIMenu*> g_GUIMenuList;
 void EQAPP_GUI_Execute();
 bool EQAPP_GUI_HandleEvent_CEverQuest__LMouseUp(uint16_t mouseX, uint16_t mouseY);
 void EQAPP_GUI_HandleEvent_ExecuteCmd(uint32_t commandID, int isActive, int zero);
+void EQAPP_GUI_CloseAllMenus();
+void EQAPP_Gui_CloseAllMenuExcept(EQApp::GUIMenu* menu);
 
 void EQAPP_GUI_Execute()
 {
@@ -91,10 +93,7 @@ bool EQAPP_GUI_HandleEvent_CEverQuest__LMouseUp(uint16_t mouseX, uint16_t mouseY
 
     }
 
-    for (auto& menu : g_GUIMenuList)
-    {
-        menu->SetOpen(false);
-    }
+    EQAPP_GUI_CloseAllMenus();
 
     return false;
 }
@@ -108,9 +107,28 @@ void EQAPP_GUI_HandleEvent_ExecuteCmd(uint32_t commandID, int isActive, int zero
 
     if (commandID == EQ_EXECUTECMD_ESCAPE)
     {
-        for (auto& menu : g_GUIMenuList)
+        EQAPP_GUI_CloseAllMenus();
+    }
+}
+
+void EQAPP_GUI_CloseAllMenus()
+{
+    for (auto& menu : g_GUIMenuList)
+    {
+        menu->SetOpen(false);
+    }
+}
+
+void EQAPP_GUI_CloseAllMenusExcept(EQApp::GUIMenu* menu)
+{
+    if (menu->IsOpen() == true)
+    {
+        for (auto& menuEx : g_GUIMenuList)
         {
-            menu->SetOpen(false);
+            if (menu != menuEx)
+            {
+                menuEx->SetOpen(false);
+            }
         }
     }
 }

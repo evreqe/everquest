@@ -12,6 +12,8 @@ void EQAPP_MainMenu_CreateMenu();
 void EQAPP_MainMenu_Toggle()
 {
     g_mainMenuGUIMenu.ToggleOpen();
+
+    EQAPP_GUI_CloseAllMenusExcept(&g_mainMenuGUIMenu);
 }
 
 void EQAPP_MainMenu_Load()
@@ -91,6 +93,12 @@ void EQAPP_MainMenu_CreateMenu()
     g_mainMenuGUIMenuItemFreeCamera.SetFunctionLeftClick(&EQAPP_FreeCamera_Toggle);
     g_mainMenuGUIMenuItemFreeCamera.SetBoolPointer(g_freeCameraIsEnabled);
 
+    EQApp::GUIMenuItem g_mainMenuGUIMenuItemHotButtonKeys;
+    g_mainMenuGUIMenuItemHotButtonKeys.SetText("Hot Button Keys");
+    g_mainMenuGUIMenuItemHotButtonKeys.FitToText();
+    g_mainMenuGUIMenuItemHotButtonKeys.SetFunctionLeftClick(&EQAPP_HotButtonKeys_Toggle);
+    g_mainMenuGUIMenuItemHotButtonKeys.SetBoolPointer(g_hotButtonKeysIsEnabled);
+
     EQApp::GUIMenuItem g_mainMenuGUIMenuItemMap;
     g_mainMenuGUIMenuItemMap.SetText("Map");
     g_mainMenuGUIMenuItemMap.FitToText();
@@ -121,6 +129,24 @@ void EQAPP_MainMenu_CreateMenu()
     g_mainMenuGUIMenuItemTrainSpells.SetFunctionLeftClick(&EQAPP_TrainSpells_Toggle);
     g_mainMenuGUIMenuItemTrainSpells.SetBoolPointer(g_trainSpellsIsEnabled);
 
+    EQApp::GUIMenuItem g_mainMenuGUIMenuItemWallHack;
+    g_mainMenuGUIMenuItemWallHack.SetText("Wall Hack");
+    g_mainMenuGUIMenuItemWallHack.FitToText();
+    g_mainMenuGUIMenuItemWallHack.SetFunctionLeftClick(&EQAPP_WallHack_Toggle);
+    g_mainMenuGUIMenuItemWallHack.SetBoolPointer(g_wallHackIsEnabled);
+
+    EQApp::GUIMenuItem g_mainMenuGUIMenuItemDestroyActors;
+    g_mainMenuGUIMenuItemDestroyActors.SetText("Destroy Actors");
+    g_mainMenuGUIMenuItemDestroyActors.FitToText();
+    g_mainMenuGUIMenuItemDestroyActors.SetFunctionLeftClick(&EQAPP_DestroyActors_Toggle);
+    g_mainMenuGUIMenuItemDestroyActors.SetBoolPointer(g_destroyActorsIsEnabled);
+
+    EQApp::GUIMenuItem g_mainMenuGUIMenuItemDestroyActorsCreateActorExLog;
+    g_mainMenuGUIMenuItemDestroyActorsCreateActorExLog.SetText("Destroy Actors CreateActorEx Log");
+    g_mainMenuGUIMenuItemDestroyActorsCreateActorExLog.FitToText();
+    g_mainMenuGUIMenuItemDestroyActorsCreateActorExLog.SetFunctionLeftClick(&EQAPP_DestroyActors_CreateActorExLog_Toggle);
+    g_mainMenuGUIMenuItemDestroyActorsCreateActorExLog.SetBoolPointer(g_destroyActorsCreateActorExLogIsEnabled);
+
     EQApp::GUIMenuItem g_mainMenuGUIMenuItemPrintBankInventory;
     g_mainMenuGUIMenuItemPrintBankInventory.SetText("Print Bank Inventory");
     g_mainMenuGUIMenuItemPrintBankInventory.FitToText();
@@ -140,6 +166,11 @@ void EQAPP_MainMenu_CreateMenu()
     g_mainMenuGUIMenuItemLoadBazaarSearchItemNames.SetText("Load Bazaar Search Item Names");
     g_mainMenuGUIMenuItemLoadBazaarSearchItemNames.FitToText();
     g_mainMenuGUIMenuItemLoadBazaarSearchItemNames.SetFunctionLeftClick(&EQAPP_BazaarSearchWindow_LoadItemNames);
+
+    EQApp::GUIMenuItem g_mainMenuGUIMenuItemLoadDestroyActors;
+    g_mainMenuGUIMenuItemLoadDestroyActors.SetText("Load Destroy Actors");
+    g_mainMenuGUIMenuItemLoadDestroyActors.FitToText();
+    g_mainMenuGUIMenuItemLoadDestroyActors.SetFunctionLeftClick(&EQAPP_DestroyActors_LoadEx);
 
     EQApp::GUIMenuItem g_mainMenuGUIMenuItemLoadSpellSet;
     g_mainMenuGUIMenuItemLoadSpellSet.SetText("Load Default Spellset");
@@ -164,11 +195,18 @@ void EQAPP_MainMenu_CreateMenu()
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemExtendedTargets);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemFoodAndDrink);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemFreeCamera);
+    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemHotButtonKeys);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemMap);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemReplaceRaces);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemSpawnAlert);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemSpeedHack);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemTrainSpells);
+    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemWallHack);
+
+    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemSeparator);
+
+    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemDestroyActors);
+    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemDestroyActorsCreateActorExLog);
 
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemSeparator);
 
@@ -179,6 +217,7 @@ void EQAPP_MainMenu_CreateMenu()
 
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemLoadNamedSpawns);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemLoadBazaarSearchItemNames);
+    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemLoadDestroyActors);
 
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemSeparator);
 
