@@ -14,6 +14,16 @@ IDirect3DDevice8** EQ_CLASS_POINTER_IDirect3DDevice8_pptr = (IDirect3DDevice8**)
 
 uintptr_t* EQ_VTABLE_IDirect3DDevice8 = *(uintptr_t**)EQ_CLASS_POINTER_IDirect3DDevice8;
 
+#define EQ_VTABLE_INDEX_IDirect3DDevice8__Reset 14
+#define EQ_VTABLE_INDEX_IDirect3DDevice8__Present 15
+#define EQ_VTABLE_INDEX_IDirect3DDevice8__BeginScene 34
+#define EQ_VTABLE_INDEX_IDirect3DDevice8__EndScene 35
+#define EQ_VTABLE_INDEX_IDirect3DDevice8__Clear 36
+#define EQ_VTABLE_INDEX_IDirect3DDevice8__SetRenderState 50
+#define EQ_VTABLE_INDEX_IDirect3DDevice8__DrawPrimitive 70
+#define EQ_VTABLE_INDEX_IDirect3DDevice8__DrawIndexedPrimitive 71
+#define EQ_VTABLE_INDEX_IDirect3DDevice8__SetStreamSource 83
+
 #define EQ_ADDRESS_POINTER_EQGraphicsDLL__t3dSetCameraLocation 0x007F9AE4
 
 #define EQ_ADDRESS_POINTER_EQGraphicsDLL__t3dCreateActorEx 0x007F98B4
@@ -24,6 +34,9 @@ uint32_t EQ_ADDRESS_FUNCTION_EQGraphicsDLL__t3dRenderDeferredPolygons = NULL;
 
 #define EQ_GRAPHICS_DLL_OFFSET_EQGraphicsDLL__t3dRenderDeferred2DItems 0x6B7F0
 uint32_t EQ_ADDRESS_FUNCTION_EQGraphicsDLL__t3dRenderDeferred2DItems = NULL;
+
+#define EQ_GRAPHICS_DLL_OFFSET_EQGraphicsDLL__t3dSelectTexture 0x64CD0
+uint32_t EQ_ADDRESS_FUNCTION_EQGraphicsDLL__t3dSelectTexture = NULL;
 
 #define EQ_GRAPHICS_DLL_DEFERRED_2D_ITEMS_MAX 4000 // t3dDefer...
 
@@ -53,6 +66,14 @@ typedef HRESULT (APIENTRY* EQ_FUNCTION_TYPE_EQIDirect3DDevice8__DrawIndexedPrimi
     UINT PrimitiveCount
 );
 EQ_FUNCTION_TYPE_EQIDirect3DDevice8__DrawIndexedPrimitive EQIDirect3DDevice8__DrawIndexedPrimitive;
+
+// reset
+typedef HRESULT (APIENTRY* EQ_FUNCTION_TYPE_EQIDirect3DDevice8__Reset)
+(
+    LPDIRECT3DDEVICE8 Device,
+    D3DPRESENT_PARAMETERS* pPresentationParameters
+);
+EQ_FUNCTION_TYPE_EQIDirect3DDevice8__Reset EQIDirect3DDevice8__Reset;
 
 // create actor ex
 typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dCreateActorEx)(int a1, EQ::ActorDefinition_ptr a2, char* a3, int a4, int a5, int a6, float a7, float a8, int a9, int a10);
@@ -90,7 +111,12 @@ EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dRenderDeferredPolygons EQGraphicsDLL__t3dRend
 typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dRenderDeferred2DItems)(int a1);
 EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dRenderDeferred2DItems EQGraphicsDLL__t3dRenderDeferred2DItems;
 
+// select texture
+typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dSelectTexture)(EQ::Texture_ptr texture);
+EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dSelectTexture EQGraphicsDLL__t3dSelectTexture;
+
 uint32_t EQ_GraphicsDLL_GetBaseAddress();
+bool EQ_GraphicsDLL_IsShowFPSEnabled();
 void EQ_GraphicsDLL_SetShowFPS(bool bEnabled);
 void EQ_GraphicsDLL_SetUseTNL(bool bEnabled);
 void EQ_GraphicsDLL_SetUseUmbra(bool bEnabled);
@@ -99,6 +125,13 @@ bool EQ_GraphicsDLL_LoadFunctions();
 uint32_t EQ_GraphicsDLL_GetBaseAddress()
 {
     return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_GRAPHICS_DLL_POINTER_BASE);
+}
+
+bool EQ_GraphicsDLL_IsShowFPSEnabled()
+{
+    uint32_t baseAddress = EQ_GraphicsDLL_GetBaseAddress();
+
+    return (EQ_ReadMemory<uint32_t>(baseAddress + EQ_GRAPHICS_DLL_OFFSET_TOGGLE_FPS_BOOLEAN) == 1);
 }
 
 void EQ_GraphicsDLL_SetShowFPS(bool bEnabled)
@@ -142,9 +175,6 @@ void EQ_GraphicsDLL_SetUseUmbra(bool bEnabled)
 
 bool EQ_GraphicsDLL_LoadFunctions()
 {
-    EQ_GraphicsDLL_SetUseTNL(true);
-    EQ_GraphicsDLL_SetUseUmbra(true);
-
     HINSTANCE graphicsDLL = LoadLibraryA(EQ_STRING_GRAPHICS_DLL_NAME);
     if (graphicsDLL == NULL)
     {

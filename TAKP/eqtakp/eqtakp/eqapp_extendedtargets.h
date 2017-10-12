@@ -35,7 +35,7 @@ uint32_t g_extendedTargetsSpawnListTimerDelay = 1000;
 
 size_t g_extendedTargetsNumSpawns = 15;
 
-float g_extendedTargetsSpawnDistanceMax = 100.0f;
+float g_extendedTargetsSpawnDistanceMax = 201.0f;
 float g_extendedTargetsSpawnDistanceZMax = 10.0f;
 
 uint32_t g_extendedTargetsFontHeight = 1;
@@ -96,6 +96,7 @@ void EQAPP_ExtendedTargets_UpdateSpawnList()
     }
 
     g_extendedTargetsSpawnList.clear();
+    g_extendedTargetsSpawnList.reserve(100);
 
     auto playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)
@@ -104,6 +105,8 @@ void EQAPP_ExtendedTargets_UpdateSpawnList()
     }
 
     std::vector<std::pair<float, uint16_t>> spawnDistanceList; // float distance, uint16_t spawnID
+
+    spawnDistanceList.reserve(500);
 
     auto spawn = EQ_GetFirstSpawn();
     while (spawn != NULL)
@@ -126,7 +129,6 @@ void EQAPP_ExtendedTargets_UpdateSpawnList()
             spawn = spawn->Next;
             continue;
         }
-
 
         float spawnDistanceZ = std::fabsf(spawn->Z - playerSpawn->Z);
         if (spawn->Height < g_extendedTargetsSpawnDistanceZMax)

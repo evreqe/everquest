@@ -58,6 +58,8 @@ bool g_ESPShowSpawnRace = false;
 bool g_ESPShowSpawnStandingState = true;
 bool g_ESPShowSpawnWeapon = false;
 
+bool g_ESPShowActorIndex = false;
+
 float g_ESPSpawnDistanceMax = 400.0f;
 float g_ESPSpawnDistanceZMax = 10.0f;
 
@@ -83,6 +85,7 @@ void EQAPP_ESP_SpawnSkeletons_Toggle();
 void EQAPP_ESP_ShowSpawnID_Toggle();
 void EQAPP_ESP_ShowSpawnRace_Toggle();
 void EQAPP_ESP_ShowSpawnWeapon_Toggle();
+void EQAPP_ESP_ShowActorIndex_Toggle();
 void EQAPP_ESP_DrawLineBetweenBones(EQ::ModelBone_ptr bone1, EQ::ModelBone_ptr bone2, uint32_t lineColorARGB);
 void EQAPP_ESP_DrawSkeleton(EQ::ModelBone_ptr bone, uint32_t lineColorARGB);
 void EQAPP_ESP_DrawSkeletonForSpawn(EQ::Spawn_ptr spawn, uint32_t lineColorARGB);
@@ -147,6 +150,12 @@ void EQAPP_ESP_ShowSpawnWeapon_Toggle()
 {
     EQ_ToggleBool(g_ESPShowSpawnWeapon);
     EQAPP_PrintBool("ESP Show Spawn Weapon", g_ESPShowSpawnWeapon);
+}
+
+void EQAPP_ESP_ShowActorIndex_Toggle()
+{
+    EQ_ToggleBool(g_ESPShowActorIndex);
+    EQAPP_PrintBool("ESP Show Actor Index", g_ESPShowActorIndex);
 }
 
 void EQAPP_ESP_DrawLineBetweenBones(EQ::ModelBone_ptr bone1, EQ::ModelBone_ptr bone2, uint32_t lineColorARGB)
@@ -277,13 +286,14 @@ void EQAPP_ESP_UpdateSpawnList()
         return;
     }
 
-    g_ESPSpawnList.clear();
-
     auto playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)
     {
         return;
     }
+
+    g_ESPSpawnList.clear();
+    g_ESPSpawnList.reserve(1000);
 
     auto targetSpawn = EQ_GetTargetSpawn();
 
@@ -435,10 +445,15 @@ void EQAPP_ESP_UpdateSpawnList()
         espSpawn.TextColorARGB = EQ_COLOR_ARGB_WHITE;
         espSpawn.SkeletonLineColorARGB = 0xFF808080;
 
-        if (espSpawn.Type == EQ_SPAWN_TYPE_PLAYER || espSpawn.Type == EQ_SPAWN_TYPE_PLAYER_CORPSE || espSpawn.IsYourPet == true)
+        if (espSpawn.Type == EQ_SPAWN_TYPE_PLAYER || espSpawn.IsYourPet == true)
         {
             espSpawn.TextColorARGB = EQ_COLOR_ARGB_RED;
             espSpawn.SkeletonLineColorARGB = EQ_COLOR_ARGB_MAROON;
+        }
+        else if (espSpawn.Type == EQ_SPAWN_TYPE_PLAYER_CORPSE)
+        {
+            espSpawn.TextColorARGB = EQ_COLOR_ARGB_MAROON;
+            espSpawn.SkeletonLineColorARGB = EQ_COLOR_ARGB_BLACK;
         }
         else if (espSpawn.Type == EQ_SPAWN_TYPE_NPC)
         {
@@ -550,43 +565,6 @@ void EQAPP_ESP_UpdateSpawnList()
             espText << "\n*Following*";
         }
 
-        if (g_ESPShowSpawnWeapon == true)
-        {
-            if (espSpawn.IsHoldingPrimaryItem == true)
-            {
-                espText << "\n*Primary: ";
-
-                auto it = EQ_STRING_MAP_ITEM_TYPE_NAME.find(espSpawn.PrimaryItemType);
-                if (it == EQ_STRING_MAP_ITEM_TYPE_NAME.end())
-                {
-                    espText << espSpawn.PrimaryItemType;
-                }
-                else
-                {
-                    espText << it->second;
-                }
-
-                espText << "*";
-            }
-
-            if (espSpawn.IsHoldingSecondaryItem == true)
-            {
-                espText << "\n*Secondary: ";
-
-                auto it = EQ_STRING_MAP_ITEM_TYPE_NAME.find(espSpawn.SecondaryItemType);
-                if (it == EQ_STRING_MAP_ITEM_TYPE_NAME.end())
-                {
-                    espText << espSpawn.SecondaryItemType;
-                }
-                else
-                {
-                    espText << it->second;
-                }
-
-                espText << "*";
-            }
-        }
-
         if (espSpawn.IsNewSpawn == true)
         {
             espText << "\n*New Spawn*";
@@ -624,6 +602,43 @@ void EQAPP_ESP_UpdateSpawnList()
         if (g_ESPShowSpawnRace == true)
         {
             espText << "\n(Race: " << espSpawn.Race << ")";
+        }
+
+        if (g_ESPShowSpawnWeapon == true)
+        {
+            if (espSpawn.IsHoldingPrimaryItem == true)
+            {
+                espText << "\n(Primary: ";
+
+                auto it = EQ_STRING_MAP_ITEM_TYPE_NAME.find(espSpawn.PrimaryItemType);
+                if (it == EQ_STRING_MAP_ITEM_TYPE_NAME.end())
+                {
+                    espText << espSpawn.PrimaryItemType;
+                }
+                else
+                {
+                    espText << it->second;
+                }
+
+                espText << "*";
+            }
+
+            if (espSpawn.IsHoldingSecondaryItem == true)
+            {
+                espText << "\n(Secondary: ";
+
+                auto it = EQ_STRING_MAP_ITEM_TYPE_NAME.find(espSpawn.SecondaryItemType);
+                if (it == EQ_STRING_MAP_ITEM_TYPE_NAME.end())
+                {
+                    espText << espSpawn.SecondaryItemType;
+                }
+                else
+                {
+                    espText << it->second;
+                }
+
+                espText << ")";
+            }
         }
 
         if (g_spawnCastSpellIsEnabled == true && g_spawnCastSpellESPIsEnabled == true)
@@ -833,9 +848,9 @@ void EQAPP_ESP_DrawActorList(uint32_t offsetActorList)
         }
 
         EQ::Location actorLocation;
-        actorLocation.Y = actorInstance->WorldY;
-        actorLocation.X = actorInstance->WorldX;
-        actorLocation.Z = actorInstance->WorldZ;
+        actorLocation.Y = actorInstance->Y;
+        actorLocation.X = actorInstance->X;
+        actorLocation.Z = actorInstance->Z;
 
         uint32_t screenX = 0;
         uint32_t screenY = 0;
@@ -846,6 +861,11 @@ void EQAPP_ESP_DrawActorList(uint32_t offsetActorList)
 
         std::stringstream actorText;
         actorText << "& " << actorDef;
+
+        if (g_ESPShowActorIndex == true)
+        {
+            actorText << "\n(Index: " << actorInstance->Index << ")";
+        }
 
         EQ_DrawText(actorText.str().c_str(), screenX, screenY, EQ_COLOR_ARGB_WHITE);
     }

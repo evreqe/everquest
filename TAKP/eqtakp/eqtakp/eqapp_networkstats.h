@@ -65,6 +65,7 @@ void EQAPP_NetworkStats_Load()
     std::cout << "Loading Network Stats players..." << std::endl;
 
     g_networkStatsPlayerList.clear();
+    g_networkStatsPlayerList.reserve(100);
 
     EQAPP_ReadFileToList("networkstats.txt", g_networkStatsPlayerList);
 }
@@ -331,6 +332,7 @@ void EQAPP_NetworkStats_Execute()
     EQAPP_NetworkStats_Write();
 
     g_networkStatsList.clear();
+    g_networkStatsList.reserve(10);
 
     for (auto& spawnName : g_networkStatsPlayerList)
     {

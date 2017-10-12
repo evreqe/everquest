@@ -32,6 +32,8 @@ bool g_mapLayer1IsEnabled = false;
 bool g_mapLayer2IsEnabled = false;
 bool g_mapLayer3IsEnabled = false;
 
+bool g_map3DIsEnabled = false;
+
 std::vector<EQApp::MapLine> g_mapLineList;
 std::vector<EQApp::MapLabel> g_mapLabelList;
 
@@ -89,6 +91,7 @@ void EQAPP_Map_Lines_Toggle();
 void EQAPP_Map_Labels_Toggle();
 void EQAPP_Map_Spawns_Toggle();
 void EQAPP_Map_HeightFilter_Toggle();
+void EQAPP_Map_3D_Toggle();
 bool EQAPP_Map_Load();
 bool EQAPP_Map_LoadFile(const std::string& filename, uint32_t layer);
 void EQAPP_Map_RecalculateScreenCoordinates();
@@ -142,10 +145,19 @@ void EQAPP_Map_HeightFilter_Toggle()
     EQAPP_PrintBool("Map Height Filter", g_mapHeightFilterIsEnabled);
 }
 
+void EQAPP_Map_3D_Toggle()
+{
+    EQ_ToggleBool(g_map3DIsEnabled);
+    EQAPP_PrintBool("Map 3D", g_map3DIsEnabled);
+}
+
 bool EQAPP_Map_Load()
 {
     g_mapLineList.clear();
+    g_mapLineList.reserve(1000);
+
     g_mapLabelList.clear();
+    g_mapLabelList.reserve(100);
 
     std::string zoneShortName = EQ_POINTER_Zone.ShortName;
     if (zoneShortName.size() == 0)
@@ -570,7 +582,7 @@ void EQAPP_Map_Execute()
             spawnLocation.Y = spawn->Y;
             spawnLocation.Z = spawn->Z;
 
-            float spawnDistance = EQ_CalculateDistance(spawnLocation.X, spawnLocation.Y, playerLocation.X, playerLocation.Y);
+            ////float spawnDistance = EQ_CalculateDistance(spawnLocation.X, spawnLocation.Y, playerLocation.X, playerLocation.Y);
 
             float spawnDistanceZ = std::fabsf((float)spawnLocation.Z - (float)playerLocation.Z);
 
@@ -598,7 +610,8 @@ void EQAPP_Map_Execute()
                     }
                 }
 
-                if (spawnDistance > g_mapSpawnDistanceMax)
+                ////if (spawnDistance > g_mapSpawnDistanceMax)
+                if (EQ_IsWithinDistance(spawnLocation.X, spawnLocation.Y, playerLocation.X, playerLocation.Y, g_mapSpawnDistanceMax) == false)
                 {
                     spawn = spawn->Next;
                     continue;
@@ -829,5 +842,55 @@ void EQAPP_Map_Execute()
     EQ_DrawLineEx(&mapArrowLineC, g_mapArrowColorARGB);
 }
 
+void EQAPP_Map_3D_Execute()
+{
+    g_mapNumLinesDrawn = 0;
+
+    for (auto& mapLine : g_mapLineList)
+    {
+        if (g_mapNumLinesDrawn > g_mapNumLinesMax)
+        {
+            break;
+        }
+
+        EQ::Location location1;
+        location1.Y = -mapLine.Line.Y1;
+        location1.X = -mapLine.Line.X1;
+        location1.Z = mapLine.Line.Z1;
+
+        float screenX1 = 0.0f;
+        float screenY1 = 0.0f;
+        if (EQ_WorldSpaceToScreenSpaceFloat(location1, screenX1, screenY1) == false)
+        {
+            continue;
+        }
+
+        EQ::Location location2;
+        location2.Y = -mapLine.Line.Y2;
+        location2.X = -mapLine.Line.X2;
+        location2.Z = mapLine.Line.Z2;
+
+        float screenX2 = 0.0f;
+        float screenY2 = 0.0f;
+        if (EQ_WorldSpaceToScreenSpaceFloat(location2, screenX2, screenY2) == false)
+        {
+            continue;
+        }
+
+        EQ::Line line;
+
+        line.X1 = screenX1;
+        line.Y1 = screenY1;
+        line.Z1 = 0.0f;
+
+        line.X2 = screenX2;
+        line.Y2 = screenY2;
+        line.Z2 = 0.0f;
+
+        EQ_DrawLineEx(&line, mapLine.Color.RGB);
+
+        g_mapNumLinesDrawn++;
+    }
+}
 
 

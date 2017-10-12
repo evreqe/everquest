@@ -98,6 +98,15 @@ void EQAPP_FreeCamera_Execute()
         return;
     }
 
+    if (EQAPP_IsKeyDown(VK_CONTROL) == true)
+    {
+        g_freeCameraMultiplier = 4.0f;
+    }
+    else
+    {
+        g_freeCameraMultiplier = 1.0f;
+    }
+
     if (EQAPP_IsKeyDown(VK_UP) == true)
     {
         float cameraY = camera->Y;

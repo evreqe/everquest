@@ -21,14 +21,19 @@ std::map<std::string, std::function<void()>> g_interpretCmdList =
     {"//Collision",                        &EQAPP_CollisionHack_Toggle},
     {"//CollisionDebug",                   &EQAPP_CollisionHack_Debug_Toggle},
     {"//DestroyActors",                    &EQAPP_DestroyActors_Toggle},
-    {"//LoadDestroyActors",                &EQAPP_DestroyActors_LoadEx},
+    {"//LoadDestroyActors",                &EQAPP_DestroyActors_Load},
     {"//DestroyActorsCreateActorExLog",    &EQAPP_DestroyActors_CreateActorExLog_Toggle},
     {"//DrawDistance",                     &EQAPP_DrawDistance_Toggle},
     {"//ESP",                              &EQAPP_ESP_Toggle},
+    {"//ESPSpawns",                        &EQAPP_ESP_Spawns_Toggle},
     {"//ESPSpawnSkeletons",                &EQAPP_ESP_SpawnSkeletons_Toggle},
+    {"//ESPGroundSpawns",                  &EQAPP_ESP_GroundSpawns_Toggle},
+    {"//ESPDoorSpawns",                    &EQAPP_ESP_DoorSpawns_Toggle},
+    {"//ESPActors",                        &EQAPP_ESP_Actors_Toggle},
     {"//ESPShowSpawnID",                   &EQAPP_ESP_ShowSpawnID_Toggle},
     {"//ESPShowSpawnRace",                 &EQAPP_ESP_ShowSpawnRace_Toggle},
     {"//ESPShowSpawnWeapon",               &EQAPP_ESP_ShowSpawnWeapon_Toggle},
+    {"//ESPShowActorIndex",                &EQAPP_ESP_ShowActorIndex_Toggle},
     {"//ExtendedTargets",                  &EQAPP_ExtendedTargets_Toggle},
     {"//FoodAndDrink",                     &EQAPP_FoodAndDrink_Toggle},
     {"//FreeCamera",                       &EQAPP_FreeCamera_Toggle},
@@ -45,6 +50,8 @@ std::map<std::string, std::function<void()>> g_interpretCmdList =
     {"//MapLines",                         &EQAPP_Map_Lines_Toggle},
     {"//MapLabels",                        &EQAPP_Map_Labels_Toggle},
     {"//MapSpawns",                        &EQAPP_Map_Spawns_Toggle},
+    {"//MapHeightFilter",                  &EQAPP_Map_HeightFilter_Toggle},
+    {"//Map3D",                            &EQAPP_Map_3D_Toggle},
     {"//LoadMap",                          &EQAPP_Map_Load},
     {"//MaxSkills",                        &EQAPP_MaxSkills_Toggle},
     {"//MerchantWindow",                   &EQAPP_MerchantWindow_Toggle},
@@ -66,6 +73,8 @@ std::map<std::string, std::function<void()>> g_interpretCmdList =
     {"//SpeedRun3",                        &EQAPP_SpeedHack_SetSpeedRun3},
     {"//SpeedSOW",                         &EQAPP_SpeedHack_SetSpeedSpiritOfWolf},
     {"//SpeedFast",                        &EQAPP_SpeedHack_SetSpeedFast},
+    {"//SpellEffectTest",                  &EQAPP_SpellEffectTest_Toggle},
+    {"//TargetRing",                       &EQAPP_TargetRing_Toggle},
     {"//TargetPlayer",                     &EQAPP_TargetNearestPlayer},
     {"//TargetNPC",                        &EQAPP_TargetNearestNPC},
     {"//TargetPlayerPet",                  &EQAPP_TargetNearestPlayerPet},
@@ -76,6 +85,7 @@ std::map<std::string, std::function<void()>> g_interpretCmdList =
     {"//TargetNPCCorpse",                  &EQAPP_TargetNearestNPCCorpse},
     {"//TrainSpells",                      &EQAPP_TrainSpells_Toggle},
     {"//TrainSpellsDebug",                 &EQAPP_TrainSpells_Debug_Toggle},
+    {"//Tree",                             &EQAPP_TreeHack_Toggle},
     {"//UseSkills",                        &EQAPP_UseSkills_Toggle},
     {"//UseSkillsRoundKick",               &EQAPP_UseSkills_RoundKick_Toggle},
     {"//UseSkillsBackstab",                &EQAPP_UseSkills_Backstab_Toggle},
@@ -86,7 +96,8 @@ std::map<std::string, std::function<void()>> g_interpretCmdList =
     {"//UseSkillsSenseHeading",            &EQAPP_UseSkills_SenseHeading_Toggle},
     {"//UseSkillsSlam",                    &EQAPP_UseSkills_Slam_Toggle},
     {"//UseSkillsTaunt",                   &EQAPP_UseSkills_Taunt_Toggle},
-    {"//WallHack",                         &EQAPP_WallHack_Toggle},
+    {"//Wall",                             &EQAPP_WallHack_Toggle},
+    {"//Water",                            &EQAPP_WaterHack_Toggle},
     {"//WriteInventory",                   &EQAPP_WriteInventoryToFile},
 
     {"//BoxChatConnect",                   &EQAPP_BoxChat_Connect},
@@ -214,8 +225,36 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
                 EQ_CLASS_POINTER_CDisplay->SpurtBloodOnDag(rootBone);
             }
 
-            //auto player = (EQClass::EQPlayer*)playerSpawn;
-            //EQ_CLASS_POINTER_CDisplay->UpdateItemSlot(player, 0, "0", true);
+            auto player = (EQClass::EQPlayer*)playerSpawn;
+
+            EQ_CLASS_POINTER_CDisplay->UpdateItemSlot(player, EQ_UPDATE_ITEM_SLOT_HEAD, "IT250", true);
+            EQ_CLASS_POINTER_CDisplay->UpdateItemSlot(player, EQ_UPDATE_ITEM_SLOT_PRIMARY, "IT250", true);
+            EQ_CLASS_POINTER_CDisplay->UpdateItemSlot(player, EQ_UPDATE_ITEM_SLOT_SECONDARY, "IT250", true);
+        }
+
+        return true;
+    }
+
+    if (commandText == "//TestSpellEffects")
+    {
+        auto playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn != NULL)
+        {
+            auto player = (EQClass::EQPlayer*)playerSpawn;
+
+            for (uint16_t i = 0; i < EQ_NUM_SPELLS; i++)
+            {
+                auto spell = EQ_GetSpellByID(i);
+                if (spell != NULL)
+                {
+                    EQ::Location location;
+                    location.Y = playerSpawn->Y;
+                    location.X = playerSpawn->X;
+                    location.Z = playerSpawn->Z;
+
+                    EQ_DoSpellEffect(2, spell, player, player, &location, NULL, 0);
+                }
+            }
         }
 
         return true;
@@ -405,6 +444,225 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
         }
 
         EQAPP_SpellSet_Save(spellSetName);
+
+        return true;
+    }
+
+    if (EQAPP_String_StartsWith(commandText, "//DestroyActor ") == true)
+    {
+        if (EQAPP_InterpretCmd_HasQuotes(commandText) == false)
+        {
+            return true;
+        }
+
+        std::string indexStr = EQAPP_String_GetBetween(commandText, "\"", "\"");
+        if (indexStr.size() == 0)
+        {
+            std::cout << "InterpretCmd Error: Actor index not found." << std::endl;
+            return true;
+        }
+
+        uint32_t index = std::stoi(indexStr);
+
+        EQAPP_DestroyActors_DestroyByIndex(EQ_GRAPHICS_DLL_OFFSET_ACTOR_LIST_STATIC, index);
+        EQAPP_DestroyActors_DestroyByIndex(EQ_GRAPHICS_DLL_OFFSET_ACTOR_LIST_DYNAMIC, index);
+
+        return true;
+    }
+
+    if (EQAPP_String_StartsWith(commandText, "//UpdateItemSlotPrimary ") == true)
+    {
+        if (EQAPP_InterpretCmd_HasQuotes(commandText) == false)
+        {
+            return true;
+        }
+
+        std::string itemDef = EQAPP_String_GetBetween(commandText, "\"", "\"");
+        if (itemDef.size() == 0)
+        {
+            std::cout << "InterpretCmd Error: Item definition not found." << std::endl;
+            return true;
+        }
+
+        auto playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn == NULL)
+        {
+            return true;
+        }
+
+        auto player = (EQClass::EQPlayer*)playerSpawn;
+
+        EQ_CLASS_POINTER_CDisplay->UpdateItemSlot(player, EQ_UPDATE_ITEM_SLOT_PRIMARY, (char*)itemDef.c_str(), true);
+
+        return true;
+    }
+
+    if (EQAPP_String_StartsWith(commandText, "//UpdateItemSlotSecondary ") == true)
+    {
+        if (EQAPP_InterpretCmd_HasQuotes(commandText) == false)
+        {
+            return true;
+        }
+
+        std::string itemDef = EQAPP_String_GetBetween(commandText, "\"", "\"");
+        if (itemDef.size() == 0)
+        {
+            std::cout << "InterpretCmd Error: Item definition not found." << std::endl;
+            return true;
+        }
+
+        auto playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn == NULL)
+        {
+            return true;
+        }
+
+        auto player = (EQClass::EQPlayer*)playerSpawn;
+
+        EQ_CLASS_POINTER_CDisplay->UpdateItemSlot(player, EQ_UPDATE_ITEM_SLOT_SECONDARY, (char*)itemDef.c_str(), true);
+
+        return true;
+    }
+
+    if (EQAPP_String_StartsWith(commandText, "//UpdateItemSlotHead ") == true)
+    {
+        if (EQAPP_InterpretCmd_HasQuotes(commandText) == false)
+        {
+            return true;
+        }
+
+        std::string itemDef = EQAPP_String_GetBetween(commandText, "\"", "\"");
+        if (itemDef.size() == 0)
+        {
+            std::cout << "InterpretCmd Error: Item definition not found." << std::endl;
+            return true;
+        }
+
+        auto playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn == NULL)
+        {
+            return true;
+        }
+
+        auto player = (EQClass::EQPlayer*)playerSpawn;
+
+        EQ_CLASS_POINTER_CDisplay->UpdateItemSlot(player, EQ_UPDATE_ITEM_SLOT_HEAD, (char*)itemDef.c_str(), true);
+
+        return true;
+    }
+
+    if (EQAPP_String_StartsWith(commandText, "//EncryptString ") == true)
+    {
+        if (EQAPP_InterpretCmd_HasQuotes(commandText) == false)
+        {
+            return true;
+        }
+
+        std::string str = EQAPP_String_GetBetween(commandText, "\"", "\"");
+        if (str.size() == 0)
+        {
+            std::cout << "InterpretCmd Error: String not found." << std::endl;
+            return true;
+        }
+
+        std::string result = EQ_EncryptDecryptString(str);
+
+        EQ_CopyStringToClipboard(result);
+
+        std::cout << "Encrypt String: " << str << std::endl;
+        std::cout << "Result: " << result << std::endl;
+
+        return true;
+    }
+
+    if (EQAPP_String_StartsWith(commandText, "//DoSpellEffect ") == true)
+    {
+        if (EQAPP_InterpretCmd_HasQuotes(commandText) == false)
+        {
+            return true;
+        }
+
+        std::string str = EQAPP_String_GetBetween(commandText, "\"", "\"");
+        if (str.size() == 0)
+        {
+            std::cout << "InterpretCmd Error: String not found." << std::endl;
+            return true;
+        }
+
+        uint16_t spellID = std::stoi(str);
+
+        auto playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn != NULL)
+        {
+            auto spell = EQ_GetSpellByID(spellID);
+            if (spell != NULL)
+            {
+                EQ::Location location;
+                location.Y = playerSpawn->Y;
+                location.X = playerSpawn->X;
+                location.Z = playerSpawn->Z;
+
+                auto player = (EQClass::EQPlayer*)playerSpawn;
+
+                EQ_DoSpellEffect(2, spell, player, player, &location, NULL, 0);
+            }
+        }
+
+        return true;
+    }
+
+    if (commandText == "//DoSpellEffect")
+    {
+        uint16_t spellID = EQAPP_GetRandomNumber(0, EQ_NUM_SPELLS - 1);
+
+        auto playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn != NULL)
+        {
+            auto spell = EQ_GetSpellByID(spellID);
+            if (spell != NULL)
+            {
+                std::cout << "DoSpellEffect: " << spell->Name << " (" << spell->ID << ")" << std::endl;
+
+                EQ::Location location;
+                location.Y = playerSpawn->Y;
+                location.X = playerSpawn->X;
+                location.Z = playerSpawn->Z;
+
+                auto player = (EQClass::EQPlayer*)playerSpawn;
+
+                EQ_DoSpellEffect(2, spell, player, player, &location, NULL, 0);
+            }
+        }
+
+        return true;
+    }
+
+    if (commandText == "//Levitate" || commandText == "//LevitateOn")
+    {
+        EQ_CLASS_POINTER_PlayerSpawn->SetNoGrav(EQ_GRAVITY_LEVITATING);
+
+        return true;
+    }
+
+    if (commandText == "//Fly" || commandText == "//FlyOn")
+    {
+        EQ_CLASS_POINTER_PlayerSpawn->SetNoGrav(EQ_GRAVITY_NONE);
+
+        return true;
+    }
+
+    if (commandText == "//LevitateOff" || commandText == "//FlyOff")
+    {
+        EQ_CLASS_POINTER_PlayerSpawn->SetNoGrav(EQ_GRAVITY_DEFAULT);
+
+        return true;
+    }
+
+    if (commandText == "//ShowFPS")
+    {
+        bool bEnabled = EQ_GraphicsDLL_IsShowFPSEnabled();
+
+        EQ_GraphicsDLL_SetShowFPS(!bEnabled);
 
         return true;
     }

@@ -122,6 +122,8 @@
       <MultiProcessorCompilation>
       </MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <LanguageStandard>
+      </LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -129,9 +131,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>D:\Code\!libraries\detours;D:\Code\!libraries\directx8sdk\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <IgnoreSpecificDefaultLibraries>
-      </IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -172,6 +174,7 @@
     <ClInclude Include="eqapp_detours.h" />
     <ClInclude Include="eqapp_dotarget.h" />
     <ClInclude Include="eqapp_drawdistance.h" />
+    <ClInclude Include="eqapp_drm.h" />
     <ClInclude Include="eqapp_enteringzone.h" />
     <ClInclude Include="eqapp_esp.h" />
     <ClInclude Include="eqapp_espmenu.h" />
@@ -203,20 +206,25 @@
     <ClInclude Include="eqapp_namespritetint.h" />
     <ClInclude Include="eqapp_networkstats.h" />
     <ClInclude Include="eqapp_neverfrozen.h" />
+    <ClInclude Include="eqapp_othermenu.h" />
     <ClInclude Include="eqapp_replaceraces.h" />
     <ClInclude Include="eqapp_skillsmenu.h" />
     <ClInclude Include="eqapp_spawnalert.h" />
     <ClInclude Include="eqapp_spawncastspell.h" />
     <ClInclude Include="eqapp_speedhack.h" />
     <ClInclude Include="eqapp_spellbookwindow.h" />
+    <ClInclude Include="eqapp_spelleffecttest.h" />
     <ClInclude Include="eqapp_spellset.h" />
     <ClInclude Include="eqapp_autostand.h" />
     <ClInclude Include="eqapp_maxskills.h" />
     <ClInclude Include="eqapp_startcasting.h" />
+    <ClInclude Include="eqapp_targetring.h" />
     <ClInclude Include="eqapp_toggleview.h" />
     <ClInclude Include="eqapp_trainspells.h" />
+    <ClInclude Include="eqapp_treehack.h" />
     <ClInclude Include="eqapp_useskills.h" />
     <ClInclude Include="eqapp_wallhack.h" />
+    <ClInclude Include="eqapp_waterhack.h" />
     <ClInclude Include="eq_classes.h" />
     <ClInclude Include="eq_functions.h" />
     <ClInclude Include="eq_graphicsdll.h" />

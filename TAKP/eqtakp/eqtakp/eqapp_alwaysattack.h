@@ -13,11 +13,6 @@ void EQAPP_AlwaysAttack_Toggle()
 
 void EQAPP_AlwaysAttack_Execute()
 {
-    if (g_alwaysAttackIsEnabled == false)
-    {
-        return;
-    }
-
     auto playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)
     {

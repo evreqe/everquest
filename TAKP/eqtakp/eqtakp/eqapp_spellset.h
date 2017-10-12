@@ -52,6 +52,7 @@ void EQAPP_SpellSet_Load(const std::string& spellSetName)
     EQAPP_SpellSet_StopMemorizing();
 
     g_spellSetList.clear();
+    g_spellSetList.reserve(10);
 
     std::stringstream filePath;
     filePath << g_applicationName << "/spellsets/" << spawnName << "_" << spellSetName << ".ini";

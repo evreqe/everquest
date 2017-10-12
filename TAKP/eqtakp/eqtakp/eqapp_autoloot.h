@@ -24,6 +24,7 @@ void EQAPP_AutoLoot_Load()
     std::cout << "Loading Auto Loot..." << std::endl;
 
     g_autoLootList.clear();
+    g_autoLootList.reserve(100);
 
     EQAPP_ReadFileToList("autoloot.txt", g_autoLootList);
 }

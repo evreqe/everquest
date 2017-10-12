@@ -123,64 +123,17 @@ void EQAPP_MainMenu_CreateMenu()
     g_mainMenuGUIMenuItemSpeedHack.SetFunctionLeftClick(&EQAPP_SpeedHack_Toggle);
     g_mainMenuGUIMenuItemSpeedHack.SetBoolPointer(g_speedHackIsEnabled);
 
+    EQApp::GUIMenuItem g_mainMenuGUIMenuItemTargetRing;
+    g_mainMenuGUIMenuItemTargetRing.SetText("Target Ring");
+    g_mainMenuGUIMenuItemTargetRing.FitToText();
+    g_mainMenuGUIMenuItemTargetRing.SetFunctionLeftClick(&EQAPP_TargetRing_Toggle);
+    g_mainMenuGUIMenuItemTargetRing.SetBoolPointer(g_targetRingIsEnabled);
+
     EQApp::GUIMenuItem g_mainMenuGUIMenuItemTrainSpells;
     g_mainMenuGUIMenuItemTrainSpells.SetText("Train Spells");
     g_mainMenuGUIMenuItemTrainSpells.FitToText();
     g_mainMenuGUIMenuItemTrainSpells.SetFunctionLeftClick(&EQAPP_TrainSpells_Toggle);
     g_mainMenuGUIMenuItemTrainSpells.SetBoolPointer(g_trainSpellsIsEnabled);
-
-    EQApp::GUIMenuItem g_mainMenuGUIMenuItemWallHack;
-    g_mainMenuGUIMenuItemWallHack.SetText("Wall Hack");
-    g_mainMenuGUIMenuItemWallHack.FitToText();
-    g_mainMenuGUIMenuItemWallHack.SetFunctionLeftClick(&EQAPP_WallHack_Toggle);
-    g_mainMenuGUIMenuItemWallHack.SetBoolPointer(g_wallHackIsEnabled);
-
-    EQApp::GUIMenuItem g_mainMenuGUIMenuItemDestroyActors;
-    g_mainMenuGUIMenuItemDestroyActors.SetText("Destroy Actors");
-    g_mainMenuGUIMenuItemDestroyActors.FitToText();
-    g_mainMenuGUIMenuItemDestroyActors.SetFunctionLeftClick(&EQAPP_DestroyActors_Toggle);
-    g_mainMenuGUIMenuItemDestroyActors.SetBoolPointer(g_destroyActorsIsEnabled);
-
-    EQApp::GUIMenuItem g_mainMenuGUIMenuItemDestroyActorsCreateActorExLog;
-    g_mainMenuGUIMenuItemDestroyActorsCreateActorExLog.SetText("Destroy Actors CreateActorEx Log");
-    g_mainMenuGUIMenuItemDestroyActorsCreateActorExLog.FitToText();
-    g_mainMenuGUIMenuItemDestroyActorsCreateActorExLog.SetFunctionLeftClick(&EQAPP_DestroyActors_CreateActorExLog_Toggle);
-    g_mainMenuGUIMenuItemDestroyActorsCreateActorExLog.SetBoolPointer(g_destroyActorsCreateActorExLogIsEnabled);
-
-    EQApp::GUIMenuItem g_mainMenuGUIMenuItemPrintBankInventory;
-    g_mainMenuGUIMenuItemPrintBankInventory.SetText("Print Bank Inventory");
-    g_mainMenuGUIMenuItemPrintBankInventory.FitToText();
-    g_mainMenuGUIMenuItemPrintBankInventory.SetFunctionLeftClick(&EQAPP_PrintBankInventory);
-
-    EQApp::GUIMenuItem g_mainMenuGUIMenuItemWriteInventoryToFile;
-    g_mainMenuGUIMenuItemWriteInventoryToFile.SetText("Write Inventory to File");
-    g_mainMenuGUIMenuItemWriteInventoryToFile.FitToText();
-    g_mainMenuGUIMenuItemWriteInventoryToFile.SetFunctionLeftClick(&EQAPP_WriteInventoryToFile);
-
-    EQApp::GUIMenuItem g_mainMenuGUIMenuItemLoadNamedSpawns;
-    g_mainMenuGUIMenuItemLoadNamedSpawns.SetText("Load Named Spawns");
-    g_mainMenuGUIMenuItemLoadNamedSpawns.FitToText();
-    g_mainMenuGUIMenuItemLoadNamedSpawns.SetFunctionLeftClick(&EQAPP_NamedSpawns_Load);
-
-    EQApp::GUIMenuItem g_mainMenuGUIMenuItemLoadBazaarSearchItemNames;
-    g_mainMenuGUIMenuItemLoadBazaarSearchItemNames.SetText("Load Bazaar Search Item Names");
-    g_mainMenuGUIMenuItemLoadBazaarSearchItemNames.FitToText();
-    g_mainMenuGUIMenuItemLoadBazaarSearchItemNames.SetFunctionLeftClick(&EQAPP_BazaarSearchWindow_LoadItemNames);
-
-    EQApp::GUIMenuItem g_mainMenuGUIMenuItemLoadDestroyActors;
-    g_mainMenuGUIMenuItemLoadDestroyActors.SetText("Load Destroy Actors");
-    g_mainMenuGUIMenuItemLoadDestroyActors.FitToText();
-    g_mainMenuGUIMenuItemLoadDestroyActors.SetFunctionLeftClick(&EQAPP_DestroyActors_LoadEx);
-
-    EQApp::GUIMenuItem g_mainMenuGUIMenuItemLoadSpellSet;
-    g_mainMenuGUIMenuItemLoadSpellSet.SetText("Load Default Spellset");
-    g_mainMenuGUIMenuItemLoadSpellSet.FitToText();
-    g_mainMenuGUIMenuItemLoadSpellSet.SetFunctionLeftClick(&EQAPP_SpellSet_Load_Default);
-
-    EQApp::GUIMenuItem g_mainMenuGUIMenuItemSaveSpellSet;
-    g_mainMenuGUIMenuItemSaveSpellSet.SetText("Save Default Spellset");
-    g_mainMenuGUIMenuItemSaveSpellSet.FitToText();
-    g_mainMenuGUIMenuItemSaveSpellSet.SetFunctionLeftClick(&EQAPP_SpellSet_Save_Default);
 
     EQApp::GUIMenuItem g_mainMenuGUIMenuItemUnload;
     g_mainMenuGUIMenuItemUnload.SetText("Unload");
@@ -200,29 +153,8 @@ void EQAPP_MainMenu_CreateMenu()
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemReplaceRaces);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemSpawnAlert);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemSpeedHack);
+    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemTargetRing);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemTrainSpells);
-    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemWallHack);
-
-    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemSeparator);
-
-    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemDestroyActors);
-    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemDestroyActorsCreateActorExLog);
-
-    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemSeparator);
-
-    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemPrintBankInventory);
-    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemWriteInventoryToFile);
-
-    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemSeparator);
-
-    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemLoadNamedSpawns);
-    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemLoadBazaarSearchItemNames);
-    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemLoadDestroyActors);
-
-    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemSeparator);
-
-    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemLoadSpellSet);
-    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemSaveSpellSet);
 
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemSeparator);
 

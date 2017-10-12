@@ -60,9 +60,9 @@ void EQAPP_CollisionHack_HandleEvent_CollisionCallbackForMove(EQ::ActorInstance_
     {
         std::cout << "Collision Hack Debug:" << std::endl;
         std::cout << "Name: " << actorInstance->ActorDefinition->Name << std::endl;
-        std::cout << "Y: " << actorInstance->WorldY << std::endl;
-        std::cout << "X: " << actorInstance->WorldX << std::endl;
-        std::cout << "Z: " << actorInstance->WorldZ << std::endl;
+        std::cout << "Y: " << actorInstance->Y << std::endl;
+        std::cout << "X: " << actorInstance->X << std::endl;
+        std::cout << "Z: " << actorInstance->Z << std::endl;
         std::cout << "Region Number: " << actorInstance->RegionNumber << std::endl;
         std::cout << "Bounding Radius: " << actorInstance->BoundingRadius << std::endl;
         std::cout << "Scale Factor: " << actorInstance->ScaleFactor << std::endl;

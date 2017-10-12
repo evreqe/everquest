@@ -38,6 +38,7 @@ void EQAPP_NamedSpawns_Load()
     }
 
     g_namedSpawnsList.clear();
+    g_namedSpawnsList.reserve(100);
 
     EQAPP_ReadFileToList("namedspawns.txt", g_namedSpawnsList);
 

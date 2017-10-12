@@ -14,6 +14,7 @@ void EQAPP_BazaarSearchWindow_LoadItemNames()
     std::cout << "Loading Bazaar Search Item Names..." << std::endl;
 
     g_bazaarSearchWindowItemNamesList.clear();
+    g_bazaarSearchWindowItemNamesList.reserve(100);
 
     EQAPP_ReadFileToList("bazaarsearchitemnames.txt", g_bazaarSearchWindowItemNamesList);
 }
@@ -35,7 +36,17 @@ void EQAPP_BazaarSearchWindow_HandleEvent_CListWnd__SetItemText(void* this_ptr, 
         return;
     }
 
+    if (EQ_POINTER_CBazaarSearchWnd->SearchListWnd == NULL)
+    {
+        return;
+    }
+
     if ((EQ::CListWnd_ptr)this_ptr != EQ_POINTER_CBazaarSearchWnd->SearchListWnd)
+    {
+        return;
+    }
+
+    if (text == NULL)
     {
         return;
     }

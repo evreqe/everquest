@@ -30,9 +30,35 @@ void EQAPP_ReplaceRaces_Execute()
     auto spawn = EQ_GetFirstSpawn();
     while (spawn != NULL)
     {
+        if (spawn->Race == EQ_RACE_INVISIBLE_MAN)
+        {
+            EQ::ChangeForm changeForm;
+
+            changeForm.SpawnID = spawn->SpawnID;
+            changeForm.Race = EQ_RACE_HUMAN;
+            changeForm.Texture = 255;
+            changeForm.HelmetTexture = 0;
+            changeForm.Unknown07 = 255;
+            changeForm.Face = 0;
+            changeForm.HairType = 255;
+            changeForm.HairColor = 255;
+            changeForm.BeardType = 255;
+            changeForm.BeardColor = 255;
+            changeForm.Size = 5;
+            changeForm.Unknown10 = -1;
+
+            auto player = (EQClass::EQPlayer*)spawn;
+
+            player->do_change_form(&changeForm);
+
+            if (spawn->PetOwnerSpawnID != 0)
+            {
+                EQ_CLASS_POINTER_CDisplay->UpdateItemSlot(player, EQ_UPDATE_ITEM_SLOT_HEAD, "IT629", true);
+            }
+        }
+
         if
         (
-            spawn->Race == EQ_RACE_INVISIBLE_MAN   ||
             spawn->Race == EQ_RACE_IKSAR_SKELETON  ||
             spawn->Race == EQ_RACE_SKELETON        ||
             spawn->Race == EQ_RACE_SARNAK_SKELETON ||

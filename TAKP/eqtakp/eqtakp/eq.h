@@ -6,6 +6,7 @@
 
 #define EQ_ADDRESS_IS_IN_GAME 0x00798550 // uint8_t
 #define EQ_ADDRESS_IS_AUTO_ATTACK_ENABLED 0x007F6FFE // uint8_t
+#define EQ_ADDRESS_IS_AUTO_RUN_ENABLED 0x00798600 // uint32_t ; when you press NUMLOCK to automatically run forwards
 #define EQ_ADDRESS_IS_NET_STATUS_ENABLED 0x007985EC // uint8_t
 #define EQ_ADDRESS_IS_NOT_TYPING_IN_CHAT 0x0079856C // uint8_t
 #define EQ_ADDRESS_IS_INSPECT_ENABLED 0x007CF28C // uint8_t ; /inspect on/off ; /toggleinspect
@@ -278,6 +279,10 @@
 #define EQ_LEVITATION_STATE_FALSE 0x00
 #define EQ_LEVITATION_STATE_TRUE  0x02
 #define EQ_LEVITATION_STATE_NPC   0x03
+
+#define EQ_GRAVITY_DEFAULT    0
+#define EQ_GRAVITY_NONE       1
+#define EQ_GRAVITY_LEVITATING 2
 
 #define EQ_ANONYMOUS_STATE_FALSE    0x00
 #define EQ_ANONYMOUS_STATE_TRUE     0x01
@@ -794,6 +799,8 @@
 #define VK_ALT VK_MENU
 #define VK_LALT VK_LMENU
 #define VK_RALT VK_RMENU
+#define VK_PAGEUP VK_PRIOR
+#define VK_PAGEDOWN VK_NEXT
 #define VK_0 0x30
 #define VK_1 0x31
 #define VK_2 0x32
@@ -1024,9 +1031,10 @@
 #define EQ_ZONE_TYPE_ANY      0xFF
 
 // CDisplay::UpdateItemSlot()
-#define EQ_ITEM_SLOT_HEAD      0
-#define EQ_ITEM_SLOT_PRIMARY   7
-#define EQ_ITEM_SLOT_SECONDARY 8
+// value chooses which Dag (bone) to attach the model to
+#define EQ_UPDATE_ITEM_SLOT_HEAD      0
+#define EQ_UPDATE_ITEM_SLOT_PRIMARY   7
+#define EQ_UPDATE_ITEM_SLOT_SECONDARY 8
 
 // equipment
 #define EQ_INVENTORY_SLOT_EAR_LEFT    0

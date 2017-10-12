@@ -23,6 +23,7 @@ void EQ_Log(const char* text, T number);
 void EQ_ToggleBool(bool& b);
 float EQ_CalculateDistance(float x1, float y1, float x2, float y2);
 float EQ_CalculateDistance3D(float x1, float y1, float z1, float x2, float y2, float z2);
+bool EQ_IsWithinDistance(float x1, float y1, float x2, float y2, float distance);
 void EQ_Rotate2D(float cx, float cy, float& x, float& y, float angle);
 float EQ_GetRadians(float degrees);
 bool EQ_IsPointInsideRectangle(int pointX, int pointY, int rectX, int rectY, int rectWidth, int rectHeight);
@@ -32,6 +33,7 @@ void EQ_CXStr_Set(EQ::CXStr** cxstr, const char* text);
 void EQ_CXStr_Append(EQ::CXStr** cxstr, const char* text);
 bool EQ_IsInGame();
 bool EQ_IsAutoAttackEnabled();
+bool EQ_IsAutoRunEnabled();
 bool EQ_IsNetStatusEnabled();
 bool EQ_IsRunEnabled();
 bool EQ_IsNotTypingInChat();
@@ -44,6 +46,7 @@ bool EQ_IsKeyPressedAlt();
 bool EQ_IsKeyPressedShift();
 bool EQ_IsMouseHoveringOverCXWnd();
 void EQ_SetAutoAttack(bool bEnabled);
+void EQ_SetAutoRun(bool bEnabled);
 void EQ_SetRun(bool bEnabled);
 void EQ_SetActorCollision(bool bEnabled);
 void EQ_SetUseVisActorList(bool bEnabled);
@@ -119,12 +122,14 @@ void EQ_DrawMouseCursor();
 uint32_t EQ_GetPlayerManaPercent();
 void EQ_SetSpawnStandingState(EQ::Spawn_ptr spawn, uint8_t standingState);
 void EQ_SetSpawnHeight(EQ::Spawn_ptr spawn, float height);
+void EQ_FaceTowardsSpawn(EQ::Spawn_ptr spawn);
 std::string EQ_GetSpawnName(EQ::Spawn_ptr spawn);
 bool EQ_IsPlayerCastingSpell();
 EQ::Camera_ptr EQ_GetCamera();
 void EQ_FixHeading(float& heading);
 uint32_t EQ_GetNumPlayersInZone();
 bool EQ_IsSpawnBehindSpawn(EQ::Spawn_ptr spawn1, EQ::Spawn_ptr spawn2);
+std::string EQ_EncryptDecryptString(std::string str);
 
 template <class T>
 void EQ_Log(const char* text, T number)
@@ -190,6 +195,10 @@ typedef int (__cdecl* EQ_FUNCTION_TYPE_CollisionCallbackForMove)(EQ::ActorInstan
 EQ_MACRO_FunctionAtAddress(int __cdecl EQ_do_target(class EQClass::EQPlayer* spawn, const char* spawnName), EQ_ADDRESS_FUNCTION_do_target);
 typedef int (__cdecl* EQ_FUNCTION_TYPE_do_target)(class EQClass::EQPlayer* spawn, const char* spawnName);
 
+#define EQ_ADDRESS_FUNCTION_DoSpellEffect 0x0052CA8D
+EQ_MACRO_FunctionAtAddress(int __cdecl EQ_DoSpellEffect(int type, EQ::Spell_ptr spell, class EQClass::EQPlayer* spawn1, class EQClass::EQPlayer* spawn2, EQ::Location_ptr location, int* missile, uint32_t duration), EQ_ADDRESS_FUNCTION_DoSpellEffect);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_DoSpellEffect)(int type, EQ::Spell_ptr spell, class EQClass::EQPlayer* spawn1, class EQClass::EQPlayer* spawn2, EQ::Location_ptr location, int* missile, uint32_t duration);
+
 /* functions */
 
 void EQ_ToggleBool(bool& b)
@@ -205,6 +214,11 @@ float EQ_CalculateDistance(float x1, float y1, float x2, float y2)
 float EQ_CalculateDistance3D(float x1, float y1, float z1, float x2, float y2, float z2)
 {
     return std::sqrt(std::pow(x2 - x1, 2) + std::pow(y2 - y1, 2) + std::pow(z2 - z1, 2));
+}
+
+bool EQ_IsWithinDistance(float x1, float y1, float x2, float y2, float distance)
+{
+    return (std::pow(x2 - x1, 2) + std::pow(y2 - y1, 2)) <= std::pow(distance, 2);
 }
 
 void EQ_Rotate2D(float cx, float cy, float& x, float& y, float angle)
@@ -306,6 +320,11 @@ bool EQ_IsAutoAttackEnabled()
     return (EQ_ReadMemory<uint8_t>(EQ_ADDRESS_IS_AUTO_ATTACK_ENABLED) == 1);
 }
 
+bool EQ_IsAutoRunEnabled()
+{
+    return (EQ_ReadMemory<uint32_t>(EQ_ADDRESS_IS_AUTO_RUN_ENABLED) == 1);
+}
+
 bool EQ_IsNetStatusEnabled()
 {
     return (EQ_ReadMemory<uint8_t>(EQ_ADDRESS_IS_NET_STATUS_ENABLED) == 1);
@@ -370,6 +389,18 @@ void EQ_SetAutoAttack(bool bEnabled)
     else
     {
         EQ_WriteMemory<uint8_t>(EQ_ADDRESS_IS_AUTO_ATTACK_ENABLED, 0x00);
+    }
+}
+
+void EQ_SetAutoRun(bool bEnabled)
+{
+    if (bEnabled == true)
+    {
+        EQ_WriteMemory<uint32_t>(EQ_ADDRESS_IS_AUTO_RUN_ENABLED, 1);
+    }
+    else
+    {
+        EQ_WriteMemory<uint32_t>(EQ_ADDRESS_IS_AUTO_RUN_ENABLED, 0);
     }
 }
 
@@ -1406,6 +1437,11 @@ EQ::Spell_ptr EQ_GetSpellByID(uint16_t spellID)
         return NULL;
     }
 
+    if (spellID > (EQ_NUM_SPELLS - 1))
+    {
+        return NULL;
+    }
+
     return EQ_POINTER_SpellList->Spell[spellID];
 }
 
@@ -1622,6 +1658,17 @@ void EQ_SetSpawnHeight(EQ::Spawn_ptr spawn, float height)
     ((EQClass::EQPlayer*)spawn)->ChangeHeight(height);
 }
 
+void EQ_FaceTowardsSpawn(EQ::Spawn_ptr spawn)
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL || spawn == NULL)
+    {
+        return;
+    }
+
+    ((EQClass::EQPlayer*)playerSpawn)->FacePlayer((EQClass::EQPlayer*)spawn);
+}
+
 std::string EQ_GetSpawnName(EQ::Spawn_ptr spawn)
 {
     if (spawn->Name == NULL || spawn->Name[0] == '\0')
@@ -1706,6 +1753,21 @@ bool EQ_IsSpawnBehindSpawn(EQ::Spawn_ptr spawn1, EQ::Spawn_ptr spawn2)
 
     return false;
 }
+
+std::string EQ_EncryptDecryptString(std::string str)
+{
+    char key[5] = {'E', 'Q', 'S', 'T', 'R'};
+
+    std::string output = str;
+
+    for (size_t i = 0; i < str.size(); i++)
+    {
+        output[i] = str[i] ^ key[i % (sizeof(key) / sizeof(char))];
+    }
+
+    return output;
+}
+
 
 
 

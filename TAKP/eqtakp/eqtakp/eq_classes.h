@@ -90,6 +90,7 @@ public:
     EQ::Spawn_ptr CDisplay::GetNearestPlayerInView(float maxDistance, uint8_t spawnType);
     int CDisplay::UpdateItemSlot(class EQPlayer* player, uint8_t itemSlot, char* itemDef, bool clientSideOnly);
     void CDisplay::SpurtBloodOnDag(EQ::ModelBone_ptr bone);
+    float CDisplay::GetPlayerFloorHeight(class EQPlayer* player, float y, float x, float z, bool unknown);
 };
 
 #define EQ_ADDRESS_FUNCTION_CDisplay__Render_World 0x004AA8BC
@@ -153,6 +154,10 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__UpdateItemSlot)(void* this_p
 #define EQ_ADDRESS_FUNCTION_CDisplay__SpurtBloodOnDag 0x004B166D
 EQ_MACRO_FunctionAtAddress(void EQClass::CDisplay::SpurtBloodOnDag(EQ::ModelBone_ptr bone), EQ_ADDRESS_FUNCTION_CDisplay__SpurtBloodOnDag);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__SpurtBloodOnDag)(void* this_ptr, EQ::ModelBone_ptr bone);
+
+#define EQ_ADDRESS_FUNCTION_CDisplay__GetPlayerFloorHeight 0x004B3A84
+EQ_MACRO_FunctionAtAddress(float EQClass::CDisplay::GetPlayerFloorHeight(class EQPlayer* player, float y, float x, float z, bool unknown), EQ_ADDRESS_FUNCTION_CDisplay__GetPlayerFloorHeight);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__GetPlayerFloorHeight)(void* this_ptr, class EQPlayer* player, float y, float x, float z, bool unknown);
 
 /* CEverQuest */
 
@@ -218,11 +223,11 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__MoveToZone__2)(void* this_
 
 #define EQ_ADDRESS_FUNCTION_CEverQuest__LootCorpse 0x00547808
 EQ_MACRO_FunctionAtAddress(int EQClass::CEverQuest::LootCorpse(class EQPlayer* player, int unknown), EQ_ADDRESS_FUNCTION_CEverQuest__LootCorpse);
-typedef signed int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__LootCorpse)(void* this_ptr, class EQPlayer* player, int unknown);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__LootCorpse)(void* this_ptr, class EQPlayer* player, int unknown);
 
 #define EQ_ADDRESS_FUNCTION_CEverQuest__DropHeldItemOnGround 0x00530D7E
 EQ_MACRO_FunctionAtAddress(void EQClass::CEverQuest::DropHeldItemOnGround(bool showDropMessage), EQ_ADDRESS_FUNCTION_CEverQuest__DropHeldItemOnGround);
-typedef signed int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__DropHeldItemOnGround)(void* this_ptr, bool showDropMessage);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__DropHeldItemOnGround)(void* this_ptr, bool showDropMessage);
 
 #define EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting 0x0052CBE7
 EQ_MACRO_FunctionAtAddress(void EQClass::CEverQuest::StartCasting(EQ::CEverQuestStartCastingMessage_ptr message), EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting);
@@ -255,6 +260,7 @@ public:
     void EQPlayer::FollowPlayerAI();
     void EQPlayer::do_change_form(EQ::ChangeForm_ptr changeForm);
     bool EQPlayer::IsInvited();
+    void EQPlayer::SetNoGrav(int gravityType);
 };
 
 #define EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight 0x0050C160
@@ -262,22 +268,26 @@ EQ_MACRO_FunctionAtAddress(void EQClass::EQPlayer::ChangeHeight(float), EQ_ADDRE
 
 #define EQ_ADDRESS_FUNCTION_EQPlayer__ChangePosition 0x0050BE3C
 EQ_MACRO_FunctionAtAddress(void EQClass::EQPlayer::ChangePosition(uint8_t standingState), EQ_ADDRESS_FUNCTION_EQPlayer__ChangePosition);
-typedef signed int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__ChangePosition)(void* this_ptr, uint8_t standingState);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__ChangePosition)(void* this_ptr, uint8_t standingState);
 
 #define EQ_ADDRESS_FUNCTION_EQPlayer__FacePlayer 0x00508120
 EQ_MACRO_FunctionAtAddress(void EQClass::EQPlayer::FacePlayer(class EQPlayer* player), EQ_ADDRESS_FUNCTION_EQPlayer__FacePlayer);
 
 #define EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI 0x00507B08
 EQ_MACRO_FunctionAtAddress(void EQClass::EQPlayer::FollowPlayerAI(), EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI);
-typedef signed int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__FollowPlayerAI)(void* this_ptr);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__FollowPlayerAI)(void* this_ptr);
 
 #define EQ_ADDRESS_FUNCTION_EQPlayer__do_change_form 0x005074FA
 EQ_MACRO_FunctionAtAddress(void EQClass::EQPlayer::do_change_form(EQ::ChangeForm_ptr changeForm), EQ_ADDRESS_FUNCTION_EQPlayer__do_change_form);
-typedef signed int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__do_change_form)(void* this_ptr, EQ::ChangeForm_ptr changeForm);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__do_change_form)(void* this_ptr, EQ::ChangeForm_ptr changeForm);
 
 #define EQ_ADDRESS_FUNCTION_EQPlayer__IsInvited 0x0050C209
 EQ_MACRO_FunctionAtAddress(bool EQClass::EQPlayer::IsInvited(), EQ_ADDRESS_FUNCTION_EQPlayer__IsInvited);
-typedef signed int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__IsInvited)(void* this_ptr);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__IsInvited)(void* this_ptr);
+
+#define EQ_ADDRESS_FUNCTION_EQPlayer__SetNoGrav 0x0052094C
+EQ_MACRO_FunctionAtAddress(void EQClass::EQPlayer::SetNoGrav(int gravityType), EQ_ADDRESS_FUNCTION_EQPlayer__SetNoGrav);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__SetNoGrav)(void* this_ptr, int gravityType);
 
 /* EQ_Character */
 
@@ -290,6 +300,8 @@ public:
     int EQ_Character::StopSpellCast(uint8_t spellGemIndex, uint16_t spellID);
     int EQ_Character::StopSpellCast(uint8_t spellGemIndex);
     int EQ_Character::UseSkill(uint8_t skillID, class EQPlayer* targetSpawn);
+    int EQ_Character::NotifyPCAffectChange(int affectID, int enabled);
+    int EQ_Character::Levitate();
 };
 
 #define EQ_ADDRESS_FUNCTION_EQ_Character__Max_Mana 0x004B9483
@@ -314,6 +326,14 @@ EQ_MACRO_FunctionAtAddress(int EQClass::EQ_Character::StopSpellCast(uint8_t spel
 #define EQ_ADDRESS_FUNCTION_EQ_Character__UseSkill 0x004BDF2F
 typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__UseSkill)(void* this_ptr, uint8_t skillID, class EQPlayer* targetSpawn);
 EQ_MACRO_FunctionAtAddress(int EQClass::EQ_Character::UseSkill(uint8_t skillID, class EQPlayer* targetSpawn), EQ_ADDRESS_FUNCTION_EQ_Character__UseSkill);
+
+#define EQ_ADDRESS_FUNCTION_EQ_Character__Levitate 0x004CAC0D
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__Levitate)(void* this_ptr);
+EQ_MACRO_FunctionAtAddress(int EQClass::EQ_Character::Levitate(), EQ_ADDRESS_FUNCTION_EQ_Character__Levitate);
+
+#define EQ_ADDRESS_FUNCTION_EQ_Character__NotifyPCAffectChange 0x004C09B6
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__NotifyPCAffectChange)(void* this_ptr, int affectID, int enabled);
+EQ_MACRO_FunctionAtAddress(int EQClass::EQ_Character::NotifyPCAffectChange(int affectID, int enabled), EQ_ADDRESS_FUNCTION_EQ_Character__NotifyPCAffectChange);
 
 /* EQ_Item */
 

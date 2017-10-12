@@ -493,7 +493,7 @@ typedef struct _Character
 /* 0x0C7E */ uint8_t Unknown0C7E[12];
 /* 0x0C8A */ uint16_t Vision2;
 /* 0x0C8C */ uint8_t Unknown0C8C[120];
-/* 0x0D04 */ uint32_t IsSwimmingUnderwater;
+/* 0x0D04 */ uint32_t IsSwimmingUnderwater; // cannot breathe air
 /* 0x0D08 */ uint8_t Unknown0D08[4];
 /* 0x0D0C */ uint8_t Unknown0D0C[4];
 /* 0x0D10 */ uint8_t IsAutoSplitEnabled;
@@ -652,21 +652,22 @@ typedef struct _ActorCollision
 typedef struct _ActorInstance
 {
 /* 0x0000 */ uint32_t MagicNumber; // == 24
-/* 0x0004 */ uint32_t Unknown0004;
-/* 0x0008 */ uint32_t Unknown0008; // points to parent
+/* 0x0004 */ uint32_t Index;
+/* 0x0008 */ struct _Model* Model; // parent
 /* 0x000C */ uint32_t Unknown000C;
-/* 0x0010 */ float WorldY;
-/* 0x0014 */ float WorldX;
-/* 0x0018 */ float WorldZ;
-/* 0x001C */ uint32_t Unknown001C;
-/* 0x0020 */ uint32_t Unknown0020;
-/* 0x0024 */ uint32_t Unknown0024;
+/* 0x0010 */ float Y;
+/* 0x0014 */ float X;
+/* 0x0018 */ float Z;
+/* 0x001C */ float Heading;
+/* 0x0020 */ float Pitch;
+/* 0x0024 */ float Roll;
 /* 0x0028 */ uint32_t RegionNumber;
 /* 0x002C */ struct _ActorCollision* ActorCollision;
 /* 0x0030 */ uint32_t Unknown0030;
 /* 0x0034 */ float ScaleFactor;
 /* 0x0038 */ float BoundingRadius;
-/* 0x003C */ uint8_t Unknown003C[36];
+/* 0x003C */ uint32_t Unknown003C;
+/* 0x0040 */ uint8_t Unknown0040[32];
 union
 {
 /* 0x0060 */ struct _Spawn* UserData;
@@ -688,6 +689,12 @@ typedef struct _Model
 /* 0x001C */ struct _ActorInstance* ActorInstance;
 /* 0x0020 */ uint32_t NumBones; // includes Root
 /* 0x0024 */ struct _ModelBone* RootBone; // first bone
+/* 0x0028 */ uint32_t Unknown0028;
+/* 0x002C */ uint32_t Unknown002C;
+/* 0x0030 */ uint32_t Unknown0030;
+/* 0x0034 */ uint32_t Unknown0034;
+/* 0x0038 */ uint32_t Unknown0038;
+/* 0x003C */ uint32_t IsVisible; // is being drawn/rendered
 /* ...... */ 
 } Model, *Model_ptr;
 
@@ -817,7 +824,7 @@ typedef struct _Spawn
 /* 0x00AA */ uint16_t Race;  // EQ_RACE_x
 /* 0x00AC */ uint8_t Gender; // EQ_GENDER_x
 /* 0x00AD */ uint8_t Level;
-/* 0x00AE */ uint8_t IsHidden; // 0 = Visible, 1 = Invisible
+/* 0x00AE */ uint8_t IsHidden; // 0 = Visible, 1 = Invisible, 2 = Invis vs Animals, 3 = Invis vs Undead
 /* 0x00AF */ uint8_t IsSneaking; // sneaking or snared ; 0 = Normal Movement Speed, 1 = Slow Movement Speed
 /* 0x00B0 */ uint8_t IsPlayerKill; // PVP flagged with red name by Priest of Discord
 /* 0x00B1 */ uint8_t StandingState; // EQ_STANDING_STATE_x
@@ -1205,6 +1212,146 @@ typedef struct _ChangeForm
 /* 0x0E */ uint16_t Size = 6;
 /* 0x10 */ uint32_t Unknown10 = 0xFFFFFFFF; // always equals -1
 } ChangeForm, *ChangeForm_ptr;
+
+// t3dSelectTexture
+typedef struct _Texture
+{
+// union
+// {
+/* 0x000 */ uint32_t Unknown000; // equals = 27 or 0x1B
+// /* 0x000 */ uint8_t Test8[300];
+// /* 0x000 */ uint32_t Test32[100];
+// };
+/* 0x004 */ uint32_t Index;
+/* 0x008 */ char* TextureName;
+/* 0x00C */ uint32_t VisibilityFlags; // 0x80000017 = Half Transparent
+/* 0x010 */ uint32_t Unknown010; // equals 1
+/* 0x014 */ uint32_t Unknown014; // equals 0
+/* 0x018 */ uint32_t Unknown018; // color depth
+/* 0x01C */ uint32_t Unknown01C; // width or height
+/* 0x020 */ uint32_t Unknown020; // width or height
+/* 0x024 */ uint32_t Unknown024; // width or height
+/* 0x028 */ uint32_t Unknown028; // width or height
+/* 0x02C */ uint32_t Unknown02C;
+/* 0x030 */ uint32_t Unknown030;
+/* 0x034 */ uint32_t Unknown034;
+/* 0x038 */ char* TextureFileName; // TextureName with BMP or DDS extension
+/* 0x03C */ uint32_t Unknown03C;
+/* 0x040 */ uint32_t Unknown040;
+/* 0x044 */ uint32_t Unknown044;
+/* 0x048 */ uint32_t Unknown048;
+/* 0x04C */ uint32_t Unknown04C;
+/* 0x050 */ uint32_t Unknown050;
+/* 0x054 */ uint32_t Unknown054;
+/* 0x058 */ uint32_t Unknown058;
+/* 0x05C */ uint32_t Unknown05C;
+/* 0x060 */ uint32_t Unknown060;
+/* 0x064 */ uint32_t Unknown064;
+/* 0x068 */ struct _Texture* UnknownTexture;
+/* 0x06C */ uint32_t Unknown06C;
+/* 0x070 */ uint32_t Unknown070;
+/* 0x074 */ uint32_t Unknown074;
+/* 0x078 */ uint32_t Unknown078;
+/* 0x07C */ uint32_t Unknown07C;
+/* 0x080 */ uint32_t Unknown080;
+/* 0x084 */ uint32_t Unknown084;
+/* 0x088 */ uint32_t Unknown088;
+/* 0x08C */ uint32_t Unknown08C;
+/* 0x090 */ uint32_t Unknown090;
+/* 0x094 */ uint32_t Unknown094; // 0xFFFFFFFF
+/* 0x098 */ uint32_t Unknown099;
+/* 0x09C */ uint32_t Unknown09C;
+/* 0x0A0 */ uint32_t Unknown0A0;
+/* 0x0A4 */ uint32_t Unknown0A4;
+/* 0x0A8 */ uint32_t Unknown0A8;
+/* 0x0AC */ uint32_t Unknown0AC;
+/* 0x0B0 */ uint32_t Unknown0B0;
+/* 0x0B4 */ uint32_t Unknown0B4;
+/* 0x0B8 */ char* TextureSpriteName; // TextureName with _SPRITE appended
+/* 0x0BC */ uint32_t Unknown0BC;
+/* 0x0C0 */ uint32_t Unknown0C0;
+/* 0x0C4 */ uint32_t Unknown0C4;
+/* 0x0C8 */ uint32_t Unknown0C8;
+/* 0x0CC */ uint32_t Unknown0CC;
+/* 0x0D0 */ uint32_t Unknown0D0;
+/* 0x0D4 */ uint32_t Unknown0D4;
+/* 0x0D8 */ uint32_t Unknown0D8;
+/* 0x0DC */ uint32_t Unknown0DC;
+/* 0x0E0 */ uint32_t Unknown0E0;
+/* 0x0E4 */ uint32_t Unknown0E4;
+/* 0x0E8 */ uint32_t Unknown0E8;
+/* 0x0EC */ uint32_t Unknown0EC;
+/* 0x0F0 */ uint32_t Unknown0F0;
+/* 0x0F4 */ uint32_t Unknown0F4;
+/* 0x0F8 */ uint32_t Unknown0F8;
+/* 0x0FC */ uint32_t Unknown0FC;
+/* 0x0100 */ uint32_t Unknown0100;
+/* 0x0104 */ uint32_t Unknown0104;
+/* 0x0108 */ uint32_t Unknown0108;
+/* 0x010C */ uint32_t Unknown010C;
+/* 0x0110 */ uint32_t Unknown0110;
+/* 0x0114 */ uint32_t Unknown0114;
+/* 0x0118 */ uint32_t Unknown0118;
+/* 0x011C */ uint32_t Unknown011C;
+/* 0x0120 */ uint32_t Unknown0120;
+/* 0x0124 */ uint32_t Unknown0124;
+/* 0x0128 */ uint32_t Unknown0128;
+/* 0x012C */ uint32_t Unknown012C;
+/* 0x0130 */ uint32_t Unknown0130;
+/* 0x0134 */ uint32_t Unknown0134;
+/* 0x0138 */ uint32_t Unknown0138;
+/* 0x013C */ uint32_t Unknown013C;
+/* 0x0140 */ uint32_t Unknown0140;
+/* 0x0144 */ uint32_t Unknown0144;
+/* 0x0148 */ uint32_t Unknown0148;
+/* 0x014C */ uint32_t Unknown014C;
+/* 0x0150 */ uint32_t Unknown0150;
+/* 0x0154 */ uint32_t Unknown0154;
+/* 0x0158 */ uint32_t Unknown0158;
+/* 0x015C */ uint32_t Unknown015C;
+/* 0x0160 */ uint32_t Unknown0160;
+/* 0x0164 */ uint32_t Unknown0164;
+/* 0x0168 */ uint32_t Unknown0168;
+/* 0x016C */ uint32_t Unknown016C;
+/* 0x0170 */ uint32_t Unknown0170;
+/* 0x0174 */ uint32_t Unknown0174;
+/* 0x0178 */ uint32_t Unknown0178;
+/* 0x017C */ uint32_t Unknown017C;
+/* 0x0180 */ uint32_t Unknown0180;
+/* 0x0184 */ uint32_t Unknown0184;
+/* 0x0188 */ uint32_t Unknown0188;
+/* 0x018C */ uint32_t Unknown018C;
+/* 0x0190 */ uint32_t Unknown0190;
+/* 0x0194 */ uint32_t Unknown0194;
+/* 0x0198 */ uint32_t Unknown0198;
+/* 0x019C */ uint32_t Unknown019C;
+/* 0x01A0 */ uint32_t Unknown01A0;
+/* 0x01A4 */ uint32_t Unknown01A4;
+/* 0x01A8 */ uint32_t Unknown01A8;
+/* 0x01AC */ uint32_t Unknown01AC;
+/* 0x01B0 */ uint32_t Unknown01B0;
+/* 0x01B4 */ uint32_t Unknown01B4;
+/* 0x01B8 */ uint32_t Unknown01B8;
+/* 0x01BC */ uint32_t Unknown01BC;
+/* 0x01C0 */ uint32_t Unknown01C0;
+/* 0x01C4 */ uint32_t Unknown01C4;
+/* 0x01C8 */ uint32_t Unknown01C8;
+/* 0x01CC */ uint32_t Unknown01CC;
+/* 0x01D0 */ uint32_t Unknown01D0;
+/* 0x01D4 */ uint32_t Unknown01D4;
+/* 0x01D8 */ uint32_t Unknown01D8;
+/* 0x01DC */ uint32_t Unknown01DC;
+/* 0x01E0 */ uint32_t Unknown01E0;
+/* 0x01E4 */ uint32_t Unknown01E4;
+/* 0x01E8 */ uint32_t Unknown01E8;
+/* 0x01EC */ uint32_t Unknown01EC;
+/* 0x01F0 */ uint32_t Unknown01F0;
+/* 0x01F4 */ uint32_t Unknown01F4;
+/* 0x01F8 */ uint32_t Unknown01F8;
+/* 0x01FC */ uint32_t Unknown01FC;
+/* 0x0200 */ uint32_t Unknown0200;
+
+} Texture, *Texture_ptr;
 
 } // namespace EQ
 

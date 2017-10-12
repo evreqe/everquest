@@ -42,9 +42,8 @@
 
 #include <d3d8.h>
 #pragma comment(lib, "d3d8.lib")
+
 #pragma comment(lib, "dxguid.lib")
-////#include <d3dx8.h>
-////#pragma comment(lib, "d3dx8d.lib")
 
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
@@ -84,6 +83,7 @@
 #include "eqapp_autoloot.h"
 #include "eqapp_namedspawns.h"
 //
+#include "eqapp_drm.h"
 #include "eqapp_autofollow.h"
 #include "eqapp_autogroup.h"
 #include "eqapp_networkstats.h"
@@ -119,6 +119,10 @@
 #include "eqapp_enteringzone.h"
 #include "eqapp_hotbuttonkeys.h"
 #include "eqapp_wallhack.h"
+#include "eqapp_waterhack.h"
+#include "eqapp_treehack.h"
+#include "eqapp_spelleffecttest.h"
+#include "eqapp_targetring.h"
 //
 #include "eqapp_extendedtargets.h"
 #include "eqapp_map.h"
@@ -133,6 +137,7 @@
 #include "eqapp_espmenu.h"
 #include "eqapp_mapmenu.h"
 #include "eqapp_memorymenu.h"
+#include "eqapp_othermenu.h"
 #include "eqapp_hudtext.h"
 //
 //
@@ -142,9 +147,10 @@
 
 void EQAPP_Load()
 {
-    EQ_WriteChatText("Loading...");
+    EQ_GraphicsDLL_SetUseTNL(false);
+    EQ_GraphicsDLL_SetUseUmbra(true);
 
-    EQ_CLASS_POINTER_IDirect3DDevice8->SetRenderState(D3DRS_SOFTWAREVERTEXPROCESSING, TRUE);
+    EQ_WriteChatText("Loading...");
 
     EQAPP_Mouse_Load();
 
@@ -156,6 +162,7 @@ void EQAPP_Load()
     EQAPP_ESPMenu_Load();
     EQAPP_MapMenu_Load();
     EQAPP_MemoryMenu_Load();
+    EQAPP_OtherMenu_Load();
 
     if (EQ_IsInGame() == true)
     {
@@ -171,6 +178,9 @@ void EQAPP_Load()
 
 void EQAPP_Unload()
 {
+    EQ_GraphicsDLL_SetUseTNL(false);
+    EQ_GraphicsDLL_SetUseUmbra(true);
+
     EQ_WriteChatText("Unloading...");
 
     EQAPP_FreeCamera_SetEnabled(false);
@@ -180,9 +190,6 @@ void EQAPP_Unload()
     EQAPP_Mouse_Unload();
 
     EQAPP_BoxChat_Unload();
-
-    EQ_GraphicsDLL_SetUseTNL(true);
-    EQ_GraphicsDLL_SetUseUmbra(true);
 
     g_bExit = 1;
 }

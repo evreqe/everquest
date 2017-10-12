@@ -30,6 +30,7 @@ void EQAPP_Memory_Load()
     std::cout << "Loading Memory..." << std::endl;
 
     g_memoryList.clear();
+    g_memoryList.reserve(100);
 
     std::stringstream filePathINI;
     filePathINI << g_applicationName << "/memory.ini";

@@ -6,6 +6,7 @@ uint32_t g_drawDistanceTimer = 0;
 uint32_t g_drawDistanceTimerDelay = 1000;
 
 float g_drawDistanceValue = 1000.0f;
+float g_drawDistanceValueDefault = 1000.0f;
 
 void EQAPP_DrawDistance_Toggle();
 void EQAPP_DrawDistance_Load();
@@ -19,7 +20,14 @@ void EQAPP_DrawDistance_Toggle()
 
 void EQAPP_DrawDistance_Load()
 {
-    // TODO
+    g_drawDistanceValue = g_drawDistanceValueDefault;
+
+    auto zoneID = EQ_GetZoneID();
+
+    if (zoneID == EQ_ZONE_ID_WAKENING)
+    {
+        g_drawDistanceValue = 400.0f;
+    }
 }
 
 void EQAPP_DrawDistance_Execute()

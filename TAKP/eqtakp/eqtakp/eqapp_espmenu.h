@@ -99,24 +99,28 @@ void EQAPP_ESPMenu_CreateMenu()
     g_ESPMenuGUIMenuItemShowSpawnWeapon.SetFunctionLeftClick(&EQAPP_ESP_ShowSpawnWeapon_Toggle);
     g_ESPMenuGUIMenuItemShowSpawnWeapon.SetBoolPointer(g_ESPShowSpawnWeapon);
 
+    EQApp::GUIMenuItem g_ESPMenuGUIMenuItemShowActorIndex;
+    g_ESPMenuGUIMenuItemShowActorIndex.SetText("Show Actor Index");
+    g_ESPMenuGUIMenuItemShowActorIndex.FitToText();
+    g_ESPMenuGUIMenuItemShowActorIndex.SetFunctionLeftClick(&EQAPP_ESP_ShowActorIndex_Toggle);
+    g_ESPMenuGUIMenuItemShowActorIndex.SetBoolPointer(g_ESPShowActorIndex);
+
     g_ESPMenuGUIMenu.AddMenuItem(g_ESPMenuGUIMenuItemToggle);
 
     g_ESPMenuGUIMenu.AddMenuItem(g_ESPMenuGUIMenuItemSeparator);
 
     g_ESPMenuGUIMenu.AddMenuItem(g_ESPMenuGUIMenuItemSpawns);
+    g_ESPMenuGUIMenu.AddMenuItem(g_ESPMenuGUIMenuItemSpawnSkeletons);
     g_ESPMenuGUIMenu.AddMenuItem(g_ESPMenuGUIMenuItemGroundSpawns);
     g_ESPMenuGUIMenu.AddMenuItem(g_ESPMenuGUIMenuItemDoorSpawns);
-
-    g_ESPMenuGUIMenu.AddMenuItem(g_ESPMenuGUIMenuItemSeparator);
-
     g_ESPMenuGUIMenu.AddMenuItem(g_ESPMenuGUIMenuItemActors);
-    g_ESPMenuGUIMenu.AddMenuItem(g_ESPMenuGUIMenuItemSpawnSkeletons);
 
     g_ESPMenuGUIMenu.AddMenuItem(g_ESPMenuGUIMenuItemSeparator);
 
     g_ESPMenuGUIMenu.AddMenuItem(g_ESPMenuGUIMenuItemShowSpawnID);
     g_ESPMenuGUIMenu.AddMenuItem(g_ESPMenuGUIMenuItemShowSpawnRace);
     g_ESPMenuGUIMenu.AddMenuItem(g_ESPMenuGUIMenuItemShowSpawnWeapon);
+    g_ESPMenuGUIMenu.AddMenuItem(g_ESPMenuGUIMenuItemShowActorIndex);
 
     g_ESPMenuGUIMenu.SetX(g_ESPMenuGUIButton.GetX());
     g_ESPMenuGUIMenu.SetY(g_ESPMenuGUIButton.GetY() + g_ESPMenuGUIButton.GetHeight() + 8);

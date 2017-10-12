@@ -236,5 +236,23 @@
     <ClInclude Include="eqapp_wallhack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="eqapp_drm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_waterhack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_treehack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_spelleffecttest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_targetring.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_othermenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
