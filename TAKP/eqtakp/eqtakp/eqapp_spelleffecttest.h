@@ -2,7 +2,7 @@
 
 bool g_spellEffectTestIsEnabled = false;
 
-uint32_t g_spellEffectTestID = 0;
+EQ_SpellID_t g_spellEffectTestSpellID = 0;
 
 uint32_t g_spellEffectTestTimer = 0;
 uint32_t g_spellEffectTestTimerDelay = 3000;
@@ -20,16 +20,16 @@ void EQAPP_SpellEffectTest_Execute()
 {
     if (EQAPP_IsKeyDown(VK_PAGEUP) == true)
     {
-        if (g_spellEffectTestID == (EQ_NUM_SPELLS - 1))
+        if (g_spellEffectTestSpellID == (EQ_NUM_SPELLS - 1))
         {
-            g_spellEffectTestID = 0;
+            g_spellEffectTestSpellID = 0;
         }
         else
         {
-            g_spellEffectTestID = g_spellEffectTestID + 1;
+            g_spellEffectTestSpellID = g_spellEffectTestSpellID + 1;
         }
 
-        std::cout << "Spell Effect Test ID: " << g_spellEffectTestID << std::endl;
+        std::cout << "Spell Effect Test ID: " << g_spellEffectTestSpellID << std::endl;
 
         Sleep(100);
 
@@ -38,16 +38,16 @@ void EQAPP_SpellEffectTest_Execute()
 
     if (EQAPP_IsKeyDown(VK_PAGEDOWN) == true)
     {
-        if (g_spellEffectTestID == 0)
+        if (g_spellEffectTestSpellID == 0)
         {
-            g_spellEffectTestID = EQ_NUM_SPELLS - 1;
+            g_spellEffectTestSpellID = EQ_NUM_SPELLS - 1;
         }
         else
         {
-            g_spellEffectTestID = g_spellEffectTestID - 1;
+            g_spellEffectTestSpellID = g_spellEffectTestSpellID - 1;
         }
 
-        std::cout << "Spell Effect Test ID: " << g_spellEffectTestID << std::endl;
+        std::cout << "Spell Effect Test ID: " << g_spellEffectTestSpellID << std::endl;
 
         Sleep(100);
 
@@ -59,24 +59,32 @@ void EQAPP_SpellEffectTest_Execute()
         return;
     }
 
-    uint16_t spellID = g_spellEffectTestID;
+    EQ_SpellID_t spellID = g_spellEffectTestSpellID;
+    if (EQ_IsSpellIDValid(spellID) == false)
+    {
+        return;
+    }
 
     auto playerSpawn = EQ_GetPlayerSpawn();
-    if (playerSpawn != NULL)
+    if (playerSpawn == NULL)
     {
-        auto spell = EQ_GetSpellByID(spellID);
-        if (spell != NULL)
-        {
-            std::cout << "DoSpellEffect: " << spell->Name << " (" << spell->ID << ")" << std::endl;
-
-            EQ::Location location;
-            location.Y = playerSpawn->Y;
-            location.X = playerSpawn->X;
-            location.Z = playerSpawn->Z;
-
-            auto player = (EQClass::EQPlayer*)playerSpawn;
-
-            EQ_DoSpellEffect(2, spell, player, player, &location, NULL, 0);
-        }
+        return;
     }
+
+    auto spell = EQ_GetSpellByID(spellID);
+    if (spell == NULL)
+    {
+        return;
+    }
+
+    std::cout << "DoSpellEffect: " << spell->Name << " (" << spell->ID << ")" << std::endl;
+
+    EQ::Location location;
+    location.Y = playerSpawn->Y;
+    location.X = playerSpawn->X;
+    location.Z = playerSpawn->Z;
+
+    auto player = (EQClass::EQPlayer*)playerSpawn;
+
+    EQ_FUNCTION_DoSpellEffect(2, spell, player, player, &location, NULL, 0);
 }

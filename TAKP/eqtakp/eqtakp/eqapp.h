@@ -14,6 +14,8 @@ bool g_bErrorMessageIsEnabled = false;
 
 bool g_bIsMemorizingSpell = false;
 
+bool g_bIsLeftMouseButtonHeldDown = false;
+
 uint32_t g_zoneID = 0xDEADBEEF;
 
 uint8_t g_playerClass = EQ_CLASS_UNKNOWN;

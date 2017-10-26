@@ -93,6 +93,18 @@ void EQAPP_SkillsMenu_CreateMenu()
     g_skillsMenuGUIMenuItemRoundKick.SetFunctionLeftClick(&EQAPP_UseSkills_RoundKick_Toggle);
     g_skillsMenuGUIMenuItemRoundKick.SetBoolPointer(g_useSkillsRoundKickIsEnabled);
 
+    EQApp::GUIMenuItem g_skillsMenuGUIMenuItemFeignDeath;
+    g_skillsMenuGUIMenuItemFeignDeath.SetText("Feign Death");
+    g_skillsMenuGUIMenuItemFeignDeath.FitToText();
+    g_skillsMenuGUIMenuItemFeignDeath.SetFunctionLeftClick(&EQAPP_UseSkills_FeignDeath_Toggle);
+    g_skillsMenuGUIMenuItemFeignDeath.SetBoolPointer(g_useSkillsFeignDeathIsEnabled);
+
+    EQApp::GUIMenuItem g_skillsMenuGUIMenuItemMend;
+    g_skillsMenuGUIMenuItemMend.SetText("Mend");
+    g_skillsMenuGUIMenuItemMend.FitToText();
+    g_skillsMenuGUIMenuItemMend.SetFunctionLeftClick(&EQAPP_UseSkills_Mend_Toggle);
+    g_skillsMenuGUIMenuItemMend.SetBoolPointer(g_useSkillsMendIsEnabled);
+
     EQApp::GUIMenuItem g_skillsMenuGUIMenuItemForage;
     g_skillsMenuGUIMenuItemForage.SetText("Forage");
     g_skillsMenuGUIMenuItemForage.FitToText();
@@ -122,6 +134,8 @@ void EQAPP_SkillsMenu_CreateMenu()
     g_skillsMenuGUIMenu.AddMenuItem(g_skillsMenuGUIMenuItemSeparator);
 
     g_skillsMenuGUIMenu.AddMenuItem(g_skillsMenuGUIMenuItemRoundKick);
+    g_skillsMenuGUIMenu.AddMenuItem(g_skillsMenuGUIMenuItemFeignDeath);
+    g_skillsMenuGUIMenu.AddMenuItem(g_skillsMenuGUIMenuItemMend);
 
     g_skillsMenuGUIMenu.AddMenuItem(g_skillsMenuGUIMenuItemSeparator);
 

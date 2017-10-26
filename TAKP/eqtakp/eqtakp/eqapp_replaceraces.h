@@ -30,13 +30,29 @@ void EQAPP_ReplaceRaces_Execute()
     auto spawn = EQ_GetFirstSpawn();
     while (spawn != NULL)
     {
+        bool bSpawnIsPet = false;
+
+        if (spawn->PetOwnerSpawnID != 0)
+        {
+            bSpawnIsPet = true;
+        }
+
         if (spawn->Race == EQ_RACE_INVISIBLE_MAN)
         {
             EQ::ChangeForm changeForm;
 
             changeForm.SpawnID = spawn->SpawnID;
             changeForm.Race = EQ_RACE_HUMAN;
-            changeForm.Texture = 255;
+
+            if (bSpawnIsPet == true)
+            {
+                changeForm.Texture = EQ_ARMOR_TEXTURE_TYPE_PLATE;
+            }
+            else
+            {
+                changeForm.Texture = 255;
+            }
+
             changeForm.HelmetTexture = 0;
             changeForm.Unknown07 = 255;
             changeForm.Face = 0;
@@ -51,7 +67,7 @@ void EQAPP_ReplaceRaces_Execute()
 
             player->do_change_form(&changeForm);
 
-            if (spawn->PetOwnerSpawnID != 0)
+            if (bSpawnIsPet == true)
             {
                 EQ_CLASS_POINTER_CDisplay->UpdateItemSlot(player, EQ_UPDATE_ITEM_SLOT_HEAD, "IT629", true);
             }

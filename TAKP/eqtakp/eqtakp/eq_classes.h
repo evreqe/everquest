@@ -37,6 +37,7 @@ namespace EQClass
     class CHotButtonWnd;
     class CItemDisplayWnd;
     class CLootWnd;
+    class CContainerWnd;
     class CMerchantWnd;
     class CSpellBookWnd;
     class CTextEntryWnd;
@@ -60,12 +61,12 @@ EQ_MACRO_FunctionAtAddress(char* EQClass::StringTable::getString(unsigned long I
 class EQClass::EQWorldData
 {
 public:
-    char* EQWorldData::GetFullZoneName(uint32_t zoneID, char* result);
+    char* EQWorldData::GetFullZoneName(EQ_ZoneID_t zoneID, char* result);
 };
 
 #define EQ_ADDRESS_FUNCTION_EQWorldData__GetFullZoneName 0x00523E49
-EQ_MACRO_FunctionAtAddress(char* EQClass::EQWorldData::GetFullZoneName(uint32_t zoneID, char* result), EQ_ADDRESS_FUNCTION_EQWorldData__GetFullZoneName);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_EQWorldData__GetFullZoneName)(void* this_ptr, uint32_t zoneID, char* result);
+EQ_MACRO_FunctionAtAddress(char* EQClass::EQWorldData::GetFullZoneName(EQ_ZoneID_t zoneID, char* result), EQ_ADDRESS_FUNCTION_EQWorldData__GetFullZoneName);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQWorldData__GetFullZoneName)(void* this_ptr, EQ_ZoneID_t zoneID, char* result);
 
 #define EQ_ADDRESS_FUNCTION_EQWorldData__GetZoneNameFromIndex 0x00523F73
 
@@ -77,19 +78,19 @@ public:
     void CDisplay::Render_World();
     void CDisplay::RealRender_World();
     void CDisplay::MoveLocalPlayerToSafeCoords();
-    static int __cdecl CDisplay::WriteTextHD2(const char* text, int x, int y, int textColor, int font);
+    int CDisplay::WriteTextHD2(const char* text, int x, int y, int textColor, int font);
     EQ::StringSprite_ptr CDisplay::ChangeDagStringSprite(EQ::ModelBone_ptr modelBone, int fontTexture, const char* text);
-    int __cdecl CDisplay::SetNameSpriteState(class EQPlayer* player, bool show);
-    int __cdecl CDisplay::SetNameSpriteTint(class EQPlayer* player);
+    int CDisplay::SetNameSpriteState(class EQPlayer* player, bool show);
+    int CDisplay::SetNameSpriteTint(class EQPlayer* player);
     void CDisplay::CreatePlayerActor(class EQPlayer* player);
-    void CDisplay::CreateActor(char* name, float a1, float a2, float a3, float a4, float a5, float a6, int a7, int a8);
+    void CDisplay::CreateActor(char* name, float a2, float a3, float a4, float a5, float a6, float a7, int a8, int a9);
     void CDisplay::DeleteActor(EQ::ActorInstance_ptr actorInstance);
     void CDisplay::SetViewActor(EQ::ActorInstance_ptr actorInstance);
     int CDisplay::ToggleView();
     void CDisplay::NewUIProcessEscape();
-    EQ::Spawn_ptr CDisplay::GetNearestPlayerInView(float maxDistance, uint8_t spawnType);
-    int CDisplay::UpdateItemSlot(class EQPlayer* player, uint8_t itemSlot, char* itemDef, bool clientSideOnly);
-    void CDisplay::SpurtBloodOnDag(EQ::ModelBone_ptr bone);
+    EQ::Spawn_ptr CDisplay::GetNearestPlayerInView(float maxDistance, EQ_SpawnType_t spawnType);
+    int CDisplay::UpdateItemSlot(class EQPlayer* player, uint8_t updateItemSlot, char* itemDefinition, bool clientSideOnly);
+    void CDisplay::SpurtBloodOnDag(EQ::ModelBone_ptr modelBone);
     float CDisplay::GetPlayerFloorHeight(class EQPlayer* player, float y, float x, float z, bool unknown);
 };
 
@@ -148,12 +149,12 @@ EQ_MACRO_FunctionAtAddress(EQ::Spawn_ptr EQClass::CDisplay::GetNearestPlayerInVi
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__GetNearestPlayerInView)(void* this_ptr, float maxDistance, uint8_t spawnType);
 
 #define EQ_ADDRESS_FUNCTION_CDisplay__UpdateItemSlot 0x004A9EB3
-EQ_MACRO_FunctionAtAddress(int EQClass::CDisplay::UpdateItemSlot(class EQPlayer* player, uint8_t itemSlot, char* itemDef, bool clientSideOnly), EQ_ADDRESS_FUNCTION_CDisplay__UpdateItemSlot);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__UpdateItemSlot)(void* this_ptr, class EQPlayer* player, uint8_t itemSlot, char* itemDef, bool clientSideOnly);
+EQ_MACRO_FunctionAtAddress(int EQClass::CDisplay::UpdateItemSlot(class EQPlayer* player, uint8_t itemSlot, char* itemDefinition, bool clientSideOnly), EQ_ADDRESS_FUNCTION_CDisplay__UpdateItemSlot);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__UpdateItemSlot)(void* this_ptr, class EQPlayer* player, uint8_t itemSlot, char* itemDefinition, bool clientSideOnly);
 
 #define EQ_ADDRESS_FUNCTION_CDisplay__SpurtBloodOnDag 0x004B166D
-EQ_MACRO_FunctionAtAddress(void EQClass::CDisplay::SpurtBloodOnDag(EQ::ModelBone_ptr bone), EQ_ADDRESS_FUNCTION_CDisplay__SpurtBloodOnDag);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__SpurtBloodOnDag)(void* this_ptr, EQ::ModelBone_ptr bone);
+EQ_MACRO_FunctionAtAddress(void EQClass::CDisplay::SpurtBloodOnDag(EQ::ModelBone_ptr modelBone), EQ_ADDRESS_FUNCTION_CDisplay__SpurtBloodOnDag);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__SpurtBloodOnDag)(void* this_ptr, EQ::ModelBone_ptr modelBone);
 
 #define EQ_ADDRESS_FUNCTION_CDisplay__GetPlayerFloorHeight 0x004B3A84
 EQ_MACRO_FunctionAtAddress(float EQClass::CDisplay::GetPlayerFloorHeight(class EQPlayer* player, float y, float x, float z, bool unknown), EQ_ADDRESS_FUNCTION_CDisplay__GetPlayerFloorHeight);
@@ -167,13 +168,13 @@ public:
     void CEverQuest::InterpretCmd(class EQPlayer* player, char* text);
     void CEverQuest::dsp_chat(const char* text, int textColor, bool filtered);
     void CEverQuest::dsp_chat(const char* text);
-    int __cdecl CEverQuest::LMouseDown(uint16_t x, uint16_t y);
-    int __cdecl CEverQuest::LMouseUp(uint16_t x, uint16_t y);
-    int __cdecl CEverQuest::RMouseDown(uint16_t x, uint16_t y);
-    int __cdecl CEverQuest::RMouseUp(uint16_t x, uint16_t y);
+    int CEverQuest::LMouseDown(uint16_t x, uint16_t y);
+    int CEverQuest::LMouseUp(uint16_t x, uint16_t y);
+    int CEverQuest::RMouseDown(uint16_t x, uint16_t y);
+    int CEverQuest::RMouseUp(uint16_t x, uint16_t y);
     char* CEverQuest::trimName(char* spawnName);
     int CEverQuest::MoveToZone(char* zoneShortName, char* text, int destinationType, int zoneRequestReason);
-    int CEverQuest::MoveToZone(int zoneID, char* text, int destinationType, int zoneRequestReason);
+    int CEverQuest::MoveToZone(EQ_ZoneID_t zoneID, char* text, int destinationType, int zoneRequestReason);
     int CEverQuest::LootCorpse(class EQPlayer* player, int unknown);
     void CEverQuest::DropHeldItemOnGround(bool showDropMessage);
     void CEverQuest::StartCasting(EQ::CEverQuestStartCastingMessage_ptr message);
@@ -195,27 +196,27 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__dsp_chat)(void* this_ptr, 
 EQ_MACRO_FunctionAtAddress(void EQClass::CEverQuest::dsp_chat(const char* text), EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat__2);
 
 #define EQ_ADDRESS_FUNCTION_CEverQuest__LMouseDown 0x005465AA
-EQ_MACRO_FunctionAtAddress(int __cdecl EQClass::CEverQuest::LMouseDown(uint16_t x, uint16_t y), EQ_ADDRESS_FUNCTION_CEverQuest__LMouseDown);
+EQ_MACRO_FunctionAtAddress(int EQClass::CEverQuest::LMouseDown(uint16_t x, uint16_t y), EQ_ADDRESS_FUNCTION_CEverQuest__LMouseDown);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__LMouseDown)(void* this_ptr, uint16_t x, uint16_t y);
 
 #define EQ_ADDRESS_FUNCTION_CEverQuest__LMouseUp 0x00531614
-EQ_MACRO_FunctionAtAddress(int __cdecl EQClass::CEverQuest::LMouseUp(uint16_t x, uint16_t y), EQ_ADDRESS_FUNCTION_CEverQuest__LMouseUp);
+EQ_MACRO_FunctionAtAddress(int EQClass::CEverQuest::LMouseUp(uint16_t x, uint16_t y), EQ_ADDRESS_FUNCTION_CEverQuest__LMouseUp);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__LMouseUp)(void* this_ptr, uint16_t x, uint16_t y);
 
 #define EQ_ADDRESS_FUNCTION_CEverQuest__RMouseDown 0x0054699D
-EQ_MACRO_FunctionAtAddress(int __cdecl EQClass::CEverQuest::RMouseDown(uint16_t x, uint16_t y), EQ_ADDRESS_FUNCTION_CEverQuest__RMouseDown);
+EQ_MACRO_FunctionAtAddress(int EQClass::CEverQuest::RMouseDown(uint16_t x, uint16_t y), EQ_ADDRESS_FUNCTION_CEverQuest__RMouseDown);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__RMouseDown)(void* this_ptr, uint16_t x, uint16_t y);
 
 #define EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp 0x00546B71
-EQ_MACRO_FunctionAtAddress(int __cdecl EQClass::CEverQuest::RMouseUp(uint16_t x, uint16_t y), EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp);
+EQ_MACRO_FunctionAtAddress(int EQClass::CEverQuest::RMouseUp(uint16_t x, uint16_t y), EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__RMouseUp)(void* this_ptr, uint16_t x, uint16_t y);
 
 #define EQ_ADDRESS_FUNCTION_CEverQuest__trimName 0x00537D39
 EQ_MACRO_FunctionAtAddress(char* EQClass::CEverQuest::trimName(char* spawnName), EQ_ADDRESS_FUNCTION_CEverQuest__trimName);
 
 #define EQ_ADDRESS_FUNCTION_CEverQuest__MoveToZone 0x00546081
-EQ_MACRO_FunctionAtAddress(int EQClass::CEverQuest::MoveToZone(int zoneID, char* text, int destinationType, int zoneRequestReason), EQ_ADDRESS_FUNCTION_CEverQuest__MoveToZone);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__MoveToZone)(void* this_ptr, int zoneId, char* text, int destinationType, int zoneRequestReason);
+EQ_MACRO_FunctionAtAddress(int EQClass::CEverQuest::MoveToZone(EQ_ZoneID_t zoneID, char* text, int destinationType, int zoneRequestReason), EQ_ADDRESS_FUNCTION_CEverQuest__MoveToZone);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__MoveToZone)(void* this_ptr, EQ_ZoneID_t zoneId, char* text, int destinationType, int zoneRequestReason);
 
 #define EQ_ADDRESS_FUNCTION_CEverQuest__MoveToZone__2 0x005460B5
 EQ_MACRO_FunctionAtAddress(int EQClass::CEverQuest::MoveToZone(char* zoneShortName, char* text, int destinationType, int zoneRequestReason), EQ_ADDRESS_FUNCTION_CEverQuest__MoveToZone__2);
@@ -255,20 +256,20 @@ class EQClass::EQPlayer
 {
 public:
     void EQPlayer::ChangeHeight(float height);
-    void EQPlayer::ChangePosition(uint8_t standingState);
+    void EQPlayer::ChangePosition(EQ_StandingState_t standingState);
     void EQPlayer::FacePlayer(class EQPlayer* player);
     void EQPlayer::FollowPlayerAI();
     void EQPlayer::do_change_form(EQ::ChangeForm_ptr changeForm);
     bool EQPlayer::IsInvited();
-    void EQPlayer::SetNoGrav(int gravityType);
+    void EQPlayer::SetNoGrav(uint32_t gravityType);
 };
 
 #define EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight 0x0050C160
 EQ_MACRO_FunctionAtAddress(void EQClass::EQPlayer::ChangeHeight(float), EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight);
 
 #define EQ_ADDRESS_FUNCTION_EQPlayer__ChangePosition 0x0050BE3C
-EQ_MACRO_FunctionAtAddress(void EQClass::EQPlayer::ChangePosition(uint8_t standingState), EQ_ADDRESS_FUNCTION_EQPlayer__ChangePosition);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__ChangePosition)(void* this_ptr, uint8_t standingState);
+EQ_MACRO_FunctionAtAddress(void EQClass::EQPlayer::ChangePosition(EQ_StandingState_t standingState), EQ_ADDRESS_FUNCTION_EQPlayer__ChangePosition);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__ChangePosition)(void* this_ptr, EQ_StandingState_t standingState);
 
 #define EQ_ADDRESS_FUNCTION_EQPlayer__FacePlayer 0x00508120
 EQ_MACRO_FunctionAtAddress(void EQClass::EQPlayer::FacePlayer(class EQPlayer* player), EQ_ADDRESS_FUNCTION_EQPlayer__FacePlayer);
@@ -286,8 +287,8 @@ EQ_MACRO_FunctionAtAddress(bool EQClass::EQPlayer::IsInvited(), EQ_ADDRESS_FUNCT
 typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__IsInvited)(void* this_ptr);
 
 #define EQ_ADDRESS_FUNCTION_EQPlayer__SetNoGrav 0x0052094C
-EQ_MACRO_FunctionAtAddress(void EQClass::EQPlayer::SetNoGrav(int gravityType), EQ_ADDRESS_FUNCTION_EQPlayer__SetNoGrav);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__SetNoGrav)(void* this_ptr, int gravityType);
+EQ_MACRO_FunctionAtAddress(void EQClass::EQPlayer::SetNoGrav(uint32_t gravityType), EQ_ADDRESS_FUNCTION_EQPlayer__SetNoGrav);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__SetNoGrav)(void* this_ptr, uint32_t gravityType);
 
 /* EQ_Character */
 
@@ -295,12 +296,12 @@ class EQClass::EQ_Character
 {
 public:
     uint16_t EQ_Character::Max_Mana();
-    void EQ_Character::eqspa_movement_rate(short unknown);
-    int EQ_Character::CastSpell(uint8_t spellGemIndex, uint16_t spellID, EQ::Item** item, uint16_t unknown);
-    int EQ_Character::StopSpellCast(uint8_t spellGemIndex, uint16_t spellID);
-    int EQ_Character::StopSpellCast(uint8_t spellGemIndex);
-    int EQ_Character::UseSkill(uint8_t skillID, class EQPlayer* targetSpawn);
-    int EQ_Character::NotifyPCAffectChange(int affectID, int enabled);
+    void EQ_Character::eqspa_movement_rate(signed short movementSpeed);
+    int EQ_Character::CastSpell(EQ_SpellGemIndex_t spellGemIndex, EQ_SpellID_t spellID, EQ::Item** item, uint16_t unknown);
+    int EQ_Character::StopSpellCast(EQ_SpellGemIndex_t spellGemIndex, EQ_SpellID_t spellID);
+    int EQ_Character::StopSpellCast(EQ_SpellGemIndex_t spellGemIndex);
+    int EQ_Character::UseSkill(EQ_SkillID_t skillID, class EQPlayer* targetPlayer);
+    int EQ_Character::NotifyPCAffectChange(EQ_AffectID_t affectID, int enabled);
     int EQ_Character::Levitate();
 };
 
@@ -312,28 +313,28 @@ EQ_MACRO_FunctionAtAddress(void EQClass::EQ_Character::eqspa_movement_rate(short
 typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__eqspa_movement_rate)(void* this_ptr, short unknown);
 
 #define EQ_ADDRESS_FUNCTION_EQ_Character__CastSpell 0x004C483B
-typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__CastSpell)(void* this_ptr, uint8_t spellGemIndex, uint16_t spellID, EQ::Item** item, uint16_t unknown);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__CastSpell)(void* this_ptr, EQ_SpellGemIndex_t spellGemIndex, EQ_SpellID_t spellID, EQ::Item** item, uint16_t unknown);
 EQ_MACRO_FunctionAtAddress(int EQClass::EQ_Character::CastSpell(uint8_t spellGemIndex, uint16_t spellID, EQ::Item** item, uint16_t unknown), EQ_ADDRESS_FUNCTION_EQ_Character__CastSpell);
 
 #define EQ_ADDRESS_FUNCTION_EQ_Character__StopSpellCast 0x004CB510
-typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__StopSpellCast)(void* this_ptr, uint8_t spellGemIndex, uint16_t spellID);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__StopSpellCast)(void* this_ptr, EQ_SpellGemIndex_t spellGemIndex, EQ_SpellID_t spellID);
 EQ_MACRO_FunctionAtAddress(int EQClass::EQ_Character::StopSpellCast(uint8_t spellGemIndex, uint16_t spellID), EQ_ADDRESS_FUNCTION_EQ_Character__StopSpellCast);
 
 #define EQ_ADDRESS_FUNCTION_EQ_Character__StopSpellCast__2 0x004CB4E8
-typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__StopSpellCast__2)(void* this_ptr, uint8_t spellGemIndex);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__StopSpellCast__2)(void* this_ptr, EQ_SpellGemIndex_t spellGemIndex);
 EQ_MACRO_FunctionAtAddress(int EQClass::EQ_Character::StopSpellCast(uint8_t spellGemIndex), EQ_ADDRESS_FUNCTION_EQ_Character__StopSpellCast__2);
 
 #define EQ_ADDRESS_FUNCTION_EQ_Character__UseSkill 0x004BDF2F
-typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__UseSkill)(void* this_ptr, uint8_t skillID, class EQPlayer* targetSpawn);
-EQ_MACRO_FunctionAtAddress(int EQClass::EQ_Character::UseSkill(uint8_t skillID, class EQPlayer* targetSpawn), EQ_ADDRESS_FUNCTION_EQ_Character__UseSkill);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__UseSkill)(void* this_ptr, EQ_SkillID_t skillID, class EQPlayer* targetPlayer);
+EQ_MACRO_FunctionAtAddress(int EQClass::EQ_Character::UseSkill(EQ_SkillID_t skillID, class EQPlayer* targetPlayer), EQ_ADDRESS_FUNCTION_EQ_Character__UseSkill);
+
+#define EQ_ADDRESS_FUNCTION_EQ_Character__NotifyPCAffectChange 0x004C09B6
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__NotifyPCAffectChange)(void* this_ptr, EQ_AffectID_t affectID, int enabled);
+EQ_MACRO_FunctionAtAddress(int EQClass::EQ_Character::NotifyPCAffectChange(EQ_AffectID_t affectID, int enabled), EQ_ADDRESS_FUNCTION_EQ_Character__NotifyPCAffectChange);
 
 #define EQ_ADDRESS_FUNCTION_EQ_Character__Levitate 0x004CAC0D
 typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__Levitate)(void* this_ptr);
 EQ_MACRO_FunctionAtAddress(int EQClass::EQ_Character::Levitate(), EQ_ADDRESS_FUNCTION_EQ_Character__Levitate);
-
-#define EQ_ADDRESS_FUNCTION_EQ_Character__NotifyPCAffectChange 0x004C09B6
-typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__NotifyPCAffectChange)(void* this_ptr, int affectID, int enabled);
-EQ_MACRO_FunctionAtAddress(int EQClass::EQ_Character::NotifyPCAffectChange(int affectID, int enabled), EQ_ADDRESS_FUNCTION_EQ_Character__NotifyPCAffectChange);
 
 /* EQ_Item */
 
@@ -489,8 +490,12 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CListWnd__SetItemColor)(void* this_ptr
 class EQClass::CContainerWnd : public EQClass::CSidlScreenWnd
 {
 public:
-    //
+    void CContainerWnd::PostDraw();
 };
+
+#define EQ_ADDRESS_FUNCTION_CContainerWnd__PostDraw 0x00416CFC
+EQ_MACRO_FunctionAtAddress(void EQClass::CContainerWnd::PostDraw(), EQ_ADDRESS_FUNCTION_CContainerWnd__PostDraw);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CContainerWnd__PostDraw)(void* this_ptr);
 
 /* CContainerMgr */
 
@@ -610,7 +615,7 @@ class EQClass::CItemDisplayWnd : public EQClass::CSidlScreenWnd
 {
 public:
     void CItemDisplayWnd::SetItem(EQ::Item_ptr item, bool unknown);
-    void CItemDisplayWnd::SetSpell(uint16_t spellID, bool hasDescription, int unknown);
+    void CItemDisplayWnd::SetSpell(EQ_SpellID_t spellID, bool hasDescription, int unknown);
 };
 
 #define EQ_ADDRESS_FUNCTION_CItemDisplayWnd__SetItem 0x00423640
@@ -618,8 +623,8 @@ EQ_MACRO_FunctionAtAddress(void EQClass::CItemDisplayWnd::SetItem(EQ::Item_ptr i
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CItemDisplayWnd__SetItem)(void* this_ptr, EQ::Item_ptr item, bool unknown);
 
 #define EQ_ADDRESS_FUNCTION_CItemDisplayWnd__SetSpell 0x00425957
-EQ_MACRO_FunctionAtAddress(void EQClass::CItemDisplayWnd::SetSpell(uint16_t spellID, bool hasDescription, int unknown), EQ_ADDRESS_FUNCTION_CItemDisplayWnd__SetSpell);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CItemDisplayWnd__SetSpell)(void* this_ptr, uint16_t spellID, bool hasDescription, int unknown);
+EQ_MACRO_FunctionAtAddress(void EQClass::CItemDisplayWnd::SetSpell(EQ_SpellID_t spellID, bool hasDescription, int unknown), EQ_ADDRESS_FUNCTION_CItemDisplayWnd__SetSpell);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CItemDisplayWnd__SetSpell)(void* this_ptr, EQ_SpellID_t spellID, bool hasDescription, int unknown);
 
 /* CLootWnd */
 
@@ -656,11 +661,11 @@ class EQClass::CSpellBookWnd : public EQClass::CSidlScreenWnd
 public:
     void CSpellBookWnd::Activate();
     char* CSpellBookWnd::UpdateSpellBookDisplay();
-    bool CSpellBookWnd::StartSpellMemorization(int spellBookIndex, uint8_t spellGemIndex, bool unknown);
-    int CSpellBookWnd::FinishMemorizing(uint8_t spellGemIndex, uint16_t spellID);
+    bool CSpellBookWnd::StartSpellMemorization(int spellBookIndex, EQ_SpellGemIndex_t spellGemIndex, bool unknown);
+    int CSpellBookWnd::FinishMemorizing(EQ_SpellGemIndex_t spellGemIndex, EQ_SpellID_t spellID);
     int CSpellBookWnd::GetSpellMemTicksLeft();
     void CSpellBookWnd::TurnToPage(signed int pageNumber);
-    void CSpellBookWnd::HandleKeys(uint32_t keyID, bool unknown);
+    void CSpellBookWnd::HandleKeys(int keyID, bool unknown);
 };
 
 #define EQ_ADDRESS_FUNCTION_CSpellBookWnd__Activate 0x0043441F
@@ -672,12 +677,12 @@ EQ_MACRO_FunctionAtAddress(char* EQClass::CSpellBookWnd::UpdateSpellBookDisplay(
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CSpellBookWnd__UpdateSpellBookDisplay)(void* this_ptr);
 
 #define EQ_ADDRESS_FUNCTION_CSpellBookWnd__StartSpellMemorization 0x00434A05
-EQ_MACRO_FunctionAtAddress(bool EQClass::CSpellBookWnd::StartSpellMemorization(int spellBookIndex, uint8_t spellGemIndex, bool unknown), EQ_ADDRESS_FUNCTION_CSpellBookWnd__StartSpellMemorization);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CSpellBookWnd__StartSpellMemorization)(void* this_ptr, int spellBookIndex, uint8_t spellGemIndex, bool unknown);
+EQ_MACRO_FunctionAtAddress(bool EQClass::CSpellBookWnd::StartSpellMemorization(int spellBookIndex, EQ_SpellGemIndex_t spellGemIndex, bool unknown), EQ_ADDRESS_FUNCTION_CSpellBookWnd__StartSpellMemorization);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CSpellBookWnd__StartSpellMemorization)(void* this_ptr, int spellBookIndex, EQ_SpellGemIndex_t spellGemIndex, bool unknown);
 
 #define EQ_ADDRESS_FUNCTION_CSpellBookWnd__FinishMemorizing 0x00434B38
-EQ_MACRO_FunctionAtAddress(int EQClass::CSpellBookWnd::FinishMemorizing(uint8_t spellGemIndex, uint16_t spellID), EQ_ADDRESS_FUNCTION_CSpellBookWnd__FinishMemorizing);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CSpellBookWnd__FinishMemorizing)(void* this_ptr, uint8_t spellGemIndex, uint16_t spellID);
+EQ_MACRO_FunctionAtAddress(int EQClass::CSpellBookWnd::FinishMemorizing(EQ_SpellGemIndex_t spellGemIndex, EQ_SpellID_t spellID), EQ_ADDRESS_FUNCTION_CSpellBookWnd__FinishMemorizing);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CSpellBookWnd__FinishMemorizing)(void* this_ptr, EQ_SpellGemIndex_t spellGemIndex, EQ_SpellID_t spellID);
 
 #define EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellMemTicksLeft 0x00434C05
 EQ_MACRO_FunctionAtAddress(int EQClass::CSpellBookWnd::GetSpellMemTicksLeft(), EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellMemTicksLeft);
@@ -688,8 +693,8 @@ EQ_MACRO_FunctionAtAddress(void EQClass::CSpellBookWnd::TurnToPage(signed int pa
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CSpellBookWnd__TurnToPage)(void* this_ptr, signed int pageNumber);
 
 #define EQ_ADDRESS_FUNCTION_CSpellBookWnd__HandleKeys 0x004346AF
-EQ_MACRO_FunctionAtAddress(void EQClass::CSpellBookWnd::HandleKeys(uint32_t keyID, bool unknown), EQ_ADDRESS_FUNCTION_CSpellBookWnd__HandleKeys);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CSpellBookWnd__HandleKeys)(void* this_ptr, uint32_t keyID, bool unknown);
+EQ_MACRO_FunctionAtAddress(void EQClass::CSpellBookWnd::HandleKeys(int keyID, bool unknown), EQ_ADDRESS_FUNCTION_CSpellBookWnd__HandleKeys);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CSpellBookWnd__HandleKeys)(void* this_ptr, int keyID, bool unknown);
 
 /* CTrackingWnd */
 

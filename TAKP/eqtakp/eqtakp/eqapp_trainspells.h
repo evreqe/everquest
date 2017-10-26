@@ -85,11 +85,11 @@ void EQAPP_TrainSpells_Execute()
     }
 
     auto spellID = EQ_GetSpellIDBySpellName(g_trainSpellsSpellName);
-    if (spellID == EQ_SPELL_ID_NULL)
+    if (EQ_IsSpellIDValid(spellID) == false)
     {
         if (g_trainSpellsDebugIsEnabled == true)
         {
-            std::cout << __FUNCTION__ << ": Spell ID is NULL in EQ_GetSpellIDBySpellName() result." << std::endl;
+            std::cout << __FUNCTION__ << ": Spell ID is not valid in EQ_GetSpellIDBySpellName() result." << std::endl;
             std::cout << __FUNCTION__ << ": Spell with that name does not exist!" << std::endl;
         }
 
@@ -143,7 +143,7 @@ void EQAPP_TrainSpells_Execute()
         std::cout << __FUNCTION__ << ": Player Mana Max: " << playerManaMax << std::endl;
         std::cout << __FUNCTION__ << ": Player Mana Percent: " << playerManaPercent << std::endl;
 
-        std::cout << __FUNCTION__ << ": Spell Casting Time: " << EQ_GetSpellCastingTime() << std::endl;
+        std::cout << __FUNCTION__ << ": Spell Casting Time: " << EQ_FUNCTION_GetSpellCastingTime() << std::endl;
     }
 
     if (playerManaPercent <= g_trainSpellsSitAtManaPercent || playerMana < spell->ManaCost)

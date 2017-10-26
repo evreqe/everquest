@@ -36,7 +36,14 @@ std::map<std::string, std::function<void()>> g_interpretCmdList =
     {"//ESPShowActorIndex",                &EQAPP_ESP_ShowActorIndex_Toggle},
     {"//ExtendedTargets",                  &EQAPP_ExtendedTargets_Toggle},
     {"//FoodAndDrink",                     &EQAPP_FoodAndDrink_Toggle},
+    {"//Fly",                              &EQAPP_Fly_On},
+    {"//FlyOn",                            &EQAPP_Fly_On},
+    {"//FlyOff",                           &EQAPP_Fly_Off},
     {"//FreeCamera",                       &EQAPP_FreeCamera_Toggle},
+    {"//LevelOfDetail",                    &EQAPP_LevelOfDetail_Toggle},
+    {"//Levitate",                         &EQAPP_Levitate_On},
+    {"//LevitateOn",                       &EQAPP_Levitate_On},
+    {"//LevitateOff",                      &EQAPP_Levitate_Off},
     {"//PrintTargetMeleeDistance",         &EQAPP_PrintTargetMeleeDistance},
     {"//HideCorpseLooted",                 &EQAPP_HideCorpseLooted_Toggle},
     {"//HotButtonKeys",                    &EQAPP_HotButtonKeys_Toggle},
@@ -252,7 +259,7 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
                     location.X = playerSpawn->X;
                     location.Z = playerSpawn->Z;
 
-                    EQ_DoSpellEffect(2, spell, player, player, &location, NULL, 0);
+                    EQ_FUNCTION_DoSpellEffect(2, spell, player, player, &location, NULL, 0);
                 }
             }
         }
@@ -589,22 +596,24 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
             return true;
         }
 
-        uint16_t spellID = std::stoi(str);
-
-        auto playerSpawn = EQ_GetPlayerSpawn();
-        if (playerSpawn != NULL)
+        EQ_SpellID_t spellID = std::stoi(str);
+        if (EQ_IsSpellIDValid(spellID) == true)
         {
-            auto spell = EQ_GetSpellByID(spellID);
-            if (spell != NULL)
+            auto playerSpawn = EQ_GetPlayerSpawn();
+            if (playerSpawn != NULL)
             {
-                EQ::Location location;
-                location.Y = playerSpawn->Y;
-                location.X = playerSpawn->X;
-                location.Z = playerSpawn->Z;
+                auto spell = EQ_GetSpellByID(spellID);
+                if (spell != NULL)
+                {
+                    EQ::Location location;
+                    location.Y = playerSpawn->Y;
+                    location.X = playerSpawn->X;
+                    location.Z = playerSpawn->Z;
 
-                auto player = (EQClass::EQPlayer*)playerSpawn;
+                    auto player = (EQClass::EQPlayer*)playerSpawn;
 
-                EQ_DoSpellEffect(2, spell, player, player, &location, NULL, 0);
+                    EQ_FUNCTION_DoSpellEffect(2, spell, player, player, &location, NULL, 0);
+                }
             }
         }
 
@@ -613,52 +622,33 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
 
     if (commandText == "//DoSpellEffect")
     {
-        uint16_t spellID = EQAPP_GetRandomNumber(0, EQ_NUM_SPELLS - 1);
-
-        auto playerSpawn = EQ_GetPlayerSpawn();
-        if (playerSpawn != NULL)
+        EQ_SpellID_t spellID = EQAPP_GetRandomNumber(1, EQ_NUM_SPELLS - 1);
+        if (EQ_IsSpellIDValid(spellID) == true)
         {
-            auto spell = EQ_GetSpellByID(spellID);
-            if (spell != NULL)
+            auto playerSpawn = EQ_GetPlayerSpawn();
+            if (playerSpawn != NULL)
             {
-                std::cout << "DoSpellEffect: " << spell->Name << " (" << spell->ID << ")" << std::endl;
+                auto spell = EQ_GetSpellByID(spellID);
+                if (spell != NULL)
+                {
+                    std::cout << "DoSpellEffect: " << spell->Name << " (" << spell->ID << ")" << std::endl;
 
-                EQ::Location location;
-                location.Y = playerSpawn->Y;
-                location.X = playerSpawn->X;
-                location.Z = playerSpawn->Z;
+                    EQ::Location location;
+                    location.Y = playerSpawn->Y;
+                    location.X = playerSpawn->X;
+                    location.Z = playerSpawn->Z;
 
-                auto player = (EQClass::EQPlayer*)playerSpawn;
+                    auto player = (EQClass::EQPlayer*)playerSpawn;
 
-                EQ_DoSpellEffect(2, spell, player, player, &location, NULL, 0);
+                    EQ_FUNCTION_DoSpellEffect(2, spell, player, player, &location, NULL, 0);
+                }
             }
         }
 
         return true;
     }
 
-    if (commandText == "//Levitate" || commandText == "//LevitateOn")
-    {
-        EQ_CLASS_POINTER_PlayerSpawn->SetNoGrav(EQ_GRAVITY_LEVITATING);
-
-        return true;
-    }
-
-    if (commandText == "//Fly" || commandText == "//FlyOn")
-    {
-        EQ_CLASS_POINTER_PlayerSpawn->SetNoGrav(EQ_GRAVITY_NONE);
-
-        return true;
-    }
-
-    if (commandText == "//LevitateOff" || commandText == "//FlyOff")
-    {
-        EQ_CLASS_POINTER_PlayerSpawn->SetNoGrav(EQ_GRAVITY_DEFAULT);
-
-        return true;
-    }
-
-    if (commandText == "//ShowFPS")
+    if (commandText == "//ShowFPS" || commandText == "/ToggleFPS")
     {
         bool bEnabled = EQ_GraphicsDLL_IsShowFPSEnabled();
 

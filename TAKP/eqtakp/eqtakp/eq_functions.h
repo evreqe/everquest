@@ -28,7 +28,7 @@ void EQ_Rotate2D(float cx, float cy, float& x, float& y, float angle);
 float EQ_GetRadians(float degrees);
 bool EQ_IsPointInsideRectangle(int pointX, int pointY, int rectX, int rectY, int rectWidth, int rectHeight);
 void EQ_ColorARGB_Darken(uint32_t& colorARGB, float percent);
-void EQ_CopyStringToClipboard(std::string& str);
+void EQ_CopyStringToClipboard(const std::string& str);
 void EQ_CXStr_Set(EQ::CXStr** cxstr, const char* text);
 void EQ_CXStr_Append(EQ::CXStr** cxstr, const char* text);
 bool EQ_IsInGame();
@@ -65,11 +65,11 @@ void EQ_CalculateTickTime(uint32_t ticks, uint32_t& hours, uint32_t& minutes, ui
 std::string EQ_GetTickTimeString(uint32_t ticks);
 void EQ_CalculateItemCost(uint32_t cost, uint32_t& platinum, uint32_t& gold, uint32_t& silver, uint32_t& copper);
 std::string EQ_GetItemCostString(uint32_t cost);
-std::string EQ_GetGuildNameByID(uint16_t guildID);
+std::string EQ_GetGuildNameByID(EQ_GuildID_t guildID);
 uint32_t EQ_GetStringSpriteFontTexture();
 uint32_t EQ_GetTimer();
 bool EQ_HasTimePassed(uint32_t& timer, uint32_t& delay);
-EQ::Spawn_ptr EQ_GetSpawnByID(uint16_t spawnID);
+EQ::Spawn_ptr EQ_GetSpawnByID(EQ_SpawnID_t spawnID);
 EQ::Spawn_ptr EQ_GetFirstSpawn();
 EQ::GroundSpawn_ptr EQ_GetFirstGroundSpawn();
 EQ::DoorSpawn_ptr EQ_GetFirstDoorSpawn();
@@ -96,8 +96,8 @@ void EQ_SetMousePosition(int x, int y);
 void EQ_UseItem(uint32_t slotID);
 std::string EQ_GetClassName(uint32_t classValue);
 std::string EQ_GetClassShortName(uint32_t classValue);
-uint32_t EQ_GetZoneID();
-void EQ_UseSkill(uint8_t skillID, EQClass::EQPlayer* targetSpawn);
+EQ_ZoneID_t EQ_GetZoneID();
+void EQ_UseSkill(EQ_SkillID_t skillID, EQClass::EQPlayer* targetSpawn);
 HWND EQ_GetWindow();
 int EQ_GetLineClipValue(float x, float y, float minX, float minY, float maxX, float maxY);
 bool EQ_LineClip(EQ::Line_ptr line, float minX, float minY, float maxX, float maxY);
@@ -107,20 +107,22 @@ uint32_t EQ_GetCameraView();
 std::string EQ_GetZoneShortName();
 std::string EQ_GetZoneLongName();
 bool EQ_IsWindowVisible(uint32_t windowAddressPointer);
-bool EQ_LootItemByName(std::string name, bool bNoDrop);
+bool EQ_LootItemByName(const std::string& name, bool bNoDrop);
 void EQ_OpenAllContainers();
 void EQ_CloseAllContainers();
-EQ::Spawn_ptr EQ_GetNearestSpawn(uint8_t spawnType, float maxDistance, float maxDistanceZ);
+EQ::Spawn_ptr EQ_GetNearestSpawn(EQ_SpawnType_t spawnType, float maxDistance, float maxDistanceZ, EQ::Spawn_ptr ignoreSpawn);
 void EQ_SetTargetSpawn(EQ::Spawn_ptr spawn);
-uint16_t EQ_GetSpellIDBySpellName(std::string spellName);
-signed int EQ_GetSpellBookSpellIndexBySpellID(uint16_t spellID);
-signed int EQ_GetSpellGemIndexBySpellID(uint16_t spellID);
-EQ::Spawn_ptr EQ_GetSpawnByName(std::string spawnName);
+bool EQ_IsSpellIDValid(EQ_SpellID_t spellID);
+EQ::Spell_ptr EQ_GetSpellByID(EQ_SpellID_t spellID);
+EQ_SpellID_t EQ_GetSpellIDBySpellName(const std::string& spellName);
+signed int EQ_GetSpellBookSpellIndexBySpellID(EQ_SpellID_t spellID);
+signed int EQ_GetSpellGemIndexBySpellID(EQ_SpellID_t spellID);
+EQ::Spawn_ptr EQ_GetSpawnByName(const std::string& spawnName);
 EQ::Spawn_ptr EQ_GetPlayerPetSpawn();
 bool EQ_IsMouseLookEnabled();
 void EQ_DrawMouseCursor();
 uint32_t EQ_GetPlayerManaPercent();
-void EQ_SetSpawnStandingState(EQ::Spawn_ptr spawn, uint8_t standingState);
+void EQ_SetSpawnStandingState(EQ::Spawn_ptr spawn, EQ_StandingState_t standingState);
 void EQ_SetSpawnHeight(EQ::Spawn_ptr spawn, float height);
 void EQ_FaceTowardsSpawn(EQ::Spawn_ptr spawn);
 std::string EQ_GetSpawnName(EQ::Spawn_ptr spawn);
@@ -129,7 +131,9 @@ EQ::Camera_ptr EQ_GetCamera();
 void EQ_FixHeading(float& heading);
 uint32_t EQ_GetNumPlayersInZone();
 bool EQ_IsSpawnBehindSpawn(EQ::Spawn_ptr spawn1, EQ::Spawn_ptr spawn2);
-std::string EQ_EncryptDecryptString(std::string str);
+bool EQ_IsSpawnBehindSpawnEx(EQ::Spawn_ptr spawn1, EQ::Spawn_ptr spawn2, float angle);
+std::string EQ_EncryptDecryptString(const std::string& str);
+bool EQ_IsClassSpellCaster(uint32_t classType);
 
 template <class T>
 void EQ_Log(const char* text, T number)
@@ -142,23 +146,26 @@ void EQ_Log(const char* text, T number)
 
 /* game's functions */
 
+#define EQ_ADDRESS_FUNCTION_WindowProc 0x0055A4F4
+typedef int (__stdcall* EQ_FUNCTION_TYPE_WindowProc)(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+
 #define EQ_ADDRESS_FUNCTION_DrawNetStatus 0x0054D3AE
 typedef int (__cdecl* EQ_FUNCTION_TYPE_DrawNetStatus)(int, unsigned short, unsigned short, unsigned short x, unsigned short y, int, unsigned short, unsigned long, long, unsigned long);
 
 #define EQ_ADDRESS_FUNCTION_HandleMouseWheel 0x0055B2E0
-typedef int (__cdecl* EQ_FUNCTION_TYPE_HandleMouseWheel)(int delta);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_HandleMouseWheel)(signed int delta);
 
 #define EQ_ADDRESS_FUNCTION_ProcessMouseEvent 0x00525DB4
 typedef int (__cdecl* EQ_FUNCTION_TYPE_ProcessMouseEvent)(void);
 
 #define EQ_ADDRESS_FUNCTION_ProcessKeyDown 0x00525B04
-typedef int (__cdecl* EQ_FUNCTION_TYPE_ProcessKeyDown)(int key);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_ProcessKeyDown)(int keyID);
 
 #define EQ_ADDRESS_FUNCTION_ProcessKeyUp 0x0052462A
-typedef int (__cdecl* EQ_FUNCTION_TYPE_ProcessKeyUp)(int key);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_ProcessKeyUp)(int keyID);
 
 #define EQ_ADDRESS_FUNCTION_ProcessMovementKeys 0x005257FA
-typedef int (__cdecl* EQ_FUNCTION_TYPE_ProcessMovementKeys)(int key);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_ProcessMovementKeys)(int keyID);
 
 #define EQ_ADDRESS_FUNCTION_GetKey 0x0055AFE2
 typedef int (__cdecl* EQ_FUNCTION_TYPE_GetKey)(void);
@@ -166,38 +173,38 @@ typedef int (__cdecl* EQ_FUNCTION_TYPE_GetKey)(void);
 #define EQ_ADDRESS_FUNCTION_get_bearing 0x004F3777
 
 #define EQ_ADDRESS_FUNCTION_ExecuteCmd 0x0054050C
-EQ_MACRO_FunctionAtAddress(int __cdecl EQ_ExecuteCmd(uint32_t ID, int isActive, int zero), EQ_ADDRESS_FUNCTION_ExecuteCmd);
-typedef int (__cdecl* EQ_FUNCTION_TYPE_ExecuteCmd)(uint32_t ID, int isActive, int zero);
+EQ_MACRO_FunctionAtAddress(int __cdecl EQ_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive, int zero), EQ_ADDRESS_FUNCTION_ExecuteCmd);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_ExecuteCmd)(uint32_t commandID, int isActive, int zero);
 
 #define EQ_ADDRESS_FUNCTION_send_message 0x0054E51A
 
 #define EQ_ADDRESS_FUNCTION_CastRay 0x004F20DB
-EQ_MACRO_FunctionAtAddress(int __cdecl EQ_CastRay(class EQClass::EQPlayer* spawn, float y, float x, float z), EQ_ADDRESS_FUNCTION_CastRay);
+EQ_MACRO_FunctionAtAddress(int __cdecl EQ_FUNCTION_CastRay(class EQClass::EQPlayer* spawn, float y, float x, float z), EQ_ADDRESS_FUNCTION_CastRay);
 
 #define EQ_ADDRESS_FUNCTION_AutoInventory 0x004F0EEB
-EQ_MACRO_FunctionAtAddress(int __cdecl EQ_AutoInventory(EQ::Character_ptr character, EQ::Item** item, short unknown = 0), EQ_ADDRESS_FUNCTION_AutoInventory);
+EQ_MACRO_FunctionAtAddress(int __cdecl EQ_FUNCTION_AutoInventory(EQ::Character_ptr character, EQ::Item** item, short unknown = 0), EQ_ADDRESS_FUNCTION_AutoInventory);
 typedef int (__cdecl* EQ_FUNCTION_TYPE_AutoInventory)(EQ::Character_ptr character, EQ::Item** item, short unknown);
 
 #define EQ_ADDRESS_FUNCTION_get_melee_range 0x004F3898
-EQ_MACRO_FunctionAtAddress(float __cdecl EQ_get_melee_range(class EQClass::EQPlayer* spawn1, class EQClass::EQPlayer* spawn2), EQ_ADDRESS_FUNCTION_get_melee_range);
+EQ_MACRO_FunctionAtAddress(float __cdecl EQ_FUNCTION_get_melee_range(class EQClass::EQPlayer* spawn1, class EQClass::EQPlayer* spawn2), EQ_ADDRESS_FUNCTION_get_melee_range);
 
 #define EQ_ADDRESS_FUNCTION_UpdateLight 0x004F0C7B
-EQ_MACRO_FunctionAtAddress(int __cdecl EQ_UpdateLight(EQ::Character_ptr character), EQ_ADDRESS_FUNCTION_UpdateLight);
+EQ_MACRO_FunctionAtAddress(int __cdecl EQ_FUNCTION_UpdateLight(EQ::Character_ptr character), EQ_ADDRESS_FUNCTION_UpdateLight);
 
 #define EQ_ADDRESS_FUNCTION_GetSpellCastingTime 0x00435F28
-EQ_MACRO_FunctionAtAddress(signed int __cdecl EQ_GetSpellCastingTime(void), EQ_ADDRESS_FUNCTION_GetSpellCastingTime);
+EQ_MACRO_FunctionAtAddress(signed int __cdecl EQ_FUNCTION_GetSpellCastingTime(void), EQ_ADDRESS_FUNCTION_GetSpellCastingTime);
 
 #define EQ_ADDRESS_FUNCTION_CollisionCallbackForMove 0x0050418B
-EQ_MACRO_FunctionAtAddress(signed int __cdecl EQ_CollisionCallbackForMove(EQ::ActorInstance_ptr actorInstance, EQ::Spawn_ptr spawn), EQ_ADDRESS_FUNCTION_CollisionCallbackForMove);
+EQ_MACRO_FunctionAtAddress(signed int __cdecl EQ_FUNCTION_CollisionCallbackForMove(EQ::ActorInstance_ptr actorInstance, EQ::Spawn_ptr spawn), EQ_ADDRESS_FUNCTION_CollisionCallbackForMove);
 typedef int (__cdecl* EQ_FUNCTION_TYPE_CollisionCallbackForMove)(EQ::ActorInstance_ptr actorInstance, EQ::Spawn_ptr spawn);
 
 #define EQ_ADDRESS_FUNCTION_do_target 0x004FD9A7
-EQ_MACRO_FunctionAtAddress(int __cdecl EQ_do_target(class EQClass::EQPlayer* spawn, const char* spawnName), EQ_ADDRESS_FUNCTION_do_target);
-typedef int (__cdecl* EQ_FUNCTION_TYPE_do_target)(class EQClass::EQPlayer* spawn, const char* spawnName);
+EQ_MACRO_FunctionAtAddress(int __cdecl EQ_FUNCTION_do_target(class EQClass::EQPlayer* player, const char* spawnName), EQ_ADDRESS_FUNCTION_do_target);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_do_target)(class EQClass::EQPlayer* player, const char* spawnName);
 
 #define EQ_ADDRESS_FUNCTION_DoSpellEffect 0x0052CA8D
-EQ_MACRO_FunctionAtAddress(int __cdecl EQ_DoSpellEffect(int type, EQ::Spell_ptr spell, class EQClass::EQPlayer* spawn1, class EQClass::EQPlayer* spawn2, EQ::Location_ptr location, int* missile, uint32_t duration), EQ_ADDRESS_FUNCTION_DoSpellEffect);
-typedef int (__cdecl* EQ_FUNCTION_TYPE_DoSpellEffect)(int type, EQ::Spell_ptr spell, class EQClass::EQPlayer* spawn1, class EQClass::EQPlayer* spawn2, EQ::Location_ptr location, int* missile, uint32_t duration);
+EQ_MACRO_FunctionAtAddress(int __cdecl EQ_FUNCTION_DoSpellEffect(int type, EQ::Spell_ptr spell, class EQClass::EQPlayer* player1, class EQClass::EQPlayer* player2, EQ::Location_ptr location, int* missile, uint32_t duration), EQ_ADDRESS_FUNCTION_DoSpellEffect);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_DoSpellEffect)(int type, EQ::Spell_ptr spell, class EQClass::EQPlayer* player1, class EQClass::EQPlayer* player2, EQ::Location_ptr location, int* missile, uint32_t duration);
 
 /* functions */
 
@@ -264,7 +271,7 @@ void EQ_ColorARGB_Darken(uint32_t& colorARGB, float percent)
     colorARGB = (alpha << 24) + (red << 16) + (green << 8) + blue;
 }
 
-void EQ_CopyStringToClipboard(std::string& str)
+void EQ_CopyStringToClipboard(const std::string& str)
 {
     HGLOBAL mem = GlobalAlloc(GMEM_MOVEABLE, str.size() + 1);
     memcpy(GlobalLock(mem), str.c_str(), str.size() + 1);
@@ -824,7 +831,7 @@ std::string EQ_GetItemCostString(uint32_t cost)
     return buffer.str();
 }
 
-std::string EQ_GetGuildNameByID(uint16_t guildID)
+std::string EQ_GetGuildNameByID(EQ_GuildID_t guildID)
 {
     if (guildID == EQ_GUILD_ID_NULL)
     {
@@ -857,7 +864,7 @@ bool EQ_HasTimePassed(uint32_t& timer, uint32_t& delay)
     return false;
 }
 
-EQ::Spawn_ptr EQ_GetSpawnByID(uint16_t spawnID)
+EQ::Spawn_ptr EQ_GetSpawnByID(EQ_SpawnID_t spawnID)
 {
     uint32_t spawnAddress = *(&EQ_POINTER_SpawnIDArray + spawnID);
 
@@ -1022,7 +1029,7 @@ void EQ_UseItem(uint32_t slotID)
 
 std::string EQ_GetClassName(uint32_t classValue)
 {
-    if ((classValue > EQ_NUM_CLASSES) || ((size_t)classValue > EQ_STRING_LIST_CLASS_NAME.size()))
+    if ((classValue > EQ_NUM_CLASSES_TOTAL) || ((size_t)classValue > EQ_STRING_LIST_CLASS_NAME.size()))
     {
         return "Unknown";
     }
@@ -1032,7 +1039,7 @@ std::string EQ_GetClassName(uint32_t classValue)
 
 std::string EQ_GetClassShortName(uint32_t classValue)
 {
-    if ((classValue > EQ_NUM_CLASSES) || ((size_t)classValue > EQ_STRING_LIST_CLASS_SHORT_NAME.size()))
+    if ((classValue > EQ_NUM_CLASSES_TOTAL) || ((size_t)classValue > EQ_STRING_LIST_CLASS_SHORT_NAME.size()))
     {
         return "UNK";
     }
@@ -1040,12 +1047,12 @@ std::string EQ_GetClassShortName(uint32_t classValue)
     return EQ_STRING_LIST_CLASS_SHORT_NAME.at(classValue);
 }
 
-uint32_t EQ_GetZoneID()
+EQ_ZoneID_t EQ_GetZoneID()
 {
-    return EQ_ReadMemory<int32_t>(EQ_ADDRESS_ZONE_ID);
+    return EQ_ReadMemory<EQ_ZoneID_t>(EQ_ADDRESS_ZONE_ID);
 }
 
-void EQ_UseSkill(uint8_t skillID, EQClass::EQPlayer* targetSpawn)
+void EQ_UseSkill(EQ_SkillID_t skillID, EQClass::EQPlayer* targetSpawn)
 {
     auto playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)
@@ -1217,7 +1224,7 @@ bool EQ_IsWindowVisible(uint32_t windowAddressPointer)
     return false;
 }
 
-bool EQ_LootItemByName(std::string name, bool bNoDrop)
+bool EQ_LootItemByName(const std::string& name, bool bNoDrop)
 {
     if (EQ_IsWindowVisible(EQ_ADDRESS_POINTER_CLootWnd) == false)
     {
@@ -1311,7 +1318,7 @@ void EQ_CloseAllContainers()
     EQ_CLASS_POINTER_CContainerMgr->CloseAllContainers();
 }
 
-EQ::Spawn_ptr EQ_GetNearestSpawn(uint8_t spawnType, float maxDistance, float maxDistanceZ)
+EQ::Spawn_ptr EQ_GetNearestSpawn(EQ_SpawnType_t spawnType, float maxDistance, float maxDistanceZ, EQ::Spawn_ptr ignoreSpawn)
 {
     auto playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)
@@ -1319,7 +1326,7 @@ EQ::Spawn_ptr EQ_GetNearestSpawn(uint8_t spawnType, float maxDistance, float max
         return NULL;
     }
 
-    uint16_t spawnID = 0;
+    EQ_SpawnID_t spawnID = 0;
 
     float shortestDistance = 0.0f;
 
@@ -1328,7 +1335,13 @@ EQ::Spawn_ptr EQ_GetNearestSpawn(uint8_t spawnType, float maxDistance, float max
     spawn = EQ_GetFirstSpawn();
     while (spawn)
     {
-        if (EQ_CastRay((EQClass::EQPlayer*)playerSpawn, spawn->Y, spawn->X, spawn->Z) != 1)
+        if (spawn == ignoreSpawn)
+        {
+            spawn = spawn->Next;
+            continue;
+        }
+
+        if (EQ_FUNCTION_CastRay((EQClass::EQPlayer*)playerSpawn, spawn->Y, spawn->X, spawn->Z) != 1)
         {
             spawn = spawn->Next;
             continue;
@@ -1430,14 +1443,24 @@ EQ::Spawn_ptr EQ_GetNearestSpawn(uint8_t spawnType, float maxDistance, float max
     return NULL;
 }
 
-EQ::Spell_ptr EQ_GetSpellByID(uint16_t spellID)
+bool EQ_IsSpellIDValid(EQ_SpellID_t spellID)
 {
-    if (spellID == EQ_SPELL_ID_NULL)
+    if (spellID == 0 || spellID == EQ_SPELL_ID_NULL)
     {
-        return NULL;
+        return false;
     }
 
     if (spellID > (EQ_NUM_SPELLS - 1))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+EQ::Spell_ptr EQ_GetSpellByID(EQ_SpellID_t spellID)
+{
+    if (EQ_IsSpellIDValid(spellID) == false)
     {
         return NULL;
     }
@@ -1445,7 +1468,7 @@ EQ::Spell_ptr EQ_GetSpellByID(uint16_t spellID)
     return EQ_POINTER_SpellList->Spell[spellID];
 }
 
-uint16_t EQ_GetSpellIDBySpellName(std::string spellName)
+EQ_SpellID_t EQ_GetSpellIDBySpellName(const std::string& spellName)
 {
     if (spellName.size() == 0)
     {
@@ -1475,7 +1498,7 @@ uint16_t EQ_GetSpellIDBySpellName(std::string spellName)
         isSongScroll = true;
     }
 
-    for (uint16_t i = 0; i < EQ_NUM_SPELLS; i++)
+    for (EQ_SpellID_t i = 0; i < EQ_NUM_SPELLS; i++)
     {
         std::string spellListSpellName = EQ_POINTER_SpellList->Spell[i]->Name;
         if (spellListSpellName.size() == 0)
@@ -1507,9 +1530,9 @@ uint16_t EQ_GetSpellIDBySpellName(std::string spellName)
     return EQ_SPELL_ID_NULL;
 }
 
-signed int EQ_GetSpellBookSpellIndexBySpellID(uint16_t spellID)
+signed int EQ_GetSpellBookSpellIndexBySpellID(EQ_SpellID_t spellID)
 {
-    if (spellID == EQ_SPELL_ID_NULL)
+    if (EQ_IsSpellIDValid(spellID) == false)
     {
         return -1;
     }
@@ -1522,7 +1545,7 @@ signed int EQ_GetSpellBookSpellIndexBySpellID(uint16_t spellID)
 
     for (signed int i = 0; i < EQ_NUM_SPELL_BOOK_SPELLS; i++)
     {
-        auto spellBookSpellID = playerSpawn->Character->SpellBook[i];
+        auto spellBookSpellID = playerSpawn->Character->SpellBookSpellID[i];
         if (spellBookSpellID == spellID)
         {
             return i;
@@ -1532,9 +1555,9 @@ signed int EQ_GetSpellBookSpellIndexBySpellID(uint16_t spellID)
     return -1;
 }
 
-signed int EQ_GetSpellGemIndexBySpellID(uint16_t spellID)
+signed int EQ_GetSpellGemIndexBySpellID(EQ_SpellID_t spellID)
 {
-    if (spellID == EQ_SPELL_ID_NULL)
+    if (EQ_IsSpellIDValid(spellID) == false)
     {
         return -1;
     }
@@ -1545,10 +1568,10 @@ signed int EQ_GetSpellGemIndexBySpellID(uint16_t spellID)
         return -1;
     }
 
-    for (size_t i = 0; i < EQ_NUM_SPELL_GEMS; i++)
+    for (signed int i = 0; i < EQ_NUM_SPELL_GEMS; i++)
     {
-        auto memorizedSpellID = playerSpawn->Character->MemorizedSpell[i];
-        if (memorizedSpellID == spellID)
+        auto spellGemSpellID = playerSpawn->Character->SpellGemSpellID[i];
+        if (spellGemSpellID == spellID)
         {
             return i;
         }
@@ -1557,7 +1580,7 @@ signed int EQ_GetSpellGemIndexBySpellID(uint16_t spellID)
     return -1;
 }
 
-EQ::Spawn_ptr EQ_GetSpawnByName(std::string spawnName)
+EQ::Spawn_ptr EQ_GetSpawnByName(const std::string& spawnName)
 {
     auto spawn = EQ_GetFirstSpawn();
     while (spawn != NULL)
@@ -1638,7 +1661,7 @@ uint32_t EQ_GetPlayerManaPercent()
     return manaPercent;
 }
 
-void EQ_SetSpawnStandingState(EQ::Spawn_ptr spawn, uint8_t standingState)
+void EQ_SetSpawnStandingState(EQ::Spawn_ptr spawn, EQ_StandingState_t standingState)
 {
     if (spawn == NULL)
     {
@@ -1686,7 +1709,7 @@ std::string EQ_GetSpawnName(EQ::Spawn_ptr spawn)
 
 bool EQ_IsPlayerCastingSpell()
 {
-    return (EQ_GetSpellCastingTime() != -1);
+    return (EQ_FUNCTION_GetSpellCastingTime() != -1);
 }
 
 bool EQ_DoesSpawnExist(EQ::Spawn_ptr spawn)
@@ -1738,6 +1761,16 @@ uint32_t EQ_GetNumPlayersInZone()
 
 bool EQ_IsSpawnBehindSpawn(EQ::Spawn_ptr spawn1, EQ::Spawn_ptr spawn2)
 {
+    if (EQ_IsSpawnBehindSpawnEx(spawn1, spawn2, 64.0f) == true)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool EQ_IsSpawnBehindSpawnEx(EQ::Spawn_ptr spawn1, EQ::Spawn_ptr spawn2, float angle)
+{
     float heading1 = spawn1->Heading;
     float heading2 = spawn2->Heading;
 
@@ -1746,7 +1779,7 @@ bool EQ_IsSpawnBehindSpawn(EQ::Spawn_ptr spawn1, EQ::Spawn_ptr spawn2)
     // use 512 / 8 = 64 for tighter angle
     // use 512 / 4 = 128 for wider angle
 
-    if (headingDifference <= 64.0f)
+    if (headingDifference <= angle)
     {
         return true;
     }
@@ -1754,7 +1787,7 @@ bool EQ_IsSpawnBehindSpawn(EQ::Spawn_ptr spawn1, EQ::Spawn_ptr spawn2)
     return false;
 }
 
-std::string EQ_EncryptDecryptString(std::string str)
+std::string EQ_EncryptDecryptString(const std::string& str)
 {
     char key[5] = {'E', 'Q', 'S', 'T', 'R'};
 
@@ -1767,6 +1800,17 @@ std::string EQ_EncryptDecryptString(std::string str)
 
     return output;
 }
+
+bool EQ_IsClassSpellCaster(uint32_t classType)
+{
+    if (classType == EQ_CLASS_UNKNOWN || classType == EQ_CLASS_WARRIOR || classType == EQ_CLASS_MONK || classType == EQ_CLASS_ROGUE)
+    {
+        return false;
+    }
+
+    return true;
+}
+
 
 
 

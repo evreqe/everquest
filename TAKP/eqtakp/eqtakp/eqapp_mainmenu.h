@@ -99,6 +99,12 @@ void EQAPP_MainMenu_CreateMenu()
     g_mainMenuGUIMenuItemHotButtonKeys.SetFunctionLeftClick(&EQAPP_HotButtonKeys_Toggle);
     g_mainMenuGUIMenuItemHotButtonKeys.SetBoolPointer(g_hotButtonKeysIsEnabled);
 
+    EQApp::GUIMenuItem g_mainMenuGUIMenuItemLevelOfDetail;
+    g_mainMenuGUIMenuItemLevelOfDetail.SetText("Level of Detail");
+    g_mainMenuGUIMenuItemLevelOfDetail.FitToText();
+    g_mainMenuGUIMenuItemLevelOfDetail.SetFunctionLeftClick(&EQAPP_LevelOfDetail_Toggle);
+    g_mainMenuGUIMenuItemLevelOfDetail.SetBoolPointer(g_levelOfDetailIsEnabled);
+
     EQApp::GUIMenuItem g_mainMenuGUIMenuItemMap;
     g_mainMenuGUIMenuItemMap.SetText("Map");
     g_mainMenuGUIMenuItemMap.FitToText();
@@ -149,6 +155,7 @@ void EQAPP_MainMenu_CreateMenu()
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemFoodAndDrink);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemFreeCamera);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemHotButtonKeys);
+    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemLevelOfDetail);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemMap);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemReplaceRaces);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemSpawnAlert);

@@ -5,8 +5,8 @@ bool g_merchantWindowIsEnabled = true;
 unsigned int g_merchantWindowFontSize = 1;
 
 void EQAPP_MerchantWindow_Toggle();
-void EQAPP_MerchantWindow_AppendSpellLevelToToolTipText(void* this_ptr);
-void EQAPP_MerchantWindow_HandleEvent_CMerchantWnd__PostDraw(void* this_ptr);
+void EQAPP_MerchantWindow_AppendSpellLevelToToolTipText_HandleEvent_CMerchantWnd__PostDraw(void* this_ptr);
+void EQAPP_MerchantWindow_AppendSpellLevelToItemSlot_HandleEvent_CMerchantWnd__PostDraw(void* this_ptr);
 
 void EQAPP_MerchantWindow_Toggle()
 {
@@ -14,7 +14,7 @@ void EQAPP_MerchantWindow_Toggle()
     EQAPP_PrintBool("Merchant Window", g_merchantWindowIsEnabled);
 }
 
-void EQAPP_MerchantWindow_AppendSpellLevelToToolTipText(void* this_ptr)
+void EQAPP_MerchantWindow_AppendSpellLevelToToolTipText_HandleEvent_CMerchantWnd__PostDraw(void* this_ptr)
 {
     auto playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)
@@ -22,8 +22,8 @@ void EQAPP_MerchantWindow_AppendSpellLevelToToolTipText(void* this_ptr)
         return;
     }
 
-    uint8_t playerClass = playerSpawn->Class;
-    if (playerClass == EQ_CLASS_UNKNOWN || playerClass == EQ_CLASS_WARRIOR || playerClass == EQ_CLASS_MONK || playerClass == EQ_CLASS_ROGUE)
+    auto playerClass = playerSpawn->Class;
+    if (EQ_IsClassSpellCaster(playerClass) == false)
     {
         return;
     }
@@ -42,19 +42,13 @@ void EQAPP_MerchantWindow_AppendSpellLevelToToolTipText(void* this_ptr)
             continue;
         }
 
-        std::string itemName = item->Name;
-        if (itemName.size() == 0)
+        if (item->Common.Type != EQ_ITEM_TYPE_SPELL_SCROLL)
         {
             continue;
         }
 
-        if ((itemName.find("Spell:") == std::string::npos) && (itemName.find("Ancient:") == std::string::npos) && (itemName.find("Song:") == std::string::npos))
-        {
-            continue;
-        }
-
-        uint16_t spellID = item->Common.SpellID;
-        if (spellID == 0 || spellID == EQ_SPELL_ID_NULL)
+        EQ_SpellID_t spellID = item->Common.SpellID;
+        if (EQ_IsSpellIDValid(spellID) == false)
         {
             continue;
         }
@@ -65,7 +59,7 @@ void EQAPP_MerchantWindow_AppendSpellLevelToToolTipText(void* this_ptr)
             continue;
         }
 
-        int spellLevelNeeded = (int)spell->Level[playerClass - 1];
+        auto spellLevelNeeded = spell->Level[playerClass - 1];
         if (spellLevelNeeded == EQ_SPELL_LEVEL_NEEDED_CANNOT_USE)
         {
             continue;
@@ -91,7 +85,7 @@ void EQAPP_MerchantWindow_AppendSpellLevelToToolTipText(void* this_ptr)
         if (originalToolTipText.find("(") == std::string::npos)
         {
             std::stringstream newToolTipText;
-            newToolTipText << originalToolTipText << " (" << spellLevelNeeded;
+            newToolTipText << originalToolTipText << " (" << (int)spellLevelNeeded;
 
             signed int spellBookIndex = EQ_GetSpellBookSpellIndexBySpellID(spellID);
             if (spellBookIndex != -1)
@@ -106,7 +100,7 @@ void EQAPP_MerchantWindow_AppendSpellLevelToToolTipText(void* this_ptr)
     }
 }
 
-void EQAPP_MerchantWindow_HandleEvent_CMerchantWnd__PostDraw(void* this_ptr)
+void EQAPP_MerchantWindow_AppendSpellLevelToItemSlot_HandleEvent_CMerchantWnd__PostDraw(void* this_ptr)
 {
     if (EQ_IsKeyPressedAlt() == true)
     {
@@ -119,7 +113,7 @@ void EQAPP_MerchantWindow_HandleEvent_CMerchantWnd__PostDraw(void* this_ptr)
         return;
     }
 
-    uint8_t playerClass = playerSpawn->Class;
+    auto playerClass = playerSpawn->Class;
     if (playerClass == EQ_CLASS_UNKNOWN || playerClass == EQ_CLASS_WARRIOR || playerClass == EQ_CLASS_MONK || playerClass == EQ_CLASS_ROGUE)
     {
         return;
@@ -139,19 +133,13 @@ void EQAPP_MerchantWindow_HandleEvent_CMerchantWnd__PostDraw(void* this_ptr)
             continue;
         }
 
-        std::string itemName = item->Name;
-        if (itemName.size() == 0)
+        if (item->Common.Type != EQ_ITEM_TYPE_SPELL_SCROLL)
         {
             continue;
         }
 
-        if ((itemName.find("Spell:") == std::string::npos) && (itemName.find("Ancient:") == std::string::npos) && (itemName.find("Song:") == std::string::npos))
-        {
-            continue;
-        }
-
-        uint16_t spellID = item->Common.SpellID;
-        if (spellID == 0 || spellID == EQ_SPELL_ID_NULL)
+        EQ_SpellID_t spellID = item->Common.SpellID;
+        if (EQ_IsSpellIDValid(spellID) == false)
         {
             continue;
         }
@@ -162,7 +150,7 @@ void EQAPP_MerchantWindow_HandleEvent_CMerchantWnd__PostDraw(void* this_ptr)
             continue;
         }
 
-        int spellLevelNeeded = (int)spell->Level[playerClass - 1];
+        auto spellLevelNeeded = spell->Level[playerClass - 1];
         if (spellLevelNeeded == EQ_SPELL_LEVEL_NEEDED_CANNOT_USE)
         {
             continue;
@@ -210,12 +198,12 @@ void EQAPP_MerchantWindow_HandleEvent_CMerchantWnd__PostDraw(void* this_ptr)
         }
 
         std::stringstream newToolTipText;
-        newToolTipText << spellLevelNeeded;
+        newToolTipText << (int)spellLevelNeeded;
 
         signed int spellBookIndex = EQ_GetSpellBookSpellIndexBySpellID(spellID);
         if (spellBookIndex != -1)
         {
-            newToolTipText << "*";
+            newToolTipText << " *";
         }
 
         merchantSlotWnd->Window.Font->Size = g_merchantWindowFontSize;

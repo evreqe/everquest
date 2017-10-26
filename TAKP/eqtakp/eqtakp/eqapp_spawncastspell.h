@@ -137,14 +137,14 @@ void EQAPP_SpawnCastSpell_HandleEvent_CEverQuest__StartCasting(void* this_ptr, E
         return;
     }
 
-    uint16_t spellID = message->SpellID;
-    if (spellID == EQ_SPELL_ID_NULL)
+    uint32_t spellCastTime = message->SpellCastTime;
+    if (spellCastTime == 0)
     {
         return;
     }
 
-    uint32_t spellCastTime = message->SpellCastTime;
-    if (spellCastTime == 0)
+    uint16_t spellID = message->SpellID;
+    if (EQ_IsSpellIDValid(spellID) == false)
     {
         return;
     }

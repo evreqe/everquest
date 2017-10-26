@@ -38,6 +38,15 @@ uint32_t EQ_ADDRESS_FUNCTION_EQGraphicsDLL__t3dRenderDeferred2DItems = NULL;
 #define EQ_GRAPHICS_DLL_OFFSET_EQGraphicsDLL__t3dSelectTexture 0x64CD0
 uint32_t EQ_ADDRESS_FUNCTION_EQGraphicsDLL__t3dSelectTexture = NULL;
 
+#define EQ_GRAPHICS_DLL_OFFSET_EQGraphicsDLL__t3dPaintHierarchicalSprite 0x442B0
+uint32_t EQ_ADDRESS_FUNCTION_EQGraphicsDLL__t3dPaintHierarchicalSprite = NULL;
+
+#define EQ_GRAPHICS_DLL_OFFSET_EQGraphicsDLL__t3dPaintHSprite 0x44510
+uint32_t EQ_ADDRESS_FUNCTION_EQGraphicsDLL__t3dPaintHSprite = NULL;
+
+#define EQ_GRAPHICS_DLL_OFFSET_EQGraphicsDLL__s3dPaintDMSprite2 0x489F0
+uint32_t EQ_ADDRESS_FUNCTION_EQGraphicsDLL__s3dPaintDMSprite2 = NULL;
+
 #define EQ_GRAPHICS_DLL_DEFERRED_2D_ITEMS_MAX 4000 // t3dDefer...
 
 #define EQ_GRAPHICS_DLL_WORLD_SPACE_TO_SCREEN_SPACE_RESULT_FAILURE 0xFFFF3D3E // world space to screen space failed because the location is not on screen
@@ -47,44 +56,52 @@ uint32_t EQ_ADDRESS_FUNCTION_EQGraphicsDLL__t3dSelectTexture = NULL;
 
 #define EQ_GRAPHICS_DLL_OFFSET_TOGGLE_FPS_BOOLEAN 0xA4F770 // uint32_t ; frames per second
 
-#define EQ_GRAPHICS_DLL_OFFSET_ACTOR_LIST_STATIC  0x873278 // crates, barrels, doors, trees, chairs, tables, etc
-#define EQ_GRAPHICS_DLL_OFFSET_ACTOR_LIST_DYNAMIC 0x9F9C78 // lamps with fire emitters, trees with moving branches, players/npcs
+#define EQ_GRAPHICS_DLL_OFFSET_ACTOR_LIST_STATIC  0x873278 // DMSprite: crates, barrels, doors, trees, chairs, tables, etc
+#define EQ_GRAPHICS_DLL_OFFSET_ACTOR_LIST_DYNAMIC 0x9F9C78 // HierachialSprite: lamps with fire emitters, trees with moving branches, players/npcs
 
 #define EQ_GRAPHICS_DLL_NUM_ACTOR_LIST_ACTORS_MAX 4096
 
 #define EQ_GRAPHICS_DLL_ACTOR_LIST_ACTOR_SIZE 0x10
 #define EQ_GRAPHICS_DLL_ACTOR_LIST_ACTOR_OFFSET_ACTOR_INSTANCE 0x10
 
+// set render state
+typedef HRESULT (APIENTRY* EQ_FUNCTION_TYPE_EQIDirect3DDevice8__SetRenderState)
+(
+    D3DRENDERSTATETYPE state,
+    DWORD value
+);
+EQ_FUNCTION_TYPE_EQIDirect3DDevice8__SetRenderState EQIDirect3DDevice8__SetRenderState;
+
 // draw indexed primitive
 typedef HRESULT (APIENTRY* EQ_FUNCTION_TYPE_EQIDirect3DDevice8__DrawIndexedPrimitive)
 (
-    LPDIRECT3DDEVICE8 Device,
-    D3DPRIMITIVETYPE Type,
-    UINT MinIndex,
-    UINT NumVertices,
-    UINT StartIndex,
-    UINT PrimitiveCount
+    LPDIRECT3DDEVICE8 device,
+    D3DPRIMITIVETYPE primitiveType,
+    UINT minIndex,
+    UINT numVertices,
+    UINT startIndex,
+    UINT primitiveCount
 );
 EQ_FUNCTION_TYPE_EQIDirect3DDevice8__DrawIndexedPrimitive EQIDirect3DDevice8__DrawIndexedPrimitive;
 
 // reset
 typedef HRESULT (APIENTRY* EQ_FUNCTION_TYPE_EQIDirect3DDevice8__Reset)
 (
-    LPDIRECT3DDEVICE8 Device,
-    D3DPRESENT_PARAMETERS* pPresentationParameters
+    LPDIRECT3DDEVICE8 device,
+    D3DPRESENT_PARAMETERS* presentationParameters
 );
 EQ_FUNCTION_TYPE_EQIDirect3DDevice8__Reset EQIDirect3DDevice8__Reset;
 
 // create actor ex
-typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dCreateActorEx)(int a1, EQ::ActorDefinition_ptr a2, char* a3, int a4, int a5, int a6, float a7, float a8, int a9, int a10);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dCreateActorEx)(int a1, EQ::ActorDefinition_ptr actorDefinition, char* a3, int a4, int a5, int a6, float a7, float a8, int a9, int a10);
 EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dCreateActorEx EQGraphicsDLL__t3dCreateActorEx;
 
 // destroy actor
-typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dDestroyActor)(int a1, EQ::ActorInstance_ptr a2);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dDestroyActor)(int CDisplay__Unknown004, EQ::ActorInstance_ptr actorInstance);
 EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dDestroyActor EQGraphicsDLL__t3dDestroyActor;
 
 // world space to screen space
-typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dWorldSpaceToScreenSpace)(uint32_t cameraDataPointer, EQ::Location*, float* resultX, float* resultY);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dWorldSpaceToScreenSpace)(uint32_t cameraDataPointer, EQ::Location* location, float* screenX, float* screenY);
 EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dWorldSpaceToScreenSpace EQGraphicsDLL__t3dWorldSpaceToScreenSpace;
 
 // draw text
@@ -92,15 +109,15 @@ typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dDeferTextA)(const char*
 EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dDeferTextA EQGraphicsDLL__t3dDeferTextA;
 
 // draw line
-typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dDeferLine)(EQ::Line*, uint32_t colorARGB);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dDeferLine)(EQ::Line* line, uint32_t colorARGB);
 EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dDeferLine EQGraphicsDLL__t3dDeferLine; // eqgfx_dx8.dll+405A0
 
 // draw rectangle
-typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dDeferRect)(EQ::Rect*, uint32_t colorARGB);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dDeferRect)(EQ::Rect* rect, uint32_t colorARGB);
 EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dDeferRect EQGraphicsDLL__t3dDeferRect; // eqgfx_dx8.dll+406C0
 
 // draw quad (filled rectangle)
-typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dDeferQuad)(EQ::Rect*, uint32_t colorARGB);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dDeferQuad)(EQ::Rect* rect, uint32_t colorARGB);
 EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dDeferQuad EQGraphicsDLL__t3dDeferQuad; // eqgfx_dx8.dll+40820
 
 // render deferred polygons
@@ -108,12 +125,24 @@ typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dRenderDeferredPolygons)
 EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dRenderDeferredPolygons EQGraphicsDLL__t3dRenderDeferredPolygons;
 
 // render deferred 2D items
-typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dRenderDeferred2DItems)(int a1);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dRenderDeferred2DItems)(int unknown);
 EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dRenderDeferred2DItems EQGraphicsDLL__t3dRenderDeferred2DItems;
 
 // select texture
 typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dSelectTexture)(EQ::Texture_ptr texture);
 EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dSelectTexture EQGraphicsDLL__t3dSelectTexture;
+
+// paint hierarchical sprite
+typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dPaintHierarchicalSprite)(int* world, int* renderContext, EQ::ActorInstance_ptr actorInstance);
+EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dPaintHierarchicalSprite EQGraphicsDLL__t3dPaintHierarchicalSprite;
+
+// paint hsprite
+typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dPaintHSprite)(EQ::ActorInstance_ptr actorInstance, int* hierarchicalSpriteInstance, int* renderContext, int* world);
+EQ_FUNCTION_TYPE_EQGraphicsDLL__t3dPaintHSprite EQGraphicsDLL__t3dPaintHSprite;
+
+// paint dm sprite 2
+typedef int (__cdecl* EQ_FUNCTION_TYPE_EQGraphicsDLL__s3dPaintDMSprite2)(int* world, int* renderContext, int* actor);
+EQ_FUNCTION_TYPE_EQGraphicsDLL__s3dPaintDMSprite2 EQGraphicsDLL__s3dPaintDMSprite2;
 
 uint32_t EQ_GraphicsDLL_GetBaseAddress();
 bool EQ_GraphicsDLL_IsShowFPSEnabled();

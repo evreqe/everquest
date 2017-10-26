@@ -163,7 +163,7 @@ typedef struct _EQZoneInfo
 {
 /* 0x000 */ uint32_t Header;
 /* 0x004 */ uint32_t Expansion;
-/* 0x008 */ uint32_t ID;
+/* 0x008 */ EQ_ZoneID_t ID;
 /* 0x00C */ char ShortName[129]; // [0x81]
 /* 0x08D */ char LongName[259]; // [0x103]
 union
@@ -241,7 +241,7 @@ typedef struct _Buff
 /* 0x0001 */ uint8_t CasterLevel; // level of player who casted the buff
 /* 0x0002 */ uint8_t Modifier; // divide by 10 to get Bard song modifier
 /* 0x0003 */ uint8_t Unknown0003;
-/* 0x0004 */ uint16_t SpellID;
+/* 0x0004 */ EQ_SpellID_t SpellID;
 /* 0x0006 */ uint16_t Ticks; //  duration in ticks ; seconds = ticks * 3
 /* 0x0008 */ uint16_t Unknown0008;
 /* 0x000A */
@@ -279,7 +279,7 @@ union
 /* 0x00FF */ /* 0x001A */ uint8_t CastingLevelEx; // also weapon proc level
 /* 0x00FF */ /* 0x001A */ uint8_t HasteEx; // need to add +1 to value
 };
-/* 0x0100 */ /* 0x001B */ uint8_t Material; // 0=None, 1=Leather, 2=Chain, 3=Plate, 4=Silk, etc
+/* 0x0100 */ /* 0x001B */ uint8_t Material; // EQ_ARMOR_TEXTURE_TYPE_x
 /* 0x0101 */ /* 0x001C */ uint8_t Unknown0258[3];
 /* 0x0104 */ /* 0x001F */ uint32_t Color;
 /* 0x0108 */ /* 0x0023 */ uint8_t Unknown0264[2];
@@ -300,7 +300,7 @@ union
 /* 0x0116 */ /* 0x0031 */ uint8_t Charges;
 };
 /* 0x0117 */ /* 0x0032 */ uint8_t EffectType;
-/* 0x0118 */ /* 0x0033 */ uint16_t SpellID;
+/* 0x0118 */ /* 0x0033 */ EQ_SpellID_t SpellID;
 /* 0x011A */ /* 0x0035 */ uint8_t Unknown0123[10];
 /* 0x0124 */ /* 0x003E */ uint16_t SkillModID;
 /* 0x0126 */ /* 0x0040 */ int8_t SkillModPercent;
@@ -338,7 +338,7 @@ typedef struct _Item
 /* 0x00B1 */ uint8_t Size; // EQ_ITEM_SIZE_x
 /* 0x00B2 */ uint8_t IsContainer;
 /* 0x00B3 */ uint8_t Unknown00B3;
-/* 0x00B4 */ uint16_t ID;
+/* 0x00B4 */ EQ_ItemID_t ID;
 /* 0x00B6 */ uint16_t Icon;
 /* 0x00B8 */ uint32_t EquipSlot;
 /* 0x00BC */ uint32_t EquippableSlots; // flag
@@ -358,7 +358,8 @@ union
 // reference eqemulator /common/sp.dat.h
 typedef struct _Spell
 {
-/* 0x0000 */ uint32_t ID;
+/* 0x0000 */ EQ_SpellID_t ID;
+/* 0x0002 */ uint16_t Unknown0002;
 /* 0x0004 */ float Range;
 /* 0x0008 */ float AOERange;
 /* 0x000C */ float PushBack;
@@ -390,7 +391,7 @@ typedef struct _Spell
 /* 0x009A */ uint8_t ZoneType2;
 /* 0x009B */ uint8_t EnvironmentType;
 /* 0x009C */ uint8_t TimeOfDay;
-/* 0x009D */ uint8_t Level[15]; // minimum level to cast for each class, [class - 1], 0xFF = CANNOT USE
+/* 0x009D */ uint8_t Level[EQ_NUM_CLASSES]; // minimum level to cast for each class, [class - 1], 0xFF = CANNOT USE
 /* 0x00AC */ uint8_t Unknown0192[36];
 /* 0x00D0 */ char* Name;        // [32]
 /* 0x00D4 */ char* Target;      // [16]
@@ -462,9 +463,9 @@ typedef struct _Character
 /* 0x00AE */ uint8_t Unknown00AE[438];
 /* 0x0264 */ struct _Buff Buff[EQ_NUM_BUFFS];
 /* 0x02FA */ uint8_t Unknown02FA[1080];
-/* 0x0732 */ uint16_t SpellBook[EQ_NUM_SPELL_BOOK_SPELLS]; // array of spell ids
+/* 0x0732 */ EQ_SpellID_t SpellBookSpellID[EQ_NUM_SPELL_BOOK_SPELLS]; // scribed spell ids
 /* 0x0932 */ uint8_t Unknown0932[512];
-/* 0x0B32 */ uint16_t MemorizedSpell[EQ_NUM_SPELL_GEMS]; // spell gem spell ids
+/* 0x0B32 */ EQ_SpellID_t SpellGemSpellID[EQ_NUM_SPELL_GEMS]; // memorized spell ids
 /* 0x0B42 */ uint8_t Unknown0B42[14];
 /* 0x0B50 */ uint16_t Unknown0B50;
 /* 0x0B52 */ uint16_t Unknown0B52;
@@ -472,7 +473,7 @@ typedef struct _Character
 /* 0x0B58 */ float ZoneEnterX;
 /* 0x0B5C */ float ZoneEnterZ;
 /* 0x0B60 */ float Unknown0060;
-/* 0x0B64 */ uint8_t StandingState; // EQ_STANDING_STATE_x
+/* 0x0B64 */ EQ_StandingState_t StandingState; // EQ_STANDING_STATE_x
 /* 0x0B65 */ uint8_t Unknown0B65[3];
 /* 0x0B68 */ uint32_t InventoryPlatinum;
 /* 0x0B6C */ uint32_t InventoryGold;
@@ -487,7 +488,7 @@ typedef struct _Character
 /* 0x0B90 */ uint32_t CursorSilver; // currency held on the mouse cursor
 /* 0x0B94 */ uint32_t CursorCopper; // currency held on the mouse cursor
 /* 0x0B98 */ uint8_t Unknown0B98[16];
-/* 0x0BA8 */ uint16_t Skill[EQ_NUM_SKILLS];
+/* 0x0BA8 */ EQ_SkillID_t Skill[EQ_NUM_SKILLS];
 /* 0x0C3C */ uint8_t Unknown0C3C[64];
 /* 0x0C7C */ uint16_t Vision1;
 /* 0x0C7E */ uint8_t Unknown0C7E[12];
@@ -503,7 +504,7 @@ typedef struct _Character
 /* 0x0D54 */ uint32_t Hunger;
 /* 0x0D58 */ uint32_t Thirst;
 /* 0x0D5C */ uint8_t Unknown0D5C[20];
-/* 0x0D70 */ uint32_t ZoneID;
+/* 0x0D70 */ EQ_ZoneID_t ZoneID;
 /* 0x0D74 */ struct _Spawn* Spawn;
 /* 0x0D78 */ struct _Item* CursorItem;
 union
@@ -517,11 +518,11 @@ union
 /* 0x0E68 */ uint8_t Unknown0E68[32];
 /* 0x0E88 */ uint32_t Unknown0E88;
 /* 0x0E8C */ uint8_t Unknown0E8C[56];
-/* 0x0EC4 */ uint32_t ZoneBoundID;
+/* 0x0EC4 */ EQ_ZoneID_t ZoneBoundID;
 /* 0x0EC8 */ uint32_t Unknown0EC8;
 /* 0x0ECC */ uint32_t Unknown0ECC;
 /* 0x0ED0 */ uint32_t Unknown0ED0;
-/* 0x0ED4 */ uint32_t ZoneBirthID;
+/* 0x0ED4 */ EQ_ZoneID_t ZoneBirthID;
 /* 0x0ED8 */ float ZoneBoundY;
 /* 0x0EDC */ uint32_t Unknown0EDC;
 /* 0x0EE0 */ uint32_t Unknown0EE0;
@@ -538,8 +539,8 @@ union
 /* 0x0F0C */ uint32_t Unknown0F0C;
 /* 0x0F10 */ float ZoneBirthZ;
 /* 0x0F14 */ uint8_t Unknown0F14[1080];
-/* 0x134C */ uint16_t Deity; // EQ_DEITY_x
-/* 0x134E */ uint16_t GuildID;
+/* 0x134C */ EQ_Deity_t Deity; // EQ_DEITY_x
+/* 0x134E */ EQ_GuildID_t GuildID;
 /* 0x1350 */ uint8_t Unknown1350[8];
 /* 0x1358 */ uint8_t Unknown1358;
 /* 0x1359 */ uint8_t Unknown1359;
@@ -552,7 +553,7 @@ union
 /* 0x1360 */ uint8_t Unknown1360;
 /* 0x1361 */ uint8_t AnonymousState;
 /* 0x1362 */ uint8_t Unknown1362;
-/* 0x1363 */ uint8_t GuildStatus; // guild rank
+/* 0x1363 */ EQ_GuildStatus_t GuildStatus; // guild rank
 /* 0x1364 */ uint8_t Drunkness; // 0 = Not Drunk, counts down over time
 /* 0x1365 */ uint8_t Unknown1365[451];
 /* 0x1528 */ uint32_t AlternateAdvancementExperience;
@@ -654,7 +655,7 @@ typedef struct _ActorInstance
 /* 0x0000 */ uint32_t MagicNumber; // == 24
 /* 0x0004 */ uint32_t Index;
 /* 0x0008 */ struct _Model* Model; // parent
-/* 0x000C */ uint32_t Unknown000C;
+/* 0x000C */ uint32_t Flags;
 /* 0x0010 */ float Y;
 /* 0x0014 */ float X;
 /* 0x0018 */ float Z;
@@ -752,16 +753,16 @@ typedef struct _Actor
 /* 0x01B8 */ uint8_t Unknown01B8[168];
 /* 0x0260 */ uint32_t Unknown0260;
 /* 0x0264 */ uint32_t HasPrimaryAndSecondary;
-/* 0x0268 */ uint32_t PrimaryItemType;
-/* 0x026C */ uint32_t SecondaryItemType;
+/* 0x0268 */ uint32_t PrimaryItemDefinition;
+/* 0x026C */ uint32_t SecondaryItemDefinition;
 /* 0x0270 */ uint8_t Unknown0270[4];
 /* 0x0274 */ uint8_t IsInvitedToGroup;
 /* 0x0275 */ uint8_t Unknown0275;
 /* 0x0276 */ uint8_t Unknown0276;
 /* 0x0277 */ uint8_t Unknown0277;
 /* 0x0278 */ uint8_t Unknown0278[4];
-/* 0x027C */ uint16_t CastingSpellID;
-/* 0x027E */ uint8_t CastingSpellGemNumber; // 255 = Bard Singing
+/* 0x027C */ EQ_SpellID_t CastingSpellID;
+/* 0x027E */ EQ_SpellGemIndex_t CastingSpellGemIndex; // 255 = Bard Singing
 /* 0x027F */ uint8_t Unknown027F;
 /* 0x0280 */ uint8_t Unknown0280[4];
 /* 0x0284 */ struct _Model* Model;
@@ -793,7 +794,7 @@ typedef struct _Spawn
 /* 0x0000 */ uint8_t MagicNumber; // == 3
 /* 0x0001 */ char Name[30]; // [0x1E]
 /* 0x001F */ uint8_t Unknown001F[37];
-/* 0x0044 */ uint32_t ZoneID; // EQ_ZONE_ID_x
+/* 0x0044 */ EQ_ZoneID_t ZoneID; // EQ_ZONE_ID_x
 /* 0x0048 */ float Y;
 /* 0x004C */ float X;
 /* 0x0050 */ float Z;
@@ -813,13 +814,13 @@ typedef struct _Spawn
 /* 0x0088 */ struct _Character* Character;
 /* 0x008C */ float CameraHeightOffset;
 /* 0x0090 */ float ModelHeightOffset;
-/* 0x0094 */ uint16_t SpawnID;
-/* 0x0096 */ uint16_t PetOwnerSpawnID; // spawn id of the owner of this pet spawn
+/* 0x0094 */ EQ_SpawnID_t SpawnID;
+/* 0x0096 */ EQ_SpawnID_t PetOwnerSpawnID; // spawn id of the owner of this pet spawn
 /* 0x0098 */ uint32_t HPMax;
 /* 0x009C */ uint32_t HPCurrent;
-/* 0x00A0 */ uint16_t GuildID;
+/* 0x00A0 */ EQ_GuildID_t GuildID;
 /* 0x00A2 */ uint8_t Unknown00A2[6];
-/* 0x00A8 */ uint8_t Type; // EQ_SPAWN_TYPE_x
+/* 0x00A8 */ EQ_SpawnType_t Type; // EQ_SPAWN_TYPE_x
 /* 0x00A9 */ uint8_t Class; // EQ_CLASS_x
 /* 0x00AA */ uint16_t Race;  // EQ_RACE_x
 /* 0x00AC */ uint8_t Gender; // EQ_GENDER_x
@@ -827,7 +828,7 @@ typedef struct _Spawn
 /* 0x00AE */ uint8_t IsHidden; // 0 = Visible, 1 = Invisible, 2 = Invis vs Animals, 3 = Invis vs Undead
 /* 0x00AF */ uint8_t IsSneaking; // sneaking or snared ; 0 = Normal Movement Speed, 1 = Slow Movement Speed
 /* 0x00B0 */ uint8_t IsPlayerKill; // PVP flagged with red name by Priest of Discord
-/* 0x00B1 */ uint8_t StandingState; // EQ_STANDING_STATE_x
+/* 0x00B1 */ EQ_StandingState_t StandingState; // EQ_STANDING_STATE_x
 /* 0x00B2 */ uint8_t LightType; // EQ_LIGHT_TYPE_x
 /* 0x00B3 */ uint8_t Unknown00B3;
 /* 0x00B4 */ uint16_t EquipmentMaterialType[7]; // EQ_EQUIPMENT_MATERIAL_TYPE_x ; Head,Chest,Arms,Wrist,Hands,Legs,Feet
@@ -845,7 +846,7 @@ typedef struct _Spawn
 /* 0x0108 */ uint8_t IsLinkDead; // LD
 /* 0x0109 */ uint8_t IsGameMaster; // GM
 /* 0x010A */ uint16_t LevitationState; // EQ_LEVITATION_STATE_x
-/* 0x010C */ uint32_t TargetType; // EQ_SPAWN_TARGET_TYPE_x ; values can be 11, 65, 67, 60
+/* 0x010C */ uint32_t TargetType; // EQ_SPAWN_TARGET_TYPE_x ; values can be 11, 65, 67, 60, and more
 /* 0x0110 */ uint32_t Unknown0110;
 /* 0x0114 */ uint32_t AnonymousState; // EQ_ANONYMOUS_STATE_x ; /anonymous and /roleplay
 /* 0x0118 */ uint32_t Unknown0118;
@@ -855,8 +856,9 @@ typedef struct _Spawn
 /* 0x0128 */ uint8_t Unknown0128[4];
 /* 0x012C */ char LastName[22]; // surname or title // [0x16]
 /* 0x0142 */ uint8_t Unknown0142[10];
-/* 0x014C */ uint16_t GuildStatus; // EQ_GUILD_STATUS_x ; guild rank
-/* 0x014E */ uint16_t Deity; // EQ_DEITY_x
+/* 0x014C */ EQ_GuildStatus_t GuildStatus; // EQ_GUILD_STATUS_x ; guild rank
+/* 0x014D */ uint8_t Unknown014D;
+/* 0x014E */ EQ_Deity_t Deity; // EQ_DEITY_x
 /* 0x0150 */ uint8_t Unknown0150;
 /* 0x0151 */ uint8_t Unknown0151[6];
 /* 0x0157 */ uint8_t Unknown0157[5];
@@ -987,7 +989,7 @@ typedef struct _CDisplay
 typedef struct _CEverQuest
 {
 /* 0x0000 */ uint8_t Unknown0000[1452];
-/* 0x05AC */ uint32_t GameState; // EQ_GAME_STATE_x
+/* 0x05AC */ EQ_GameState_t GameState; // EQ_GAME_STATE_x
 } CEverQuest, *CEverQuest_ptr;
 
 typedef struct _CXWndManager
@@ -1157,6 +1159,23 @@ typedef struct _CLootWnd
 /* ...... */
 } CLootWnd, *CLootWnd_ptr;
 
+typedef struct _CContainerWnd
+{
+/* 0x0000 */ struct _CsidlScreenWnd CSidlScreenWnd;
+/* 0x0138 */ struct _Item* ContainerItem;
+/* 0x013C */ struct _CsidlScreenWnd* ContainerSlotWnd[EQ_NUM_CONTAINER_SLOTS];
+/* 0x0164 */ struct _CsidlScreenWnd* CombineButtonWnd; // TODO: DOUBLECHECK
+/* 0x0168 */ struct _CsidlScreenWnd* DoneButtonWnd; // TODO: DOUBLECHECK
+/* ...... */
+} CContainerWnd, *CContainerWnd_ptr;
+
+typedef struct _CContainerMgr
+{
+/* 0x0000 */ uint32_t VTable;
+/* 0x0004 */ struct _CContainerWnd* ContainerWnd[EQ_NUM_CONTAINERS];
+/* ...... */
+} CContainerMgr, *CContainerMgr_ptr;
+
 typedef struct _CMerchantWnd
 {
 /* 0x0000 */ struct _CsidlScreenWnd CsidlScreenWnd;
@@ -1181,8 +1200,8 @@ typedef struct _CBazaarSearchWndResultMessage
 {
     uint16_t Action; // 7 or 12
     uint16_t ItemQuantity;
-    uint16_t ItemID;
-    uint16_t SpawnID;
+    EQ_ItemID_t ItemID;
+    EQ_SpawnID_t SpawnID;
     uint32_t ItemValue; // price in copper
     char ItemName[64];
 /* ...... */
@@ -1190,15 +1209,15 @@ typedef struct _CBazaarSearchWndResultMessage
 
 typedef struct _CEverQuestStartCastingMessage
 {
-    uint16_t SpawnID;
-    uint16_t SpellID;
+    EQ_SpawnID_t SpawnID;
+    EQ_SpellID_t SpellID;
     uint32_t SpellCastTime;
 } CEverQuestStartCastingMessage, *CEverQuestStartCastingMessage_ptr;
 
 // illusions
 typedef struct _ChangeForm
 {
-/* 0x00 */ uint16_t SpawnID = 0xFFFF;
+/* 0x00 */ EQ_SpawnID_t SpawnID = 0xFFFF;
 /* 0x02 */ uint16_t Race = EQ_RACE_HUMAN;
 /* 0x04 */ uint8_t Gender = EQ_GENDER_MALE;
 /* 0x05 */ uint8_t Texture = 0xFF;

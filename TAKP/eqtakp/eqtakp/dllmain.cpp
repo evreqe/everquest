@@ -13,6 +13,7 @@
 #include <sstream>
 #include <unordered_map>
 #include <vector>
+#include <array>
 
 #include <cstdio>
 #include <cstdlib>
@@ -92,6 +93,7 @@
 #include "eqapp_bufftimers.h"
 #include "eqapp_dotarget.h"
 #include "eqapp_spellbookwindow.h"
+#include "eqapp_containerwindow.h"
 #include "eqapp_merchantwindow.h"
 #include "eqapp_itemdisplaywindow.h"
 #include "eqapp_bazaarsearchwindow.h"
@@ -123,6 +125,7 @@
 #include "eqapp_treehack.h"
 #include "eqapp_spelleffecttest.h"
 #include "eqapp_targetring.h"
+#include "eqapp_levelofdetail.h"
 //
 #include "eqapp_extendedtargets.h"
 #include "eqapp_map.h"
@@ -153,6 +156,7 @@ void EQAPP_Load()
     EQ_WriteChatText("Loading...");
 
     EQAPP_Mouse_Load();
+    ////EQAPP_Keyboard_Load();
 
     EQAPP_Memory_Load();
     EQAPP_UseSkills_Load();
@@ -188,8 +192,14 @@ void EQAPP_Unload()
     EQAPP_Memory_Unload();
 
     EQAPP_Mouse_Unload();
+    ////EQAPP_Keyboard_Unload();
 
     EQAPP_BoxChat_Unload();
+
+    if (EQ_IsInGame() == true)
+    {
+        EQ_FUNCTION_UpdateLight(EQ_POINTER_PlayerCharacter);
+    }
 
     g_bExit = 1;
 }

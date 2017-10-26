@@ -37,7 +37,7 @@ void EQAPP_TargetRing_Execute()
                 spellDuration = 10;
             }
 
-            EQ_DoSpellEffect(2, spell, target, target, &location, NULL, spellDuration);
+            EQ_FUNCTION_DoSpellEffect(2, spell, target, target, &location, NULL, spellDuration);
         }
     }
 }

@@ -7,7 +7,7 @@ bool g_spawnAlertShowPlayer = true;
 bool g_spawnAlertShowNPC = false;
 bool g_spawnAlertShowCorpse = false;
 
-std::vector<uint16_t> g_spawnAlertNewSpawnIDList;
+std::vector<EQ_SpawnID_t> g_spawnAlertNewSpawnIDList;
 
 void EQAPP_SpawnAlert_Toggle();
 void EQAPP_SpawnAlert_ShowNewSpawn_Toggle();

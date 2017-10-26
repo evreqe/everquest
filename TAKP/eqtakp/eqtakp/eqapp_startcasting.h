@@ -23,12 +23,13 @@ void EQAPP_StartCasting_HandleEvent_CEverQuest__StartCasting(void* this_ptr, EQ:
         return;
     }
 
-    if (message->SpellID == EQ_SPELL_ID_NULL)
+    auto spellID = message->SpellID;
+    if (EQ_IsSpellIDValid(spellID) == false)
     {
         return;
     }
 
-    auto spell = EQ_GetSpellByID(message->SpellID);
+    auto spell = EQ_GetSpellByID(spellID);
     if (spell == NULL)
     {
         return;

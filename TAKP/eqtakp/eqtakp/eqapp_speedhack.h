@@ -5,7 +5,7 @@ bool g_speedHackIsEnabled = true;
 float g_speedHackModifier = EQ_MOVEMENT_SPEED_MODIFIER_SPIRIT_OF_WOLF;
 
 void EQAPP_SpeedHack_Toggle();
-void EQAPP_SpeedHack_HandleEvent_EQ_Character__eqspa_movement_rate(void* this_ptr, short unknown);
+void EQAPP_SpeedHack_HandleEvent_EQ_Character__eqspa_movement_rate(void* this_ptr, signed short movementSpeed);
 void EQAPP_SpeedHack_SetSpeedRun1();
 void EQAPP_SpeedHack_SetSpeedRun2();
 void EQAPP_SpeedHack_SetSpeedRun3();
@@ -18,7 +18,7 @@ void EQAPP_SpeedHack_Toggle()
     EQAPP_PrintBool("Speed Hack", g_speedHackIsEnabled);
 }
 
-void EQAPP_SpeedHack_HandleEvent_EQ_Character__eqspa_movement_rate(void* this_ptr, short unknown)
+void EQAPP_SpeedHack_HandleEvent_EQ_Character__eqspa_movement_rate(void* this_ptr, signed short movementSpeed)
 {
     auto playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)

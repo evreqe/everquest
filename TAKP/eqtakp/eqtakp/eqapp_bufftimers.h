@@ -14,7 +14,7 @@ void EQAPP_BuffTimers_HandleEvent_CBuffWindow__RefreshBuffDisplay(void* this_ptr
     for (size_t i = 0; i < EQ_NUM_BUFFS; i++)
     {
         uint16_t spellID = EQ_POINTER_PlayerCharacter->Buff[i].SpellID;
-        if (spellID == EQ_SPELL_ID_NULL)
+        if (EQ_IsSpellIDValid(spellID) == false)
         {
             continue;
         }
@@ -48,7 +48,7 @@ void EQAPP_BuffTimers_HandleEvent_CBuffWindow__PostDraw(void* this_ptr)
     for (size_t i = 0; i < EQ_NUM_BUFFS; i++)
     {
         uint16_t spellID = EQ_POINTER_PlayerCharacter->Buff[i].SpellID;
-        if (spellID == EQ_SPELL_ID_NULL)
+        if (EQ_IsSpellIDValid(spellID) == false)
         {
             continue;
         }

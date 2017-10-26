@@ -26,7 +26,7 @@ void EQAPP_DrawDistance_Load()
 
     if (zoneID == EQ_ZONE_ID_WAKENING)
     {
-        g_drawDistanceValue = 400.0f;
+        g_drawDistanceValue = 100.0f;
     }
 }
 

@@ -5,7 +5,7 @@ namespace EQApp
     typedef struct _ESPSpawn
     {
         EQ::Spawn_ptr Spawn;
-        uint16_t SpawnID;
+        EQ_SpawnID_t SpawnID;
         std::string Name;
         std::string LastName;
         EQ::Location Location;
@@ -21,8 +21,8 @@ namespace EQApp
         int StandingState;
         int HPCurrent;
         int HPMax;
-        int PrimaryItemType;
-        int SecondaryItemType;
+        int PrimaryItemDefinition;
+        int SecondaryItemDefinition;
         bool ShowAtAnyDistance = false;
         bool IsNamedSpawn = false;
         bool IsNewSpawn = false;
@@ -328,8 +328,8 @@ void EQAPP_ESP_UpdateSpawnList()
         espSpawn.StandingState = spawn->StandingState;
         espSpawn.HPCurrent = spawn->HPCurrent;
         espSpawn.HPMax = spawn->HPMax;
-        espSpawn.PrimaryItemType = spawn->Actor->PrimaryItemType;
-        espSpawn.SecondaryItemType = spawn->Actor->SecondaryItemType;
+        espSpawn.PrimaryItemDefinition = spawn->Actor->PrimaryItemDefinition;
+        espSpawn.SecondaryItemDefinition = spawn->Actor->SecondaryItemDefinition;
 
         espSpawn.Distance = EQ_CalculateDistance(spawn->X, spawn->Y, playerSpawn->X, playerSpawn->Y);
         espSpawn.DistanceZ = std::fabsf(spawn->Z - playerSpawn->Z);
@@ -345,12 +345,12 @@ void EQAPP_ESP_UpdateSpawnList()
             espSpawn.IsInvisible = true;
         }
 
-        if (spawn->Actor->PrimaryItemType != 0)
+        if (spawn->Actor->PrimaryItemDefinition != 0)
         {
             espSpawn.IsHoldingPrimaryItem = true;
         }
 
-        if (spawn->Actor->SecondaryItemType != 0)
+        if (spawn->Actor->SecondaryItemDefinition != 0)
         {
             espSpawn.IsHoldingSecondaryItem = true;
         }
@@ -426,7 +426,7 @@ void EQAPP_ESP_UpdateSpawnList()
 
         if (espSpawn.ShowAtAnyDistance == false)
         {
-            if (EQ_IsZoneInList(EQ_ZONE_ID_LIST_VERTICAL) == true)
+            if (EQ_IsZoneInList(EQ_ZONE_ID_LIST_DUNGEON) == true)
             {
                 if (espSpawn.DistanceZ > g_ESPSpawnDistanceZMax)
                 {
@@ -610,10 +610,10 @@ void EQAPP_ESP_UpdateSpawnList()
             {
                 espText << "\n(Primary: ";
 
-                auto it = EQ_STRING_MAP_ITEM_TYPE_NAME.find(espSpawn.PrimaryItemType);
-                if (it == EQ_STRING_MAP_ITEM_TYPE_NAME.end())
+                auto it = EQ_STRING_MAP_ITEM_DEFINITION_NAME.find(espSpawn.PrimaryItemDefinition);
+                if (it == EQ_STRING_MAP_ITEM_DEFINITION_NAME.end())
                 {
-                    espText << espSpawn.PrimaryItemType;
+                    espText << espSpawn.PrimaryItemDefinition;
                 }
                 else
                 {
@@ -627,10 +627,10 @@ void EQAPP_ESP_UpdateSpawnList()
             {
                 espText << "\n(Secondary: ";
 
-                auto it = EQ_STRING_MAP_ITEM_TYPE_NAME.find(espSpawn.SecondaryItemType);
-                if (it == EQ_STRING_MAP_ITEM_TYPE_NAME.end())
+                auto it = EQ_STRING_MAP_ITEM_DEFINITION_NAME.find(espSpawn.SecondaryItemDefinition);
+                if (it == EQ_STRING_MAP_ITEM_DEFINITION_NAME.end())
                 {
-                    espText << espSpawn.SecondaryItemType;
+                    espText << espSpawn.SecondaryItemDefinition;
                 }
                 else
                 {

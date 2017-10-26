@@ -15,5 +15,5 @@ void EQAPP_AutoInventory_Execute()
         return;
     }
 
-    EQ_AutoInventory(playerSpawn->Character, &playerSpawn->Character->CursorItem, 0);
+    EQ_FUNCTION_AutoInventory(playerSpawn->Character, &playerSpawn->Character->CursorItem, 0);
 }

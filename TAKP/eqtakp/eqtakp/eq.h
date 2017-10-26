@@ -1,5 +1,7 @@
 #pragma once
 
+#include "eq_types.h"
+
 #define EQ_ADDRESS_BASE 0x00400000
 
 #define EQ_ADDRESS_TIMER 0x007989D4 // uint32_t ; time elapsed in milliseconds
@@ -55,7 +57,8 @@
 
 #define EQ_NUM_COMMANDS 277 // 0-276
 #define EQ_NUM_ZONES 224
-#define EQ_NUM_CLASSES 32
+#define EQ_NUM_CLASSES 15 // playable
+#define EQ_NUM_CLASSES_TOTAL 32
 #define EQ_NUM_BUFFS 15
 #define EQ_NUM_SPELLS 4000
 #define EQ_NUM_SPELL_GEMS 8
@@ -76,6 +79,7 @@
 #define EQ_NUM_HOTBUTTONS_TOTAL 100
 #define EQ_NUM_CONTAINER_SLOTS 10
 #define EQ_NUM_MODEL_BONE_CHILDREN 32
+#define EQ_NUM_CONTAINERS 25 // TODO: DOUBLECHECK
 
 #define EQ_EXPERIENCE_BAR_VALUE_MAX 350 // the progress bar (0-350)
 #define EQ_ALTERNATE_ADVANCEMENT_EXPERIENCE_BAR_VALUE_MAX 330 // the progress bar (0-330)
@@ -256,6 +260,12 @@
 #define EQ_DEITY_TUNARE        0x00D7
 #define EQ_DEITY_AGNOSTIC      0x018C
 
+#define EQ_ARMOR_TEXTURE_TYPE_NONE    0
+#define EQ_ARMOR_TEXTURE_TYPE_LEATHER 1
+#define EQ_ARMOR_TEXTURE_TYPE_CHAIN   2
+#define EQ_ARMOR_TEXTURE_TYPE_PLATE   3
+#define EQ_ARMOR_TEXTURE_TYPE_SILK    4
+
 #define EQ_GUILD_ID_NULL 0xFFFF // uint16_t
 
 #define EQ_GUILD_STATUS_MEMBER  0
@@ -280,9 +290,9 @@
 #define EQ_LEVITATION_STATE_TRUE  0x02
 #define EQ_LEVITATION_STATE_NPC   0x03
 
-#define EQ_GRAVITY_DEFAULT    0
-#define EQ_GRAVITY_NONE       1
-#define EQ_GRAVITY_LEVITATING 2
+#define EQ_GRAVITY_TYPE_DEFAULT    0
+#define EQ_GRAVITY_TYPE_NONE       1
+#define EQ_GRAVITY_TYPE_LEVITATING 2
 
 #define EQ_ANONYMOUS_STATE_FALSE    0x00
 #define EQ_ANONYMOUS_STATE_TRUE     0x01
@@ -1171,7 +1181,7 @@ const float EQ_MOVEMENT_SPEED_MODIFIER_AA_RUN_2       = 0.14f;
 const float EQ_MOVEMENT_SPEED_MODIFIER_AA_RUN_3       = 0.21f;
 const float EQ_MOVEMENT_SPEED_MODIFIER_SPIRIT_OF_WOLF = 0.30f;
 
-std::vector<std::string> EQ_STRING_LIST_CLASS_NAME =
+std::array<std::string, EQ_NUM_CLASSES_TOTAL + 1> EQ_STRING_LIST_CLASS_NAME =
 {
     "Unknown",
     "Warrior",
@@ -1208,7 +1218,7 @@ std::vector<std::string> EQ_STRING_LIST_CLASS_NAME =
     "Merchant",
 };
 
-std::vector<std::string> EQ_STRING_LIST_CLASS_SHORT_NAME =
+std::array<std::string, EQ_NUM_CLASSES_TOTAL + 1> EQ_STRING_LIST_CLASS_SHORT_NAME =
 {
     "UNK",
     "WAR",
@@ -1315,7 +1325,7 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_INVENTORY_EQUIPMENT_NAME
     {20, "Ammo"},
 };
 
-std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_ITEM_TYPE_NAME =
+std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_ITEM_DEFINITION_NAME =
 {
     {1, "1H Sword"},
     {2, "2H Sword"},
@@ -1490,26 +1500,22 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_ITEM_TYPE_NAME =
     {11501, "Drum"},
 };
 
-typedef std::vector<uint32_t> EQ_ZoneIDList_t;
-
-// zones that have multiple levels going up and down
-EQ_ZoneIDList_t EQ_ZONE_ID_LIST_VERTICAL =
+// zones that are dungeons with multiple levels and monsters
+EQ_ZoneIDList_t EQ_ZONE_ID_LIST_DUNGEON =
 {
     EQ_ZONE_ID_BEFALLEN,
     EQ_ZONE_ID_BLACKBURROW,
+    EQ_ZONE_ID_CHARASIS,
+    EQ_ZONE_ID_CHARDOK,
     EQ_ZONE_ID_CRYSTAL,
+    EQ_ZONE_ID_DROGA,
     EQ_ZONE_ID_HIGHKEEP,
+    EQ_ZONE_ID_KAESORA,
+    EQ_ZONE_ID_KARNOR,
     EQ_ZONE_ID_KURN,
     EQ_ZONE_ID_UNREST,
+    EQ_ZONE_ID_VELKETOR,
     EQ_ZONE_ID_WARRENS,
-};
-
-// zones that are indoors
-EQ_ZoneIDList_t EQ_ZONE_ID_LIST_INDOORS =
-{
-    EQ_ZONE_ID_BEFALLEN,
-    EQ_ZONE_ID_HIGHKEEP,
-    EQ_ZONE_ID_KURN,
 };
 
 // zones that are safe cities with mostly no monsters

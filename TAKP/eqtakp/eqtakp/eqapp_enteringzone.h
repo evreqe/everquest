@@ -1,6 +1,8 @@
 #pragma once
 
-void EQAPP_EnteringZone_HandleEvent_CEverQuest__MoveToZone(void* this_ptr, int zoneID, char* text, int destinationType, int zoneRequestReason)
+void EQAPP_EnteringZone_HandleEvent_CEverQuest__MoveToZone(void* this_ptr, EQ_ZoneID_t zoneID, char* text, int destinationType, int zoneRequestReason);
+
+void EQAPP_EnteringZone_HandleEvent_CEverQuest__MoveToZone(void* this_ptr, EQ_ZoneID_t zoneID, char* text, int destinationType, int zoneRequestReason)
 {
     char zoneFullName[259];
     EQ_CLASS_POINTER_EQWorldData->GetFullZoneName(zoneID, zoneFullName);

@@ -6,7 +6,7 @@ bool g_itemDisplayWindowItemsIsEnabled = true;
 bool g_itemDisplayWindowSpellsIsEnabled = true;
 
 void EQAPP_ItemDisplayWindow_HandleEvent_CItemDisplayWnd__SetItem(void* this_ptr, EQ::Item_ptr item, bool unknown);
-void EQAPP_ItemDisplayWindow_HandleEvent_CItemDisplayWnd__SetSpell(void* this_ptr, uint16_t spellID, bool hasDescription, int unknown);
+void EQAPP_ItemDisplayWindow_HandleEvent_CItemDisplayWnd__SetSpell(void* this_ptr, EQ_SpellID_t spellID, bool hasDescription, int unknown);
 
 void EQAPP_ItemDisplayWindow_HandleEvent_CItemDisplayWnd__SetItem(void* this_ptr, EQ::Item_ptr item, bool unknown)
 {
@@ -26,6 +26,8 @@ void EQAPP_ItemDisplayWindow_HandleEvent_CItemDisplayWnd__SetItem(void* this_ptr
         return;
     }
 
+    EQ_ItemType_t itemType = item->Common.Type;
+
     std::stringstream itemFilename;
     itemFilename << "items/" << item->ID << ".txt";
 
@@ -40,12 +42,12 @@ void EQAPP_ItemDisplayWindow_HandleEvent_CItemDisplayWnd__SetItem(void* this_ptr
 
     EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, "<BR><c \"#FF00FF\">");
 
-    std::stringstream ssItemIDText;
-    ssItemIDText << "ID: " << item->ID << " (0x" << std::hex << item->ID << std::dec << ")<BR>";
-
-    EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, ssItemIDText.str().c_str());
-
     std::stringstream buffer;
+
+    buffer << "ID: " << item->ID << " (0x" << std::hex << item->ID << std::dec << ")<BR>";
+    buffer << "Type: " << (int)itemType << "<BR>";
+
+    EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
 
     if (item->Cost > 0)
     {
@@ -59,14 +61,40 @@ void EQAPP_ItemDisplayWindow_HandleEvent_CItemDisplayWnd__SetItem(void* this_ptr
 
     if (item->IsContainer == 0)
     {
-        uint16_t itemSpellID = item->Common.SpellID;
-        if (itemSpellID != 0 && itemSpellID != EQ_SPELL_ID_NULL)
+        EQ_SpellID_t itemSpellID = item->Common.SpellID;
+
+        bool itemSpellIDIsValid = EQ_IsSpellIDValid(itemSpellID);
+
+        if (itemSpellIDIsValid == true)
         {
             auto spell = EQ_GetSpellByID(itemSpellID);
             if (spell != NULL)
             {
                 buffer.str(std::string());
                 buffer << "Spell ID: " << spell->ID << " (" << spell->Name << ")<BR>";
+
+                if (itemType == EQ_ITEM_TYPE_SPELL_SCROLL)
+                {
+                    buffer << "Level Needed: ";
+
+                    for (int i = 0; i < (EQ_NUM_CLASSES + 1); i++)
+                    {
+                        int spellClass = i + 1;
+
+                        uint8_t spellLevel = spell->Level[spellClass];
+
+                        if (spellLevel != 0 && spellLevel != EQ_SPELL_LEVEL_NEEDED_CANNOT_USE)
+                        {
+                            std::string spellClassName = EQ_GetClassShortName(spellClass + 1);
+                            if (spellClassName.size() != 0)
+                            {
+                                buffer << spellClassName << " (" << (int)spellLevel << ") ";
+                            }
+                        }
+                    }
+
+                    buffer << "<BR>";
+                }
 
                 EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
             }
@@ -99,9 +127,9 @@ void EQAPP_ItemDisplayWindow_HandleEvent_CItemDisplayWnd__SetItem(void* this_ptr
             }
         }
 
-        if ((itemName.find("Spell:") != std::string::npos) || (itemName.find("Ancient:") != std::string::npos)|| (itemName.find("Song:") != std::string::npos))
+        if (itemType == EQ_ITEM_TYPE_SPELL_SCROLL)
         {
-            if (itemSpellID != EQ_SPELL_ID_NULL)
+            if (itemSpellIDIsValid == true)
             {
                 auto spellBookIndex = EQ_GetSpellBookSpellIndexBySpellID(itemSpellID);
                 if (spellBookIndex != -1)
@@ -119,8 +147,9 @@ void EQAPP_ItemDisplayWindow_HandleEvent_CItemDisplayWnd__SetItem(void* this_ptr
 
     if (item->IsContainer == 0)
     {
-        uint16_t itemSpellID = item->Common.SpellID;
-        if (itemSpellID != 0 && itemSpellID != EQ_SPELL_ID_NULL)
+        EQ_SpellID_t itemSpellID = item->Common.SpellID;
+
+        if (EQ_IsSpellIDValid(itemSpellID) == true)
         {
             auto spell = EQ_GetSpellByID(itemSpellID);
             if (spell != NULL)
@@ -141,16 +170,20 @@ void EQAPP_ItemDisplayWindow_HandleEvent_CItemDisplayWnd__SetItem(void* this_ptr
     }
 }
 
-void EQAPP_ItemDisplayWindow_HandleEvent_CItemDisplayWnd__SetSpell(void* this_ptr, uint16_t spellID, bool hasDescription, int unknown)
+void EQAPP_ItemDisplayWindow_HandleEvent_CItemDisplayWnd__SetSpell(void* this_ptr, EQ_SpellID_t spellID, bool hasDescription, int unknown)
 {
-    if (spellID == EQ_SPELL_ID_NULL)
+    if (EQ_POINTER_CItemDisplayWnd->DisplayText == NULL)
+    {
+        return;
+    }
+
+    if (EQ_IsSpellIDValid(spellID) == false)
     {
         return;
     }
 
     auto spell = EQ_POINTER_SpellList->Spell[spellID];
-
-    if (spell == NULL || EQ_POINTER_CItemDisplayWnd->DisplayText == NULL)
+    if (spell == NULL)
     {
         return;
     }

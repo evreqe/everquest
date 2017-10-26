@@ -35,7 +35,7 @@ uint32_t g_extendedTargetsSpawnListTimerDelay = 1000;
 
 size_t g_extendedTargetsNumSpawns = 15;
 
-float g_extendedTargetsSpawnDistanceMax = 201.0f;
+float g_extendedTargetsSpawnDistanceMax = 210.0f;
 float g_extendedTargetsSpawnDistanceZMax = 10.0f;
 
 uint32_t g_extendedTargetsFontHeight = 1;

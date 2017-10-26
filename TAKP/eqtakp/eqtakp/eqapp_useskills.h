@@ -11,9 +11,13 @@ bool g_useSkillsSlamIsEnabled = false;
 bool g_useSkillsDisarmIsEnabled = false;
 bool g_useSkillsBackstabIsEnabled = false;
 bool g_useSkillsRoundKickIsEnabled = false;
+bool g_useSkillsFeignDeathIsEnabled = false;
+bool g_useSkillsMendIsEnabled = false;
 
 uint32_t g_useSkillsTimer = 0;
 uint32_t g_useSkillsTimerDelay = 1000;
+
+float g_useSkillsBackstabDistanceMaximum = 10.0f;
 
 void EQAPP_UseSkills_Toggle();
 void EQAPP_UseSkills_SenseHeading_Toggle();
@@ -25,6 +29,8 @@ void EQAPP_UseSkills_Slam_Toggle();
 void EQAPP_UseSkills_Disarm_Toggle();
 void EQAPP_UseSkills_Backstab_Toggle();
 void EQAPP_UseSkills_RoundKick_Toggle();
+void EQAPP_UseSkills_FeignDeath_Toggle();
+void EQAPP_UseSkills_Mend_Toggle();
 void EQAPP_UseSkills_Load();
 void EQAPP_UseSkills_Execute();
 
@@ -103,7 +109,19 @@ void EQAPP_UseSkills_Backstab_Toggle()
 void EQAPP_UseSkills_RoundKick_Toggle()
 {
     EQ_ToggleBool(g_useSkillsRoundKickIsEnabled);
-    EQAPP_PrintBool("Use Skills (RoundKick): ", g_useSkillsRoundKickIsEnabled);
+    EQAPP_PrintBool("Use Skills (Round Kick): ", g_useSkillsRoundKickIsEnabled);
+}
+
+void EQAPP_UseSkills_FeignDeath_Toggle()
+{
+    EQ_ToggleBool(g_useSkillsFeignDeathIsEnabled);
+    EQAPP_PrintBool("Use Skills (Feign Death): ", g_useSkillsFeignDeathIsEnabled);
+}
+
+void EQAPP_UseSkills_Mend_Toggle()
+{
+    EQ_ToggleBool(g_useSkillsMendIsEnabled);
+    EQAPP_PrintBool("Use Skills (Mend): ", g_useSkillsMendIsEnabled);
 }
 
 void EQAPP_UseSkills_Load()
@@ -123,6 +141,8 @@ void EQAPP_UseSkills_Load()
     g_useSkillsDisarmIsEnabled = false;
     g_useSkillsBackstabIsEnabled = false;
     g_useSkillsRoundKickIsEnabled = false;
+    g_useSkillsFeignDeathIsEnabled = false;
+    g_useSkillsMendIsEnabled = false;
 
     if (playerSpawn->Class == EQ_CLASS_WARRIOR || playerSpawn->Class == EQ_CLASS_PALADIN || playerSpawn->Class == EQ_CLASS_SHADOWKNIGHT)
     {
@@ -207,7 +227,7 @@ void EQAPP_UseSkills_Execute()
         {
             float targetSpawnDistance = EQ_CalculateDistance(playerSpawn->X, playerSpawn->Y, targetSpawn->X, targetSpawn->Y);
 
-            float targetSpawnMeleeDistance = EQ_get_melee_range((EQClass::EQPlayer*)playerSpawn, (EQClass::EQPlayer*)targetSpawn);
+            float targetSpawnMeleeDistance = EQ_FUNCTION_get_melee_range((EQClass::EQPlayer*)playerSpawn, (EQClass::EQPlayer*)targetSpawn);
 
             if (targetSpawnDistance <= targetSpawnMeleeDistance)
             {
@@ -246,7 +266,7 @@ void EQAPP_UseSkills_Execute()
                 {
                     if (g_useSkillsBackstabIsEnabled == true)
                     {
-                        if (targetSpawnDistance <= 10.0f)
+                        if (targetSpawnDistance <= g_useSkillsBackstabDistanceMaximum)
                         {
                             if (EQ_IsSpawnBehindSpawn(playerSpawn, targetSpawn) == true)
                             {
@@ -262,6 +282,31 @@ void EQAPP_UseSkills_Execute()
                     {
                         EQ_UseSkill(EQ_SKILL_ROUND_KICK, (EQClass::EQPlayer*)targetSpawn);
                     }
+                }
+            }
+        }
+    }
+
+    if (g_useSkillsFeignDeathIsEnabled == true)
+    {
+        if (playerSpawn->Class == EQ_CLASS_MONK)
+        {
+            EQ_UseSkill(EQ_SKILL_FEIGN_DEATH, NULL);
+        }
+    }
+
+    if (EQ_IsAutoAttackEnabled() == false)
+    {
+        if (g_useSkillsMendIsEnabled == true)
+        {
+            if (playerSpawn->Class == EQ_CLASS_MONK)
+            {
+                auto hpCurrent = playerSpawn->HPCurrent;
+                auto hpMax = playerSpawn->HPMax;
+
+                if (hpCurrent == hpMax)
+                {
+                    EQ_UseSkill(EQ_SKILL_MEND, NULL);
                 }
             }
         }

@@ -14,8 +14,8 @@ DWORD EQAPP_GetModuleBaseAddress(const wchar_t* moduleName);
 bool EQAPP_IsForegroundWindowCurrentProcessId();
 
 void EQAPP_PrintBool(const char* text, bool& b);
-void EQAPP_PrintErrorMessage(const char* functionName, std::string text);
-void EQAPP_PrintDebugMessage(const char* functionName, std::string text);
+void EQAPP_PrintErrorMessage(const char* functionName, const std::string& text);
+void EQAPP_PrintDebugMessage(const char* functionName, const std::string& text);
 
 bool EQAPP_IsKeyDown(int vkKey);
 
@@ -23,6 +23,12 @@ void EQAPP_Mouse_Load();
 void EQAPP_Mouse_Unload();
 void EQAPP_Mouse_Unacquire();
 void EQAPP_Mouse_Acquire();
+
+
+void EQAPP_Keyboard_Load();
+void EQAPP_Keyboard_Unload();
+void EQAPP_Keyboard_Unacquire();
+void EQAPP_Keyboard_Acquire();
 
 void EQAPP_PlaySound(const char* filename);
 void EQAPP_Beep();
@@ -47,6 +53,11 @@ void EQAPP_TargetNearestNPCCorpse();
 
 void EQAPP_PrintBankInventory();
 void EQAPP_WriteInventoryToFile();
+
+void EQAPP_Levitate_On();
+void EQAPP_Levitate_Off();
+void EQAPP_Fly_On();
+void EQAPP_Fly_Off();
 
 template <class T>
 void EQAPP_Log(const char* text, T number)
@@ -168,7 +179,7 @@ void EQAPP_PrintBool(const char* text, bool& b)
     std::cout << text << ": " << (b ? "On" : "Off") << std::endl;
 }
 
-void EQAPP_PrintErrorMessage(const char* functionName, std::string text)
+void EQAPP_PrintErrorMessage(const char* functionName, const std::string& text)
 {
     if (g_bErrorMessageIsEnabled == false)
     {
@@ -178,7 +189,7 @@ void EQAPP_PrintErrorMessage(const char* functionName, std::string text)
     std::cout << "[ERROR] " << functionName << ": " << text << std::endl;
 }
 
-void EQAPP_PrintDebugMessage(const char* functionName, std::string text)
+void EQAPP_PrintDebugMessage(const char* functionName, const std::string& text)
 {
     if (g_bDebugMessageIsEnabled == false)
     {
@@ -210,7 +221,7 @@ void EQAPP_Mouse_Load()
     EQ_CLASS_POINTER_DInputMouse->Unacquire();
 
     EQ_CLASS_POINTER_DInputMouse->SetDataFormat(&c_dfDIMouse2);
-    ////EQ_CLASS_POINTER_DInputMouse->SetCooperativeLevel(EQ_GetWindow(), DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
+    ////EQ_CLASS_POINTER_DInputMouse->SetCooperativeLevel(EQ_GetWindow(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 
     EQ_CLASS_POINTER_DInputMouse->Acquire();
 }
@@ -227,7 +238,7 @@ void EQAPP_Mouse_Unload()
     EQ_CLASS_POINTER_DInputMouse->Unacquire();
 
     EQ_CLASS_POINTER_DInputMouse->SetDataFormat(&c_dfDIMouse);
-    ////EQ_CLASS_POINTER_DInputMouse->SetCooperativeLevel(EQ_GetWindow(), DISCL_BACKGROUND | DISCL_EXCLUSIVE);
+    ////EQ_CLASS_POINTER_DInputMouse->SetCooperativeLevel(EQ_GetWindow(), DISCL_FOREGROUND | DISCL_EXCLUSIVE);
 
     EQ_CLASS_POINTER_DInputMouse->Acquire();
 }
@@ -259,6 +270,57 @@ void EQAPP_Mouse_Acquire()
         {
             SetCapture(GetForegroundWindow());
             ////std::cout << "Mouse Acquired." << std::endl;
+        }
+    }
+}
+
+void EQAPP_Keyboard_Load()
+{
+    EQ_CLASS_POINTER_DInputKeyboard->Unacquire();
+
+    EQ_CLASS_POINTER_DInputKeyboard->SetDataFormat(&c_dfDIKeyboard);
+    ////EQ_CLASS_POINTER_DInputKeyboard->SetCooperativeLevel(EQ_GetWindow(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+
+    EQ_CLASS_POINTER_DInputKeyboard->Acquire();
+}
+
+void EQAPP_Keyboard_Unload()
+{
+    EQ_CLASS_POINTER_DInputKeyboard->Unacquire();
+
+    EQ_CLASS_POINTER_DInputKeyboard->SetDataFormat(&c_dfDIKeyboard);
+    ////EQ_CLASS_POINTER_DInputKeyboard->SetCooperativeLevel(EQ_GetWindow(), DISCL_FOREGROUND | DISCL_EXCLUSIVE);
+
+    EQ_CLASS_POINTER_DInputKeyboard->Acquire();
+}
+
+void EQAPP_Keyboard_Unacquire()
+{
+    EQ_CLASS_POINTER_DInputKeyboard->Unacquire();
+}
+
+void EQAPP_Keyboard_Acquire()
+{
+    if (EQ_CLASS_POINTER_IDirectInput8 == NULL || EQ_CLASS_POINTER_DInputKeyboard == NULL)
+    {
+        return;
+    }
+
+    if (EQAPP_IsForegroundWindowCurrentProcessId() == false)
+    {
+        return;
+    }
+
+    char keyboardState[256];
+    HRESULT result = EQ_CLASS_POINTER_DInputKeyboard->GetDeviceState(sizeof(keyboardState), (LPVOID)&keyboardState);
+    if (result == DIERR_INPUTLOST || result == DIERR_NOTACQUIRED)
+    {
+        EQ_CLASS_POINTER_DInputKeyboard->SetDataFormat(&c_dfDIKeyboard);
+
+        if (EQ_CLASS_POINTER_DInputKeyboard->Acquire() == DI_OK)
+        {
+            SetCapture(GetForegroundWindow());
+            ////std::cout << "Keyboard Acquired." << std::endl;
         }
     }
 }
@@ -377,7 +439,7 @@ float EQAPP_GetTargetMeleeDistance()
         return -1.0f;
     }
 
-    return EQ_get_melee_range((EQClass::EQPlayer*)playerSpawn, (EQClass::EQPlayer*)targetSpawn);
+    return EQ_FUNCTION_get_melee_range((EQClass::EQPlayer*)playerSpawn, (EQClass::EQPlayer*)targetSpawn);
 }
 
 void EQAPP_PrintTargetMeleeDistance()
@@ -387,7 +449,7 @@ void EQAPP_PrintTargetMeleeDistance()
 
 void EQAPP_TargetNearestPlayer()
 {
-    auto spawn = EQ_GetNearestSpawn(EQ_SPAWN_TYPE_PLAYER, 400.0f, 20.0f);
+    auto spawn = EQ_GetNearestSpawn(EQ_SPAWN_TYPE_PLAYER, 400.0f, 20.0f, NULL);
     if (spawn != NULL)
     {
         EQ_SetTargetSpawn(spawn);
@@ -396,7 +458,7 @@ void EQAPP_TargetNearestPlayer()
 
 void EQAPP_TargetNearestNPC()
 {
-    auto spawn = EQ_GetNearestSpawn(EQ_SPAWN_TYPE_NPC, 400.0f, 20.0f);
+    auto spawn = EQ_GetNearestSpawn(EQ_SPAWN_TYPE_NPC, 400.0f, 20.0f, NULL);
     if (spawn != NULL)
     {
         EQ_SetTargetSpawn(spawn);
@@ -405,7 +467,7 @@ void EQAPP_TargetNearestNPC()
 
 void EQAPP_TargetNearestPlayerPet()
 {
-    auto spawn = EQ_GetNearestSpawn(EQ_SPAWN_TYPE_PLAYER_PET, 400.0f, 20.0f);
+    auto spawn = EQ_GetNearestSpawn(EQ_SPAWN_TYPE_PLAYER_PET, 400.0f, 20.0f, NULL);
     if (spawn != NULL)
     {
         EQ_SetTargetSpawn(spawn);
@@ -414,7 +476,7 @@ void EQAPP_TargetNearestPlayerPet()
 
 void EQAPP_TargetNearestNPCPet()
 {
-    auto spawn = EQ_GetNearestSpawn(EQ_SPAWN_TYPE_NPC_PET, 400.0f, 20.0f);
+    auto spawn = EQ_GetNearestSpawn(EQ_SPAWN_TYPE_NPC_PET, 400.0f, 20.0f, NULL);
     if (spawn != NULL)
     {
         EQ_SetTargetSpawn(spawn);
@@ -423,7 +485,7 @@ void EQAPP_TargetNearestNPCPet()
 
 void EQAPP_TargetNearestAnyCorpse()
 {
-    auto spawn = EQ_GetNearestSpawn(EQ_SPAWN_TYPE_ANY_CORPSE, 400.0f, 20.0f);
+    auto spawn = EQ_GetNearestSpawn(EQ_SPAWN_TYPE_ANY_CORPSE, 400.0f, 20.0f, NULL);
     if (spawn != NULL)
     {
         EQ_SetTargetSpawn(spawn);
@@ -432,7 +494,7 @@ void EQAPP_TargetNearestAnyCorpse()
 
 void EQAPP_TargetNearestPlayerCorpse()
 {
-    auto spawn = EQ_GetNearestSpawn(EQ_SPAWN_TYPE_PLAYER_CORPSE, 400.0f, 20.0f);
+    auto spawn = EQ_GetNearestSpawn(EQ_SPAWN_TYPE_PLAYER_CORPSE, 400.0f, 20.0f, NULL);
     if (spawn != NULL)
     {
         EQ_SetTargetSpawn(spawn);
@@ -441,7 +503,7 @@ void EQAPP_TargetNearestPlayerCorpse()
 
 void EQAPP_TargetNearestNPCCorpse()
 {
-    auto spawn = EQ_GetNearestSpawn(EQ_SPAWN_TYPE_NPC_CORPSE, 400.0f, 20.0f);
+    auto spawn = EQ_GetNearestSpawn(EQ_SPAWN_TYPE_NPC_CORPSE, 400.0f, 20.0f, NULL);
     if (spawn != NULL)
     {
         EQ_SetTargetSpawn(spawn);
@@ -785,5 +847,38 @@ if (EQ_IsInGame() == false)
     file.close();
 }
 
+void EQAPP_Levitate_On()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn != NULL)
+    {
+        ((EQClass::EQPlayer*)playerSpawn)->SetNoGrav(EQ_GRAVITY_TYPE_LEVITATING);
+    }
+}
 
+void EQAPP_Levitate_Off()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn != NULL)
+    {
+        ((EQClass::EQPlayer*)playerSpawn)->SetNoGrav(EQ_GRAVITY_TYPE_DEFAULT);
+    }
+}
 
+void EQAPP_Fly_On()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn != NULL)
+    {
+        ((EQClass::EQPlayer*)playerSpawn)->SetNoGrav(EQ_GRAVITY_TYPE_NONE);
+    }
+}
+
+void EQAPP_Fly_Off()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn != NULL)
+    {
+        ((EQClass::EQPlayer*)playerSpawn)->SetNoGrav(EQ_GRAVITY_TYPE_DEFAULT);
+    }
+}

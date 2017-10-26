@@ -42,7 +42,7 @@ template <class T>
 T EQ_ReadMemoryProtected(uint32_t address)
 {
     DWORD oldProtect;
-    VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, sizeof(T), PAGE_READWRITE, &oldProtect);
+    VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, sizeof(T), PAGE_EXECUTE_READWRITE, &oldProtect);
 
     T* buffer = (T*)address;
 
@@ -55,12 +55,22 @@ template <class T>
 void EQ_WriteMemoryProtected(uint32_t address, T value)
 {
     DWORD oldProtect;
-    VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, sizeof(value), PAGE_READWRITE, &oldProtect);
+    VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, sizeof(value), PAGE_EXECUTE_READWRITE, &oldProtect);
 
     T* buffer = (T*)address;
     *buffer = value;
 
     VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, sizeof(value), oldProtect, &oldProtect);
+}
+
+void EQ_WriteBytesProtected(uint32_t address, char* bytes, size_t size)
+{
+    DWORD oldProtect;
+    VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, size, PAGE_EXECUTE_READWRITE, &oldProtect);
+
+    memcpy((LPVOID)address, (LPVOID)bytes, size);
+
+    VirtualProtectEx(GetCurrentProcess(), (LPVOID)address, size, oldProtect, &oldProtect);
 }
 
 void EQ_ReadMemoryString(uint32_t address, size_t size, char result[])

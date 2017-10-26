@@ -4,8 +4,8 @@ namespace EQApp
 {
     typedef struct _SpellSetData
     {
-        uint32_t SpellGemIndex;
-        uint32_t SpellID;
+        EQ_SpellGemIndex_t SpellGemIndex;
+        EQ_SpellID_t SpellID;
         std::string SpellName;
     } SpellSetData, *SpellSetData_ptr;
 }
@@ -22,8 +22,8 @@ void EQAPP_SpellSet_StartMemorizing();
 void EQAPP_SpellSet_StopMemorizing();
 void EQAPP_SpellSet_LoadAndStartMemorizing();
 void EQAPP_SpellSet_Memorize();
-void EQAPP_SpellSet_HandleEvent_EQPlayer__ChangePosition(void* this_ptr, uint8_t standingState);
-void EQAPP_SpellSet_HandleEvent_CSpellBookWnd__FinishMemorizing(void* this_ptr, uint8_t spellGemIndex, uint16_t spellID);
+void EQAPP_SpellSet_HandleEvent_EQPlayer__ChangePosition(void* this_ptr, EQ_StandingState_t standingState);
+void EQAPP_SpellSet_HandleEvent_CSpellBookWnd__FinishMemorizing(void* this_ptr, EQ_SpellGemIndex_t spellGemIndex, EQ_SpellID_t spellID);
 
 void EQAPP_SpellSet_Load(const std::string& spellSetName)
 {
@@ -68,9 +68,10 @@ void EQAPP_SpellSet_Load(const std::string& spellSetName)
         return;
     }
 
-    for (size_t i = 0; i < EQ_NUM_SPELL_GEMS; i++)
+    for (uint8_t i = 0; i < EQ_NUM_SPELL_GEMS; i++)
     {
-        if (playerSpawn->Character->MemorizedSpell[i] != EQ_SPELL_ID_NULL)
+        auto spellGemSpellID = playerSpawn->Character->SpellGemSpellID[i];
+        if (EQ_IsSpellIDValid(spellGemSpellID) == false)
         {
             continue;
         }
@@ -137,10 +138,10 @@ void EQAPP_SpellSet_Save(const std::string& spellSetName)
 
     file << "[SpellSet]\n";
 
-    for (size_t i = 0; i < EQ_NUM_SPELL_GEMS; i++)
+    for (signed int i = 0; i < EQ_NUM_SPELL_GEMS; i++)
     {
-        uint16_t spellID = playerSpawn->Character->MemorizedSpell[i];
-        if (spellID == EQ_SPELL_ID_NULL)
+        auto spellID = playerSpawn->Character->SpellGemSpellID[i];
+        if (EQ_IsSpellIDValid(spellID) == false)
         {
             continue;
         }
@@ -252,17 +253,18 @@ void EQAPP_SpellSet_Memorize()
 
     for (auto& spellSetData : g_spellSetList)
     {
-        if (playerSpawn->Character->MemorizedSpell[spellSetData.SpellGemIndex] != EQ_SPELL_ID_NULL)
+        auto spellGemSpellID = playerSpawn->Character->SpellGemSpellID[spellSetData.SpellGemIndex];
+        if (EQ_IsSpellIDValid(spellGemSpellID) == false)
         {
             continue;
         }
 
-        if (spellSetData.SpellID == EQ_SPELL_ID_NULL)
+        if (EQ_IsSpellIDValid(spellSetData.SpellID) == false)
         {
             continue;
         }
 
-        signed int spellBookIndex = EQ_GetSpellBookSpellIndexBySpellID(spellSetData.SpellID);
+        auto spellBookIndex = EQ_GetSpellBookSpellIndexBySpellID(spellSetData.SpellID);
         if (spellBookIndex == -1)
         {
             continue;
@@ -282,7 +284,7 @@ void EQAPP_SpellSet_Memorize()
     }
 }
 
-void EQAPP_SpellSet_HandleEvent_EQPlayer__ChangePosition(void* this_ptr, uint8_t standingState)
+void EQAPP_SpellSet_HandleEvent_EQPlayer__ChangePosition(void* this_ptr, EQ_StandingState_t standingState)
 {
     auto playerSpawn = EQ_GetPlayerSpawn();
     if ((playerSpawn != NULL) && ((EQ::Spawn_ptr)this_ptr == playerSpawn))
@@ -296,7 +298,7 @@ void EQAPP_SpellSet_HandleEvent_EQPlayer__ChangePosition(void* this_ptr, uint8_t
     }
 }
 
-void EQAPP_SpellSet_HandleEvent_CSpellBookWnd__FinishMemorizing(void* this_ptr, uint8_t spellGemIndex, uint16_t spellID)
+void EQAPP_SpellSet_HandleEvent_CSpellBookWnd__FinishMemorizing(void* this_ptr, EQ_SpellGemIndex_t spellGemIndex, EQ_SpellID_t spellID)
 {
     if (g_spellSetIsMemorizingInProgress == true)
     {
