@@ -90,6 +90,10 @@ void EQAPP_Map_Toggle();
 void EQAPP_Map_Lines_Toggle();
 void EQAPP_Map_Labels_Toggle();
 void EQAPP_Map_Spawns_Toggle();
+void EQAPP_Map_Layer0_Toggle();
+void EQAPP_Map_Layer1_Toggle();
+void EQAPP_Map_Layer2_Toggle();
+void EQAPP_Map_Layer3_Toggle();
 void EQAPP_Map_HeightFilter_Toggle();
 void EQAPP_Map_3D_Toggle();
 bool EQAPP_Map_Load();
@@ -139,6 +143,30 @@ void EQAPP_Map_Spawns_Toggle()
     EQAPP_PrintBool("Map Spawns", g_mapSpawnsIsEnabled);
 }
 
+void EQAPP_Map_Layer0_Toggle()
+{
+    EQ_ToggleBool(g_mapLayer0IsEnabled);
+    EQAPP_PrintBool("Map Base Layer", g_mapLayer0IsEnabled);
+}
+
+void EQAPP_Map_Layer1_Toggle()
+{
+    EQ_ToggleBool(g_mapLayer1IsEnabled);
+    EQAPP_PrintBool("Map Layer 1", g_mapLayer1IsEnabled);
+}
+
+void EQAPP_Map_Layer2_Toggle()
+{
+    EQ_ToggleBool(g_mapLayer2IsEnabled);
+    EQAPP_PrintBool("Map Layer 2", g_mapLayer2IsEnabled);
+}
+
+void EQAPP_Map_Layer3_Toggle()
+{
+    EQ_ToggleBool(g_mapLayer3IsEnabled);
+    EQAPP_PrintBool("Map Layer 3", g_mapLayer3IsEnabled);
+}
+
 void EQAPP_Map_HeightFilter_Toggle()
 {
     EQ_ToggleBool(g_mapHeightFilterIsEnabled);
@@ -170,16 +198,13 @@ bool EQAPP_Map_Load()
 
     EQAPP_Map_LoadFile(filePath.str(), 0); // layer 0 is the base layer
 
-/*
-    unsigned int mapLayer = 1;
-    for (mapLayer = 1; mapLayer < (g_mapNumLayers + 1); mapLayer++)
+    for (unsigned int mapLayer = 1; mapLayer < (g_mapNumLayers + 1); mapLayer++)
     {
         std::stringstream filePathEx;
         filePathEx << g_applicationName << "/maps/" << zoneShortName << "_" << mapLayer << ".txt";
 
         EQAPP_Map_LoadFile(filePathEx.str(), mapLayer);
     }
-*/
 
     EQAPP_Map_RecalculateScreenCoordinates();
     EQAPP_Map_ResetZoom();
@@ -293,7 +318,7 @@ void EQAPP_Map_RecalculateScreenCoordinates()
     uint32_t resolutionWidth = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_RESOLUTION_WIDTH);
     uint32_t resolutionHeight = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_RESOLUTION_HEIGHT);
 
-    g_mapX = ((float)resolutionWidth - 12.0f) - g_mapWidth;
+    g_mapX = ((float)resolutionWidth - 4.0f) - g_mapWidth;
     g_mapY = 4.0f;
 
     g_mapMinX = g_mapX;
@@ -473,6 +498,38 @@ void EQAPP_Map_Execute()
                 break;
             }
 
+            if (g_mapLayer0IsEnabled == false)
+            {
+                if (mapLine.Layer == 0)
+                {
+                    continue;
+                }
+            }
+
+            if (g_mapLayer1IsEnabled == false)
+            {
+                if (mapLine.Layer == 1)
+                {
+                    continue;
+                }
+            }
+
+            if (g_mapLayer2IsEnabled == false)
+            {
+                if (mapLine.Layer == 2)
+                {
+                    continue;
+                }
+            }
+
+            if (g_mapLayer3IsEnabled == false)
+            {
+                if (mapLine.Layer == 3)
+                {
+                    continue;
+                }
+            }
+
             if (g_mapHeightFilterIsEnabled == true)
             {
                 if (g_mapHeightFilterLow > 0.0f)
@@ -531,6 +588,38 @@ void EQAPP_Map_Execute()
             if (g_mapNumLabelsDrawn > g_mapNumLabelsMax)
             {
                 break;
+            }
+
+            if (g_mapLayer0IsEnabled == false)
+            {
+                if (mapLabel.Layer == 0)
+                {
+                    continue;
+                }
+            }
+
+            if (g_mapLayer1IsEnabled == false)
+            {
+                if (mapLabel.Layer == 1)
+                {
+                    continue;
+                }
+            }
+
+            if (g_mapLayer2IsEnabled == false)
+            {
+                if (mapLabel.Layer == 2)
+                {
+                    continue;
+                }
+            }
+
+            if (g_mapLayer3IsEnabled == false)
+            {
+                if (mapLabel.Layer == 3)
+                {
+                    continue;
+                }
             }
 
             float labelX = 0.0f;

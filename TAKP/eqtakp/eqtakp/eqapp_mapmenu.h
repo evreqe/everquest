@@ -69,11 +69,55 @@ void EQAPP_MapMenu_CreateMenu()
     g_mapMenuGUIMenuItemSpawns.SetFunctionLeftClick(&EQAPP_Map_Spawns_Toggle);
     g_mapMenuGUIMenuItemSpawns.SetBoolPointer(g_mapSpawnsIsEnabled);
 
+    EQApp::GUIMenuItem g_mapMenuGUIMenuItemLayer0;
+    g_mapMenuGUIMenuItemLayer0.SetText("Base Layer");
+    g_mapMenuGUIMenuItemLayer0.FitToText();
+    g_mapMenuGUIMenuItemLayer0.SetFunctionLeftClick(&EQAPP_Map_Layer0_Toggle);
+    g_mapMenuGUIMenuItemLayer0.SetBoolPointer(g_mapLayer0IsEnabled);
+
+    EQApp::GUIMenuItem g_mapMenuGUIMenuItemLayer1;
+    g_mapMenuGUIMenuItemLayer1.SetText("Layer 1");
+    g_mapMenuGUIMenuItemLayer1.FitToText();
+    g_mapMenuGUIMenuItemLayer1.SetFunctionLeftClick(&EQAPP_Map_Layer1_Toggle);
+    g_mapMenuGUIMenuItemLayer1.SetBoolPointer(g_mapLayer1IsEnabled);
+
+    EQApp::GUIMenuItem g_mapMenuGUIMenuItemLayer2;
+    g_mapMenuGUIMenuItemLayer2.SetText("Layer 2");
+    g_mapMenuGUIMenuItemLayer2.FitToText();
+    g_mapMenuGUIMenuItemLayer2.SetFunctionLeftClick(&EQAPP_Map_Layer2_Toggle);
+    g_mapMenuGUIMenuItemLayer2.SetBoolPointer(g_mapLayer2IsEnabled);
+
+    EQApp::GUIMenuItem g_mapMenuGUIMenuItemLayer3;
+    g_mapMenuGUIMenuItemLayer3.SetText("Layer 3");
+    g_mapMenuGUIMenuItemLayer3.FitToText();
+    g_mapMenuGUIMenuItemLayer3.SetFunctionLeftClick(&EQAPP_Map_Layer3_Toggle);
+    g_mapMenuGUIMenuItemLayer3.SetBoolPointer(g_mapLayer3IsEnabled);
+
     EQApp::GUIMenuItem g_mapMenuGUIMenuItemHeightFilter;
     g_mapMenuGUIMenuItemHeightFilter.SetText("Height Filter");
     g_mapMenuGUIMenuItemHeightFilter.FitToText();
     g_mapMenuGUIMenuItemHeightFilter.SetFunctionLeftClick(&EQAPP_Map_HeightFilter_Toggle);
     g_mapMenuGUIMenuItemHeightFilter.SetBoolPointer(g_mapHeightFilterIsEnabled);
+
+    EQApp::GUIMenuItem g_mapMenuGUIMenuItemCenter;
+    g_mapMenuGUIMenuItemCenter.SetText("Center");
+    g_mapMenuGUIMenuItemCenter.FitToText();
+    g_mapMenuGUIMenuItemCenter.SetFunctionLeftClick(&EQAPP_Map_Center);
+
+    EQApp::GUIMenuItem g_mapMenuGUIMenuItemResetZoom;
+    g_mapMenuGUIMenuItemResetZoom.SetText("Reset Zoom");
+    g_mapMenuGUIMenuItemResetZoom.FitToText();
+    g_mapMenuGUIMenuItemResetZoom.SetFunctionLeftClick(&EQAPP_Map_ResetZoom);
+
+    EQApp::GUIMenuItem g_mapMenuGUIMenuItemZoomIn;
+    g_mapMenuGUIMenuItemZoomIn.SetText("Zoom In");
+    g_mapMenuGUIMenuItemZoomIn.FitToText();
+    g_mapMenuGUIMenuItemZoomIn.SetFunctionLeftClick(&EQAPP_Map_ZoomIn);
+
+    EQApp::GUIMenuItem g_mapMenuGUIMenuItemZoomOut;
+    g_mapMenuGUIMenuItemZoomOut.SetText("Zoom Out");
+    g_mapMenuGUIMenuItemZoomOut.FitToText();
+    g_mapMenuGUIMenuItemZoomOut.SetFunctionLeftClick(&EQAPP_Map_ZoomOut);
 
     g_mapMenuGUIMenu.AddMenuItem(g_mapMenuGUIMenuItemToggle);
 
@@ -85,7 +129,21 @@ void EQAPP_MapMenu_CreateMenu()
 
     g_mapMenuGUIMenu.AddMenuItem(g_mapMenuGUIMenuItemSeparator);
 
+    g_mapMenuGUIMenu.AddMenuItem(g_mapMenuGUIMenuItemLayer0);
+    g_mapMenuGUIMenu.AddMenuItem(g_mapMenuGUIMenuItemLayer1);
+    g_mapMenuGUIMenu.AddMenuItem(g_mapMenuGUIMenuItemLayer2);
+    g_mapMenuGUIMenu.AddMenuItem(g_mapMenuGUIMenuItemLayer3);
+
+    g_mapMenuGUIMenu.AddMenuItem(g_mapMenuGUIMenuItemSeparator);
+
     g_mapMenuGUIMenu.AddMenuItem(g_mapMenuGUIMenuItemHeightFilter);
+
+    g_mapMenuGUIMenu.AddMenuItem(g_mapMenuGUIMenuItemSeparator);
+
+    g_mapMenuGUIMenu.AddMenuItem(g_mapMenuGUIMenuItemCenter);
+    g_mapMenuGUIMenu.AddMenuItem(g_mapMenuGUIMenuItemResetZoom);
+    g_mapMenuGUIMenu.AddMenuItem(g_mapMenuGUIMenuItemZoomIn);
+    g_mapMenuGUIMenu.AddMenuItem(g_mapMenuGUIMenuItemZoomOut);
 
     g_mapMenuGUIMenu.SetX(g_mapMenuGUIButton.GetX());
     g_mapMenuGUIMenu.SetY(g_mapMenuGUIButton.GetY() + g_mapMenuGUIButton.GetHeight() + 8);

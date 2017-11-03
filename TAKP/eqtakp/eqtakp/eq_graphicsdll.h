@@ -24,6 +24,16 @@ uintptr_t* EQ_VTABLE_IDirect3DDevice8 = *(uintptr_t**)EQ_CLASS_POINTER_IDirect3D
 #define EQ_VTABLE_INDEX_IDirect3DDevice8__DrawIndexedPrimitive 71
 #define EQ_VTABLE_INDEX_IDirect3DDevice8__SetStreamSource 83
 
+uint32_t EQ_ADDRESS_FUNCTION_EQIDirect3DDevice8__Reset = NULL;
+uint32_t EQ_ADDRESS_FUNCTION_EQIDirect3DDevice8__Present = NULL;
+uint32_t EQ_ADDRESS_FUNCTION_EQIDirect3DDevice8__BeginScene = NULL;
+uint32_t EQ_ADDRESS_FUNCTION_EQIDirect3DDevice8__EndScene = NULL;
+uint32_t EQ_ADDRESS_FUNCTION_EQIDirect3DDevice8__Clear = NULL;
+uint32_t EQ_ADDRESS_FUNCTION_EQIDirect3DDevice8__SetRenderState = NULL;
+uint32_t EQ_ADDRESS_FUNCTION_EQIDirect3DDevice8__DrawPrimitive = NULL;
+uint32_t EQ_ADDRESS_FUNCTION_EQIDirect3DDevice8__DrawIndexedPrimitive = NULL;
+uint32_t EQ_ADDRESS_FUNCTION_EQIDirect3DDevice8__SetStreamSource = NULL;
+
 #define EQ_ADDRESS_POINTER_EQGraphicsDLL__t3dSetCameraLocation 0x007F9AE4
 
 #define EQ_ADDRESS_POINTER_EQGraphicsDLL__t3dCreateActorEx 0x007F98B4

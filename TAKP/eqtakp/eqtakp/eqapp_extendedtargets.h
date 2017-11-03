@@ -28,6 +28,8 @@ namespace EQApp
 
 bool g_extendedTargetsIsEnabled = true;
 
+bool g_extendedTargetsHeightFilterIsEnabled = true;
+
 std::vector<EQApp::ExtendedTargetsSpawn> g_extendedTargetsSpawnList;
 
 uint32_t g_extendedTargetsSpawnListTimer = 0;
@@ -40,10 +42,10 @@ float g_extendedTargetsSpawnDistanceZMax = 10.0f;
 
 uint32_t g_extendedTargetsFontHeight = 1;
 
-float g_extendedTargetsDefaultX = 8.0f;
+float g_extendedTargetsDefaultX = 4.0f;
 float g_extendedTargetsDefaultY = 412.0f;
 
-float g_extendedTargetsX = 8.0f;
+float g_extendedTargetsX = 4.0f;
 float g_extendedTargetsY = 412.0f;
 
 float g_extendedTargetsWidth  = 200.0f;
@@ -53,6 +55,7 @@ uint32_t g_extendedTargetsBorderColorARGB     = EQ_COLOR_ARGB_GRAY;
 uint32_t g_extendedTargetsBackgroundColorARGB = 0x80000000;
 
 void EQAPP_ExtendedTargets_Toggle();
+void EQAPP_ExtendedTargets_HeightFilter_Toggle();
 void EQAPP_ExtendedTargets_Load();
 void EQAPP_ExtendedTargets_RecalculateScreenCoordinates();
 void EQAPP_ExtendedTargets_UpdateSpawnList();
@@ -70,6 +73,12 @@ void EQAPP_ExtendedTargets_Toggle()
     }
 }
 
+void EQAPP_ExtendedTargets_HeightFilter_Toggle()
+{
+    EQ_ToggleBool(g_extendedTargetsHeightFilterIsEnabled);
+    EQAPP_PrintBool("Extended Targets Height Filter", g_extendedTargetsHeightFilterIsEnabled);
+}
+
 void EQAPP_ExtendedTargets_Load()
 {
     g_extendedTargetsSpawnList.clear();
@@ -84,7 +93,7 @@ void EQAPP_ExtendedTargets_RecalculateScreenCoordinates()
     uint32_t resolutionWidth = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_RESOLUTION_WIDTH);
     uint32_t resolutionHeight = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_RESOLUTION_HEIGHT);
 
-    g_extendedTargetsX = (float)resolutionWidth - g_extendedTargetsDefaultX - g_extendedTargetsWidth;
+    g_extendedTargetsX = ((float)resolutionWidth - 4.0f) - g_extendedTargetsWidth;
     g_extendedTargetsY = (float)(g_extendedTargetsDefaultY + g_extendedTargetsFontHeight);
 }
 
@@ -130,21 +139,24 @@ void EQAPP_ExtendedTargets_UpdateSpawnList()
             continue;
         }
 
-        float spawnDistanceZ = std::fabsf(spawn->Z - playerSpawn->Z);
-        if (spawn->Height < g_extendedTargetsSpawnDistanceZMax)
+        if (g_extendedTargetsHeightFilterIsEnabled == true)
         {
-            if (spawnDistanceZ > g_extendedTargetsSpawnDistanceZMax)
+            float spawnDistanceZ = std::fabsf(spawn->Z - playerSpawn->Z);
+            if (spawn->Height < g_extendedTargetsSpawnDistanceZMax)
             {
-                spawn = spawn->Next;
-                continue;
+                if (spawnDistanceZ > g_extendedTargetsSpawnDistanceZMax)
+                {
+                    spawn = spawn->Next;
+                    continue;
+                }
             }
-        }
-        else
-        {
-            if (spawnDistanceZ > (spawn->Height * 2.0f))
+            else
             {
-                spawn = spawn->Next;
-                continue;
+                if (spawnDistanceZ > (spawn->Height * 2.0f))
+                {
+                    spawn = spawn->Next;
+                    continue;
+                }
             }
         }
 

@@ -173,37 +173,37 @@ typedef int (__cdecl* EQ_FUNCTION_TYPE_GetKey)(void);
 #define EQ_ADDRESS_FUNCTION_get_bearing 0x004F3777
 
 #define EQ_ADDRESS_FUNCTION_ExecuteCmd 0x0054050C
-EQ_MACRO_FunctionAtAddress(int __cdecl EQ_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive, int zero), EQ_ADDRESS_FUNCTION_ExecuteCmd);
+EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQ_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive, int zero), EQ_ADDRESS_FUNCTION_ExecuteCmd);
 typedef int (__cdecl* EQ_FUNCTION_TYPE_ExecuteCmd)(uint32_t commandID, int isActive, int zero);
 
 #define EQ_ADDRESS_FUNCTION_send_message 0x0054E51A
 
 #define EQ_ADDRESS_FUNCTION_CastRay 0x004F20DB
-EQ_MACRO_FunctionAtAddress(int __cdecl EQ_FUNCTION_CastRay(class EQClass::EQPlayer* spawn, float y, float x, float z), EQ_ADDRESS_FUNCTION_CastRay);
+EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQ_FUNCTION_CastRay(class EQClass::EQPlayer* spawn, float y, float x, float z), EQ_ADDRESS_FUNCTION_CastRay);
 
 #define EQ_ADDRESS_FUNCTION_AutoInventory 0x004F0EEB
-EQ_MACRO_FunctionAtAddress(int __cdecl EQ_FUNCTION_AutoInventory(EQ::Character_ptr character, EQ::Item** item, short unknown = 0), EQ_ADDRESS_FUNCTION_AutoInventory);
+EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQ_FUNCTION_AutoInventory(EQ::Character_ptr character, EQ::Item** item, short unknown = 0), EQ_ADDRESS_FUNCTION_AutoInventory);
 typedef int (__cdecl* EQ_FUNCTION_TYPE_AutoInventory)(EQ::Character_ptr character, EQ::Item** item, short unknown);
 
 #define EQ_ADDRESS_FUNCTION_get_melee_range 0x004F3898
-EQ_MACRO_FunctionAtAddress(float __cdecl EQ_FUNCTION_get_melee_range(class EQClass::EQPlayer* spawn1, class EQClass::EQPlayer* spawn2), EQ_ADDRESS_FUNCTION_get_melee_range);
+EQ_MACRO_FUNCTION_FunctionAtAddress(float __cdecl EQ_FUNCTION_get_melee_range(class EQClass::EQPlayer* spawn1, class EQClass::EQPlayer* spawn2), EQ_ADDRESS_FUNCTION_get_melee_range);
 
 #define EQ_ADDRESS_FUNCTION_UpdateLight 0x004F0C7B
-EQ_MACRO_FunctionAtAddress(int __cdecl EQ_FUNCTION_UpdateLight(EQ::Character_ptr character), EQ_ADDRESS_FUNCTION_UpdateLight);
+EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQ_FUNCTION_UpdateLight(EQ::Character_ptr character), EQ_ADDRESS_FUNCTION_UpdateLight);
 
 #define EQ_ADDRESS_FUNCTION_GetSpellCastingTime 0x00435F28
-EQ_MACRO_FunctionAtAddress(signed int __cdecl EQ_FUNCTION_GetSpellCastingTime(void), EQ_ADDRESS_FUNCTION_GetSpellCastingTime);
+EQ_MACRO_FUNCTION_FunctionAtAddress(signed int __cdecl EQ_FUNCTION_GetSpellCastingTime(void), EQ_ADDRESS_FUNCTION_GetSpellCastingTime);
 
 #define EQ_ADDRESS_FUNCTION_CollisionCallbackForMove 0x0050418B
-EQ_MACRO_FunctionAtAddress(signed int __cdecl EQ_FUNCTION_CollisionCallbackForMove(EQ::ActorInstance_ptr actorInstance, EQ::Spawn_ptr spawn), EQ_ADDRESS_FUNCTION_CollisionCallbackForMove);
+EQ_MACRO_FUNCTION_FunctionAtAddress(signed int __cdecl EQ_FUNCTION_CollisionCallbackForMove(EQ::ActorInstance_ptr actorInstance, EQ::Spawn_ptr spawn), EQ_ADDRESS_FUNCTION_CollisionCallbackForMove);
 typedef int (__cdecl* EQ_FUNCTION_TYPE_CollisionCallbackForMove)(EQ::ActorInstance_ptr actorInstance, EQ::Spawn_ptr spawn);
 
 #define EQ_ADDRESS_FUNCTION_do_target 0x004FD9A7
-EQ_MACRO_FunctionAtAddress(int __cdecl EQ_FUNCTION_do_target(class EQClass::EQPlayer* player, const char* spawnName), EQ_ADDRESS_FUNCTION_do_target);
+EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQ_FUNCTION_do_target(class EQClass::EQPlayer* player, const char* spawnName), EQ_ADDRESS_FUNCTION_do_target);
 typedef int (__cdecl* EQ_FUNCTION_TYPE_do_target)(class EQClass::EQPlayer* player, const char* spawnName);
 
 #define EQ_ADDRESS_FUNCTION_DoSpellEffect 0x0052CA8D
-EQ_MACRO_FunctionAtAddress(int __cdecl EQ_FUNCTION_DoSpellEffect(int type, EQ::Spell_ptr spell, class EQClass::EQPlayer* player1, class EQClass::EQPlayer* player2, EQ::Location_ptr location, int* missile, uint32_t duration), EQ_ADDRESS_FUNCTION_DoSpellEffect);
+EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQ_FUNCTION_DoSpellEffect(int type, EQ::Spell_ptr spell, class EQClass::EQPlayer* player1, class EQClass::EQPlayer* player2, EQ::Location_ptr location, int* missile, uint32_t duration), EQ_ADDRESS_FUNCTION_DoSpellEffect);
 typedef int (__cdecl* EQ_FUNCTION_TYPE_DoSpellEffect)(int type, EQ::Spell_ptr spell, class EQClass::EQPlayer* player1, class EQClass::EQPlayer* player2, EQ::Location_ptr location, int* missile, uint32_t duration);
 
 /* functions */

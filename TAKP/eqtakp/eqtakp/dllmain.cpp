@@ -150,10 +150,10 @@
 
 void EQAPP_Load()
 {
+    EQ_WriteChatText("Loading...");
+
     EQ_GraphicsDLL_SetUseTNL(false);
     EQ_GraphicsDLL_SetUseUmbra(true);
-
-    EQ_WriteChatText("Loading...");
 
     EQAPP_Mouse_Load();
     ////EQAPP_Keyboard_Load();
@@ -175,17 +175,17 @@ void EQAPP_Load()
         EQAPP_Detours_OnZoneChanged_Load();
     }
 
-    g_bLoaded = 1;
-
     EQ_WriteChatText("Loaded!");
+
+    g_bLoaded = 1;
 }
 
 void EQAPP_Unload()
 {
+    EQ_WriteChatText("Unloading...");
+
     EQ_GraphicsDLL_SetUseTNL(false);
     EQ_GraphicsDLL_SetUseUmbra(true);
-
-    EQ_WriteChatText("Unloading...");
 
     EQAPP_FreeCamera_SetEnabled(false);
 
@@ -200,6 +200,8 @@ void EQAPP_Unload()
     {
         EQ_FUNCTION_UpdateLight(EQ_POINTER_PlayerCharacter);
     }
+
+    EQ_WriteChatText("Unloaded!");
 
     g_bExit = 1;
 }
@@ -217,14 +219,10 @@ DWORD WINAPI EQAPP_ThreadLoop(LPVOID param)
         Sleep(100);
     }
 
-    Sleep(100);
-
-    EQAPP_Detours_Remove();
+    EQAPP_Detours_Unload();
 
     TerminateThread(EQAPP_ThreadLoad, 0);
     TerminateThread(EQAPP_ThreadConsole, 0);
-
-    Sleep(100);
 
     FreeLibraryAndExitThread(g_module, 0);
     return 0;
@@ -249,7 +247,7 @@ DWORD WINAPI EQAPP_ThreadLoad(LPVOID param)
 
     g_handleThreadLoop = CreateThread(NULL, 0, &EQAPP_ThreadLoop, NULL, 0, NULL);
 
-    EQAPP_Detours_Add();
+    EQAPP_Detours_Load();
 
     ExitThread(0);
 
@@ -276,15 +274,14 @@ BOOL __stdcall DllMain(HMODULE module, DWORD reason, LPVOID reserved)
 {
     g_module = module;
 
-    switch (reason)
+    if (reason == DLL_PROCESS_ATTACH)
     {
-        case DLL_PROCESS_ATTACH:
-            DisableThreadLibraryCalls(module);
-            g_handleThreadLoad = CreateThread(NULL, 0, &EQAPP_ThreadLoad, NULL, 0, NULL);
-            break;
-
-        case DLL_PROCESS_DETACH:
-            break;
+        DisableThreadLibraryCalls(module);
+        g_handleThreadLoad = CreateThread(NULL, 0, &EQAPP_ThreadLoad, NULL, 0, NULL);
+    }
+    else if (reason == DLL_PROCESS_DETACH)
+    {
+        //
     }
 
     return TRUE;

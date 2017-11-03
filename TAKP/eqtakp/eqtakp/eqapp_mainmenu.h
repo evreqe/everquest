@@ -81,6 +81,12 @@ void EQAPP_MainMenu_CreateMenu()
     g_mainMenuGUIMenuItemExtendedTargets.SetFunctionLeftClick(&EQAPP_ExtendedTargets_Toggle);
     g_mainMenuGUIMenuItemExtendedTargets.SetBoolPointer(g_extendedTargetsIsEnabled);
 
+    EQApp::GUIMenuItem g_mainMenuGUIMenuItemExtendedTargetsHeightFilter;
+    g_mainMenuGUIMenuItemExtendedTargetsHeightFilter.SetText("ET Height Filter");
+    g_mainMenuGUIMenuItemExtendedTargetsHeightFilter.FitToText();
+    g_mainMenuGUIMenuItemExtendedTargetsHeightFilter.SetFunctionLeftClick(&EQAPP_ExtendedTargets_HeightFilter_Toggle);
+    g_mainMenuGUIMenuItemExtendedTargetsHeightFilter.SetBoolPointer(g_extendedTargetsHeightFilterIsEnabled);
+
     EQApp::GUIMenuItem g_mainMenuGUIMenuItemFoodAndDrink;
     g_mainMenuGUIMenuItemFoodAndDrink.SetText("Food and Drink");
     g_mainMenuGUIMenuItemFoodAndDrink.FitToText();
@@ -152,6 +158,7 @@ void EQAPP_MainMenu_CreateMenu()
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemCollisionHack);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemESP);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemExtendedTargets);
+    g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemExtendedTargetsHeightFilter);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemFoodAndDrink);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemFreeCamera);
     g_mainMenuGUIMenu.AddMenuItem(g_mainMenuGUIMenuItemHotButtonKeys);
