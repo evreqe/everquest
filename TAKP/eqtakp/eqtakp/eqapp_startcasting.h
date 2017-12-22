@@ -1,6 +1,6 @@
 #pragma once
 
-bool g_startCastingisEnabled = true;
+bool g_StartCastingisEnabled = true;
 
 void EQAPP_StartCasting_HandleEvent_CEverQuest__StartCasting(void* this_ptr, EQ::CEverQuestStartCastingMessage_ptr message);
 

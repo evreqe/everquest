@@ -846,7 +846,7 @@ typedef struct _Spawn
 /* 0x0108 */ uint8_t IsLinkDead; // LD
 /* 0x0109 */ uint8_t IsGameMaster; // GM
 /* 0x010A */ uint16_t LevitationState; // EQ_LEVITATION_STATE_x
-/* 0x010C */ uint32_t TargetType; // EQ_SPAWN_TARGET_TYPE_x ; values can be 11, 65, 67, 60, and more
+/* 0x010C */ uint32_t BodyType; // EQ_SPAWN_BODY_TYPE_x
 /* 0x0110 */ uint32_t Unknown0110;
 /* 0x0114 */ uint32_t AnonymousState; // EQ_ANONYMOUS_STATE_x ; /anonymous and /roleplay
 /* 0x0118 */ uint32_t Unknown0118;

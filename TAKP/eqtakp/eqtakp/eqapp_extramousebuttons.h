@@ -1,16 +1,16 @@
 #pragma once
 
-bool g_extraMouseButtonsIsEnabled = true;
+bool g_ExtraMouseButtonsIsEnabled = true;
 
-uint32_t g_extraMouseButtonsTimer = 0;
-uint32_t g_extraMouseButtonsTimerDelay = 250;
+uint32_t g_ExtraMouseButtonsTimer = 0;
+uint32_t g_ExtraMouseButtonsTimerDelay = 250;
 
 void EQAPP_ExtraMouseButtons_HandleEvent_ProcessMouseEvent();
 
 void EQAPP_ExtraMouseButtons_HandleEvent_ProcessMouseEvent()
 {
     auto currentTime = EQ_GetTimer();
-    if ((currentTime - g_extraMouseButtonsTimer) < g_extraMouseButtonsTimerDelay)
+    if ((currentTime - g_ExtraMouseButtonsTimer) < g_ExtraMouseButtonsTimerDelay)
     {
         return;
     }
@@ -45,7 +45,7 @@ void EQAPP_ExtraMouseButtons_HandleEvent_ProcessMouseEvent()
 
     if (wasButtonPressed == true)
     {
-        g_extraMouseButtonsTimer = EQ_GetTimer();
+        g_ExtraMouseButtonsTimer = EQ_GetTimer();
     }
 }
 

@@ -1,6 +1,6 @@
 #pragma once
 
-bool g_interpretCmdIsEnabled = true;
+bool g_InterpretCmdIsEnabled = true;
 
 void EQAPP_InterpretCmd_NULL();
 
@@ -9,7 +9,7 @@ void EQAPP_InterpretCmd_NULL()
     return;
 }
 
-std::map<std::string, std::function<void()>> g_interpretCmdList =
+std::map<std::string, std::function<void()>> g_InterpretCmdList =
 {
     {"//AlwaysAttack",                     &EQAPP_AlwaysAttack_Toggle},
     {"//AutoGroup",                        &EQAPP_AutoGroup_Toggle},
@@ -154,7 +154,7 @@ bool EQAPP_InterpretCmd_HandleEvent_CEverQuest__InterpretCmd(void* this_ptr, cla
 
         if (commandText.find("/") != std::string::npos)
         {
-            for (auto& cmd : g_interpretCmdList)
+            for (auto& cmd : g_InterpretCmdList)
             {
                 std::string cmdText = cmd.first;
                 std::string cmdTextStripped = cmdText.substr(2, cmdText.size());
@@ -166,7 +166,7 @@ bool EQAPP_InterpretCmd_HandleEvent_CEverQuest__InterpretCmd(void* this_ptr, cla
             }
         }
 
-        for (auto& cmd : g_interpretCmdList)
+        for (auto& cmd : g_InterpretCmdList)
         {
             if (commandText == cmd.first)
             {
@@ -205,8 +205,8 @@ void EQAPP_InterpretCmd_Execute(std::string commandText)
     }
 
     // handle interpret command list functions
-    auto cmd = g_interpretCmdList.find(commandText);
-    if (cmd != g_interpretCmdList.end())
+    auto cmd = g_InterpretCmdList.find(commandText);
+    if (cmd != g_InterpretCmdList.end())
     {
         cmd->second();
         return;
@@ -219,7 +219,7 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
     {
         std::cout << "Command List: " << std::endl;
 
-        for (auto& cmd : g_interpretCmdList)
+        for (auto& cmd : g_InterpretCmdList)
         {
             std::cout << cmd.first << std::endl;
         }
@@ -287,7 +287,7 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
             return true;
         }
 
-        g_trainSpellsSpellName = spellName;
+        g_TrainSpellsSpellName = spellName;
 
         std::cout << "Train Spell Name: " << spellName << std::endl;
 
@@ -390,7 +390,7 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
         float height = std::stof(heightStr);
         if (height >= 1.0f)
         {
-            g_changeHeightMinimumHeight = height;
+            g_ChangeHeightMinimumHeight = height;
         }
 
         std::cout << "Change Height Min: " << std::fixed << std::setprecision(1) << height << std::endl;
@@ -415,7 +415,7 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
         float height = std::stof(heightStr);
         if (height >= 1.0f)
         {
-            g_changeHeightMaximumHeight = height;
+            g_ChangeHeightMaximumHeight = height;
         }
 
         std::cout << "Change Height Max: " << std::fixed << std::setprecision(1) << height << std::endl;
@@ -654,11 +654,9 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (commandText == "//ShowFPS" || commandText == "/ToggleFPS")
+    if (commandText == "//ShowFPS" || commandText == "//ToggleFPS")
     {
-        bool bEnabled = EQ_GraphicsDLL_IsShowFPSEnabled();
-
-        EQ_GraphicsDLL_SetShowFPS(!bEnabled);
+        EQ_GraphicsDLL_ToggleShowFPS();
 
         return true;
     }

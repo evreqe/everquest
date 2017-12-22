@@ -1,16 +1,16 @@
 #pragma once
 
-bool g_targetRingIsEnabled = false;
+bool g_TargetRingIsEnabled = false;
 
-uint32_t g_targetRingSpellID = 3848;
+EQ_SpellID_t g_TargetRingSpellID = 3848;
 
 void EQAPP_TargetRing_Toggle();
 void EQAPP_TargetRing_Execute();
 
 void EQAPP_TargetRing_Toggle()
 {
-    EQ_ToggleBool(g_targetRingIsEnabled);
-    EQAPP_PrintBool("Target Ring", g_targetRingIsEnabled);
+    EQ_ToggleBool(g_TargetRingIsEnabled);
+    EQAPP_PrintBool("Target Ring", g_TargetRingIsEnabled);
 }
 
 void EQAPP_TargetRing_Execute()
@@ -18,7 +18,7 @@ void EQAPP_TargetRing_Execute()
     auto targetSpawn = EQ_GetTargetSpawn();
     if (targetSpawn != NULL)
     {
-        auto spell = EQ_GetSpellByID(g_targetRingSpellID);
+        auto spell = EQ_GetSpellByID(g_TargetRingSpellID);
         if (spell != NULL)
         {
             auto target = (EQClass::EQPlayer*)targetSpawn;

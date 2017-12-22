@@ -216,6 +216,13 @@ EQ::CBuffWindow** EQ_POINTER_CBuffWindow_pptr = (EQ::CBuffWindow**)EQ_ADDRESS_PO
 EQClass::CBuffWindow** EQ_CLASS_POINTER_CBuffWindow_pptr = (EQClass::CBuffWindow**)EQ_ADDRESS_POINTER_CBuffWindow;
 #define EQ_CLASS_POINTER_CBuffWindow (*EQ_CLASS_POINTER_CBuffWindow_pptr)
 
+/* CCastSpellWnd */
+
+#define EQ_ADDRESS_POINTER_CCastSpellWnd 0x0063D648
+
+EQClass::CCastSpellWnd** EQ_CLASS_POINTER_CCastSpellWnd_pptr = (EQClass::CCastSpellWnd**)EQ_ADDRESS_POINTER_CCastSpellWnd;
+#define EQ_CLASS_POINTER_CCastSpellWnd (*EQ_CLASS_POINTER_CCastSpellWnd_pptr)
+
 /* CGiveWnd */
 
 #define EQ_ADDRESS_POINTER_CGiveWnd 0x0063D678

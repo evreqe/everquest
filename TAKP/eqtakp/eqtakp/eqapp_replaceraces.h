@@ -1,9 +1,9 @@
 #pragma once
 
-bool g_replaceRacesIsEnabled = true;
+bool g_ReplaceRacesIsEnabled = true;
 
-uint32_t g_replaceRacesTimer = 0;
-uint32_t g_replaceRacesTimerDelay = 3000;
+uint32_t g_ReplaceRacesTimer = 0;
+uint32_t g_ReplaceRacesTimerDelay = 3000;
 
 void EQAPP_ReplaceRaces_Toggle();
 void EQAPP_ReplaceRaces_Execute();
@@ -11,8 +11,8 @@ bool EQAPP_ReplaceRaces_HandleEvent_EQPlayer__do_change_form(void* this_ptr, EQ:
 
 void EQAPP_ReplaceRaces_Toggle()
 {
-    EQ_ToggleBool(g_replaceRacesIsEnabled);
-    EQAPP_PrintBool("Replace Races", g_replaceRacesIsEnabled);
+    EQ_ToggleBool(g_ReplaceRacesIsEnabled);
+    EQAPP_PrintBool("Replace Races", g_ReplaceRacesIsEnabled);
 }
 
 void EQAPP_ReplaceRaces_Execute()
@@ -22,7 +22,7 @@ void EQAPP_ReplaceRaces_Execute()
         return;
     }
 
-    if (EQ_HasTimePassed(g_replaceRacesTimer, g_replaceRacesTimerDelay) == false)
+    if (EQ_HasTimePassed(g_ReplaceRacesTimer, g_ReplaceRacesTimerDelay) == false)
     {
         return;
     }

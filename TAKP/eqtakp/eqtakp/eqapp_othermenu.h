@@ -1,8 +1,8 @@
 #pragma once
 
-EQApp::GUIButton g_otherMenuGUIButton;
+EQApp::GUIButton g_OtherMenuGUIButton;
 
-EQApp::GUIMenu g_otherMenuGUIMenu;
+EQApp::GUIMenu g_OtherMenuGUIMenu;
 
 void EQAPP_OtherMenu_Toggle();
 void EQAPP_OtherMenu_Load();
@@ -11,9 +11,9 @@ void EQAPP_OtherMenu_CreateMenu();
 
 void EQAPP_OtherMenu_Toggle()
 {
-    g_otherMenuGUIMenu.ToggleOpen();
+    g_OtherMenuGUIMenu.ToggleOpen();
 
-    EQAPP_GUI_CloseAllMenusExcept(&g_otherMenuGUIMenu);
+    EQAPP_GUI_CloseAllMenusExcept(&g_OtherMenuGUIMenu);
 }
 
 void EQAPP_OtherMenu_Load()
@@ -24,146 +24,154 @@ void EQAPP_OtherMenu_Load()
 
 void EQAPP_OtherMenu_CreateButton()
 {
-    g_otherMenuGUIButton.SetX(700);
-    g_otherMenuGUIButton.SetY(6);
+    g_OtherMenuGUIButton.SetX(700);
+    g_OtherMenuGUIButton.SetY(6);
 
-    g_otherMenuGUIButton.SetWidth(64);
-    g_otherMenuGUIButton.SetHeight(32);
+    g_OtherMenuGUIButton.SetWidth(64);
+    g_OtherMenuGUIButton.SetHeight(32);
 
-    g_otherMenuGUIButton.SetText("OTHER");
-    g_otherMenuGUIButton.FitToText();
+    g_OtherMenuGUIButton.SetText("OTHER");
+    g_OtherMenuGUIButton.FitToText();
 
-    g_otherMenuGUIButton.SetFunctionLeftClick(&EQAPP_OtherMenu_Toggle);
+    g_OtherMenuGUIButton.SetFunctionLeftClick(&EQAPP_OtherMenu_Toggle);
 
-    g_GUIButtonList.push_back(&g_otherMenuGUIButton);
+    g_GUIButtonList.push_back(&g_OtherMenuGUIButton);
 }
 
 void EQAPP_OtherMenu_CreateMenu()
 {
-    EQApp::GUIMenuItem g_otherMenuGUIMenuItemSeparator;
-    g_otherMenuGUIMenuItemSeparator.SetText("--------------------");
-    g_otherMenuGUIMenuItemSeparator.FitToText();
-    g_otherMenuGUIMenuItemSeparator.SetIsSeparator(true);
+    EQApp::GUIMenuItem g_OtherMenuGUIMenuItemSeparator;
+    g_OtherMenuGUIMenuItemSeparator.SetText("--------------------");
+    g_OtherMenuGUIMenuItemSeparator.FitToText();
+    g_OtherMenuGUIMenuItemSeparator.SetIsSeparator(true);
 
-    EQApp::GUIMenuItem g_otherMenuGUIMenuItemWallHack;
-    g_otherMenuGUIMenuItemWallHack.SetText("Wall Hack");
-    g_otherMenuGUIMenuItemWallHack.FitToText();
-    g_otherMenuGUIMenuItemWallHack.SetFunctionLeftClick(&EQAPP_WallHack_Toggle);
-    g_otherMenuGUIMenuItemWallHack.SetBoolPointer(g_wallHackIsEnabled);
+    EQApp::GUIMenuItem g_OtherMenuGUIMenuItemWallHack;
+    g_OtherMenuGUIMenuItemWallHack.SetText("Wall Hack");
+    g_OtherMenuGUIMenuItemWallHack.FitToText();
+    g_OtherMenuGUIMenuItemWallHack.SetFunctionLeftClick(&EQAPP_WallHack_Toggle);
+    g_OtherMenuGUIMenuItemWallHack.SetBoolPointer(g_WallHackIsEnabled);
 
-    EQApp::GUIMenuItem g_otherMenuGUIMenuItemWaterHack;
-    g_otherMenuGUIMenuItemWaterHack.SetText("Water Hack");
-    g_otherMenuGUIMenuItemWaterHack.FitToText();
-    g_otherMenuGUIMenuItemWaterHack.SetFunctionLeftClick(&EQAPP_WaterHack_Toggle);
-    g_otherMenuGUIMenuItemWaterHack.SetBoolPointer(g_waterHackIsEnabled);
+    EQApp::GUIMenuItem g_OtherMenuGUIMenuItemWaterHack;
+    g_OtherMenuGUIMenuItemWaterHack.SetText("Water Hack");
+    g_OtherMenuGUIMenuItemWaterHack.FitToText();
+    g_OtherMenuGUIMenuItemWaterHack.SetFunctionLeftClick(&EQAPP_WaterHack_Toggle);
+    g_OtherMenuGUIMenuItemWaterHack.SetBoolPointer(g_WaterHackIsEnabled);
 
-    EQApp::GUIMenuItem g_otherMenuGUIMenuItemTreeHack;
-    g_otherMenuGUIMenuItemTreeHack.SetText("Tree Hack");
-    g_otherMenuGUIMenuItemTreeHack.FitToText();
-    g_otherMenuGUIMenuItemTreeHack.SetFunctionLeftClick(&EQAPP_TreeHack_Toggle);
-    g_otherMenuGUIMenuItemTreeHack.SetBoolPointer(g_treeHackIsEnabled);
+    EQApp::GUIMenuItem g_OtherMenuGUIMenuItemTreeHack;
+    g_OtherMenuGUIMenuItemTreeHack.SetText("Tree Hack");
+    g_OtherMenuGUIMenuItemTreeHack.FitToText();
+    g_OtherMenuGUIMenuItemTreeHack.SetFunctionLeftClick(&EQAPP_TreeHack_Toggle);
+    g_OtherMenuGUIMenuItemTreeHack.SetBoolPointer(g_TreeHackIsEnabled);
 
-    EQApp::GUIMenuItem g_otherMenuGUIMenuItemDestroyActors;
-    g_otherMenuGUIMenuItemDestroyActors.SetText("Destroy Actors");
-    g_otherMenuGUIMenuItemDestroyActors.FitToText();
-    g_otherMenuGUIMenuItemDestroyActors.SetFunctionLeftClick(&EQAPP_DestroyActors_Toggle);
-    g_otherMenuGUIMenuItemDestroyActors.SetBoolPointer(g_destroyActorsIsEnabled);
+    EQApp::GUIMenuItem g_OtherMenuGUIMenuItemDestroyActors;
+    g_OtherMenuGUIMenuItemDestroyActors.SetText("Destroy Actors");
+    g_OtherMenuGUIMenuItemDestroyActors.FitToText();
+    g_OtherMenuGUIMenuItemDestroyActors.SetFunctionLeftClick(&EQAPP_DestroyActors_Toggle);
+    g_OtherMenuGUIMenuItemDestroyActors.SetBoolPointer(g_DestroyActorsIsEnabled);
 
-    EQApp::GUIMenuItem g_otherMenuGUIMenuItemDestroyActorsCreateActorExLog;
-    g_otherMenuGUIMenuItemDestroyActorsCreateActorExLog.SetText("Destroy Actors CreateActorEx Log");
-    g_otherMenuGUIMenuItemDestroyActorsCreateActorExLog.FitToText();
-    g_otherMenuGUIMenuItemDestroyActorsCreateActorExLog.SetFunctionLeftClick(&EQAPP_DestroyActors_CreateActorExLog_Toggle);
-    g_otherMenuGUIMenuItemDestroyActorsCreateActorExLog.SetBoolPointer(g_destroyActorsCreateActorExLogIsEnabled);
+    EQApp::GUIMenuItem g_OtherMenuGUIMenuItemDestroyActorsCreateActorExLog;
+    g_OtherMenuGUIMenuItemDestroyActorsCreateActorExLog.SetText("Destroy Actors CreateActorEx Log");
+    g_OtherMenuGUIMenuItemDestroyActorsCreateActorExLog.FitToText();
+    g_OtherMenuGUIMenuItemDestroyActorsCreateActorExLog.SetFunctionLeftClick(&EQAPP_DestroyActors_CreateActorExLog_Toggle);
+    g_OtherMenuGUIMenuItemDestroyActorsCreateActorExLog.SetBoolPointer(g_DestroyActorsCreateActorExLogIsEnabled);
 
-    EQApp::GUIMenuItem g_otherMenuGUIMenuItemPrintBankInventory;
-    g_otherMenuGUIMenuItemPrintBankInventory.SetText("Print Bank Inventory");
-    g_otherMenuGUIMenuItemPrintBankInventory.FitToText();
-    g_otherMenuGUIMenuItemPrintBankInventory.SetFunctionLeftClick(&EQAPP_PrintBankInventory);
+    EQApp::GUIMenuItem g_OtherMenuGUIMenuItemPrintBankInventory;
+    g_OtherMenuGUIMenuItemPrintBankInventory.SetText("Print Bank Inventory");
+    g_OtherMenuGUIMenuItemPrintBankInventory.FitToText();
+    g_OtherMenuGUIMenuItemPrintBankInventory.SetFunctionLeftClick(&EQAPP_PrintBankInventory);
 
-    EQApp::GUIMenuItem g_otherMenuGUIMenuItemWriteInventoryToFile;
-    g_otherMenuGUIMenuItemWriteInventoryToFile.SetText("Write Inventory to File");
-    g_otherMenuGUIMenuItemWriteInventoryToFile.FitToText();
-    g_otherMenuGUIMenuItemWriteInventoryToFile.SetFunctionLeftClick(&EQAPP_WriteInventoryToFile);
+    EQApp::GUIMenuItem g_OtherMenuGUIMenuItemWriteInventoryToFile;
+    g_OtherMenuGUIMenuItemWriteInventoryToFile.SetText("Write Inventory to File");
+    g_OtherMenuGUIMenuItemWriteInventoryToFile.FitToText();
+    g_OtherMenuGUIMenuItemWriteInventoryToFile.SetFunctionLeftClick(&EQAPP_WriteInventoryToFile);
 
-    EQApp::GUIMenuItem g_otherMenuGUIMenuItemLoadSpellSet;
-    g_otherMenuGUIMenuItemLoadSpellSet.SetText("Load Default Spellset");
-    g_otherMenuGUIMenuItemLoadSpellSet.FitToText();
-    g_otherMenuGUIMenuItemLoadSpellSet.SetFunctionLeftClick(&EQAPP_SpellSet_LoadAndStartMemorizing);
+    EQApp::GUIMenuItem g_OtherMenuGUIMenuItemLoadSpellSet;
+    g_OtherMenuGUIMenuItemLoadSpellSet.SetText("Load Default Spellset");
+    g_OtherMenuGUIMenuItemLoadSpellSet.FitToText();
+    g_OtherMenuGUIMenuItemLoadSpellSet.SetFunctionLeftClick(&EQAPP_SpellSet_LoadAndStartMemorizing);
 
-    EQApp::GUIMenuItem g_otherMenuGUIMenuItemSaveSpellSet;
-    g_otherMenuGUIMenuItemSaveSpellSet.SetText("Save Default Spellset");
-    g_otherMenuGUIMenuItemSaveSpellSet.FitToText();
-    g_otherMenuGUIMenuItemSaveSpellSet.SetFunctionLeftClick(&EQAPP_SpellSet_Save_Default);
+    EQApp::GUIMenuItem g_OtherMenuGUIMenuItemSaveSpellSet;
+    g_OtherMenuGUIMenuItemSaveSpellSet.SetText("Save Default Spellset");
+    g_OtherMenuGUIMenuItemSaveSpellSet.FitToText();
+    g_OtherMenuGUIMenuItemSaveSpellSet.SetFunctionLeftClick(&EQAPP_SpellSet_Save_Default);
 
-    EQApp::GUIMenuItem g_otherMenuGUIMenuItemLoadAutoLoot;
-    g_otherMenuGUIMenuItemLoadAutoLoot.SetText("Load Auto Loot");
-    g_otherMenuGUIMenuItemLoadAutoLoot.FitToText();
-    g_otherMenuGUIMenuItemLoadAutoLoot.SetFunctionLeftClick(&EQAPP_AutoLoot_Load);
+    EQApp::GUIMenuItem g_OtherMenuGUIMenuItemLoadAutoLoot;
+    g_OtherMenuGUIMenuItemLoadAutoLoot.SetText("Load Auto Loot");
+    g_OtherMenuGUIMenuItemLoadAutoLoot.FitToText();
+    g_OtherMenuGUIMenuItemLoadAutoLoot.SetFunctionLeftClick(&EQAPP_AutoLoot_Load);
 
-    EQApp::GUIMenuItem g_otherMenuGUIMenuItemLoadMap;
-    g_otherMenuGUIMenuItemLoadMap.SetText("Load Map");
-    g_otherMenuGUIMenuItemLoadMap.FitToText();
-    g_otherMenuGUIMenuItemLoadMap.SetFunctionLeftClick(&EQAPP_Map_Load);
+    EQApp::GUIMenuItem g_OtherMenuGUIMenuItemLoadMap;
+    g_OtherMenuGUIMenuItemLoadMap.SetText("Load Map");
+    g_OtherMenuGUIMenuItemLoadMap.FitToText();
+    g_OtherMenuGUIMenuItemLoadMap.SetFunctionLeftClick(&EQAPP_Map_Load);
 
-    EQApp::GUIMenuItem g_otherMenuGUIMenuItemLoadNamedSpawns;
-    g_otherMenuGUIMenuItemLoadNamedSpawns.SetText("Load Named Spawns");
-    g_otherMenuGUIMenuItemLoadNamedSpawns.FitToText();
-    g_otherMenuGUIMenuItemLoadNamedSpawns.SetFunctionLeftClick(&EQAPP_NamedSpawns_Load);
+    EQApp::GUIMenuItem g_OtherMenuGUIMenuItemLoadNamedSpawns;
+    g_OtherMenuGUIMenuItemLoadNamedSpawns.SetText("Load Named Spawns");
+    g_OtherMenuGUIMenuItemLoadNamedSpawns.FitToText();
+    g_OtherMenuGUIMenuItemLoadNamedSpawns.SetFunctionLeftClick(&EQAPP_NamedSpawns_Load);
 
-    EQApp::GUIMenuItem g_otherMenuGUIMenuItemLoadBazaarSearchItemNames;
-    g_otherMenuGUIMenuItemLoadBazaarSearchItemNames.SetText("Load Bazaar Search Item Names");
-    g_otherMenuGUIMenuItemLoadBazaarSearchItemNames.FitToText();
-    g_otherMenuGUIMenuItemLoadBazaarSearchItemNames.SetFunctionLeftClick(&EQAPP_BazaarSearchWindow_LoadItemNames);
+    EQApp::GUIMenuItem g_OtherMenuGUIMenuItemLoadBazaarSearchItemNames;
+    g_OtherMenuGUIMenuItemLoadBazaarSearchItemNames.SetText("Load Bazaar Search Item Names");
+    g_OtherMenuGUIMenuItemLoadBazaarSearchItemNames.FitToText();
+    g_OtherMenuGUIMenuItemLoadBazaarSearchItemNames.SetFunctionLeftClick(&EQAPP_BazaarSearchWindow_LoadItemNames);
 
-    EQApp::GUIMenuItem g_otherMenuGUIMenuItemLoadDestroyActors;
-    g_otherMenuGUIMenuItemLoadDestroyActors.SetText("Load Destroy Actors");
-    g_otherMenuGUIMenuItemLoadDestroyActors.FitToText();
-    g_otherMenuGUIMenuItemLoadDestroyActors.SetFunctionLeftClick(&EQAPP_DestroyActors_Load);
+    EQApp::GUIMenuItem g_OtherMenuGUIMenuItemLoadDestroyActors;
+    g_OtherMenuGUIMenuItemLoadDestroyActors.SetText("Load Destroy Actors");
+    g_OtherMenuGUIMenuItemLoadDestroyActors.FitToText();
+    g_OtherMenuGUIMenuItemLoadDestroyActors.SetFunctionLeftClick(&EQAPP_DestroyActors_Load);
 
-    EQApp::GUIMenuItem g_otherMenuGUIMenuItemLoadTreeHack;
-    g_otherMenuGUIMenuItemLoadTreeHack.SetText("Load Tree Hack");
-    g_otherMenuGUIMenuItemLoadTreeHack.FitToText();
-    g_otherMenuGUIMenuItemLoadTreeHack.SetFunctionLeftClick(&EQAPP_TreeHack_Load);
+    EQApp::GUIMenuItem g_OtherMenuGUIMenuItemLoadTreeHack;
+    g_OtherMenuGUIMenuItemLoadTreeHack.SetText("Load Tree Hack");
+    g_OtherMenuGUIMenuItemLoadTreeHack.FitToText();
+    g_OtherMenuGUIMenuItemLoadTreeHack.SetFunctionLeftClick(&EQAPP_TreeHack_Load);
 
-    EQApp::GUIMenuItem g_otherMenuGUIMenuItemLoadWaterHack;
-    g_otherMenuGUIMenuItemLoadWaterHack.SetText("Load Water Hack");
-    g_otherMenuGUIMenuItemLoadWaterHack.FitToText();
-    g_otherMenuGUIMenuItemLoadWaterHack.SetFunctionLeftClick(&EQAPP_WaterHack_Load);
+    EQApp::GUIMenuItem g_OtherMenuGUIMenuItemLoadWaterHack;
+    g_OtherMenuGUIMenuItemLoadWaterHack.SetText("Load Water Hack");
+    g_OtherMenuGUIMenuItemLoadWaterHack.FitToText();
+    g_OtherMenuGUIMenuItemLoadWaterHack.SetFunctionLeftClick(&EQAPP_WaterHack_Load);
 
-    g_otherMenuGUIMenu.AddMenuItem(g_otherMenuGUIMenuItemWallHack);
-    g_otherMenuGUIMenu.AddMenuItem(g_otherMenuGUIMenuItemWaterHack);
-    g_otherMenuGUIMenu.AddMenuItem(g_otherMenuGUIMenuItemTreeHack);
+    EQApp::GUIMenuItem g_OtherMenuGUIMenuItemToggleShowFPS;
+    g_OtherMenuGUIMenuItemToggleShowFPS.SetText("Toggle FPS Overlay");
+    g_OtherMenuGUIMenuItemToggleShowFPS.FitToText();
+    g_OtherMenuGUIMenuItemToggleShowFPS.SetFunctionLeftClick(&EQ_GraphicsDLL_ToggleShowFPS);
 
-    g_otherMenuGUIMenu.AddMenuItem(g_otherMenuGUIMenuItemSeparator);
+    g_OtherMenuGUIMenu.AddMenuItem(g_OtherMenuGUIMenuItemWallHack);
+    g_OtherMenuGUIMenu.AddMenuItem(g_OtherMenuGUIMenuItemWaterHack);
+    g_OtherMenuGUIMenu.AddMenuItem(g_OtherMenuGUIMenuItemTreeHack);
 
-    g_otherMenuGUIMenu.AddMenuItem(g_otherMenuGUIMenuItemDestroyActors);
-    g_otherMenuGUIMenu.AddMenuItem(g_otherMenuGUIMenuItemDestroyActorsCreateActorExLog);
+    g_OtherMenuGUIMenu.AddMenuItem(g_OtherMenuGUIMenuItemSeparator);
 
-    g_otherMenuGUIMenu.AddMenuItem(g_otherMenuGUIMenuItemSeparator);
+    g_OtherMenuGUIMenu.AddMenuItem(g_OtherMenuGUIMenuItemDestroyActors);
+    g_OtherMenuGUIMenu.AddMenuItem(g_OtherMenuGUIMenuItemDestroyActorsCreateActorExLog);
 
-    g_otherMenuGUIMenu.AddMenuItem(g_otherMenuGUIMenuItemPrintBankInventory);
-    g_otherMenuGUIMenu.AddMenuItem(g_otherMenuGUIMenuItemWriteInventoryToFile);
+    g_OtherMenuGUIMenu.AddMenuItem(g_OtherMenuGUIMenuItemSeparator);
 
-    g_otherMenuGUIMenu.AddMenuItem(g_otherMenuGUIMenuItemSeparator);
+    g_OtherMenuGUIMenu.AddMenuItem(g_OtherMenuGUIMenuItemPrintBankInventory);
+    g_OtherMenuGUIMenu.AddMenuItem(g_OtherMenuGUIMenuItemWriteInventoryToFile);
 
-    g_otherMenuGUIMenu.AddMenuItem(g_otherMenuGUIMenuItemLoadSpellSet);
-    g_otherMenuGUIMenu.AddMenuItem(g_otherMenuGUIMenuItemSaveSpellSet);
+    g_OtherMenuGUIMenu.AddMenuItem(g_OtherMenuGUIMenuItemSeparator);
 
-    g_otherMenuGUIMenu.AddMenuItem(g_otherMenuGUIMenuItemSeparator);
+    g_OtherMenuGUIMenu.AddMenuItem(g_OtherMenuGUIMenuItemLoadSpellSet);
+    g_OtherMenuGUIMenu.AddMenuItem(g_OtherMenuGUIMenuItemSaveSpellSet);
 
-    g_otherMenuGUIMenu.AddMenuItem(g_otherMenuGUIMenuItemLoadAutoLoot);
-    g_otherMenuGUIMenu.AddMenuItem(g_otherMenuGUIMenuItemLoadMap);
-    g_otherMenuGUIMenu.AddMenuItem(g_otherMenuGUIMenuItemLoadNamedSpawns);
-    g_otherMenuGUIMenu.AddMenuItem(g_otherMenuGUIMenuItemLoadBazaarSearchItemNames);
-    g_otherMenuGUIMenu.AddMenuItem(g_otherMenuGUIMenuItemLoadDestroyActors);
-    g_otherMenuGUIMenu.AddMenuItem(g_otherMenuGUIMenuItemLoadTreeHack);
-    g_otherMenuGUIMenu.AddMenuItem(g_otherMenuGUIMenuItemLoadWaterHack);
+    g_OtherMenuGUIMenu.AddMenuItem(g_OtherMenuGUIMenuItemSeparator);
 
+    g_OtherMenuGUIMenu.AddMenuItem(g_OtherMenuGUIMenuItemLoadAutoLoot);
+    g_OtherMenuGUIMenu.AddMenuItem(g_OtherMenuGUIMenuItemLoadMap);
+    g_OtherMenuGUIMenu.AddMenuItem(g_OtherMenuGUIMenuItemLoadNamedSpawns);
+    g_OtherMenuGUIMenu.AddMenuItem(g_OtherMenuGUIMenuItemLoadBazaarSearchItemNames);
+    g_OtherMenuGUIMenu.AddMenuItem(g_OtherMenuGUIMenuItemLoadDestroyActors);
+    g_OtherMenuGUIMenu.AddMenuItem(g_OtherMenuGUIMenuItemLoadTreeHack);
+    g_OtherMenuGUIMenu.AddMenuItem(g_OtherMenuGUIMenuItemLoadWaterHack);
 
-    g_otherMenuGUIMenu.SetX(g_otherMenuGUIButton.GetX());
-    g_otherMenuGUIMenu.SetY(g_otherMenuGUIButton.GetY() + g_otherMenuGUIButton.GetHeight() + 8);
+    g_OtherMenuGUIMenu.AddMenuItem(g_OtherMenuGUIMenuItemSeparator);
 
-    g_otherMenuGUIMenu.FitToText();
+    g_OtherMenuGUIMenu.AddMenuItem(g_OtherMenuGUIMenuItemToggleShowFPS);
 
-    g_GUIMenuList.push_back(&g_otherMenuGUIMenu);
+    g_OtherMenuGUIMenu.SetX(g_OtherMenuGUIButton.GetX());
+    g_OtherMenuGUIMenu.SetY(g_OtherMenuGUIButton.GetY() + g_OtherMenuGUIButton.GetHeight() + 8);
+
+    g_OtherMenuGUIMenu.FitToText();
+
+    g_GUIMenuList.push_back(&g_OtherMenuGUIMenu);
 }

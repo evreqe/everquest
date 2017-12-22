@@ -19,72 +19,72 @@ namespace EQApp
     } MapLabel, *MapLabel_ptr;
 }
 
-bool g_mapIsEnabled = false;
+bool g_MapIsEnabled = false;
 
-bool g_mapLinesIsEnabled = true;
-bool g_mapLabelsIsEnabled = false;
-bool g_mapSpawnsIsEnabled = true;
+bool g_MapLinesIsEnabled = true;
+bool g_MapLabelsIsEnabled = false;
+bool g_MapSpawnsIsEnabled = true;
 
-bool g_mapHeightFilterIsEnabled = false;
+bool g_MapHeightFilterIsEnabled = false;
 
-bool g_mapLayer0IsEnabled = true;
-bool g_mapLayer1IsEnabled = false;
-bool g_mapLayer2IsEnabled = false;
-bool g_mapLayer3IsEnabled = false;
+bool g_MapLayer0IsEnabled = true;
+bool g_MapLayer1IsEnabled = false;
+bool g_MapLayer2IsEnabled = false;
+bool g_MapLayer3IsEnabled = false;
 
-bool g_map3DIsEnabled = false;
+bool g_Map3DIsEnabled = false;
 
-std::vector<EQApp::MapLine> g_mapLineList;
-std::vector<EQApp::MapLabel> g_mapLabelList;
+std::vector<EQApp::MapLine> g_MapLineList;
+std::vector<EQApp::MapLabel> g_MapLabelList;
 
-unsigned int g_mapNumLayers = 3;
+unsigned int g_MapNumLayers = 3;
 
-unsigned int g_mapNumLinesDrawn = 0;
-unsigned int g_mapNumLinesMax = 3500;
+unsigned int g_MapNumLinesDrawn = 0;
+unsigned int g_MapNumLinesMax = 3500;
 
-unsigned int g_mapNumLabelsDrawn = 0;
-unsigned int g_mapNumLabelsMax = 1000;
+unsigned int g_MapNumLabelsDrawn = 0;
+unsigned int g_MapNumLabelsMax = 1000;
 
-float g_mapX = 4.0f;
-float g_mapY = 64.0f;
+float g_MapX = 4.0f;
+float g_MapY = 64.0f;
 
-float g_mapWidth  = 400.0f;
-float g_mapHeight = 400.0f;
+float g_MapWidth  = 400.0f;
+float g_MapHeight = 400.0f;
 
-float g_mapMinX = g_mapX;
-float g_mapMaxX = g_mapX + g_mapWidth;
+float g_MapMinX = g_MapX;
+float g_MapMaxX = g_MapX + g_MapWidth;
 
-float g_mapMinY = g_mapY;
-float g_mapMaxY = g_mapY + g_mapHeight;
+float g_MapMinY = g_MapY;
+float g_MapMaxY = g_MapY + g_MapHeight;
 
-float g_mapOriginX = g_mapX + (g_mapWidth  * 0.5f);
-float g_mapOriginY = g_mapY + (g_mapHeight * 0.5f);
+float g_MapOriginX = g_MapX + (g_MapWidth  * 0.5f);
+float g_MapOriginY = g_MapY + (g_MapHeight * 0.5f);
 
-float g_mapOffsetX = 0.0f;
-float g_mapOffsetY = 0.0f;
+float g_MapOffsetX = 0.0f;
+float g_MapOffsetY = 0.0f;
 
-float g_mapHeightFilterLow  = 10.0f; // z axis
-float g_mapHeightFilterHigh = 10.0f; // z axis
+float g_MapHeightFilterLow  = 10.0f; // z axis
+float g_MapHeightFilterHigh = 10.0f; // z axis
 
-float g_mapZoom           = 1.0f;
-float g_mapZoomMultiplier = 0.05f; // zoom speed
-float g_mapZoomDefault    = 1.0f;
-float g_mapZoomMinimum    = 10.0f;
-float g_mapZoomMaximum    = 0.01f;
+float g_MapZoom           = 1.0f;
+float g_MapZoomMultiplier = 0.05f; // zoom speed
+float g_MapZoomDefault    = 1.0f;
+float g_MapZoomMinimum    = 10.0f;
+float g_MapZoomMaximum    = 0.01f;
 
-float g_mapMouseWheelZoomMultiplier = 0.5f; // mouse wheel zoom speed
+float g_MapMouseWheelZoomMultiplier = 0.5f; // mouse wheel zoom speed
 
-uint32_t g_mapCenterLineColorARGB = EQ_COLOR_ARGB_FUCHSIA;
-float g_mapCenterLineSize = 4.0f;
+uint32_t g_MapCenterLineColorARGB = EQ_COLOR_ARGB_FUCHSIA;
+float g_MapCenterLineSize = 4.0f;
 
-uint32_t g_mapArrowColorARGB = EQ_COLOR_ARGB_FUCHSIA;
-float g_mapArrowRadius = 20.0f;
+uint32_t g_MapArrowColorARGB = EQ_COLOR_ARGB_FUCHSIA;
+float g_MapArrowRadius = 20.0f;
 
-uint32_t g_mapBorderColorARGB = EQ_COLOR_ARGB_GRAY;
-uint32_t g_mapBackgroundColorARGB = EQ_COLOR_ARGB_TOOLTIP_TEXT_BACKGROUND;
+uint32_t g_MapBorderColorARGB = EQ_COLOR_ARGB_GRAY;
+uint32_t g_MapBackgroundColorARGB = EQ_COLOR_ARGB_TOOLTIP_TEXT_BACKGROUND;
 
-float g_mapSpawnDistanceMax = 20000.0f;
-float g_mapSpawnDistanceZMax = 20.0f;
+float g_MapSpawnDistanceMax = 20000.0f;
+float g_MapSpawnDistanceZMax = 20.0f;
 
 void EQAPP_Map_Toggle();
 void EQAPP_Map_Lines_Toggle();
@@ -115,10 +115,10 @@ void EQAPP_Map_Execute(); // draw
 
 void EQAPP_Map_Toggle()
 {
-    EQ_ToggleBool(g_mapIsEnabled);
-    ////EQAPP_PrintBool("Map", g_mapIsEnabled);
+    EQ_ToggleBool(g_MapIsEnabled);
+    ////EQAPP_PrintBool("Map", g_MapIsEnabled);
 
-    if (g_mapIsEnabled == true)
+    if (g_MapIsEnabled == true)
     {
         EQAPP_Map_RecalculateScreenCoordinates();
         EQAPP_Map_Center();
@@ -127,65 +127,65 @@ void EQAPP_Map_Toggle()
 
 void EQAPP_Map_Lines_Toggle()
 {
-    EQ_ToggleBool(g_mapLinesIsEnabled);
-    EQAPP_PrintBool("Map Lines", g_mapLinesIsEnabled);
+    EQ_ToggleBool(g_MapLinesIsEnabled);
+    EQAPP_PrintBool("Map Lines", g_MapLinesIsEnabled);
 }
 
 void EQAPP_Map_Labels_Toggle()
 {
-    EQ_ToggleBool(g_mapLabelsIsEnabled);
-    EQAPP_PrintBool("Map Labels", g_mapLabelsIsEnabled);
+    EQ_ToggleBool(g_MapLabelsIsEnabled);
+    EQAPP_PrintBool("Map Labels", g_MapLabelsIsEnabled);
 }
 
 void EQAPP_Map_Spawns_Toggle()
 {
-    EQ_ToggleBool(g_mapSpawnsIsEnabled);
-    EQAPP_PrintBool("Map Spawns", g_mapSpawnsIsEnabled);
+    EQ_ToggleBool(g_MapSpawnsIsEnabled);
+    EQAPP_PrintBool("Map Spawns", g_MapSpawnsIsEnabled);
 }
 
 void EQAPP_Map_Layer0_Toggle()
 {
-    EQ_ToggleBool(g_mapLayer0IsEnabled);
-    EQAPP_PrintBool("Map Base Layer", g_mapLayer0IsEnabled);
+    EQ_ToggleBool(g_MapLayer0IsEnabled);
+    EQAPP_PrintBool("Map Base Layer", g_MapLayer0IsEnabled);
 }
 
 void EQAPP_Map_Layer1_Toggle()
 {
-    EQ_ToggleBool(g_mapLayer1IsEnabled);
-    EQAPP_PrintBool("Map Layer 1", g_mapLayer1IsEnabled);
+    EQ_ToggleBool(g_MapLayer1IsEnabled);
+    EQAPP_PrintBool("Map Layer 1", g_MapLayer1IsEnabled);
 }
 
 void EQAPP_Map_Layer2_Toggle()
 {
-    EQ_ToggleBool(g_mapLayer2IsEnabled);
-    EQAPP_PrintBool("Map Layer 2", g_mapLayer2IsEnabled);
+    EQ_ToggleBool(g_MapLayer2IsEnabled);
+    EQAPP_PrintBool("Map Layer 2", g_MapLayer2IsEnabled);
 }
 
 void EQAPP_Map_Layer3_Toggle()
 {
-    EQ_ToggleBool(g_mapLayer3IsEnabled);
-    EQAPP_PrintBool("Map Layer 3", g_mapLayer3IsEnabled);
+    EQ_ToggleBool(g_MapLayer3IsEnabled);
+    EQAPP_PrintBool("Map Layer 3", g_MapLayer3IsEnabled);
 }
 
 void EQAPP_Map_HeightFilter_Toggle()
 {
-    EQ_ToggleBool(g_mapHeightFilterIsEnabled);
-    EQAPP_PrintBool("Map Height Filter", g_mapHeightFilterIsEnabled);
+    EQ_ToggleBool(g_MapHeightFilterIsEnabled);
+    EQAPP_PrintBool("Map Height Filter", g_MapHeightFilterIsEnabled);
 }
 
 void EQAPP_Map_3D_Toggle()
 {
-    EQ_ToggleBool(g_map3DIsEnabled);
-    EQAPP_PrintBool("Map 3D", g_map3DIsEnabled);
+    EQ_ToggleBool(g_Map3DIsEnabled);
+    EQAPP_PrintBool("Map 3D", g_Map3DIsEnabled);
 }
 
 bool EQAPP_Map_Load()
 {
-    g_mapLineList.clear();
-    g_mapLineList.reserve(1000);
+    g_MapLineList.clear();
+    g_MapLineList.reserve(1000);
 
-    g_mapLabelList.clear();
-    g_mapLabelList.reserve(100);
+    g_MapLabelList.clear();
+    g_MapLabelList.reserve(100);
 
     std::string zoneShortName = EQ_POINTER_Zone.ShortName;
     if (zoneShortName.size() == 0)
@@ -194,14 +194,14 @@ bool EQAPP_Map_Load()
     }
 
     std::stringstream filePath;
-    filePath << g_applicationName << "/maps/" << zoneShortName << ".txt";
+    filePath << g_EQAppName << "/maps/" << zoneShortName << ".txt";
 
     EQAPP_Map_LoadFile(filePath.str(), 0); // layer 0 is the base layer
 
-    for (unsigned int mapLayer = 1; mapLayer < (g_mapNumLayers + 1); mapLayer++)
+    for (unsigned int mapLayer = 1; mapLayer < (g_MapNumLayers + 1); mapLayer++)
     {
         std::stringstream filePathEx;
-        filePathEx << g_applicationName << "/maps/" << zoneShortName << "_" << mapLayer << ".txt";
+        filePathEx << g_EQAppName << "/maps/" << zoneShortName << "_" << mapLayer << ".txt";
 
         EQAPP_Map_LoadFile(filePathEx.str(), mapLayer);
     }
@@ -278,7 +278,7 @@ bool EQAPP_Map_LoadFile(const std::string& filename, uint32_t layer)
 
             mapLine.Layer = layer;
 
-            g_mapLineList.push_back(mapLine);
+            g_MapLineList.push_back(mapLine);
         }
         else if (lineType == 'P')
         {
@@ -306,7 +306,7 @@ bool EQAPP_Map_LoadFile(const std::string& filename, uint32_t layer)
 
             EQAPP_String_ReplaceAll(mapLabel.Text, "_", " ");
 
-            g_mapLabelList.push_back(mapLabel);
+            g_MapLabelList.push_back(mapLabel);
         }
     }
 
@@ -318,17 +318,17 @@ void EQAPP_Map_RecalculateScreenCoordinates()
     uint32_t resolutionWidth = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_RESOLUTION_WIDTH);
     uint32_t resolutionHeight = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_RESOLUTION_HEIGHT);
 
-    g_mapX = ((float)resolutionWidth - 4.0f) - g_mapWidth;
-    g_mapY = 4.0f;
+    g_MapX = ((float)resolutionWidth - 4.0f) - g_MapWidth;
+    g_MapY = 4.0f;
 
-    g_mapMinX = g_mapX;
-    g_mapMaxX = g_mapX + g_mapWidth;
+    g_MapMinX = g_MapX;
+    g_MapMaxX = g_MapX + g_MapWidth;
 
-    g_mapMinY = g_mapY;
-    g_mapMaxY = g_mapY + g_mapHeight;
+    g_MapMinY = g_MapY;
+    g_MapMaxY = g_MapY + g_MapHeight;
 
-    g_mapOriginX = g_mapX + (g_mapWidth  * 0.5f);
-    g_mapOriginY = g_mapY + (g_mapHeight * 0.5f);
+    g_MapOriginX = g_MapX + (g_MapWidth  * 0.5f);
+    g_MapOriginY = g_MapY + (g_MapHeight * 0.5f);
 }
 
 void EQAPP_Map_ConvertWorldLocationToScreenPosition(float x, float y, float& screenX, float& screenY)
@@ -339,47 +339,47 @@ void EQAPP_Map_ConvertWorldLocationToScreenPosition(float x, float y, float& scr
         return;
     }
 
-    screenX = (((x * g_mapZoom) + g_mapOriginX) + ((playerSpawn->X + g_mapOffsetX) * g_mapZoom));
-    screenY = (((y * g_mapZoom) + g_mapOriginY) + ((playerSpawn->Y + g_mapOffsetY) * g_mapZoom));
+    screenX = (((x * g_MapZoom) + g_MapOriginX) + ((playerSpawn->X + g_MapOffsetX) * g_MapZoom));
+    screenY = (((y * g_MapZoom) + g_MapOriginY) + ((playerSpawn->Y + g_MapOffsetY) * g_MapZoom));
 }
 
 void EQAPP_Map_ZoomOut()
 {
-    g_mapZoom -= g_mapZoom * g_mapZoomMultiplier;
+    g_MapZoom -= g_MapZoom * g_MapZoomMultiplier;
 
-    if (g_mapZoom <= g_mapZoomMaximum)
+    if (g_MapZoom <= g_MapZoomMaximum)
     {
-        g_mapZoom = g_mapZoomMaximum;
+        g_MapZoom = g_MapZoomMaximum;
     }
 }
 
 void EQAPP_Map_ZoomIn()
 {
-    g_mapZoom += g_mapZoom * g_mapZoomMultiplier;
+    g_MapZoom += g_MapZoom * g_MapZoomMultiplier;
 
-    if (g_mapZoom >= g_mapZoomMinimum)
+    if (g_MapZoom >= g_MapZoomMinimum)
     {
-        g_mapZoom = g_mapZoomMinimum;
+        g_MapZoom = g_MapZoomMinimum;
     }
 }
 
 void EQAPP_Map_MouseWheelZoomOut()
 {
-    g_mapZoom -= g_mapZoom * g_mapMouseWheelZoomMultiplier;
+    g_MapZoom -= g_MapZoom * g_MapMouseWheelZoomMultiplier;
 
-    if (g_mapZoom <= g_mapZoomMaximum)
+    if (g_MapZoom <= g_MapZoomMaximum)
     {
-        g_mapZoom = g_mapZoomMaximum;
+        g_MapZoom = g_MapZoomMaximum;
     }
 }
 
 void EQAPP_Map_MouseWheelZoomIn()
 {
-    g_mapZoom += g_mapZoom * g_mapMouseWheelZoomMultiplier;
+    g_MapZoom += g_MapZoom * g_MapMouseWheelZoomMultiplier;
 
-    if (g_mapZoom >= g_mapZoomMinimum)
+    if (g_MapZoom >= g_MapZoomMinimum)
     {
-        g_mapZoom = g_mapZoomMinimum;
+        g_MapZoom = g_MapZoomMinimum;
     }
 }
 
@@ -403,45 +403,45 @@ void EQAPP_Map_Scroll(signed int speedX, signed int speedY)
     if (speedX != 0)
     {
         float addX = (float)speedX;
-        if (g_mapZoom != 0.0f)
+        if (g_MapZoom != 0.0f)
         {
-            addX = addX / g_mapZoom;
+            addX = addX / g_MapZoom;
         }
 
-        g_mapOffsetX += addX;
+        g_MapOffsetX += addX;
     }
 
     if (speedY != 0)
     {
         float addY= (float)speedY;
-        if (g_mapZoom != 0.0f)
+        if (g_MapZoom != 0.0f)
         {
-            addY = addY / g_mapZoom;
+            addY = addY / g_MapZoom;
         }
 
-        g_mapOffsetY += addY;
+        g_MapOffsetY += addY;
     }
 }
 
 void EQAPP_Map_SetZoom(float zoom)
 {
-    g_mapZoom = zoom;
+    g_MapZoom = zoom;
 }
 
 void EQAPP_Map_ResetZoom()
 {
-    g_mapZoom = 1.0f;
+    g_MapZoom = 1.0f;
 }
 
 void EQAPP_Map_Center()
 {
-    g_mapOffsetX = 0.0f;
-    g_mapOffsetY = 0.0f;
+    g_MapOffsetX = 0.0f;
+    g_MapOffsetY = 0.0f;
 }
 
 bool EQAPP_Map_IsPointInsideMap(uint32_t x, uint32_t y)
 {
-    return (EQ_IsPointInsideRectangle(x, y, (int)(g_mapX), (int)(g_mapY), (int)g_mapWidth, (int)g_mapHeight) == true);
+    return (EQ_IsPointInsideRectangle(x, y, (int)(g_MapX), (int)(g_MapY), (int)g_MapWidth, (int)g_MapHeight) == true);
 }
 
 bool EQAPP_Map_IsMouseOver()
@@ -483,22 +483,22 @@ void EQAPP_Map_Execute()
 
     auto targetSpawn = EQ_GetTargetSpawn();
 
-    EQ_DrawRectangle(g_mapX, g_mapY, g_mapWidth, g_mapHeight, g_mapBackgroundColorARGB, true);
-    EQ_DrawRectangle(g_mapX, g_mapY, g_mapWidth, g_mapHeight, g_mapBorderColorARGB);
+    EQ_DrawRectangle(g_MapX, g_MapY, g_MapWidth, g_MapHeight, g_MapBackgroundColorARGB, true);
+    EQ_DrawRectangle(g_MapX, g_MapY, g_MapWidth, g_MapHeight, g_MapBorderColorARGB);
 
-    g_mapNumLinesDrawn = 0;
-    g_mapNumLabelsDrawn = 0;
+    g_MapNumLinesDrawn = 0;
+    g_MapNumLabelsDrawn = 0;
 
-    if (g_mapLinesIsEnabled == true)
+    if (g_MapLinesIsEnabled == true)
     {
-        for (auto& mapLine : g_mapLineList)
+        for (auto& mapLine : g_MapLineList)
         {
-            if (g_mapNumLinesDrawn > g_mapNumLinesMax)
+            if (g_MapNumLinesDrawn > g_MapNumLinesMax)
             {
                 break;
             }
 
-            if (g_mapLayer0IsEnabled == false)
+            if (g_MapLayer0IsEnabled == false)
             {
                 if (mapLine.Layer == 0)
                 {
@@ -506,7 +506,7 @@ void EQAPP_Map_Execute()
                 }
             }
 
-            if (g_mapLayer1IsEnabled == false)
+            if (g_MapLayer1IsEnabled == false)
             {
                 if (mapLine.Layer == 1)
                 {
@@ -514,7 +514,7 @@ void EQAPP_Map_Execute()
                 }
             }
 
-            if (g_mapLayer2IsEnabled == false)
+            if (g_MapLayer2IsEnabled == false)
             {
                 if (mapLine.Layer == 2)
                 {
@@ -522,7 +522,7 @@ void EQAPP_Map_Execute()
                 }
             }
 
-            if (g_mapLayer3IsEnabled == false)
+            if (g_MapLayer3IsEnabled == false)
             {
                 if (mapLine.Layer == 3)
                 {
@@ -530,26 +530,26 @@ void EQAPP_Map_Execute()
                 }
             }
 
-            if (g_mapHeightFilterIsEnabled == true)
+            if (g_MapHeightFilterIsEnabled == true)
             {
-                if (g_mapHeightFilterLow > 0.0f)
+                if (g_MapHeightFilterLow > 0.0f)
                 {
                     if
                     (
-                        mapLine.Line.Z1 < (playerSpawn->Z - g_mapHeightFilterLow) ||
-                        mapLine.Line.Z2 < (playerSpawn->Z - g_mapHeightFilterLow)
+                        mapLine.Line.Z1 < (playerSpawn->Z - g_MapHeightFilterLow) ||
+                        mapLine.Line.Z2 < (playerSpawn->Z - g_MapHeightFilterLow)
                     )
                     {
                         continue;
                     }
                 }
 
-                if (g_mapHeightFilterHigh > 0.0f)
+                if (g_MapHeightFilterHigh > 0.0f)
                 {
                     if
                     (
-                        mapLine.Line.Z1 > (playerSpawn->Z + g_mapHeightFilterHigh) ||
-                        mapLine.Line.Z2 > (playerSpawn->Z + g_mapHeightFilterHigh)
+                        mapLine.Line.Z1 > (playerSpawn->Z + g_MapHeightFilterHigh) ||
+                        mapLine.Line.Z2 > (playerSpawn->Z + g_MapHeightFilterHigh)
                     )
                     {
                         continue;
@@ -569,7 +569,7 @@ void EQAPP_Map_Execute()
             EQAPP_Map_ConvertWorldLocationToScreenPosition(mapLine.Line.X2, mapLine.Line.Y2, line.X2, line.Y2);
             line.Z2 = 1.0f;
 
-            bool bDrawLine = EQ_LineClip(&line, g_mapMinX, g_mapMinY, g_mapMaxX, g_mapMaxY);
+            bool bDrawLine = EQ_LineClip(&line, g_MapMinX, g_MapMinY, g_MapMaxX, g_MapMaxY);
             if (bDrawLine == false)
             {
                 continue;
@@ -577,20 +577,20 @@ void EQAPP_Map_Execute()
 
             EQ_DrawLineEx(&line, mapLine.Color.RGB);
 
-            g_mapNumLinesDrawn++;
+            g_MapNumLinesDrawn++;
         }
     }
 
-    if (g_mapLabelsIsEnabled == true)
+    if (g_MapLabelsIsEnabled == true)
     {
-        for (auto& mapLabel : g_mapLabelList)
+        for (auto& mapLabel : g_MapLabelList)
         {
-            if (g_mapNumLabelsDrawn > g_mapNumLabelsMax)
+            if (g_MapNumLabelsDrawn > g_MapNumLabelsMax)
             {
                 break;
             }
 
-            if (g_mapLayer0IsEnabled == false)
+            if (g_MapLayer0IsEnabled == false)
             {
                 if (mapLabel.Layer == 0)
                 {
@@ -598,7 +598,7 @@ void EQAPP_Map_Execute()
                 }
             }
 
-            if (g_mapLayer1IsEnabled == false)
+            if (g_MapLayer1IsEnabled == false)
             {
                 if (mapLabel.Layer == 1)
                 {
@@ -606,7 +606,7 @@ void EQAPP_Map_Execute()
                 }
             }
 
-            if (g_mapLayer2IsEnabled == false)
+            if (g_MapLayer2IsEnabled == false)
             {
                 if (mapLabel.Layer == 2)
                 {
@@ -614,7 +614,7 @@ void EQAPP_Map_Execute()
                 }
             }
 
-            if (g_mapLayer3IsEnabled == false)
+            if (g_MapLayer3IsEnabled == false)
             {
                 if (mapLabel.Layer == 3)
                 {
@@ -633,11 +633,11 @@ void EQAPP_Map_Execute()
 
             EQ_DrawTextEx(mapLabel.Text.c_str(), (int)labelX, (int)labelY, EQ_COLOR_ARGB_WHITE, EQ_ADDRESS_POINTER_FONT_ARIAL12);
 
-            g_mapNumLabelsDrawn++;
+            g_MapNumLabelsDrawn++;
         }
     }
 
-    if (g_mapSpawnsIsEnabled == true)
+    if (g_MapSpawnsIsEnabled == true)
     {
         uint32_t numSpawnsMouseOver = 0;
 
@@ -650,16 +650,22 @@ void EQAPP_Map_Execute()
                 continue;
             }
 
+            if (EQ_IsSpawnTargetable(spawn) == false)
+            {
+                spawn = spawn->Next;
+                continue;
+            }
+
             float spawnMapX = 0.0f;
             float spawnMapY = 0.0f;
             EQAPP_Map_ConvertWorldLocationToScreenPosition(-spawn->X, -spawn->Y, spawnMapX, spawnMapY);
 
             if
             (
-                spawnMapX >= g_mapMaxX ||
-                spawnMapY >= g_mapMaxY ||
-                spawnMapX <= g_mapMinX ||
-                spawnMapY <= g_mapMinY
+                spawnMapX >= g_MapMaxX ||
+                spawnMapY >= g_MapMaxY ||
+                spawnMapX <= g_MapMinX ||
+                spawnMapY <= g_MapMinY
             )
             {
                 spawn = spawn->Next;
@@ -690,17 +696,17 @@ void EQAPP_Map_Execute()
 
             if (useDistance == true)
             {
-                if (g_mapHeightFilterIsEnabled == true)
+                if (g_MapHeightFilterIsEnabled == true)
                 {
-                    if (spawnDistanceZ > g_mapSpawnDistanceZMax)
+                    if (spawnDistanceZ > g_MapSpawnDistanceZMax)
                     {
                         spawn = spawn->Next;
                         continue;
                     }
                 }
 
-                ////if (spawnDistance > g_mapSpawnDistanceMax)
-                if (EQ_IsWithinDistance(spawnLocation.X, spawnLocation.Y, playerLocation.X, playerLocation.Y, g_mapSpawnDistanceMax) == false)
+                ////if (spawnDistance > g_MapSpawnDistanceMax)
+                if (EQ_IsWithinDistance(spawnLocation.X, spawnLocation.Y, playerLocation.X, playerLocation.Y, g_MapSpawnDistanceMax) == false)
                 {
                     spawn = spawn->Next;
                     continue;
@@ -815,23 +821,23 @@ void EQAPP_Map_Execute()
     }
 
     EQ::Line mapCenterLineHorizontal;
-    mapCenterLineHorizontal.X1 = playerMapX - g_mapCenterLineSize;
+    mapCenterLineHorizontal.X1 = playerMapX - g_MapCenterLineSize;
     mapCenterLineHorizontal.Y1 = playerMapY;
     mapCenterLineHorizontal.Z1 = 1.0f;
-    mapCenterLineHorizontal.X2 = playerMapX + g_mapCenterLineSize;
+    mapCenterLineHorizontal.X2 = playerMapX + g_MapCenterLineSize;
     mapCenterLineHorizontal.Y2 = playerMapY;
     mapCenterLineHorizontal.Z2 = 1.0f;
 
     EQ::Line mapCenterLineVertical;
     mapCenterLineVertical.X1 = playerMapX;
-    mapCenterLineVertical.Y1 = playerMapY - g_mapCenterLineSize;
+    mapCenterLineVertical.Y1 = playerMapY - g_MapCenterLineSize;
     mapCenterLineVertical.Z1 = 1.0f;
     mapCenterLineVertical.X2 = playerMapX;
-    mapCenterLineVertical.Y2 = playerMapY + g_mapCenterLineSize;
+    mapCenterLineVertical.Y2 = playerMapY + g_MapCenterLineSize;
     mapCenterLineVertical.Z2 = 1.0f;
 
-    EQ_DrawLineEx(&mapCenterLineHorizontal, g_mapCenterLineColorARGB);
-    EQ_DrawLineEx(&mapCenterLineVertical,   g_mapCenterLineColorARGB);
+    EQ_DrawLineEx(&mapCenterLineHorizontal, g_MapCenterLineColorARGB);
+    EQ_DrawLineEx(&mapCenterLineVertical,   g_MapCenterLineColorARGB);
 
     float playerHeadingC = playerSpawn->Heading;
 
@@ -845,10 +851,10 @@ void EQAPP_Map_Execute()
     float playerHeadingRadiansC = playerHeadingC * (EQ_PI / 256.0f);
 
     float arrowAddCX = cosf(playerHeadingRadiansC);
-    arrowAddCX = arrowAddCX * g_mapArrowRadius;
+    arrowAddCX = arrowAddCX * g_MapArrowRadius;
 
     float arrowAddCY = sinf(playerHeadingRadiansC);
-    arrowAddCY = arrowAddCY * g_mapArrowRadius;
+    arrowAddCY = arrowAddCY * g_MapArrowRadius;
 
     float arrowCX = -playerSpawn->X - arrowAddCX;
     float arrowCY = -playerSpawn->Y + arrowAddCY;
@@ -865,10 +871,10 @@ void EQAPP_Map_Execute()
     float playerHeadingRadiansB = playerHeadingB * (EQ_PI / 256.0f);
 
     float arrowAddBX = cosf(playerHeadingRadiansB);
-    arrowAddBX = arrowAddBX * (g_mapArrowRadius * 0.5f);
+    arrowAddBX = arrowAddBX * (g_MapArrowRadius * 0.5f);
 
     float arrowAddBY = sinf(playerHeadingRadiansB);
-    arrowAddBY = arrowAddBY * (g_mapArrowRadius * 0.5f);
+    arrowAddBY = arrowAddBY * (g_MapArrowRadius * 0.5f);
 
     float arrowBX = arrowCX + arrowAddBX;
     float arrowBY = arrowCY - arrowAddBY;
@@ -885,10 +891,10 @@ void EQAPP_Map_Execute()
     float playerHeadingRadiansA = playerHeadingA * (EQ_PI / 256.0f);
 
     float arrowAddAX = cosf(playerHeadingRadiansA);
-    arrowAddAX = arrowAddAX * (g_mapArrowRadius * 0.5f);
+    arrowAddAX = arrowAddAX * (g_MapArrowRadius * 0.5f);
 
     float arrowAddAY = sinf(playerHeadingRadiansA);
-    arrowAddAY = arrowAddAY * (g_mapArrowRadius * 0.5f);
+    arrowAddAY = arrowAddAY * (g_MapArrowRadius * 0.5f);
 
     float arrowAX = arrowCX + arrowAddAX;
     float arrowAY = arrowCY - arrowAddAY;
@@ -926,18 +932,18 @@ void EQAPP_Map_Execute()
     mapArrowLineC.Y2 = mapArrowCY;
     mapArrowLineC.Z2 = 1.0f;
 
-    EQ_DrawLineEx(&mapArrowLineA, g_mapArrowColorARGB);
-    EQ_DrawLineEx(&mapArrowLineB, g_mapArrowColorARGB);
-    EQ_DrawLineEx(&mapArrowLineC, g_mapArrowColorARGB);
+    EQ_DrawLineEx(&mapArrowLineA, g_MapArrowColorARGB);
+    EQ_DrawLineEx(&mapArrowLineB, g_MapArrowColorARGB);
+    EQ_DrawLineEx(&mapArrowLineC, g_MapArrowColorARGB);
 }
 
 void EQAPP_Map_3D_Execute()
 {
-    g_mapNumLinesDrawn = 0;
+    g_MapNumLinesDrawn = 0;
 
-    for (auto& mapLine : g_mapLineList)
+    for (auto& mapLine : g_MapLineList)
     {
-        if (g_mapNumLinesDrawn > g_mapNumLinesMax)
+        if (g_MapNumLinesDrawn > g_MapNumLinesMax)
         {
             break;
         }
@@ -978,7 +984,7 @@ void EQAPP_Map_3D_Execute()
 
         EQ_DrawLineEx(&line, mapLine.Color.RGB);
 
-        g_mapNumLinesDrawn++;
+        g_MapNumLinesDrawn++;
     }
 }
 

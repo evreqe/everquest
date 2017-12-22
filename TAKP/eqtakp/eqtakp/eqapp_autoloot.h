@@ -1,11 +1,11 @@
 #pragma once
 
-bool g_autoLootIsEnabled = true;
+bool g_AutoLootIsEnabled = true;
 
-std::vector<std::string> g_autoLootList;
+std::vector<std::string> g_AutoLootList;
 
-uint32_t g_autoLootTimer = 0;
-uint32_t g_autoLootTimerDelay = 250;
+uint32_t g_AutoLootTimer = 0;
+uint32_t g_AutoLootTimerDelay = 250;
 
 void EQAPP_AutoLoot_Toggle();
 void EQAPP_AutoLoot_Load();
@@ -15,39 +15,39 @@ void EQAPP_AutoLoot_Remove(std::string itemName);
 
 void EQAPP_AutoLoot_Toggle()
 {
-    EQ_ToggleBool(g_autoLootIsEnabled);
-    EQAPP_PrintBool("Auto Loot", g_autoLootIsEnabled);
+    EQ_ToggleBool(g_AutoLootIsEnabled);
+    EQAPP_PrintBool("Auto Loot", g_AutoLootIsEnabled);
 }
 
 void EQAPP_AutoLoot_Load()
 {
     std::cout << "Loading Auto Loot..." << std::endl;
 
-    g_autoLootList.clear();
-    g_autoLootList.reserve(100);
+    g_AutoLootList.clear();
+    g_AutoLootList.reserve(100);
 
-    EQAPP_ReadFileToList("autoloot.txt", g_autoLootList);
+    EQAPP_ReadFileToList("autoloot.txt", g_AutoLootList);
 }
 
 void EQAPP_AutoLoot_Execute()
 {
-    if (g_autoLootList.size() == 0)
+    if (g_AutoLootList.size() == 0)
     {
         return;
     }
 
-    if (EQ_HasTimePassed(g_autoLootTimer, g_autoLootTimerDelay) == false)
+    if (EQ_HasTimePassed(g_AutoLootTimer, g_AutoLootTimerDelay) == false)
     {
         return;
     }
 
     if (EQ_IsWindowVisible(EQ_ADDRESS_POINTER_CLootWnd) == false)
     {
-        g_autoLootTimer = EQ_GetTimer();
+        g_AutoLootTimer = EQ_GetTimer();
         return;
     }
 
-    for (auto& itemName : g_autoLootList)
+    for (auto& itemName : g_AutoLootList)
     {
         bool result = EQ_LootItemByName(itemName, false);
         if (result == true)
@@ -65,7 +65,7 @@ void EQAPP_AutoLoot_Add(std::string itemName)
         return;
     }
 
-    g_autoLootList.push_back(itemName);
+    g_AutoLootList.push_back(itemName);
 
     std::cout << "Auto Loot item added: " << itemName << std::endl;
 }
@@ -77,11 +77,11 @@ void EQAPP_AutoLoot_Remove(std::string itemName)
         return;
     }
 
-    for (auto autoLootListIterator = g_autoLootList.begin(); autoLootListIterator != g_autoLootList.end(); autoLootListIterator++)
+    for (auto autoLootListIterator = g_AutoLootList.begin(); autoLootListIterator != g_AutoLootList.end(); autoLootListIterator++)
     {
         if (*autoLootListIterator == itemName)
         {
-            autoLootListIterator = g_autoLootList.erase(autoLootListIterator);
+            autoLootListIterator = g_AutoLootList.erase(autoLootListIterator);
             autoLootListIterator--;
 
             std::cout << "Auto Loot item removed: " << itemName << std::endl;

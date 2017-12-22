@@ -14,18 +14,18 @@ namespace EQApp
     typedef std::shared_ptr<EQApp::SpawnCastSpell> SpawnCastSpell_sharedptr;
 }
 
-bool g_spawnCastSpellIsEnabled = true;
-bool g_spawnCastSpellESPIsEnabled = true;
+bool g_SpawnCastSpellIsEnabled = true;
+bool g_SpawnCastSpellESPIsEnabled = true;
 
-std::vector<EQApp::SpawnCastSpell_sharedptr> g_spawnCastSpellList;
+std::vector<EQApp::SpawnCastSpell_sharedptr> g_SpawnCastSpellList;
 
-uint32_t g_spawnCastSpellMinimumCastTime = 3000;
+uint32_t g_SpawnCastSpellMinimumCastTime = 3000;
 
-uint32_t g_spawnCastSpellCountdownTimer = 0;
-uint32_t g_spawnCastSpellCountdownTimerDelay = 100;
+uint32_t g_SpawnCastSpellCountdownTimer = 0;
+uint32_t g_SpawnCastSpellCountdownTimerDelay = 100;
 
-uint32_t g_spawnCastSpellDrawTextX = 1200;
-uint32_t g_spawnCastSpellDrawTextY = 500;
+uint32_t g_SpawnCastSpellDrawTextX = 1200;
+uint32_t g_SpawnCastSpellDrawTextY = 500;
 
 void EQAPP_SpawnCastSpell_Execute();
 void EQAPP_SpawnCastSpell_DrawText();
@@ -33,7 +33,7 @@ void EQAPP_SpawnCastSpell_HandleEvent_CEverQuest__StartCasting(void* this_ptr, E
 
 void EQAPP_SpawnCastSpell_Execute()
 {
-    if (g_spawnCastSpellList.size() == 0)
+    if (g_SpawnCastSpellList.size() == 0)
     {
         return;
     }
@@ -41,12 +41,12 @@ void EQAPP_SpawnCastSpell_Execute()
     uint32_t currentTime = EQ_GetTimer();
 
     bool bCountdownTimerHasPassed = false;
-    if (EQ_HasTimePassed(g_spawnCastSpellCountdownTimer, g_spawnCastSpellCountdownTimerDelay) == true)
+    if (EQ_HasTimePassed(g_SpawnCastSpellCountdownTimer, g_SpawnCastSpellCountdownTimerDelay) == true)
     {
         bCountdownTimerHasPassed = true;
     }
 
-    for (auto spawnCastSpellListIterator = g_spawnCastSpellList.begin(); spawnCastSpellListIterator != g_spawnCastSpellList.end(); spawnCastSpellListIterator++)
+    for (auto spawnCastSpellListIterator = g_SpawnCastSpellList.begin(); spawnCastSpellListIterator != g_SpawnCastSpellList.end(); spawnCastSpellListIterator++)
     {
         EQApp::SpawnCastSpell_ptr spawnCastSpell = spawnCastSpellListIterator->get();
         if (spawnCastSpell == nullptr)
@@ -57,7 +57,7 @@ void EQAPP_SpawnCastSpell_Execute()
         auto spawn = spawnCastSpell->Spawn;
         if (spawn == NULL)
         {
-            spawnCastSpellListIterator = g_spawnCastSpellList.erase(spawnCastSpellListIterator);
+            spawnCastSpellListIterator = g_SpawnCastSpellList.erase(spawnCastSpellListIterator);
             spawnCastSpellListIterator--;
             continue;
         }
@@ -70,25 +70,25 @@ void EQAPP_SpawnCastSpell_Execute()
 
         if (bCountdownTimerHasPassed == true)
         {
-            if (spawnCastSpell->SpellCastTimeCountdown > 0 && spawnCastSpell->SpellCastTimeCountdown > g_spawnCastSpellCountdownTimerDelay)
+            if (spawnCastSpell->SpellCastTimeCountdown > 0 && spawnCastSpell->SpellCastTimeCountdown > g_SpawnCastSpellCountdownTimerDelay)
             {
-                spawnCastSpell->SpellCastTimeCountdown -= g_spawnCastSpellCountdownTimerDelay;
+                spawnCastSpell->SpellCastTimeCountdown -= g_SpawnCastSpellCountdownTimerDelay;
             }
-            else if (spawnCastSpell->SpellCastTimeCountdown <= g_spawnCastSpellCountdownTimerDelay)
+            else if (spawnCastSpell->SpellCastTimeCountdown <= g_SpawnCastSpellCountdownTimerDelay)
             {
                 spawnCastSpell->SpellCastTimeCountdown = 0;
             }
         }
 
         uint32_t spellCastTime = spawnCastSpell->SpellCastTime;
-        if (spellCastTime < g_spawnCastSpellMinimumCastTime)
+        if (spellCastTime < g_SpawnCastSpellMinimumCastTime)
         {
-            spellCastTime = g_spawnCastSpellMinimumCastTime;
+            spellCastTime = g_SpawnCastSpellMinimumCastTime;
         }
 
         if ((currentTime - spawnCastSpell->StartCastingTime) > spellCastTime)
         {
-            spawnCastSpellListIterator = g_spawnCastSpellList.erase(spawnCastSpellListIterator);
+            spawnCastSpellListIterator = g_SpawnCastSpellList.erase(spawnCastSpellListIterator);
             spawnCastSpellListIterator--;
             continue;
         }
@@ -97,14 +97,14 @@ void EQAPP_SpawnCastSpell_Execute()
 
 void EQAPP_SpawnCastSpell_DrawText()
 {
-    if (g_spawnCastSpellList.size() == 0)
+    if (g_SpawnCastSpellList.size() == 0)
     {
         return;
     }
 
     std::stringstream drawText;
 
-    for (auto& spawnCastSpell : g_spawnCastSpellList)
+    for (auto& spawnCastSpell : g_SpawnCastSpellList)
     {
         if (spawnCastSpell == nullptr)
         {
@@ -126,7 +126,7 @@ void EQAPP_SpawnCastSpell_DrawText()
         drawText << spawnName << " (" << spawnCastSpell->SpellName << ")\n";
     }
 
-    EQ_DrawText(drawText.str().c_str(), g_spawnCastSpellDrawTextX, g_spawnCastSpellDrawTextY, EQ_COLOR_ARGB_WHITE);
+    EQ_DrawText(drawText.str().c_str(), g_SpawnCastSpellDrawTextX, g_SpawnCastSpellDrawTextY, EQ_COLOR_ARGB_WHITE);
 }
 
 void EQAPP_SpawnCastSpell_HandleEvent_CEverQuest__StartCasting(void* this_ptr, EQ::CEverQuestStartCastingMessage_ptr message)
@@ -162,7 +162,7 @@ void EQAPP_SpawnCastSpell_HandleEvent_CEverQuest__StartCasting(void* this_ptr, E
     }
 
     // update if spawn already exists in the list
-    for (auto& spawnCastSpell : g_spawnCastSpellList)
+    for (auto& spawnCastSpell : g_SpawnCastSpellList)
     {
         if (spawnCastSpell->Spawn == spawn)
         {
@@ -182,6 +182,6 @@ void EQAPP_SpawnCastSpell_HandleEvent_CEverQuest__StartCasting(void* this_ptr, E
     spawnCastSpell->SpellCastTimeCountdown = spellCastTime;
     spawnCastSpell->StartCastingTime       = EQ_GetTimer();
 
-    g_spawnCastSpellList.push_back(std::move(spawnCastSpell));
+    g_SpawnCastSpellList.push_back(std::move(spawnCastSpell));
 }
 

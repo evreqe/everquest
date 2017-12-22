@@ -1,13 +1,13 @@
 #pragma once
 
-bool g_spawnAlertIsEnabled = false;
+bool g_SpawnAlertIsEnabled = false;
 
-bool g_spawnAlertShowNewSpawn = false;
-bool g_spawnAlertShowPlayer = true;
-bool g_spawnAlertShowNPC = false;
-bool g_spawnAlertShowCorpse = false;
+bool g_SpawnAlertShowNewSpawn = false;
+bool g_SpawnAlertShowPlayer = true;
+bool g_SpawnAlertShowNPC = false;
+bool g_SpawnAlertShowCorpse = false;
 
-std::vector<EQ_SpawnID_t> g_spawnAlertNewSpawnIDList;
+std::vector<EQ_SpawnID_t> g_SpawnAlertNewSpawnIDList;
 
 void EQAPP_SpawnAlert_Toggle();
 void EQAPP_SpawnAlert_ShowNewSpawn_Toggle();
@@ -20,34 +20,34 @@ void EQAPP_SpawnAlert_HandleEvent_CDisplay__DeleteActor(void* this_ptr, EQ::Acto
 
 void EQAPP_SpawnAlert_Toggle()
 {
-    EQ_ToggleBool(g_spawnAlertIsEnabled);
-    EQAPP_PrintBool("Spawn Alert", g_spawnAlertIsEnabled);
+    EQ_ToggleBool(g_SpawnAlertIsEnabled);
+    EQAPP_PrintBool("Spawn Alert", g_SpawnAlertIsEnabled);
 }
 
 void EQAPP_SpawnAlert_ShowNewSpawn_Toggle()
 {
-    EQ_ToggleBool(g_spawnAlertShowNewSpawn);
-    EQAPP_PrintBool("Spawn Alert Show New Spawn", g_spawnAlertShowNewSpawn);
+    EQ_ToggleBool(g_SpawnAlertShowNewSpawn);
+    EQAPP_PrintBool("Spawn Alert Show New Spawn", g_SpawnAlertShowNewSpawn);
 
-    g_spawnAlertNewSpawnIDList.clear();
+    g_SpawnAlertNewSpawnIDList.clear();
 }
 
 void EQAPP_SpawnAlert_ShowPlayer_Toggle()
 {
-    EQ_ToggleBool(g_spawnAlertShowPlayer);
-    EQAPP_PrintBool("Spawn Alert Show Player", g_spawnAlertShowPlayer);
+    EQ_ToggleBool(g_SpawnAlertShowPlayer);
+    EQAPP_PrintBool("Spawn Alert Show Player", g_SpawnAlertShowPlayer);
 }
 
 void EQAPP_SpawnAlert_ShowNPC_Toggle()
 {
-    EQ_ToggleBool(g_spawnAlertShowNPC);
-    EQAPP_PrintBool("Spawn Alert Show NPC", g_spawnAlertShowNPC);
+    EQ_ToggleBool(g_SpawnAlertShowNPC);
+    EQAPP_PrintBool("Spawn Alert Show NPC", g_SpawnAlertShowNPC);
 }
 
 void EQAPP_SpawnAlert_ShowCorpse_Toggle()
 {
-    EQ_ToggleBool(g_spawnAlertShowCorpse);
-    EQAPP_PrintBool("Spawn Alert Show Corpse", g_spawnAlertShowCorpse);
+    EQ_ToggleBool(g_SpawnAlertShowCorpse);
+    EQAPP_PrintBool("Spawn Alert Show Corpse", g_SpawnAlertShowCorpse);
 }
 
 void EQAPP_SpawnAlert_PrintAlertMessage(EQ::Spawn_ptr spawn, bool bDespawn)
@@ -92,11 +92,11 @@ void EQAPP_SpawnAlert_PrintAlertMessage(EQ::Spawn_ptr spawn, bool bDespawn)
         {
             spawnText << " spawned.";
 
-            if (g_spawnAlertShowNewSpawn == true)
+            if (g_SpawnAlertShowNewSpawn == true)
             {
                 bool bAlreadyExists = false;
 
-                for (auto& spawnID : g_spawnAlertNewSpawnIDList)
+                for (auto& spawnID : g_SpawnAlertNewSpawnIDList)
                 {
                     if (spawnID == spawn->SpawnID)
                     {
@@ -107,7 +107,7 @@ void EQAPP_SpawnAlert_PrintAlertMessage(EQ::Spawn_ptr spawn, bool bDespawn)
 
                 if (bAlreadyExists == false)
                 {
-                    g_spawnAlertNewSpawnIDList.push_back(spawn->SpawnID);
+                    g_SpawnAlertNewSpawnIDList.push_back(spawn->SpawnID);
                 }
             }
         }
@@ -138,17 +138,17 @@ void EQAPP_SpawnAlert_PrintAlertMessage(EQ::Spawn_ptr spawn, bool bDespawn)
         return;
     }
 
-    if (bIsPlayer == true && g_spawnAlertShowPlayer == false)
+    if (bIsPlayer == true && g_SpawnAlertShowPlayer == false)
     {
         return;
     }
 
-    if (bIsNPC == true && g_spawnAlertShowNPC == false)
+    if (bIsNPC == true && g_SpawnAlertShowNPC == false)
     {
         return;
     }
 
-    if (bIsCorpse == true && g_spawnAlertShowCorpse == false)
+    if (bIsCorpse == true && g_SpawnAlertShowCorpse == false)
     {
         return;
     }

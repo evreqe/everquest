@@ -1,6 +1,6 @@
 #pragma once
 
-bool g_spellBookWindowIsEnabled = true;
+bool g_SpellBookWindowIsEnabled = true;
 
 signed int EQAPP_SpellBookWindow_HandleEvent__CSpellBookWnd__TurnToPage(void* this_ptr, signed int pageNumber);
 void EQAPP_SpellBookWindow_HandleEvent__CSpellBookWnd__HandleKeys(void* this_ptr, int keyID, bool unknown);

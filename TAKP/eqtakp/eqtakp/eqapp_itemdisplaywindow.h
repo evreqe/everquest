@@ -1,9 +1,9 @@
 #pragma once
 
-bool g_itemDisplayWindowIsEnabled = true;
+bool g_ItemDisplayWindowIsEnabled = true;
 
-bool g_itemDisplayWindowItemsIsEnabled = true;
-bool g_itemDisplayWindowSpellsIsEnabled = true;
+bool g_ItemDisplayWindowItemsIsEnabled = true;
+bool g_ItemDisplayWindowSpellsIsEnabled = true;
 
 void EQAPP_ItemDisplayWindow_HandleEvent_CItemDisplayWnd__SetItem(void* this_ptr, EQ::Item_ptr item, bool unknown);
 void EQAPP_ItemDisplayWindow_HandleEvent_CItemDisplayWnd__SetSpell(void* this_ptr, EQ_SpellID_t spellID, bool hasDescription, int unknown);
@@ -129,6 +129,14 @@ void EQAPP_ItemDisplayWindow_HandleEvent_CItemDisplayWnd__SetItem(void* this_ptr
 
         if (itemType == EQ_ITEM_TYPE_SPELL_SCROLL)
         {
+            if (EQ_IsItemIDInBags(item->ID) == true)
+            {
+                buffer.str(std::string());
+                buffer << "This spell scroll is already in your bags.<BR>";
+
+                EQ_CXStr_Append(&EQ_POINTER_CItemDisplayWnd->DisplayText, buffer.str().c_str());
+            }
+
             if (itemSpellIDIsValid == true)
             {
                 auto spellBookIndex = EQ_GetSpellBookSpellIndexBySpellID(itemSpellID);

@@ -140,7 +140,6 @@ void GUIMenu::Draw()
         menuItem.OnProcessFrame();
         menuItem.Draw();
 
-        //if (*menuItem.GetBoolPointer() == true)
         if (menuItem.IsChecked() == true)
         {
             EQ_DrawText("*", drawX + 8, drawY, EQ_COLOR_ARGB_WHITE);

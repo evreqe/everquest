@@ -1,18 +1,18 @@
 #pragma once
 
-bool g_treeHackIsEnabled = false;
+bool g_TreeHackIsEnabled = false;
 
-std::vector<std::string> g_treeHackTextureFileNameList;
+std::vector<std::string> g_TreeHackTextureFileNameList;
 
 void EQAPP_TreeHack_Toggle();
 void EQAPP_TreeHack_Load();
 
 void EQAPP_TreeHack_Toggle()
 {
-    EQ_ToggleBool(g_treeHackIsEnabled);
-    EQAPP_PrintBool("Tree Hack", g_treeHackIsEnabled);
+    EQ_ToggleBool(g_TreeHackIsEnabled);
+    EQAPP_PrintBool("Tree Hack", g_TreeHackIsEnabled);
 
-    EQ_GraphicsDLL_SetUseTNL(g_treeHackIsEnabled);
+    EQ_GraphicsDLL_SetUseTNL(g_TreeHackIsEnabled);
 }
 
 void EQAPP_TreeHack_Load()
@@ -26,13 +26,13 @@ void EQAPP_TreeHack_Load()
         return;
     }
 
-    g_treeHackTextureFileNameList.clear();
-    g_treeHackTextureFileNameList.reserve(100);
+    g_TreeHackTextureFileNameList.clear();
+    g_TreeHackTextureFileNameList.reserve(100);
 
-    EQAPP_ReadFileToList("treehack.txt", g_treeHackTextureFileNameList);
+    EQAPP_ReadFileToList("treehack.txt", g_TreeHackTextureFileNameList);
 
     std::stringstream filePath;
     filePath << "treehack/" << zoneShortName << ".txt";
 
-    EQAPP_ReadFileToList(filePath.str().c_str(), g_treeHackTextureFileNameList);
+    EQAPP_ReadFileToList(filePath.str().c_str(), g_TreeHackTextureFileNameList);
 }

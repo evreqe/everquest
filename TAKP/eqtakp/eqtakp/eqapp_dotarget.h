@@ -1,6 +1,6 @@
 #pragma once
 
-bool g_doTargetIsEnabled = true;
+bool g_DoTargetIsEnabled = true;
 
 bool EQAPP_DoTarget_HandleEvent_do_target(class EQClass::EQPlayer* player, const char* findSpawnName_);
 
@@ -27,6 +27,12 @@ bool EQAPP_DoTarget_HandleEvent_do_target(class EQClass::EQPlayer* player, const
         }
 
         if (spawn->Type != EQ_SPAWN_TYPE_PLAYER)
+        {
+            spawn = spawn->Next;
+            continue;
+        }
+
+        if (EQ_IsSpawnTargetable(spawn) == false)
         {
             spawn = spawn->Next;
             continue;

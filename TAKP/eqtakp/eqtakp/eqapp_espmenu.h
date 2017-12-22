@@ -93,6 +93,12 @@ void EQAPP_ESPMenu_CreateMenu()
     g_ESPMenuGUIMenuItemShowSpawnRace.SetFunctionLeftClick(&EQAPP_ESP_ShowSpawnRace_Toggle);
     g_ESPMenuGUIMenuItemShowSpawnRace.SetBoolPointer(g_ESPShowSpawnRace);
 
+    EQApp::GUIMenuItem g_ESPMenuGUIMenuItemShowSpawnBodyType;
+    g_ESPMenuGUIMenuItemShowSpawnBodyType.SetText("Show Spawn Body Type");
+    g_ESPMenuGUIMenuItemShowSpawnBodyType.FitToText();
+    g_ESPMenuGUIMenuItemShowSpawnBodyType.SetFunctionLeftClick(&EQAPP_ESP_ShowSpawnBodyType_Toggle);
+    g_ESPMenuGUIMenuItemShowSpawnBodyType.SetBoolPointer(g_ESPShowSpawnBodyType);
+
     EQApp::GUIMenuItem g_ESPMenuGUIMenuItemShowSpawnWeapon;
     g_ESPMenuGUIMenuItemShowSpawnWeapon.SetText("Show Spawn Weapon");
     g_ESPMenuGUIMenuItemShowSpawnWeapon.FitToText();
@@ -119,6 +125,7 @@ void EQAPP_ESPMenu_CreateMenu()
 
     g_ESPMenuGUIMenu.AddMenuItem(g_ESPMenuGUIMenuItemShowSpawnID);
     g_ESPMenuGUIMenu.AddMenuItem(g_ESPMenuGUIMenuItemShowSpawnRace);
+    g_ESPMenuGUIMenu.AddMenuItem(g_ESPMenuGUIMenuItemShowSpawnBodyType);
     g_ESPMenuGUIMenu.AddMenuItem(g_ESPMenuGUIMenuItemShowSpawnWeapon);
     g_ESPMenuGUIMenu.AddMenuItem(g_ESPMenuGUIMenuItemShowActorIndex);
 

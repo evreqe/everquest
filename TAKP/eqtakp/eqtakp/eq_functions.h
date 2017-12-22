@@ -94,8 +94,8 @@ bool EQ_IsSpawnGroupMember(EQ::Spawn_ptr spawn);
 EQ::Mouse EQ_GetMouse();
 void EQ_SetMousePosition(int x, int y);
 void EQ_UseItem(uint32_t slotID);
-std::string EQ_GetClassName(uint32_t classValue);
-std::string EQ_GetClassShortName(uint32_t classValue);
+std::string EQ_GetClassName(uint32_t classType);
+std::string EQ_GetClassShortName(uint32_t classType);
 EQ_ZoneID_t EQ_GetZoneID();
 void EQ_UseSkill(EQ_SkillID_t skillID, EQClass::EQPlayer* targetSpawn);
 HWND EQ_GetWindow();
@@ -134,6 +134,10 @@ bool EQ_IsSpawnBehindSpawn(EQ::Spawn_ptr spawn1, EQ::Spawn_ptr spawn2);
 bool EQ_IsSpawnBehindSpawnEx(EQ::Spawn_ptr spawn1, EQ::Spawn_ptr spawn2, float angle);
 std::string EQ_EncryptDecryptString(const std::string& str);
 bool EQ_IsClassSpellCaster(uint32_t classType);
+bool EQ_IsSpawnTargetable(EQ::Spawn_ptr spawn);
+bool EQ_CanClassUseTauntSkill(uint32_t classType);
+bool EQ_CanRaceUseSlamSkill(uint32_t raceType);
+bool EQ_IsItemIDInBags(EQ_ItemID_t findItemID);
 
 template <class T>
 void EQ_Log(const char* text, T number)
@@ -1027,24 +1031,24 @@ void EQ_UseItem(uint32_t slotID)
     }
 }
 
-std::string EQ_GetClassName(uint32_t classValue)
+std::string EQ_GetClassName(uint32_t classType)
 {
-    if ((classValue > EQ_NUM_CLASSES_TOTAL) || ((size_t)classValue > EQ_STRING_LIST_CLASS_NAME.size()))
+    if ((classType > EQ_NUM_CLASSES_TOTAL) || ((size_t)classType > EQ_STRING_LIST_CLASS_NAME.size()))
     {
         return "Unknown";
     }
 
-    return EQ_STRING_LIST_CLASS_NAME.at(classValue);
+    return EQ_STRING_LIST_CLASS_NAME.at(classType);
 }
 
-std::string EQ_GetClassShortName(uint32_t classValue)
+std::string EQ_GetClassShortName(uint32_t classType)
 {
-    if ((classValue > EQ_NUM_CLASSES_TOTAL) || ((size_t)classValue > EQ_STRING_LIST_CLASS_SHORT_NAME.size()))
+    if ((classType > EQ_NUM_CLASSES_TOTAL) || ((size_t)classType > EQ_STRING_LIST_CLASS_SHORT_NAME.size()))
     {
         return "UNK";
     }
 
-    return EQ_STRING_LIST_CLASS_SHORT_NAME.at(classValue);
+    return EQ_STRING_LIST_CLASS_SHORT_NAME.at(classType);
 }
 
 EQ_ZoneID_t EQ_GetZoneID()
@@ -1810,6 +1814,91 @@ bool EQ_IsClassSpellCaster(uint32_t classType)
 
     return true;
 }
+
+bool EQ_IsSpawnTargetable(EQ::Spawn_ptr spawn)
+{
+    if (spawn->BodyType == EQ_SPAWN_BODY_TYPE_CANNOT_TARGET)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool EQ_CanClassUseTauntSkill(uint32_t classType)
+{
+    if (classType == EQ_CLASS_WARRIOR || classType == EQ_CLASS_PALADIN || classType == EQ_CLASS_SHADOWKNIGHT || classType == EQ_CLASS_RANGER)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool EQ_CanRaceUseSlamSkill(uint32_t raceType)
+{
+    if (raceType == EQ_RACE_BARBARIAN || raceType == EQ_RACE_OGRE || raceType == EQ_RACE_TROLL)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool EQ_IsItemIDInBags(EQ_ItemID_t findItemID)
+{
+    if (EQ_IsInGame() == false)
+    {
+        return false;
+    }
+
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return false;
+    }
+
+    for (size_t i = 0; i < EQ_NUM_INVENTORY_PACK_SLOTS; i++)
+    {
+        EQ::Item_ptr item = (EQ::Item_ptr)playerSpawn->Character->InventoryPackItem[i];
+        if (item == NULL)
+        {
+            continue;
+        }
+
+        if (item->IsContainer == 0)
+        {
+            if (item->ID == findItemID)
+            {
+                return true;
+            }
+        }
+
+        if (item->IsContainer == 1)
+        {
+            for (size_t j = 0; j < EQ_NUM_CONTAINER_SLOTS; j++)
+            {
+                EQ::Item_ptr containerItem = (EQ::Item_ptr)playerSpawn->Character->InventoryPackItem[i]->Container.Item[j];
+                if (containerItem == NULL)
+                {
+                    continue;
+                }
+
+                if (containerItem->IsContainer == 0)
+                {
+                    if (containerItem->ID == findItemID)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
+
 
 
 

@@ -1,14 +1,14 @@
 #pragma once
 
-bool g_alwaysAttackIsEnabled = false;
+bool g_AlwaysAttackIsEnabled = false;
 
 void EQAPP_AlwaysAttack_Toggle();
 void EQAPP_AlwaysAttack_Execute();
 
 void EQAPP_AlwaysAttack_Toggle()
 {
-    EQ_ToggleBool(g_alwaysAttackIsEnabled);
-    EQAPP_PrintBool("Always Attack", g_alwaysAttackIsEnabled);
+    EQ_ToggleBool(g_AlwaysAttackIsEnabled);
+    EQAPP_PrintBool("Always Attack", g_AlwaysAttackIsEnabled);
 }
 
 void EQAPP_AlwaysAttack_Execute()
@@ -36,6 +36,7 @@ void EQAPP_AlwaysAttack_Execute()
     auto targetSpawn = EQ_GetTargetSpawn();
     if (targetSpawn == NULL || targetSpawn == playerSpawn)
     {
+        EQ_SetAutoAttack(false);
         return;
     }
 

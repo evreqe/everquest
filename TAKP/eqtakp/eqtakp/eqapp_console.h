@@ -1,9 +1,9 @@
 #pragma once
 
-volatile int g_bConsole = 0;
+volatile int g_ConsoleIsLoaded = 0;
 
-std::stringstream g_consoleStringStream;
-std::streambuf* g_consoleStreamBuffer;
+std::stringstream g_ConsoleStringStream;
+std::streambuf* g_ConsoleStreamBuffer;
 
 void EQAPP_Console_Load();
 void EQAPP_Console_Unload();
@@ -14,26 +14,27 @@ void EQAPP_Console_Load()
     setvbuf(stdout, 0, _IOLBF, 4096);
 
     // redirect cout to stringstream
-    g_consoleStreamBuffer = std::cout.rdbuf(g_consoleStringStream.rdbuf());
+    g_ConsoleStreamBuffer = std::cout.rdbuf(g_ConsoleStringStream.rdbuf());
 
-    g_bConsole = 1;
+    g_ConsoleIsLoaded = 1;
 }
 
 void EQAPP_Console_Unload()
 {
     // restore cout
-    std::cout.rdbuf(g_consoleStreamBuffer);
+    std::cout.rdbuf(g_ConsoleStreamBuffer);
 
-    g_bConsole = 0;
+    g_ConsoleIsLoaded = 0;
 }
 
 void EQAPP_Console_Print()
 {
-    // print redirected std::cout to the chat window
-    for (std::string text; std::getline(g_consoleStringStream, text, '\n');)
+    // print redirected cout to the chat window
+    for (std::string text; std::getline(g_ConsoleStringStream, text, '\n');)
     {
         EQ_WriteChatText(text.c_str());
     }
-    g_consoleStringStream.str(std::string());
-    g_consoleStringStream.clear();
+
+    g_ConsoleStringStream.str(std::string());
+    g_ConsoleStringStream.clear();
 }

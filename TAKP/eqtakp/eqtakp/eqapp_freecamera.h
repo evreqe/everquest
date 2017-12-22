@@ -1,8 +1,8 @@
 #pragma once
 
-bool g_freeCameraIsEnabled = false;
+bool g_FreeCameraIsEnabled = false;
 
-float g_freeCameraMultiplier = 1.0f;
+float g_FreeCameraMultiplier = 1.0f;
 
 void EQAPP_FreeCamera_Toggle();
 void EQAPP_FreeCamera_SetEnabled(bool bEnabled);
@@ -12,7 +12,7 @@ bool EQAPP_FreeCamera_HandleEvent_ExecuteCmd(uint32_t commandID, int isActive, i
 
 void EQAPP_FreeCamera_Toggle()
 {
-    if (g_freeCameraIsEnabled == true)
+    if (g_FreeCameraIsEnabled == true)
     {
         EQAPP_FreeCamera_SetEnabled(false);
     }
@@ -80,9 +80,9 @@ void EQAPP_FreeCamera_SetEnabled(bool bEnabled)
         }
     }
 
-    g_freeCameraIsEnabled = bEnabled;
+    g_FreeCameraIsEnabled = bEnabled;
 
-    EQAPP_PrintBool("Free Camera", g_freeCameraIsEnabled);
+    EQAPP_PrintBool("Free Camera", g_FreeCameraIsEnabled);
 }
 
 void EQAPP_FreeCamera_Execute()
@@ -100,11 +100,11 @@ void EQAPP_FreeCamera_Execute()
 
     if (EQAPP_IsKeyDown(VK_CONTROL) == true)
     {
-        g_freeCameraMultiplier = 4.0f;
+        g_FreeCameraMultiplier = 4.0f;
     }
     else
     {
-        g_freeCameraMultiplier = 1.0f;
+        g_FreeCameraMultiplier = 1.0f;
     }
 
     if (EQAPP_IsKeyDown(VK_UP) == true)
@@ -132,11 +132,11 @@ void EQAPP_FreeCamera_Execute()
 
         if (fabs(cameraPitch) < 90.0f)
         {
-            cameraY -= addY * g_freeCameraMultiplier;
-            cameraX += addX * g_freeCameraMultiplier;
+            cameraY -= addY * g_FreeCameraMultiplier;
+            cameraX += addX * g_FreeCameraMultiplier;
         }
 
-        cameraZ += addZ * g_freeCameraMultiplier;
+        cameraZ += addZ * g_FreeCameraMultiplier;
 
         camera->Y = cameraY;
         camera->X = cameraX;
@@ -168,11 +168,11 @@ void EQAPP_FreeCamera_Execute()
 
         if (fabs(cameraPitch) < 90.0f)
         {
-            cameraY += addY * g_freeCameraMultiplier;
-            cameraX -= addX * g_freeCameraMultiplier;
+            cameraY += addY * g_FreeCameraMultiplier;
+            cameraX -= addX * g_FreeCameraMultiplier;
         }
 
-        cameraZ -= addZ * g_freeCameraMultiplier;
+        cameraZ -= addZ * g_FreeCameraMultiplier;
 
         camera->Y = cameraY;
         camera->X = cameraX;
@@ -202,11 +202,11 @@ void EQAPP_FreeCamera_Execute()
 
         if (fabs(cameraPitch) < 90.0f)
         {
-            cameraY -= addY * g_freeCameraMultiplier;
-            cameraX += addX * g_freeCameraMultiplier;
+            cameraY -= addY * g_FreeCameraMultiplier;
+            cameraX += addX * g_FreeCameraMultiplier;
         }
 
-        cameraZ += addZ * g_freeCameraMultiplier;
+        cameraZ += addZ * g_FreeCameraMultiplier;
 
         camera->Y = cameraY;
         camera->X = cameraX;
@@ -238,11 +238,11 @@ void EQAPP_FreeCamera_Execute()
 
         if (fabs(cameraPitch) < 90.0f)
         {
-            cameraY -= addY * g_freeCameraMultiplier;
-            cameraX += addX * g_freeCameraMultiplier;
+            cameraY -= addY * g_FreeCameraMultiplier;
+            cameraX += addX * g_FreeCameraMultiplier;
         }
 
-        cameraZ += addZ * g_freeCameraMultiplier;
+        cameraZ += addZ * g_FreeCameraMultiplier;
 
         camera->Y = cameraY;
         camera->X = cameraX;

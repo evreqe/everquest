@@ -1,12 +1,12 @@
 #pragma once
 
-bool g_drawDistanceIsEnabled = true;
+bool g_DrawDistanceIsEnabled = true;
 
-uint32_t g_drawDistanceTimer = 0;
-uint32_t g_drawDistanceTimerDelay = 1000;
+uint32_t g_DrawDistanceTimer = 0;
+uint32_t g_DrawDistanceTimerDelay = 1000;
 
-float g_drawDistanceValue = 1000.0f;
-float g_drawDistanceValueDefault = 1000.0f;
+float g_DrawDistanceValue = 1000.0f;
+float g_DrawDistanceValueDefault = 1000.0f;
 
 void EQAPP_DrawDistance_Toggle();
 void EQAPP_DrawDistance_Load();
@@ -14,42 +14,42 @@ void EQAPP_DrawDistance_Execute();
 
 void EQAPP_DrawDistance_Toggle()
 {
-    EQ_ToggleBool(g_drawDistanceIsEnabled);
-    EQAPP_PrintBool("Draw Distance`", g_drawDistanceIsEnabled);
+    EQ_ToggleBool(g_DrawDistanceIsEnabled);
+    EQAPP_PrintBool("Draw Distance`", g_DrawDistanceIsEnabled);
 }
 
 void EQAPP_DrawDistance_Load()
 {
-    g_drawDistanceValue = g_drawDistanceValueDefault;
+    g_DrawDistanceValue = g_DrawDistanceValueDefault;
 
     auto zoneID = EQ_GetZoneID();
 
     if (zoneID == EQ_ZONE_ID_WAKENING)
     {
-        g_drawDistanceValue = 100.0f;
+        g_DrawDistanceValue = 100.0f;
     }
 }
 
 void EQAPP_DrawDistance_Execute()
 {
-    if (EQ_HasTimePassed(g_drawDistanceTimer, g_drawDistanceTimerDelay) == false)
+    if (EQ_HasTimePassed(g_DrawDistanceTimer, g_DrawDistanceTimerDelay) == false)
     {
         return;
     }
 
-    if (EQ_POINTER_Camera->DrawDistance < g_drawDistanceValue)
+    if (EQ_POINTER_Camera->DrawDistance < g_DrawDistanceValue)
     {
-        EQ_POINTER_Camera->DrawDistance = g_drawDistanceValue;
+        EQ_POINTER_Camera->DrawDistance = g_DrawDistanceValue;
     }
 
-    if (EQ_POINTER_Zone.MinClip < g_drawDistanceValue)
+    if (EQ_POINTER_Zone.MinClip < g_DrawDistanceValue)
     {
-        EQ_POINTER_Zone.MinClip = g_drawDistanceValue;
+        EQ_POINTER_Zone.MinClip = g_DrawDistanceValue;
     }
 
-    if (EQ_POINTER_Zone.MaxClip < g_drawDistanceValue)
+    if (EQ_POINTER_Zone.MaxClip < g_DrawDistanceValue)
     {
-        EQ_POINTER_Zone.MaxClip = g_drawDistanceValue;
+        EQ_POINTER_Zone.MaxClip = g_DrawDistanceValue;
     }
 }
 

@@ -1,8 +1,8 @@
 #pragma once
 
-bool g_containerWindowIsEnabled = true;
+bool g_ContainerWindowIsEnabled = true;
 
-unsigned int g_containerWindowFontSize = 1;
+unsigned int g_ContainerWindowFontSize = 1;
 
 void EQAPP_ContainerWindow_Toggle();
 void EQAPP_ContainerWindow_AppendSpellLevelToToolTipText_HandleEvent_CContainerWnd__PostDraw(void* this_ptr);
@@ -10,8 +10,8 @@ void EQAPP_ContainerWindow_AppendSpellLevelToItemSlot_HandleEvent_CContainerWnd_
 
 void EQAPP_ContainerWindow_Toggle()
 {
-    EQ_ToggleBool(g_containerWindowIsEnabled);
-    EQAPP_PrintBool("Container Window", g_containerWindowIsEnabled);
+    EQ_ToggleBool(g_ContainerWindowIsEnabled);
+    EQAPP_PrintBool("Container Window", g_ContainerWindowIsEnabled);
 }
 
 void EQAPP_ContainerWindow_AppendSpellLevelToToolTipText_HandleEvent_CContainerWnd__PostDraw(void* this_ptr)
@@ -231,7 +231,7 @@ void EQAPP_ContainerWindow_AppendSpellLevelToItemSlot_HandleEvent_CContainerWnd_
             newToolTipText << " *";
         }
 
-        containerSlotWnd->Window.Font->Size = g_containerWindowFontSize;
+        containerSlotWnd->Window.Font->Size = g_ContainerWindowFontSize;
 
         EQ_CXStr_Set(&containerSlotWnd->Window.ToolTipText, newToolTipText.str().c_str());
 

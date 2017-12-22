@@ -1,12 +1,12 @@
 #pragma once
 
-bool g_destroyActorsIsEnabled = false;
-bool g_destroyActorsCreateActorExLogIsEnabled = false;
+bool g_DestroyActorsIsEnabled = false;
+bool g_DestroyActorsCreateActorExLogIsEnabled = false;
 
-uint32_t g_destroyActorsTimer = 0;
-uint32_t g_destroyActorsTimerDelay = 3000;
+uint32_t g_DestroyActorsTimer = 0;
+uint32_t g_DestroyActorsTimerDelay = 3000;
 
-std::vector<std::string> g_destroyActorsList;
+std::vector<std::string> g_DestroyActorsList;
 
 void EQAPP_DestroyActors_Toggle();
 void EQAPP_DestroyActors_LoadEx(char* zoneShortName);
@@ -18,10 +18,10 @@ void EQAPP_DestroyActors_HandleEvent_EQGraphicsDLL__t3dCreateActorEx(EQ::ActorIn
 
 void EQAPP_DestroyActors_Toggle()
 {
-    EQ_ToggleBool(g_destroyActorsIsEnabled);
-    EQAPP_PrintBool("Destroy Actors", g_destroyActorsIsEnabled);
+    EQ_ToggleBool(g_DestroyActorsIsEnabled);
+    EQAPP_PrintBool("Destroy Actors", g_DestroyActorsIsEnabled);
 
-    if (g_destroyActorsIsEnabled == true)
+    if (g_DestroyActorsIsEnabled == true)
     {
          EQAPP_DestroyActors_Load();
     }
@@ -29,8 +29,8 @@ void EQAPP_DestroyActors_Toggle()
 
 void EQAPP_DestroyActors_CreateActorExLog_Toggle()
 {
-    EQ_ToggleBool(g_destroyActorsCreateActorExLogIsEnabled);
-    EQAPP_PrintBool("Destroy Actors CreateActorEx Log", g_destroyActorsCreateActorExLogIsEnabled);
+    EQ_ToggleBool(g_DestroyActorsCreateActorExLogIsEnabled);
+    EQAPP_PrintBool("Destroy Actors CreateActorEx Log", g_DestroyActorsCreateActorExLogIsEnabled);
 }
 
 void EQAPP_DestroyActors_LoadEx(char* zoneShortName)
@@ -44,15 +44,15 @@ void EQAPP_DestroyActors_LoadEx(char* zoneShortName)
         return;
     }
 
-    g_destroyActorsList.clear();
-    g_destroyActorsList.reserve(100);
+    g_DestroyActorsList.clear();
+    g_DestroyActorsList.reserve(100);
 
-    EQAPP_ReadFileToList("destroyactors.txt", g_destroyActorsList);
+    EQAPP_ReadFileToList("destroyactors.txt", g_DestroyActorsList);
 
     std::stringstream filePath;
     filePath << "destroyactors/" << zoneShortNameStr << ".txt";
 
-    EQAPP_ReadFileToList(filePath.str().c_str(), g_destroyActorsList);
+    EQAPP_ReadFileToList(filePath.str().c_str(), g_DestroyActorsList);
 }
 
 void EQAPP_DestroyActors_Load()
@@ -101,7 +101,7 @@ void EQAPP_DestroyActors_DestroyByNameInList(uint32_t offsetActorList)
             continue;
         }
 
-        for (auto& destroyActor : g_destroyActorsList)
+        for (auto& destroyActor : g_DestroyActorsList)
         {
             if (actorDef == destroyActor)
             {
@@ -148,7 +148,7 @@ void EQAPP_DestroyActors_DestroyByIndex(uint32_t offsetActorList, uint32_t index
 
 void EQAPP_DestroyActors_Execute()
 {
-    if (EQ_HasTimePassed(g_destroyActorsTimer, g_destroyActorsTimerDelay) == false)
+    if (EQ_HasTimePassed(g_DestroyActorsTimer, g_DestroyActorsTimerDelay) == false)
     {
         return;
     }
@@ -180,7 +180,7 @@ void EQAPP_DestroyActors_HandleEvent_EQGraphicsDLL__t3dCreateActorEx(EQ::ActorIn
         return;
     }
 
-    if (g_destroyActorsCreateActorExLogIsEnabled == true)
+    if (g_DestroyActorsCreateActorExLogIsEnabled == true)
     {
         std::ofstream file;
         file.open("eqtakp/createactorexlog.txt", std::ios::app);
@@ -188,12 +188,12 @@ void EQAPP_DestroyActors_HandleEvent_EQGraphicsDLL__t3dCreateActorEx(EQ::ActorIn
         file.close();
     }
 
-    if (g_destroyActorsList.size() == 0)
+    if (g_DestroyActorsList.size() == 0)
     {
         return;
     }
 
-    for (auto& destroyActor : g_destroyActorsList)
+    for (auto& destroyActor : g_DestroyActorsList)
     {
         if (actorDef == destroyActor)
         {

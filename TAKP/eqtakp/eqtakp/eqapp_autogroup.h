@@ -1,19 +1,19 @@
 #pragma once
 
-bool g_autoGroupIsEnabled = true;
+bool g_AutoGroupIsEnabled = true;
 
-uint32_t g_autoGroupTimer = 0;
-uint32_t g_autoGroupTimerDelay = 3000;
+uint32_t g_AutoGroupTimer = 0;
+uint32_t g_AutoGroupTimerDelay = 3000;
 
 void EQAPP_AutoGroup_Toggle()
 {
-    EQ_ToggleBool(g_autoGroupIsEnabled);
-    EQAPP_PrintBool("Auto Group", g_autoGroupIsEnabled);
+    EQ_ToggleBool(g_AutoGroupIsEnabled);
+    EQAPP_PrintBool("Auto Group", g_AutoGroupIsEnabled);
 }
 
 void EQAPP_AutoGroup_Execute()
 {
-    if (EQ_HasTimePassed(g_autoGroupTimer, g_autoGroupTimerDelay) == false)
+    if (EQ_HasTimePassed(g_AutoGroupTimer, g_AutoGroupTimerDelay) == false)
     {
         return;
     }

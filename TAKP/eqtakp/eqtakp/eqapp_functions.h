@@ -24,7 +24,6 @@ void EQAPP_Mouse_Unload();
 void EQAPP_Mouse_Unacquire();
 void EQAPP_Mouse_Acquire();
 
-
 void EQAPP_Keyboard_Load();
 void EQAPP_Keyboard_Unload();
 void EQAPP_Keyboard_Unacquire();
@@ -63,7 +62,7 @@ template <class T>
 void EQAPP_Log(const char* text, T number)
 {
     std::stringstream filePath;
-    filePath << g_applicationName << "/log.txt";
+    filePath << g_EQAppName << "/log.txt";
 
     std::fstream file;
     file.open(filePath.str().c_str(), std::ios::out | std::ios::app);
@@ -181,7 +180,7 @@ void EQAPP_PrintBool(const char* text, bool& b)
 
 void EQAPP_PrintErrorMessage(const char* functionName, const std::string& text)
 {
-    if (g_bErrorMessageIsEnabled == false)
+    if (g_EQAppErrorMessageIsEnabled == false)
     {
         return;
     }
@@ -191,7 +190,7 @@ void EQAPP_PrintErrorMessage(const char* functionName, const std::string& text)
 
 void EQAPP_PrintDebugMessage(const char* functionName, const std::string& text)
 {
-    if (g_bDebugMessageIsEnabled == false)
+    if (g_EQAppDebugMessageIsEnabled == false)
     {
         return;
     }
@@ -356,7 +355,7 @@ void EQAPP_DeleteFileContents(const char* filename)
 std::string EQAPP_ReadFileContents(const char* filename)
 {
     std::stringstream filePath;
-    filePath << g_applicationName << "/" << filename;
+    filePath << g_EQAppName << "/" << filename;
 
     std::string filePathStr = filePath.str();
 
@@ -381,7 +380,7 @@ std::string EQAPP_ReadFileContents(const char* filename)
 void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list)
 {
     std::stringstream filePath;
-    filePath << g_applicationName << "/" << filename;
+    filePath << g_EQAppName << "/" << filename;
 
     std::string filePathStr = filePath.str();
 
@@ -422,7 +421,7 @@ uint32_t EQAPP_GetRandomNumber(uint32_t low, uint32_t high)
     std::uniform_int_distribution<uint32_t> uid;
     std::uniform_int_distribution<uint32_t>::param_type uidpt(low, high);
 
-    return uid(g_randomEngine, uidpt);
+    return uid(g_EQAppRandomEngine, uidpt);
 }
 
 float EQAPP_GetTargetMeleeDistance()
@@ -607,7 +606,7 @@ void EQAPP_PrintBankInventory()
 
 void EQAPP_WriteInventoryToFile()
 {
-if (EQ_IsInGame() == false)
+    if (EQ_IsInGame() == false)
     {
         return;
     }
@@ -625,7 +624,7 @@ if (EQ_IsInGame() == false)
     }
 
     std::stringstream filePath;
-    filePath << g_applicationName << "/inventory/" << spawnName << ".txt";
+    filePath << g_EQAppName << "/inventory/" << spawnName << ".txt";
 
     std::string filePathStr = filePath.str();
 

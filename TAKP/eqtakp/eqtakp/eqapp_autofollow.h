@@ -1,9 +1,9 @@
 #pragma once
 
-bool g_autoFollowIsEnabled = true;
+bool g_AutoFollowIsEnabled = true;
 
-uint32_t g_autoFollowTimer = 0;
-uint32_t g_autoFollowTimerDelay = 500;
+uint32_t g_AutoFollowTimer = 0;
+uint32_t g_AutoFollowTimerDelay = 500;
 
 void EQAPP_AutoFollow_SetFollowDistanceToDefault();
 void EQAPP_AutoFollow_SetFollowDistanceToZero();
@@ -23,7 +23,7 @@ void EQAPP_AutoFollow_SetFollowDistanceToZero()
 
 void EQAPP_AutoFollow_HandleEvent__EQPlayer__FollowPlayerAI(void* this_ptr)
 {
-    bool bHasTimePassed = EQ_HasTimePassed(g_autoFollowTimer, g_autoFollowTimerDelay);
+    bool bHasTimePassed = EQ_HasTimePassed(g_AutoFollowTimer, g_AutoFollowTimerDelay);
 
     auto thisSpawn = (EQ::Spawn_ptr)this_ptr;
     if (thisSpawn == NULL || thisSpawn->Actor == NULL)

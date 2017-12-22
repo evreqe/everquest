@@ -43,7 +43,6 @@
 
 #include <d3d8.h>
 #pragma comment(lib, "d3d8.lib")
-
 #pragma comment(lib, "dxguid.lib")
 
 #define DIRECTINPUT_VERSION 0x0800
@@ -150,7 +149,10 @@
 
 void EQAPP_Load()
 {
-    EQ_WriteChatText("Loading...");
+    if (EQ_IsInGame() == true)
+    {
+        EQ_WriteChatText("Loading...");
+    }
 
     EQ_GraphicsDLL_SetUseTNL(false);
     EQ_GraphicsDLL_SetUseUmbra(true);
@@ -170,19 +172,22 @@ void EQAPP_Load()
 
     if (EQ_IsInGame() == true)
     {
-        g_zoneID = EQ_GetZoneID();
+        g_EQAppZoneID = EQ_GetZoneID();
 
         EQAPP_Detours_OnZoneChanged_Load();
+
+        EQ_WriteChatText("Loaded!");
     }
 
-    EQ_WriteChatText("Loaded!");
-
-    g_bLoaded = 1;
+    g_EQAppIsLoaded = 1;
 }
 
 void EQAPP_Unload()
 {
-    EQ_WriteChatText("Unloading...");
+    if (EQ_IsInGame() == true)
+    {
+        EQ_WriteChatText("Unloading...");
+    }
 
     EQ_GraphicsDLL_SetUseTNL(false);
     EQ_GraphicsDLL_SetUseUmbra(true);
@@ -199,22 +204,22 @@ void EQAPP_Unload()
     if (EQ_IsInGame() == true)
     {
         EQ_FUNCTION_UpdateLight(EQ_POINTER_PlayerCharacter);
+
+        EQ_WriteChatText("Unloaded!");
     }
 
-    EQ_WriteChatText("Unloaded!");
-
-    g_bExit = 1;
+    g_EQAppShouldUnload = 1;
 }
 
 DWORD WINAPI EQAPP_ThreadLoop(LPVOID param)
 {
-    while (g_bExit == 0)
+    while (g_EQAppShouldUnload == 0)
     {
         Sleep(100);
     }
 
     // wait for the console to unload
-    while (g_bConsole == 1)
+    while (g_ConsoleIsLoaded == 1)
     {
         Sleep(100);
     }
@@ -224,7 +229,7 @@ DWORD WINAPI EQAPP_ThreadLoop(LPVOID param)
     TerminateThread(EQAPP_ThreadLoad, 0);
     TerminateThread(EQAPP_ThreadConsole, 0);
 
-    FreeLibraryAndExitThread(g_module, 0);
+    FreeLibraryAndExitThread(g_EQAppModule, 0);
     return 0;
 }
 
@@ -234,22 +239,22 @@ DWORD WINAPI EQAPP_ThreadLoad(LPVOID param)
 
     if (EQ_GraphicsDLL_LoadFunctions() == false)
     {
-        MessageBoxA(NULL, "Error: Failed to load graphics DLL functions!", g_applicationName, MB_ICONERROR);
+        MessageBoxA(NULL, "Error: Failed to load graphics DLL functions!", g_EQAppName, MB_ICONERROR);
 
-        FreeLibraryAndExitThread(g_module, 0);
+        FreeLibraryAndExitThread(g_EQAppModule, 0);
         return 0;
     }
 
-    g_handleThreadConsole = CreateThread(NULL, 0, &EQAPP_ThreadConsole, NULL, 0, NULL);
+    g_EQAppHandleThreadConsole = CreateThread(NULL, 0, &EQAPP_ThreadConsole, NULL, 0, NULL);
 
     // wait for the console to load
-    while (g_bConsole == 0);
+    while (g_ConsoleIsLoaded == 0);
 
-    g_handleThreadLoop = CreateThread(NULL, 0, &EQAPP_ThreadLoop, NULL, 0, NULL);
+    g_EQAppHandleThreadLoop = CreateThread(NULL, 0, &EQAPP_ThreadLoop, NULL, 0, NULL);
 
     EQAPP_Detours_Load();
 
-    ExitThread(0);
+    ////ExitThread(0);
 
     return 0;
 }
@@ -258,26 +263,26 @@ DWORD WINAPI EQAPP_ThreadConsole(LPVOID param)
 {
     EQAPP_Console_Load();
 
-    while (g_bExit == 0)
+    while (g_EQAppShouldUnload == 0)
     {
         Sleep(100);
     }
 
     EQAPP_Console_Unload();
 
-    ExitThread(0);
+    ////ExitThread(0);
 
     return 0;
 }
 
 BOOL __stdcall DllMain(HMODULE module, DWORD reason, LPVOID reserved)
 {
-    g_module = module;
+    g_EQAppModule = module;
 
     if (reason == DLL_PROCESS_ATTACH)
     {
         DisableThreadLibraryCalls(module);
-        g_handleThreadLoad = CreateThread(NULL, 0, &EQAPP_ThreadLoad, NULL, 0, NULL);
+        g_EQAppHandleThreadLoad = CreateThread(NULL, 0, &EQAPP_ThreadLoad, NULL, 0, NULL);
     }
     else if (reason == DLL_PROCESS_DETACH)
     {

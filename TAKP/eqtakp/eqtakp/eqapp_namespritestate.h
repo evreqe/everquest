@@ -1,8 +1,8 @@
 #pragma once
 
-bool g_nameSpriteStateIsEnabled = true;
+bool g_NameSpriteStateIsEnabled = true;
 
-bool g_nameSpriteStateRemoveLastNamesIsEnabled = true;
+bool g_NameSpriteStateRemoveLastNamesIsEnabled = true;
 
 void EQAPP_NameSpriteState_Toggle();
 void EQAPP_NameSpriteState_RemoveLastNames_Toggle();
@@ -10,14 +10,14 @@ bool EQAPP_NameSpriteState_HandleEvent_CDisplay__SetNameSpriteState(void* this_p
 
 void EQAPP_NameSpriteState_Toggle()
 {
-    EQ_ToggleBool(g_nameSpriteStateIsEnabled);
-    EQAPP_PrintBool("Name Sprite State", g_nameSpriteStateIsEnabled);
+    EQ_ToggleBool(g_NameSpriteStateIsEnabled);
+    EQAPP_PrintBool("Name Sprite State", g_NameSpriteStateIsEnabled);
 }
 
 void EQAPP_NameSpriteState_RemoveLastNames_Toggle()
 {
-    EQ_ToggleBool(g_nameSpriteStateRemoveLastNamesIsEnabled);
-    EQAPP_PrintBool("Name Sprite State Remove Last Names", g_nameSpriteStateRemoveLastNamesIsEnabled);
+    EQ_ToggleBool(g_NameSpriteStateRemoveLastNamesIsEnabled);
+    EQAPP_PrintBool("Name Sprite State Remove Last Names", g_NameSpriteStateRemoveLastNamesIsEnabled);
 }
 
 bool EQAPP_NameSpriteState_HandleEvent_CDisplay__SetNameSpriteState(void* this_ptr, class EQPlayer* player, bool show)
@@ -74,7 +74,7 @@ bool EQAPP_NameSpriteState_HandleEvent_CDisplay__SetNameSpriteState(void* this_p
         return false;
     }
 
-    if (g_nameSpriteStateRemoveLastNamesIsEnabled == true)
+    if (g_NameSpriteStateRemoveLastNamesIsEnabled == true)
     {
         if (spawn->Type == EQ_SPAWN_TYPE_PLAYER)
         {

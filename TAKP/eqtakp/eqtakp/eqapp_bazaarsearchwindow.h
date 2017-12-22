@@ -1,10 +1,10 @@
 #pragma once
 
-bool g_bazaarSearchWindowIsEnabled = true;
+bool g_BazaarSearchWindowIsEnabled = true;
 
-uint32_t g_bazaarSearchWindowItemNameColorARGB = 0xFFFF00FF;
+uint32_t g_BazaarSearchWindowItemNameColorARGB = 0xFFFF00FF;
 
-std::vector<std::string> g_bazaarSearchWindowItemNamesList;
+std::vector<std::string> g_BazaarSearchWindowItemNamesList;
 
 void EQAPP_BazaarSearchWindow_LoadItemNames();
 void EQAPP_BazaarSearchWindow_HandleEvent_CListWnd__SetItemText(void* this_ptr, int index, int column, EQ::CXStr_ptr text);
@@ -13,10 +13,10 @@ void EQAPP_BazaarSearchWindow_LoadItemNames()
 {
     std::cout << "Loading Bazaar Search Item Names..." << std::endl;
 
-    g_bazaarSearchWindowItemNamesList.clear();
-    g_bazaarSearchWindowItemNamesList.reserve(100);
+    g_BazaarSearchWindowItemNamesList.clear();
+    g_BazaarSearchWindowItemNamesList.reserve(100);
 
-    EQAPP_ReadFileToList("bazaarsearchitemnames.txt", g_bazaarSearchWindowItemNamesList);
+    EQAPP_ReadFileToList("bazaarsearchitemnames.txt", g_BazaarSearchWindowItemNamesList);
 }
 
 void EQAPP_BazaarSearchWindow_HandleEvent_CListWnd__SetItemText(void* this_ptr, int index, int column, EQ::CXStr_ptr text)
@@ -62,13 +62,13 @@ void EQAPP_BazaarSearchWindow_HandleEvent_CListWnd__SetItemText(void* this_ptr, 
         return;
     }
 
-    for (auto& itemName : g_bazaarSearchWindowItemNamesList)
+    for (auto& itemName : g_BazaarSearchWindowItemNamesList)
     {
         if (listText.find(itemName) != std::string::npos)
         {
-            ((EQClass::CListWnd*)this_ptr)->SetItemColor(index, 0, g_bazaarSearchWindowItemNameColorARGB);
-            ((EQClass::CListWnd*)this_ptr)->SetItemColor(index, 1, g_bazaarSearchWindowItemNameColorARGB);
-            ((EQClass::CListWnd*)this_ptr)->SetItemColor(index, 2, g_bazaarSearchWindowItemNameColorARGB);
+            ((EQClass::CListWnd*)this_ptr)->SetItemColor(index, 0, g_BazaarSearchWindowItemNameColorARGB);
+            ((EQClass::CListWnd*)this_ptr)->SetItemColor(index, 1, g_BazaarSearchWindowItemNameColorARGB);
+            ((EQClass::CListWnd*)this_ptr)->SetItemColor(index, 2, g_BazaarSearchWindowItemNameColorARGB);
 
             break;
         }

@@ -33,6 +33,7 @@ namespace EQClass
 
     class CBazaarSearchWnd;
     class CBuffWindow;
+    class CCastSpellWnd;
     class CGiveWnd;
     class CHotButtonWnd;
     class CItemDisplayWnd;
@@ -62,6 +63,8 @@ class EQClass::EQWorldData
 {
 public:
     char* EQWorldData::GetFullZoneName(EQ_ZoneID_t zoneID, char* result);
+    int EQWorldData::GetZoneNameFromIndex(EQ_ZoneID_t zoneID, char* zoneShortName);
+    EQ_ZoneID_t EQWorldData::GetIndexFromZoneName(char* zoneShortName);
 };
 
 #define EQ_ADDRESS_FUNCTION_EQWorldData__GetFullZoneName 0x00523E49
@@ -69,6 +72,12 @@ EQ_MACRO_FUNCTION_FunctionAtAddress(char* EQClass::EQWorldData::GetFullZoneName(
 typedef int (__thiscall* EQ_FUNCTION_TYPE_EQWorldData__GetFullZoneName)(void* this_ptr, EQ_ZoneID_t zoneID, char* result);
 
 #define EQ_ADDRESS_FUNCTION_EQWorldData__GetZoneNameFromIndex 0x00523F73
+EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::EQWorldData::GetZoneNameFromIndex(EQ_ZoneID_t zoneID, char* zoneShortName), EQ_ADDRESS_FUNCTION_EQWorldData__GetZoneNameFromIndex);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQWorldData__GetZoneNameFromIndex)(void* this_ptr, EQ_ZoneID_t zoneID, char* zoneShortName);
+
+#define EQ_ADDRESS_FUNCTION_EQWorldData__GetIndexFromZoneName 0x00523FA4
+EQ_MACRO_FUNCTION_FunctionAtAddress(EQ_ZoneID_t EQClass::EQWorldData::GetIndexFromZoneName(char* zoneShortName), EQ_ADDRESS_FUNCTION_EQWorldData__GetIndexFromZoneName);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQWorldData__GetIndexFromZoneName)(void* this_ptr, char* zoneShortName);
 
 /* CDisplay */
 
@@ -589,6 +598,18 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CBuffWindow__OnProcessFrame)(void* thi
 #define EQ_ADDRESS_FUNCTION_CBuffWindow__PostDraw 0x004095FE
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CBuffWindow::PostDraw(), EQ_ADDRESS_FUNCTION_CBuffWindow__PostDraw);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CBuffWindow__PostDraw)(void* this_ptr);
+
+/* CCastSpellWnd */
+
+class EQClass::CCastSpellWnd : public EQClass::CSidlScreenWnd
+{
+public:
+    int CCastSpellWnd::HandleSpellRightClick(EQ_SpellGemIndex_t spellGemIndex);
+};
+
+#define EQ_ADDRESS_FUNCTION_CCastSpellWnd__HandleSpellRightClick 0x0040A5F5
+EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::CCastSpellWnd::HandleSpellRightClick(EQ_SpellGemIndex_t spellGemIndex), EQ_ADDRESS_FUNCTION_CCastSpellWnd__HandleSpellRightClick);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CCastSpellWnd__HandleSpellRightClick)(void* this_ptr, EQ_SpellGemIndex_t spellGemIndex);
 
 /* CGiveWnd */
 

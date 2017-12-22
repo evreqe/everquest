@@ -26,33 +26,33 @@ namespace EQApp
     } ExtendedTargetsSpawn, *ExtendedTargetsSpawn_ptr;
 }
 
-bool g_extendedTargetsIsEnabled = true;
+bool g_ExtendedTargetsIsEnabled = true;
 
-bool g_extendedTargetsHeightFilterIsEnabled = true;
+bool g_ExtendedTargetsHeightFilterIsEnabled = true;
 
-std::vector<EQApp::ExtendedTargetsSpawn> g_extendedTargetsSpawnList;
+std::vector<EQApp::ExtendedTargetsSpawn> g_ExtendedTargetsSpawnList;
 
-uint32_t g_extendedTargetsSpawnListTimer = 0;
-uint32_t g_extendedTargetsSpawnListTimerDelay = 1000;
+uint32_t g_ExtendedTargetsSpawnListTimer = 0;
+uint32_t g_ExtendedTargetsSpawnListTimerDelay = 1000;
 
-size_t g_extendedTargetsNumSpawns = 15;
+size_t g_ExtendedTargetsNumSpawns = 15;
 
-float g_extendedTargetsSpawnDistanceMax = 210.0f;
-float g_extendedTargetsSpawnDistanceZMax = 10.0f;
+float g_ExtendedTargetsSpawnDistanceMax = 210.0f;
+float g_ExtendedTargetsSpawnDistanceZMax = 10.0f;
 
-uint32_t g_extendedTargetsFontHeight = 1;
+uint32_t g_ExtendedTargetsFontHeight = 1;
 
-float g_extendedTargetsDefaultX = 4.0f;
-float g_extendedTargetsDefaultY = 412.0f;
+float g_ExtendedTargetsDefaultX = 4.0f;
+float g_ExtendedTargetsDefaultY = 412.0f;
 
-float g_extendedTargetsX = 4.0f;
-float g_extendedTargetsY = 412.0f;
+float g_ExtendedTargetsX = 4.0f;
+float g_ExtendedTargetsY = 412.0f;
 
-float g_extendedTargetsWidth  = 200.0f;
-float g_extendedTargetsHeight = 200.0f;
+float g_ExtendedTargetsWidth  = 200.0f;
+float g_ExtendedTargetsHeight = 200.0f;
 
-uint32_t g_extendedTargetsBorderColorARGB     = EQ_COLOR_ARGB_GRAY;
-uint32_t g_extendedTargetsBackgroundColorARGB = 0x80000000;
+uint32_t g_ExtendedTargetsBorderColorARGB     = EQ_COLOR_ARGB_GRAY;
+uint32_t g_ExtendedTargetsBackgroundColorARGB = 0x80000000;
 
 void EQAPP_ExtendedTargets_Toggle();
 void EQAPP_ExtendedTargets_HeightFilter_Toggle();
@@ -64,10 +64,10 @@ bool EQAPP_ExtendedTargets_HandleEvent_CEverQuest__LMouseUp(uint16_t mouseX, uin
 
 void EQAPP_ExtendedTargets_Toggle()
 {
-    EQ_ToggleBool(g_extendedTargetsIsEnabled);
-    EQAPP_PrintBool("Extended Targets", g_extendedTargetsIsEnabled);
+    EQ_ToggleBool(g_ExtendedTargetsIsEnabled);
+    EQAPP_PrintBool("Extended Targets", g_ExtendedTargetsIsEnabled);
 
-    if (g_extendedTargetsIsEnabled == true)
+    if (g_ExtendedTargetsIsEnabled == true)
     {
         EQAPP_ExtendedTargets_RecalculateScreenCoordinates();
     }
@@ -75,37 +75,37 @@ void EQAPP_ExtendedTargets_Toggle()
 
 void EQAPP_ExtendedTargets_HeightFilter_Toggle()
 {
-    EQ_ToggleBool(g_extendedTargetsHeightFilterIsEnabled);
-    EQAPP_PrintBool("Extended Targets Height Filter", g_extendedTargetsHeightFilterIsEnabled);
+    EQ_ToggleBool(g_ExtendedTargetsHeightFilterIsEnabled);
+    EQAPP_PrintBool("Extended Targets Height Filter", g_ExtendedTargetsHeightFilterIsEnabled);
 }
 
 void EQAPP_ExtendedTargets_Load()
 {
-    g_extendedTargetsSpawnList.clear();
+    g_ExtendedTargetsSpawnList.clear();
 
     EQAPP_ExtendedTargets_RecalculateScreenCoordinates();
 }
 
 void EQAPP_ExtendedTargets_RecalculateScreenCoordinates()
 {
-    g_extendedTargetsFontHeight = EQ_GetFontTextHeight(EQ_ADDRESS_POINTER_FONT_ARIAL14);
+    g_ExtendedTargetsFontHeight = EQ_GetFontTextHeight(EQ_ADDRESS_POINTER_FONT_ARIAL14);
 
     uint32_t resolutionWidth = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_RESOLUTION_WIDTH);
     uint32_t resolutionHeight = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_RESOLUTION_HEIGHT);
 
-    g_extendedTargetsX = ((float)resolutionWidth - 4.0f) - g_extendedTargetsWidth;
-    g_extendedTargetsY = (float)(g_extendedTargetsDefaultY + g_extendedTargetsFontHeight);
+    g_ExtendedTargetsX = ((float)resolutionWidth - 4.0f) - g_ExtendedTargetsWidth;
+    g_ExtendedTargetsY = (float)(g_ExtendedTargetsDefaultY + g_ExtendedTargetsFontHeight);
 }
 
 void EQAPP_ExtendedTargets_UpdateSpawnList()
 {
-    if (EQ_HasTimePassed(g_extendedTargetsSpawnListTimer, g_extendedTargetsSpawnListTimerDelay) == false)
+    if (EQ_HasTimePassed(g_ExtendedTargetsSpawnListTimer, g_ExtendedTargetsSpawnListTimerDelay) == false)
     {
         return;
     }
 
-    g_extendedTargetsSpawnList.clear();
-    g_extendedTargetsSpawnList.reserve(100);
+    g_ExtendedTargetsSpawnList.clear();
+    g_ExtendedTargetsSpawnList.reserve(100);
 
     auto playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)
@@ -132,19 +132,25 @@ void EQAPP_ExtendedTargets_UpdateSpawnList()
             continue;
         }
 
-        float spawnDistance = EQ_CalculateDistance(spawn->X, spawn->Y, playerSpawn->X, playerSpawn->Y);
-        if (spawnDistance > g_extendedTargetsSpawnDistanceMax)
+        if (EQ_IsSpawnTargetable(spawn) == false)
         {
             spawn = spawn->Next;
             continue;
         }
 
-        if (g_extendedTargetsHeightFilterIsEnabled == true)
+        float spawnDistance = EQ_CalculateDistance(spawn->X, spawn->Y, playerSpawn->X, playerSpawn->Y);
+        if (spawnDistance > g_ExtendedTargetsSpawnDistanceMax)
+        {
+            spawn = spawn->Next;
+            continue;
+        }
+
+        if (g_ExtendedTargetsHeightFilterIsEnabled == true)
         {
             float spawnDistanceZ = std::fabsf(spawn->Z - playerSpawn->Z);
-            if (spawn->Height < g_extendedTargetsSpawnDistanceZMax)
+            if (spawn->Height < g_ExtendedTargetsSpawnDistanceZMax)
             {
-                if (spawnDistanceZ > g_extendedTargetsSpawnDistanceZMax)
+                if (spawnDistanceZ > g_ExtendedTargetsSpawnDistanceZMax)
                 {
                     spawn = spawn->Next;
                     continue;
@@ -167,7 +173,7 @@ void EQAPP_ExtendedTargets_UpdateSpawnList()
 
     std::sort(spawnDistanceList.begin(), spawnDistanceList.end());
 
-    spawnDistanceList.resize(g_extendedTargetsNumSpawns);
+    spawnDistanceList.resize(g_ExtendedTargetsNumSpawns);
 
     uint32_t spawnIndex = 0;
 
@@ -295,14 +301,14 @@ void EQAPP_ExtendedTargets_UpdateSpawnList()
 
         size_t fontWidth = EQ_GetFontTextWidth(etSpawn.Text.c_str(), EQ_ADDRESS_POINTER_FONT_ARIAL14);
 
-        etSpawn.X = (uint32_t)g_extendedTargetsX;
-        etSpawn.Y = (uint32_t)(g_extendedTargetsY + (spawnIndex * g_extendedTargetsFontHeight));
+        etSpawn.X = (uint32_t)g_ExtendedTargetsX;
+        etSpawn.Y = (uint32_t)(g_ExtendedTargetsY + (spawnIndex * g_ExtendedTargetsFontHeight));
         etSpawn.Width = fontWidth;
-        etSpawn.Height = g_extendedTargetsFontHeight;
+        etSpawn.Height = g_ExtendedTargetsFontHeight;
 
         spawnIndex++;
 
-        g_extendedTargetsSpawnList.push_back(etSpawn);
+        g_ExtendedTargetsSpawnList.push_back(etSpawn);
     }
 }
 
@@ -310,37 +316,37 @@ void EQAPP_ExtendedTargets_Execute()
 {
     EQAPP_ExtendedTargets_UpdateSpawnList();
 
-    if (g_extendedTargetsSpawnList.size() == 0)
+    if (g_ExtendedTargetsSpawnList.size() == 0)
     {
         return;
     }
 
-    size_t numExtendedTargets = g_extendedTargetsSpawnList.size();
+    size_t numExtendedTargets = g_ExtendedTargetsSpawnList.size();
 
     EQ_DrawRectangle
     (
-        (float)g_extendedTargetsX - 4.0f,
-        (float)(g_extendedTargetsY - g_extendedTargetsFontHeight),
-        (float)g_extendedTargetsWidth,
-        (float)((numExtendedTargets + 1) * g_extendedTargetsFontHeight),
-        g_extendedTargetsBackgroundColorARGB, true
+        (float)g_ExtendedTargetsX - 4.0f,
+        (float)(g_ExtendedTargetsY - g_ExtendedTargetsFontHeight),
+        (float)g_ExtendedTargetsWidth,
+        (float)((numExtendedTargets + 1) * g_ExtendedTargetsFontHeight),
+        g_ExtendedTargetsBackgroundColorARGB, true
     );
 
     EQ_DrawRectangle
     (
-        (float)g_extendedTargetsX - 4.0f,
-        (float)(g_extendedTargetsY - g_extendedTargetsFontHeight),
-        (float)g_extendedTargetsWidth,
-        (float)((numExtendedTargets + 1) * g_extendedTargetsFontHeight),
-        g_extendedTargetsBorderColorARGB, false
+        (float)g_ExtendedTargetsX - 4.0f,
+        (float)(g_ExtendedTargetsY - g_ExtendedTargetsFontHeight),
+        (float)g_ExtendedTargetsWidth,
+        (float)((numExtendedTargets + 1) * g_ExtendedTargetsFontHeight),
+        g_ExtendedTargetsBorderColorARGB, false
     );
 
     std::string etText = "Extended Targets: ";
-    EQ_DrawText(etText.c_str(), (int)g_extendedTargetsX, (int)(g_extendedTargetsY - g_extendedTargetsFontHeight), EQ_COLOR_ARGB_WHITE);
+    EQ_DrawText(etText.c_str(), (int)g_ExtendedTargetsX, (int)(g_ExtendedTargetsY - g_ExtendedTargetsFontHeight), EQ_COLOR_ARGB_WHITE);
 
     EQ::Mouse mouse = EQ_GetMouse();
 
-    for (auto& etSpawn : g_extendedTargetsSpawnList)
+    for (auto& etSpawn : g_ExtendedTargetsSpawnList)
     {
         if (EQ_IsPointInsideRectangle(mouse.X, mouse.Y, (int)etSpawn.X, (int)etSpawn.Y, (int)etSpawn.Width, (int)etSpawn.Height) == true)
         {
@@ -356,7 +362,7 @@ void EQAPP_ExtendedTargets_Execute()
 
 bool EQAPP_ExtendedTargets_HandleEvent_CEverQuest__LMouseUp(uint16_t mouseX, uint16_t mouseY)
 {
-    for (auto& etSpawn : g_extendedTargetsSpawnList)
+    for (auto& etSpawn : g_ExtendedTargetsSpawnList)
     {
         if (EQ_IsPointInsideRectangle(mouseX, mouseY, etSpawn.X, etSpawn.Y, etSpawn.Width, etSpawn.Height) == true)
         {

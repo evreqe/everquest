@@ -1,11 +1,11 @@
 #pragma once
 
-bool g_hotButtonKeysIsEnabled = false;
+bool g_HotButtonKeysIsEnabled = false;
 
-uint32_t g_hotButtonKeysTimer = 0;
-uint32_t g_hotButtonKeysTimerDelay = 500;
+uint32_t g_HotButtonKeysTimer = 0;
+uint32_t g_HotButtonKeysTimerDelay = 500;
 
-int g_hotButtonKeysModifier = VK_CONTROL;
+int g_HotButtonKeysModifier = VK_CONTROL;
 
 void EQAPP_HotButtonKeys_Toggle();
 void EQAPP_HotButtonKeys_Execute();
@@ -15,27 +15,27 @@ void EQAPP_HotButtonKeys_SetModifierToShift();
 
 void EQAPP_HotButtonKeys_Toggle()
 {
-    EQ_ToggleBool(g_hotButtonKeysIsEnabled);
-    EQAPP_PrintBool("Hot Button Keys", g_hotButtonKeysIsEnabled);
+    EQ_ToggleBool(g_HotButtonKeysIsEnabled);
+    EQAPP_PrintBool("Hot Button Keys", g_HotButtonKeysIsEnabled);
 }
 
 void EQAPP_HotButtonKeys_Execute()
 {
     uint32_t currentTime = EQ_GetTimer();
-    if ((currentTime - g_hotButtonKeysTimer) < g_hotButtonKeysTimerDelay)
+    if ((currentTime - g_HotButtonKeysTimer) < g_HotButtonKeysTimerDelay)
     {
         return;
     }
 
     if (EQAPP_IsForegroundWindowCurrentProcessId() == false)
     {
-        if (EQAPP_IsKeyDown(g_hotButtonKeysModifier) == true)
+        if (EQAPP_IsKeyDown(g_HotButtonKeysModifier) == true)
         {
             if (EQAPP_IsKeyDown(VK_1) == true)
             {
                 EQ_CLASS_POINTER_CHotButtonWnd->DoHotButton(0, 0);
 
-                g_hotButtonKeysTimer = currentTime;
+                g_HotButtonKeysTimer = currentTime;
                 return;
             }
 
@@ -43,7 +43,7 @@ void EQAPP_HotButtonKeys_Execute()
             {
                 EQ_CLASS_POINTER_CHotButtonWnd->DoHotButton(1, 0);
 
-                g_hotButtonKeysTimer = currentTime;
+                g_HotButtonKeysTimer = currentTime;
                 return;
             }
 
@@ -51,7 +51,7 @@ void EQAPP_HotButtonKeys_Execute()
             {
                 EQ_CLASS_POINTER_CHotButtonWnd->DoHotButton(2, 0);
 
-                g_hotButtonKeysTimer = currentTime;
+                g_HotButtonKeysTimer = currentTime;
                 return;
             }
 
@@ -59,7 +59,7 @@ void EQAPP_HotButtonKeys_Execute()
             {
                 EQ_CLASS_POINTER_CHotButtonWnd->DoHotButton(3, 0);
 
-                g_hotButtonKeysTimer = currentTime;
+                g_HotButtonKeysTimer = currentTime;
                 return;
             }
 
@@ -67,7 +67,7 @@ void EQAPP_HotButtonKeys_Execute()
             {
                 EQ_CLASS_POINTER_CHotButtonWnd->DoHotButton(4, 0);
 
-                g_hotButtonKeysTimer = currentTime;
+                g_HotButtonKeysTimer = currentTime;
                 return;
             }
 
@@ -75,7 +75,7 @@ void EQAPP_HotButtonKeys_Execute()
             {
                 EQ_CLASS_POINTER_CHotButtonWnd->DoHotButton(5, 0);
 
-                g_hotButtonKeysTimer = currentTime;
+                g_HotButtonKeysTimer = currentTime;
                 return;
             }
 
@@ -83,7 +83,7 @@ void EQAPP_HotButtonKeys_Execute()
             {
                 EQ_CLASS_POINTER_CHotButtonWnd->DoHotButton(6, 0);
 
-                g_hotButtonKeysTimer = currentTime;
+                g_HotButtonKeysTimer = currentTime;
                 return;
             }
 
@@ -91,7 +91,7 @@ void EQAPP_HotButtonKeys_Execute()
             {
                 EQ_CLASS_POINTER_CHotButtonWnd->DoHotButton(7, 0);
 
-                g_hotButtonKeysTimer = currentTime;
+                g_HotButtonKeysTimer = currentTime;
                 return;
             }
 
@@ -99,7 +99,7 @@ void EQAPP_HotButtonKeys_Execute()
             {
                 EQ_CLASS_POINTER_CHotButtonWnd->DoHotButton(8, 0);
 
-                g_hotButtonKeysTimer = currentTime;
+                g_HotButtonKeysTimer = currentTime;
                 return;
             }
 
@@ -107,7 +107,7 @@ void EQAPP_HotButtonKeys_Execute()
             {
                 EQ_CLASS_POINTER_CHotButtonWnd->DoHotButton(9, 1);
 
-                g_hotButtonKeysTimer = currentTime;
+                g_HotButtonKeysTimer = currentTime;
                 return;
             }
         }
@@ -116,15 +116,15 @@ void EQAPP_HotButtonKeys_Execute()
 
 void EQAPP_HotButtonKeys_SetModifierToAlt()
 {
-    g_hotButtonKeysModifier = VK_ALT;
+    g_HotButtonKeysModifier = VK_ALT;
 }
 
 void EQAPP_HotButtonKeys_SetModifierToControl()
 {
-    g_hotButtonKeysModifier = VK_CONTROL;
+    g_HotButtonKeysModifier = VK_CONTROL;
 }
 
 void EQAPP_HotButtonKeys_SetModifierToShift()
 {
-    g_hotButtonKeysModifier = VK_SHIFT;
+    g_HotButtonKeysModifier = VK_SHIFT;
 }

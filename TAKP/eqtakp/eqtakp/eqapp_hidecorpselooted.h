@@ -1,14 +1,14 @@
 #pragma once
 
-bool g_hideCorpseLootedIsEnabled = true;
+bool g_HideCorpseLootedIsEnabled = true;
 
 void EQAPP_HideCorpseLooted_Toggle();
 void EQAPP_HideCorpseLooted_HandleEvent_CLootWnd__Deactivate(void* this_ptr);
 
 void EQAPP_HideCorpseLooted_Toggle()
 {
-    EQ_ToggleBool(g_hideCorpseLootedIsEnabled);
-    EQAPP_PrintBool("Hide Corpse Looted", g_hideCorpseLootedIsEnabled);
+    EQ_ToggleBool(g_HideCorpseLootedIsEnabled);
+    EQAPP_PrintBool("Hide Corpse Looted", g_HideCorpseLootedIsEnabled);
 }
 
 void EQAPP_HideCorpseLooted_HandleEvent_CLootWnd__Deactivate(void* this_ptr)

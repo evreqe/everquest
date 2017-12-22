@@ -1,8 +1,8 @@
 #pragma once
 
-bool g_autoStandIsEnabled = true;
+bool g_AutoStandIsEnabled = true;
 
-bool g_autoStandWhenCastSpellIsEnabled = true;
+bool g_AutoStandWhenCastSpellIsEnabled = true;
 
 void EQAPP_AutoStand_HandleEvent_EQ_Character__CastSpell(void* this_ptr, uint8_t spellGemIndex, EQ_SpellID_t spellID, EQ::Item** item, uint16_t unknown);
 

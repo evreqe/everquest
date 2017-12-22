@@ -1,18 +1,18 @@
 #pragma once
 
-bool g_waterHackIsEnabled = false;
+bool g_WaterHackIsEnabled = false;
 
-std::vector<std::string> g_waterHackTextureFileNameList;
+std::vector<std::string> g_WaterHackTextureFileNameList;
 
 void EQAPP_WaterHack_Toggle();
 void EQAPP_WaterHack_Load();
 
 void EQAPP_WaterHack_Toggle()
 {
-    EQ_ToggleBool(g_waterHackIsEnabled);
-    EQAPP_PrintBool("Water Hack", g_waterHackIsEnabled);
+    EQ_ToggleBool(g_WaterHackIsEnabled);
+    EQAPP_PrintBool("Water Hack", g_WaterHackIsEnabled);
 
-    EQ_GraphicsDLL_SetUseTNL(g_waterHackIsEnabled);
+    EQ_GraphicsDLL_SetUseTNL(g_WaterHackIsEnabled);
 }
 
 void EQAPP_WaterHack_Load()
@@ -26,13 +26,13 @@ void EQAPP_WaterHack_Load()
         return;
     }
 
-    g_waterHackTextureFileNameList.clear();
-    g_waterHackTextureFileNameList.reserve(100);
+    g_WaterHackTextureFileNameList.clear();
+    g_WaterHackTextureFileNameList.reserve(100);
 
-    EQAPP_ReadFileToList("waterhack.txt", g_waterHackTextureFileNameList);
+    EQAPP_ReadFileToList("waterhack.txt", g_WaterHackTextureFileNameList);
 
     std::stringstream filePath;
     filePath << "waterhack/" << zoneShortName << ".txt";
 
-    EQAPP_ReadFileToList(filePath.str().c_str(), g_waterHackTextureFileNameList);
+    EQAPP_ReadFileToList(filePath.str().c_str(), g_WaterHackTextureFileNameList);
 }

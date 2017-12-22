@@ -1,8 +1,8 @@
 #pragma once
 
-bool g_levelOfDetailIsEnabled = false;
+bool g_LevelOfDetailIsEnabled = false;
 
-float g_levelOfDetailDistance = 400.0f;
+float g_LevelOfDetailDistance = 400.0f;
 
 void EQAPP_LevelOfDetail_Toggle();
 
@@ -11,8 +11,8 @@ bool EQAPP_LevelOfDetail_HandleEvent_EQGraphicsDLL__s3dPaintDMSprite2(int* world
 
 void EQAPP_LevelOfDetail_Toggle()
 {
-    EQ_ToggleBool(g_levelOfDetailIsEnabled);
-    EQAPP_PrintBool("Level of Detail", g_levelOfDetailIsEnabled);
+    EQ_ToggleBool(g_LevelOfDetailIsEnabled);
+    EQAPP_PrintBool("Level of Detail", g_LevelOfDetailIsEnabled);
 }
 
 bool EQAPP_LevelOfDetail_HandleEvent_EQGraphicsDLL__t3dPaintHierarchicalSprite(int* world, int* renderContext, EQ::ActorInstance_ptr actorInstance)
@@ -25,7 +25,7 @@ bool EQAPP_LevelOfDetail_HandleEvent_EQGraphicsDLL__t3dPaintHierarchicalSprite(i
 
     if (actorInstance->Flags & 0x10000000) // ignore players/npcs, only cull objects
     {
-        if (EQ_IsWithinDistance(playerSpawn->X, playerSpawn->Y, actorInstance->X, actorInstance->Y, g_levelOfDetailDistance) == false)
+        if (EQ_IsWithinDistance(playerSpawn->X, playerSpawn->Y, actorInstance->X, actorInstance->Y, g_LevelOfDetailDistance) == false)
         {
             return true;
         }
@@ -48,13 +48,13 @@ bool EQAPP_LevelOfDetail_HandleEvent_EQGraphicsDLL__s3dPaintDMSprite2(int* world
 
     EQ::ActorInstance_ptr actorInstance = (EQ::ActorInstance_ptr)unknown2;
 
-    //if (actorInstance->Flags & 0x20000000) // TODO
-    //{
-        if (EQ_IsWithinDistance(playerSpawn->X, playerSpawn->Y, actorInstance->X, actorInstance->Y, g_levelOfDetailDistance) == false)
+    ////if (actorInstance->Flags & 0x20000000) // TODO
+    ////{
+        if (EQ_IsWithinDistance(playerSpawn->X, playerSpawn->Y, actorInstance->X, actorInstance->Y, g_LevelOfDetailDistance) == false)
         {
             return true;
         }
-    //}
+    ////}
 
     return false;
 }

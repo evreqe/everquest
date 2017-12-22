@@ -143,9 +143,27 @@
 #define EQ_SPAWN_TYPE_NPC_PET       253 // custom unique value for pets
 #define EQ_SPAWN_TYPE_ANY_CORPSE    254 // custom unique value for hide corpse looted
 
-#define EQ_SPAWN_TARGET_TYPE_CAN_TARGET     0x00
-#define EQ_SPAWN_TARGET_TYPE_CAN_TARGET_2   0x01
-#define EQ_SPAWN_TARGET_TYPE_CANNOT_TARGET  0x41
+#define EQ_SPAWN_BODY_TYPE_UNKNOWN           0
+#define EQ_SPAWN_BODY_TYPE_HUMANOID          1
+#define EQ_SPAWN_BODY_TYPE_LYCANTHROPE       2
+#define EQ_SPAWN_BODY_TYPE_UNDEAD            3
+#define EQ_SPAWN_BODY_TYPE_GIANT             4
+#define EQ_SPAWN_BODY_TYPE_CONSTRUCT         5
+#define EQ_SPAWN_BODY_TYPE_EXTRAPLANAR       6
+#define EQ_SPAWN_BODY_TYPE_MAGICAL           7
+#define EQ_SPAWN_BODY_TYPE_VAMPYRE           12
+#define EQ_SPAWN_BODY_TYPE_ATENHA_RA         13
+#define EQ_SPAWN_BODY_TYPE_GREATER_AKHEVA    14
+#define EQ_SPAWN_BODY_TYPE_KHATI_SHA         15
+#define EQ_SPAWN_BODY_TYPE_ZEK               19
+#define EQ_SPAWN_BODY_TYPE_ANIMAL            21
+#define EQ_SPAWN_BODY_TYPE_INSECT            22
+#define EQ_SPAWN_BODY_TYPE_MONSTER           23
+#define EQ_SPAWN_BODY_TYPE_ELEMENTAL         24
+#define EQ_SPAWN_BODY_TYPE_PLANT             25
+#define EQ_SPAWN_BODY_TYPE_DRAGON            26
+#define EQ_SPAWN_BODY_TYPE_SUMMONED_CREATURE 28
+#define EQ_SPAWN_BODY_TYPE_CANNOT_TARGET     66
 
 #define EQ_ADDRESS_POINTER_CAMERA_DATA 0x0063B924 // pass this as first argument to graphics DLL world space to screen space funtion
 
@@ -182,6 +200,8 @@
 #define EQ_BUFF_TYPE_DETRIMENTAL           0
 #define EQ_BUFF_TYPE_BENEFICIAL            1
 #define EQ_BUFF_TYPE_BENEFICIAL_GROUP_ONLY 2
+
+#define EQ_HUNGER_AND_THIRST_MAX 32000
 
 #define EQ_GENDER_MALE   0x00
 #define EQ_GENDER_FEMALE 0x01
@@ -1348,7 +1368,7 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_ITEM_DEFINITION_NAME =
     {23, "Halberd"},
     {24, "2H Hammer"},
     {25, "2H Battle Axe"},
-    {26, "Icy Blade(P)"},
+    {26, "Icy Blade"},
     {27, "Book"},
     {28, "Open Book"},
     {29, "Writhing Staff"},
@@ -1498,6 +1518,31 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_ITEM_DEFINITION_NAME =
     {230, "Vah Shir Shield"},
     {10201, "Book Staff"},
     {11501, "Drum"},
+};
+
+std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_SPAWN_BODY_TYPE =
+{
+    {0, "Unknown"},
+    {1, "Humanoid"},
+    {2, "Lycanthrope"},
+    {3, "Undead"},
+    {4, "Giant"},
+    {5, "Construct"},
+    {6, "Extraplanar"},
+    {7, "Magical"},
+    {12, "Vampyre"},
+    {13, "Atenha Ra"},
+    {14, "Greater Akheva"},
+    {15, "Khati Sha"},
+    {19, "Zek"},
+    {21, "Animal"},
+    {22, "Insect"},
+    {23, "Monster"},
+    {24, "Elemental"},
+    {25, "Plant"},
+    {26, "Dragon"},
+    {28, "Summoned Creature"},
+    {66, "Cannot Target"},
 };
 
 // zones that are dungeons with multiple levels and monsters

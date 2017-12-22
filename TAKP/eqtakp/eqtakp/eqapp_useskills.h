@@ -1,23 +1,23 @@
 #pragma once
 
-bool g_useSkillsIsEnabled = true;
+bool g_UseSkillsIsEnabled = true;
 
-bool g_useSkillsSenseHeadingIsEnabled = false;
-bool g_useSkillsForageIsEnabled = false;
-bool g_useSkillsTauntIsEnabled = false;
-bool g_useSkillsKickIsEnabled = false;
-bool g_useSkillsBashIsEnabled = false;
-bool g_useSkillsSlamIsEnabled = false;
-bool g_useSkillsDisarmIsEnabled = false;
-bool g_useSkillsBackstabIsEnabled = false;
-bool g_useSkillsRoundKickIsEnabled = false;
-bool g_useSkillsFeignDeathIsEnabled = false;
-bool g_useSkillsMendIsEnabled = false;
+bool g_UseSkillsSenseHeadingIsEnabled = false;
+bool g_UseSkillsForageIsEnabled = false;
+bool g_UseSkillsTauntIsEnabled = false;
+bool g_UseSkillsKickIsEnabled = false;
+bool g_UseSkillsBashIsEnabled = false;
+bool g_UseSkillsSlamIsEnabled = false;
+bool g_UseSkillsDisarmIsEnabled = false;
+bool g_UseSkillsBackstabIsEnabled = false;
+bool g_UseSkillsRoundKickIsEnabled = false;
+bool g_UseSkillsFeignDeathIsEnabled = false;
+bool g_UseSkillsMendIsEnabled = false;
 
-uint32_t g_useSkillsTimer = 0;
-uint32_t g_useSkillsTimerDelay = 1000;
+uint32_t g_UseSkillsTimer = 0;
+uint32_t g_UseSkillsTimerDelay = 1000;
 
-float g_useSkillsBackstabDistanceMaximum = 10.0f;
+float g_UseSkillsBackstabDistanceMaximum = 10.0f;
 
 void EQAPP_UseSkills_Toggle();
 void EQAPP_UseSkills_SenseHeading_Toggle();
@@ -36,92 +36,92 @@ void EQAPP_UseSkills_Execute();
 
 void EQAPP_UseSkills_Toggle()
 {
-    EQ_ToggleBool(g_useSkillsIsEnabled);
-    EQAPP_PrintBool("Use Skills", g_useSkillsIsEnabled);
+    EQ_ToggleBool(g_UseSkillsIsEnabled);
+    EQAPP_PrintBool("Use Skills", g_UseSkillsIsEnabled);
 }
 
 void EQAPP_UseSkills_SenseHeading_Toggle()
 {
-    EQ_ToggleBool(g_useSkillsSenseHeadingIsEnabled);
-    EQAPP_PrintBool("Use Skills (Sense Heading)", g_useSkillsSenseHeadingIsEnabled);
+    EQ_ToggleBool(g_UseSkillsSenseHeadingIsEnabled);
+    EQAPP_PrintBool("Use Skills (Sense Heading)", g_UseSkillsSenseHeadingIsEnabled);
 }
 
 void EQAPP_UseSkills_Forage_Toggle()
 {
-    EQ_ToggleBool(g_useSkillsForageIsEnabled);
-    EQAPP_PrintBool("Use Skills (Forage)", g_useSkillsForageIsEnabled);
+    EQ_ToggleBool(g_UseSkillsForageIsEnabled);
+    EQAPP_PrintBool("Use Skills (Forage)", g_UseSkillsForageIsEnabled);
 }
 
 void EQAPP_UseSkills_Taunt_Toggle()
 {
-    EQ_ToggleBool(g_useSkillsTauntIsEnabled);
-    EQAPP_PrintBool("Use Skills (Taunt)", g_useSkillsTauntIsEnabled);
+    EQ_ToggleBool(g_UseSkillsTauntIsEnabled);
+    EQAPP_PrintBool("Use Skills (Taunt)", g_UseSkillsTauntIsEnabled);
 }
 
 void EQAPP_UseSkills_Kick_Toggle()
 {
-    EQ_ToggleBool(g_useSkillsKickIsEnabled);
-    EQAPP_PrintBool("Use Skills (Kick)", g_useSkillsKickIsEnabled);
+    EQ_ToggleBool(g_UseSkillsKickIsEnabled);
+    EQAPP_PrintBool("Use Skills (Kick)", g_UseSkillsKickIsEnabled);
 
-    if (g_useSkillsKickIsEnabled == true)
+    if (g_UseSkillsKickIsEnabled == true)
     {
-        g_useSkillsBashIsEnabled = false;
-        g_useSkillsSlamIsEnabled = false;
+        g_UseSkillsBashIsEnabled = false;
+        g_UseSkillsSlamIsEnabled = false;
     }
 }
 
 void EQAPP_UseSkills_Bash_Toggle()
 {
-    EQ_ToggleBool(g_useSkillsBashIsEnabled);
-    EQAPP_PrintBool("Use Skills (Bash)", g_useSkillsBashIsEnabled);
+    EQ_ToggleBool(g_UseSkillsBashIsEnabled);
+    EQAPP_PrintBool("Use Skills (Bash)", g_UseSkillsBashIsEnabled);
 
-    if (g_useSkillsBashIsEnabled == true)
+    if (g_UseSkillsBashIsEnabled == true)
     {
-        g_useSkillsKickIsEnabled = false;
-        g_useSkillsSlamIsEnabled = false;
+        g_UseSkillsKickIsEnabled = false;
+        g_UseSkillsSlamIsEnabled = false;
     }
 }
 
 void EQAPP_UseSkills_Slam_Toggle()
 {
-    EQ_ToggleBool(g_useSkillsSlamIsEnabled);
-    EQAPP_PrintBool("Use Skills (Slam)", g_useSkillsSlamIsEnabled);
+    EQ_ToggleBool(g_UseSkillsSlamIsEnabled);
+    EQAPP_PrintBool("Use Skills (Slam)", g_UseSkillsSlamIsEnabled);
 
-    if (g_useSkillsSlamIsEnabled == true)
+    if (g_UseSkillsSlamIsEnabled == true)
     {
-        g_useSkillsKickIsEnabled = false;
-        g_useSkillsBashIsEnabled = false;
+        g_UseSkillsKickIsEnabled = false;
+        g_UseSkillsBashIsEnabled = false;
     }
 }
 
 void EQAPP_UseSkills_Disarm_Toggle()
 {
-    EQ_ToggleBool(g_useSkillsDisarmIsEnabled);
-    EQAPP_PrintBool("Use Skills (Disarm): ", g_useSkillsDisarmIsEnabled);
+    EQ_ToggleBool(g_UseSkillsDisarmIsEnabled);
+    EQAPP_PrintBool("Use Skills (Disarm): ", g_UseSkillsDisarmIsEnabled);
 }
 
 void EQAPP_UseSkills_Backstab_Toggle()
 {
-    EQ_ToggleBool(g_useSkillsBackstabIsEnabled);
-    EQAPP_PrintBool("Use Skills (Backstab): ", g_useSkillsBackstabIsEnabled);
+    EQ_ToggleBool(g_UseSkillsBackstabIsEnabled);
+    EQAPP_PrintBool("Use Skills (Backstab): ", g_UseSkillsBackstabIsEnabled);
 }
 
 void EQAPP_UseSkills_RoundKick_Toggle()
 {
-    EQ_ToggleBool(g_useSkillsRoundKickIsEnabled);
-    EQAPP_PrintBool("Use Skills (Round Kick): ", g_useSkillsRoundKickIsEnabled);
+    EQ_ToggleBool(g_UseSkillsRoundKickIsEnabled);
+    EQAPP_PrintBool("Use Skills (Round Kick): ", g_UseSkillsRoundKickIsEnabled);
 }
 
 void EQAPP_UseSkills_FeignDeath_Toggle()
 {
-    EQ_ToggleBool(g_useSkillsFeignDeathIsEnabled);
-    EQAPP_PrintBool("Use Skills (Feign Death): ", g_useSkillsFeignDeathIsEnabled);
+    EQ_ToggleBool(g_UseSkillsFeignDeathIsEnabled);
+    EQAPP_PrintBool("Use Skills (Feign Death): ", g_UseSkillsFeignDeathIsEnabled);
 }
 
 void EQAPP_UseSkills_Mend_Toggle()
 {
-    EQ_ToggleBool(g_useSkillsMendIsEnabled);
-    EQAPP_PrintBool("Use Skills (Mend): ", g_useSkillsMendIsEnabled);
+    EQ_ToggleBool(g_UseSkillsMendIsEnabled);
+    EQAPP_PrintBool("Use Skills (Mend): ", g_UseSkillsMendIsEnabled);
 }
 
 void EQAPP_UseSkills_Load()
@@ -132,28 +132,28 @@ void EQAPP_UseSkills_Load()
         return;
     }
 
-    g_useSkillsSenseHeadingIsEnabled = false;
-    g_useSkillsForageIsEnabled = false;
-    g_useSkillsTauntIsEnabled = false;
-    g_useSkillsKickIsEnabled = false;
-    g_useSkillsBashIsEnabled = false;
-    g_useSkillsSlamIsEnabled = false;
-    g_useSkillsDisarmIsEnabled = false;
-    g_useSkillsBackstabIsEnabled = false;
-    g_useSkillsRoundKickIsEnabled = false;
-    g_useSkillsFeignDeathIsEnabled = false;
-    g_useSkillsMendIsEnabled = false;
+    g_UseSkillsSenseHeadingIsEnabled = false;
+    g_UseSkillsForageIsEnabled = false;
+    g_UseSkillsTauntIsEnabled = false;
+    g_UseSkillsKickIsEnabled = false;
+    g_UseSkillsBashIsEnabled = false;
+    g_UseSkillsSlamIsEnabled = false;
+    g_UseSkillsDisarmIsEnabled = false;
+    g_UseSkillsBackstabIsEnabled = false;
+    g_UseSkillsRoundKickIsEnabled = false;
+    g_UseSkillsFeignDeathIsEnabled = false;
+    g_UseSkillsMendIsEnabled = false;
 
-    if (playerSpawn->Class == EQ_CLASS_WARRIOR || playerSpawn->Class == EQ_CLASS_PALADIN || playerSpawn->Class == EQ_CLASS_SHADOWKNIGHT)
+    if (EQ_CanClassUseTauntSkill(playerSpawn->Class) == true)
     {
-        g_useSkillsTauntIsEnabled = true;
+        g_UseSkillsTauntIsEnabled = true;
     }
 
     if (playerSpawn->Class == EQ_CLASS_WARRIOR)
     {
-        g_useSkillsKickIsEnabled = true;
-        g_useSkillsBashIsEnabled = false;
-        g_useSkillsSlamIsEnabled = false;
+        g_UseSkillsKickIsEnabled = true;
+        g_UseSkillsBashIsEnabled = false;
+        g_UseSkillsSlamIsEnabled = false;
     }
 
     if
@@ -164,37 +164,37 @@ void EQAPP_UseSkills_Load()
         playerSpawn->Class == EQ_CLASS_SHAMAN
     )
     {
-        if (playerSpawn->Race == EQ_RACE_BARBARIAN || playerSpawn->Race == EQ_RACE_OGRE || playerSpawn->Race == EQ_RACE_TROLL)
+        if (EQ_CanRaceUseSlamSkill(playerSpawn->Race) == true)
         {
-            g_useSkillsKickIsEnabled = false;
-            g_useSkillsBashIsEnabled = false;
-            g_useSkillsSlamIsEnabled = true;
+            g_UseSkillsKickIsEnabled = false;
+            g_UseSkillsBashIsEnabled = false;
+            g_UseSkillsSlamIsEnabled = true;
         }
         else
         {
-            g_useSkillsKickIsEnabled = false;
-            g_useSkillsBashIsEnabled = true;
-            g_useSkillsSlamIsEnabled = false;
+            g_UseSkillsKickIsEnabled = false;
+            g_UseSkillsBashIsEnabled = true;
+            g_UseSkillsSlamIsEnabled = false;
         }
     }
 
     if (playerSpawn->Class == EQ_CLASS_ROGUE)
     {
-        g_useSkillsBackstabIsEnabled = true;
+        g_UseSkillsBackstabIsEnabled = true;
     }
 
     if (playerSpawn->Class == EQ_CLASS_MONK)
     {
-        g_useSkillsRoundKickIsEnabled = true;
-        g_useSkillsKickIsEnabled = false;
-        g_useSkillsBashIsEnabled = false;
-        g_useSkillsSlamIsEnabled = false;
+        g_UseSkillsRoundKickIsEnabled = true;
+        g_UseSkillsKickIsEnabled = false;
+        g_UseSkillsBashIsEnabled = false;
+        g_UseSkillsSlamIsEnabled = false;
     }
 }
 
 void EQAPP_UseSkills_Execute()
 {
-    if (EQ_HasTimePassed(g_useSkillsTimer, g_useSkillsTimerDelay) == false)
+    if (EQ_HasTimePassed(g_UseSkillsTimer, g_UseSkillsTimerDelay) == false)
     {
         return;
     }
@@ -205,12 +205,12 @@ void EQAPP_UseSkills_Execute()
         return;
     }
 
-    if (g_useSkillsSenseHeadingIsEnabled == true)
+    if (g_UseSkillsSenseHeadingIsEnabled == true)
     {
         EQ_UseSkill(EQ_SKILL_SENSE_HEADING, NULL);
     }
 
-    if (g_useSkillsForageIsEnabled == true)
+    if (g_UseSkillsForageIsEnabled == true)
     {
         if (EQ_IsAutoAttackEnabled() == false && playerSpawn->StandingState == EQ_STANDING_STATE_STANDING)
         {
@@ -231,32 +231,32 @@ void EQAPP_UseSkills_Execute()
 
             if (targetSpawnDistance <= targetSpawnMeleeDistance)
             {
-                if (g_useSkillsKickIsEnabled == true)
+                if (g_UseSkillsKickIsEnabled == true)
                 {
                     EQ_UseSkill(EQ_SKILL_KICK, (EQClass::EQPlayer*)targetSpawn);
                 }
 
-                if (g_useSkillsBashIsEnabled == true)
+                if (g_UseSkillsBashIsEnabled == true)
                 {
                     EQ_UseSkill(EQ_SKILL_BASH, (EQClass::EQPlayer*)targetSpawn);
                 }
 
-                if (g_useSkillsDisarmIsEnabled == true)
+                if (g_UseSkillsDisarmIsEnabled == true)
                 {
                     EQ_UseSkill(EQ_SKILL_DISARM, (EQClass::EQPlayer*)targetSpawn);
                 }
 
-                if (playerSpawn->Class == EQ_CLASS_WARRIOR || playerSpawn->Class == EQ_CLASS_PALADIN || playerSpawn->Class == EQ_CLASS_SHADOWKNIGHT)
+                if (EQ_CanClassUseTauntSkill(playerSpawn->Class) == true)
                 {
-                    if (g_useSkillsTauntIsEnabled == true)
+                    if (g_UseSkillsTauntIsEnabled == true)
                     {
                         EQ_UseSkill(EQ_SKILL_TAUNT, (EQClass::EQPlayer*)targetSpawn);
                     }
                 }
 
-                if (playerSpawn->Race == EQ_RACE_BARBARIAN || playerSpawn->Race == EQ_RACE_OGRE || playerSpawn->Race == EQ_RACE_TROLL)
+                if (EQ_CanRaceUseSlamSkill(playerSpawn->Race) == true)
                 {
-                    if (g_useSkillsSlamIsEnabled == true)
+                    if (g_UseSkillsSlamIsEnabled == true)
                     {
                         EQ_UseSkill(EQ_SKILL_SLAM, (EQClass::EQPlayer*)targetSpawn);
                     }
@@ -264,9 +264,9 @@ void EQAPP_UseSkills_Execute()
 
                 if (playerSpawn->Class == EQ_CLASS_ROGUE)
                 {
-                    if (g_useSkillsBackstabIsEnabled == true)
+                    if (g_UseSkillsBackstabIsEnabled == true)
                     {
-                        if (targetSpawnDistance <= g_useSkillsBackstabDistanceMaximum)
+                        if (targetSpawnDistance <= g_UseSkillsBackstabDistanceMaximum)
                         {
                             if (EQ_IsSpawnBehindSpawn(playerSpawn, targetSpawn) == true)
                             {
@@ -278,7 +278,7 @@ void EQAPP_UseSkills_Execute()
 
                 if (playerSpawn->Class == EQ_CLASS_MONK)
                 {
-                    if (g_useSkillsRoundKickIsEnabled == true)
+                    if (g_UseSkillsRoundKickIsEnabled == true)
                     {
                         EQ_UseSkill(EQ_SKILL_ROUND_KICK, (EQClass::EQPlayer*)targetSpawn);
                     }
@@ -287,7 +287,7 @@ void EQAPP_UseSkills_Execute()
         }
     }
 
-    if (g_useSkillsFeignDeathIsEnabled == true)
+    if (g_UseSkillsFeignDeathIsEnabled == true)
     {
         if (playerSpawn->Class == EQ_CLASS_MONK)
         {
@@ -297,7 +297,7 @@ void EQAPP_UseSkills_Execute()
 
     if (EQ_IsAutoAttackEnabled() == false)
     {
-        if (g_useSkillsMendIsEnabled == true)
+        if (g_UseSkillsMendIsEnabled == true)
         {
             if (playerSpawn->Class == EQ_CLASS_MONK)
             {

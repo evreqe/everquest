@@ -1,8 +1,8 @@
 #pragma once
 
-bool g_merchantWindowIsEnabled = true;
+bool g_MerchantWindowIsEnabled = true;
 
-unsigned int g_merchantWindowFontSize = 1;
+unsigned int g_MerchantWindowFontSize = 1;
 
 void EQAPP_MerchantWindow_Toggle();
 void EQAPP_MerchantWindow_AppendSpellLevelToToolTipText_HandleEvent_CMerchantWnd__PostDraw(void* this_ptr);
@@ -10,8 +10,8 @@ void EQAPP_MerchantWindow_AppendSpellLevelToItemSlot_HandleEvent_CMerchantWnd__P
 
 void EQAPP_MerchantWindow_Toggle()
 {
-    EQ_ToggleBool(g_merchantWindowIsEnabled);
-    EQAPP_PrintBool("Merchant Window", g_merchantWindowIsEnabled);
+    EQ_ToggleBool(g_MerchantWindowIsEnabled);
+    EQAPP_PrintBool("Merchant Window", g_MerchantWindowIsEnabled);
 }
 
 void EQAPP_MerchantWindow_AppendSpellLevelToToolTipText_HandleEvent_CMerchantWnd__PostDraw(void* this_ptr)
@@ -59,7 +59,7 @@ void EQAPP_MerchantWindow_AppendSpellLevelToToolTipText_HandleEvent_CMerchantWnd
             continue;
         }
 
-        auto spellLevelNeeded = spell->Level[playerClass - 1];
+        uint32_t spellLevelNeeded = spell->Level[playerClass - 1];
         if (spellLevelNeeded == EQ_SPELL_LEVEL_NEEDED_CANNOT_USE)
         {
             continue;
@@ -90,7 +90,12 @@ void EQAPP_MerchantWindow_AppendSpellLevelToToolTipText_HandleEvent_CMerchantWnd
             signed int spellBookIndex = EQ_GetSpellBookSpellIndexBySpellID(spellID);
             if (spellBookIndex != -1)
             {
-                newToolTipText << "*";
+                newToolTipText << " *";
+            }
+
+            if (EQ_IsItemIDInBags(item->ID) == true)
+            {
+                newToolTipText << " $";
             }
 
             newToolTipText << ")";
@@ -150,7 +155,7 @@ void EQAPP_MerchantWindow_AppendSpellLevelToItemSlot_HandleEvent_CMerchantWnd__P
             continue;
         }
 
-        auto spellLevelNeeded = spell->Level[playerClass - 1];
+        uint32_t spellLevelNeeded = spell->Level[playerClass - 1];
         if (spellLevelNeeded == EQ_SPELL_LEVEL_NEEDED_CANNOT_USE)
         {
             continue;
@@ -206,7 +211,12 @@ void EQAPP_MerchantWindow_AppendSpellLevelToItemSlot_HandleEvent_CMerchantWnd__P
             newToolTipText << " *";
         }
 
-        merchantSlotWnd->Window.Font->Size = g_merchantWindowFontSize;
+        if (EQ_IsItemIDInBags(item->ID) == true)
+        {
+            newToolTipText << " $";
+        }
+
+        merchantSlotWnd->Window.Font->Size = g_MerchantWindowFontSize;
 
         EQ_CXStr_Set(&merchantSlotWnd->Window.ToolTipText, newToolTipText.str().c_str());
 

@@ -1,8 +1,8 @@
 #pragma once
 
-bool g_collisionHackIsEnabled = false;
+bool g_CollisionHackIsEnabled = false;
 
-bool g_collisionHackDebugIsEnabled = false;
+bool g_CollisionHackDebugIsEnabled = false;
 
 void EQAPP_CollisionHack_Toggle();
 void EQAPP_CollisionHack_Debug_Toggle();
@@ -10,10 +10,10 @@ void EQAPP_CollisionHack_HandleEvent_CollisionCallbackForMove(EQ::ActorInstance_
 
 void EQAPP_CollisionHack_Toggle()
 {
-    EQ_ToggleBool(g_collisionHackIsEnabled);
-    EQAPP_PrintBool("Collision Hack", g_collisionHackIsEnabled);
+    EQ_ToggleBool(g_CollisionHackIsEnabled);
+    EQAPP_PrintBool("Collision Hack", g_CollisionHackIsEnabled);
 
-    if (g_collisionHackIsEnabled == true)
+    if (g_CollisionHackIsEnabled == true)
     {
         EQ_SetActorCollision(false);
 
@@ -29,8 +29,8 @@ void EQAPP_CollisionHack_Toggle()
 
 void EQAPP_CollisionHack_Debug_Toggle()
 {
-    EQ_ToggleBool(g_collisionHackDebugIsEnabled);
-    EQAPP_PrintBool("Collision Hack Debug", g_collisionHackDebugIsEnabled);
+    EQ_ToggleBool(g_CollisionHackDebugIsEnabled);
+    EQAPP_PrintBool("Collision Hack Debug", g_CollisionHackDebugIsEnabled);
 }
 
 void EQAPP_CollisionHack_HandleEvent_CollisionCallbackForMove(EQ::ActorInstance_ptr actorInstance, EQ::Spawn_ptr spawn)
@@ -56,7 +56,7 @@ void EQAPP_CollisionHack_HandleEvent_CollisionCallbackForMove(EQ::ActorInstance_
         return;
     }
 
-    if (g_collisionHackDebugIsEnabled == true)
+    if (g_CollisionHackDebugIsEnabled == true)
     {
         std::cout << "Collision Hack Debug:" << std::endl;
         std::cout << "Name: " << actorInstance->ActorDefinition->Name << std::endl;

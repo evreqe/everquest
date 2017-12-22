@@ -22,29 +22,29 @@ namespace EQApp
     } NetworkStats, *NetworkStats_ptr;
 }
 
-bool g_networkStatsIsEnabled = true;
+bool g_NetworkStatsIsEnabled = true;
 
-std::vector<std::string> g_networkStatsPlayerList;
-std::vector<EQApp::NetworkStats> g_networkStatsList;
+std::vector<std::string> g_NetworkStatsPlayerList;
+std::vector<EQApp::NetworkStats> g_NetworkStatsList;
 
-float g_networkStatsDrawBarSpawnDistanceMax = 200.0f;
+float g_NetworkStatsDrawBarSpawnDistanceMax = 200.0f;
 
-float g_networkStatsDrawBarWidth = 64.0f;
-float g_networkStatsDrawBarHeight = 8.0f;
+float g_NetworkStatsDrawBarWidth = 64.0f;
+float g_NetworkStatsDrawBarHeight = 8.0f;
 
-uint32_t g_networkStatsDrawBarBackgroundColorARGB = 0x80000000;
-uint32_t g_networkStatsDrawBarBorderColorARGB     = 0xFF000000;
-uint32_t g_networkStatsDrawBarHPColorARGB         = 0x80FF0000;
-uint32_t g_networkStatsDrawBarManaColorARGB       = 0x800080FF;
+uint32_t g_NetworkStatsDrawBarBackgroundColorARGB = 0x80000000;
+uint32_t g_NetworkStatsDrawBarBorderColorARGB     = 0xFF000000;
+uint32_t g_NetworkStatsDrawBarHPColorARGB         = 0x80FF0000;
+uint32_t g_NetworkStatsDrawBarManaColorARGB       = 0x800080FF;
 
-uint32_t g_networkStatsDrawTextX = 8;
-uint32_t g_networkStatsDrawTextY = 64;
+uint32_t g_NetworkStatsDrawTextX = 8;
+uint32_t g_NetworkStatsDrawTextY = 64;
 
-uint32_t g_networkStatsDrawTextBuffsX = 100;
-uint32_t g_networkStatsDrawTextBuffsY = 300;
+uint32_t g_NetworkStatsDrawTextBuffsX = 100;
+uint32_t g_NetworkStatsDrawTextBuffsY = 300;
 
-uint32_t g_networkStatsTimer = 0;
-uint32_t g_networkStatsTimerDelay = 1000;
+uint32_t g_NetworkStatsTimer = 0;
+uint32_t g_NetworkStatsTimerDelay = 1000;
 
 void EQAPP_NetworkStats_Load();
 void EQAPP_NetworkStats_DrawBar(EQApp::NetworkStats& networkStats, EQ::Spawn_ptr spawn, bool spawnIsPet);
@@ -56,18 +56,18 @@ EQApp::NetworkStats EQAPP_NetworkStats_Read(std::string spawnName);
 
 void EQAPP_NetworkStats_Toggle()
 {
-    EQ_ToggleBool(g_networkStatsIsEnabled);
-    EQAPP_PrintBool("Network Stats", g_networkStatsIsEnabled);
+    EQ_ToggleBool(g_NetworkStatsIsEnabled);
+    EQAPP_PrintBool("Network Stats", g_NetworkStatsIsEnabled);
 }
 
 void EQAPP_NetworkStats_Load()
 {
     std::cout << "Loading Network Stats players..." << std::endl;
 
-    g_networkStatsPlayerList.clear();
-    g_networkStatsPlayerList.reserve(100);
+    g_NetworkStatsPlayerList.clear();
+    g_NetworkStatsPlayerList.reserve(100);
 
-    EQAPP_ReadFileToList("networkstats.txt", g_networkStatsPlayerList);
+    EQAPP_ReadFileToList("networkstats.txt", g_NetworkStatsPlayerList);
 }
 
 void EQAPP_NetworkStats_DrawBar(EQApp::NetworkStats& networkStats, EQ::Spawn_ptr spawn, bool spawnIsPet)
@@ -145,42 +145,42 @@ void EQAPP_NetworkStats_DrawBar(EQApp::NetworkStats& networkStats, EQ::Spawn_ptr
         return;
     }
 
-    float halfWidth = g_networkStatsDrawBarWidth * 0.5f;
+    float halfWidth = g_NetworkStatsDrawBarWidth * 0.5f;
 
     screenX = screenX - halfWidth;
 
-    float HPWidth = g_networkStatsDrawBarWidth * HPPercent;
-    float manaWidth = g_networkStatsDrawBarWidth * manaPercent;
+    float HPWidth = g_NetworkStatsDrawBarWidth * HPPercent;
+    float manaWidth = g_NetworkStatsDrawBarWidth * manaPercent;
 
     if (bDrawMana == true)
     {
-        float halfHeight = g_networkStatsDrawBarHeight * 0.5f;
+        float halfHeight = g_NetworkStatsDrawBarHeight * 0.5f;
 
         // transparent background
-        EQ_DrawRectangle(screenX, screenY, g_networkStatsDrawBarWidth, g_networkStatsDrawBarHeight, g_networkStatsDrawBarBackgroundColorARGB, true);
+        EQ_DrawRectangle(screenX, screenY, g_NetworkStatsDrawBarWidth, g_NetworkStatsDrawBarHeight, g_NetworkStatsDrawBarBackgroundColorARGB, true);
 
         // red hp
-        EQ_DrawRectangle(screenX, screenY, HPWidth, halfHeight, g_networkStatsDrawBarHPColorARGB, true);
+        EQ_DrawRectangle(screenX, screenY, HPWidth, halfHeight, g_NetworkStatsDrawBarHPColorARGB, true);
 
         // black hp border
-        EQ_DrawRectangle(screenX, screenY, g_networkStatsDrawBarWidth, halfHeight, g_networkStatsDrawBarBorderColorARGB, false);
+        EQ_DrawRectangle(screenX, screenY, g_NetworkStatsDrawBarWidth, halfHeight, g_NetworkStatsDrawBarBorderColorARGB, false);
 
         // blue mana
-        EQ_DrawRectangle(screenX, screenY + halfHeight, manaWidth, halfHeight, g_networkStatsDrawBarManaColorARGB, true);
+        EQ_DrawRectangle(screenX, screenY + halfHeight, manaWidth, halfHeight, g_NetworkStatsDrawBarManaColorARGB, true);
 
         // black mana border
-        EQ_DrawRectangle(screenX, screenY + halfHeight, g_networkStatsDrawBarWidth, halfHeight, g_networkStatsDrawBarBorderColorARGB, false);
+        EQ_DrawRectangle(screenX, screenY + halfHeight, g_NetworkStatsDrawBarWidth, halfHeight, g_NetworkStatsDrawBarBorderColorARGB, false);
     }
     else
     {
         // transparent background
-        EQ_DrawRectangle(screenX, screenY, g_networkStatsDrawBarWidth, g_networkStatsDrawBarHeight, g_networkStatsDrawBarBackgroundColorARGB, true);
+        EQ_DrawRectangle(screenX, screenY, g_NetworkStatsDrawBarWidth, g_NetworkStatsDrawBarHeight, g_NetworkStatsDrawBarBackgroundColorARGB, true);
 
         // red hp
-        EQ_DrawRectangle(screenX, screenY, HPWidth, g_networkStatsDrawBarHeight, g_networkStatsDrawBarHPColorARGB, true);
+        EQ_DrawRectangle(screenX, screenY, HPWidth, g_NetworkStatsDrawBarHeight, g_NetworkStatsDrawBarHPColorARGB, true);
 
         // black hp border
-        EQ_DrawRectangle(screenX, screenY, g_networkStatsDrawBarWidth, g_networkStatsDrawBarHeight, g_networkStatsDrawBarBorderColorARGB, false);
+        EQ_DrawRectangle(screenX, screenY, g_NetworkStatsDrawBarWidth, g_NetworkStatsDrawBarHeight, g_NetworkStatsDrawBarBorderColorARGB, false);
     }
 }
 
@@ -191,9 +191,9 @@ void EQAPP_NetworkStats_DrawBars()
         return;
     }
 
-    for (auto& networkStats : g_networkStatsList)
+    for (auto& networkStats : g_NetworkStatsList)
     {
-        if (networkStats.SpawnDistance > g_networkStatsDrawBarSpawnDistanceMax)
+        if (networkStats.SpawnDistance > g_NetworkStatsDrawBarSpawnDistanceMax)
         {
             continue;
         }
@@ -232,7 +232,7 @@ void EQAPP_NetworkStats_DrawText()
 
     std::stringstream drawText;
 
-    for (auto& networkStats : g_networkStatsList)
+    for (auto& networkStats : g_NetworkStatsList)
     {
         ////if (networkStats.SpawnID == playerSpawn->SpawnID)
         ////{
@@ -257,12 +257,12 @@ void EQAPP_NetworkStats_DrawText()
         drawText << "\n";
     }
 
-    EQ_DrawText(drawText.str().c_str(), g_networkStatsDrawTextX, g_networkStatsDrawTextY, EQ_COLOR_ARGB_WHITE);
+    EQ_DrawText(drawText.str().c_str(), g_NetworkStatsDrawTextX, g_NetworkStatsDrawTextY, EQ_COLOR_ARGB_WHITE);
 
-    uint32_t drawTextBuffsX = g_networkStatsDrawTextBuffsX;
-    uint32_t drawTextBuffsY = g_networkStatsDrawTextBuffsY;
+    uint32_t drawTextBuffsX = g_NetworkStatsDrawTextBuffsX;
+    uint32_t drawTextBuffsY = g_NetworkStatsDrawTextBuffsY;
 
-    for (auto& networkStats : g_networkStatsList)
+    for (auto& networkStats : g_NetworkStatsList)
     {
         if (networkStats.SpawnID == playerSpawn->SpawnID)
         {
@@ -318,7 +318,7 @@ void EQAPP_NetworkStats_Execute()
         return;
     }
 
-    if (EQ_HasTimePassed(g_networkStatsTimer, g_networkStatsTimerDelay) == false)
+    if (EQ_HasTimePassed(g_NetworkStatsTimer, g_NetworkStatsTimerDelay) == false)
     {
         return;
     }
@@ -331,10 +331,10 @@ void EQAPP_NetworkStats_Execute()
 
     EQAPP_NetworkStats_Write();
 
-    g_networkStatsList.clear();
-    g_networkStatsList.reserve(10);
+    g_NetworkStatsList.clear();
+    g_NetworkStatsList.reserve(10);
 
-    for (auto& spawnName : g_networkStatsPlayerList)
+    for (auto& spawnName : g_NetworkStatsPlayerList)
     {
         auto spawn = EQ_GetSpawnByName(spawnName);
         if (spawn == NULL)
@@ -349,7 +349,7 @@ void EQAPP_NetworkStats_Execute()
 
         if (networkStats.ErrorCode == 0)
         {
-            g_networkStatsList.push_back(networkStats);
+            g_NetworkStatsList.push_back(networkStats);
         }
     }
 }
@@ -379,7 +379,7 @@ void EQAPP_NetworkStats_Write()
     }
 
     std::stringstream filePath;
-    filePath << g_applicationName << "/networkstats/" << spawnName << ".txt";
+    filePath << g_EQAppName << "/networkstats/" << spawnName << ".txt";
 
     std::string filePathStr = filePath.str();
 
@@ -455,7 +455,7 @@ EQApp::NetworkStats EQAPP_NetworkStats_Read(std::string spawnName)
     }
 
     std::stringstream filePath;
-    filePath << g_applicationName << "/networkstats/" << spawnName << ".txt";
+    filePath << g_EQAppName << "/networkstats/" << spawnName << ".txt";
 
     std::string filePathStr = filePath.str();
 

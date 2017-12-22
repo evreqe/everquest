@@ -24,51 +24,51 @@ void EQAPP_HUDText_Execute()
         text << "Players in Zone: " << numPlayersInZone << "\n";
     }
 
-    if (g_boxChatIsConnected == true)
+    if (g_BoxChatIsConnected == true)
     {
         text << "Box Chat is connected.\n";
     }
 
-    if (g_hotButtonKeysIsEnabled == true)
+    if (g_HotButtonKeysIsEnabled == true)
     {
-        if (g_hotButtonKeysModifier == VK_ALT)
+        if (g_HotButtonKeysModifier == VK_ALT)
         {
             text << "Hot Button Keys: ALT\n";
         }
-        else if (g_hotButtonKeysModifier == VK_CONTROL)
+        else if (g_HotButtonKeysModifier == VK_CONTROL)
         {
             text << "Hot Button Keys: CONTROL\n";
         }
-        else if (g_hotButtonKeysModifier == VK_SHIFT)
+        else if (g_HotButtonKeysModifier == VK_SHIFT)
         {
             text << "Hot Button Keys: SHIFT\n";
         }
     }
 
-    if (g_alwaysAttackIsEnabled == true)
+    if (g_AlwaysAttackIsEnabled == true)
     {
         text << "Always Attack: On\n";
     }
 
-    if (g_foodAndDrinkIsEnabled == true)
+    if (g_FoodAndDrinkIsEnabled == true)
     {
         text << "Food and Drink: On\n";
     }
 
-    if (g_freeCameraIsEnabled == true)
+    if (g_FreeCameraIsEnabled == true)
     {
         text << "Free Camera: On\n";
     }
 
-    if (g_collisionHackIsEnabled == true)
+    if (g_CollisionHackIsEnabled == true)
     {
         text << "Collision Hack: On\n";
     }
 
-    if (g_trainSpellsIsEnabled == true)
+    if (g_TrainSpellsIsEnabled == true)
     {
         text << "Train Spells: On\n";
-        text << "Train Spell: " << g_trainSpellsSpellName << "\n";
+        text << "Train Spell: " << g_TrainSpellsSpellName << "\n";
     }
 
     EQ_DrawText(text.str().c_str(), g_HUDTextX, g_HUDTextY, EQ_COLOR_ARGB_WHITE);

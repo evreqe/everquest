@@ -1,6 +1,6 @@
 #pragma once
 
-bool g_toggleViewIsEnabled = true;
+bool g_ToggleViewIsEnabled = true;
 
 void EQAPP_ToggleView_HandleEvent_CDisplay__ToggleView(void* this_ptr);
 

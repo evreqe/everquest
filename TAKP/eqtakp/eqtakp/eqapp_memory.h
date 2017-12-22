@@ -12,12 +12,12 @@ namespace EQApp
     } Memory, *Memory_ptr;
 }
 
-bool g_memoryIsEnabled = true;
+bool g_MemoryIsEnabled = true;
 
-std::vector<EQApp::Memory> g_memoryList;
+std::vector<EQApp::Memory> g_MemoryList;
 
-uint32_t g_memoryFilesMax = 255;
-uint32_t g_memoryAddressesMax = 8;
+uint32_t g_MemoryFilesMax = 255;
+uint32_t g_MemoryAddressesMax = 8;
 
 void EQAPP_Memory_Load();
 void EQAPP_Memory_Unload();
@@ -29,25 +29,25 @@ void EQAPP_Memory_Load()
 {
     std::cout << "Loading Memory..." << std::endl;
 
-    g_memoryList.clear();
-    g_memoryList.reserve(100);
+    g_MemoryList.clear();
+    g_MemoryList.reserve(100);
 
     std::stringstream filePathINI;
-    filePathINI << g_applicationName << "/memory.ini";
+    filePathINI << g_EQAppName << "/memory.ini";
 
     std::string filePathINIStr = filePathINI.str();
 
     const char* filePathINICStr = filePathINIStr.c_str();
 
-    g_memoryIsEnabled = EQAPP_INI_ReadBool(filePathINICStr, "Memory", "bEnabled", 1);
+    g_MemoryIsEnabled = EQAPP_INI_ReadBool(filePathINICStr, "Memory", "bEnabled", 1);
 
-    if (g_memoryIsEnabled == false)
+    if (g_MemoryIsEnabled == false)
     {
         EQAPP_PrintErrorMessage(__FUNCTION__, "memory is disabled");
         return;
     }
 
-    for (size_t i = 0; i < g_memoryFilesMax; i++)
+    for (size_t i = 0; i < g_MemoryFilesMax; i++)
     {
         std::stringstream ssFilename;
         ssFilename << "sFilename" << i;
@@ -60,7 +60,7 @@ void EQAPP_Memory_Load()
         }
 
         std::stringstream filePathMemory;
-        filePathMemory << g_applicationName << "/memory/" << filename << ".ini";
+        filePathMemory << g_EQAppName << "/memory/" << filename << ".ini";
 
         std::stringstream ssEnabled;
         ssEnabled << "bEnabled" << i;
@@ -75,10 +75,10 @@ void EQAPP_Memory_Load()
         memory.Name           = EQAPP_INI_ReadString(filePathMemory.str().c_str(), "Memory", "Name", "");
         memory.Description    = EQAPP_INI_ReadString(filePathMemory.str().c_str(), "Memory", "Description", "");
         
-        g_memoryList.push_back(memory);
+        g_MemoryList.push_back(memory);
     }
 
-    for (auto& memory : g_memoryList)
+    for (auto& memory : g_MemoryList)
     {
         if (memory.Enabled == true)
         {
@@ -93,7 +93,7 @@ void EQAPP_Memory_Unload()
 {
     std::cout << "Unloading Memory..." << std::endl;
 
-    for (auto& memory : g_memoryList)
+    for (auto& memory : g_MemoryList)
     {
         EQAPP_Memory_Set(&memory, false);
     }
@@ -109,7 +109,7 @@ void EQAPP_Memory_Set(EQApp::Memory* pMemory, bool bEnable)
 
     pMemory->Enabled = bEnable;
 
-    for (size_t i = 0; i < g_memoryAddressesMax; i++)
+    for (size_t i = 0; i < g_MemoryAddressesMax; i++)
     {
         std::stringstream ssFilename;
         ssFilename << pMemory->Filename.c_str();
@@ -149,7 +149,7 @@ void EQAPP_Memory_Set(EQApp::Memory* pMemory, bool bEnable)
         {
             baseAddress = EQ_ADDRESS_BASE;
         }
-        else if (sAddress.find(EQ_STRING_GRAPHICS_DLL_NAME) != std::string::npos || sAddress.find(EQ_STRING_GRAPHICS_DLL_NAME_LOWERCASE) != std::string::npos)
+        else if (sAddress.find(g_EQGraphicsDLLName) != std::string::npos || sAddress.find(g_EQGraphicsDLLNameLowercase) != std::string::npos)
         {
             baseAddress = EQ_ReadMemory<DWORD>(EQ_ADDRESS_GRAPHICS_DLL_POINTER_BASE);
         }
@@ -203,7 +203,7 @@ void EQAPP_Memory_Set(EQApp::Memory* pMemory, bool bEnable)
 
 void EQAPP_Memory_ToggleByIndex(uint32_t index)
 {
-    if (index > (g_memoryList.size() - 1))
+    if (index > (g_MemoryList.size() - 1))
     {
         std::stringstream ss;
         ss << "no memory found at specified index: " << index;
@@ -212,7 +212,7 @@ void EQAPP_Memory_ToggleByIndex(uint32_t index)
         return;
     }
 
-    EQApp::Memory* pMemory = &g_memoryList.at(index);
+    EQApp::Memory* pMemory = &g_MemoryList.at(index);
     EQ_ToggleBool(pMemory->Enabled);
     EQAPP_Memory_Set(pMemory, pMemory->Enabled);
     EQAPP_PrintBool(pMemory->Name.c_str(), pMemory->Enabled);
@@ -223,7 +223,7 @@ void EQAPP_Memory_Print()
     std::cout << "Memory List:" << std::endl;
     std::cout << "Index : Enabled : Name (Description)" << std::endl;
 
-    for (auto& memory : g_memoryList)
+    for (auto& memory : g_MemoryList)
     {
         std::cout << "#" << memory.Index << " : " << memory.Enabled << " : " << memory.Name << " (" << memory.Description << ")" << std::endl;
     }

@@ -1,16 +1,16 @@
 #pragma once
 
-bool g_nameSpriteTintIsEnabled = true;
+bool g_NameSpriteTintIsEnabled = true;
 
-static int g_nameSpriteTintFlash = 0;
+static int g_NameSpriteTintFlash = 0;
 
 void EQAPP_NameSpriteTint_Toggle();
 bool EQAPP_NameSpriteTint_HandleEvent_CDisplay__SetNameSpriteTint(void* this_ptr, class EQPlayer* player);
 
 void EQAPP_NameSpriteTint_Toggle()
 {
-    EQ_ToggleBool(g_nameSpriteTintIsEnabled);
-    EQAPP_PrintBool("Name Sprite Tint", g_nameSpriteTintIsEnabled);
+    EQ_ToggleBool(g_NameSpriteTintIsEnabled);
+    EQAPP_PrintBool("Name Sprite Tint", g_NameSpriteTintIsEnabled);
 }
 
 bool EQAPP_NameSpriteTint_HandleEvent_CDisplay__SetNameSpriteTint(void* this_ptr, class EQPlayer* player)
@@ -118,9 +118,9 @@ bool EQAPP_NameSpriteTint_HandleEvent_CDisplay__SetNameSpriteTint(void* this_ptr
         uint8_t g = spawn->Actor->ModelBoneHeadPoint->StringSprite->Color.G;
         uint8_t b = spawn->Actor->ModelBoneHeadPoint->StringSprite->Color.B;
 
-        uint8_t rr = (int)(g_nameSpriteTintFlash * ((255 - r) * 0.1f)); // / 10
-        uint8_t gg = (int)(g_nameSpriteTintFlash * ((255 - g) * 0.1f)); // / 10
-        uint8_t bb = (int)(g_nameSpriteTintFlash * ((255 - b) * 0.1f)); // / 10
+        uint8_t rr = (int)(g_NameSpriteTintFlash * ((255 - r) * 0.1f)); // / 10
+        uint8_t gg = (int)(g_NameSpriteTintFlash * ((255 - g) * 0.1f)); // / 10
+        uint8_t bb = (int)(g_NameSpriteTintFlash * ((255 - b) * 0.1f)); // / 10
 
         uint8_t rrr = 0;
 
@@ -147,13 +147,13 @@ bool EQAPP_NameSpriteTint_HandleEvent_CDisplay__SetNameSpriteTint(void* this_ptr
         spawn->Actor->ModelBoneHeadPoint->StringSprite->Color.G = ggg;
         spawn->Actor->ModelBoneHeadPoint->StringSprite->Color.B = bbb;
 
-        if (g_nameSpriteTintFlash >= 10)
+        if (g_NameSpriteTintFlash >= 10)
         {
-            g_nameSpriteTintFlash = 0;
+            g_NameSpriteTintFlash = 0;
         }
         else
         {
-            g_nameSpriteTintFlash++;
+            g_NameSpriteTintFlash++;
         }
     }
 

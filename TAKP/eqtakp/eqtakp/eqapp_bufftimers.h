@@ -1,8 +1,8 @@
 #pragma once
 
-bool g_buffTimersIsEnabled = true;
+bool g_BuffTimersIsEnabled = true;
 
-unsigned int g_buffTimersFontSize = 1;
+unsigned int g_BuffTimersFontSize = 1;
 
 void EQAPP_BuffTimers_HandleEvent_CBuffWindow__RefreshBuffDisplay(void* this_ptr);
 void EQAPP_BuffTimers_HandleEvent_CBuffWindow__PostDraw(void* this_ptr);
@@ -66,7 +66,7 @@ void EQAPP_BuffTimers_HandleEvent_CBuffWindow__PostDraw(void* this_ptr)
         {
             if (buffButtonWnd->Window.ToolTipText != NULL && buffButtonWnd->Window.Font != NULL)
             {
-                buffButtonWnd->Window.Font->Size = g_buffTimersFontSize;
+                buffButtonWnd->Window.Font->Size = g_BuffTimersFontSize;
 
                 std::string originalToolTipText = buffButtonWnd->Window.ToolTipText->Text;
 

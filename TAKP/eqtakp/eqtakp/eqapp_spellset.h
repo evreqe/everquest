@@ -10,9 +10,9 @@ namespace EQApp
     } SpellSetData, *SpellSetData_ptr;
 }
 
-bool g_spellSetIsEnabled = true;
-bool g_spellSetIsMemorizingInProgress = false;
-std::vector<EQApp::SpellSetData> g_spellSetList;
+bool g_SpellSetIsEnabled = true;
+bool g_SpellSetIsMemorizingInProgress = false;
+std::vector<EQApp::SpellSetData> g_SpellSetList;
 
 void EQAPP_SpellSet_Load(const std::string& spellSetName);
 void EQAPP_SpellSet_Save(const std::string& spellSetName);
@@ -51,11 +51,11 @@ void EQAPP_SpellSet_Load(const std::string& spellSetName)
 
     EQAPP_SpellSet_StopMemorizing();
 
-    g_spellSetList.clear();
-    g_spellSetList.reserve(10);
+    g_SpellSetList.clear();
+    g_SpellSetList.reserve(10);
 
     std::stringstream filePath;
-    filePath << g_applicationName << "/spellsets/" << spawnName << "_" << spellSetName << ".ini";
+    filePath << g_EQAppName << "/spellsets/" << spawnName << "_" << spellSetName << ".ini";
 
     std::cout << "Loading spell set from file: " << filePath.str() << std::endl;
 
@@ -90,7 +90,7 @@ void EQAPP_SpellSet_Load(const std::string& spellSetName)
 
         spellSetData.SpellName = EQAPP_INI_ReadString(filePath.str().c_str(), "SpellSet", ssSpellName.str().c_str(), "(null)");
 
-        g_spellSetList.push_back(spellSetData);
+        g_SpellSetList.push_back(spellSetData);
     }
 }
 
@@ -119,7 +119,7 @@ void EQAPP_SpellSet_Save(const std::string& spellSetName)
     }
 
     std::stringstream filePath;
-    filePath << g_applicationName << "/spellsets/" << spawnName << "_" << spellSetName << ".ini";
+    filePath << g_EQAppName << "/spellsets/" << spawnName << "_" << spellSetName << ".ini";
 
     std::string filePathStr = filePath.str();
 
@@ -172,7 +172,7 @@ void EQAPP_SpellSet_Save_Default()
 
 void EQAPP_SpellSet_StartMemorizing()
 {
-    if (g_spellSetList.size() == 0)
+    if (g_SpellSetList.size() == 0)
     {
         EQAPP_SpellSet_StopMemorizing();
         return;
@@ -196,14 +196,14 @@ void EQAPP_SpellSet_StartMemorizing()
         ((EQClass::EQPlayer*)playerSpawn)->ChangePosition(EQ_STANDING_STATE_SITTING);
     }
 
-    g_spellSetIsMemorizingInProgress = true;
+    g_SpellSetIsMemorizingInProgress = true;
 
     EQAPP_SpellSet_Memorize();
 }
 
 void EQAPP_SpellSet_StopMemorizing()
 {
-    g_spellSetIsMemorizingInProgress = false;
+    g_SpellSetIsMemorizingInProgress = false;
 }
 
 void EQAPP_SpellSet_LoadAndStartMemorizing()
@@ -214,7 +214,7 @@ void EQAPP_SpellSet_LoadAndStartMemorizing()
 
 void EQAPP_SpellSet_Memorize()
 {
-    if (g_spellSetList.size() == 0)
+    if (g_SpellSetList.size() == 0)
     {
         EQAPP_SpellSet_StopMemorizing();
         return;
@@ -226,7 +226,7 @@ void EQAPP_SpellSet_Memorize()
         return;
     }
 
-    if (g_bIsMemorizingSpell == true)
+    if (g_EQAppIsMemorizingSpell == true)
     {
         return;
     }
@@ -251,7 +251,7 @@ void EQAPP_SpellSet_Memorize()
 
     bool bWasAbleToMemorizeSpell = false;
 
-    for (auto& spellSetData : g_spellSetList)
+    for (auto& spellSetData : g_SpellSetList)
     {
         auto spellGemSpellID = playerSpawn->Character->SpellGemSpellID[spellSetData.SpellGemIndex];
         if (EQ_IsSpellIDValid(spellGemSpellID) == false)
@@ -291,7 +291,7 @@ void EQAPP_SpellSet_HandleEvent_EQPlayer__ChangePosition(void* this_ptr, EQ_Stan
     {
         if (standingState != EQ_STANDING_STATE_SITTING)
         {
-            g_bIsMemorizingSpell = false;
+            g_EQAppIsMemorizingSpell = false;
 
             EQAPP_SpellSet_StopMemorizing();
         }
@@ -300,7 +300,7 @@ void EQAPP_SpellSet_HandleEvent_EQPlayer__ChangePosition(void* this_ptr, EQ_Stan
 
 void EQAPP_SpellSet_HandleEvent_CSpellBookWnd__FinishMemorizing(void* this_ptr, EQ_SpellGemIndex_t spellGemIndex, EQ_SpellID_t spellID)
 {
-    if (g_spellSetIsMemorizingInProgress == true)
+    if (g_SpellSetIsMemorizingInProgress == true)
     {
         EQAPP_SpellSet_Memorize();
     }

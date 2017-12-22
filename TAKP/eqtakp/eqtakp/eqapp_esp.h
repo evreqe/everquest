@@ -15,6 +15,7 @@ namespace EQApp
         int Level;
         int Type;
         int Race;
+        int BodyType;
         int Class;
         std::string ClassShortName;
         int GuildID;
@@ -55,6 +56,7 @@ bool g_ESPShowNamedSpawnsOnly = false;
 
 bool g_ESPShowSpawnID = false;
 bool g_ESPShowSpawnRace = false;
+bool g_ESPShowSpawnBodyType = false;
 bool g_ESPShowSpawnStandingState = true;
 bool g_ESPShowSpawnWeapon = false;
 
@@ -84,6 +86,7 @@ void EQAPP_ESP_Actors_Toggle();
 void EQAPP_ESP_SpawnSkeletons_Toggle();
 void EQAPP_ESP_ShowSpawnID_Toggle();
 void EQAPP_ESP_ShowSpawnRace_Toggle();
+void EQAPP_ESP_ShowSpawnBodyType_Toggle();
 void EQAPP_ESP_ShowSpawnWeapon_Toggle();
 void EQAPP_ESP_ShowActorIndex_Toggle();
 void EQAPP_ESP_DrawLineBetweenBones(EQ::ModelBone_ptr bone1, EQ::ModelBone_ptr bone2, uint32_t lineColorARGB);
@@ -144,6 +147,12 @@ void EQAPP_ESP_ShowSpawnRace_Toggle()
 {
     EQ_ToggleBool(g_ESPShowSpawnRace);
     EQAPP_PrintBool("ESP Show Spawn Race", g_ESPShowSpawnRace);
+}
+
+void EQAPP_ESP_ShowSpawnBodyType_Toggle()
+{
+    EQ_ToggleBool(g_ESPShowSpawnBodyType);
+    EQAPP_PrintBool("ESP Show Spawn Body Type", g_ESPShowSpawnBodyType);
 }
 
 void EQAPP_ESP_ShowSpawnWeapon_Toggle()
@@ -322,6 +331,7 @@ void EQAPP_ESP_UpdateSpawnList()
         espSpawn.Level = spawn->Level;
         espSpawn.Type = spawn->Type;
         espSpawn.Race = spawn->Race;
+        espSpawn.BodyType = spawn->BodyType;
         espSpawn.Class = spawn->Class;
         espSpawn.ClassShortName = EQ_GetClassShortName(spawn->Class);
         espSpawn.GuildID = spawn->GuildID;
@@ -380,9 +390,9 @@ void EQAPP_ESP_UpdateSpawnList()
             espSpawn.IsYourPet = true;
         }
 
-        if (g_namedSpawnsIsEnabled == true)
+        if (g_NamedSpawnsIsEnabled == true)
         {
-            for (auto& name : g_namedSpawnsList)
+            for (auto& name : g_NamedSpawnsList)
             {
                 if (espSpawn.Name.find(name) != std::string::npos)
                 {
@@ -402,9 +412,9 @@ void EQAPP_ESP_UpdateSpawnList()
             }
         }
 
-        if (g_spawnAlertIsEnabled == true && g_spawnAlertShowNewSpawn == true)
+        if (g_SpawnAlertIsEnabled == true && g_SpawnAlertShowNewSpawn == true)
         {
-            for (auto& spawnID : g_spawnAlertNewSpawnIDList)
+            for (auto& spawnID : g_SpawnAlertNewSpawnIDList)
             {
                 if (spawnID == espSpawn.SpawnID)
                 {
@@ -497,6 +507,12 @@ void EQAPP_ESP_UpdateSpawnList()
                 espSpawn.TextColorARGB = EQ_COLOR_ARGB_GREEN_BLUE;
                 espSpawn.SkeletonLineColorARGB = EQ_COLOR_ARGB_WHITE;
             }
+        }
+
+        if (EQ_IsSpawnTargetable(spawn) == false)
+        {
+            espSpawn.TextColorARGB = EQ_COLOR_ARGB_WHITE;
+            espSpawn.SkeletonLineColorARGB = EQ_COLOR_ARGB_WHITE;
         }
 
         if (spawn == targetSpawn)
@@ -604,6 +620,23 @@ void EQAPP_ESP_UpdateSpawnList()
             espText << "\n(Race: " << espSpawn.Race << ")";
         }
 
+        if (g_ESPShowSpawnBodyType == true)
+        {
+            espText << "\n(Body Type: ";
+
+                auto it = EQ_STRING_MAP_SPAWN_BODY_TYPE.find(espSpawn.BodyType);
+                if (it == EQ_STRING_MAP_SPAWN_BODY_TYPE.end())
+                {
+                    espText << espSpawn.BodyType;
+                }
+                else
+                {
+                    espText << it->second;
+                }
+
+            espText << ")";
+        }
+
         if (g_ESPShowSpawnWeapon == true)
         {
             if (espSpawn.IsHoldingPrimaryItem == true)
@@ -620,7 +653,7 @@ void EQAPP_ESP_UpdateSpawnList()
                     espText << it->second;
                 }
 
-                espText << "*";
+                espText << ")";
             }
 
             if (espSpawn.IsHoldingSecondaryItem == true)
@@ -641,9 +674,9 @@ void EQAPP_ESP_UpdateSpawnList()
             }
         }
 
-        if (g_spawnCastSpellIsEnabled == true && g_spawnCastSpellESPIsEnabled == true)
+        if (g_SpawnCastSpellIsEnabled == true && g_SpawnCastSpellESPIsEnabled == true)
         {
-            for (auto& spawnCastSpell : g_spawnCastSpellList)
+            for (auto& spawnCastSpell : g_SpawnCastSpellList)
             {
                 if (spawnCastSpell->Spawn == NULL)
                 {

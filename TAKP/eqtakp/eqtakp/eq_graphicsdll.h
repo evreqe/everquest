@@ -2,8 +2,8 @@
 
 #include "eq.h"
 
-const char* EQ_STRING_GRAPHICS_DLL_NAME           = "EQGfx_Dx8.dll";
-const char* EQ_STRING_GRAPHICS_DLL_NAME_LOWERCASE = "eqgfx_dx8.dll";
+const char* g_EQGraphicsDLLName          = "EQGfx_Dx8.dll";
+const char* g_EQGraphicsDLLNameLowercase = "eqgfx_dx8.dll";
 
 #define EQ_ADDRESS_GRAPHICS_DLL_POINTER_BASE 0x007F9C50
 
@@ -14,15 +14,15 @@ IDirect3DDevice8** EQ_CLASS_POINTER_IDirect3DDevice8_pptr = (IDirect3DDevice8**)
 
 uintptr_t* EQ_VTABLE_IDirect3DDevice8 = *(uintptr_t**)EQ_CLASS_POINTER_IDirect3DDevice8;
 
-#define EQ_VTABLE_INDEX_IDirect3DDevice8__Reset 14
-#define EQ_VTABLE_INDEX_IDirect3DDevice8__Present 15
-#define EQ_VTABLE_INDEX_IDirect3DDevice8__BeginScene 34
-#define EQ_VTABLE_INDEX_IDirect3DDevice8__EndScene 35
-#define EQ_VTABLE_INDEX_IDirect3DDevice8__Clear 36
-#define EQ_VTABLE_INDEX_IDirect3DDevice8__SetRenderState 50
-#define EQ_VTABLE_INDEX_IDirect3DDevice8__DrawPrimitive 70
+#define EQ_VTABLE_INDEX_IDirect3DDevice8__Reset                14
+#define EQ_VTABLE_INDEX_IDirect3DDevice8__Present              15
+#define EQ_VTABLE_INDEX_IDirect3DDevice8__BeginScene           34
+#define EQ_VTABLE_INDEX_IDirect3DDevice8__EndScene             35
+#define EQ_VTABLE_INDEX_IDirect3DDevice8__Clear                36
+#define EQ_VTABLE_INDEX_IDirect3DDevice8__SetRenderState       50
+#define EQ_VTABLE_INDEX_IDirect3DDevice8__DrawPrimitive        70
 #define EQ_VTABLE_INDEX_IDirect3DDevice8__DrawIndexedPrimitive 71
-#define EQ_VTABLE_INDEX_IDirect3DDevice8__SetStreamSource 83
+#define EQ_VTABLE_INDEX_IDirect3DDevice8__SetStreamSource      83
 
 uint32_t EQ_ADDRESS_FUNCTION_EQIDirect3DDevice8__Reset = NULL;
 uint32_t EQ_ADDRESS_FUNCTION_EQIDirect3DDevice8__Present = NULL;
@@ -75,7 +75,7 @@ uint32_t EQ_ADDRESS_FUNCTION_EQGraphicsDLL__s3dPaintDMSprite2 = NULL;
 #define EQ_GRAPHICS_DLL_ACTOR_LIST_ACTOR_OFFSET_ACTOR_INSTANCE 0x10
 
 // set render state
-typedef HRESULT (APIENTRY* EQ_FUNCTION_TYPE_EQIDirect3DDevice8__SetRenderState)
+typedef HRESULT (__stdcall* EQ_FUNCTION_TYPE_EQIDirect3DDevice8__SetRenderState)
 (
     D3DRENDERSTATETYPE state,
     DWORD value
@@ -83,7 +83,7 @@ typedef HRESULT (APIENTRY* EQ_FUNCTION_TYPE_EQIDirect3DDevice8__SetRenderState)
 EQ_FUNCTION_TYPE_EQIDirect3DDevice8__SetRenderState EQIDirect3DDevice8__SetRenderState;
 
 // draw indexed primitive
-typedef HRESULT (APIENTRY* EQ_FUNCTION_TYPE_EQIDirect3DDevice8__DrawIndexedPrimitive)
+typedef HRESULT (__stdcall* EQ_FUNCTION_TYPE_EQIDirect3DDevice8__DrawIndexedPrimitive)
 (
     LPDIRECT3DDEVICE8 device,
     D3DPRIMITIVETYPE primitiveType,
@@ -95,7 +95,7 @@ typedef HRESULT (APIENTRY* EQ_FUNCTION_TYPE_EQIDirect3DDevice8__DrawIndexedPrimi
 EQ_FUNCTION_TYPE_EQIDirect3DDevice8__DrawIndexedPrimitive EQIDirect3DDevice8__DrawIndexedPrimitive;
 
 // reset
-typedef HRESULT (APIENTRY* EQ_FUNCTION_TYPE_EQIDirect3DDevice8__Reset)
+typedef HRESULT (__stdcall* EQ_FUNCTION_TYPE_EQIDirect3DDevice8__Reset)
 (
     LPDIRECT3DDEVICE8 device,
     D3DPRESENT_PARAMETERS* presentationParameters
@@ -157,6 +157,7 @@ EQ_FUNCTION_TYPE_EQGraphicsDLL__s3dPaintDMSprite2 EQGraphicsDLL__s3dPaintDMSprit
 uint32_t EQ_GraphicsDLL_GetBaseAddress();
 bool EQ_GraphicsDLL_IsShowFPSEnabled();
 void EQ_GraphicsDLL_SetShowFPS(bool bEnabled);
+void EQ_GraphicsDLL_ToggleShowFPS();
 void EQ_GraphicsDLL_SetUseTNL(bool bEnabled);
 void EQ_GraphicsDLL_SetUseUmbra(bool bEnabled);
 bool EQ_GraphicsDLL_LoadFunctions();
@@ -184,6 +185,13 @@ void EQ_GraphicsDLL_SetShowFPS(bool bEnabled)
     }
 
     EQ_WriteMemory<uint32_t>(baseAddress + EQ_GRAPHICS_DLL_OFFSET_TOGGLE_FPS_BOOLEAN, value);
+}
+
+void EQ_GraphicsDLL_ToggleShowFPS()
+{
+    bool bEnabled = EQ_GraphicsDLL_IsShowFPSEnabled();
+
+    EQ_GraphicsDLL_SetShowFPS(!bEnabled);
 }
 
 void EQ_GraphicsDLL_SetUseTNL(bool bEnabled)
@@ -214,7 +222,7 @@ void EQ_GraphicsDLL_SetUseUmbra(bool bEnabled)
 
 bool EQ_GraphicsDLL_LoadFunctions()
 {
-    HINSTANCE graphicsDLL = LoadLibraryA(EQ_STRING_GRAPHICS_DLL_NAME);
+    HINSTANCE graphicsDLL = LoadLibraryA(g_EQGraphicsDLLName);
     if (graphicsDLL == NULL)
     {
         return false;
