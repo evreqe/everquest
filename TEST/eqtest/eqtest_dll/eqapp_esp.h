@@ -4,6 +4,9 @@ bool g_ESPIsEnabled = false;
 
 float g_ESPDistance = 400.0f;
 
+std::string g_ESPFindSpawnName;
+std::string g_ESPFindSpawnLastName;
+
 void EQAPP_ESP_Toggle();
 void EQAPP_ESP_Execute();
 
@@ -36,6 +39,30 @@ void EQAPP_ESP_Execute()
             continue;
         }
 
+        bool bIgnoreDistance = false;
+
+        char spawnName[EQ_SIZE_SPAWN_NAME];
+        memcpy(spawnName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_NAME), sizeof(spawnName));
+
+        if (g_ESPFindSpawnName.size() != 0)
+        {
+            if (strstr(spawnName, g_ESPFindSpawnName.c_str()) != 0)
+            {
+                bIgnoreDistance = true;
+            }
+        }
+
+        char spawnLastName[EQ_SIZE_SPAWN_LAST_NAME];
+        memcpy(spawnLastName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_LAST_NAME), sizeof(spawnLastName));
+
+        if (g_ESPFindSpawnLastName.size() != 0)
+        {
+            if (strstr(spawnLastName, g_ESPFindSpawnLastName.c_str()) != 0)
+            {
+                bIgnoreDistance = true;
+            }
+        }
+
         float spawnY = EQ_ReadMemory<float>(spawn + EQ_OFFSET_SPAWN_Y);
         float spawnX = EQ_ReadMemory<float>(spawn + EQ_OFFSET_SPAWN_X);
         float spawnZ = EQ_ReadMemory<float>(spawn + EQ_OFFSET_SPAWN_Z);
@@ -43,7 +70,7 @@ void EQAPP_ESP_Execute()
         float spawnDistance = EQ_CalculateDistance(playerSpawnX, playerSpawnY, spawnX, spawnY);
 
         int mouseLook = EQ_ReadMemory<uint8_t>(EQ_ADDRESS_MOUSE_LOOK);
-        if (mouseLook == 0)
+        if (mouseLook == 0 && bIgnoreDistance == false)
         {
             if (spawnDistance > g_ESPDistance)
             {
@@ -58,16 +85,29 @@ void EQAPP_ESP_Execute()
         if (result == true)
         {
             int spawnType = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_TYPE);
-            int spawnLevel = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_LEVEL);
 
-            char spawnName[EQ_SIZE_SPAWN_NAME];
-            memcpy(spawnName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_NAME), sizeof(spawnName));
-
-            if (strstr(spawnName, "`s Mount") != 0)
+            if (spawnType == EQ_SPAWN_TYPE_NPC)
             {
-                spawn = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_NEXT);
-                continue;
+                if (strstr(spawnName, "`s Mount") != 0)
+                {
+                    spawn = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_NEXT);
+                    continue;
+                }
+
+                if (strstr(spawnName, "Aura ") != 0)
+                {
+                    spawn = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_NEXT);
+                    continue;
+                }
+
+                if (strstr(spawnName, " Aura") != 0)
+                {
+                    spawn = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_NEXT);
+                    continue;
+                }
             }
+
+            int spawnLevel = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_LEVEL);
 
             std::stringstream ss;
             ss << "[" << spawnLevel << "] " << spawnName;
@@ -81,9 +121,6 @@ void EQAPP_ESP_Execute()
 
             if (spawnType == EQ_SPAWN_TYPE_NPC)
             {
-                char spawnLastName[EQ_SIZE_SPAWN_LAST_NAME];
-                memcpy(spawnLastName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_LAST_NAME), sizeof(spawnLastName));
-
                 if (strlen(spawnLastName) > 0)
                 {
                     ss << "\n(" << spawnLastName << ")";
@@ -108,6 +145,11 @@ void EQAPP_ESP_Execute()
             if (spawn == targetSpawn)
             {
                 textColor = EQ_DRAW_TEXT_COLOR_PINK;
+            }
+
+            if (bIgnoreDistance == true)
+            {
+                textColor = EQ_DRAW_TEXT_COLOR_GREEN;
             }
 
             EQ_DrawTextEx(ss.str().c_str(), (int)screenX, (int)screenY, textColor);

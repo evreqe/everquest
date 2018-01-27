@@ -89,9 +89,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;EQTEST_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\Code\!libraries\detours;D:\Code\everquest\eqtest\eq;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>D:\Code\!libraries\detours</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -115,7 +117,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;EQTEST_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Code\!libraries\detours;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Code\!libraries\detours;D:\Code\everquest\eqtest\eq;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -145,23 +147,28 @@
     <ClCompile Include="dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="eq.h" />
+    <ClInclude Include="..\eq\eq.h" />
+    <ClInclude Include="..\eq\eq_classes.h" />
+    <ClInclude Include="..\eq\eq_executecmd.h" />
+    <ClInclude Include="..\eq\eq_functions.h" />
+    <ClInclude Include="..\eq\eq_graphicsdll.h" />
+    <ClInclude Include="..\eq\eq_keys.h" />
+    <ClInclude Include="..\eq\eq_macros.h" />
+    <ClInclude Include="..\eq\eq_memory.h" />
+    <ClInclude Include="..\eq\eq_offsets.h" />
+    <ClInclude Include="..\eq\eq_pointers.h" />
+    <ClInclude Include="..\eq\eq_structures.h" />
+    <ClInclude Include="..\eq\eq_types.h" />
     <ClInclude Include="eqapp.h" />
     <ClInclude Include="eqapp_alwaysattack.h" />
     <ClInclude Include="eqapp_boxchat.h" />
+    <ClInclude Include="eqapp_changeheight.h" />
     <ClInclude Include="eqapp_combathotbutton.h" />
     <ClInclude Include="eqapp_console.h" />
     <ClInclude Include="eqapp_detours.h" />
     <ClInclude Include="eqapp_esp.h" />
     <ClInclude Include="eqapp_functions.h" />
     <ClInclude Include="eqapp_interpretcmd.h" />
-    <ClInclude Include="eq_classes.h" />
-    <ClInclude Include="eq_executecmd.h" />
-    <ClInclude Include="eq_functions.h" />
-    <ClInclude Include="eq_keys.h" />
-    <ClInclude Include="eq_macros.h" />
-    <ClInclude Include="eq_memory.h" />
-    <ClInclude Include="eq_structures.h" />
     <ClInclude Include="virtualkeycodes.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

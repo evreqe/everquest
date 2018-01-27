@@ -9,6 +9,7 @@ EQ_MACRO_FUNCTION_DefineDetour(ExecuteCmd);
 EQ_MACRO_FUNCTION_DefineDetour(CXWndManager__DrawWindows);
 
 EQ_MACRO_FUNCTION_DefineDetour(EQPlayer__FollowPlayerAI);
+EQ_MACRO_FUNCTION_DefineDetour(EQPlayer__ChangeHeight);
 
 EQ_MACRO_FUNCTION_DefineDetour(EQ_Character__eqspa_movement_rate);
 
@@ -21,6 +22,7 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown);
 int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawWindows(void* this_ptr, void* not_used);
 
 int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__FollowPlayerAI(void* this_ptr, void* not_used);
+int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__ChangeHeight(void* this_ptr, void* not_used, float height, float a2, float a3, int a4);
 
 int __fastcall EQAPP_DETOURED_FUNCTION_EQ_Character__eqspa_movement_rate(void* this_ptr, void* not_used, int movementSpeed);
 
@@ -34,6 +36,7 @@ void EQAPP_Detours_Load()
     EQ_MACRO_FUNCTION_AddDetour(CXWndManager__DrawWindows);
 
     EQ_MACRO_FUNCTION_AddDetour(EQPlayer__FollowPlayerAI);
+    ////EQ_MACRO_FUNCTION_AddDetour(EQPlayer__ChangeHeight);
 
     ////EQ_MACRO_FUNCTION_AddDetour(EQ_Character__eqspa_movement_rate);
 
@@ -48,6 +51,7 @@ void EQAPP_Detours_Unload()
     EQ_MACRO_FUNCTION_RemoveDetour(CXWndManager__DrawWindows);
 
     EQ_MACRO_FUNCTION_RemoveDetour(EQPlayer__FollowPlayerAI);
+    ////EQ_MACRO_FUNCTION_RemoveDetour(EQPlayer__ChangeHeight);
 
     ////EQ_MACRO_FUNCTION_RemoveDetour(EQ_Character__eqspa_movement_rate);
 
@@ -112,6 +116,13 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
         EQ_DrawText("- ESP", 8, 180);
     }
 
+    if (g_ChangeHeightIsEnabled == true)
+    {
+        EQAPP_ChangeHeight_Execute();
+
+        EQ_DrawText("- Change Height", 8, 200);
+    }
+
 /*
     int drawX = 800;
     int drawY = 200;
@@ -138,6 +149,8 @@ int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive,
     {
         return EQAPP_REAL_FUNCTION_ExecuteCmd(commandID, isActive, unknown, zero);
     }
+
+    std::cout << "ExecuteCmd(): " << commandID << " (Active: " << isActive << ") " << zero << std::endl;
 
 /*
     if (commandID > EQ_EXECUTECMD_ID_LAST)
@@ -183,8 +196,21 @@ int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__FollowPlayerAI(void* this_ptr, 
         return EQAPP_REAL_FUNCTION_EQPlayer__FollowPlayerAI(this_ptr);
     }
 
-    EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_1, 2.5f);
-    EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_2, 2.5f);
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn != NULL)
+    {
+        if ((uint32_t)this_ptr == playerSpawn)
+        {
+            uint32_t followSpawn = EQ_ReadMemory<uint32_t>(playerSpawn + EQ_OFFSET_SPAWN_FOLLOW_SPAWN);
+            if (followSpawn != NULL)
+            {
+                EQ_TurnPlayerTowardsTarget();
+
+                EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_1, 5.0f);
+                EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_2, 5.0f);
+            }
+        }
+    }
 
     int result = EQAPP_REAL_FUNCTION_EQPlayer__FollowPlayerAI(this_ptr);
 
@@ -192,6 +218,25 @@ int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__FollowPlayerAI(void* this_ptr, 
     EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_2, 30.0f);
 
     return result;
+}
+
+int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__ChangeHeight(void* this_ptr, void* not_used, float height, float a2, float a3, int a4)
+{
+    if (g_EQAppShouldUnload == 1)
+    {
+        return EQAPP_REAL_FUNCTION_EQPlayer__ChangeHeight(this_ptr, height, a2, a3, a4);
+    }
+
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn != NULL)
+    {
+        if ((uint32_t)this_ptr == playerSpawn)
+        {
+            std::cout << "EQPlayer__ChangeHeight(): " << height << ", " << a2 << ", " << a3 << ", " << a4;
+        }
+    }
+
+    return EQAPP_REAL_FUNCTION_EQPlayer__ChangeHeight(this_ptr, height, a2, a3, a4);
 }
 
 int __fastcall EQAPP_DETOURED_FUNCTION_EQ_Character__eqspa_movement_rate(void* this_ptr, void* not_used, int movementSpeed)

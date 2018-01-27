@@ -20,6 +20,8 @@ bool EQAPP_String_StartsWith(std::string& subject, const std::string& search);
 std::string EQAPP_String_GetBetween(std::string& subject, const std::string& begin, const std::string& end);
 std::string EQAPP_String_JoinStrings(const std::vector<std::string>& elements, const std::string& separator);
 void EQAPP_String_Split(const std::string& subject, std::vector<std::string>& tokens, char delimiter);
+std::string EQAPP_String_GetBefore(const std::string& subject, const std::string& find);
+std::string EQAPP_String_GetAfter(const std::string& subject, const std::string& find);
 
 int EQAPP_INI_ReadInt(const char* filename, const char* section, const char* key, int defaultValue);
 bool EQAPP_INI_ReadBool(const char* filename, const char* section, const char* key, int defaultValue);
@@ -214,6 +216,32 @@ void EQAPP_String_Split(const std::string& subject, std::vector<std::string>& to
 {
     std::istringstream iss(subject);
     for (std::string token; std::getline(iss, token, delimiter); tokens.push_back(token));
+}
+
+std::string EQAPP_String_GetBefore(const std::string& subject, const std::string& find)
+{
+    std::string result = std::string();
+
+    std::string::size_type pos = subject.find_first_of(find);
+    if (pos != std::string::npos)
+    {
+        result = subject.substr(0, pos);
+    }
+
+    return result;
+}
+
+std::string EQAPP_String_GetAfter(const std::string& subject, const std::string& find)
+{
+    std::string result = std::string();
+
+    std::string::size_type pos = subject.find_first_of(find);
+    if (pos != std::string::npos)
+    {
+        result = subject.substr(pos + 1);
+    }
+
+    return result;
 }
 
 int EQAPP_INI_ReadInt(const char* filename, const char* section, const char* key, int defaultValue)

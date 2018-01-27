@@ -6,6 +6,7 @@
 #include <random>
 
 const char* g_EQAppName = "eqtest";
+const char* g_EQAppNameEx = "EQTest";
 
 volatile int g_EQAppIsLoaded = 0;
 volatile int g_EQAppShouldUnload = 0;

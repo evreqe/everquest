@@ -54,6 +54,7 @@
 
 #include "eqapp_alwaysattack.h"
 #include "eqapp_combathotbutton.h"
+#include "eqapp_changeheight.h"
 #include "eqapp_esp.h"
 #include "eqapp_boxchat.h"
 
@@ -65,14 +66,20 @@ void EQAPP_Load()
 {
     EQAPP_SetWindowTitleToPlayerSpawnName();
 
-    std::cout << "Loaded!" << std::endl;
+    std::chrono::system_clock::time_point timePoint = std::chrono::system_clock::now();
+    std::time_t time = std::chrono::system_clock::to_time_t(timePoint);
+
+    std::cout << g_EQAppNameEx << " Loaded!    " << std::ctime(&time);
 
     g_EQAppIsLoaded = 1;
 }
 
 void EQAPP_Unload()
 {
-    std::cout << "Unloaded!" << std::endl;
+    std::chrono::system_clock::time_point timePoint = std::chrono::system_clock::now();
+    std::time_t time = std::chrono::system_clock::to_time_t(timePoint);
+
+    std::cout << g_EQAppNameEx << " Unloaded!    " << std::ctime(&time);
 
     g_EQAppShouldUnload = 1;
 }
@@ -94,6 +101,7 @@ void EQAPP_InitializeAddressesAndPointers()
 
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_DrawNetStatus);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_ExecuteCmd);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_get_bearing);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_TARGET_SPAWN);
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_PLAYER_SPAWN);
@@ -103,12 +111,13 @@ void EQAPP_InitializeAddressesAndPointers()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName);
 
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight);
 
     EQAPP_FixAddress(EQ_ADDRESS_FOLLOW_DISTANCE_1);
     EQAPP_FixAddress(EQ_ADDRESS_FOLLOW_DISTANCE_2);
 
-    EQAPP_FixAddress(EQ_ADDRESS_POINTER_PLAYER_CHARACTER);
-    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQ_Character__eqspa_movement_rate);
+    ////EQAPP_FixAddress(EQ_ADDRESS_POINTER_PLAYER_CHARACTER);
+    ////EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQ_Character__eqspa_movement_rate);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CXWndManager);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows);
@@ -147,9 +156,12 @@ DWORD WINAPI EQAPP_ThreadLoop(LPVOID param)
             }
             else
             {
-                if (g_EQAppPlayerName.size() != 0)
+                if (g_BoxChatAutoConnect == true)
                 {
-                    EQAPP_BoxChat_Connect(g_EQAppPlayerName);
+                    if (g_EQAppPlayerName.size() != 0)
+                    {
+                        EQAPP_BoxChat_Connect(g_EQAppPlayerName);
+                    }
                 }
             }
         }

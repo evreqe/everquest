@@ -10,21 +10,13 @@
 #include <psapi.h>
 #pragma comment(lib, "psapi.lib")
 
+#include "eq.h"
+
 #define APPLICATION_NAME "EQTest Inject DLL"
 
-#define EQ_STRING_DLL_NAME "eqtest.dll"
+#define APPLICATION_DLL_NAME "eqtest.dll"
 
-#define EQ_STRING_PROCESS_NAME "eqgame.exe"
-
-DWORD EQ_CLIENT_VERSION_DATE_ADDRESS = 0xAE70B8;
-#define EQ_CLIENT_VERSION_DATE_STRING "Jan  8 2018"
-#define EQ_CLIENT_VERSION_DATE_BYTES "\x4A\x61\x6E\x20\x20\x38\x20\x32\x30\x31\x38\x00"
-#define EQ_CLIENT_VERSION_DATE_SIZE 12
-
-DWORD EQ_CLIENT_VERSION_TIME_ADDRESS = 0xAE70C4;
-#define EQ_CLIENT_VERSION_TIME_STRING "16:56:08"
-#define EQ_CLIENT_VERSION_TIME_BYTES "\x31\x36\x3A\x35\x36\x3A\x30\x38\x00"
-#define EQ_CLIENT_VERSION_TIME_SIZE 9
+#define GAME_PROCESS_NAME "eqgame.exe"
 
 void enable_debug_privileges()
 {
@@ -108,18 +100,18 @@ int is_client_version_correct(DWORD process_id, HANDLE process_handle)
 
     DWORD base_address = get_module_base_address(process_id, L"eqgame.exe");
 
-    DWORD date_address = (EQ_CLIENT_VERSION_DATE_ADDRESS - 0x400000) + base_address;
-    DWORD time_address = (EQ_CLIENT_VERSION_TIME_ADDRESS - 0x400000) + base_address;
+    DWORD date_address = (EQ_ADDRESS_CLIENT_VERSION_DATE - 0x400000) + base_address;
+    DWORD time_address = (EQ_ADDRESS_CLIENT_VERSION_TIME - 0x400000) + base_address;
 
-    BYTE date_buffer[EQ_CLIENT_VERSION_DATE_SIZE];
-    ReadProcessMemory(process_handle, (void*)date_address, &date_buffer, sizeof(date_buffer), 0);
+    char date_buffer[EQ_SIZE_CLIENT_VERSION_DATE] = {0};
+    ReadProcessMemory(process_handle, (LPVOID)date_address, &date_buffer[0], sizeof(date_buffer), 0);
 
-    BYTE time_buffer[EQ_CLIENT_VERSION_TIME_SIZE];
-    ReadProcessMemory(process_handle, (void*)time_address, &time_buffer, sizeof(time_buffer), 0);
+    char time_buffer[EQ_SIZE_CLIENT_VERSION_TIME] = {0};
+    ReadProcessMemory(process_handle, (LPVOID)time_address, &time_buffer[0], sizeof(time_buffer), 0);
 
-    if (memcmp(date_buffer, EQ_CLIENT_VERSION_DATE_BYTES, sizeof(date_buffer)) == 0)
+    if (strcmp(date_buffer, EQ_STRING_CLIENT_VERSION_DATE) == 0)
     {
-        if (memcmp(time_buffer, EQ_CLIENT_VERSION_TIME_BYTES, sizeof(time_buffer)) == 0)
+        if (strcmp(time_buffer, EQ_STRING_CLIENT_VERSION_TIME) == 0)
         {
             result = 1;
         }
@@ -128,7 +120,7 @@ int is_client_version_correct(DWORD process_id, HANDLE process_handle)
     if (result == 0)
     {
         char error_text[4096];
-        sprintf(error_text, "Expected %s and %s for date and time!", EQ_CLIENT_VERSION_DATE_STRING, EQ_CLIENT_VERSION_TIME_STRING);
+        sprintf(error_text, "Expected %s and %s for date and time!", EQ_STRING_CLIENT_VERSION_DATE, EQ_STRING_CLIENT_VERSION_TIME);
 
         MessageBoxA(NULL, error_text, "Inject DLL Error", MB_ICONERROR);
     }
@@ -171,7 +163,7 @@ int main(int argc, char *argv[])
                     char module_name[1024] = {0};
                     GetModuleBaseNameA(process_handle, module, module_name, sizeof(module_name));
 
-                    if (strcmp(module_name, EQ_STRING_PROCESS_NAME) == 0)
+                    if (strcmp(module_name, GAME_PROCESS_NAME) == 0)
                     {
                         int is_dll_already_injected = 0;
 
@@ -190,7 +182,7 @@ int main(int argc, char *argv[])
 
                                 //printf("Module Name: %s\n", module_name);
 
-                                if (strcmp(module_name, EQ_STRING_DLL_NAME) == 0)
+                                if (strcmp(module_name, APPLICATION_DLL_NAME) == 0)
                                 {
                                     printf("DLL is already injected in EverQuest. (Name: %s, ID: %d | 0x%08X)\nSkipping...\n", module_name, (int)processes[i], (int)processes[i]);
 
@@ -208,7 +200,7 @@ int main(int argc, char *argv[])
                                 printf("EverQuest process found. (Name: %s, ID: %d | 0x%08X)\nInjecting DLL...\n", module_name, (int)processes[i], (int)processes[i]);
 
                                 char dll_path_name[MAX_PATH] = {0};
-                                GetFullPathNameA(EQ_STRING_DLL_NAME, MAX_PATH, dll_path_name, NULL);
+                                GetFullPathNameA(APPLICATION_DLL_NAME, MAX_PATH, dll_path_name, NULL);
 
                                 LPVOID remote_memory = VirtualAllocEx(process_handle, NULL, strlen(dll_path_name), MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
 

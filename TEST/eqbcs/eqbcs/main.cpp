@@ -276,7 +276,7 @@ int main(int argc , char *argv[])
 
                             bool bBroadcast = false;
 
-                            if (textTokens.at(0) == "//BCT")
+                            if (textTokens.at(0) == "//BCT" || textTokens.at(0) == "//BoxChatTell")
                             {
                                 bBCT  = true;
                                 bBCA  = false;
@@ -285,7 +285,7 @@ int main(int argc , char *argv[])
                                 bBroadcast = true;
                             }
  
-                            if (textTokens.at(0) == "//BCA")
+                            if (textTokens.at(0) == "//BCA" || textTokens.at(0) == "//BoxChatOthers")
                             {
                                 bBCT  = false;
                                 bBCA  = true;
@@ -294,7 +294,7 @@ int main(int argc , char *argv[])
                                 bBroadcast = true;
                             }
 
-                            if (textTokens.at(0) == "//BCAA")
+                            if (textTokens.at(0) == "//BCAA" || textTokens.at(0) == "//BoxChatAll")
                             {
                                 bBCT  = false;
                                 bBCA  = false;

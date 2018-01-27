@@ -8,9 +8,14 @@ bool g_BoxChatIsEnabled = true;
 
 bool g_BoxChatIsConnected = false;
 
+bool g_BoxChatAutoConnect = true;
+
 std::list<std::string> g_BoxChatInterpretCommandList;
 
 std::chrono::time_point<std::chrono::steady_clock> g_BoxChatInterpretCommandTimer = std::chrono::steady_clock::now();
+
+std::chrono::time_point<std::chrono::steady_clock> g_BoxChatKeepAliveTimer = std::chrono::steady_clock::now();
+long long g_BoxChatKeepAliveTimerInterval = 3;
 
 char g_BoxChatServerIPAddress[EQBCS_STRING_MAX];
 char g_BoxChatServerPort[EQBCS_STRING_MAX];
@@ -164,7 +169,13 @@ void EQAPP_BoxChat_Execute()
 
     if (g_BoxChatSocket == INVALID_SOCKET)
     {
+        EQAPP_BoxChat_DisconnectEx();
         return;
+    }
+
+    if (EQAPP_HasTimeElapsed(g_BoxChatKeepAliveTimer, g_BoxChatKeepAliveTimerInterval) == true)
+    {
+        EQAPP_BoxChat_SendText("$KeepAlive");
     }
 
     FD_ZERO(&g_BoxChatFDSetRead);
@@ -264,6 +275,8 @@ void EQAPP_BoxChat_InterpretCommands()
         return;
     }
 
+    bool bUseTimer = false;
+
     bool bHasTimeElapsed = false;
 
     auto timeNow = std::chrono::steady_clock::now();
@@ -278,6 +291,8 @@ void EQAPP_BoxChat_InterpretCommands()
         if (tokens.size() > 1)
         {
             timeInterval = std::stoll(tokens.at(1));
+
+            bUseTimer = true;
         }
     }
 
@@ -289,7 +304,7 @@ void EQAPP_BoxChat_InterpretCommands()
         g_BoxChatInterpretCommandTimer = std::chrono::steady_clock::now();
     }
 
-    if (bHasTimeElapsed == false)
+    if (bUseTimer == true && bHasTimeElapsed == false)
     {
         return;
     }
