@@ -15,12 +15,16 @@ const int g_EQAppKillSwitchKey = VK_F12;
 
 bool g_EQAppDebugMessageIsEnabled = false;
 
+bool g_EQAppSleepIsEnabled = false;
+
 std::string g_EQAppPlayerName;
 
 std::mt19937 g_EQAppRandomEngine((uint32_t)std::chrono::high_resolution_clock::now().time_since_epoch().count());
 
 std::chrono::time_point<std::chrono::steady_clock> g_EQAppWindowTitleTimer = std::chrono::steady_clock::now();
 long long g_EQAppWindowTitleTimerInterval = 3;
+
+std::unordered_map<uint32_t, std::string> g_EQAppSpellList; // ID, Name
 
 HMODULE g_EQAppModule;
 

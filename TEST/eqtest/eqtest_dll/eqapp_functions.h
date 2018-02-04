@@ -31,14 +31,20 @@ std::string EQAPP_INI_ReadString(const char* filename, const char* section, cons
 void EQAPP_PlaySound(const char* filename);
 void EQAPP_Beep();
 void EQAPP_BeepEx(UINT beepType);
-bool EQAPP_FileExists(const char *fileName);
+bool EQAPP_FileExists(const char* fileName);
 void EQAPP_DeleteFileContents(const char* filename);
 std::string EQAPP_ReadFileContents(const char* filename);
 void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list, bool coutLines = true);
 
+void EQAPP_SpellList_Load();
+void EQAPP_SpellList_LoadEx(const char* filename);
+std::string EQAPP_SpellList_GetNameByID(uint32_t spellID);
+
 void EQAPP_SetWindowTitleToPlayerSpawnName();
 
 bool EQAPP_HasTimeElapsed(std::chrono::time_point<std::chrono::steady_clock>& timer, long long timerInterval);
+
+void EQAPP_Sleep_Toggle();
 
 template <class T>
 void EQAPP_Log(const char* text, T number)
@@ -292,7 +298,7 @@ void EQAPP_BeepEx(UINT beepType)
     MessageBeep(beepType);
 }
 
-bool EQAPP_FileExists(const char *fileName)
+bool EQAPP_FileExists(const char* fileName)
 {
     std::ifstream file(fileName);
     return file.good();
@@ -372,6 +378,61 @@ void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list, 
     file.close();
 }
 
+void EQAPP_SpellList_Load()
+{
+    EQAPP_SpellList_LoadEx("spells_us.txt");
+}
+
+void EQAPP_SpellList_LoadEx(const char* filename)
+{
+    std::fstream file;
+    file.open(filename, std::fstream::in);
+    if (file.is_open() == false)
+    {
+        std::stringstream ss;
+        ss << "failed to open file: " << filename;
+
+        EQAPP_PrintDebugMessage(__FUNCTION__, ss.str());
+        return;
+    }
+
+    g_EQAppSpellList.clear();
+
+    std::string line;
+    while (std::getline(file, line))
+    {
+        if (line.size() == 0)
+        {
+            continue;
+        }
+
+        std::vector<std::string> tokens;
+        EQAPP_String_Split(line, tokens, '^');
+
+        if (tokens.size() > 1)
+        {
+            uint32_t spellID = std::stoul(tokens.at(0));
+
+            g_EQAppSpellList.insert({spellID, tokens.at(1)});
+        }
+    }
+
+    file.close();
+}
+
+std::string EQAPP_SpellList_GetNameByID(uint32_t spellID)
+{
+    auto it = g_EQAppSpellList.find(spellID);
+    if (it != g_EQAppSpellList.end())
+    {
+        return it->second;
+    }
+    else
+    {
+        return std::string();
+    }
+}
+
 void EQAPP_SetWindowTitleToPlayerSpawnName()
 {
     std::string playerSpawnName = EQ_GetPlayerSpawnName();
@@ -402,4 +463,10 @@ bool EQAPP_HasTimeElapsed(std::chrono::time_point<std::chrono::steady_clock>& ti
     }
 
     return false;
+}
+
+void EQAPP_Sleep_Toggle()
+{
+    EQ_ToggleBool(g_EQAppSleepIsEnabled);
+    EQAPP_PrintBool("Sleep", g_EQAppSleepIsEnabled);
 }

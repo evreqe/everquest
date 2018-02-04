@@ -3,6 +3,7 @@
 void EQAPP_Detours_Load();
 void EQAPP_Detours_Unload();
 
+EQ_MACRO_FUNCTION_DefineDetour(CrashDetected);
 EQ_MACRO_FUNCTION_DefineDetour(DrawNetStatus);
 EQ_MACRO_FUNCTION_DefineDetour(ExecuteCmd);
 
@@ -14,10 +15,11 @@ EQ_MACRO_FUNCTION_DefineDetour(EQPlayer__ChangeHeight);
 EQ_MACRO_FUNCTION_DefineDetour(EQ_Character__eqspa_movement_rate);
 
 EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__InterpretCmd);
+EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__StartCasting);
 
-int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive, void* unknown, int zero);
-
+int __cdecl EQAPP_DETOURED_FUNCTION_CrashDetected();
 int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown);
+int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive, void* unknown, int zero);
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawWindows(void* this_ptr, void* not_used);
 
@@ -27,9 +29,11 @@ int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__ChangeHeight(void* this_ptr, vo
 int __fastcall EQAPP_DETOURED_FUNCTION_EQ_Character__eqspa_movement_rate(void* this_ptr, void* not_used, int movementSpeed);
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__InterpretCmd(void* this_ptr, void* not_used, class EQPlayer* player, const char* text);
+int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__StartCasting(void* this_ptr, void* not_used, EQ::CEverQuest__StartCasting_Message_ptr message);
 
 void EQAPP_Detours_Load()
 {
+    EQ_MACRO_FUNCTION_AddDetour(CrashDetected);
     EQ_MACRO_FUNCTION_AddDetour(DrawNetStatus);
     ////EQ_MACRO_FUNCTION_AddDetour(ExecuteCmd);
 
@@ -41,10 +45,12 @@ void EQAPP_Detours_Load()
     ////EQ_MACRO_FUNCTION_AddDetour(EQ_Character__eqspa_movement_rate);
 
     EQ_MACRO_FUNCTION_AddDetour(CEverQuest__InterpretCmd);
+    EQ_MACRO_FUNCTION_AddDetour(CEverQuest__StartCasting);
 }
 
 void EQAPP_Detours_Unload()
 {
+    EQ_MACRO_FUNCTION_RemoveDetour(CrashDetected);
     EQ_MACRO_FUNCTION_RemoveDetour(DrawNetStatus);
     ////EQ_MACRO_FUNCTION_RemoveDetour(ExecuteCmd);
 
@@ -56,6 +62,20 @@ void EQAPP_Detours_Unload()
     ////EQ_MACRO_FUNCTION_RemoveDetour(EQ_Character__eqspa_movement_rate);
 
     EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__InterpretCmd);
+    EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__StartCasting);
+}
+
+int __cdecl EQAPP_DETOURED_FUNCTION_CrashDetected()
+{
+    if (g_EQAppShouldUnload == 1)
+    {
+        return EQAPP_REAL_FUNCTION_CrashDetected();
+    }
+
+    std::cout << "**** CRASH DETECTED ****" << std::endl;
+    return 0;
+
+    return EQAPP_REAL_FUNCTION_CrashDetected();
 }
 
 int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
@@ -80,63 +100,48 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
 
     g_EQAppPlayerName = EQ_GetPlayerSpawnName();
 
-    EQ_DrawText("EQTEST", 8, 100);
-
     if (EQAPP_HasTimeElapsed(g_EQAppWindowTitleTimer, g_EQAppWindowTitleTimerInterval) == true)
     {
         EQAPP_SetWindowTitleToPlayerSpawnName();
+    }
+
+    if (g_EQAppSleepIsEnabled == true)
+    {
+        Sleep(100);
+    }
+
+    if (g_HUDIsEnabled == true)
+    {
+        EQAPP_HUD_Execute();
     }
 
     if (g_BoxChatIsEnabled == true)
     {
         if (g_BoxChatIsConnected == true)
         {
-            EQ_DrawText("- Connected", 8, 120);
+            EQAPP_BoxChat_Execute();
         }
-
-        EQAPP_BoxChat_Execute();
     }
 
     if (g_AlwaysAttackIsEnabled == true)
     {
         EQAPP_AlwaysAttack_Execute();
+    }
 
-        EQ_DrawText("- Always Attack", 8, 140);
+    if (g_AlwaysHotButtonIsEnabled == true)
+    {
+        EQAPP_AlwaysHotButton_Execute();
     }
 
     if (g_CombatHotButtonIsEnabled == true)
     {
         EQAPP_CombatHotButton_Execute();
-
-        EQ_DrawText("- Combat HotButton", 8, 160);
-    }
-
-    if (g_ESPIsEnabled == true)
-    {
-        EQ_DrawText("- ESP", 8, 180);
     }
 
     if (g_ChangeHeightIsEnabled == true)
     {
         EQAPP_ChangeHeight_Execute();
-
-        EQ_DrawText("- Change Height", 8, 200);
     }
-
-/*
-    int drawX = 800;
-    int drawY = 200;
-
-    for (size_t i = 0; i < 32; i++)
-    {
-        std::stringstream ss;
-        ss << i << ": Testing123";
-
-        EQ_DrawTextEx(ss.str().c_str(), drawX, drawY, i);
-
-        drawY += 10;
-    }
-*/
 
     EQAPP_Console_Print();
 
@@ -184,6 +189,12 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawWindows(void* this_ptr,
     if (g_ESPIsEnabled == true)
     {
         EQAPP_ESP_Execute();
+    }
+
+    if (g_SpawnCastSpellIsEnabled == true)
+    {
+        EQAPP_SpawnCastSpell_Execute();
+        EQAPP_SpawnCastSpell_DrawText();
     }
 
     return EQAPP_REAL_FUNCTION_CXWndManager__DrawWindows(this_ptr);
@@ -274,4 +285,27 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__InterpretCmd(void* this_ptr, 
     }
 
     return EQAPP_REAL_FUNCTION_CEverQuest__InterpretCmd(this_ptr, player, text);
+}
+
+int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__StartCasting(void* this_ptr, void* not_used, EQ::CEverQuest__StartCasting_Message_ptr message)
+{
+    if (g_EQAppShouldUnload == 1)
+    {
+        return EQAPP_REAL_FUNCTION_CEverQuest__StartCasting(this_ptr, message);
+    }
+
+/*
+    std::cout << "---- CEverQuest::StartCasting() ----" << std::endl;
+    std::cout << "SpawnID: " << message->SpawnID << std::endl;
+    std::cout << "SpellID: " << message->SpellID << " <" << EQAPP_SpellList_GetNameByID(message->SpellID) << ">" << std::endl;
+    std::cout << "SpellCastTime: " << message->SpellCastTime << std::endl;
+    std::cout << "------------------------------------" << std::endl;
+*/
+
+    if (g_SpawnCastSpellIsEnabled == true)
+    {
+        EQAPP_SpawnCastSpell_HandleEvent_CEverQuest__StartCasting(this_ptr, message);
+    }
+
+    return EQAPP_REAL_FUNCTION_CEverQuest__StartCasting(this_ptr, message);
 }

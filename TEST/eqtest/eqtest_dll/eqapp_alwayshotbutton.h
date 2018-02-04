@@ -2,25 +2,25 @@
 
 #include "eqapp_boxchat.h"
 
-bool g_CombatHotButtonIsEnabled = false;
+bool g_AlwaysHotButtonIsEnabled = false;
 
-std::chrono::time_point<std::chrono::steady_clock> g_CombatHotButtonTimer = std::chrono::steady_clock::now();
-long long g_CombatHotButtonTimerInterval = 6;
+std::chrono::time_point<std::chrono::steady_clock> g_AlwaysHotButtonTimer = std::chrono::steady_clock::now();
+long long g_AlwaysHotButtonTimerInterval = 1;
 
-signed int g_CombatHotButtonIndex = -1;
+signed int g_AlwaysHotButtonIndex = -1;
 
-void EQAPP_CombatHotButton_Toggle();
-void EQAPP_CombatHotButton_Execute();
+void EQAPP_AlwaysHotButton_Toggle();
+void EQAPP_AlwaysHotButton_Execute();
 
-void EQAPP_CombatHotButton_Toggle()
+void EQAPP_AlwaysHotButton_Toggle()
 {
-    EQ_ToggleBool(g_CombatHotButtonIsEnabled);
-    EQAPP_PrintBool("Combat HotButton", g_CombatHotButtonIsEnabled);
+    EQ_ToggleBool(g_AlwaysHotButtonIsEnabled);
+    EQAPP_PrintBool("Always HotButton", g_AlwaysHotButtonIsEnabled);
 }
 
-void EQAPP_CombatHotButton_Execute()
+void EQAPP_AlwaysHotButton_Execute()
 {
-    if (EQAPP_HasTimeElapsed(g_CombatHotButtonTimer, g_CombatHotButtonTimerInterval) == false)
+    if (EQAPP_HasTimeElapsed(g_AlwaysHotButtonTimer, g_AlwaysHotButtonTimerInterval) == false)
     {
         return;
     }
@@ -30,32 +30,14 @@ void EQAPP_CombatHotButton_Execute()
         return;
     }
 
-    auto targetSpawn = EQ_GetTargetSpawn();
-    if (targetSpawn == NULL)
-    {
-        return;
-    }
-
-    int spawnType = EQ_ReadMemory<uint8_t>(targetSpawn + EQ_OFFSET_SPAWN_TYPE);
-    if (spawnType != EQ_SPAWN_TYPE_NPC)
-    {
-        return;
-    }
-
-    int autoAttack = EQ_ReadMemory<uint8_t>(EQ_ADDRESS_AUTO_ATTACK);
-    if (autoAttack == 0)
-    {
-        return;
-    }
-
-    if (g_CombatHotButtonIndex < 0 || g_CombatHotButtonIndex > (EQ_NUM_HOT_BUTTONS - 1))
+    if (g_AlwaysHotButtonIndex < 0 || g_AlwaysHotButtonIndex > (EQ_NUM_HOT_BUTTONS - 1))
     {
         return;
     }
 
     signed int command = -1;
 
-    switch (g_CombatHotButtonIndex)
+    switch (g_AlwaysHotButtonIndex)
     {
         case 0:
             command = EQ_EXECUTECMD_HOT1_1;

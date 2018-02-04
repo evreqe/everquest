@@ -84,18 +84,22 @@ class EQClass::CEverQuest
 public:
     void CEverQuest::InterpretCmd(class EQPlayer* player, const char* text);
     void CEverQuest::dsp_chat(const char* text, int textColor, bool one_1, bool one_2, bool zero_1);
+    void CEverQuest::StartCasting(EQ::CEverQuest__StartCasting_Message_ptr message);
 };
-
-////EQClass::CEverQuest** EQ_CLASS_POINTER_CEverQuest_pptr = (EQClass::CEverQuest**)EQ_ADDRESS_POINTER_CEverQuest;
-////#define EQ_CLASS_POINTER_CEverQuest (*EQ_CLASS_POINTER_CEverQuest_pptr)
-EQClass::CEverQuest** EQ_CLASS_POINTER_CEverQuest_pptr;
-EQClass::CEverQuest* EQ_CLASS_POINTER_CEverQuest;
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::InterpretCmd(class EQPlayer* player, const char* text), EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__InterpretCmd)(void* this_ptr, class EQPlayer* player, const char* text);
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::dsp_chat(const char* text, int textColor, bool one_1, bool one_2, bool zero_1), EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__dsp_chat)(void* this_ptr, const char* text, int textColor, bool one_1, bool one_2, bool zero_1);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::StartCasting(EQ::CEverQuest__StartCasting_Message_ptr message), EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__StartCasting)(void* this_ptr, EQ::CEverQuest__StartCasting_Message_ptr message);
+
+////EQClass::CEverQuest** EQ_CLASS_POINTER_CEverQuest_pptr = (EQClass::CEverQuest**)EQ_ADDRESS_POINTER_CEverQuest;
+////#define EQ_CLASS_POINTER_CEverQuest (*EQ_CLASS_POINTER_CEverQuest_pptr)
+EQClass::CEverQuest** EQ_CLASS_POINTER_CEverQuest_pptr;
+EQClass::CEverQuest* EQ_CLASS_POINTER_CEverQuest;
 
 /* CDisplay */
 
@@ -105,10 +109,10 @@ public:
     static int __cdecl CDisplay::WriteTextHD2(const char* text, int x, int y, signed int color);
 };
 
+EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQClass::CDisplay::WriteTextHD2(const char* text, int x, int y, signed int color), EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__WriteTextHD2)(void* this_ptr, const char* text, int x, int y, signed int color);
+
 ////EQClass::CDisplay** EQ_CLASS_POINTER_CDisplay_pptr = (EQClass::CDisplay**)EQ_ADDRESS_POINTER_CDisplay;
 ////#define EQ_CLASS_POINTER_CDisplay (*EQ_CLASS_POINTER_CDisplay_pptr)
 EQClass::CDisplay** EQ_CLASS_POINTER_CDisplay_pptr;
 EQClass::CDisplay* EQ_CLASS_POINTER_CDisplay;
-
-EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQClass::CDisplay::WriteTextHD2(const char* text, int x, int y, signed int color), EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__WriteTextHD2)(void* this_ptr, const char* text, int x, int y, signed int color);

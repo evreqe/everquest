@@ -1,17 +1,23 @@
 #pragma once
 
+#include <cstdint>
+
+#include "eq_virtualkeycodes.h"
 #include "eq_executecmd.h"
 #include "eq_keys.h"
 
-DWORD EQ_ADDRESS_CLIENT_VERSION_DATE = 0xAE60B8; // WinMain()    "Starting EverQuest (Built %s %s)"
+DWORD EQ_ADDRESS_CLIENT_VERSION_DATE = 0xAE60B8; // WinMain()    "Starting EverQuest (Built %s %s)"    CrashDetected()    "Client Version: %s %s\n"
 #define EQ_STRING_CLIENT_VERSION_DATE "Jan 22 2018"
 #define EQ_SIZE_CLIENT_VERSION_DATE 12
 
-DWORD EQ_ADDRESS_CLIENT_VERSION_TIME = 0xAE60C4; // WinMain()    "Starting EverQuest (Built %s %s)"
+DWORD EQ_ADDRESS_CLIENT_VERSION_TIME = 0xAE60C4; // WinMain()    "Starting EverQuest (Built %s %s)"    CrashDetected()    "Client Version: %s %s\n"
 #define EQ_STRING_CLIENT_VERSION_TIME "10:35:37"
 #define EQ_SIZE_CLIENT_VERSION_TIME 9
 
 const float EQ_PI = 3.14159265358979f;
+
+#define EQ_NUM_HOT_BUTTONS    12
+#define EQ_NUM_SPELLS         59999
 
 DWORD EQ_BASE_ADDRESS_VALUE    = 0x400000;
 
@@ -28,8 +34,57 @@ DWORD EQ_ADDRESS_POINTER_WINDOW_HWND = 0xFBC0C0; // HWND hWnd
 PostMessageA(hWnd, 0x4647u, 0x4247u, (LPARAM)v3);
 */
 
-DWORD EQ_ADDRESS_FUNCTION_DrawNetStatus    = 0x5BA110; // "%ldms" and "%0.2f%%"
-DWORD EQ_ADDRESS_FUNCTION_ExecuteCmd       = 0x5219A0; // "ExecuteCmd has received a CMD_EXITGAME.\n" and "/%s %s" and "%c%s %s " and "help.html"
+DWORD EQ_ADDRESS_FUNCTION_CrashDetected    = 0x6413E0; // "Crash (char = %s, zone = %s)\n"    "Local Player's World location at time of crash: %f, %f, %f.\n"    "Gamestate at crash = %d\n"    "Crash Details: %s\n"
+/*
+  sub_8A4150("Fatal error occurred in mainthread! (Release Client #630)\n");
+  strcat(byte_FBC576, "Fatal error in mainthread! (Release Client #630)\n");
+  sub_8A4150("Client Version: %s %s", "Jan 22 2018", "10:35:37");
+  sprintf(v26, "Client Version: %s %s\n", "Jan 22 2018", "10:35:37");
+*/
+/*
+  if ( DialogBoxParamA(0, (LPCSTR)0x6F, hWndParent, sub_63F5F0, 0) )
+  {
+    if ( &byte_F24CEC[strlen(byte_F24CEC) + 1] != &byte_F24CEC[1] )
+    {
+      byte_F24EEB = 0;
+      sub_8A4B70(v26, 0x200u, "Crash Details: %s\n", (unsigned int)byte_F24CEC);
+      sub_8A4150(v26);
+      strcat(byte_FBC576, v26);
+      v16 = 0;
+      v17 = strlen(v26);
+      if ( v17 > 0 )
+      {
+        do
+        {
+          if ( v16 >= 0x1FF )
+            break;
+          v18 = v26[v16++];
+        }
+        while ( (signed int)v16 < v17 );
+      }
+    }
+  }
+  v19 = lpFileName;
+  strcat(byte_FBC576, (const char *)off_C69A98);
+  v20 = CreateFileA(v19, 0x80000000, 1u, 0, 3u, 0x80u, 0);
+  v21 = v20;
+  if ( v20 != (HANDLE)-1 )
+  {
+    NumberOfBytesRead = 0;
+    ReadFile(v20, byte_FC4280, 0x100000u, &NumberOfBytesRead, 0);
+    CloseHandle(v21);
+    if ( NumberOfBytesRead )
+    {
+      byte_FC4280[NumberOfBytesRead] = 0;
+      v22 = 31999 - strlen(byte_FBC576);
+      if ( v22 > 0 )
+        strcat(byte_FBC576, &byte_FC4280[(signed int)(NumberOfBytesRead - v22) < 0 ? 0 : NumberOfBytesRead - v22]);
+    }
+  }
+*/
+
+DWORD EQ_ADDRESS_FUNCTION_DrawNetStatus    = 0x5BA110; // "%ldms"    "%0.2f%%"
+DWORD EQ_ADDRESS_FUNCTION_ExecuteCmd       = 0x5219A0; // "ExecuteCmd has received a CMD_EXITGAME.\n"    "/%s %s"    "%c%s %s "    "help.html"
 /*
 ExecuteCmd()
 case 508:
@@ -43,6 +98,7 @@ sub_8A55C0(
       (unsigned int)"c:\\p4\\EverQuest\\test\\Common\\CharacterMagicSystem.cpp");
     sub_523550(508, 0, 0, 0); // ExecuteCmd
 */
+
 DWORD EQ_ADDRESS_FUNCTION_get_bearing    = 0x539620; // search for "fpatan"
 /*
 double __cdecl sub_53B1C0(float a1, float a2, float a3, float a4)
@@ -196,7 +252,7 @@ while ( *(_DWORD *)(result + 4) != v7 )
 
 // class EQPlayer
 DWORD EQ_ADDRESS_POINTER_TARGET_SPAWN    = 0xF25020; // pinstTargetSpawn
-DWORD EQ_ADDRESS_POINTER_PLAYER_SPAWN    = 0xF2501C; // pinstCharSpawn    "Local Player's World location at time of crash: %f, %f, %f.\n"
+DWORD EQ_ADDRESS_POINTER_PLAYER_SPAWN    = 0xF2501C; // pinstCharSpawn    ControlledPlayer    "Local Player's World location at time of crash: %f, %f, %f.\n"
 /*
 if ( dword_F21FE8 ) // PlayerSpawn
   {
@@ -368,7 +424,7 @@ CEverQuest__InterpretCmd()
 if ( *(_DWORD *)(dword_10C1418 + 1480) == 5 ) // gamestate == in-game
 */
 
-#define EQ_OFFSET_CEverQuest_GAME_STATE    0x5C8 // 1480
+#define EQ_OFFSET_CEverQuest_GAME_STATE    0x5C8 // 1480 decimal    "Gamestate at crash = %d\n"
 
 #define EQ_GAME_STATE_IN_GAME 5
 
@@ -415,6 +471,36 @@ CEverQuest__InterpretCmd()
 sub_4764B0(v9, v8, 273, 1, 1, 0); // CEverQuest__dsp_chat
 */
 
+DWORD EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting    = 0x566CF0; // "%s <%s>"
+/*
+  if ( v13 && v13 != 3 && v13 != 7 )
+  {
+    v14 = CDisplay__FindZoneTopZ(v51, *(float *)&v53, v52);
+    v52 = v14;
+    if ( -9.9999999e26 != v14 )
+    {
+      v56 = v51;
+      v57 = v53;
+      v58 = v14;
+      DoParticleEffect(v3, 2, (int)&unk_E9BEF0, 61, v5, 0, 0, &v56, 0, 500);
+      CDisplay__PlaySoundAtLocation(v51, *(float *)&v53, v52, 99);
+    }
+  }
+*/
+
+namespace EQ
+{
+
+typedef struct _CEverQuest__StartCasting_Message
+{
+    uint32_t SpellID;
+    uint16_t SpawnID;
+    uint16_t SpellCastTime;
+    uint32_t Unknown1;
+} CEverQuest__StartCasting_Message, *CEverQuest__StartCasting_Message_ptr;
+
+} // namespace EQ
+
 #define EQ_CHAT_TEXT_COLOR_YELLOW    15
 
 // class CDisplay
@@ -442,7 +528,7 @@ const float EQ_CAMERA_PITCH_DEFAULT    = -8.5f;      // center view
 const float EQ_CAMERA_PITCH_MIN        = -136.5f;    // look down
 const float EQ_CAMERA_PITCH_MAX        = 119.5f;     // look up
 
-DWORD EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2    = 0x4C20C0; // "%ldms" and "%0.2f%%"
+DWORD EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2    = 0x4C20C0; // "%ldms"    "%0.2f%%"
 /*
 DrawNetStatus()
 ((void (__cdecl *)(char *, _DWORD, _DWORD, signed int))sub_4C2200)(

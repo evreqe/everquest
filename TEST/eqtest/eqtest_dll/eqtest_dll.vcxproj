@@ -155,12 +155,10 @@
     <ClInclude Include="..\eq\eq_keys.h" />
     <ClInclude Include="..\eq\eq_macros.h" />
     <ClInclude Include="..\eq\eq_memory.h" />
-    <ClInclude Include="..\eq\eq_offsets.h" />
-    <ClInclude Include="..\eq\eq_pointers.h" />
-    <ClInclude Include="..\eq\eq_structures.h" />
-    <ClInclude Include="..\eq\eq_types.h" />
+    <ClInclude Include="..\eq\eq_virtualkeycodes.h" />
     <ClInclude Include="eqapp.h" />
     <ClInclude Include="eqapp_alwaysattack.h" />
+    <ClInclude Include="eqapp_alwayshotbutton.h" />
     <ClInclude Include="eqapp_boxchat.h" />
     <ClInclude Include="eqapp_changeheight.h" />
     <ClInclude Include="eqapp_combathotbutton.h" />
@@ -168,8 +166,9 @@
     <ClInclude Include="eqapp_detours.h" />
     <ClInclude Include="eqapp_esp.h" />
     <ClInclude Include="eqapp_functions.h" />
+    <ClInclude Include="eqapp_hud.h" />
     <ClInclude Include="eqapp_interpretcmd.h" />
-    <ClInclude Include="virtualkeycodes.h" />
+    <ClInclude Include="eqapp_spawncastspell.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

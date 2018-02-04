@@ -35,9 +35,6 @@
     <ClInclude Include="eqapp_console.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="virtualkeycodes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="eqapp_boxchat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -77,16 +74,16 @@
     <ClInclude Include="..\eq\eq_memory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\eq\eq_offsets.h">
+    <ClInclude Include="..\eq\eq_virtualkeycodes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\eq\eq_pointers.h">
+    <ClInclude Include="eqapp_alwayshotbutton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\eq\eq_structures.h">
+    <ClInclude Include="eqapp_spawncastspell.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\eq\eq_types.h">
+    <ClInclude Include="eqapp_hud.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

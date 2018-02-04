@@ -1,6 +1,10 @@
 #pragma once
 
+#include "eqapp_spawncastspell.h"
+
 bool g_ESPIsEnabled = false;
+
+bool g_ESPShowSpawnIDIsEnabled = false;
 
 float g_ESPDistance = 400.0f;
 
@@ -14,6 +18,12 @@ void EQAPP_ESP_Toggle()
 {
     EQ_ToggleBool(g_ESPIsEnabled);
     EQAPP_PrintBool("ESP", g_ESPIsEnabled);
+}
+
+void EQAPP_ESP_ShowSpawnID_Toggle()
+{
+    EQ_ToggleBool(g_ESPShowSpawnIDIsEnabled);
+    EQAPP_PrintBool("ESP Show Spawn ID", g_ESPShowSpawnIDIsEnabled);
 }
 
 void EQAPP_ESP_Execute()
@@ -109,22 +119,55 @@ void EQAPP_ESP_Execute()
 
             int spawnLevel = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_LEVEL);
 
-            std::stringstream ss;
-            ss << "[" << spawnLevel << "] " << spawnName;
+            std::stringstream espText;
+            espText << "[" << spawnLevel << "] " << spawnName;
 
             if (spawnType == EQ_SPAWN_TYPE_CORPSE)
             {
-                ss << "'s corpse";
+                espText << "'s corpse";
             }
 
-            ss << " (" << (int)spawnDistance << ")";
+            espText << " (" << (int)spawnDistance << "m)";
 
             if (spawnType == EQ_SPAWN_TYPE_NPC)
             {
                 if (strlen(spawnLastName) > 0)
                 {
-                    ss << "\n(" << spawnLastName << ")";
+                    espText << "\n(" << spawnLastName << ")";
                 }
+            }
+
+            if (g_SpawnCastSpellIsEnabled == true && g_SpawnCastSpellESPIsEnabled == true)
+            {
+                for (auto& spawnCastSpell : g_SpawnCastSpellList)
+                {
+                    if (spawnCastSpell->Spawn == NULL)
+                    {
+                        continue;
+                    }
+
+                    if (spawnCastSpell->Spawn == spawn)
+                    {
+                        espText << "\n<" << spawnCastSpell->SpellName << ">";
+
+                        if (spawnCastSpell->SpellCastTimeCountdown > 0)
+                        {
+                            float spellCastTimeCurrentFloat = (float)(spawnCastSpell->SpellCastTimeCountdown / 1000.0f);
+
+                            espText.precision(1);
+                            espText << " " << std::fixed << spellCastTimeCurrentFloat;
+                        }
+
+                        break;
+                    }
+                }
+            }
+
+            if (g_ESPShowSpawnIDIsEnabled == true)
+            {
+                uint32_t spawnID = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_ID);
+
+                espText << "\n(ID: " << spawnID << ")";
             }
 
             int textColor = EQ_DRAW_TEXT_COLOR_WHITE;
@@ -152,7 +195,7 @@ void EQAPP_ESP_Execute()
                 textColor = EQ_DRAW_TEXT_COLOR_GREEN;
             }
 
-            EQ_DrawTextEx(ss.str().c_str(), (int)screenX, (int)screenY, textColor);
+            EQ_DrawTextEx(espText.str().c_str(), (int)screenX, (int)screenY, textColor);
         }
 
         spawn = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_NEXT);

@@ -44,8 +44,6 @@
 #include "detours.h"
 #pragma comment(lib, "detours.lib")
 
-#include "virtualkeycodes.h"
-
 #include "eq.h"
 #include "eq_functions.h"
 
@@ -53,10 +51,13 @@
 #include "eqapp_functions.h"
 
 #include "eqapp_alwaysattack.h"
+#include "eqapp_alwayshotbutton.h"
 #include "eqapp_combathotbutton.h"
 #include "eqapp_changeheight.h"
+#include "eqapp_spawncastspell.h"
 #include "eqapp_esp.h"
 #include "eqapp_boxchat.h"
+#include "eqapp_hud.h"
 
 #include "eqapp_console.h"
 #include "eqapp_interpretcmd.h"
@@ -64,6 +65,8 @@
 
 void EQAPP_Load()
 {
+    EQAPP_SpellList_Load();
+
     EQAPP_SetWindowTitleToPlayerSpawnName();
 
     std::chrono::system_clock::time_point timePoint = std::chrono::system_clock::now();
@@ -99,6 +102,7 @@ void EQAPP_InitializeAddressesAndPointers()
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_WINDOW_HWND);
 
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CrashDetected);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_DrawNetStatus);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_ExecuteCmd);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_get_bearing);
@@ -125,6 +129,7 @@ void EQAPP_InitializeAddressesAndPointers()
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CEverQuest);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CDisplay);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2);

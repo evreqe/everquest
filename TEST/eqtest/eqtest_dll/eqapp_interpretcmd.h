@@ -11,12 +11,20 @@ void EQAPP_InterpretCmd_NULL()
 
 std::map<std::string, std::function<void()>> g_InterpretCmdList =
 {
+    {"//Sleep",                        &EQAPP_Sleep_Toggle},
     {"//AlwaysAttack",                 &EQAPP_AlwaysAttack_Toggle},
     {"//AA",                           &EQAPP_AlwaysAttack_Toggle},
+    {"//AlwaysHotButton",              &EQAPP_AlwaysHotButton_Toggle},
+    {"//AHB",                          &EQAPP_AlwaysHotButton_Toggle},
     {"//CombatHotButton",              &EQAPP_CombatHotButton_Toggle},
     {"//CHB",                          &EQAPP_CombatHotButton_Toggle},
     {"//ESP",                          &EQAPP_ESP_Toggle},
+    {"//ESPShowSpawnID",               &EQAPP_ESP_ShowSpawnID_Toggle},
     {"//ChangeHeight",                 &EQAPP_ChangeHeight_Toggle},
+    {"//LoadSpellList",                &EQAPP_SpellList_Load},
+    {"//SpawnCastSpell",               &EQAPP_SpawnCastSpell_Toggle},
+    {"//SCS",                          &EQAPP_SpawnCastSpell_Toggle},
+    {"//HUD",                          &EQAPP_HUD_Toggle},
     ////{"//Null",                         &EQAPP_InterpretCmd_NULL},
     {"//Test",                         &EQAPP_InterpretCmd_NULL},
     {"//WindowTitle",                  &EQAPP_InterpretCmd_NULL},
@@ -839,6 +847,42 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
         return true;
     }
 
+    if (EQAPP_String_StartsWith(commandText, "//CombatHotButton ") == true || EQAPP_String_StartsWith(commandText, "//CHB ") == true)
+    {
+        std::string numberStr = EQAPP_String_GetAfter(commandText, " ");
+        if (numberStr.size() != 0)
+        {
+            signed int number = std::stoi(numberStr);
+
+            if (number > 0 && number < (EQ_NUM_HOT_BUTTONS + 1))
+            {
+                g_CombatHotButtonIndex = number - 1;
+
+                std::cout << "Combat HotButton: " << number << std::endl;
+            }
+        }
+
+        return true;
+    }
+
+    if (EQAPP_String_StartsWith(commandText, "//AlwaysHotButton ") == true || EQAPP_String_StartsWith(commandText, "//AHB ") == true)
+    {
+        std::string numberStr = EQAPP_String_GetAfter(commandText, " ");
+        if (numberStr.size() != 0)
+        {
+            signed int number = std::stoi(numberStr);
+
+            if (number > 0 && number < (EQ_NUM_HOT_BUTTONS + 1))
+            {
+                g_AlwaysHotButtonIndex = number - 1;
+
+                std::cout << "Always HotButton: " << number << std::endl;
+            }
+        }
+
+        return true;
+    }
+
     if (commandText == "//ESPFindName")
     {
         g_ESPFindSpawnName = std::string();
@@ -878,6 +922,44 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
             g_ESPFindSpawnLastName = name;
 
             std::cout << "ESP Find Spawn Last Name: " << name << std::endl;
+        }
+
+        return true;
+    }
+
+    if (commandText == "//GetNearbyNPCs")
+    {
+        std::vector<uint32_t> spawnIDList;
+        EQAPP_GetNPCSpawnIDListSortedByDistance(spawnIDList);
+
+        std::cout << "Nearby NPCs:" << std::endl;
+
+        uint32_t spawnIndex = 0;
+
+        for (auto& spawnID : spawnIDList)
+        {
+            if (spawnIndex > 9)
+            {
+                break;
+            }
+
+            auto spawn = EQ_GetSpawnByID(spawnID);
+            if (spawn == NULL)
+            {
+                spawnIndex++;
+                continue;
+            }
+
+            std::string spawnName = EQ_GetSpawnName(spawn);
+            if (spawnName.size() == 0)
+            {
+                spawnIndex++;
+                continue;
+            }
+
+            std::cout << spawnIndex + 1 << ": " << spawnName << " (ID: " << spawnID << ")" << std::endl;
+
+            spawnIndex++;
         }
 
         return true;

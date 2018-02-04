@@ -31,6 +31,7 @@ void EQAPP_ChangeHeight_Execute()
         if (spawnType == EQ_SPAWN_TYPE_PLAYER)
         {
             float spawnHeight = EQ_ReadMemory<float>(spawn + EQ_OFFSET_SPAWN_HEIGHT);
+
             if (spawnHeight > g_ChangeHeightMaximumHeight)
             {
                 EQ_SetSpawnHeight(spawn, g_ChangeHeightMaximumHeight);
