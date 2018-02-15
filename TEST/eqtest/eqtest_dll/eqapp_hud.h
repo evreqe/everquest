@@ -2,8 +2,8 @@
 
 bool g_HUDIsEnabled = true;
 
-uint32_t g_HUDXDefault = 8;
-uint32_t g_HUDYDefault = 100;
+uint32_t g_HUDXDefault = 200;
+uint32_t g_HUDYDefault = 10;
 uint32_t g_HUDFontHeight = 12;
 
 uint32_t g_HUDX = g_HUDXDefault;
@@ -33,7 +33,7 @@ void EQAPP_HUD_Execute()
 
     EQAPP_HUD_DrawText("EQTEST");
 
-    if (g_EQAppSleepIsEnabled == true)
+    if (g_SleepIsEnabled == true)
     {
         EQAPP_HUD_DrawText("- SLEEP!");
     }
@@ -42,7 +42,7 @@ void EQAPP_HUD_Execute()
     {
         if (g_BoxChatIsConnected == true)
         {
-            EQAPP_HUD_DrawText("- Box Chat Connected");
+            EQAPP_HUD_DrawText("- Box Chat is connected");
         }
     }
 
@@ -53,12 +53,28 @@ void EQAPP_HUD_Execute()
 
     if (g_AlwaysHotButtonIsEnabled == true)
     {
+        std::stringstream ss;
+        ss << "- Always HotButton: " << g_AlwaysHotButtonIndex;
+
         EQAPP_HUD_DrawText("- Always HotButton");
     }
 
     if (g_CombatHotButtonIsEnabled == true)
     {
+        std::stringstream ss;
+        ss << "- Combat HotButton: " << g_CombatHotButtonIndex;
+
         EQAPP_HUD_DrawText("- Combat HotButton");
+    }
+
+    if (g_AutoAlternateAbilityIsEnabled == true)
+    {
+        EQAPP_HUD_DrawText("- Auto Alternate Ability");
+    }
+
+    if (g_CombatAlternateAbilityIsEnabled == true)
+    {
+        EQAPP_HUD_DrawText("- Combat Alternate Ability");
     }
 
     if (g_ESPIsEnabled == true)

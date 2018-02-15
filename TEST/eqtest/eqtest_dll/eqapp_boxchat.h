@@ -12,10 +12,10 @@ bool g_BoxChatAutoConnect = true;
 
 std::list<std::string> g_BoxChatInterpretCommandList;
 
-std::chrono::time_point<std::chrono::steady_clock> g_BoxChatInterpretCommandTimer = std::chrono::steady_clock::now();
+EQApp::Timer g_BoxChatInterpretCommandTimer = EQAPP_Timer_GetTimeNow();
 
-std::chrono::time_point<std::chrono::steady_clock> g_BoxChatKeepAliveTimer = std::chrono::steady_clock::now();
-long long g_BoxChatKeepAliveTimerInterval = 3;
+EQApp::Timer g_BoxChatKeepAliveTimer = EQAPP_Timer_GetTimeNow();
+EQApp::TimerInterval g_BoxChatKeepAliveTimerInterval = 3;
 
 char g_BoxChatServerIPAddress[EQBCS_STRING_MAX];
 char g_BoxChatServerPort[EQBCS_STRING_MAX];
@@ -173,7 +173,7 @@ void EQAPP_BoxChat_Execute()
         return;
     }
 
-    if (EQAPP_HasTimeElapsed(g_BoxChatKeepAliveTimer, g_BoxChatKeepAliveTimerInterval) == true)
+    if (EQAPP_Timer_HasTimeElapsed(g_BoxChatKeepAliveTimer, g_BoxChatKeepAliveTimerInterval) == true)
     {
         EQAPP_BoxChat_SendText("$KeepAlive");
     }
@@ -210,8 +210,7 @@ void EQAPP_BoxChat_Execute()
 
         ////std::cout << "recvText: " << recvText << std::endl;
 
-        std::vector<std::string> recvTokens;
-        EQAPP_String_Split(recvText, recvTokens, '\n');
+        std::vector<std::string> recvTokens = EQAPP_String_Split(recvText, '\n');
 
         if (recvTokens.size() == 0)
         {
@@ -221,8 +220,7 @@ void EQAPP_BoxChat_Execute()
 
         for (auto& recvToken : recvTokens)
         {
-            std::vector<std::string> textTokens;
-            EQAPP_String_Split(recvToken, textTokens, ' ');
+            std::vector<std::string> textTokens = EQAPP_String_Split(recvToken, ' ');
 
             if (textTokens.size() == 0)
             {
@@ -279,29 +277,27 @@ void EQAPP_BoxChat_InterpretCommands()
 
     bool bHasTimeElapsed = false;
 
-    auto timeNow = std::chrono::steady_clock::now();
+    auto timeNow = EQAPP_Timer_GetTimeNow();
 
-    long long timeInterval = 1;
+    EQApp::TimerInterval timeInterval = 1;
 
-    if (commandText.find("//Pause ") != std::string::npos)
+    if (EQAPP_String_StartsWith(commandText, "//Pause ") == true)
     {
-        std::vector<std::string> tokens;
-        EQAPP_String_Split(commandText, tokens, ' ');
-
-        if (tokens.size() > 1)
+        std::string timeStr = EQAPP_String_GetAfter(commandText, " ");
+        if (timeStr.size() != 0)
         {
-            timeInterval = std::stoll(tokens.at(1));
+            timeInterval = std::stoll(timeStr);
 
             bUseTimer = true;
         }
     }
 
-    auto timeElapsed = std::chrono::duration_cast<std::chrono::seconds>(timeNow - g_BoxChatInterpretCommandTimer).count();
+    auto timeElapsed = EQAPP_Timer_GetTimeElapsed(g_BoxChatInterpretCommandTimer);
     if (timeElapsed >= timeInterval)
     {
         bHasTimeElapsed = true;
 
-        g_BoxChatInterpretCommandTimer = std::chrono::steady_clock::now();
+        g_BoxChatInterpretCommandTimer = EQAPP_Timer_GetTimeNow();
     }
 
     if (bUseTimer == true && bHasTimeElapsed == false)

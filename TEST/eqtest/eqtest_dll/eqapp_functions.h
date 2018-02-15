@@ -15,19 +15,6 @@ bool EQAPP_IsKeyDown(int vkKey);
 
 uint32_t EQAPP_GetRandomNumber(uint32_t low, uint32_t high);
 
-void EQAPP_String_ReplaceAll(std::string& subject, const std::string& search, const std::string& replace);
-bool EQAPP_String_StartsWith(std::string& subject, const std::string& search);
-std::string EQAPP_String_GetBetween(std::string& subject, const std::string& begin, const std::string& end);
-std::string EQAPP_String_JoinStrings(const std::vector<std::string>& elements, const std::string& separator);
-void EQAPP_String_Split(const std::string& subject, std::vector<std::string>& tokens, char delimiter);
-std::string EQAPP_String_GetBefore(const std::string& subject, const std::string& find);
-std::string EQAPP_String_GetAfter(const std::string& subject, const std::string& find);
-
-int EQAPP_INI_ReadInt(const char* filename, const char* section, const char* key, int defaultValue);
-bool EQAPP_INI_ReadBool(const char* filename, const char* section, const char* key, int defaultValue);
-float EQAPP_INI_ReadFloat(const char* filename, const char* section, const char* key, float defaultValue);
-std::string EQAPP_INI_ReadString(const char* filename, const char* section, const char* key, const char* defaultValue);
-
 void EQAPP_PlaySound(const char* filename);
 void EQAPP_Beep();
 void EQAPP_BeepEx(UINT beepType);
@@ -36,15 +23,7 @@ void EQAPP_DeleteFileContents(const char* filename);
 std::string EQAPP_ReadFileContents(const char* filename);
 void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list, bool coutLines = true);
 
-void EQAPP_SpellList_Load();
-void EQAPP_SpellList_LoadEx(const char* filename);
-std::string EQAPP_SpellList_GetNameByID(uint32_t spellID);
-
 void EQAPP_SetWindowTitleToPlayerSpawnName();
-
-bool EQAPP_HasTimeElapsed(std::chrono::time_point<std::chrono::steady_clock>& timer, long long timerInterval);
-
-void EQAPP_Sleep_Toggle();
 
 template <class T>
 void EQAPP_Log(const char* text, T number)
@@ -161,128 +140,6 @@ uint32_t EQAPP_GetRandomNumber(uint32_t low, uint32_t high)
     return uid(g_EQAppRandomEngine, uidpt);
 }
 
-void EQAPP_String_ReplaceAll(std::string& subject, const std::string& search, const std::string& replace)
-{
-    std::size_t position = 0;
-    while ((position = subject.find(search, position)) != std::string::npos)
-    {
-         subject.replace(position, search.length(), replace);
-         position += replace.length();
-    }
-}
-
-bool EQAPP_String_StartsWith(std::string& subject, const std::string& search)
-{
-    return (subject.compare(0, search.size(), search) == 0);
-}
-
-std::string EQAPP_String_GetBetween(std::string& subject, const std::string& begin, const std::string& end)
-{
-    std::size_t beginPosition;
-    if ((beginPosition = subject.find(begin)) != std::string::npos)
-    {
-        beginPosition = beginPosition + begin.length();
-
-        std::size_t endPosition;
-        if ((endPosition = subject.find(end, beginPosition)) != std::string::npos && endPosition != beginPosition)
-        {
-            return subject.substr(beginPosition, endPosition - beginPosition);
-        }
-    }
-
-    return std::string();
-}
-
-std::string EQAPP_String_JoinStrings(const std::vector<std::string>& elements, const std::string& separator)
-{
-    if (elements.empty() == false)
-    {
-        std::stringstream ss;
-
-        auto it = elements.cbegin();
-        while (true)
-        {
-            ss << *it++;
-
-            if (it != elements.cend())
-            {
-                ss << separator;
-            }
-            else
-            {
-                return ss.str();
-            }
-        }
-    }
-
-    return std::string();
-}
-
-void EQAPP_String_Split(const std::string& subject, std::vector<std::string>& tokens, char delimiter)
-{
-    std::istringstream iss(subject);
-    for (std::string token; std::getline(iss, token, delimiter); tokens.push_back(token));
-}
-
-std::string EQAPP_String_GetBefore(const std::string& subject, const std::string& find)
-{
-    std::string result = std::string();
-
-    std::string::size_type pos = subject.find_first_of(find);
-    if (pos != std::string::npos)
-    {
-        result = subject.substr(0, pos);
-    }
-
-    return result;
-}
-
-std::string EQAPP_String_GetAfter(const std::string& subject, const std::string& find)
-{
-    std::string result = std::string();
-
-    std::string::size_type pos = subject.find_first_of(find);
-    if (pos != std::string::npos)
-    {
-        result = subject.substr(pos + 1);
-    }
-
-    return result;
-}
-
-int EQAPP_INI_ReadInt(const char* filename, const char* section, const char* key, int defaultValue)
-{
-    return GetPrivateProfileIntA(section, key, defaultValue, filename);
-}
-
-bool EQAPP_INI_ReadBool(const char* filename, const char* section, const char* key, int defaultValue)
-{
-    int result = GetPrivateProfileIntA(section, key, defaultValue, filename);
-
-    return (result != 0);
-}
-
-float EQAPP_INI_ReadFloat(const char* filename, const char* section, const char* key, float defaultValue)
-{
-    char bufferDefault[128];
-    _snprintf_s(bufferDefault, sizeof(bufferDefault), _TRUNCATE, "%f", defaultValue);
-
-    char bufferResult[128];
-    GetPrivateProfileStringA(section, key, bufferDefault, bufferResult, sizeof(bufferResult), filename);
-
-    float result = (float)atof(bufferResult);
-
-    return result;
-}
-
-std::string EQAPP_INI_ReadString(const char* filename, const char* section, const char* key, const char* defaultValue)
-{
-    char buffer[1024];
-    int result = GetPrivateProfileStringA(section, key, defaultValue, buffer, sizeof(buffer), filename);
-
-    return std::string(buffer, result);
-}
-
 void EQAPP_PlaySound(const char* filename)
 {
     PlaySoundA(filename, 0, SND_FILENAME | SND_NODEFAULT | SND_ASYNC);
@@ -378,61 +235,6 @@ void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list, 
     file.close();
 }
 
-void EQAPP_SpellList_Load()
-{
-    EQAPP_SpellList_LoadEx("spells_us.txt");
-}
-
-void EQAPP_SpellList_LoadEx(const char* filename)
-{
-    std::fstream file;
-    file.open(filename, std::fstream::in);
-    if (file.is_open() == false)
-    {
-        std::stringstream ss;
-        ss << "failed to open file: " << filename;
-
-        EQAPP_PrintDebugMessage(__FUNCTION__, ss.str());
-        return;
-    }
-
-    g_EQAppSpellList.clear();
-
-    std::string line;
-    while (std::getline(file, line))
-    {
-        if (line.size() == 0)
-        {
-            continue;
-        }
-
-        std::vector<std::string> tokens;
-        EQAPP_String_Split(line, tokens, '^');
-
-        if (tokens.size() > 1)
-        {
-            uint32_t spellID = std::stoul(tokens.at(0));
-
-            g_EQAppSpellList.insert({spellID, tokens.at(1)});
-        }
-    }
-
-    file.close();
-}
-
-std::string EQAPP_SpellList_GetNameByID(uint32_t spellID)
-{
-    auto it = g_EQAppSpellList.find(spellID);
-    if (it != g_EQAppSpellList.end())
-    {
-        return it->second;
-    }
-    else
-    {
-        return std::string();
-    }
-}
-
 void EQAPP_SetWindowTitleToPlayerSpawnName()
 {
     std::string playerSpawnName = EQ_GetPlayerSpawnName();
@@ -449,24 +251,4 @@ void EQAPP_SetWindowTitleToPlayerSpawnName()
             SetWindowTextA(hwnd, ss.str().c_str());
         }
     }
-}
-
-bool EQAPP_HasTimeElapsed(std::chrono::time_point<std::chrono::steady_clock>& timer, long long timerInterval)
-{
-    auto timeNow = std::chrono::steady_clock::now();
-
-    auto timeElapsed = std::chrono::duration_cast<std::chrono::seconds>(timeNow - timer).count();
-    if (timeElapsed >= timerInterval)
-    {
-        timer = std::chrono::steady_clock::now();
-        return true;
-    }
-
-    return false;
-}
-
-void EQAPP_Sleep_Toggle()
-{
-    EQ_ToggleBool(g_EQAppSleepIsEnabled);
-    EQAPP_PrintBool("Sleep", g_EQAppSleepIsEnabled);
 }

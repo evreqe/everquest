@@ -17,7 +17,7 @@ EQ_MACRO_FUNCTION_DefineDetour(EQ_Character__eqspa_movement_rate);
 EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__InterpretCmd);
 EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__StartCasting);
 
-int __cdecl EQAPP_DETOURED_FUNCTION_CrashDetected();
+char* __cdecl EQAPP_DETOURED_FUNCTION_CrashDetected();
 int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown);
 int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive, void* unknown, int zero);
 
@@ -65,15 +65,19 @@ void EQAPP_Detours_Unload()
     EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__StartCasting);
 }
 
-int __cdecl EQAPP_DETOURED_FUNCTION_CrashDetected()
+char* __cdecl EQAPP_DETOURED_FUNCTION_CrashDetected()
 {
     if (g_EQAppShouldUnload == 1)
     {
         return EQAPP_REAL_FUNCTION_CrashDetected();
     }
 
-    std::cout << "**** CRASH DETECTED ****" << std::endl;
-    return 0;
+    for (unsigned int i = 0; i < 10; i++)
+    {
+        std::cout << "********** CRASH DETECTED **********" << std::endl;
+    }
+
+    ////return "CrashDetected()";
 
     return EQAPP_REAL_FUNCTION_CrashDetected();
 }
@@ -100,14 +104,14 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
 
     g_EQAppPlayerName = EQ_GetPlayerSpawnName();
 
-    if (EQAPP_HasTimeElapsed(g_EQAppWindowTitleTimer, g_EQAppWindowTitleTimerInterval) == true)
+    if (EQAPP_Timer_HasTimeElapsed(g_EQAppWindowTitleTimer, g_EQAppWindowTitleTimerInterval) == true)
     {
         EQAPP_SetWindowTitleToPlayerSpawnName();
     }
 
-    if (g_EQAppSleepIsEnabled == true)
+    if (g_SleepIsEnabled == true)
     {
-        Sleep(100);
+        EQAPP_Sleep_Execute();
     }
 
     if (g_HUDIsEnabled == true)
@@ -136,6 +140,16 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
     if (g_CombatHotButtonIsEnabled == true)
     {
         EQAPP_CombatHotButton_Execute();
+    }
+
+    if (g_AutoAlternateAbilityIsEnabled == true)
+    {
+        EQAPP_AutoAlternateAbility_Execute();
+    }
+
+    if (g_CombatAlternateAbilityIsEnabled == true)
+    {
+        EQAPP_CombatAlternateAbility_Execute();
     }
 
     if (g_ChangeHeightIsEnabled == true)
@@ -207,6 +221,8 @@ int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__FollowPlayerAI(void* this_ptr, 
         return EQAPP_REAL_FUNCTION_EQPlayer__FollowPlayerAI(this_ptr);
     }
 
+    EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_3, 400.0f);
+
     auto playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn != NULL)
     {
@@ -225,8 +241,9 @@ int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__FollowPlayerAI(void* this_ptr, 
 
     int result = EQAPP_REAL_FUNCTION_EQPlayer__FollowPlayerAI(this_ptr);
 
-    EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_1, 15.0f);
-    EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_2, 30.0f);
+    EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_1, EQ_FOLLOW_DISTANCE_1_DEFAULT);
+    EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_2, EQ_FOLLOW_DISTANCE_2_DEFAULT);
+    EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_3, EQ_FOLLOW_DISTANCE_3_DEFAULT);
 
     return result;
 }

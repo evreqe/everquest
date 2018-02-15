@@ -4,8 +4,8 @@
 
 bool g_AlwaysHotButtonIsEnabled = false;
 
-std::chrono::time_point<std::chrono::steady_clock> g_AlwaysHotButtonTimer = std::chrono::steady_clock::now();
-long long g_AlwaysHotButtonTimerInterval = 1;
+EQApp::Timer g_AlwaysHotButtonTimer = EQAPP_Timer_GetTimeNow();
+EQApp::TimerInterval g_AlwaysHotButtonTimerInterval = 1;
 
 signed int g_AlwaysHotButtonIndex = -1;
 
@@ -20,7 +20,7 @@ void EQAPP_AlwaysHotButton_Toggle()
 
 void EQAPP_AlwaysHotButton_Execute()
 {
-    if (EQAPP_HasTimeElapsed(g_AlwaysHotButtonTimer, g_AlwaysHotButtonTimerInterval) == false)
+    if (EQAPP_Timer_HasTimeElapsed(g_AlwaysHotButtonTimer, g_AlwaysHotButtonTimerInterval) == false)
     {
         return;
     }

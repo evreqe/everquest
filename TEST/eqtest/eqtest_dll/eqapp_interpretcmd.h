@@ -18,9 +18,14 @@ std::map<std::string, std::function<void()>> g_InterpretCmdList =
     {"//AHB",                          &EQAPP_AlwaysHotButton_Toggle},
     {"//CombatHotButton",              &EQAPP_CombatHotButton_Toggle},
     {"//CHB",                          &EQAPP_CombatHotButton_Toggle},
+    {"//AutoAlternateAbility",         &EQAPP_AutoAlternateAbility_Toggle},
+    {"//AAA",                          &EQAPP_AutoAlternateAbility_Toggle},
+    {"//CombatAlternateAbility",       &EQAPP_CombatAlternateAbility_Toggle},
+    {"//CAA",                          &EQAPP_CombatAlternateAbility_Toggle},
     {"//ESP",                          &EQAPP_ESP_Toggle},
     {"//ESPShowSpawnID",               &EQAPP_ESP_ShowSpawnID_Toggle},
     {"//ChangeHeight",                 &EQAPP_ChangeHeight_Toggle},
+    {"//CH",                           &EQAPP_ChangeHeight_Toggle},
     {"//LoadSpellList",                &EQAPP_SpellList_Load},
     {"//SpawnCastSpell",               &EQAPP_SpawnCastSpell_Toggle},
     {"//SCS",                          &EQAPP_SpawnCastSpell_Toggle},
@@ -55,12 +60,13 @@ std::map<std::string, std::function<void()>> g_InterpretCmdList =
     {"//OpenBags",                     &EQAPP_InterpretCmd_NULL},
     {"//CloseBags",                    &EQAPP_InterpretCmd_NULL},
     {"//HotButton1",                   &EQAPP_InterpretCmd_NULL},
+    {"//HotButton1_1",                 &EQAPP_InterpretCmd_NULL},
     {"//XTarget1",                     &EQAPP_InterpretCmd_NULL},
     {"//Potion1",                      &EQAPP_InterpretCmd_NULL},
     {"//ESPFindName",                  &EQAPP_InterpretCmd_NULL},
     {"//ESPFindLastName",              &EQAPP_InterpretCmd_NULL},
-    {"//Multi",                        &EQAPP_InterpretCmd_NULL},
-    {"//MultiRandom",                  &EQAPP_InterpretCmd_NULL},
+    {"//Multiline",                    &EQAPP_InterpretCmd_NULL},
+    {"//MultilineRandom",              &EQAPP_InterpretCmd_NULL},
     {"//CastRandom",                   &EQAPP_InterpretCmd_NULL},
     {"//DoAbility",                    &EQAPP_InterpretCmd_NULL},
     {"//DoAbilityRandom",              &EQAPP_InterpretCmd_NULL},
@@ -68,16 +74,16 @@ std::map<std::string, std::function<void()>> g_InterpretCmdList =
     {"//DisciplineRandom",             &EQAPP_InterpretCmd_NULL},
     {"//AltActivate",                  &EQAPP_InterpretCmd_NULL},
     {"//AltActivateRandom",            &EQAPP_InterpretCmd_NULL},
-    {"//BCC",                          &EQAPP_InterpretCmd_NULL},
-    {"//BCD",                          &EQAPP_InterpretCmd_NULL},
-    {"//BCT",                          &EQAPP_InterpretCmd_NULL},
-    {"//BCA",                          &EQAPP_InterpretCmd_NULL},
-    {"//BCAA",                         &EQAPP_InterpretCmd_NULL},
     {"//BoxChatConnect",               &EQAPP_InterpretCmd_NULL},
+    {"//BCC",                          &EQAPP_InterpretCmd_NULL},
     {"//BoxChatDisconnect",            &EQAPP_InterpretCmd_NULL},
+    {"//BCD",                          &EQAPP_InterpretCmd_NULL},
     {"//BoxChatTell",                  &EQAPP_InterpretCmd_NULL},
+    {"//BCT",                          &EQAPP_InterpretCmd_NULL},
     {"//BoxChatOthers",                &EQAPP_InterpretCmd_NULL},
+    {"//BCA",                          &EQAPP_InterpretCmd_NULL},
     {"//BoxChatAll",                   &EQAPP_InterpretCmd_NULL},
+    {"//BCAA",                         &EQAPP_InterpretCmd_NULL},
 };
 
 bool EQAPP_InterpretCmd_HandleEvent_CEverQuest__InterpretCmd(void* this_ptr, class EQPlayer* player, const char* commandText_);
@@ -188,13 +194,12 @@ void EQAPP_InterpretCmd_InterpretArguments(const std::string& commandText, const
         return;
     }
 
-    if (commandTextAfterSpace.find(";") == std::string::npos)
+    if (EQAPP_String_Contains(commandTextAfterSpace, ",") == false)
     {
         return;
     }
 
-    std::vector<std::string> tokens;
-    EQAPP_String_Split(commandTextAfterSpace, tokens, ';');
+    std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
 
     if (tokens.size() == 0)
     {
@@ -218,13 +223,12 @@ void EQAPP_InterpretCmd_InterpretRandomArgument(const std::string& commandText, 
         return;
     }
 
-    if (commandTextAfterSpace.find(";") == std::string::npos)
+    if (EQAPP_String_Contains(commandTextAfterSpace, ",") == false)
     {
         return;
     }
 
-    std::vector<std::string> tokens;
-    EQAPP_String_Split(commandTextAfterSpace, tokens, ';');
+    std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
 
     if (tokens.size() == 0)
     {
@@ -341,6 +345,25 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
         return true;
     }
 
+    if (EQAPP_String_StartsWith(commandText, "//ChangeHeight ") == true)
+    {
+        std::string heightStr = EQAPP_String_GetAfter(commandText, " ");
+        if (heightStr.size() != 0)
+        {
+            float height = std::stof(heightStr);
+            if (height > 0.0f)
+            {
+                auto targetSpawn = EQ_GetTargetSpawn();
+                if (targetSpawn != NULL)
+                {
+                    EQ_SetSpawnHeight(targetSpawn, height);
+                }
+            }
+        }
+
+        return true;
+    }
+
     if (commandText == "//FaceTarget")
     {
         EQ_TurnPlayerTowardsTarget();
@@ -357,24 +380,18 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
 
     if (EQAPP_String_StartsWith(commandText, "//Target ") == true)
     {
-        std::vector<std::string> tokens;
-        EQAPP_String_Split(commandText, tokens, ' ');
-
-        if (tokens.size() > 1)
+        std::string spawnName = EQAPP_String_GetAfter(commandText, " ");
+        if (spawnName.size() != 0)
         {
-            std::string spawnName = tokens.at(1);
-            if (spawnName.size() != 0)
+            auto playerSpawn = EQ_GetPlayerSpawn();
+            if (playerSpawn != NULL)
             {
-                auto playerSpawn = EQ_GetPlayerSpawn();
-                if (playerSpawn != NULL)
+                auto spawn = EQ_GetSpawnByName(spawnName.c_str());
+                if (spawn != NULL)
                 {
-                    auto spawn = EQ_GetSpawnByName(spawnName.c_str());
-                    if (spawn != NULL)
-                    {
-                        EQ_WriteMemory<uint32_t>(EQ_ADDRESS_POINTER_TARGET_SPAWN, spawn);
+                    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_POINTER_TARGET_SPAWN, spawn);
 
-                        std::cout << "Target: " << spawnName << std::endl;
-                    }
+                    std::cout << "Target: " << spawnName << std::endl;
                 }
             }
         }
@@ -384,26 +401,20 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
 
     if (EQAPP_String_StartsWith(commandText, "//TargetID ") == true)
     {
-        std::vector<std::string> tokens;
-        EQAPP_String_Split(commandText, tokens, ' ');
-
-        if (tokens.size() > 1)
+        std::string spawnIDStr = EQAPP_String_GetAfter(commandText, " ");
+        if (spawnIDStr.size() != 0)
         {
-            std::string str = tokens.at(1);
-            if (str.size() != 0)
+            uint32_t spawnID = std::stoul(spawnIDStr);
+
+            auto playerSpawn = EQ_GetPlayerSpawn();
+            if (playerSpawn != NULL)
             {
-                uint32_t spawnID = std::stoul(str);
-
-                auto playerSpawn = EQ_GetPlayerSpawn();
-                if (playerSpawn != NULL)
+                auto spawn = EQ_GetSpawnByID(spawnID);
+                if (spawn != NULL)
                 {
-                    auto spawn = EQ_GetSpawnByID(spawnID);
-                    if (spawn != NULL)
-                    {
-                        EQ_WriteMemory<uint32_t>(EQ_ADDRESS_POINTER_TARGET_SPAWN, spawn);
+                    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_POINTER_TARGET_SPAWN, spawn);
 
-                        std::cout << "Target by ID: " << str << std::endl;
-                    }
+                    std::cout << "Target by ID: " << spawnIDStr << std::endl;
                 }
             }
         }
@@ -428,25 +439,19 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
 
     if (EQAPP_String_StartsWith(commandText, "//Follow ") == true)
     {
-        std::vector<std::string> tokens;
-        EQAPP_String_Split(commandText, tokens, ' ');
-
-        if (tokens.size() > 1)
+        std::string spawnName = EQAPP_String_GetAfter(commandText, " ");
+        if (spawnName.size() != 0)
         {
-            std::string spawnName = tokens.at(1);
-            if (spawnName.size() != 0)
+            auto playerSpawn = EQ_GetPlayerSpawn();
+            if (playerSpawn != NULL)
             {
-                auto playerSpawn = EQ_GetPlayerSpawn();
-                if (playerSpawn != NULL)
+                auto spawn = EQ_GetSpawnByName(spawnName.c_str());
+                if (spawn != NULL)
                 {
-                    auto spawn = EQ_GetSpawnByName(spawnName.c_str());
-                    if (spawn != NULL)
-                    {
-                        EQ_WriteMemory<uint32_t>(EQ_ADDRESS_POINTER_TARGET_SPAWN, spawn);
-                        EQ_WriteMemory<uint32_t>(playerSpawn + EQ_OFFSET_SPAWN_FOLLOW_SPAWN, spawn);
+                    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_POINTER_TARGET_SPAWN, spawn);
+                    EQ_WriteMemory<uint32_t>(playerSpawn + EQ_OFFSET_SPAWN_FOLLOW_SPAWN, spawn);
 
-                        std::cout << "Follow: " << spawnName << std::endl;
-                    }
+                    std::cout << "Follow: " << spawnName << std::endl;
                 }
             }
         }
@@ -665,11 +670,604 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
         return true;
     }
 
+    if (commandText == "//HotButton1_1")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT1_1, 1);
+    }
+
+    if (commandText == "//HotButton1_2")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT1_2, 1);
+    }
+
+    if (commandText == "//HotButton1_3")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT1_3, 1);
+    }
+
+    if (commandText == "//HotButton1_4")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT1_4, 1);
+    }
+
+    if (commandText == "//HotButton1_5")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT1_5, 1);
+    }
+
+    if (commandText == "//HotButton1_6")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT1_6, 1);
+    }
+
+    if (commandText == "//HotButton1_7")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT1_7, 1);
+    }
+
+    if (commandText == "//HotButton1_8")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT1_8, 1);
+    }
+
+    if (commandText == "//HotButton1_9")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT1_9, 1);
+    }
+
+    if (commandText == "//HotButton1_10")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT1_10, 1);
+    }
+
+    if (commandText == "//HotButton1_11")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT1_11, 1);
+    }
+
+    if (commandText == "//HotButton1_12")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT1_12, 1);
+    }
+
     if (commandText == "//HotButton2_1")
     {
         EQ_ExecuteCommand(EQ_EXECUTECMD_HOT2_1, 1);
+    }
 
-        return true;
+    if (commandText == "//HotButton2_2")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT2_2, 1);
+    }
+
+    if (commandText == "//HotButton2_3")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT2_3, 1);
+    }
+
+    if (commandText == "//HotButton2_4")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT2_4, 1);
+    }
+
+    if (commandText == "//HotButton2_5")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT2_5, 1);
+    }
+
+    if (commandText == "//HotButton2_6")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT2_6, 1);
+    }
+
+    if (commandText == "//HotButton2_7")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT2_7, 1);
+    }
+
+    if (commandText == "//HotButton2_8")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT2_8, 1);
+    }
+
+    if (commandText == "//HotButton2_9")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT2_9, 1);
+    }
+
+    if (commandText == "//HotButton2_10")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT2_10, 1);
+    }
+
+    if (commandText == "//HotButton2_11")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT2_11, 1);
+    }
+
+    if (commandText == "//HotButton2_12")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT2_12, 1);
+    }
+
+    if (commandText == "//HotButton3_1")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT3_1, 1);
+    }
+
+    if (commandText == "//HotButton3_2")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT3_2, 1);
+    }
+
+    if (commandText == "//HotButton3_3")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT3_3, 1);
+    }
+
+    if (commandText == "//HotButton3_4")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT3_4, 1);
+    }
+
+    if (commandText == "//HotButton3_5")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT3_5, 1);
+    }
+
+    if (commandText == "//HotButton3_6")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT3_6, 1);
+    }
+
+    if (commandText == "//HotButton3_7")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT3_7, 1);
+    }
+
+    if (commandText == "//HotButton3_8")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT3_8, 1);
+    }
+
+    if (commandText == "//HotButton3_9")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT3_9, 1);
+    }
+
+    if (commandText == "//HotButton3_10")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT3_10, 1);
+    }
+
+    if (commandText == "//HotButton3_11")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT3_11, 1);
+    }
+
+    if (commandText == "//HotButton3_12")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT3_12, 1);
+    }
+
+    if (commandText == "//HotButton4_1")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT4_1, 1);
+    }
+
+    if (commandText == "//HotButton4_2")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT4_2, 1);
+    }
+
+    if (commandText == "//HotButton4_3")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT4_3, 1);
+    }
+
+    if (commandText == "//HotButton4_4")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT4_4, 1);
+    }
+
+    if (commandText == "//HotButton4_5")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT4_5, 1);
+    }
+
+    if (commandText == "//HotButton4_6")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT4_6, 1);
+    }
+
+    if (commandText == "//HotButton4_7")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT4_7, 1);
+    }
+
+    if (commandText == "//HotButton4_8")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT4_8, 1);
+    }
+
+    if (commandText == "//HotButton4_9")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT4_9, 1);
+    }
+
+    if (commandText == "//HotButton4_10")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT4_10, 1);
+    }
+
+    if (commandText == "//HotButton4_11")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT4_11, 1);
+    }
+
+    if (commandText == "//HotButton4_12")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT4_12, 1);
+    }
+
+    if (commandText == "//HotButton5_1")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT5_1, 1);
+    }
+
+    if (commandText == "//HotButton5_2")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT5_2, 1);
+    }
+
+    if (commandText == "//HotButton5_3")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT5_3, 1);
+    }
+
+    if (commandText == "//HotButton5_4")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT5_4, 1);
+    }
+
+    if (commandText == "//HotButton5_5")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT5_5, 1);
+    }
+
+    if (commandText == "//HotButton5_6")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT5_6, 1);
+    }
+
+    if (commandText == "//HotButton5_7")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT5_7, 1);
+    }
+
+    if (commandText == "//HotButton5_8")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT5_8, 1);
+    }
+
+    if (commandText == "//HotButton5_9")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT5_9, 1);
+    }
+
+    if (commandText == "//HotButton5_10")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT5_10, 1);
+    }
+
+    if (commandText == "//HotButton5_11")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT5_11, 1);
+    }
+
+    if (commandText == "//HotButton5_12")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT5_12, 1);
+    }
+
+    if (commandText == "//HotButton6_1")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT6_1, 1);
+    }
+
+    if (commandText == "//HotButton6_2")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT6_2, 1);
+    }
+
+    if (commandText == "//HotButton6_3")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT6_3, 1);
+    }
+
+    if (commandText == "//HotButton6_4")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT6_4, 1);
+    }
+
+    if (commandText == "//HotButton6_5")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT6_5, 1);
+    }
+
+    if (commandText == "//HotButton6_6")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT6_6, 1);
+    }
+
+    if (commandText == "//HotButton6_7")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT6_7, 1);
+    }
+
+    if (commandText == "//HotButton6_8")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT6_8, 1);
+    }
+
+    if (commandText == "//HotButton6_9")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT6_9, 1);
+    }
+
+    if (commandText == "//HotButton6_10")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT6_10, 1);
+    }
+
+    if (commandText == "//HotButton6_11")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT6_11, 1);
+    }
+
+    if (commandText == "//HotButton6_12")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT6_12, 1);
+    }
+
+    if (commandText == "//HotButton7_1")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT7_1, 1);
+    }
+
+    if (commandText == "//HotButton7_2")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT7_2, 1);
+    }
+
+    if (commandText == "//HotButton7_3")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT7_3, 1);
+    }
+
+    if (commandText == "//HotButton7_4")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT7_4, 1);
+    }
+
+    if (commandText == "//HotButton7_5")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT7_5, 1);
+    }
+
+    if (commandText == "//HotButton7_6")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT7_6, 1);
+    }
+
+    if (commandText == "//HotButton7_7")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT7_7, 1);
+    }
+
+    if (commandText == "//HotButton7_8")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT7_8, 1);
+    }
+
+    if (commandText == "//HotButton7_9")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT7_9, 1);
+    }
+
+    if (commandText == "//HotButton7_10")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT7_10, 1);
+    }
+
+    if (commandText == "//HotButton7_11")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT7_11, 1);
+    }
+
+    if (commandText == "//HotButton7_12")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT7_12, 1);
+    }
+
+    if (commandText == "//HotButton8_1")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT8_1, 1);
+    }
+
+    if (commandText == "//HotButton8_2")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT8_2, 1);
+    }
+
+    if (commandText == "//HotButton8_3")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT8_3, 1);
+    }
+
+    if (commandText == "//HotButton8_4")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT8_4, 1);
+    }
+
+    if (commandText == "//HotButton8_5")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT8_5, 1);
+    }
+
+    if (commandText == "//HotButton8_6")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT8_6, 1);
+    }
+
+    if (commandText == "//HotButton8_7")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT8_7, 1);
+    }
+
+    if (commandText == "//HotButton8_8")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT8_8, 1);
+    }
+
+    if (commandText == "//HotButton8_9")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT8_9, 1);
+    }
+
+    if (commandText == "//HotButton8_10")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT8_10, 1);
+    }
+
+    if (commandText == "//HotButton8_11")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT8_11, 1);
+    }
+
+    if (commandText == "//HotButton8_12")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT8_12, 1);
+    }
+
+    if (commandText == "//HotButton9_1")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT9_1, 1);
+    }
+
+    if (commandText == "//HotButton9_2")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT9_2, 1);
+    }
+
+    if (commandText == "//HotButton9_3")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT9_3, 1);
+    }
+
+    if (commandText == "//HotButton9_4")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT9_4, 1);
+    }
+
+    if (commandText == "//HotButton9_5")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT9_5, 1);
+    }
+
+    if (commandText == "//HotButton9_6")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT9_6, 1);
+    }
+
+    if (commandText == "//HotButton9_7")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT9_7, 1);
+    }
+
+    if (commandText == "//HotButton9_8")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT9_8, 1);
+    }
+
+    if (commandText == "//HotButton9_9")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT9_9, 1);
+    }
+
+    if (commandText == "//HotButton9_10")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT9_10, 1);
+    }
+
+    if (commandText == "//HotButton9_11")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT9_11, 1);
+    }
+
+    if (commandText == "//HotButton9_12")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT9_12, 1);
+    }
+
+    if (commandText == "//HotButton10_1")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT10_1, 1);
+    }
+
+    if (commandText == "//HotButton10_2")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT10_2, 1);
+    }
+
+    if (commandText == "//HotButton10_3")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT10_3, 1);
+    }
+
+    if (commandText == "//HotButton10_4")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT10_4, 1);
+    }
+
+    if (commandText == "//HotButton10_5")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT10_5, 1);
+    }
+
+    if (commandText == "//HotButton10_6")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT10_6, 1);
+    }
+
+    if (commandText == "//HotButton10_7")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT10_7, 1);
+    }
+
+    if (commandText == "//HotButton10_8")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT10_8, 1);
+    }
+
+    if (commandText == "//HotButton10_9")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT10_9, 1);
+    }
+
+    if (commandText == "//HotButton10_10")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT10_10, 1);
+    }
+
+    if (commandText == "//HotButton10_11")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT10_11, 1);
+    }
+
+    if (commandText == "//HotButton10_12")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_HOT10_12, 1);
     }
 
     if (commandText == "//XTarget1")
@@ -965,14 +1563,14 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (EQAPP_String_StartsWith(commandText, "//Multi ") == true)
+    if (EQAPP_String_StartsWith(commandText, "//Multiline ") == true)
     {
         EQAPP_InterpretCmd_InterpretArguments(commandText, "");
 
         return true;
     }
 
-    if (EQAPP_String_StartsWith(commandText, "//MultiRandom ") == true)
+    if (EQAPP_String_StartsWith(commandText, "//MultilineRandom ") == true)
     {
         EQAPP_InterpretCmd_InterpretRandomArgument(commandText, "");
 
@@ -1030,26 +1628,20 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
 
     if (EQAPP_String_StartsWith(commandText, "//BoxChatConnect ") == true || EQAPP_String_StartsWith(commandText, "//BCC ") == true)
     {
-        g_BoxChatAutoConnect = false;
+        g_BoxChatAutoConnect = false; // prevent crash when the auto connect thread calls EQAPP_BoxChat_Connect()
 
-        std::vector<std::string> tokens;
-        EQAPP_String_Split(commandText, tokens, ' ');
-
-        if (tokens.size() > 1)
+        std::string name = EQAPP_String_GetAfter(commandText, " ");
+        if (name.size() != 0)
         {
-            std::string name = tokens.at(1);
-            if (name.size() != 0)
-            {
-                std::cout << "Box Chat Connect as Name: " << name << std::endl;
+            std::cout << "Box Chat Connect as Name: " << name << std::endl;
 
-                if (EQAPP_BoxChat_Connect(name) == false)
-                {
-                    std::cout << "Box Chat failed to connect!" << std::endl;
-                }
+            if (EQAPP_BoxChat_Connect(name) == false)
+            {
+                std::cout << "Box Chat failed to connect!" << std::endl;
             }
         }
 
-        g_BoxChatAutoConnect = true;
+        g_BoxChatAutoConnect = true; // prevent crash when the auto connect thread calls EQAPP_BoxChat_Connect()
 
         return true;
     }
@@ -1083,18 +1675,12 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
 
     if (EQAPP_String_StartsWith(commandText, "//BoxChatTell ") == true || EQAPP_String_StartsWith(commandText, "//BCT ") == true)
     {
-        std::vector<std::string> tokens;
-        EQAPP_String_Split(commandText, tokens, ' ');
-
-        if (tokens.size() > 1)
+        std::string name = EQAPP_String_GetAfter(commandText, " ");
+        if (name.size() != 0)
         {
-            std::string spawnName = tokens.at(1);
-            if (spawnName.size() != 0)
-            {
-                EQAPP_BoxChat_SendText(commandText);
+            EQAPP_BoxChat_SendText(commandText);
 
-                std::cout << "Box Chat to '" << spawnName << "': " << commandText << std::endl;
-            }
+            std::cout << "Box Chat to '" << name << "': " << commandText << std::endl;
         }
 
         return true;

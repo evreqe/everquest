@@ -2,8 +2,8 @@
 
 bool g_AlwaysAttackIsEnabled = false;
 
-std::chrono::time_point<std::chrono::steady_clock> g_AlwaysAttackTimer = std::chrono::steady_clock::now();
-long long g_AlwaysAttackTimerInterval = 1;
+EQApp::Timer g_AlwaysAttackTimer = EQAPP_Timer_GetTimeNow();
+EQApp::TimerInterval g_AlwaysAttackTimerInterval = 1;
 
 void EQAPP_AlwaysAttack_Toggle();
 void EQAPP_AlwaysAttack_Execute();
@@ -21,7 +21,7 @@ void EQAPP_AlwaysAttack_Toggle()
 
 void EQAPP_AlwaysAttack_Execute()
 {
-    if (EQAPP_HasTimeElapsed(g_AlwaysAttackTimer, g_AlwaysAttackTimerInterval) == false)
+    if (EQAPP_Timer_HasTimeElapsed(g_AlwaysAttackTimer, g_AlwaysAttackTimerInterval) == false)
     {
         return;
     }

@@ -118,9 +118,32 @@ void EQAPP_ESP_Execute()
             }
 
             int spawnLevel = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_LEVEL);
+            int spawnRace = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_RACE);
+            int spawnClass = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_CLASS);
 
             std::stringstream espText;
-            espText << "[" << spawnLevel << "] " << spawnName;
+            espText << "[" << spawnLevel;
+
+            bool bShowSpawnClass = true;
+
+            if (spawnType == EQ_SPAWN_TYPE_NPC)
+            {
+                if (spawnClass == EQ_CLASS_WARRIOR || spawnClass == EQ_CLASS_BANKER || spawnClass == EQ_CLASS_MERCHANT)
+                {
+                    bShowSpawnClass = false;
+                }
+            }
+
+            if (bShowSpawnClass == true)
+            {
+                auto spawnClassIt = EQ_UMAP_CLASS_SHORT_NAME.find(spawnClass);
+                if (spawnClassIt != EQ_UMAP_CLASS_SHORT_NAME.end())
+                {
+                    espText << " " << spawnClassIt->second;
+                }
+            }
+
+            espText << "] " << spawnName;
 
             if (spawnType == EQ_SPAWN_TYPE_CORPSE)
             {

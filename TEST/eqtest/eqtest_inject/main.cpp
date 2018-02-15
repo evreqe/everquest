@@ -120,7 +120,7 @@ int is_client_version_correct(DWORD process_id, HANDLE process_handle)
     if (result == 0)
     {
         char error_text[4096];
-        sprintf(error_text, "Expected %s and %s for date and time!", EQ_STRING_CLIENT_VERSION_DATE, EQ_STRING_CLIENT_VERSION_TIME);
+        sprintf_s(error_text, sizeof(error_text), "Expected %s and %s for date and time!", EQ_STRING_CLIENT_VERSION_DATE, EQ_STRING_CLIENT_VERSION_TIME);
 
         MessageBoxA(NULL, error_text, "Inject DLL Error", MB_ICONERROR);
     }

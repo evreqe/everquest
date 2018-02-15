@@ -2,8 +2,8 @@
 
 bool g_ChangeHeightIsEnabled = true;
 
-std::chrono::time_point<std::chrono::steady_clock> g_ChangeHeightTimer = std::chrono::steady_clock::now();
-long long g_ChangeHeightTimerInterval = 3;
+EQApp::Timer g_ChangeHeightTimer = EQAPP_Timer_GetTimeNow();
+EQApp::TimerInterval g_ChangeHeightTimerInterval = 3;
 
 float g_ChangeHeightMinimumHeight = 1.0f;
 float g_ChangeHeightMaximumHeight = 5.0f;
@@ -19,7 +19,7 @@ void EQAPP_ChangeHeight_Toggle()
 
 void EQAPP_ChangeHeight_Execute()
 {
-    if (EQAPP_HasTimeElapsed(g_ChangeHeightTimer, g_ChangeHeightTimerInterval) == false)
+    if (EQAPP_Timer_HasTimeElapsed(g_ChangeHeightTimer, g_ChangeHeightTimerInterval) == false)
     {
         return;
     }

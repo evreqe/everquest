@@ -4,8 +4,8 @@
 
 bool g_CombatHotButtonIsEnabled = false;
 
-std::chrono::time_point<std::chrono::steady_clock> g_CombatHotButtonTimer = std::chrono::steady_clock::now();
-long long g_CombatHotButtonTimerInterval = 6;
+EQApp::Timer g_CombatHotButtonTimer = EQAPP_Timer_GetTimeNow();
+EQApp::TimerInterval g_CombatHotButtonTimerInterval = 6;
 
 signed int g_CombatHotButtonIndex = -1;
 
@@ -20,7 +20,7 @@ void EQAPP_CombatHotButton_Toggle()
 
 void EQAPP_CombatHotButton_Execute()
 {
-    if (EQAPP_HasTimeElapsed(g_CombatHotButtonTimer, g_CombatHotButtonTimerInterval) == false)
+    if (EQAPP_Timer_HasTimeElapsed(g_CombatHotButtonTimer, g_CombatHotButtonTimerInterval) == false)
     {
         return;
     }

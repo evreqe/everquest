@@ -2,39 +2,49 @@
 
 #include <cstdint>
 
+#include <unordered_map>
+#include <string>
+
+#include "eq_alternateabilities.h"
 #include "eq_virtualkeycodes.h"
 #include "eq_executecmd.h"
 #include "eq_keys.h"
 
-DWORD EQ_ADDRESS_CLIENT_VERSION_DATE = 0xAE60B8; // WinMain()    "Starting EverQuest (Built %s %s)"    CrashDetected()    "Client Version: %s %s\n"
-#define EQ_STRING_CLIENT_VERSION_DATE "Jan 22 2018"
+DWORD EQ_ADDRESS_CLIENT_VERSION_DATE = 0xADBC20; // WinMain()    "Starting EverQuest (Built %s %s)"    CrashDetected()    "Client Version: %s %s\n"
+#define EQ_STRING_CLIENT_VERSION_DATE "Feb 12 2018"
 #define EQ_SIZE_CLIENT_VERSION_DATE 12
 
-DWORD EQ_ADDRESS_CLIENT_VERSION_TIME = 0xAE60C4; // WinMain()    "Starting EverQuest (Built %s %s)"    CrashDetected()    "Client Version: %s %s\n"
-#define EQ_STRING_CLIENT_VERSION_TIME "10:35:37"
+DWORD EQ_ADDRESS_CLIENT_VERSION_TIME = 0xADBC14; // WinMain()    "Starting EverQuest (Built %s %s)"    CrashDetected()    "Client Version: %s %s\n"
+#define EQ_STRING_CLIENT_VERSION_TIME "19:55:13"
 #define EQ_SIZE_CLIENT_VERSION_TIME 9
 
 const float EQ_PI = 3.14159265358979f;
 
+#define EQ_NUM_HOT_BARS       10
 #define EQ_NUM_HOT_BUTTONS    12
 #define EQ_NUM_SPELLS         59999
 
 DWORD EQ_BASE_ADDRESS_VALUE    = 0x400000;
 
-DWORD EQ_ADDRESS_AUTO_ATTACK    = 0xFB6A7B; // uint8_t
-DWORD EQ_ADDRESS_AUTO_FIRE      = 0xFB6A7C; // uint8_t
-DWORD EQ_ADDRESS_AUTO_RUN       = 0xF32514; // uint32_t
-DWORD EQ_ADDRESS_MOUSE_LOOK     = 0xF324F6; // uint8_t
+DWORD EQ_ADDRESS_AUTO_ATTACK    = 0xFB49B7; // uint8_t
+DWORD EQ_ADDRESS_AUTO_FIRE      = 0x0;      // uint8_t
+DWORD EQ_ADDRESS_AUTO_RUN       = 0xF30450; // uint32_t
+DWORD EQ_ADDRESS_MOUSE_LOOK     = 0xF30432; // uint8_t
+DWORD EQ_ADDRESS_NET_STATUS     = 0xF30435; // uint8_t    byte_F30435 = sub_9CFF30("Defaults", "NetStat", 0, 0);
 /*
 search for 1 and 0
 */
 
-DWORD EQ_ADDRESS_POINTER_WINDOW_HWND = 0xFBC0C0; // HWND hWnd
+DWORD EQ_ADDRESS_POINTER_WINDOW_HWND = 0xFB73B0; // HWND hWnd
 /*
-PostMessageA(hWnd, 0x4647u, 0x4247u, (LPARAM)v3);
+    PostMessageA(hWnd, 0x4647u, 0x4247u, (LPARAM)v3);
+*/
+/*
+    _snprintf(v11, v10, "%s %s", &Dest, &v14);
+    PostMessageA(hWnd, 0x4646u, 0x4246u, (LPARAM)v11);
 */
 
-DWORD EQ_ADDRESS_FUNCTION_CrashDetected    = 0x6413E0; // "Crash (char = %s, zone = %s)\n"    "Local Player's World location at time of crash: %f, %f, %f.\n"    "Gamestate at crash = %d\n"    "Crash Details: %s\n"
+DWORD EQ_ADDRESS_FUNCTION_CrashDetected    = 0x741000; // "Crash (char = %s, zone = %s)\n"    "Local Player's World location at time of crash: %f, %f, %f.\n"    "Gamestate at crash = %d\n"    "Crash Details: %s\n"
 /*
   sub_8A4150("Fatal error occurred in mainthread! (Release Client #630)\n");
   strcat(byte_FBC576, "Fatal error in mainthread! (Release Client #630)\n");
@@ -83,8 +93,8 @@ DWORD EQ_ADDRESS_FUNCTION_CrashDetected    = 0x6413E0; // "Crash (char = %s, zon
   }
 */
 
-DWORD EQ_ADDRESS_FUNCTION_DrawNetStatus    = 0x5BA110; // "%ldms"    "%0.2f%%"
-DWORD EQ_ADDRESS_FUNCTION_ExecuteCmd       = 0x5219A0; // "ExecuteCmd has received a CMD_EXITGAME.\n"    "/%s %s"    "%c%s %s "    "help.html"
+DWORD EQ_ADDRESS_FUNCTION_DrawNetStatus    = 0x6BA2A0; // "%ldms"    "%0.2f%%"
+DWORD EQ_ADDRESS_FUNCTION_ExecuteCmd       = 0x624500; // "ExecuteCmd has received a CMD_EXITGAME.\n"    "/%s %s"    "%c%s %s "    "help.html"
 /*
 ExecuteCmd()
 case 508:
@@ -99,7 +109,7 @@ sub_8A55C0(
     sub_523550(508, 0, 0, 0); // ExecuteCmd
 */
 
-DWORD EQ_ADDRESS_FUNCTION_get_bearing    = 0x539620; // search for "fpatan"
+DWORD EQ_ADDRESS_FUNCTION_get_bearing    = 0x62B880; // search for "fpatan"
 /*
 double __cdecl sub_53B1C0(float a1, float a2, float a3, float a4)
 {
@@ -146,12 +156,12 @@ double __cdecl sub_53B1C0(float a1, float a2, float a3, float a4)
 */
 
 // class EQPlayer
-DWORD EQ_ADDRESS_POINTER_EQPlayerManager    = 0xFB80B0; // pinstSpawnManager
+DWORD EQ_ADDRESS_POINTER_EQPlayerManager    = 0xFB6040; // pinstSpawnManager
 
 #define EQ_OFFSET_EQPlayerManager_FIRST_SPAWN    0x08
 #define EQ_OFFSET_EQPlayerManager_LAST_SPAWN     0x0C
 
-DWORD EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID      = 0x5E2E00; // "Your inventory is full!"
+DWORD EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID      = 0x6E3AE0; // "Your inventory is full!"
 /*
 case 0xD:
       result = (_DWORD *)sub_5E2420((void *)dword_FB5090, *(_DWORD *)(a3 + 4)); // EQPlayerManager__GetSpawnByID and pinstSpawnManager
@@ -192,7 +202,7 @@ LABEL_53:
       return result;
 */
 
-DWORD EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName    = 0x5E3260; // "Incorrect Usage. Type /xtarget for correct usage."
+DWORD EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName    = 0x6E3B00; // "Incorrect Usage. Type /xtarget for correct usage."
 /*
 if ( !sub_8A3560(&v32, 0) || (sub_89F500(&v32), v8 = sub_89E950(&v28) - 1, v8 < 0) )
       {
@@ -251,8 +261,9 @@ while ( *(_DWORD *)(result + 4) != v7 )
 */
 
 // class EQPlayer
-DWORD EQ_ADDRESS_POINTER_TARGET_SPAWN    = 0xF25020; // pinstTargetSpawn
-DWORD EQ_ADDRESS_POINTER_PLAYER_SPAWN    = 0xF2501C; // pinstCharSpawn    ControlledPlayer    "Local Player's World location at time of crash: %f, %f, %f.\n"
+DWORD EQ_ADDRESS_POINTER_TARGET_SPAWN        = 0xF22F80; // pinstTargetSpawn   ExecuteCmd() case 355 CLEAR_TARGET
+DWORD EQ_ADDRESS_POINTER_CONTROLLED_SPAWN    = 0x0; // pinstCharSpawn    ControlledPlayer
+DWORD EQ_ADDRESS_POINTER_PLAYER_SPAWN        = 0xF20F2C; // LocalPlayer    "Local Player's World location at time of crash: %f, %f, %f.\n"
 /*
 if ( dword_F21FE8 ) // PlayerSpawn
   {
@@ -263,7 +274,39 @@ if ( dword_F21FE8 ) // PlayerSpawn
   }
 */
 
-DWORD EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI    = 0x5D4B60; // search for xref to autorun
+// double check offsets after patch!
+#define EQ_OFFSET_SPAWN_PREVIOUS          0x04     // uint32_t pointer
+#define EQ_OFFSET_SPAWN_NEXT              0x08     // uint32_t pointer
+#define EQ_OFFSET_SPAWN_LAST_NAME         0x38     // char[32]
+#define EQ_OFFSET_SPAWN_Y                 0x64     // float
+#define EQ_OFFSET_SPAWN_X                 0x68     // float
+#define EQ_OFFSET_SPAWN_Z                 0x6C     // float
+#define EQ_OFFSET_SPAWN_HEADING           0x80     // float
+#define EQ_OFFSET_SPAWN_NAME_NUMBERED     0xA4     // char[64]
+#define EQ_OFFSET_SPAWN_NAME              0xE4     // char[64]
+#define EQ_OFFSET_SPAWN_TYPE              0x125    // uint8_t
+#define EQ_OFFSET_SPAWN_HEIGHT            0x13C    // float
+#define EQ_OFFSET_SPAWN_ID                0x148    // uint32_t
+// ******************************************************************************** //
+#define EQ_OFFSET_SPAWN_ZONE_ID           0x534    // uint32_t
+#define EQ_OFFSET_SPAWN_LEVEL             0x584    // uint8_t
+#define EQ_OFFSET_SPAWN_RACE              0xF9C    // uint32_t
+#define EQ_OFFSET_SPAWN_CLASS             0xFA4    // uint32_t
+#define EQ_OFFSET_SPAWN_STANDING_STATE    0x4D8    // uint8_t
+#define EQ_OFFSET_SPAWN_HP_CURRENT        0x4F0    // uint32_t
+#define EQ_OFFSET_SPAWN_HP_MAX            0x590    // uint32_t
+#define EQ_OFFSET_SPAWN_MANA_CURRENT      0x3AC    // uint32_t
+#define EQ_OFFSET_SPAWN_MANA_MAX          0x50C    // uint32_t
+#define EQ_OFFSET_SPAWN_FOLLOW_SPAWN      0xF30    // uint32_t pointer
+
+#define EQ_SIZE_SPAWN_NAME         64 // 0x40
+#define EQ_SIZE_SPAWN_LAST_NAME    32 // 0x20
+
+#define EQ_SPAWN_TYPE_PLAYER    0
+#define EQ_SPAWN_TYPE_NPC       1
+#define EQ_SPAWN_TYPE_CORPSE    2
+
+DWORD EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI    = 0x6D7700; // search for xref to autorun
 /*
 EQPlayer__FollowPlayerAI()
     if ( v21 + 15.0 <= *(float *)(v1 + 564) ) // Follow Distance 1
@@ -287,13 +330,18 @@ EQPlayer__FollowPlayerAI()
     }
 */
 
-DWORD EQ_ADDRESS_FOLLOW_DISTANCE_1    = 0xACABE0; // 15.0f
-DWORD EQ_ADDRESS_FOLLOW_DISTANCE_2    = 0xACAA84; // 30.0f
+DWORD EQ_ADDRESS_FOLLOW_DISTANCE_1    = 0xAC0CD0; // 15.0f
+DWORD EQ_ADDRESS_FOLLOW_DISTANCE_2    = 0xAC0CD4; // 30.0f
+DWORD EQ_ADDRESS_FOLLOW_DISTANCE_3    = 0xAC0958; // 200.0f    // maximum follow distance
 /*
 EQPlayer__FollowPlayerAI()
 */
 
-DWORD EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight    = 0x5EDE70; // PlayerZoneClient__ChangeHeight    "%s is now able to kill anyone (or be killed) as if they were an NPC." and "FORMAT: /becomenpc"
+const float EQ_FOLLOW_DISTANCE_1_DEFAULT = 15.0f;
+const float EQ_FOLLOW_DISTANCE_2_DEFAULT = 30.0f;
+const float EQ_FOLLOW_DISTANCE_3_DEFAULT = 200.0f;
+
+DWORD EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight    = 0x6EBF50; // PlayerZoneClient__ChangeHeight    "%s is now able to kill anyone (or be killed) as if they were an NPC." and "FORMAT: /becomenpc"
 /*
 v25 = sub_569850(v18);
 sprintf(&v59, "Changing %s to race: %s.", dword_F26020 + 164, v25);
@@ -313,6 +361,7 @@ result = sub_476850(v29, &v59, 273, 1, 1, 0);
 */
 
 /*
+do_height():
 v10 = 0.0;
   v11 = 0.0;
   v2 = (char *)dword_F26020;
@@ -350,29 +399,6 @@ v10 = 0.0;
       sub_5EFD60(v2, v10, v11, 1.0, 0); // EQPlayer__ChangeHeight()
     }
 */
-
-// double check offsets after patch!
-#define EQ_OFFSET_SPAWN_PREVIOUS         0x04     // uint32_t pointer
-#define EQ_OFFSET_SPAWN_NEXT             0x08     // uint32_t pointer
-#define EQ_OFFSET_SPAWN_LAST_NAME        0x38     // 32 bytes
-#define EQ_OFFSET_SPAWN_Y                0x64     // float
-#define EQ_OFFSET_SPAWN_X                0x68     // float
-#define EQ_OFFSET_SPAWN_Z                0x6C     // float
-#define EQ_OFFSET_SPAWN_HEADING          0x80     // float
-#define EQ_OFFSET_SPAWN_NAME_NUMBERED    0xA4     // 64 bytes
-#define EQ_OFFSET_SPAWN_NAME             0xE4     // 64 bytes
-#define EQ_OFFSET_SPAWN_TYPE             0x125    // uint8_t
-#define EQ_OFFSET_SPAWN_HEIGHT           0x13C    // float
-#define EQ_OFFSET_SPAWN_ID               0x148    // uint32_t
-#define EQ_OFFSET_SPAWN_LEVEL            0x1C0    // uint8_t
-#define EQ_OFFSET_SPAWN_FOLLOW_SPAWN     0xF20    // uint32_t pointer
-
-#define EQ_SIZE_SPAWN_NAME         0x40 // 64 bytes
-#define EQ_SIZE_SPAWN_LAST_NAME    0x20 // 32 bytes
-
-#define EQ_SPAWN_TYPE_PLAYER    0x00
-#define EQ_SPAWN_TYPE_NPC       0x01
-#define EQ_SPAWN_TYPE_CORPSE    0x02
 
 // class EQ_Character
 DWORD EQ_ADDRESS_POINTER_PLAYER_CHARACTER    = 0x0; // psintCharData
@@ -413,22 +439,22 @@ if ( v94 - *(_DWORD *)(v112 + 900) > 1000 )
 */
 
 // class CXWndManager
-DWORD EQ_ADDRESS_POINTER_CXWndManager    = 0x1732E90; // pinstCXWndManager
+DWORD EQ_ADDRESS_POINTER_CXWndManager    = 0x1731174; // pinstCXWndManager
 
-DWORD EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows    = 0x8CA260; // "DoAllDrawing() failed\n"
+DWORD EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows    = 0x9C9770; // "DoAllDrawing() failed\n"    GetTickCount()
 
 // class CEverQuest
-DWORD EQ_ADDRESS_POINTER_CEverQuest    = 0x10C4438; // pinstCEverQuest
+DWORD EQ_ADDRESS_POINTER_CEverQuest    = 0xFB71F0; // pinstCEverQuest
 /*
 CEverQuest__InterpretCmd()
 if ( *(_DWORD *)(dword_10C1418 + 1480) == 5 ) // gamestate == in-game
 */
 
-#define EQ_OFFSET_CEverQuest_GAME_STATE    0x5C8 // 1480 decimal    "Gamestate at crash = %d\n"
+#define EQ_OFFSET_CEverQuest_GAME_STATE    0x5C8 // uint32_t, 1480 decimal    "Gamestate at crash = %d\n"
 
 #define EQ_GAME_STATE_IN_GAME 5
 
-DWORD EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd    = 0x56B890; // "#%s %s"
+DWORD EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd    = 0x686A00; // "#%s %s"
 /*
 CEverQuest__InterpretCmd()
 switch ( byte_F334A0 )
@@ -465,13 +491,15 @@ default:
 }
 */
 
-DWORD EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat        = 0x476560;
+DWORD EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat        = 0x579900;
 /*
 CEverQuest__InterpretCmd()
 sub_4764B0(v9, v8, 273, 1, 1, 0); // CEverQuest__dsp_chat
 */
 
-DWORD EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting    = 0x566CF0; // "%s <%s>"
+#define EQ_CHAT_TEXT_COLOR_YELLOW    15
+
+DWORD EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting    = 0x66DA80; // "%s <%s>"
 /*
   if ( v13 && v13 != 3 && v13 != 7 )
   {
@@ -501,10 +529,11 @@ typedef struct _CEverQuest__StartCasting_Message
 
 } // namespace EQ
 
-#define EQ_CHAT_TEXT_COLOR_YELLOW    15
-
 // class CDisplay
-DWORD EQ_ADDRESS_POINTER_CDisplay    = 0xF25038; // pinstCDisplay    "CDisplay::CreatePlayerActor - FATAL ERROR - mySpriteDef is NULL. "
+DWORD EQ_ADDRESS_POINTER_CDisplay    = 0xF20698; // pinstCDisplay    "CDisplay::CreatePlayerActor - FATAL ERROR - mySpriteDef is NULL. "
+/*
+CDisplay::CreatePlayerActor(*(float *)&a1, (int)dword_F20698, 0, 0, 1, 2, 1, 0);
+*/
 
 #define EQ_OFFSET_CDisplay_CAMERA    0x118 // uint32_t pointer
 #define EQ_OFFSET_CDisplay_TIMER     0x154 // uint32_t
@@ -513,29 +542,31 @@ DWORD EQ_ADDRESS_POINTER_CDisplay    = 0xF25038; // pinstCDisplay    "CDisplay::
 #define EQ_OFFSET_CAMERA_ASPECT_RATIO                  0x08 // float
 #define EQ_OFFSET_CAMERA_UNKNOWN_0x0C                  0x0C // float, 0.0 to 1.0
 #define EQ_OFFSET_CAMERA_DRAW_DISTANCE                 0x14 // float
+#define EQ_OFFSET_CAMERA_ACTOR_CLIP_PLANE              0x1C // float
+#define EQ_OFFSET_CAMERA_SHADOW_CLIP_PLANE             0x24 // float
 #define EQ_OFFSET_CAMERA_SCREEN_WIDTH_HALF             0x38 // float
 #define EQ_OFFSET_CAMERA_SCREEN_HEIGHT_HALF            0x3C // float
-#define EQ_OFFSET_CAMERA_HEADING                       0xB0 // float
-#define EQ_OFFSET_CAMERA_PITCH                         0xB4 // float
-#define EQ_OFFSET_CAMERA_UNKNOWN_0xB8                  0xB8 // float, rotation?
+#define EQ_OFFSET_CAMERA_HEADING                       0xB0 // float, yaw
+#define EQ_OFFSET_CAMERA_PITCH                         0xB4 // float, pitch
+#define EQ_OFFSET_CAMERA_ROTATION                      0xB8 // float, roll
 #define EQ_OFFSET_CAMERA_Y                             0xBC // float
 #define EQ_OFFSET_CAMERA_X                             0xC0 // float
 #define EQ_OFFSET_CAMERA_Z                             0xC4 // float
 
-const float EQ_CAMERA_FIELD_OF_VIEW_DEFAULT    = 45.0f;
+const float EQ_CAMERA_FIELD_OF_VIEW_DEFAULT       = 45.0f;
+const float EQ_CAMERA_FIELD_OF_VIEW_DRUID_MASK    = 60.0f;
 
 const float EQ_CAMERA_PITCH_DEFAULT    = -8.5f;      // center view
 const float EQ_CAMERA_PITCH_MIN        = -136.5f;    // look down
 const float EQ_CAMERA_PITCH_MAX        = 119.5f;     // look up
 
-DWORD EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2    = 0x4C20C0; // "%ldms"    "%0.2f%%"
+DWORD EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2    = 0x5C2A60; // "%ldms"    "%0.2f%%"
 /*
 DrawNetStatus()
-((void (__cdecl *)(char *, _DWORD, _DWORD, signed int))sub_4C2200)(
-      &v11,
-      (unsigned __int16)a1,
-      (unsigned __int16)a2,
-      12)
+    sprintf(&Dest, "%0.2f%%", v8 * 100.0);
+    CDisplay__WriteTextHD2(&Dest, (unsigned __int16)a1, (unsigned __int16)a2, (void *)12);
+    sprintf(&Dest, "%ldms", v16);
+    CDisplay__WriteTextHD2(&Dest, (unsigned __int16)a1 + 64, (unsigned __int16)a2, (void *)12);
 */
 
 #define EQ_DRAW_TEXT_COLOR_BLACK         0  // ARGB 0xFF000000
@@ -559,3 +590,152 @@ DrawNetStatus()
 #define EQ_DRAW_TEXT_COLOR_TEAL          18 // ARGB 0xFF00F0F0
 #define EQ_DRAW_TEXT_COLOR_DEFAULT_6     19 // ARGB 0xFF606060
 #define EQ_DRAW_TEXT_COLOR_BLACK_2       20 // ARGB 0xFF000000
+
+#define EQ_ZONE_ID_POKNOWLEDGE    202 // Plane of Knowledge
+#define EQ_ZONE_ID_GUILDLOBBY     344 // The Guild Lobby
+
+std::unordered_map<uint32_t, std::string> EQ_UMAP_ZONE_NAME =
+{
+    {EQ_ZONE_ID_POKNOWLEDGE,      "Plane of Knowledge"},
+    {EQ_ZONE_ID_GUILDLOBBY,       "The Guild Lobby"},
+};
+
+std::unordered_map<uint32_t, std::string> EQ_UMAP_ZONE_SHORT_NAME =
+{
+    {EQ_ZONE_ID_POKNOWLEDGE,      "poknowledge"},
+    {EQ_ZONE_ID_GUILDLOBBY,       "guildlobby"},
+};
+
+#define EQ_RACE_UNKNOWN      0
+#define EQ_RACE_HUMAN        1
+#define EQ_RACE_BARBARIAN    2
+#define EQ_RACE_ERUDITE      3
+#define EQ_RACE_WOOD_ELF     4
+#define EQ_RACE_HIGH_ELF     5
+#define EQ_RACE_DARK_ELF     6
+#define EQ_RACE_HALF_ELF     7
+#define EQ_RACE_DWARF        8
+#define EQ_RACE_TROLL        9
+#define EQ_RACE_OGRE         10
+#define EQ_RACE_HALFLING     11
+#define EQ_RACE_GNOME        12
+#define EQ_RACE_IKSAR        128
+#define EQ_RACE_VAH_SHIR     130
+#define EQ_RACE_FROGLOK      330
+#define EQ_RACE_DRAKKIN      -1 // TODO
+
+std::unordered_map<uint32_t, std::string> EQ_UMAP_RACE_NAME =
+{
+    {EQ_RACE_UNKNOWN,      "Unknown"},
+    {EQ_RACE_HUMAN,        "Human"},
+    {EQ_RACE_BARBARIAN,    "Barbarian"},
+    {EQ_RACE_ERUDITE,      "Erudite"},
+    {EQ_RACE_WOOD_ELF,     "Wood Elf"},
+    {EQ_RACE_HIGH_ELF,     "High Elf"},
+    {EQ_RACE_DARK_ELF,     "Dark Elf"},
+    {EQ_RACE_HALF_ELF,     "Half Elf"},
+    {EQ_RACE_DWARF,        "Dwarf"},
+    {EQ_RACE_TROLL,        "Troll"},
+    {EQ_RACE_OGRE,         "Ogre"},
+    {EQ_RACE_HALFLING,     "Halfling"},
+    {EQ_RACE_GNOME,        "Gnome"},
+    {EQ_RACE_IKSAR,        "Iksar"},
+    {EQ_RACE_VAH_SHIR,     "Vah Shir"},
+    {EQ_RACE_FROGLOK,      "Froglok"},
+    {EQ_RACE_DRAKKIN,      "Drakkin"},
+};
+
+std::unordered_map<uint32_t, std::string> EQ_UMAP_RACE_SHORT_NAME =
+{
+    {EQ_RACE_UNKNOWN,      "UNK"},
+    {EQ_RACE_HUMAN,        "HUM"},
+    {EQ_RACE_BARBARIAN,    "BAR"},
+    {EQ_RACE_ERUDITE,      "ERU"},
+    {EQ_RACE_WOOD_ELF,     "ELF"},
+    {EQ_RACE_HIGH_ELF,     "HIE"},
+    {EQ_RACE_DARK_ELF,     "DEF"},
+    {EQ_RACE_HALF_ELF,     "HEF"},
+    {EQ_RACE_DWARF,        "DWF"},
+    {EQ_RACE_TROLL,        "TRL"},
+    {EQ_RACE_OGRE,         "OGR"},
+    {EQ_RACE_HALFLING,     "HFL"},
+    {EQ_RACE_GNOME,        "GNM"},
+    {EQ_RACE_IKSAR,        "IKS"},
+    {EQ_RACE_VAH_SHIR,     "VAH"},
+    {EQ_RACE_FROGLOK,      "FRG"},
+    {EQ_RACE_DRAKKIN,      "DRK"},
+};
+
+#define EQ_CLASS_UNKNOWN             0
+#define EQ_CLASS_WARRIOR             1
+#define EQ_CLASS_CLERIC              2
+#define EQ_CLASS_PALADIN             3
+#define EQ_CLASS_RANGER              4
+#define EQ_CLASS_SHADOWKNIGHT        5
+#define EQ_CLASS_DRUID               6
+#define EQ_CLASS_MONK                7
+#define EQ_CLASS_BARD                8
+#define EQ_CLASS_ROGUE               9
+#define EQ_CLASS_SHAMAN              10
+#define EQ_CLASS_NECROMANCER         11
+#define EQ_CLASS_WIZARD              12
+#define EQ_CLASS_MAGICIAN            13
+#define EQ_CLASS_ENCHANTER           14
+#define EQ_CLASS_BEASTLORD           15
+#define EQ_CLASS_BERSERKER           16
+#define EQ_CLASS_BANKER              40
+#define EQ_CLASS_MERCHANT            41
+
+std::unordered_map<uint32_t, std::string> EQ_UMAP_CLASS_NAME =
+{
+    {EQ_CLASS_UNKNOWN,         "Unknown"},
+    {EQ_CLASS_WARRIOR,         "Warrior"},
+    {EQ_CLASS_CLERIC,          "Cleric"},
+    {EQ_CLASS_PALADIN,         "Paladin"},
+    {EQ_CLASS_RANGER,          "Ranger"},
+    {EQ_CLASS_SHADOWKNIGHT,    "Shadowknight"},
+    {EQ_CLASS_DRUID,           "Druid"},
+    {EQ_CLASS_MONK,            "Monk"},
+    {EQ_CLASS_BARD,            "Bard"},
+    {EQ_CLASS_ROGUE,           "Rogue"},
+    {EQ_CLASS_SHAMAN,          "Shaman"},
+    {EQ_CLASS_NECROMANCER,     "Necromancer"},
+    {EQ_CLASS_WIZARD,          "Wizard"},
+    {EQ_CLASS_MAGICIAN,        "Magician"},
+    {EQ_CLASS_ENCHANTER,       "Enchanter"},
+    {EQ_CLASS_BEASTLORD,       "Beastlord"},
+    {EQ_CLASS_BERSERKER,       "Berserker"},
+    {EQ_CLASS_BANKER,          "Banker"},
+    {EQ_CLASS_MERCHANT,        "Merchant"},
+};
+
+std::unordered_map<uint32_t, std::string> EQ_UMAP_CLASS_SHORT_NAME =
+{
+    {EQ_CLASS_UNKNOWN,         "UNK"},
+    {EQ_CLASS_WARRIOR,         "WAR"},
+    {EQ_CLASS_CLERIC,          "CLR"},
+    {EQ_CLASS_PALADIN,         "PAL"},
+    {EQ_CLASS_RANGER,          "RNG"},
+    {EQ_CLASS_SHADOWKNIGHT,    "SHD"},
+    {EQ_CLASS_DRUID,           "DRU"},
+    {EQ_CLASS_MONK,            "MNK"},
+    {EQ_CLASS_BARD,            "BRD"},
+    {EQ_CLASS_ROGUE,           "ROG"},
+    {EQ_CLASS_SHAMAN,          "SHM"},
+    {EQ_CLASS_NECROMANCER,     "NEC"},
+    {EQ_CLASS_WIZARD,          "WIZ"},
+    {EQ_CLASS_MAGICIAN,        "MAG"},
+    {EQ_CLASS_ENCHANTER,       "ENC"},
+    {EQ_CLASS_BEASTLORD,       "BST"},
+    {EQ_CLASS_BERSERKER,       "BER"},
+    ////{EQ_CLASS_BANKER,          "BANKER"},
+    ////{EQ_CLASS_MERCHANT,        "MERCHANT"},
+};
+
+#define EQ_STANDING_STATE_STANDING    100
+#define EQ_STANDING_STATE_FROZEN      102 // stunned, mesmerized or feared    "You lose control of yourself!"
+#define EQ_STANDING_STATE_KNEELING    105 // looting or binding wounds
+#define EQ_STANDING_STATE_SITTING     110
+#define EQ_STANDING_STATE_DUCKING     111 // crouching
+#define EQ_STANDING_STATE_FEIGN_DEATH 115 // pretending to be dead
+#define EQ_STANDING_STATE_DEAD        120

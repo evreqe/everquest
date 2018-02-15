@@ -17,8 +17,8 @@
 
 typedef int (__cdecl* EQ_FUNCTION_TYPE_DrawNetStatus)(int x, int y, int unknown);
 
-EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQ_FUNCTION_CrashDetected(), EQ_ADDRESS_FUNCTION_CrashDetected);
-typedef int (__cdecl* EQ_FUNCTION_TYPE_CrashDetected)();
+EQ_MACRO_FUNCTION_FunctionAtAddress(char* __cdecl EQ_FUNCTION_CrashDetected(), EQ_ADDRESS_FUNCTION_CrashDetected);
+typedef char* (__cdecl* EQ_FUNCTION_TYPE_CrashDetected)();
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQ_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive, void* unknown, int zero), EQ_ADDRESS_FUNCTION_ExecuteCmd);
 typedef int (__cdecl* EQ_FUNCTION_TYPE_ExecuteCmd)(uint32_t commandID, int isActive, void* unknown, int zero);
@@ -48,6 +48,8 @@ uint32_t EQ_GetPlayerSpawn();
 std::string EQ_GetPlayerSpawnName();
 uint32_t EQ_GetSpawnByID(uint32_t spawnID);
 uint32_t EQ_GetSpawnByName(const char* spawnName);
+uint32_t EQ_GetSpawnHPPercent(uint32_t spawn);
+uint32_t EQ_GetSpawnManaPercent(uint32_t spawn);
 void EQ_SetSpawnHeight(uint32_t spawn, float height);
 void EQ_InterpretCommand(const char* text);
 void EQ_ExecuteCommand(uint32_t commandID, int isActive);
@@ -56,6 +58,7 @@ void EQ_WriteChatText(const char* text);
 void EQ_WriteChatTextEx(const char* text, int color);
 void EQ_DrawText(const char* text, int x, int y);
 void EQ_DrawTextEx(const char* text, int x, int y, int color);
+bool EQ_IsInGame();
 uint32_t EQ_GetTimer();
 uint32_t EQ_GetCamera();
 void EQ_SetCameraPitch(float pitch);
@@ -256,13 +259,38 @@ uint32_t EQ_GetSpawnByName(const char* spawnName)
     return spawn;
 }
 
-void EQ_SetSpawnHeight(uint32_t spawn, float height)
+uint32_t EQ_GetSpawnHPPercent(uint32_t spawn)
 {
-    if (spawn == NULL)
+    uint32_t hpCurrent = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_HP_CURRENT);
+    uint32_t hpMax     = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_HP_MAX);
+
+    uint32_t hpMultiplied = hpCurrent * hpMax;
+
+    if (hpMultiplied == 0)
     {
-        return;
+        return 0;
     }
 
+    return hpMultiplied / 100;
+}
+
+uint32_t EQ_GetSpawnManaPercent(uint32_t spawn)
+{
+    uint32_t manaCurrent = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_MANA_CURRENT);
+    uint32_t manaMax     = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_MANA_MAX);
+
+    uint32_t manaMultiplied = manaCurrent * manaMax;
+
+    if (manaMultiplied == 0)
+    {
+        return 0;
+    }
+
+    return manaMultiplied / 100;
+}
+
+void EQ_SetSpawnHeight(uint32_t spawn, float height)
+{
     ((EQClass::EQPlayer*)spawn)->ChangeHeight(height, 0.0f, 1.0f, 0);
 }
 
@@ -303,6 +331,19 @@ void EQ_DrawText(const char* text, int x, int y)
 void EQ_DrawTextEx(const char* text, int x, int y, int color)
 {
     EQ_CLASS_POINTER_CDisplay->WriteTextHD2(text, x, y, color);
+}
+
+bool EQ_IsInGame()
+{
+    uint32_t everquest = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CEverQuest);
+    if (everquest == NULL)
+    {
+        return NULL;
+    }
+
+    uint32_t gameState = EQ_ReadMemory<uint32_t>(everquest + EQ_OFFSET_CEverQuest_GAME_STATE);
+
+    return gameState == EQ_GAME_STATE_IN_GAME;
 }
 
 uint32_t EQ_GetTimer()

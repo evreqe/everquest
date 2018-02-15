@@ -50,15 +50,20 @@
 #include "eqapp.h"
 #include "eqapp_functions.h"
 
+#include "eqapp_spelllist.h"
+
 #include "eqapp_alwaysattack.h"
 #include "eqapp_alwayshotbutton.h"
 #include "eqapp_combathotbutton.h"
+#include "eqapp_autoalternateability.h"
+#include "eqapp_combatalternateability.h"
 #include "eqapp_changeheight.h"
 #include "eqapp_spawncastspell.h"
 #include "eqapp_esp.h"
+#include "eqapp_sleep.h"
 #include "eqapp_boxchat.h"
-#include "eqapp_hud.h"
 
+#include "eqapp_hud.h"
 #include "eqapp_console.h"
 #include "eqapp_interpretcmd.h"
 #include "eqapp_detours.h"
@@ -69,20 +74,18 @@ void EQAPP_Load()
 
     EQAPP_SetWindowTitleToPlayerSpawnName();
 
-    std::chrono::system_clock::time_point timePoint = std::chrono::system_clock::now();
-    std::time_t time = std::chrono::system_clock::to_time_t(timePoint);
+    std::string timeText = EQAPP_Timer_GetTimeAsString();
 
-    std::cout << g_EQAppNameEx << " Loaded!    " << std::ctime(&time);
+    std::cout << g_EQAppNameEx << " Loaded!    " << timeText;
 
     g_EQAppIsLoaded = 1;
 }
 
 void EQAPP_Unload()
 {
-    std::chrono::system_clock::time_point timePoint = std::chrono::system_clock::now();
-    std::time_t time = std::chrono::system_clock::to_time_t(timePoint);
+    std::string timeText = EQAPP_Timer_GetTimeAsString();
 
-    std::cout << g_EQAppNameEx << " Unloaded!    " << std::ctime(&time);
+    std::cout << g_EQAppNameEx << " Unloaded!    " << timeText;
 
     g_EQAppShouldUnload = 1;
 }
