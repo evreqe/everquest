@@ -40,7 +40,16 @@ void EQAPP_SpellList_LoadEx(const char* filename)
         {
             uint32_t spellID = std::stoul(tokens.at(0));
 
-            g_SpellList.insert({spellID, tokens.at(1)});
+            std::string spellName = tokens.at(1);
+            if (spellName.size() == 0)
+            {
+                continue;
+            }
+
+            ////std::cout << "Spell ID: " << spellID << std::endl;
+            ////std::cout << "Spell Name: " << spellName << std::endl;
+
+            g_SpellList.insert({spellID, spellName});
         }
     }
 

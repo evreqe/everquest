@@ -11,13 +11,13 @@ namespace EQApp
         uint32_t StartCastingTime = 0; // time you started to cast the spell in the global timer
     } SpawnCastSpell, *SpawnCastSpell_ptr;
 
-    typedef std::shared_ptr<EQApp::SpawnCastSpell> SpawnCastSpell_sptr;
+    typedef std::shared_ptr<EQApp::SpawnCastSpell> SpawnCastSpell_sharedptr;
 }
 
 bool g_SpawnCastSpellIsEnabled = true;
 bool g_SpawnCastSpellESPIsEnabled = true;
 
-std::vector<EQApp::SpawnCastSpell_sptr> g_SpawnCastSpellList;
+std::vector<EQApp::SpawnCastSpell_sharedptr> g_SpawnCastSpellList;
 
 uint32_t g_SpawnCastSpellMinimumCastTime = 3000;
 
@@ -55,7 +55,7 @@ void EQAPP_SpawnCastSpell_Execute()
 
     for (auto spawnCastSpellListIterator = g_SpawnCastSpellList.begin(); spawnCastSpellListIterator != g_SpawnCastSpellList.end(); spawnCastSpellListIterator++)
     {
-        EQApp::SpawnCastSpell_ptr spawnCastSpell = spawnCastSpellListIterator->get();
+        auto spawnCastSpell = spawnCastSpellListIterator->get();
         if (spawnCastSpell == nullptr)
         {
             continue;
@@ -69,7 +69,7 @@ void EQAPP_SpawnCastSpell_Execute()
             continue;
         }
 
-        int standingState = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_STANDING_STATE);
+        auto standingState = EQ_GetSpawnStandingState(spawn);
         if (standingState != EQ_STANDING_STATE_STANDING)
         {
             spawnCastSpell->SpellCastTime = 0;
@@ -149,19 +149,19 @@ void EQAPP_SpawnCastSpell_DrawText()
 
 void EQAPP_SpawnCastSpell_HandleEvent_CEverQuest__StartCasting(void* this_ptr, EQ::CEverQuest__StartCasting_Message_ptr message)
 {
-    uint32_t spawn = EQ_GetSpawnByID(message->SpawnID);
+    auto spawn = EQ_GetSpawnByID(message->SpawnID);
     if (spawn == NULL)
     {
         return;
     }
 
-    uint16_t spellCastTime = message->SpellCastTime;
+    auto spellCastTime = message->SpellCastTime;
     if (spellCastTime == 0)
     {
         return;
     }
 
-    uint32_t spellID = message->SpellID;
+    auto spellID = message->SpellID;
     if (EQ_IsSpellIDValid(spellID) == false)
     {
         return;
@@ -187,7 +187,7 @@ void EQAPP_SpawnCastSpell_HandleEvent_CEverQuest__StartCasting(void* this_ptr, E
     }
 
     // add to the list
-    EQApp::SpawnCastSpell_sptr spawnCastSpell = std::make_shared<EQApp::SpawnCastSpell>();
+    auto spawnCastSpell = std::make_shared<EQApp::SpawnCastSpell>();
     spawnCastSpell->Spawn                  = spawn;
     spawnCastSpell->SpellName              = spellName;
     spawnCastSpell->SpellCastTime          = spellCastTime;

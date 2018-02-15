@@ -312,10 +312,16 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__StartCasting(void* this_ptr, 
     }
 
 /*
+    auto spawn = EQ_GetSpawnByID(message->SpawnID);
+
+    std::string spawnName = EQ_GetSpawnName(spawn);
+
+    std::string spellName = EQAPP_SpellList_GetNameByID(message->SpellID);
+
     std::cout << "---- CEverQuest::StartCasting() ----" << std::endl;
-    std::cout << "SpawnID: " << message->SpawnID << std::endl;
-    std::cout << "SpellID: " << message->SpellID << " <" << EQAPP_SpellList_GetNameByID(message->SpellID) << ">" << std::endl;
-    std::cout << "SpellCastTime: " << message->SpellCastTime << std::endl;
+    std::cout << "Spawn ID: " << message->SpawnID << " (" << spawnName << ")" << std::endl;
+    std::cout << "Spell ID: " << message->SpellID << " <" << spellName << ">" << std::endl;
+    std::cout << "Spell Cast Time: " << message->SpellCastTime << std::endl;
     std::cout << "------------------------------------" << std::endl;
 */
 

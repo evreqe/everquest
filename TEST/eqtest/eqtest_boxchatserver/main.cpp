@@ -44,7 +44,7 @@ std::string EQ_BCS_JoinStrings(const std::vector<std::string> &elements, const s
         }
     }
 
-    return "";
+    return std::string();
 }
 
 int main(int argc , char *argv[])

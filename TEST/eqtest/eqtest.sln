@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eqtest_inject", "eqtest_inj
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eqtest_dll", "eqtest_dll\eqtest_dll.vcxproj", "{DCC8B1F0-A69B-4928-A422-903754512A24}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eqtest_boxchatserver", "eqtest_boxchatserver\eqtest_boxchatserver.vcxproj", "{0E600E83-9738-4D6E-B6AA-F88494233D6D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{DCC8B1F0-A69B-4928-A422-903754512A24}.Release|x64.Build.0 = Release|x64
 		{DCC8B1F0-A69B-4928-A422-903754512A24}.Release|x86.ActiveCfg = Release|Win32
 		{DCC8B1F0-A69B-4928-A422-903754512A24}.Release|x86.Build.0 = Release|Win32
+		{0E600E83-9738-4D6E-B6AA-F88494233D6D}.Debug|x64.ActiveCfg = Debug|x64
+		{0E600E83-9738-4D6E-B6AA-F88494233D6D}.Debug|x64.Build.0 = Debug|x64
+		{0E600E83-9738-4D6E-B6AA-F88494233D6D}.Debug|x86.ActiveCfg = Debug|Win32
+		{0E600E83-9738-4D6E-B6AA-F88494233D6D}.Debug|x86.Build.0 = Debug|Win32
+		{0E600E83-9738-4D6E-B6AA-F88494233D6D}.Release|x64.ActiveCfg = Release|x64
+		{0E600E83-9738-4D6E-B6AA-F88494233D6D}.Release|x64.Build.0 = Release|x64
+		{0E600E83-9738-4D6E-B6AA-F88494233D6D}.Release|x86.ActiveCfg = Release|Win32
+		{0E600E83-9738-4D6E-B6AA-F88494233D6D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

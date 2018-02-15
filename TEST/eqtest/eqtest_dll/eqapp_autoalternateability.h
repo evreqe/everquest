@@ -34,7 +34,7 @@ void EQAPP_AutoAlternateAbility_Execute()
         return;
     }
 
-    int spawnStandingState = EQ_ReadMemory<uint8_t>(playerSpawn + EQ_OFFSET_SPAWN_STANDING_STATE);
+    auto spawnStandingState = EQ_GetSpawnStandingState(playerSpawn);
     if (spawnStandingState != EQ_STANDING_STATE_STANDING)
     {
         return;
@@ -48,7 +48,7 @@ void EQAPP_AutoAlternateAbility_Execute()
 
     std::vector<uint32_t> alternateAbilityList;
 
-    int spawnClass = EQ_ReadMemory<uint32_t>(playerSpawn + EQ_OFFSET_SPAWN_CLASS);
+    auto spawnClass = EQ_GetSpawnClass(playerSpawn);
 
     if (spawnClass == EQ_CLASS_WARRIOR)
     {

@@ -34,11 +34,16 @@ std::map<std::string, std::function<void()>> g_InterpretCmdList =
     {"//Test",                         &EQAPP_InterpretCmd_NULL},
     {"//WindowTitle",                  &EQAPP_InterpretCmd_NULL},
     {"//AcceptInvite",                 &EQAPP_InterpretCmd_NULL},
+    {"//JoinGroup",                    &EQAPP_InterpretCmd_NULL},
     {"//Disband",                      &EQAPP_InterpretCmd_NULL},
+    {"//FieldOfView",                  &EQAPP_InterpretCmd_NULL},
+    {"//FOV",                          &EQAPP_InterpretCmd_NULL},
     {"//ShrinkTarget",                 &EQAPP_InterpretCmd_NULL},
     {"//GrowTarget",                   &EQAPP_InterpretCmd_NULL},
+    {"//ChangeTargetHeight",           &EQAPP_InterpretCmd_NULL},
     {"//FaceTarget",                   &EQAPP_InterpretCmd_NULL},
     {"//TargetMe",                     &EQAPP_InterpretCmd_NULL},
+    {"//TargetMyself",                 &EQAPP_InterpretCmd_NULL},
     {"//Target",                       &EQAPP_InterpretCmd_NULL},
     {"//TargetID",                     &EQAPP_InterpretCmd_NULL},
     {"//Follow",                       &EQAPP_InterpretCmd_NULL},
@@ -49,18 +54,29 @@ std::map<std::string, std::function<void()>> g_InterpretCmdList =
     {"//CloseTopWindow",               &EQAPP_InterpretCmd_NULL},
     {"//CloseTopWindows",              &EQAPP_InterpretCmd_NULL},
     {"//Hail",                         &EQAPP_InterpretCmd_NULL},
+    {"//Camp",                         &EQAPP_InterpretCmd_NULL},
     {"//Use",                          &EQAPP_InterpretCmd_NULL},
     {"//Jump",                         &EQAPP_InterpretCmd_NULL},
+    {"//SitStand",                     &EQAPP_InterpretCmd_NULL},
+    {"//RunWalk",                      &EQAPP_InterpretCmd_NULL},
     {"//ConfirmNo",                    &EQAPP_InterpretCmd_NULL},
     {"//ConfirmYes",                   &EQAPP_InterpretCmd_NULL},
     {"//PitchDown",                    &EQAPP_InterpretCmd_NULL},
     {"//PitchUp",                      &EQAPP_InterpretCmd_NULL},
     {"//CenterView",                   &EQAPP_InterpretCmd_NULL},
     {"//FirstPersonCamera",            &EQAPP_InterpretCmd_NULL},
+    {"//OverheadCamera",               &EQAPP_InterpretCmd_NULL},
+    {"//ChaseCamera",                  &EQAPP_InterpretCmd_NULL},
+    {"//User1Camera",                  &EQAPP_InterpretCmd_NULL},
+    {"//ThirdPersonCamera1",           &EQAPP_InterpretCmd_NULL},
+    {"//User2Camera",                  &EQAPP_InterpretCmd_NULL},
+    {"//ThirdPersonCamera2",           &EQAPP_InterpretCmd_NULL},
+    {"//TetherCamera",                 &EQAPP_InterpretCmd_NULL},
     {"//OpenBags",                     &EQAPP_InterpretCmd_NULL},
     {"//CloseBags",                    &EQAPP_InterpretCmd_NULL},
     {"//HotButton1",                   &EQAPP_InterpretCmd_NULL},
     {"//HotButton1_1",                 &EQAPP_InterpretCmd_NULL},
+    {"//XTargetCycle",                 &EQAPP_InterpretCmd_NULL},
     {"//XTarget1",                     &EQAPP_InterpretCmd_NULL},
     {"//Potion1",                      &EQAPP_InterpretCmd_NULL},
     {"//ESPFindName",                  &EQAPP_InterpretCmd_NULL},
@@ -89,7 +105,7 @@ std::map<std::string, std::function<void()>> g_InterpretCmdList =
 bool EQAPP_InterpretCmd_HandleEvent_CEverQuest__InterpretCmd(void* this_ptr, class EQPlayer* player, const char* commandText_);
 bool EQAPP_InterpretCmd_HasQuotes(const std::string& commandText);
 void EQAPP_InterpretCmd_InterpretArguments(const std::string& commandText, const std::string& prependText);
-void EQAPP_InterpretCmd_InterpretRandomArgument(const std::string& commandText, const std::string& prependText);
+void EQAPP_InterpretCmd_InterpretArgumentsRandom(const std::string& commandText, const std::string& prependText);
 void EQAPP_InterpretCmd_Execute(std::string commandText);
 bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText);
 
@@ -111,7 +127,7 @@ bool EQAPP_InterpretCmd_HandleEvent_CEverQuest__InterpretCmd(void* this_ptr, cla
         auto playerSpawn = EQ_GetPlayerSpawn();
         if (playerSpawn != NULL)
         {
-            uint32_t spawnID = EQ_ReadMemory<uint32_t>(playerSpawn + EQ_OFFSET_SPAWN_ID);
+            auto spawnID = EQ_GetSpawnID(playerSpawn);
 
             std::string strID = std::to_string(spawnID);
             if (strID.size() != 0)
@@ -126,7 +142,7 @@ bool EQAPP_InterpretCmd_HandleEvent_CEverQuest__InterpretCmd(void* this_ptr, cla
         auto targetSpawn = EQ_GetTargetSpawn();
         if (targetSpawn != NULL)
         {
-            uint32_t spawnID = EQ_ReadMemory<uint32_t>(targetSpawn + EQ_OFFSET_SPAWN_ID);
+            auto spawnID = EQ_GetSpawnID(targetSpawn);
 
             std::string strID = std::to_string(spawnID);
             if (strID.size() != 0)
@@ -215,7 +231,7 @@ void EQAPP_InterpretCmd_InterpretArguments(const std::string& commandText, const
     }
 }
 
-void EQAPP_InterpretCmd_InterpretRandomArgument(const std::string& commandText, const std::string& prependText)
+void EQAPP_InterpretCmd_InterpretArgumentsRandom(const std::string& commandText, const std::string& prependText)
 {
     std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
     if (commandTextAfterSpace.size() == 0)
@@ -307,7 +323,7 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (commandText == "//AcceptInvite")
+    if (commandText == "//AcceptInvite" || commandText == "//JoinGroup")
     {
         EQ_ExecuteCommand(EQ_EXECUTECMD_TARGETME, 1);
         EQ_ExecuteCommand(EQ_EXECUTECMD_INVITE_FOLLOW, 1);
@@ -319,6 +335,23 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
     if (commandText == "//Disband")
     {
         EQ_ExecuteCommand(EQ_EXECUTECMD_DISBAND, 1);
+
+        return true;
+    }
+
+    if (EQAPP_String_StartsWith(commandText, "//FieldOfView ") == true || EQAPP_String_StartsWith(commandText, "//FOV ") == true)
+    {
+        std::string fieldOfViewStr = EQAPP_String_GetAfter(commandText, " ");
+        if (fieldOfViewStr.size() != 0)
+        {
+            float fieldOfView = std::stof(fieldOfViewStr);
+            if (fieldOfView > 0.0f)
+            {
+                EQ_SetCameraFieldOfView(fieldOfView);
+
+                std::cout << "Field of View: " << fieldOfView << std::endl;
+            }
+        }
 
         return true;
     }
@@ -345,7 +378,7 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (EQAPP_String_StartsWith(commandText, "//ChangeHeight ") == true)
+    if (EQAPP_String_StartsWith(commandText, "//ChangeTargetHeight ") == true)
     {
         std::string heightStr = EQAPP_String_GetAfter(commandText, " ");
         if (heightStr.size() != 0)
@@ -357,6 +390,8 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
                 if (targetSpawn != NULL)
                 {
                     EQ_SetSpawnHeight(targetSpawn, height);
+
+                    std::cout << "Change Target Height: " << height << std::endl;
                 }
             }
         }
@@ -371,9 +406,51 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (commandText == "//TargetMe")
+    if (commandText == "//TargetMe" || commandText == "//TargetMyself")
     {
         EQ_ExecuteCommand(EQ_EXECUTECMD_TARGETME, 1);
+
+        return true;
+    }
+
+    if (commandText == "//TargetPC" || commandText == "//TargetPlayer")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_TARGETPC, 1);
+
+        return true;
+    }
+
+    if (commandText == "//TargetNPC")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_TARGETNPC, 1);
+
+        return true;
+    }
+
+    if (commandText == "//TargetCorpse")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_TARGETCORPSE, 1);
+
+        return true;
+    }
+
+    if (commandText == "//TargetPCCycle" || commandText == "//TargetPlayerCycle")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_CYCLEPCTARGETS, 1);
+
+        return true;
+    }
+
+    if (commandText == "//TargetNPCCycle")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_CYCLENPCTARGETS, 1);
+
+        return true;
+    }
+
+    if (commandText == "//TargetCorpseCycle")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_CYCLECORPSETARGETS, 1);
 
         return true;
     }
@@ -389,7 +466,7 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
                 auto spawn = EQ_GetSpawnByName(spawnName.c_str());
                 if (spawn != NULL)
                 {
-                    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_POINTER_TARGET_SPAWN, spawn);
+                    EQ_SetTargetSpawn(spawn);
 
                     std::cout << "Target: " << spawnName << std::endl;
                 }
@@ -412,7 +489,7 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
                 auto spawn = EQ_GetSpawnByID(spawnID);
                 if (spawn != NULL)
                 {
-                    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_POINTER_TARGET_SPAWN, spawn);
+                    EQ_SetTargetSpawn(spawn);
 
                     std::cout << "Target by ID: " << spawnIDStr << std::endl;
                 }
@@ -424,15 +501,7 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
 
     if (commandText == "//Follow")
     {
-        auto targetSpawn = EQ_GetTargetSpawn();
-        if (targetSpawn != NULL)
-        {
-            auto playerSpawn = EQ_GetPlayerSpawn();
-            if (playerSpawn != NULL)
-            {
-                EQ_WriteMemory<uint32_t>(playerSpawn + EQ_OFFSET_SPAWN_FOLLOW_SPAWN, targetSpawn);
-            }
-        }
+        EQ_FollowTarget();
 
         return true;
     }
@@ -448,8 +517,8 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
                 auto spawn = EQ_GetSpawnByName(spawnName.c_str());
                 if (spawn != NULL)
                 {
-                    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_POINTER_TARGET_SPAWN, spawn);
-                    EQ_WriteMemory<uint32_t>(playerSpawn + EQ_OFFSET_SPAWN_FOLLOW_SPAWN, spawn);
+                    EQ_SetTargetSpawn(spawn);
+                    EQ_SetSpawnFollowSpawn(playerSpawn, spawn);
 
                     std::cout << "Follow: " << spawnName << std::endl;
                 }
@@ -461,12 +530,7 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
 
     if (commandText == "//StopFollow")
     {
-        auto playerSpawn = EQ_GetPlayerSpawn();
-        if (playerSpawn != NULL)
-        {
-            EQ_WriteMemory<uint32_t>(playerSpawn + EQ_OFFSET_SPAWN_FOLLOW_SPAWN, 0);
-            EQ_WriteMemory<uint32_t>(EQ_ADDRESS_AUTO_RUN, 0);
-        }
+        EQ_StopFollow();
 
         return true;
     }
@@ -516,6 +580,13 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
         return true;
     }
 
+    if (commandText == "//Camp")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_CAMP, 1);
+
+        return true;
+    }
+
     if (commandText == "//Use")
     {
         EQ_ExecuteCommand(EQ_EXECUTECMD_USE, 1);
@@ -526,6 +597,20 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
     if (commandText == "//Jump")
     {
         EQ_ExecuteCommand(EQ_EXECUTECMD_JUMP, 1);
+
+        return true;
+    }
+
+    if (commandText == "//SitStand")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_SIT_STAND, 1);
+
+        return true;
+    }
+
+    if (commandText == "//RunWalk")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_RUN_WALK, 1);
 
         return true;
     }
@@ -568,6 +653,41 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
     if (commandText == "//FirstPersonCamera")
     {
         EQ_ExecuteCommand(EQ_EXECUTECMD_FIRST_PERSON_CAMERA, 1);
+
+        return true;
+    }
+
+    if (commandText == "//OverheadCamera")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_OVERHEAD_CAMERA, 1);
+
+        return true;
+    }
+
+    if (commandText == "//ChaseCamera")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_CHASE_CAMERA, 1);
+
+        return true;
+    }
+
+    if (commandText == "//User1Camera" || commandText == "//ThirdPersonCamera1")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_USER1_CAMERA, 1);
+
+        return true;
+    }
+
+    if (commandText == "//User2Camera" || commandText == "//ThirdPersonCamera2")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_USER2_CAMERA, 1);
+
+        return true;
+    }
+
+    if (commandText == "//TetherCamera")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_TETHER_CAMERA, 1);
 
         return true;
     }
@@ -1270,6 +1390,13 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
         EQ_ExecuteCommand(EQ_EXECUTECMD_HOT10_12, 1);
     }
 
+    if (commandText == "//XTargetCycle")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_CYCLE_XTARGET, 1);
+
+        return true;
+    }
+
     if (commandText == "//XTarget1")
     {
         EQ_ExecuteCommand(EQ_EXECUTECMD_TARGET_XTARGET_1, 1);
@@ -1527,8 +1654,7 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
 
     if (commandText == "//GetNearbyNPCs")
     {
-        std::vector<uint32_t> spawnIDList;
-        EQAPP_GetNPCSpawnIDListSortedByDistance(spawnIDList);
+        std::vector<uint32_t> spawnIDList = EQAPP_GetNPCSpawnIDListSortedByDistance();
 
         std::cout << "Nearby NPCs:" << std::endl;
 
@@ -1536,7 +1662,7 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
 
         for (auto& spawnID : spawnIDList)
         {
-            if (spawnIndex > 9)
+            if (spawnIndex > 10)
             {
                 break;
             }
@@ -1572,14 +1698,14 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
 
     if (EQAPP_String_StartsWith(commandText, "//MultilineRandom ") == true)
     {
-        EQAPP_InterpretCmd_InterpretRandomArgument(commandText, "");
+        EQAPP_InterpretCmd_InterpretArgumentsRandom(commandText, "");
 
         return true;
     }
 
     if (EQAPP_String_StartsWith(commandText, "//CastRandom ") == true)
     {
-        EQAPP_InterpretCmd_InterpretRandomArgument(commandText, "/cast ");
+        EQAPP_InterpretCmd_InterpretArgumentsRandom(commandText, "/cast ");
 
         return true;
     }
@@ -1593,7 +1719,7 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
 
     if (EQAPP_String_StartsWith(commandText, "//DoAbilityRandom ") == true)
     {
-        EQAPP_InterpretCmd_InterpretRandomArgument(commandText, "/doability ");
+        EQAPP_InterpretCmd_InterpretArgumentsRandom(commandText, "/doability ");
 
         return true;
     }
@@ -1607,7 +1733,7 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
 
     if (EQAPP_String_StartsWith(commandText, "//DisciplineRandom ") == true)
     {
-        EQAPP_InterpretCmd_InterpretRandomArgument(commandText, "/discipline ");
+        EQAPP_InterpretCmd_InterpretArgumentsRandom(commandText, "/discipline ");
 
         return true;
     }
@@ -1621,7 +1747,7 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
 
     if (EQAPP_String_StartsWith(commandText, "//AltActivateRandom ") == true)
     {
-        EQAPP_InterpretCmd_InterpretRandomArgument(commandText, "/alt activate ");
+        EQAPP_InterpretCmd_InterpretArgumentsRandom(commandText, "/alt activate ");
 
         return true;
     }

@@ -34,14 +34,13 @@ void EQAPP_CombatAlternateAbility_Execute()
         return;
     }
 
-    int targetSpawnType = EQ_ReadMemory<uint8_t>(targetSpawn + EQ_OFFSET_SPAWN_TYPE);
+    auto targetSpawnType = EQ_GetSpawnType(targetSpawn);
     if (targetSpawnType != EQ_SPAWN_TYPE_NPC)
     {
         return;
     }
 
-    int autoAttack = EQ_ReadMemory<uint8_t>(EQ_ADDRESS_AUTO_ATTACK);
-    if (autoAttack == 0)
+    if (EQ_IsAutoAttackEnabled() == false)
     {
         return;
     }
@@ -54,9 +53,9 @@ void EQAPP_CombatAlternateAbility_Execute()
 
     std::vector<uint32_t> alternateAbilityList;
 
-    int spawnClass = EQ_ReadMemory<uint32_t>(playerSpawn + EQ_OFFSET_SPAWN_CLASS);
+    auto playerSpawnClass = EQ_GetSpawnClass(playerSpawn);
 
-    if (spawnClass == EQ_CLASS_WARRIOR)
+    if (playerSpawnClass == EQ_CLASS_WARRIOR)
     {
         alternateAbilityList.push_back(EQ_ALTERNATE_ABILITY_BLAST_OF_ANGER);
         alternateAbilityList.push_back(EQ_ALTERNATE_ABILITY_CALL_OF_CHALLENGE);

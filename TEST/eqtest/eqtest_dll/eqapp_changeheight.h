@@ -27,10 +27,10 @@ void EQAPP_ChangeHeight_Execute()
     auto spawn = EQ_GetFirstSpawn();
     while (spawn != NULL)
     {
-        int spawnType = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_TYPE);
+        auto spawnType = EQ_GetSpawnType(spawn);
         if (spawnType == EQ_SPAWN_TYPE_PLAYER)
         {
-            float spawnHeight = EQ_ReadMemory<float>(spawn + EQ_OFFSET_SPAWN_HEIGHT);
+            auto spawnHeight = EQ_GetSpawnHeight(spawn);
 
             if (spawnHeight > g_ChangeHeightMaximumHeight)
             {
@@ -43,6 +43,6 @@ void EQAPP_ChangeHeight_Execute()
             }
         }
 
-        spawn = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_NEXT);
+        spawn = EQ_GetSpawnNext(spawn);
     }
 }

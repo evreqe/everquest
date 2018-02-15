@@ -100,8 +100,10 @@ void EQAPP_FixAddress(DWORD& address)
 void EQAPP_InitializeAddressesAndPointers()
 {
     EQAPP_FixAddress(EQ_ADDRESS_AUTO_ATTACK);
+    EQAPP_FixAddress(EQ_ADDRESS_AUTO_FIRE);
     EQAPP_FixAddress(EQ_ADDRESS_AUTO_RUN);
     EQAPP_FixAddress(EQ_ADDRESS_MOUSE_LOOK);
+    EQAPP_FixAddress(EQ_ADDRESS_NET_STATUS);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_WINDOW_HWND);
 
@@ -122,6 +124,7 @@ void EQAPP_InitializeAddressesAndPointers()
 
     EQAPP_FixAddress(EQ_ADDRESS_FOLLOW_DISTANCE_1);
     EQAPP_FixAddress(EQ_ADDRESS_FOLLOW_DISTANCE_2);
+    EQAPP_FixAddress(EQ_ADDRESS_FOLLOW_DISTANCE_3);
 
     ////EQAPP_FixAddress(EQ_ADDRESS_POINTER_PLAYER_CHARACTER);
     ////EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQ_Character__eqspa_movement_rate);

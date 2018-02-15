@@ -34,9 +34,9 @@ void EQAPP_ESP_Execute()
         return;
     }
 
-    float playerSpawnY = EQ_ReadMemory<float>(playerSpawn + EQ_OFFSET_SPAWN_Y);
-    float playerSpawnX = EQ_ReadMemory<float>(playerSpawn + EQ_OFFSET_SPAWN_X);
-    float playerSpawnZ = EQ_ReadMemory<float>(playerSpawn + EQ_OFFSET_SPAWN_Z);
+    auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
+    auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
+    auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
 
     auto targetSpawn = EQ_GetTargetSpawn();
 
@@ -45,46 +45,43 @@ void EQAPP_ESP_Execute()
     {
         if (spawn == playerSpawn)
         {
-            spawn = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_NEXT);
+            spawn = EQ_GetSpawnNext(spawn);
             continue;
         }
 
         bool bIgnoreDistance = false;
 
-        char spawnName[EQ_SIZE_SPAWN_NAME];
-        memcpy(spawnName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_NAME), sizeof(spawnName));
+        std::string spawnName = EQ_GetSpawnName(spawn);
 
         if (g_ESPFindSpawnName.size() != 0)
         {
-            if (strstr(spawnName, g_ESPFindSpawnName.c_str()) != 0)
+            if (EQAPP_String_Contains(spawnName, g_ESPFindSpawnName) == true)
             {
                 bIgnoreDistance = true;
             }
         }
 
-        char spawnLastName[EQ_SIZE_SPAWN_LAST_NAME];
-        memcpy(spawnLastName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_LAST_NAME), sizeof(spawnLastName));
+        std::string spawnLastName = EQ_GetSpawnLastName(spawn);
 
         if (g_ESPFindSpawnLastName.size() != 0)
         {
-            if (strstr(spawnLastName, g_ESPFindSpawnLastName.c_str()) != 0)
+            if (EQAPP_String_Contains(spawnLastName, g_ESPFindSpawnLastName) == true)
             {
                 bIgnoreDistance = true;
             }
         }
 
-        float spawnY = EQ_ReadMemory<float>(spawn + EQ_OFFSET_SPAWN_Y);
-        float spawnX = EQ_ReadMemory<float>(spawn + EQ_OFFSET_SPAWN_X);
-        float spawnZ = EQ_ReadMemory<float>(spawn + EQ_OFFSET_SPAWN_Z);
+        auto spawnY = EQ_GetSpawnY(spawn);
+        auto spawnX = EQ_GetSpawnX(spawn);
+        auto spawnZ = EQ_GetSpawnZ(spawn);
 
         float spawnDistance = EQ_CalculateDistance(playerSpawnX, playerSpawnY, spawnX, spawnY);
 
-        int mouseLook = EQ_ReadMemory<uint8_t>(EQ_ADDRESS_MOUSE_LOOK);
-        if (mouseLook == 0 && bIgnoreDistance == false)
+        if (EQ_IsMouseLookEnabled() == false && bIgnoreDistance == false)
         {
             if (spawnDistance > g_ESPDistance)
             {
-                spawn = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_NEXT);
+                spawn = EQ_GetSpawnNext(spawn);
                 continue;
             }
         }
@@ -94,32 +91,32 @@ void EQAPP_ESP_Execute()
         bool result = EQ_WorldSpaceToScreenSpace(spawnX, spawnY, spawnZ, screenX, screenY);
         if (result == true)
         {
-            int spawnType = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_TYPE);
+            auto spawnType = EQ_GetSpawnType(spawn);
 
             if (spawnType == EQ_SPAWN_TYPE_NPC)
             {
-                if (strstr(spawnName, "`s Mount") != 0)
+                if (EQAPP_String_Contains(spawnName, "`s Mount") == true)
                 {
-                    spawn = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_NEXT);
+                    spawn = EQ_GetSpawnNext(spawn);
                     continue;
                 }
 
-                if (strstr(spawnName, "Aura ") != 0)
+                if (EQAPP_String_Contains(spawnName, "Aura ") == true)
                 {
-                    spawn = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_NEXT);
+                    spawn = EQ_GetSpawnNext(spawn);
                     continue;
                 }
 
-                if (strstr(spawnName, " Aura") != 0)
+                if (EQAPP_String_Contains(spawnName, " Aura") == true)
                 {
-                    spawn = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_NEXT);
+                    spawn = EQ_GetSpawnNext(spawn);
                     continue;
                 }
             }
 
-            int spawnLevel = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_LEVEL);
-            int spawnRace = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_RACE);
-            int spawnClass = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_CLASS);
+            auto spawnLevel = EQ_GetSpawnLevel(spawn);
+            auto spawnRace = EQ_GetSpawnRace(spawn);
+            auto spawnClass = EQ_GetSpawnClass(spawn);
 
             std::stringstream espText;
             espText << "[" << spawnLevel;
@@ -154,7 +151,7 @@ void EQAPP_ESP_Execute()
 
             if (spawnType == EQ_SPAWN_TYPE_NPC)
             {
-                if (strlen(spawnLastName) > 0)
+                if (spawnLastName.size() != 0)
                 {
                     espText << "\n(" << spawnLastName << ")";
                 }
@@ -188,7 +185,7 @@ void EQAPP_ESP_Execute()
 
             if (g_ESPShowSpawnIDIsEnabled == true)
             {
-                uint32_t spawnID = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_ID);
+                auto spawnID = EQ_GetSpawnID(spawn);
 
                 espText << "\n(ID: " << spawnID << ")";
             }
@@ -221,6 +218,6 @@ void EQAPP_ESP_Execute()
             EQ_DrawTextEx(espText.str().c_str(), (int)screenX, (int)screenY, textColor);
         }
 
-        spawn = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_NEXT);
+        spawn = EQ_GetSpawnNext(spawn);
     }
 }

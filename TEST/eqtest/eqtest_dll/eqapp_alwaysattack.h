@@ -15,7 +15,7 @@ void EQAPP_AlwaysAttack_Toggle()
 
     if (g_AlwaysAttackIsEnabled == false)
     {
-        EQ_WriteMemory<uint8_t>(EQ_ADDRESS_AUTO_ATTACK, 0);
+        EQ_SetAutoAttack(false);
     }
 }
 
@@ -29,16 +29,16 @@ void EQAPP_AlwaysAttack_Execute()
     auto targetSpawn = EQ_GetTargetSpawn();
     if (targetSpawn == NULL)
     {
-        EQ_WriteMemory<uint8_t>(EQ_ADDRESS_AUTO_ATTACK, 0);
+        EQ_SetAutoAttack(false);
         return;
     }
 
-    int spawnType = EQ_ReadMemory<uint8_t>(targetSpawn + EQ_OFFSET_SPAWN_TYPE);
+    auto spawnType = EQ_GetSpawnType(targetSpawn);
     if (spawnType != EQ_SPAWN_TYPE_NPC)
     {
-        EQ_WriteMemory<uint8_t>(EQ_ADDRESS_AUTO_ATTACK, 0);
+        EQ_SetAutoAttack(false);
         return;
     }
 
-    EQ_WriteMemory<uint8_t>(EQ_ADDRESS_AUTO_ATTACK, 1);
+    EQ_SetAutoAttack(true);
 }

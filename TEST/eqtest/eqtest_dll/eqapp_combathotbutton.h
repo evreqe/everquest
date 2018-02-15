@@ -36,14 +36,13 @@ void EQAPP_CombatHotButton_Execute()
         return;
     }
 
-    int spawnType = EQ_ReadMemory<uint8_t>(targetSpawn + EQ_OFFSET_SPAWN_TYPE);
-    if (spawnType != EQ_SPAWN_TYPE_NPC)
+    auto targetSpawnType = EQ_GetSpawnType(targetSpawn);
+    if (targetSpawnType != EQ_SPAWN_TYPE_NPC)
     {
         return;
     }
 
-    int autoAttack = EQ_ReadMemory<uint8_t>(EQ_ADDRESS_AUTO_ATTACK);
-    if (autoAttack == 0)
+    if (EQ_IsAutoAttackEnabled() == false)
     {
         return;
     }
