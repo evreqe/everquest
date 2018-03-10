@@ -41,5 +41,5 @@ BOOL __stdcall DllMain(HMODULE module, DWORD reason, LPVOID reserved);
 void EQAPP_Load();
 void EQAPP_Unload();
 
-void EQAPP_FixAddress(DWORD& address);
+void EQAPP_FixAddress(uint32_t& address);
 void EQAPP_InitializeAddressesAndPointers();

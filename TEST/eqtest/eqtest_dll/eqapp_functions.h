@@ -29,7 +29,7 @@ template <class T>
 void EQAPP_Log(const char* text, T number)
 {
     std::stringstream filePath;
-    filePath << g_EQAppName << "/log.txt";
+    filePath << "eqtestlog.txt";
 
     std::fstream file;
     file.open(filePath.str().c_str(), std::ios::out | std::ios::app);

@@ -2,7 +2,7 @@
 
 #include "eqapp_boxchat.h"
 
-bool g_CombatAlternateAbilityIsEnabled = false;
+bool g_CombatAlternateAbilityIsEnabled = true;
 
 EQApp::Timer g_CombatAlternateAbilityTimer = EQAPP_Timer_GetTimeNow();
 EQApp::TimerInterval g_CombatAlternateAbilityTimerInterval = 6;
@@ -28,6 +28,11 @@ void EQAPP_CombatAlternateAbility_Execute()
         return;
     }
 
+    if (EQ_IsAutoAttackEnabled() == false)
+    {
+        return;
+    }
+
     auto targetSpawn = EQ_GetTargetSpawn();
     if (targetSpawn == NULL)
     {
@@ -40,7 +45,14 @@ void EQAPP_CombatAlternateAbility_Execute()
         return;
     }
 
-    if (EQ_IsAutoAttackEnabled() == false)
+    float targetSpawnDistance = EQ_GetSpawnDistance(targetSpawn);
+    if (targetSpawnDistance > 25.0f)
+    {
+        return;
+    }
+
+    auto targetSpawnLastName = EQ_GetSpawnLastName(targetSpawn);
+    if (targetSpawnLastName.size() != 0)
     {
         return;
     }
@@ -51,17 +63,87 @@ void EQAPP_CombatAlternateAbility_Execute()
         return;
     }
 
+    auto spawnStandingState = EQ_GetSpawnStandingState(playerSpawn);
+    if (spawnStandingState != EQ_STANDING_STATE_STANDING)
+    {
+        return;
+    }
+
+    auto spawnZoneID = EQ_GetSpawnZoneID(playerSpawn);
+    if (EQ_IsZoneIDSafe(spawnZoneID) == true)
+    {
+        return;
+    }
+
+    auto playerEndurancePercent = EQ_GetSpawnEnduranceCurrent(playerSpawn);
+
     std::vector<uint32_t> alternateAbilityList;
+
+    alternateAbilityList.push_back(EQAlternateAbilities::Special::Banestrike);
 
     auto playerSpawnClass = EQ_GetSpawnClass(playerSpawn);
 
     if (playerSpawnClass == EQ_CLASS_WARRIOR)
     {
-        alternateAbilityList.push_back(EQ_ALTERNATE_ABILITY_BLAST_OF_ANGER);
-        alternateAbilityList.push_back(EQ_ALTERNATE_ABILITY_CALL_OF_CHALLENGE);
-        alternateAbilityList.push_back(EQ_ALTERNATE_ABILITY_KNEE_STRIKE);
-        alternateAbilityList.push_back(EQ_ALTERNATE_ABILITY_GUT_PUNCH);
-        alternateAbilityList.push_back(EQ_ALTERNATE_ABILITY_VEHEMENT_RAGE);
+        alternateAbilityList.push_back(EQAlternateAbilities::Warrior::Blast_of_Anger);
+        alternateAbilityList.push_back(EQAlternateAbilities::Warrior::Call_of_Challenge);
+        alternateAbilityList.push_back(EQAlternateAbilities::Warrior::Gut_Punch);
+        alternateAbilityList.push_back(EQAlternateAbilities::Warrior::Knee_Strike);
+        alternateAbilityList.push_back(EQAlternateAbilities::Warrior::Ageless_Enmity);
+        alternateAbilityList.push_back(EQAlternateAbilities::Warrior::Vehement_Rage);
+        alternateAbilityList.push_back(EQAlternateAbilities::Warrior::Warlords_Fury);
+        alternateAbilityList.push_back(EQAlternateAbilities::Warrior::Rage_of_Rallos_Zek);
+    }
+
+    if (playerSpawnClass == EQ_CLASS_CLERIC)
+    {
+        alternateAbilityList.push_back(EQAlternateAbilities::Cleric::Divine_Avatar);
+        alternateAbilityList.push_back(EQAlternateAbilities::Cleric::Celestial_Hammer);
+    }
+
+    if (playerSpawnClass == EQ_CLASS_ENCHANTER)
+    {
+        alternateAbilityList.push_back(EQAlternateAbilities::Enchanter::Dreary_Deeds);
+    }
+
+    if (playerSpawnClass == EQ_CLASS_DRUID)
+    {
+        alternateAbilityList.push_back(EQAlternateAbilities::Druid::Natures_Guardian);
+        alternateAbilityList.push_back(EQAlternateAbilities::Druid::Spirits_of_Nature);
+        alternateAbilityList.push_back(EQAlternateAbilities::Druid::Storm_Strike);
+    }
+
+    if (playerSpawnClass == EQ_CLASS_BARD)
+    {
+        if (playerEndurancePercent > 50)
+        {
+            alternateAbilityList.push_back(EQAlternateAbilities::Bard::Boastful_Bellow);
+            alternateAbilityList.push_back(EQAlternateAbilities::Bard::Vainglorious_Shout);
+        }
+
+        alternateAbilityList.push_back(EQAlternateAbilities::Bard::Bladed_Song);
+        alternateAbilityList.push_back(EQAlternateAbilities::Bard::Cacophony);
+        alternateAbilityList.push_back(EQAlternateAbilities::Bard::Dance_of_Blades);
+        alternateAbilityList.push_back(EQAlternateAbilities::Bard::Fierce_Eye);
+        alternateAbilityList.push_back(EQAlternateAbilities::Bard::Fundament_First_Spire_of_the_Minstrels);
+        alternateAbilityList.push_back(EQAlternateAbilities::Bard::Funeral_Dirge);
+        alternateAbilityList.push_back(EQAlternateAbilities::Bard::Quick_Time);
+        alternateAbilityList.push_back(EQAlternateAbilities::Bard::Song_of_Stone);
+    }
+
+    if (playerSpawnClass == EQ_CLASS_BERSERKER)
+    {
+        alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Silent_Strikes);
+        alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Rampage);
+        alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Blinding_Fury);
+        alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Drawn_to_Blood);
+        alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Blood_Pact);
+        alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Desperation);
+        alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Vehement_Rage);
+        alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Savage_Spirit);
+        alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Fundament_Third_Spire_of_Savagery);
+        alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Juggernaut_Surge);
+        alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Untamed_Rage);
     }
 
     for (auto& alternateAbility : alternateAbilityList)

@@ -5,77 +5,16 @@
 
 namespace EQClass
 {
+    class CEverQuest;
+    class CDisplay;
+
     class EQPlayerManager;
     class EQPlayer;
-    class EQ_Character;
 
     class CXWndManager;
 
-    class CEverQuest;
-    class CDisplay;
+    class CBazaarSearchWnd;
 } // namespace EQClass
-
-/* EQPlayerManager */
-
-class EQClass::EQPlayerManager
-{
-public:
-    uint32_t* EQPlayerManager::GetSpawnByID(uint32_t spawnID);
-    uint32_t* EQPlayerManager::GetSpawnByName(const char* spawnName);
-};
-
-EQ_MACRO_FUNCTION_FunctionAtAddress(uint32_t* EQClass::EQPlayerManager::GetSpawnByID(uint32_t spawnID), EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayerManager__GetSpawnByID)(void* this_ptr, uint32_t spawnID);
-
-EQ_MACRO_FUNCTION_FunctionAtAddress(uint32_t* EQClass::EQPlayerManager::GetSpawnByName(const char* spawnName), EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayerManager__GetSpawnByName)(void* this_ptr, const char* spawnName);
-
-////EQClass::EQPlayerManager** EQ_CLASS_POINTER_EQPlayerManager_pptr = (EQClass::EQPlayerManager**)EQ_ADDRESS_POINTER_EQPlayerManager;
-////#define EQ_CLASS_POINTER_EQPlayerManager (*EQ_CLASS_POINTER_EQPlayerManager_pptr)
-EQClass::EQPlayerManager** EQ_CLASS_POINTER_EQPlayerManager_pptr;
-EQClass::EQPlayerManager* EQ_CLASS_POINTER_EQPlayerManager;
-
-/* EQPlayer */
-
-class EQClass::EQPlayer
-{
-public:
-    void EQPlayer::FollowPlayerAI();
-    void EQPlayer::ChangeHeight(float height, float a2, float a3, int a4);
-};
-
-EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQPlayer::FollowPlayerAI(), EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__FollowPlayerAI)(void* this_ptr);
-
-EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQPlayer::ChangeHeight(float height, float a2, float a3, int a4), EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__ChangeHeight)(void* this_ptr, float height, float a2, float a3, int a4);
-
-/* EQ_Character */
-
-class EQClass::EQ_Character
-{
-public:
-    void EQ_Character::eqspa_movement_rate(int movementSpeed);
-};
-
-EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQ_Character::eqspa_movement_rate(int movementSpeed), EQ_ADDRESS_FUNCTION_EQ_Character__eqspa_movement_rate);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__eqspa_movement_rate)(void* this_ptr, int movementSpeed);
-
-/* CXWndManager */
-
-class EQClass::CXWndManager
-{
-public:
-    int CXWndManager::DrawWindows();
-};
-
-EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::CXWndManager::DrawWindows(), EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CXWndManager__DrawWindows)(void* this_ptr);
-
-////EQClass::CXWndManager** EQ_CLASS_POINTER_CXWndManager_pptr = (EQClass::CXWndManager**)EQ_ADDRESS_POINTER_CXWndManager;
-////#define EQ_CLASS_POINTER_CXWndManager (*EQ_CLASS_POINTER_CXWndManager_pptr)
-EQClass::CXWndManager** EQ_CLASS_POINTER_CXWndManager_pptr;
-EQClass::CXWndManager* EQ_CLASS_POINTER_CXWndManager;
 
 /* CEverQuest */
 
@@ -116,3 +55,74 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__WriteTextHD2)(void* this_ptr
 ////#define EQ_CLASS_POINTER_CDisplay (*EQ_CLASS_POINTER_CDisplay_pptr)
 EQClass::CDisplay** EQ_CLASS_POINTER_CDisplay_pptr;
 EQClass::CDisplay* EQ_CLASS_POINTER_CDisplay;
+
+/* EQPlayerManager */
+
+class EQClass::EQPlayerManager
+{
+public:
+    uint32_t* EQPlayerManager::GetSpawnByID(uint32_t spawnID);
+    uint32_t* EQPlayerManager::GetSpawnByName(const char* spawnName);
+};
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(uint32_t* EQClass::EQPlayerManager::GetSpawnByID(uint32_t spawnID), EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayerManager__GetSpawnByID)(void* this_ptr, uint32_t spawnID);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(uint32_t* EQClass::EQPlayerManager::GetSpawnByName(const char* spawnName), EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayerManager__GetSpawnByName)(void* this_ptr, const char* spawnName);
+
+////EQClass::EQPlayerManager** EQ_CLASS_POINTER_EQPlayerManager_pptr = (EQClass::EQPlayerManager**)EQ_ADDRESS_POINTER_EQPlayerManager;
+////#define EQ_CLASS_POINTER_EQPlayerManager (*EQ_CLASS_POINTER_EQPlayerManager_pptr)
+EQClass::EQPlayerManager** EQ_CLASS_POINTER_EQPlayerManager_pptr;
+EQClass::EQPlayerManager* EQ_CLASS_POINTER_EQPlayerManager;
+
+/* EQPlayer */
+
+class EQClass::EQPlayer
+{
+public:
+    void EQPlayer::FollowPlayerAI();
+    void EQPlayer::ChangeHeight(float height, float a2, float a3, int a4);
+};
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQPlayer::FollowPlayerAI(), EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__FollowPlayerAI)(void* this_ptr);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQPlayer::ChangeHeight(float height, float a2, float a3, int a4), EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__ChangeHeight)(void* this_ptr, float height, float a2, float a3, int a4);
+
+/* CXWndManager */
+
+class EQClass::CXWndManager
+{
+public:
+    int CXWndManager::DrawWindows();
+};
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::CXWndManager::DrawWindows(), EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CXWndManager__DrawWindows)(void* this_ptr);
+
+////EQClass::CXWndManager** EQ_CLASS_POINTER_CXWndManager_pptr = (EQClass::CXWndManager**)EQ_ADDRESS_POINTER_CXWndManager;
+////#define EQ_CLASS_POINTER_CXWndManager (*EQ_CLASS_POINTER_CXWndManager_pptr)
+EQClass::CXWndManager** EQ_CLASS_POINTER_CXWndManager_pptr;
+EQClass::CXWndManager* EQ_CLASS_POINTER_CXWndManager;
+
+/* CBazaarSearchWnd */
+
+class EQClass::CBazaarSearchWnd
+{
+public:
+    void CBazaarSearchWnd::AddItemToList(char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11);
+    void CBazaarSearchWnd::doQuery();
+};
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CBazaarSearchWnd::AddItemToList(char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11), EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarSearchWnd__AddItemToList)(void* this_ptr, char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CBazaarSearchWnd::doQuery(), EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarSearchWnd__doQuery)(void* this_ptr);
+
+////EQClass::CBazaarSearchWnd** EQ_CLASS_POINTER_CBazaarSearchWnd_pptr = (EQClass::CBazaarSearchWnd**)EQ_ADDRESS_POINTER_CBazaarSearchWnd;
+////#define EQ_CLASS_POINTER_CBazaarSearchWnd (*EQ_CLASS_POINTER_CBazaarSearchWnd_pptr)
+EQClass::CBazaarSearchWnd** EQ_CLASS_POINTER_CBazaarSearchWnd_pptr;
+EQClass::CBazaarSearchWnd* EQ_CLASS_POINTER_CBazaarSearchWnd;

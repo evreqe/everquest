@@ -33,8 +33,42 @@ void EQAPP_AlwaysAttack_Execute()
         return;
     }
 
-    auto spawnType = EQ_GetSpawnType(targetSpawn);
-    if (spawnType != EQ_SPAWN_TYPE_NPC)
+    auto targetSpawnType = EQ_GetSpawnType(targetSpawn);
+    if (targetSpawnType != EQ_SPAWN_TYPE_NPC)
+    {
+        EQ_SetAutoAttack(false);
+        return;
+    }
+
+    float targetSpawnDistance = EQ_GetSpawnDistance(targetSpawn);
+    if (targetSpawnDistance > 25.0f)
+    {
+        EQ_SetAutoAttack(false);
+        return;
+    }
+
+    auto targetSpawnLastName = EQ_GetSpawnLastName(targetSpawn);
+    if (targetSpawnLastName.size() != 0)
+    {
+        EQ_SetAutoAttack(false);
+        return;
+    }
+
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    auto spawnStandingState = EQ_GetSpawnStandingState(playerSpawn);
+    if (spawnStandingState != EQ_STANDING_STATE_STANDING)
+    {
+        EQ_SetAutoAttack(false);
+        return;
+    }
+
+    auto spawnZoneID = EQ_GetSpawnZoneID(playerSpawn);
+    if (EQ_IsZoneIDSafe(spawnZoneID) == true)
     {
         EQ_SetAutoAttack(false);
         return;

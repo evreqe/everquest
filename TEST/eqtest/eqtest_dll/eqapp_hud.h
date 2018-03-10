@@ -54,22 +54,31 @@ void EQAPP_HUD_Execute()
     if (g_AlwaysHotButtonIsEnabled == true)
     {
         std::stringstream ss;
-        ss << "- Always HotButton: " << g_AlwaysHotButtonIndex;
+        ss << "- Always HotButton: " << g_AlwaysHotButtonIndex + 1;
 
-        EQAPP_HUD_DrawText("- Always HotButton");
+        EQAPP_HUD_DrawText(ss.str().c_str());
     }
 
     if (g_CombatHotButtonIsEnabled == true)
     {
         std::stringstream ss;
-        ss << "- Combat HotButton: " << g_CombatHotButtonIndex;
+        ss << "- Combat HotButton: " << g_CombatHotButtonIndex + 1;
 
-        EQAPP_HUD_DrawText("- Combat HotButton");
+        EQAPP_HUD_DrawText(ss.str().c_str());
     }
 
     if (g_AutoAlternateAbilityIsEnabled == true)
     {
         EQAPP_HUD_DrawText("- Auto Alternate Ability");
+
+        auto playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn != NULL)
+        {
+            std::stringstream ss1;
+            ss1 << "- HP%: " << EQ_GetSpawnHPPercent(playerSpawn);
+
+            EQAPP_HUD_DrawText(ss1.str().c_str());
+        }
     }
 
     if (g_CombatAlternateAbilityIsEnabled == true)
@@ -90,6 +99,16 @@ void EQAPP_HUD_Execute()
     if (g_SpawnCastSpellIsEnabled == true)
     {
         EQAPP_HUD_DrawText("- Spawn Cast Spell");
+    }
+
+    if (g_BazaarFilterIsEnabled == true)
+    {
+        EQAPP_HUD_DrawText("- Bazaar Filter");
+    }
+
+    if (g_BazaarFilterDoQueryIsEnabled == true)
+    {
+        EQAPP_HUD_DrawText("- Bazaar Filter Do Query");
     }
 
 /*

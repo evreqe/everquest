@@ -57,8 +57,10 @@
 #include "eqapp_combathotbutton.h"
 #include "eqapp_autoalternateability.h"
 #include "eqapp_combatalternateability.h"
+#include "eqapp_bazaarfilter.h"
 #include "eqapp_changeheight.h"
 #include "eqapp_spawncastspell.h"
+#include "eqapp_followai.h"
 #include "eqapp_esp.h"
 #include "eqapp_sleep.h"
 #include "eqapp_boxchat.h"
@@ -70,6 +72,7 @@
 
 void EQAPP_Load()
 {
+    EQAPP_BazaarFilter_Load();
     EQAPP_SpellList_Load();
 
     EQAPP_SetWindowTitleToPlayerSpawnName();
@@ -90,9 +93,9 @@ void EQAPP_Unload()
     g_EQAppShouldUnload = 1;
 }
 
-void EQAPP_FixAddress(DWORD& address)
+void EQAPP_FixAddress(uint32_t& address)
 {
-    DWORD baseAddress = (DWORD)GetModuleHandle(NULL);
+    uint32_t baseAddress = (uint32_t)GetModuleHandle(NULL);
 
     address = (address - EQ_BASE_ADDRESS_VALUE) + baseAddress;
 }
@@ -110,9 +113,10 @@ void EQAPP_InitializeAddressesAndPointers()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CrashDetected);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_DrawNetStatus);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_ExecuteCmd);
-    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_get_bearing);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_TARGET_SPAWN);
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CONTROLLED_SPAWN);
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_LOCAL_SPAWN);
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_PLAYER_SPAWN);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_EQPlayerManager);
@@ -121,10 +125,6 @@ void EQAPP_InitializeAddressesAndPointers()
 
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight);
-
-    EQAPP_FixAddress(EQ_ADDRESS_FOLLOW_DISTANCE_1);
-    EQAPP_FixAddress(EQ_ADDRESS_FOLLOW_DISTANCE_2);
-    EQAPP_FixAddress(EQ_ADDRESS_FOLLOW_DISTANCE_3);
 
     ////EQAPP_FixAddress(EQ_ADDRESS_POINTER_PLAYER_CHARACTER);
     ////EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQ_Character__eqspa_movement_rate);
@@ -140,6 +140,12 @@ void EQAPP_InitializeAddressesAndPointers()
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CDisplay);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2);
 
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__WndNotification);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__HandleBazaarMsg);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery);
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////
 
     EQ_CLASS_POINTER_EQPlayerManager_pptr = (EQClass::EQPlayerManager**)EQ_ADDRESS_POINTER_EQPlayerManager;
@@ -153,6 +159,9 @@ void EQAPP_InitializeAddressesAndPointers()
 
     EQ_CLASS_POINTER_CDisplay_pptr = (EQClass::CDisplay**)EQ_ADDRESS_POINTER_CDisplay;
     EQ_CLASS_POINTER_CDisplay = (*EQ_CLASS_POINTER_CDisplay_pptr);
+
+    EQ_CLASS_POINTER_CBazaarSearchWnd_pptr = (EQClass::CBazaarSearchWnd**)EQ_ADDRESS_POINTER_CBazaarSearchWnd;
+    EQ_CLASS_POINTER_CBazaarSearchWnd = (*EQ_CLASS_POINTER_CBazaarSearchWnd_pptr);
 }
 
 DWORD WINAPI EQAPP_ThreadLoop(LPVOID param)
@@ -211,6 +220,8 @@ DWORD WINAPI EQAPP_ThreadLoad(LPVOID param)
     g_EQAppHandleThreadLoop = CreateThread(NULL, 0, &EQAPP_ThreadLoop, NULL, 0, NULL);
 
     EQAPP_Detours_Load();
+
+    EQ_SetNetStatus(true);
 
     return 0;
 }

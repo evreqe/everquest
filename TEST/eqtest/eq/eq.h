@@ -5,37 +5,32 @@
 #include <unordered_map>
 #include <string>
 
+#include "eq_constants.h"
 #include "eq_alternateabilities.h"
 #include "eq_virtualkeycodes.h"
 #include "eq_executecmd.h"
 #include "eq_keys.h"
 
-DWORD EQ_ADDRESS_CLIENT_VERSION_DATE = 0xADBC20; // WinMain()    "Starting EverQuest (Built %s %s)"    CrashDetected()    "Client Version: %s %s\n"
-#define EQ_STRING_CLIENT_VERSION_DATE "Feb 12 2018"
+uint32_t EQ_ADDRESS_CLIENT_VERSION_DATE = 0xADBC88; // WinMain()    "Starting EverQuest (Built %s %s)"    CrashDetected()    "Client Version: %s %s\n"
+#define EQ_STRING_CLIENT_VERSION_DATE "Mar  9 2018"
 #define EQ_SIZE_CLIENT_VERSION_DATE 12
 
-DWORD EQ_ADDRESS_CLIENT_VERSION_TIME = 0xADBC14; // WinMain()    "Starting EverQuest (Built %s %s)"    CrashDetected()    "Client Version: %s %s\n"
-#define EQ_STRING_CLIENT_VERSION_TIME "19:55:13"
+uint32_t EQ_ADDRESS_CLIENT_VERSION_TIME = 0xADBC7C; // WinMain()    "Starting EverQuest (Built %s %s)"    CrashDetected()    "Client Version: %s %s\n"
+#define EQ_STRING_CLIENT_VERSION_TIME "14:46:10"
 #define EQ_SIZE_CLIENT_VERSION_TIME 9
 
-const float EQ_PI = 3.14159265358979f;
+uint32_t EQ_BASE_ADDRESS_VALUE    = 0x400000;
 
-#define EQ_NUM_HOT_BARS       10
-#define EQ_NUM_HOT_BUTTONS    12
-#define EQ_NUM_SPELLS         59999
-
-DWORD EQ_BASE_ADDRESS_VALUE    = 0x400000;
-
-DWORD EQ_ADDRESS_AUTO_ATTACK    = 0xFB49B7; // uint8_t
-DWORD EQ_ADDRESS_AUTO_FIRE      = 0x0;      // uint8_t
-DWORD EQ_ADDRESS_AUTO_RUN       = 0xF30450; // uint32_t
-DWORD EQ_ADDRESS_MOUSE_LOOK     = 0xF30432; // uint8_t
-DWORD EQ_ADDRESS_NET_STATUS     = 0xF30435; // uint8_t    byte_F30435 = sub_9CFF30("Defaults", "NetStat", 0, 0);
+uint32_t EQ_ADDRESS_AUTO_ATTACK    = 0xFBD537; // uint8_t    // Attack
+uint32_t EQ_ADDRESS_AUTO_FIRE      = 0x0; // uint8_t    // Autofire
+uint32_t EQ_ADDRESS_AUTO_RUN       = 0xF35C70; // uint32_t
+uint32_t EQ_ADDRESS_MOUSE_LOOK     = 0xF35C52; // uint8_t    // MouseLook
+uint32_t EQ_ADDRESS_NET_STATUS     = 0xF35C55; // uint8_t    byte_F30435 = sub_9CFF30("Defaults", "NetStat", 0, 0); // 0xF30435
 /*
 search for 1 and 0
 */
 
-DWORD EQ_ADDRESS_POINTER_WINDOW_HWND = 0xFB73B0; // HWND hWnd
+uint32_t EQ_ADDRESS_POINTER_WINDOW_HWND = 0xFBFF48; // HWND hWnd    // HWnd
 /*
     PostMessageA(hWnd, 0x4647u, 0x4247u, (LPARAM)v3);
 */
@@ -44,7 +39,11 @@ DWORD EQ_ADDRESS_POINTER_WINDOW_HWND = 0xFB73B0; // HWND hWnd
     PostMessageA(hWnd, 0x4646u, 0x4246u, (LPARAM)v11);
 */
 
-DWORD EQ_ADDRESS_FUNCTION_CrashDetected    = 0x741000; // "Crash (char = %s, zone = %s)\n"    "Local Player's World location at time of crash: %f, %f, %f.\n"    "Gamestate at crash = %d\n"    "Crash Details: %s\n"
+uint32_t EQ_ADDRESS_POINTER_StringTable    = 0xF26798; // pinstStringTable
+
+uint32_t EQ_ADDRESS_FUNCTION_StringTable__getString    = 0x964D20; // "%s (%d)"    "ERROR: String not found."
+
+uint32_t EQ_ADDRESS_FUNCTION_CrashDetected    = 0x73FEE0; // "Crash (char = %s, zone = %s)\n"    "Local Player's World location at time of crash: %f, %f, %f.\n"    "Gamestate at crash = %d\n"    "Crash Details: %s\n"
 /*
   sub_8A4150("Fatal error occurred in mainthread! (Release Client #630)\n");
   strcat(byte_FBC576, "Fatal error in mainthread! (Release Client #630)\n");
@@ -93,8 +92,8 @@ DWORD EQ_ADDRESS_FUNCTION_CrashDetected    = 0x741000; // "Crash (char = %s, zon
   }
 */
 
-DWORD EQ_ADDRESS_FUNCTION_DrawNetStatus    = 0x6BA2A0; // "%ldms"    "%0.2f%%"
-DWORD EQ_ADDRESS_FUNCTION_ExecuteCmd       = 0x624500; // "ExecuteCmd has received a CMD_EXITGAME.\n"    "/%s %s"    "%c%s %s "    "help.html"
+uint32_t EQ_ADDRESS_FUNCTION_DrawNetStatus    = 0x6B9860; // "%ldms"    "%0.2f%%"
+uint32_t EQ_ADDRESS_FUNCTION_ExecuteCmd       = 0x6243B0; // "ExecuteCmd has received a CMD_EXITGAME.\n"    "/%s %s"    "%c%s %s "    "help.html"
 /*
 ExecuteCmd()
 case 508:
@@ -109,59 +108,10 @@ sub_8A55C0(
     sub_523550(508, 0, 0, 0); // ExecuteCmd
 */
 
-DWORD EQ_ADDRESS_FUNCTION_get_bearing    = 0x62B880; // search for "fpatan"
-/*
-double __cdecl sub_53B1C0(float a1, float a2, float a3, float a4)
-{
-  double v4; // st6@1
-  long double v5; // st5@1
-  double v6; // st4@1
-  long double v7; // st2@1
-  long double v8; // rt2@3
-  long double v9; // st2@3
-  double v10; // st5@3
-  long double v11; // st7@3
-  double result; // st7@5
-  double v13; // st3@8
-
-  v4 = a3;
-  v5 = fabs(a1 - a3);
-  v6 = a2;
-  v7 = fabs(a2 - a4);
-  if ( v5 < 0.0000009999999974752427 )
-    v5 = 0.0000009999999974752427;
-  v8 = v7;
-  v9 = v5;
-  v10 = a4;
-  v11 = atan2(v9, v8) * 180.0 * 0.3183099014828645;
-  if ( a1 < v4 )
-  {
-    v13 = a1;
-  }
-  else
-  {
-    if ( a4 >= v6 )
-      return (90.0 - v11 + 90.0) * 511.5 * 0.0027777778;
-    if ( a4 <= v6 )
-      return (v11 + 180.0) * 511.5 * 0.0027777778;
-    v13 = a1;
-    v10 = a4;
-  }
-  if ( v13 > v4 || v10 > v6 )
-    result = v11 * 511.5 * 0.0027777778;
-  else
-    result = (90.0 - v11 + 270.0) * 511.5 * 0.0027777778;
-  return result;
-}
-*/
-
 // class EQPlayer
-DWORD EQ_ADDRESS_POINTER_EQPlayerManager    = 0xFB6040; // pinstSpawnManager
+uint32_t EQ_ADDRESS_POINTER_EQPlayerManager    = 0xFBEBC0; // pinstSpawnManager
 
-#define EQ_OFFSET_EQPlayerManager_FIRST_SPAWN    0x08
-#define EQ_OFFSET_EQPlayerManager_LAST_SPAWN     0x0C
-
-DWORD EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID      = 0x6E3AE0; // "Your inventory is full!"
+uint32_t EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID      = 0x6E27A0; // "Your inventory is full!"
 /*
 case 0xD:
       result = (_DWORD *)sub_5E2420((void *)dword_FB5090, *(_DWORD *)(a3 + 4)); // EQPlayerManager__GetSpawnByID and pinstSpawnManager
@@ -202,7 +152,7 @@ LABEL_53:
       return result;
 */
 
-DWORD EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName    = 0x6E3B00; // "Incorrect Usage. Type /xtarget for correct usage."
+uint32_t EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName    = 0x6E27C0; // "Incorrect Usage. Type /xtarget for correct usage."
 /*
 if ( !sub_8A3560(&v32, 0) || (sub_89F500(&v32), v8 = sub_89E950(&v28) - 1, v8 < 0) )
       {
@@ -261,9 +211,10 @@ while ( *(_DWORD *)(result + 4) != v7 )
 */
 
 // class EQPlayer
-DWORD EQ_ADDRESS_POINTER_TARGET_SPAWN        = 0xF22F80; // pinstTargetSpawn   ExecuteCmd() case 355 CLEAR_TARGET
-DWORD EQ_ADDRESS_POINTER_CONTROLLED_SPAWN    = 0x0; // pinstCharSpawn    ControlledPlayer
-DWORD EQ_ADDRESS_POINTER_PLAYER_SPAWN        = 0xF20F2C; // LocalPlayer    "Local Player's World location at time of crash: %f, %f, %f.\n"
+uint32_t EQ_ADDRESS_POINTER_TARGET_SPAWN        = 0xF25EF0; // pinstTarget    ExecuteCmd() case 355 CLEAR_TARGET
+uint32_t EQ_ADDRESS_POINTER_CONTROLLED_SPAWN    = 0x0; // pinstControlledPlayer
+uint32_t EQ_ADDRESS_POINTER_LOCAL_SPAWN         = 0xF287A8; // pinstLocalPlayer    "Local Player's World location at time of crash: %f, %f, %f.\n"
+uint32_t EQ_ADDRESS_POINTER_PLAYER_SPAWN        = EQ_ADDRESS_POINTER_LOCAL_SPAWN;
 /*
 if ( dword_F21FE8 ) // PlayerSpawn
   {
@@ -274,39 +225,7 @@ if ( dword_F21FE8 ) // PlayerSpawn
   }
 */
 
-// double check offsets after patch!
-#define EQ_OFFSET_SPAWN_PREVIOUS          0x04     // uint32_t pointer
-#define EQ_OFFSET_SPAWN_NEXT              0x08     // uint32_t pointer
-#define EQ_OFFSET_SPAWN_LAST_NAME         0x38     // char[32]
-#define EQ_OFFSET_SPAWN_Y                 0x64     // float
-#define EQ_OFFSET_SPAWN_X                 0x68     // float
-#define EQ_OFFSET_SPAWN_Z                 0x6C     // float
-#define EQ_OFFSET_SPAWN_HEADING           0x80     // float
-#define EQ_OFFSET_SPAWN_NAME_NUMBERED     0xA4     // char[64]
-#define EQ_OFFSET_SPAWN_NAME              0xE4     // char[64]
-#define EQ_OFFSET_SPAWN_TYPE              0x125    // uint8_t
-#define EQ_OFFSET_SPAWN_HEIGHT            0x13C    // float
-#define EQ_OFFSET_SPAWN_ID                0x148    // uint32_t
-// ******************************************************************************** //
-#define EQ_OFFSET_SPAWN_ZONE_ID           0x534    // uint32_t
-#define EQ_OFFSET_SPAWN_LEVEL             0x584    // uint8_t
-#define EQ_OFFSET_SPAWN_RACE              0xF9C    // uint32_t
-#define EQ_OFFSET_SPAWN_CLASS             0xFA4    // uint32_t
-#define EQ_OFFSET_SPAWN_STANDING_STATE    0x4D8    // uint8_t
-#define EQ_OFFSET_SPAWN_HP_CURRENT        0x4F0    // uint32_t
-#define EQ_OFFSET_SPAWN_HP_MAX            0x590    // uint32_t
-#define EQ_OFFSET_SPAWN_MANA_CURRENT      0x3AC    // uint32_t
-#define EQ_OFFSET_SPAWN_MANA_MAX          0x50C    // uint32_t
-#define EQ_OFFSET_SPAWN_FOLLOW_SPAWN      0xF30    // uint32_t pointer
-
-#define EQ_SIZE_SPAWN_NAME         64 // 0x40
-#define EQ_SIZE_SPAWN_LAST_NAME    32 // 0x20
-
-#define EQ_SPAWN_TYPE_PLAYER    0
-#define EQ_SPAWN_TYPE_NPC       1
-#define EQ_SPAWN_TYPE_CORPSE    2
-
-DWORD EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI    = 0x6D7700; // search for xref to autorun
+uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI    = 0x6D63F0; // search for xref to autorun
 /*
 EQPlayer__FollowPlayerAI()
     if ( v21 + 15.0 <= *(float *)(v1 + 564) ) // Follow Distance 1
@@ -330,18 +249,7 @@ EQPlayer__FollowPlayerAI()
     }
 */
 
-DWORD EQ_ADDRESS_FOLLOW_DISTANCE_1    = 0xAC0CD0; // 15.0f
-DWORD EQ_ADDRESS_FOLLOW_DISTANCE_2    = 0xAC0CD4; // 30.0f
-DWORD EQ_ADDRESS_FOLLOW_DISTANCE_3    = 0xAC0958; // 200.0f    // maximum follow distance
-/*
-EQPlayer__FollowPlayerAI()
-*/
-
-const float EQ_FOLLOW_DISTANCE_1_DEFAULT = 15.0f;
-const float EQ_FOLLOW_DISTANCE_2_DEFAULT = 30.0f;
-const float EQ_FOLLOW_DISTANCE_3_DEFAULT = 200.0f;
-
-DWORD EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight    = 0x6EBF50; // PlayerZoneClient__ChangeHeight    "%s is now able to kill anyone (or be killed) as if they were an NPC." and "FORMAT: /becomenpc"
+uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight    = 0x6EAC30; // PlayerZoneClient__ChangeHeight    "%s is now able to kill anyone (or be killed) as if they were an NPC." and "FORMAT: /becomenpc"
 /*
 v25 = sub_569850(v18);
 sprintf(&v59, "Changing %s to race: %s.", dword_F26020 + 164, v25);
@@ -400,61 +308,19 @@ v10 = 0.0;
     }
 */
 
-// class EQ_Character
-DWORD EQ_ADDRESS_POINTER_PLAYER_CHARACTER    = 0x0; // psintCharData
-
-DWORD EQ_ADDRESS_FUNCTION_EQ_Character__eqspa_movement_rate    = 0x0; // "*** EXITING: I have completed camping." and "Sending up a MSG_ONVEHICLE for vehicle %s.\n"
-/*
-if ( v94 - *(_DWORD *)(v112 + 900) > 1000 )
-    {
-      v113 = v94 - *(_DWORD *)(v112 + 900);
-      *(_DWORD *)(v112 + 900) = v94;
-      if ( !*(_BYTE *)(*(_DWORD *)(v6 + 8) + 293) )
-      {
-        sub_463A90(v6);
-        v114 = (*(int (__thiscall **)(int))(*(_DWORD *)(*(_DWORD *)(*(_DWORD *)(v6 + 4) + 4) + v6 + 4) + 64))(*(_DWORD *)(*(_DWORD *)(v6 + 4) + 4) + v6 + 4);
-        sub_4B6C70(v114, v113);
-        v115 = sub_44F860(99, 1, 0, 1, 1);
-        v116 = v6;
-        if ( v115 >= 0 )
-        {
-          v115 = sub_44F860(3, 1, 0, 1, 1);
-          v116 = v6;
-        }
-        sub_450400(v116, v115); // EQ_Character__eqspa_movement_rate
-        sub_5D9D20();
-        HIBYTE(word_F2FB24) = 1;
-        if ( (char *)dword_F21FFC != PlayerSpawn____dword_F21FE8 )
-          LOBYTE(word_F2FB24) = 1;
-        sub_5CC8F0(v222);
-        sub_46D100(v6);
-        sub_462FD0(v6);
-        v117 = *(_DWORD *)(v6 + 8);
-        if ( !v117 )
-        {
-          v135 = v215;
-          v136 = v215 == 0;
-          goto LABEL_478;
-        }
-*/
-
 // class CXWndManager
-DWORD EQ_ADDRESS_POINTER_CXWndManager    = 0x1731174; // pinstCXWndManager
+uint32_t EQ_ADDRESS_POINTER_CXWndManager    = 0x1739C64; // pinstCXWndManager
 
-DWORD EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows    = 0x9C9770; // "DoAllDrawing() failed\n"    GetTickCount()
+uint32_t EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows    = 0x9C96F0; // "DoAllDrawing() failed\n"    GetTickCount()
 
 // class CEverQuest
-DWORD EQ_ADDRESS_POINTER_CEverQuest    = 0xFB71F0; // pinstCEverQuest
+uint32_t EQ_ADDRESS_POINTER_CEverQuest    = 0xFBFD88; // pinstCEverQuest
 /*
 CEverQuest__InterpretCmd()
 if ( *(_DWORD *)(dword_10C1418 + 1480) == 5 ) // gamestate == in-game
 */
 
-#define EQ_OFFSET_CEverQuest_GAME_STATE    0x5C8 // uint32_t, 1480 decimal    "Gamestate at crash = %d\n"
-
-#define EQ_GAME_STATE_IN_GAME 5
-
-DWORD EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd    = 0x686A00; // "#%s %s"
+uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd    = 0x6861C0; // "#%s %s"
 /*
 CEverQuest__InterpretCmd()
 switch ( byte_F334A0 )
@@ -491,15 +357,13 @@ default:
 }
 */
 
-DWORD EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat        = 0x579900;
+uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat        = 0x579710; // "You cannot purchase an item from yourself!"
 /*
 CEverQuest__InterpretCmd()
 sub_4764B0(v9, v8, 273, 1, 1, 0); // CEverQuest__dsp_chat
 */
 
-#define EQ_CHAT_TEXT_COLOR_YELLOW    15
-
-DWORD EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting    = 0x66DA80; // "%s <%s>"
+uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting    = 0x66D260; // "%s <%s>"
 /*
   if ( v13 && v13 != 3 && v13 != 7 )
   {
@@ -516,51 +380,13 @@ DWORD EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting    = 0x66DA80; // "%s <%s>"
   }
 */
 
-namespace EQ
-{
-
-typedef struct _CEverQuest__StartCasting_Message
-{
-    uint32_t SpellID;
-    uint16_t SpawnID;
-    uint16_t SpellCastTime;
-    uint32_t Unknown1;
-} CEverQuest__StartCasting_Message, *CEverQuest__StartCasting_Message_ptr;
-
-} // namespace EQ
-
 // class CDisplay
-DWORD EQ_ADDRESS_POINTER_CDisplay    = 0xF20698; // pinstCDisplay    "CDisplay::CreatePlayerActor - FATAL ERROR - mySpriteDef is NULL. "
+uint32_t EQ_ADDRESS_POINTER_CDisplay    = 0xF25F08; // pinstCDisplay    "CDisplay::CreatePlayerActor - FATAL ERROR - mySpriteDef is NULL. "
 /*
 CDisplay::CreatePlayerActor(*(float *)&a1, (int)dword_F20698, 0, 0, 1, 2, 1, 0);
 */
 
-#define EQ_OFFSET_CDisplay_CAMERA    0x118 // uint32_t pointer
-#define EQ_OFFSET_CDisplay_TIMER     0x154 // uint32_t
-
-#define EQ_OFFSET_CAMERA_FIELD_OF_VIEW                 0x04 // float
-#define EQ_OFFSET_CAMERA_ASPECT_RATIO                  0x08 // float
-#define EQ_OFFSET_CAMERA_UNKNOWN_0x0C                  0x0C // float, 0.0 to 1.0
-#define EQ_OFFSET_CAMERA_DRAW_DISTANCE                 0x14 // float
-#define EQ_OFFSET_CAMERA_ACTOR_CLIP_PLANE              0x1C // float
-#define EQ_OFFSET_CAMERA_SHADOW_CLIP_PLANE             0x24 // float
-#define EQ_OFFSET_CAMERA_SCREEN_WIDTH_HALF             0x38 // float
-#define EQ_OFFSET_CAMERA_SCREEN_HEIGHT_HALF            0x3C // float
-#define EQ_OFFSET_CAMERA_HEADING                       0xB0 // float, yaw
-#define EQ_OFFSET_CAMERA_PITCH                         0xB4 // float, pitch
-#define EQ_OFFSET_CAMERA_ROTATION                      0xB8 // float, roll
-#define EQ_OFFSET_CAMERA_Y                             0xBC // float
-#define EQ_OFFSET_CAMERA_X                             0xC0 // float
-#define EQ_OFFSET_CAMERA_Z                             0xC4 // float
-
-const float EQ_CAMERA_FIELD_OF_VIEW_DEFAULT       = 45.0f;
-const float EQ_CAMERA_FIELD_OF_VIEW_DRUID_MASK    = 60.0f;
-
-const float EQ_CAMERA_PITCH_DEFAULT    = -8.5f;      // center view
-const float EQ_CAMERA_PITCH_MIN        = -136.5f;    // look down
-const float EQ_CAMERA_PITCH_MAX        = 119.5f;     // look up
-
-DWORD EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2    = 0x5C2A60; // "%ldms"    "%0.2f%%"
+uint32_t EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2    = 0x5C2A00; // "%ldms"    "%0.2f%%"
 /*
 DrawNetStatus()
     sprintf(&Dest, "%0.2f%%", v8 * 100.0);
@@ -569,173 +395,435 @@ DrawNetStatus()
     CDisplay__WriteTextHD2(&Dest, (unsigned __int16)a1 + 64, (unsigned __int16)a2, (void *)12);
 */
 
-#define EQ_DRAW_TEXT_COLOR_BLACK         0  // ARGB 0xFF000000
-#define EQ_DRAW_TEXT_COLOR_DEFAULT       1  // ARGB 0xFF606060
-#define EQ_DRAW_TEXT_COLOR_DARK_GREEN    2  // ARGB 0xFF008000
-#define EQ_DRAW_TEXT_COLOR_DEFAULT_2     3  // ARGB 0xFF606060
-#define EQ_DRAW_TEXT_COLOR_DARK_BLUE     4  // ARGB 0xFF000080
-#define EQ_DRAW_TEXT_COLOR_PINK          5  // ARGB 0xFFF000F0
-#define EQ_DRAW_TEXT_COLOR_DARK_GRAY     6  // ARGB 0xFF808080
-#define EQ_DRAW_TEXT_COLOR_WHITE_2       7  // ARGB 0xFFE0E0E0
-#define EQ_DRAW_TEXT_COLOR_DEFAULT_3     8  // ARGB 0xFF606060
-#define EQ_DRAW_TEXT_COLOR_DEFAULT_4     9  // ARGB 0xFF606060
-#define EQ_DRAW_TEXT_COLOR_WHITE         10 // ARGB 0xFFF0F0F0
-#define EQ_DRAW_TEXT_COLOR_DEFAULT_5     11 // ARGB 0xFF606060
-#define EQ_DRAW_TEXT_COLOR_GRAY          12 // ARGB 0xFFA0A0A0
-#define EQ_DRAW_TEXT_COLOR_RED           13 // ARGB 0xFFF00000
-#define EQ_DRAW_TEXT_COLOR_GREEN         14 // ARGB 0xFF00F000
-#define EQ_DRAW_TEXT_COLOR_YELLOW        15 // ARGB 0xFFF0F000
-#define EQ_DRAW_TEXT_COLOR_BLUE          16 // ARGB 0xFF0000F0
-#define EQ_DRAW_TEXT_COLOR_BLUE_2        17 // ARGB 0xFF0000AF
-#define EQ_DRAW_TEXT_COLOR_TEAL          18 // ARGB 0xFF00F0F0
-#define EQ_DRAW_TEXT_COLOR_DEFAULT_6     19 // ARGB 0xFF606060
-#define EQ_DRAW_TEXT_COLOR_BLACK_2       20 // ARGB 0xFF000000
+uint32_t EQ_ADDRESS_POINTER_CBazaarSearchWnd    = 0xE74DB4;
 
-#define EQ_ZONE_ID_POKNOWLEDGE    202 // Plane of Knowledge
-#define EQ_ZONE_ID_GUILDLOBBY     344 // The Guild Lobby
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__WndNotification    = 0x77A3A0; // "You cannot purchase an item from yourself!"    "9999999"
+/*
+sub_8EB690("BazaarSearchWnd", "HideTraders", *(_BYTE *)(v26 + 492));
+*/
 
-std::unordered_map<uint32_t, std::string> EQ_UMAP_ZONE_NAME =
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__HandleBazaarMsg    = 0x77B520; // "You successfully purchased %d %s(s) from %s."    " The item has been sent to your parcels."
+/*
+else
 {
-    {EQ_ZONE_ID_POKNOWLEDGE,      "Plane of Knowledge"},
-    {EQ_ZONE_ID_GUILDLOBBY,       "The Guild Lobby"},
-};
+    v24 = (volatile signed __int32 **)sub_8A3160(
+                                        (int)&v39,
+                                        "You successfully purchased %d %s(s) from %s.",
+                                        *(_DWORD *)(a4 + 280));
+    LOBYTE(v60) = 3;
+    sub_8A1330((volatile signed __int32 **)&v36, v24);
+    LOBYTE(v60) = 2;
+    if ( v39 )
+        CXStr__FreeRep((_DWORD *)v39);
+    v15 = *(_DWORD *)(a4 + 4) == 1;
+    v39 = 0;
+    if ( v15 )
+        sub_8A2480((int *)&v36, " The item has been sent to your parcels.");
+    else
+        sub_8A2480((int *)&v36, " The item has been added to your inventory.");
+}
+*/
+/*
+case 5514u: // 0x5D3Au
+          v54 = a5;
+          v53 = a4;
+          v55 = 0;
+          CBazaarSearchWnd__HandleBazaarMsg((_DWORD *)CBazaarSearchWnd____dword_E716E8, COERCE_FLOAT(&v53));
+          break;
+*/
 
-std::unordered_map<uint32_t, std::string> EQ_UMAP_ZONE_SHORT_NAME =
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList    = 0x778250;
+/*
+  result = 0;
+  v13 = this;
+  v45 = 0;
+  v14 = this[9360];
+  v47 = 0;
+  v15 = *(_DWORD *)(v14 + 500);
+  if ( v15 < 200 )
+  {
+    v16 = Memory;
+    if ( (signed int)Memory > 0 )
+    {
+      v17 = Str1;
+      v18 = (char *)&this[46 * v15];
+      *((_DWORD *)v18 + 193) = a8;
+      *((_DWORD *)v18 + 194) = a9;
+      *((_DWORD *)v18 + 191) = a3;
+      v19 = a11;
+      *((_DWORD *)v18 + 195) = v16;
+      *((_DWORD *)v18 + 192) = 0;
+      *((_DWORD *)v18 + 196) = v19;
+      sub_9A10E0(v17);
+      *((_DWORD *)v18 + 188) = a5;
+      *((_DWORD *)v18 + 189) = a6;
+      *((_DWORD *)v18 + 190) = a7;
+      sub_99D8D0(v18 + 688, Source, 0x40u);
+      sub_99D8D0(v18 + 624, a4, 0x40u);
+      CComboWnd__InsertChoice(Directory);
+      v20 = v13[9360];
+      v21 = (void *)sub_9BC0F0((int)&Memory, -1, v15, v15 >> 31, 0, 0);
+      LOBYTE(v47) = 0;
+      if ( Memory )
+        CXStr__FreeRep(Memory);
+      v22 = sub_7AEC90(a8);
+      v23 = v13[9360];
+      sub_9BCD80(v21, 0, v22);
+      CComboWnd__InsertChoice(Source);
+      v24 = v13[9360];
+      sub_9BCD00(v21, 1, &a8);
+      LOBYTE(v47) = 0;
+      if ( a8 )
+        CXStr__FreeRep(a8);
+      sub_99B670((int)&v45, "%d", (char)v16);
+      v25 = v13[9360];
+      sub_9BCD00(v21, 2, &v45);
+      v26 = (unsigned int)a3 % 1000i64;
+      v46 = (unsigned __int64)((unsigned int)a3 / 1000i64) >> 32;
+      v27 = _itoa((unsigned int)a3 / 1000i64, DstBuf, 10);
+      CComboWnd__InsertChoice(v27);
+      v28 = v13[9360];
+      LOBYTE(v47) = 3;
+      sub_9BCD00(v21, 3, &a8);
+      LOBYTE(v47) = 0;
+      if ( a8 )
+        CXStr__FreeRep(a8);
+      v29 = v26 / 100i64;
+      v30 = v26 % 100i64;
+      v46 = HIDWORD(v29);
+      v31 = _itoa(v29, DstBuf, 10);
+      CComboWnd__InsertChoice(v31);
+      v32 = v13[9360];
+      LOBYTE(v47) = 4;
+      sub_9BCD00(v21, 4, &a8);
+      LOBYTE(v47) = 0;
+      if ( a8 )
+        CXStr__FreeRep(a8);
+      v33 = v30 / 10i64;
+      v34 = v30 % 10i64;
+      v46 = HIDWORD(v33);
+      v35 = _itoa(v33, DstBuf, 10);
+      CComboWnd__InsertChoice(v35);
+      v36 = v13[9360];
+      LOBYTE(v47) = 5;
+      sub_9BCD00(v21, 5, &a8);
+      LOBYTE(v47) = 0;
+      if ( a8 )
+        CXStr__FreeRep(a8);
+      v37 = _itoa(v34, DstBuf, 10);
+      CComboWnd__InsertChoice(v37);
+      v38 = v13[9360];
+      LOBYTE(v47) = 6;
+      sub_9BCD00(v21, 6, &a8);
+      LOBYTE(v47) = 0;
+      if ( a8 )
+        CXStr__FreeRep(a8);
+      CComboWnd__InsertChoice(a4);
+      v39 = v13[9360];
+      LOBYTE(v47) = 7;
+      sub_9BCD00(v21, 7, &a8);
+      LOBYTE(v47) = 0;
+      if ( a8 )
+        CXStr__FreeRep(a8);
+      v40 = v13[9369];
+      a8 = 0;
+      if ( v40 )
+      {
+        v41 = sub_9D6B40(*(_DWORD *)(v40 + 108));
+        v42 = sub_9D9D10(v13, v41, 0);
+        if ( v42 )
+        {
+          sub_9C5970(1, 0);
+          (*(void (__thiscall **)(int, signed int, signed int, signed int))(*(_DWORD *)v42 + 216))(v42, 1, 1, 1);
+          v43 = v13[9360];
+          sub_9BCFA0(v21, 8, v42);
+        }
+      }
+      if ( v45 )
+        CXStr__FreeRep(v45);
+      v45 = 0;
+      if ( a11 )
+        sub_99B670((int)&v45, "%d", a11);
+      v44 = v13[9360];
+      sub_9BCD00(v21, 9, &v45);
+      result = v45;
+    }
+  }
+  v47 = -1;
+  if ( result )
+    result = (void *)CXStr__FreeRep(result);
+  return result;
+}
+*/
+/*
+CBazaarSearchWnd__HandleBazaarMsg()
+do
 {
-    {EQ_ZONE_ID_POKNOWLEDGE,      "poknowledge"},
-    {EQ_ZONE_ID_GUILDLOBBY,       "guildlobby"},
-};
+    sub_77D8F0(v3);
+    v11 = *(_DWORD *)(*((_DWORD *)v2 + 9356) + 4 * (0u % *((_DWORD *)v2 + 9357)));
+    if ( v11 )
+    {
+    while ( *(_DWORD *)(v11 + 76) )
+    {
+        v11 = *(_DWORD *)(v11 + 80);
+        if ( !v11 )
+        goto LABEL_16;
+    }
+    sub_779C50(    // CBazaarSearchWnd__AddItemToList()
+        v2,
+        &Source,
+        v14,
+        (char *)(v11 + 12),
+        0,
+        *(_DWORD *)(v11 + 8),
+        *(_DWORD *)v11,
+        v17,
+        v16,
+        Memory,
+        v19[0],
+        &Str1);
+}
+*/
 
-#define EQ_RACE_UNKNOWN      0
-#define EQ_RACE_HUMAN        1
-#define EQ_RACE_BARBARIAN    2
-#define EQ_RACE_ERUDITE      3
-#define EQ_RACE_WOOD_ELF     4
-#define EQ_RACE_HIGH_ELF     5
-#define EQ_RACE_DARK_ELF     6
-#define EQ_RACE_HALF_ELF     7
-#define EQ_RACE_DWARF        8
-#define EQ_RACE_TROLL        9
-#define EQ_RACE_OGRE         10
-#define EQ_RACE_HALFLING     11
-#define EQ_RACE_GNOME        12
-#define EQ_RACE_IKSAR        128
-#define EQ_RACE_VAH_SHIR     130
-#define EQ_RACE_FROGLOK      330
-#define EQ_RACE_DRAKKIN      -1 // TODO
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery    = 0x778AF0;
+/*
+CBazaarSearchWnd__WndNotification()
 
-std::unordered_map<uint32_t, std::string> EQ_UMAP_RACE_NAME =
-{
-    {EQ_RACE_UNKNOWN,      "Unknown"},
-    {EQ_RACE_HUMAN,        "Human"},
-    {EQ_RACE_BARBARIAN,    "Barbarian"},
-    {EQ_RACE_ERUDITE,      "Erudite"},
-    {EQ_RACE_WOOD_ELF,     "Wood Elf"},
-    {EQ_RACE_HIGH_ELF,     "High Elf"},
-    {EQ_RACE_DARK_ELF,     "Dark Elf"},
-    {EQ_RACE_HALF_ELF,     "Half Elf"},
-    {EQ_RACE_DWARF,        "Dwarf"},
-    {EQ_RACE_TROLL,        "Troll"},
-    {EQ_RACE_OGRE,         "Ogre"},
-    {EQ_RACE_HALFLING,     "Halfling"},
-    {EQ_RACE_GNOME,        "Gnome"},
-    {EQ_RACE_IKSAR,        "Iksar"},
-    {EQ_RACE_VAH_SHIR,     "Vah Shir"},
-    {EQ_RACE_FROGLOK,      "Froglok"},
-    {EQ_RACE_DRAKKIN,      "Drakkin"},
-};
+        if ( v28 > -1 && v28 < 200 )
+              {
+                if ( *(_DWORD *)(184 * (v28 + 4) + v8) == *((_DWORD *)pinstCharData + 1415) )
+                {
+                  v29 = sub_4764A0();
+                  CEverQuest__dsp_chat(v29, "You cannot purchase an item from yourself!", 13, 1, 1, 0);
+                }
+                else if ( *(_DWORD *)(184 * v28 + v8 + 764) <= 1 )
+                {
+                  sub_67B490((_DWORD *)v8, 1);
+                }
+                else
+                {
+                  (*(void (__thiscall **)(_DWORD *, int *))(*v7 + 252))(v7, &v41);
+                  v30 = *(_DWORD *)(184 * *(_DWORD *)(v8 + 600) + v8 + 764);
+                  sub_7738D0((_DWORD *)dword_E716C0, v8, v30, v30, v41, v42, 1, 0, 0, 0);
+                }
+              }
+            }
+          }
+          else
+          {
+            v31 = StringTable__getString((int *)StringTable____dword_F24F9C, 0x38CAu, 0);
+            v32 = sub_4764A0();
+            CEverQuest__dsp_chat(v32, v31, 13, 1, 1, 0);
+          }
+        }
+        return;
+      }
+LABEL_106:
+      sub_8D1150(v20, 0, 0);
+      *(_BYTE *)(v8 + 592) = 0;
+      *(_DWORD *)(v8 + 580) = sub_8A4290();
+      CBazaarSearchWnd__doQuery((_DWORD **)v8); // CBazaarSearchWnd__doQuery()
+      return;
+    case 14:
+      goto LABEL_48;
+    case 15:
+      v33 = a5;
+      v34 = a5 - 1;
+      *(_DWORD *)(v8 + 576) = a5;
+      switch ( v34 )
+      {
+        case 0:
+          *(_DWORD *)(v8 + 556) ^= 1u;
+          sub_67B8A0((_DWORD *)v8, v33);
+          break;
+        case 1:
+          *(_DWORD *)(v8 + 560) ^= 1u;
+          sub_67B8A0((_DWORD *)v8, v33);
+          break;
+*/
 
-std::unordered_map<uint32_t, std::string> EQ_UMAP_RACE_SHORT_NAME =
-{
-    {EQ_RACE_UNKNOWN,      "UNK"},
-    {EQ_RACE_HUMAN,        "HUM"},
-    {EQ_RACE_BARBARIAN,    "BAR"},
-    {EQ_RACE_ERUDITE,      "ERU"},
-    {EQ_RACE_WOOD_ELF,     "ELF"},
-    {EQ_RACE_HIGH_ELF,     "HIE"},
-    {EQ_RACE_DARK_ELF,     "DEF"},
-    {EQ_RACE_HALF_ELF,     "HEF"},
-    {EQ_RACE_DWARF,        "DWF"},
-    {EQ_RACE_TROLL,        "TRL"},
-    {EQ_RACE_OGRE,         "OGR"},
-    {EQ_RACE_HALFLING,     "HFL"},
-    {EQ_RACE_GNOME,        "GNM"},
-    {EQ_RACE_IKSAR,        "IKS"},
-    {EQ_RACE_VAH_SHIR,     "VAH"},
-    {EQ_RACE_FROGLOK,      "FRG"},
-    {EQ_RACE_DRAKKIN,      "DRK"},
-};
+/*
+  v1 = this;
+  sub_77CCE0(&v54);
+  v2 = (int *)v1[9360];
+  v3 = -1;
+  v51 = 0;
+  v4 = -1;
+  v48 = -1;
+  v5 = 0;
+  v50 = -1;
+  v6 = *v2;
+  v53 = -1;
+  v52 = 0;
+  v45 = 0;
+  v46 = 1;
+  v47 = 110;
+  v49 = 20;
+  (*(void (**)(void))(v6 + 384))();
+  v7 = (int *)(*(int (__stdcall **)(void **))(*(_DWORD *)v1[9390] + 384))(&Memory);
+  v70 = 0;
+  v8 = sub_999AD0(v7);
+  v9 = (char *)(v69 - (char *)v8);
+  do
+  {
+    v10 = *(_BYTE *)v8;
+    v8 = (char (*)[4])((char *)v8 + 1);
+    (*v8)[(_DWORD)v9 - 1] = v10;
+  }
+  while ( v10 );
+  v70 = -1;
+  if ( Memory )
+    CXStr__FreeRep(Memory);
+  if ( CComboWnd__GetCurChoice(v1[9384]) )
+    v53 = dword_10C4144[2 * CComboWnd__GetCurChoice(v1[9384])];
+  if ( CComboWnd__GetCurChoice(v1[9385]) )
+    v50 = dword_C8D7AC[2 * CComboWnd__GetCurChoice(v1[9385])];
+  if ( CComboWnd__GetCurChoice(v1[9383]) )
+  {
+    v11 = CComboWnd__GetCurChoice(v1[9383]);
+    v12 = v1[9383];
+    v48 = dword_AE22E4[2 * v11];
+    v13 = sub_9DEE60(&Memory);
+    v14 = v1[9360];
+    v70 = 1;
+    sub_9BC090(9, v13);
+    v70 = -1;
+    if ( Memory )
+      CXStr__FreeRep(Memory);
+  }
+  if ( CComboWnd__GetCurChoice(v1[9382]) )
+    v4 = dword_AE223C[2 * CComboWnd__GetCurChoice(v1[9382])];
+  if ( CComboWnd__GetCurChoice(v1[9386]) )
+    v3 = dword_AE20FC[2 * CComboWnd__GetCurChoice(v1[9386])];
+  v15 = v1[9391];
+  if ( v15 )
+  {
+    v16 = (int *)(*(int (__stdcall **)(void **))(*(_DWORD *)v15 + 384))(&Memory);
+    v70 = 2;
+    v17 = sub_999AD0(v16);
+    v45 = atoi((const char *)v17);
+    v70 = -1;
+    if ( Memory )
+      CXStr__FreeRep(Memory);
+  }
+  v18 = v1[9392];
+  if ( v18 )
+  {
+    v19 = (int *)(*(int (__stdcall **)(void **))(*(_DWORD *)v18 + 384))(&Memory);
+    v70 = 3;
+    v20 = sub_999AD0(v19);
+    v52 = atoi((const char *)v20);
+    v70 = -1;
+    if ( Memory )
+      CXStr__FreeRep(Memory);
+  }
+  v21 = v1[9393];
+  if ( v21 )
+  {
+    v22 = (int *)(*(int (__stdcall **)(void **))(*(_DWORD *)v21 + 384))(&Memory);
+    v70 = 4;
+    v23 = sub_999AD0(v22);
+    v47 = atoi((const char *)v23);
+    v70 = -1;
+    if ( Memory )
+      CXStr__FreeRep(Memory);
+  }
+  v24 = v1[9394];
+  if ( v24 )
+  {
+    v25 = (int *)(*(int (__stdcall **)(void **))(*(_DWORD *)v24 + 384))(&Memory);
+    v70 = 5;
+    v26 = sub_999AD0(v25);
+    v46 = atoi((const char *)v26);
+    v70 = -1;
+    if ( Memory )
+      CXStr__FreeRep(Memory);
+  }
+  v27 = v1[9395];
+  if ( v27 )
+  {
+    v28 = (int *)(*(int (__stdcall **)(void **))(*(_DWORD *)v27 + 384))(&v44);
+    v70 = 6;
+    v29 = sub_999AD0(v28);
+    v49 = atoi((const char *)v29);
+    v70 = -1;
+    if ( v44 )
+      CXStr__FreeRep(v44);
+    v44 = 0;
+  }
+  v30 = v1[9387];
+  if ( v30 )
+  {
+    v31 = CComboWnd__GetCurChoice(v30);
+    if ( v31 != -1 )
+    {
+      v32 = v1[9387];
+      v5 = sub_9DF0B0(v31);
+    }
+  }
+  v33 = v1[9388];
+  if ( v33 && CComboWnd__GetCurChoice(v33) )
+  {
+    v34 = CComboWnd__GetCurChoice(v1[9388]);
+    v35 = v1[9388];
+    v51 = sub_9DF0B0(v34);
+  }
+  v36 = v1[9389];
+  if ( v36 && CComboWnd__GetCurChoice(v36) )
+  {
+    v37 = CComboWnd__GetCurChoice(v1[9389]);
+    v38 = v1[9389];
+    v39 = sub_9DF0B0(v37);
+  }
+  else
+  {
+    v39 = 0;
+  }
+  v57 = v50;
+  v58 = v53;
+  v59 = v48;
+  v62 = v52;
+  v63 = v45;
+  v64 = v46;
+  v65 = v47;
+  v66 = v49;
+  v54 = 7;
+  v60 = v4;
+  v61 = v3;
+  v67 = v51;
+  v68 = v39;
+  if ( v5 == -1 )
+  {
+    LOBYTE(v55) = 0;
+    v56 = 0;
+  }
+  else
+  {
+    LOBYTE(v55) = 1;
+    v56 = v5;
+  }
+  v40 = 0;
+  do
+  {
+    v41 = v69[v40++];
+    *((_BYTE *)&v61 + v40 + 3) = v41;
+  }
+  while ( v41 );
+  if ( *(_DWORD *)dword_F20F20 )
+  {
+    word_F206D0 = sub_94D6F0(9449, 0);
+    qmemcpy(&dword_F206D2, &v54, 0x84u);
+    v42 = send_message(*(int *)dword_F20F20, 4, &word_F206D0, 134);
+    j_j__free(0);
+    --dword_10D83A4;
+    if ( v42 )
+      sub_8ED3F0(dword_F20F20[0]);
+    else
+      sub_57B530((_DWORD *)dword_D3AAA8, (int *)dword_F20F20);
+  }
+  else if ( !byte_F30384 )
+  {
+    sub_99D530("Attempt to send message %d on a void connection.", 233);
+  }
+*/
 
-#define EQ_CLASS_UNKNOWN             0
-#define EQ_CLASS_WARRIOR             1
-#define EQ_CLASS_CLERIC              2
-#define EQ_CLASS_PALADIN             3
-#define EQ_CLASS_RANGER              4
-#define EQ_CLASS_SHADOWKNIGHT        5
-#define EQ_CLASS_DRUID               6
-#define EQ_CLASS_MONK                7
-#define EQ_CLASS_BARD                8
-#define EQ_CLASS_ROGUE               9
-#define EQ_CLASS_SHAMAN              10
-#define EQ_CLASS_NECROMANCER         11
-#define EQ_CLASS_WIZARD              12
-#define EQ_CLASS_MAGICIAN            13
-#define EQ_CLASS_ENCHANTER           14
-#define EQ_CLASS_BEASTLORD           15
-#define EQ_CLASS_BERSERKER           16
-#define EQ_CLASS_BANKER              40
-#define EQ_CLASS_MERCHANT            41
-
-std::unordered_map<uint32_t, std::string> EQ_UMAP_CLASS_NAME =
-{
-    {EQ_CLASS_UNKNOWN,         "Unknown"},
-    {EQ_CLASS_WARRIOR,         "Warrior"},
-    {EQ_CLASS_CLERIC,          "Cleric"},
-    {EQ_CLASS_PALADIN,         "Paladin"},
-    {EQ_CLASS_RANGER,          "Ranger"},
-    {EQ_CLASS_SHADOWKNIGHT,    "Shadowknight"},
-    {EQ_CLASS_DRUID,           "Druid"},
-    {EQ_CLASS_MONK,            "Monk"},
-    {EQ_CLASS_BARD,            "Bard"},
-    {EQ_CLASS_ROGUE,           "Rogue"},
-    {EQ_CLASS_SHAMAN,          "Shaman"},
-    {EQ_CLASS_NECROMANCER,     "Necromancer"},
-    {EQ_CLASS_WIZARD,          "Wizard"},
-    {EQ_CLASS_MAGICIAN,        "Magician"},
-    {EQ_CLASS_ENCHANTER,       "Enchanter"},
-    {EQ_CLASS_BEASTLORD,       "Beastlord"},
-    {EQ_CLASS_BERSERKER,       "Berserker"},
-    {EQ_CLASS_BANKER,          "Banker"},
-    {EQ_CLASS_MERCHANT,        "Merchant"},
-};
-
-std::unordered_map<uint32_t, std::string> EQ_UMAP_CLASS_SHORT_NAME =
-{
-    {EQ_CLASS_UNKNOWN,         "UNK"},
-    {EQ_CLASS_WARRIOR,         "WAR"},
-    {EQ_CLASS_CLERIC,          "CLR"},
-    {EQ_CLASS_PALADIN,         "PAL"},
-    {EQ_CLASS_RANGER,          "RNG"},
-    {EQ_CLASS_SHADOWKNIGHT,    "SHD"},
-    {EQ_CLASS_DRUID,           "DRU"},
-    {EQ_CLASS_MONK,            "MNK"},
-    {EQ_CLASS_BARD,            "BRD"},
-    {EQ_CLASS_ROGUE,           "ROG"},
-    {EQ_CLASS_SHAMAN,          "SHM"},
-    {EQ_CLASS_NECROMANCER,     "NEC"},
-    {EQ_CLASS_WIZARD,          "WIZ"},
-    {EQ_CLASS_MAGICIAN,        "MAG"},
-    {EQ_CLASS_ENCHANTER,       "ENC"},
-    {EQ_CLASS_BEASTLORD,       "BST"},
-    {EQ_CLASS_BERSERKER,       "BER"},
-    ////{EQ_CLASS_BANKER,          "BANKER"},
-    ////{EQ_CLASS_MERCHANT,        "MERCHANT"},
-};
-
-#define EQ_STANDING_STATE_STANDING    100
-#define EQ_STANDING_STATE_FROZEN      102 // stunned, mesmerized or feared    "You lose control of yourself!"
-#define EQ_STANDING_STATE_KNEELING    105 // looting or binding wounds
-#define EQ_STANDING_STATE_SITTING     110
-#define EQ_STANDING_STATE_DUCKING     111 // crouching
-#define EQ_STANDING_STATE_FEIGN_DEATH 115 // pretending to be dead
-#define EQ_STANDING_STATE_DEAD        120

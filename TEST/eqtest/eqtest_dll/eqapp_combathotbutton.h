@@ -30,6 +30,11 @@ void EQAPP_CombatHotButton_Execute()
         return;
     }
 
+    if (EQ_IsAutoAttackEnabled() == false)
+    {
+        return;
+    }
+
     auto targetSpawn = EQ_GetTargetSpawn();
     if (targetSpawn == NULL)
     {
@@ -42,7 +47,32 @@ void EQAPP_CombatHotButton_Execute()
         return;
     }
 
-    if (EQ_IsAutoAttackEnabled() == false)
+    float targetSpawnDistance = EQ_GetSpawnDistance(targetSpawn);
+    if (targetSpawnDistance > 25.0f)
+    {
+        return;
+    }
+
+    auto targetSpawnLastName = EQ_GetSpawnLastName(targetSpawn);
+    if (targetSpawnLastName.size() != 0)
+    {
+        return;
+    }
+
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    auto spawnStandingState = EQ_GetSpawnStandingState(playerSpawn);
+    if (spawnStandingState != EQ_STANDING_STATE_STANDING)
+    {
+        return;
+    }
+
+    auto spawnZoneID = EQ_GetSpawnZoneID(playerSpawn);
+    if (EQ_IsZoneIDSafe(spawnZoneID) == true)
     {
         return;
     }

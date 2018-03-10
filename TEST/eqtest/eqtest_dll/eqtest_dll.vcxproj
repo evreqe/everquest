@@ -157,6 +157,7 @@
     <ClInclude Include="..\eq\eq.h" />
     <ClInclude Include="..\eq\eq_alternateabilities.h" />
     <ClInclude Include="..\eq\eq_classes.h" />
+    <ClInclude Include="..\eq\eq_constants.h" />
     <ClInclude Include="..\eq\eq_executecmd.h" />
     <ClInclude Include="..\eq\eq_functions.h" />
     <ClInclude Include="..\eq\eq_graphicsdll.h" />
@@ -168,6 +169,7 @@
     <ClInclude Include="eqapp_alwaysattack.h" />
     <ClInclude Include="eqapp_alwayshotbutton.h" />
     <ClInclude Include="eqapp_autoalternateability.h" />
+    <ClInclude Include="eqapp_bazaarfilter.h" />
     <ClInclude Include="eqapp_boxchat.h" />
     <ClInclude Include="eqapp_changeheight.h" />
     <ClInclude Include="eqapp_combatalternateability.h" />
@@ -175,6 +177,7 @@
     <ClInclude Include="eqapp_console.h" />
     <ClInclude Include="eqapp_detours.h" />
     <ClInclude Include="eqapp_esp.h" />
+    <ClInclude Include="eqapp_followai.h" />
     <ClInclude Include="eqapp_functions.h" />
     <ClInclude Include="eqapp_hud.h" />
     <ClInclude Include="eqapp_ini.h" />

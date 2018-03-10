@@ -12,10 +12,11 @@ EQ_MACRO_FUNCTION_DefineDetour(CXWndManager__DrawWindows);
 EQ_MACRO_FUNCTION_DefineDetour(EQPlayer__FollowPlayerAI);
 EQ_MACRO_FUNCTION_DefineDetour(EQPlayer__ChangeHeight);
 
-EQ_MACRO_FUNCTION_DefineDetour(EQ_Character__eqspa_movement_rate);
-
 EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__InterpretCmd);
 EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__StartCasting);
+EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__dsp_chat);
+
+EQ_MACRO_FUNCTION_DefineDetour(CBazaarSearchWnd__AddItemToList);
 
 char* __cdecl EQAPP_DETOURED_FUNCTION_CrashDetected();
 int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown);
@@ -26,10 +27,11 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawWindows(void* this_ptr,
 int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__FollowPlayerAI(void* this_ptr, void* not_used);
 int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__ChangeHeight(void* this_ptr, void* not_used, float height, float a2, float a3, int a4);
 
-int __fastcall EQAPP_DETOURED_FUNCTION_EQ_Character__eqspa_movement_rate(void* this_ptr, void* not_used, int movementSpeed);
-
 int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__InterpretCmd(void* this_ptr, void* not_used, class EQPlayer* player, const char* text);
 int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__StartCasting(void* this_ptr, void* not_used, EQ::CEverQuest__StartCasting_Message_ptr message);
+int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void* not_used, const char* text, int textColor, bool one_1, bool one_2, bool zero_1);
+
+int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* this_ptr, void* not_used, char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11);
 
 void EQAPP_Detours_Load()
 {
@@ -42,10 +44,11 @@ void EQAPP_Detours_Load()
     EQ_MACRO_FUNCTION_AddDetour(EQPlayer__FollowPlayerAI);
     ////EQ_MACRO_FUNCTION_AddDetour(EQPlayer__ChangeHeight);
 
-    ////EQ_MACRO_FUNCTION_AddDetour(EQ_Character__eqspa_movement_rate);
-
     EQ_MACRO_FUNCTION_AddDetour(CEverQuest__InterpretCmd);
     EQ_MACRO_FUNCTION_AddDetour(CEverQuest__StartCasting);
+    EQ_MACRO_FUNCTION_AddDetour(CEverQuest__dsp_chat);
+
+    EQ_MACRO_FUNCTION_AddDetour(CBazaarSearchWnd__AddItemToList);
 }
 
 void EQAPP_Detours_Unload()
@@ -59,10 +62,11 @@ void EQAPP_Detours_Unload()
     EQ_MACRO_FUNCTION_RemoveDetour(EQPlayer__FollowPlayerAI);
     ////EQ_MACRO_FUNCTION_RemoveDetour(EQPlayer__ChangeHeight);
 
-    ////EQ_MACRO_FUNCTION_RemoveDetour(EQ_Character__eqspa_movement_rate);
-
     EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__InterpretCmd);
     EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__StartCasting);
+    EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__dsp_chat);
+
+    EQ_MACRO_FUNCTION_RemoveDetour(CBazaarSearchWnd__AddItemToList);
 }
 
 char* __cdecl EQAPP_DETOURED_FUNCTION_CrashDetected()
@@ -157,6 +161,11 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
         EQAPP_ChangeHeight_Execute();
     }
 
+    if (g_BazaarFilterDoQueryIsEnabled == true)
+    {
+        EQAPP_BazaarFilter_DoQuery();
+    }
+
     EQAPP_Console_Print();
 
     return EQAPP_REAL_FUNCTION_DrawNetStatus(x, y, unknown);
@@ -221,31 +230,13 @@ int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__FollowPlayerAI(void* this_ptr, 
         return EQAPP_REAL_FUNCTION_EQPlayer__FollowPlayerAI(this_ptr);
     }
 
-    EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_3, 400.0f);
-
-    auto playerSpawn = EQ_GetPlayerSpawn();
-    if (playerSpawn != NULL)
+    if (g_FollowAIIsEnabled == true)
     {
-        if ((uint32_t)this_ptr == playerSpawn)
-        {
-            uint32_t followSpawn = EQ_ReadMemory<uint32_t>(playerSpawn + EQ_OFFSET_SPAWN_FOLLOW_SPAWN);
-            if (followSpawn != NULL)
-            {
-                EQ_TurnPlayerTowardsTarget();
-
-                EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_1, 5.0f);
-                EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_2, 5.0f);
-            }
-        }
+        EQAPP_FollowAI_Execute();
+        return 1;
     }
 
-    int result = EQAPP_REAL_FUNCTION_EQPlayer__FollowPlayerAI(this_ptr);
-
-    EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_1, EQ_FOLLOW_DISTANCE_1_DEFAULT);
-    EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_2, EQ_FOLLOW_DISTANCE_2_DEFAULT);
-    EQ_WriteMemoryProtected<float>(EQ_ADDRESS_FOLLOW_DISTANCE_3, EQ_FOLLOW_DISTANCE_3_DEFAULT);
-
-    return result;
+    return EQAPP_REAL_FUNCTION_EQPlayer__FollowPlayerAI(this_ptr);
 }
 
 int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__ChangeHeight(void* this_ptr, void* not_used, float height, float a2, float a3, int a4)
@@ -265,24 +256,6 @@ int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__ChangeHeight(void* this_ptr, vo
     }
 
     return EQAPP_REAL_FUNCTION_EQPlayer__ChangeHeight(this_ptr, height, a2, a3, a4);
-}
-
-int __fastcall EQAPP_DETOURED_FUNCTION_EQ_Character__eqspa_movement_rate(void* this_ptr, void* not_used, int movementSpeed)
-{
-    if (g_EQAppShouldUnload == 1)
-    {
-        return EQAPP_REAL_FUNCTION_EQ_Character__eqspa_movement_rate(this_ptr, movementSpeed);
-    }
-
-    // never snared, rooted or slowed below base movement speed
-    if (movementSpeed < 0)
-    {
-        movementSpeed = 0;
-    }
-
-    ////std::cout << "movementSpeed: " << movementSpeed << std::endl;
-
-    return EQAPP_REAL_FUNCTION_EQ_Character__eqspa_movement_rate(this_ptr, movementSpeed);
 }
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__InterpretCmd(void* this_ptr, void* not_used, class EQPlayer* player, const char* text)
@@ -331,4 +304,83 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__StartCasting(void* this_ptr, 
     }
 
     return EQAPP_REAL_FUNCTION_CEverQuest__StartCasting(this_ptr, message);
+}
+
+int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void* not_used, const char* text, int textColor, bool one_1, bool one_2, bool zero_1)
+{
+    if (g_EQAppShouldUnload == 1)
+    {
+        return EQAPP_REAL_FUNCTION_CEverQuest__dsp_chat(this_ptr, text, textColor, one_1, one_2, zero_1);
+    }
+
+    std::string chatText = text;
+
+    ////EQAPP_Log(chatText.c_str(), textColor);
+
+    int result = EQAPP_REAL_FUNCTION_CEverQuest__dsp_chat(this_ptr, text, textColor, one_1, one_2, zero_1);
+
+    // Drunkard's Stein anniversary quest
+    if (EQAPP_String_Contains(chatText, "Galdorin Visigothe says") == true)
+    {
+        auto targetSpawn = EQ_GetTargetSpawn();
+        if (targetSpawn != NULL)
+        {
+            std::string targetSpawnName = EQ_GetSpawnName(targetSpawn);
+            if (EQAPP_String_Contains(targetSpawnName, "Galdorin Visigothe") == true)
+            {
+                if (EQAPP_String_Contains(chatText, "My stinky stein has rough dirty lips,") == true)
+                {
+                    EQ_InterpretCommand("/say My stinky stein has rough dirty lips,");
+                }
+
+                if (EQAPP_String_Contains(chatText, "but she loves a deep carouse.") == true)
+                {
+                    EQ_InterpretCommand("/say but she loves a deep carouse.");
+                }
+
+                if (EQAPP_String_Contains(chatText, "Beer or ale are her great trips.") == true)
+                {
+                    EQ_InterpretCommand("/say Beer or ale are her great trips.");
+                }
+
+                if (EQAPP_String_Contains(chatText, "No matter how many vows") == true)
+                {
+                    EQ_InterpretCommand("/say No matter how many vows");
+                }
+
+                if (EQAPP_String_Contains(chatText, "I make or break, my drinking glass") == true)
+                {
+                    EQ_InterpretCommand("/say I make or break, my drinking glass");
+                }
+
+                if (EQAPP_String_Contains(chatText, "reminds me of my lovely Brasse.") == true)
+                {
+                    EQ_InterpretCommand("/say reminds me of my lovely Brasse.");
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
+int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* this_ptr, void* not_used, char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11)
+{
+    if (g_EQAppShouldUnload == 1)
+    {
+        return EQAPP_REAL_FUNCTION_CBazaarSearchWnd__AddItemToList(this_ptr, itemName, itemPrice, traderName, a4, a5, a6, a7, a8, a9, a10, a11);
+    }
+
+    ////std::cout << "CBazaarSearchWnd::AddItemToList(): " << itemName << "^" << itemPrice << "^" << traderName << "^" << a4 << "^"  << a5 << "^" << a6 << "^" << a7 << "^" << a8 <<  "^" << a10 << std::endl;
+
+    if (g_BazaarFilterIsEnabled == true)
+    {
+        bool bShouldAddItemToList = EQAPP_BazaarFilter_HandleEvent_CBazaarSearchWnd__AddItemToList(itemName, itemPrice, traderName);
+        if (bShouldAddItemToList == false)
+        {
+            return 1;
+        }
+    }
+
+    return EQAPP_REAL_FUNCTION_CBazaarSearchWnd__AddItemToList(this_ptr, itemName, itemPrice, traderName, a4, a5, a6, a7, a8, a9, a10, a11);
 }

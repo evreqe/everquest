@@ -133,8 +133,8 @@ void EQAPP_ESP_Execute()
 
             if (bShowSpawnClass == true)
             {
-                auto spawnClassIt = EQ_UMAP_CLASS_SHORT_NAME.find(spawnClass);
-                if (spawnClassIt != EQ_UMAP_CLASS_SHORT_NAME.end())
+                auto spawnClassIt = EQ_TABLE_CLASS_SHORT_NAME.find(spawnClass);
+                if (spawnClassIt != EQ_TABLE_CLASS_SHORT_NAME.end())
                 {
                     espText << " " << spawnClassIt->second;
                 }

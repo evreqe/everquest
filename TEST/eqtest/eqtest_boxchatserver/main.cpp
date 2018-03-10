@@ -47,6 +47,16 @@ std::string EQ_BCS_JoinStrings(const std::vector<std::string> &elements, const s
     return std::string();
 }
 
+std::vector<std::string> EQ_BCS_SplitString(const std::string& subject, char delimiter)
+{
+    std::vector<std::string> tokens;
+
+    std::istringstream iss(subject);
+    for (std::string token; std::getline(iss, token, delimiter); tokens.push_back(token));
+
+    return tokens;
+}
+
 int main(int argc , char *argv[])
 {
     std::cout << "EverQuest Box Chat Server" << std::endl;
@@ -237,17 +247,13 @@ int main(int argc , char *argv[])
 
                     ////std::cout << "recvText: " << recvText << std::endl;
 
-                    std::istringstream recvSplit(recvText);
-                    std::vector<std::string> recvTokens;
-                    for (std::string recvToken; std::getline(recvSplit, recvToken, '\n'); recvTokens.push_back(recvToken));
+                    std::vector<std::string> recvTokens = EQ_BCS_SplitString(recvText, '\n');
 
                     for (auto& token : recvTokens)
                     {
                         std::cout << "#" << clientSocketName[i] << ": " << token << std::endl;
 
-                        std::istringstream textSplit(token);
-                        std::vector<std::string> textTokens;
-                        for (std::string textToken; std::getline(textSplit, textToken, ' '); textTokens.push_back(textToken));
+                        std::vector<std::string> textTokens = EQ_BCS_SplitString(token, ' ');
 
                         if (textTokens.size() > 1)
                         {
@@ -379,9 +385,7 @@ int main(int argc , char *argv[])
                                         continue;
                                     }
 
-                                    std::istringstream commandSplit(textTokensExStr);
-                                    std::vector<std::string> commandTokens;
-                                    for (std::string commandToken; std::getline(commandSplit, commandToken, ';'); commandTokens.push_back(commandToken));
+                                    std::vector<std::string> commandTokens = EQ_BCS_SplitString(textTokensExStr, ';');
 
                                     if (commandTokens.size() == 0)
                                     {

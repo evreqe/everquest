@@ -23,49 +23,115 @@ typedef char* (__cdecl* EQ_FUNCTION_TYPE_CrashDetected)();
 EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQ_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive, void* unknown, int zero), EQ_ADDRESS_FUNCTION_ExecuteCmd);
 typedef int (__cdecl* EQ_FUNCTION_TYPE_ExecuteCmd)(uint32_t commandID, int isActive, void* unknown, int zero);
 
-EQ_MACRO_FUNCTION_FunctionAtAddress(float __cdecl EQ_FUNCTION_get_bearing(float y1, float x1, float y2, float x2), EQ_ADDRESS_FUNCTION_get_bearing);
-typedef float (__cdecl* EQ_FUNCTION_TYPE_get_bearing)(float y1, float x1, float y2, float x2);
-
 /* function prototypes */
 
 template <class T>
 void EQ_Log(const char* text, T number);
 
 void EQ_ToggleBool(bool& b);
+
 float EQ_CalculateDistance(float x1, float y1, float x2, float y2);
 float EQ_CalculateDistance3D(float x1, float y1, float z1, float x2, float y2, float z2);
 bool EQ_IsWithinDistance(float x1, float y1, float x2, float y2, float distance);
+
+float EQ_GetBearing(float y1, float x1, float y2, float x2);
+
 bool EQ_IsPointInsideRectangle(int pointX, int pointY, int rectX, int rectY, int rectWidth, int rectHeight);
 void EQ_ColorARGB_Darken(uint32_t& colorARGB, float percent);
 void EQ_CopyStringToClipboard(const std::string& str);
-bool EQ_IsSpellIDValid(uint32_t spellID);
-uint32_t EQ_GetFirstSpawn();
-uint32_t EQ_GetLastSpawn();
-std::string EQ_GetSpawnName(uint32_t spawn);
-uint32_t EQ_GetTargetSpawn();
-std::string EQ_GetTargetSpawnName();
-uint32_t EQ_GetPlayerSpawn();
-std::string EQ_GetPlayerSpawnName();
-uint32_t EQ_GetSpawnByID(uint32_t spawnID);
-uint32_t EQ_GetSpawnByName(const char* spawnName);
-uint32_t EQ_GetSpawnHPPercent(uint32_t spawn);
-uint32_t EQ_GetSpawnManaPercent(uint32_t spawn);
-void EQ_SetSpawnHeight(uint32_t spawn, float height);
-void EQ_InterpretCommand(const char* text);
-void EQ_ExecuteCommand(uint32_t commandID, int isActive);
-HWND EQ_GetWindow();
-void EQ_WriteChatText(const char* text);
-void EQ_WriteChatTextEx(const char* text, int color);
-void EQ_DrawText(const char* text, int x, int y);
-void EQ_DrawTextEx(const char* text, int x, int y, int color);
+
+uint32_t EQ_GetGameState();
 bool EQ_IsInGame();
+bool EQ_IsSpellIDValid(uint32_t spellID);
+bool EQ_HasTimeElapsed(uint32_t& timer, uint32_t& interval);
+bool EQ_IsZoneIDSafe(uint32_t zoneID);
+HWND EQ_GetWindow();
 uint32_t EQ_GetTimer();
 uint32_t EQ_GetCamera();
+
+bool EQ_IsNetStatusEnabled();
+bool EQ_IsAutoAttackEnabled();
+bool EQ_IsAutoFireEnabled();
+bool EQ_IsAutoRunEnabled();
+bool EQ_IsMouseLookEnabled();
+
+void EQ_SetNetStatus(bool b);
+void EQ_SetAutoAttack(bool b);
+void EQ_SetAutoFire(bool b);
+void EQ_SetAutoRun(bool b);
+void EQ_SetMouseLook(bool b);
+
+uint32_t EQ_GetSpawnByID(uint32_t spawnID);
+uint32_t EQ_GetSpawnByName(const char* spawnName);
+
+uint32_t EQ_GetFirstSpawn();
+uint32_t EQ_GetLastSpawn();
+
+uint32_t EQ_GetTargetSpawn();
+uint32_t EQ_GetPlayerSpawn();
+
+void EQ_SetTargetSpawn(uint32_t spawn);
+
+uint32_t EQ_GetSpawnNext(uint32_t spawn);
+uint32_t EQ_GetSpawnPrevious(uint32_t spawn);
+
+std::string EQ_GetSpawnName(uint32_t spawn);
+std::string EQ_GetSpawnLastName(uint32_t spawn);
+
+std::string EQ_GetTargetSpawnName();
+std::string EQ_GetPlayerSpawnName();
+
+bool EQ_IsSpawnWithinDistance(uint32_t spawn, float distance);
+float EQ_GetSpawnDistance(uint32_t spawn);
+float EQ_GetSpawnDistance3D(uint32_t spawn);
+
+float EQ_GetSpawnY(uint32_t spawn);
+float EQ_GetSpawnX(uint32_t spawn);
+float EQ_GetSpawnZ(uint32_t spawn);
+float EQ_GetSpawnHeading(uint32_t spawn);
+uint32_t EQ_GetSpawnType(uint32_t spawn);
+float EQ_GetSpawnHeight(uint32_t spawn);
+uint32_t EQ_GetSpawnID(uint32_t spawn);
+uint32_t EQ_GetSpawnZoneID(uint32_t spawn);
+uint32_t EQ_GetSpawnLevel(uint32_t spawn);
+uint32_t EQ_GetSpawnRace(uint32_t spawn);
+uint32_t EQ_GetSpawnClass(uint32_t spawn);
+uint32_t EQ_GetSpawnStandingState(uint32_t spawn);
+uint32_t EQ_GetSpawnHPCurrent(uint32_t spawn);
+uint32_t EQ_GetSpawnHPMax(uint32_t spawn);
+uint32_t EQ_GetSpawnHPPercent(uint32_t spawn);
+uint32_t EQ_GetSpawnManaCurrent(uint32_t spawn);
+uint32_t EQ_GetSpawnManaMax(uint32_t spawn);
+uint32_t EQ_GetSpawnManaPercent(uint32_t spawn);
+uint32_t EQ_GetSpawnEnduranceCurrent(uint32_t spawn);
+uint32_t EQ_GetSpawnEnduranceMax(uint32_t spawn);
+uint32_t EQ_GetSpawnEndurancePercent(uint32_t spawn);
+uint32_t EQ_GetSpawnFollowSpawn(uint32_t spawn);
+
+void EQ_SetSpawnHeading(uint32_t spawn, float heading);
+void EQ_SetSpawnHeight(uint32_t spawn, float height);
+void EQ_SetSpawnFollowSpawn(uint32_t spawn, uint32_t followSpawn);
+void EQ_TurnPlayerTowardsSpawn(uint32_t spawn);
+
+void EQ_InterpretCommand(const char* text);
+void EQ_ExecuteCommand(uint32_t commandID, int isActive);
+
+void EQ_WriteChatText(const char* text);
+void EQ_WriteChatTextEx(const char* text, int color);
+
+void EQ_DrawText(const char* text, int x, int y);
+void EQ_DrawTextEx(const char* text, int x, int y, int color);
+
 void EQ_SetCameraPitch(float pitch);
 void EQ_SetCameraFieldOfView(float fieldOfView);
+
 bool EQ_WorldSpaceToScreenSpace(float worldX, float worldY, float worldZ, float& screenX, float& screenY);
+
+void EQ_StopFollow();
+void EQ_FollowTarget();
 void EQ_TurnPlayerTowardsTarget();
-void EQAPP_GetNPCSpawnIDListSortedByDistance(std::vector<uint32_t>& spawnIDList);
+
+std::vector<uint32_t> EQAPP_GetNPCSpawnIDListSortedByDistance();
 
 /* functions */
 
@@ -96,6 +162,68 @@ float EQ_CalculateDistance3D(float x1, float y1, float z1, float x2, float y2, f
 bool EQ_IsWithinDistance(float x1, float y1, float x2, float y2, float distance)
 {
     return (std::pow(x2 - x1, 2) + std::pow(y2 - y1, 2)) <= std::pow(distance, 2);
+}
+
+float EQ_GetBearing(float y1, float x1, float y2, float x2)
+{
+    float v4 = 0.0f;
+    float v5 = 0.0f;
+    float v6 = 0.0f;
+    float v7 = 0.0f;
+    float v8 = 0.0f;
+    float v9 = 0.0f;
+    float v10 = 0.0f;
+    float v11 = 0.0f;
+    float v13 = 0.0f;
+
+    v4 = y2;
+    v5 = std::fabs(y1 - y2);
+    v6 = x1;
+    v7 = std::fabs(x1 - x2);
+
+    if (v5 < 0.0000009999999974752427f)
+    {
+        v5 = 0.0000009999999974752427f;
+    }
+
+    v8 = v7;
+    v9 = v5;
+    v10 = x2;
+
+    v11 = std::atan2(v8, v9) * 180.0f * 0.3183099014828645f;
+
+    if (y1 < v4)
+    {
+        v13 = y1;
+    }
+    else
+    {
+        if (x2 >= v6)
+        {
+            return (90.0f - v11 + 90.0f) * 511.5f * 0.0027777778f;
+        }
+
+        if (x2 <= v6)
+        {
+            return (v11 + 180.0f) * 511.5f * 0.0027777778f;
+        }
+
+        v13 = y1;
+        v10 = x2;
+    }
+
+    float result = 0.0f;
+
+    if (v13 > v4 || v10 > v6)
+    {
+        result = v11 * 511.5f * 0.0027777778f;
+    }
+    else
+    {
+        result = (90.0f - v11 + 270.0f) * 511.5f * 0.0027777778f;
+    }
+
+    return result;
 }
 
 bool EQ_IsPointInsideRectangle(int pointX, int pointY, int rectX, int rectY, int rectWidth, int rectHeight)
@@ -134,95 +262,144 @@ void EQ_CopyStringToClipboard(const std::string& str)
     CloseClipboard();
 }
 
+uint32_t EQ_GetGameState()
+{
+    uint32_t everquest = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CEverQuest);
+    if (everquest == NULL)
+    {
+        return 255;
+    }
+
+    return EQ_ReadMemory<uint32_t>(everquest + EQ_OFFSET_CEverQuest_GAME_STATE);
+}
+
+bool EQ_IsInGame()
+{
+    return EQ_GetGameState() == EQ_GAME_STATE_IN_GAME;
+}
+
 bool EQ_IsSpellIDValid(uint32_t spellID)
 {
     return (spellID - 1) <= EQ_NUM_SPELLS;
 }
 
-uint32_t EQ_GetFirstSpawn()
+bool EQ_HasTimeElapsed(uint32_t& timer, uint32_t& interval)
 {
-    uint32_t playerManager = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_EQPlayerManager);
-    if (playerManager == NULL)
+    auto currentTimer = EQ_GetTimer();
+
+    if ((currentTimer - timer) > interval)
+    {
+        timer = currentTimer;
+        return true;
+    }
+
+    return false;
+}
+
+bool EQ_IsZoneIDSafe(uint32_t zoneID)
+{
+    if
+    (
+        zoneID == EQ_ZONE_ID_BAZAAR ||
+        zoneID == EQ_ZONE_ID_NEXUS ||
+        zoneID == EQ_ZONE_ID_POKNOWLEDGE ||
+        zoneID == EQ_ZONE_ID_POTRANQUILITY ||
+        zoneID == EQ_ZONE_ID_GUILDLOBBY ||
+        zoneID == EQ_ZONE_ID_GUILDHALL ||
+        zoneID == EQ_ZONE_ID_BARTER
+    )
+    {
+        return true;
+    }
+
+    return false;
+}
+
+HWND EQ_GetWindow()
+{
+    return EQ_ReadMemory<HWND>(EQ_ADDRESS_POINTER_WINDOW_HWND);
+}
+
+uint32_t EQ_GetTimer()
+{
+    uint32_t display = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CDisplay);
+    if (display == NULL)
     {
         return NULL;
     }
 
-    return EQ_ReadMemory<uint32_t>(playerManager + EQ_OFFSET_EQPlayerManager_FIRST_SPAWN);
+    return EQ_ReadMemory<uint32_t>(display + EQ_OFFSET_CDisplay_TIMER);
 }
 
-uint32_t EQ_GetLastSpawn()
+uint32_t EQ_GetCamera()
 {
-    uint32_t playerManager = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_EQPlayerManager);
-    if (playerManager == NULL)
+    uint32_t display = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CDisplay);
+    if (display == NULL)
     {
         return NULL;
     }
 
-    return EQ_ReadMemory<uint32_t>(playerManager + EQ_OFFSET_EQPlayerManager_LAST_SPAWN);
+    return EQ_ReadMemory<uint32_t>(display + EQ_OFFSET_CDisplay_CAMERA);
 }
 
-std::string EQ_GetSpawnName(uint32_t spawn)
+bool EQ_IsNetStatusEnabled()
 {
-    if (spawn == NULL)
-    {
-        return std::string();
-    }
-
-    char spawnName[EQ_SIZE_SPAWN_NAME];
-    memcpy(spawnName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_NAME), sizeof(spawnName));
-
-    if (strlen(spawnName) == 0)
-    {
-        return std::string();
-    }
-
-    std::string result = spawnName;
-
-    std::string::size_type findPosition1 = result.find("`");
-    if (findPosition1 != std::string::npos)
-    {
-        return result.substr(0, findPosition1);
-    }
-
-    std::string::size_type findPosition2 = result.find("'");
-    if (findPosition2 != std::string::npos)
-    {
-        return result.substr(0, findPosition2);
-    }
-
-    return result;
+    return EQ_ReadMemory<uint8_t>(EQ_ADDRESS_NET_STATUS);
 }
 
-uint32_t EQ_GetTargetSpawn()
+bool EQ_IsAutoAttackEnabled()
 {
-    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_TARGET_SPAWN);
+    return EQ_ReadMemory<uint8_t>(EQ_ADDRESS_AUTO_ATTACK);
 }
 
-std::string EQ_GetTargetSpawnName()
+bool EQ_IsAutoFireEnabled()
 {
-    auto targetSpawn = EQ_GetTargetSpawn();
-    if (targetSpawn == NULL)
-    {
-        return std::string();
-    }
-
-    return EQ_GetSpawnName(targetSpawn);
+    return EQ_ReadMemory<uint8_t>(EQ_ADDRESS_AUTO_FIRE);
 }
 
-uint32_t EQ_GetPlayerSpawn()
+bool EQ_IsAutoRunEnabled()
 {
-    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_PLAYER_SPAWN);
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_AUTO_RUN);
 }
 
-std::string EQ_GetPlayerSpawnName()
+bool EQ_IsMouseLookEnabled()
 {
-    auto playerSpawn = EQ_GetPlayerSpawn();
-    if (playerSpawn == NULL)
-    {
-        return std::string();
-    }
+    return EQ_ReadMemory<uint8_t>(EQ_ADDRESS_MOUSE_LOOK);
+}
 
-    return EQ_GetSpawnName(playerSpawn);
+void EQ_SetNetStatus(bool b)
+{
+    uint8_t value = (uint8_t)b;
+
+    EQ_WriteMemory<uint8_t>(EQ_ADDRESS_NET_STATUS, value);
+}
+
+void EQ_SetAutoAttack(bool b)
+{
+    uint8_t value = (uint8_t)b;
+
+    EQ_WriteMemory<uint8_t>(EQ_ADDRESS_AUTO_ATTACK, value);
+}
+
+void EQ_SetAutoFire(bool b)
+{
+    uint8_t value = (uint8_t)b;
+
+    EQ_WriteMemory<uint8_t>(EQ_ADDRESS_AUTO_FIRE, value);
+}
+
+void EQ_SetAutoRun(bool b)
+{
+    uint32_t value = (uint32_t)b;
+
+    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_AUTO_RUN, value);
+}
+
+void EQ_SetMouseLook(bool b)
+{
+    uint8_t value = (uint8_t)b;
+
+    EQ_WriteMemory<uint8_t>(EQ_ADDRESS_MOUSE_LOOK, value);
 }
 
 uint32_t EQ_GetSpawnByID(uint32_t spawnID)
@@ -259,39 +436,353 @@ uint32_t EQ_GetSpawnByName(const char* spawnName)
     return spawn;
 }
 
+uint32_t EQ_GetFirstSpawn()
+{
+    uint32_t playerManager = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_EQPlayerManager);
+    if (playerManager == NULL)
+    {
+        return NULL;
+    }
+
+    return EQ_ReadMemory<uint32_t>(playerManager + EQ_OFFSET_EQPlayerManager_FIRST_SPAWN);
+}
+
+uint32_t EQ_GetLastSpawn()
+{
+    uint32_t playerManager = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_EQPlayerManager);
+    if (playerManager == NULL)
+    {
+        return NULL;
+    }
+
+    return EQ_ReadMemory<uint32_t>(playerManager + EQ_OFFSET_EQPlayerManager_LAST_SPAWN);
+}
+
+uint32_t EQ_GetTargetSpawn()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_TARGET_SPAWN);
+}
+
+uint32_t EQ_GetPlayerSpawn()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_PLAYER_SPAWN);
+}
+
+void EQ_SetTargetSpawn(uint32_t spawn)
+{
+    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_POINTER_TARGET_SPAWN, spawn);
+}
+
+uint32_t EQ_GetSpawnNext(uint32_t spawn)
+{
+    return EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_NEXT);
+}
+
+uint32_t EQ_GetSpawnPrevious(uint32_t spawn)
+{
+    return EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_PREVIOUS);
+}
+
+std::string EQ_GetSpawnName(uint32_t spawn)
+{
+    char spawnName[EQ_SIZE_SPAWN_NAME];
+    memcpy(spawnName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_NAME), sizeof(spawnName));
+
+    if (strlen(spawnName) == 0)
+    {
+        return std::string();
+    }
+
+    std::string result = spawnName;
+
+    auto spawnType = EQ_GetSpawnType(spawn);
+    if (spawnType == EQ_SPAWN_TYPE_PLAYER)
+    {
+        std::string::size_type findPosition1 = result.find("`");
+        if (findPosition1 != std::string::npos)
+        {
+            return result.substr(0, findPosition1);
+        }
+
+        std::string::size_type findPosition2 = result.find("'");
+        if (findPosition2 != std::string::npos)
+        {
+            return result.substr(0, findPosition2);
+        }
+    }
+
+    return result;
+}
+
+std::string EQ_GetSpawnLastName(uint32_t spawn)
+{
+    char spawnLastName[EQ_SIZE_SPAWN_LAST_NAME];
+    memcpy(spawnLastName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_LAST_NAME), sizeof(spawnLastName));
+
+    if (strlen(spawnLastName) == 0)
+    {
+        return std::string();
+    }
+
+    return spawnLastName;
+}
+
+std::string EQ_GetTargetSpawnName()
+{
+    auto targetSpawn = EQ_GetTargetSpawn();
+    if (targetSpawn == NULL)
+    {
+        return std::string();
+    }
+
+    return EQ_GetSpawnName(targetSpawn);
+}
+
+std::string EQ_GetPlayerSpawnName()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return std::string();
+    }
+
+    return EQ_GetSpawnName(playerSpawn);
+}
+
+bool EQ_IsSpawnWithinDistance(uint32_t spawn, float distance)
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return false;
+    }
+
+    auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
+    auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
+
+    auto spawnY = EQ_GetSpawnY(spawn);
+    auto spawnX = EQ_GetSpawnX(spawn);
+
+    bool result = EQ_IsWithinDistance(playerSpawnX, playerSpawnY, spawnX, spawnY, distance);
+
+    return result;
+}
+
+float EQ_GetSpawnDistance(uint32_t spawn)
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return 0.0f;
+    }
+
+    auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
+    auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
+
+    auto spawnY = EQ_GetSpawnY(spawn);
+    auto spawnX = EQ_GetSpawnX(spawn);
+
+    float spawnDistance = EQ_CalculateDistance(playerSpawnX, playerSpawnY, spawnX, spawnY);
+
+    return spawnDistance;
+}
+
+float EQ_GetSpawnDistance3D(uint32_t spawn)
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return 0.0f;
+    }
+
+    auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
+    auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
+    auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
+
+    auto spawnY = EQ_GetSpawnY(spawn);
+    auto spawnX = EQ_GetSpawnX(spawn);
+    auto spawnZ = EQ_GetSpawnZ(spawn);
+
+    float spawnDistance = EQ_CalculateDistance3D(playerSpawnX, playerSpawnY, playerSpawnZ, spawnX, spawnY, spawnZ);
+
+    return spawnDistance;
+}
+
+float EQ_GetSpawnY(uint32_t spawn)
+{
+    return EQ_ReadMemory<float>(spawn + EQ_OFFSET_SPAWN_Y);
+}
+
+float EQ_GetSpawnX(uint32_t spawn)
+{
+    return EQ_ReadMemory<float>(spawn + EQ_OFFSET_SPAWN_X);
+}
+
+float EQ_GetSpawnZ(uint32_t spawn)
+{
+    return EQ_ReadMemory<float>(spawn + EQ_OFFSET_SPAWN_Z);
+}
+
+float EQ_GetSpawnHeading(uint32_t spawn)
+{
+    return EQ_ReadMemory<float>(spawn + EQ_OFFSET_SPAWN_HEADING);
+}
+
+uint32_t EQ_GetSpawnType(uint32_t spawn)
+{
+    return EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_TYPE);
+}
+
+float EQ_GetSpawnHeight(uint32_t spawn)
+{
+    return EQ_ReadMemory<float>(spawn + EQ_OFFSET_SPAWN_HEIGHT);
+}
+
+uint32_t EQ_GetSpawnID(uint32_t spawn)
+{
+    return EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_ID);
+}
+
+uint32_t EQ_GetSpawnZoneID(uint32_t spawn)
+{
+    return EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_ZONE_ID);
+}
+
+uint32_t EQ_GetSpawnLevel(uint32_t spawn)
+{
+    return EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_LEVEL);
+}
+
+uint32_t EQ_GetSpawnRace(uint32_t spawn)
+{
+    return EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_RACE);
+}
+
+uint32_t EQ_GetSpawnClass(uint32_t spawn)
+{
+    return EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_CLASS);
+}
+
+uint32_t EQ_GetSpawnStandingState(uint32_t spawn)
+{
+    return EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_STANDING_STATE);
+}
+
+uint32_t EQ_GetSpawnHPCurrent(uint32_t spawn)
+{
+    return EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_HP_CURRENT);
+}
+
+uint32_t EQ_GetSpawnHPMax(uint32_t spawn)
+{
+    return EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_HP_MAX);
+}
+
 uint32_t EQ_GetSpawnHPPercent(uint32_t spawn)
 {
-    uint32_t hpCurrent = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_HP_CURRENT);
-    uint32_t hpMax     = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_HP_MAX);
+    auto current = EQ_GetSpawnHPCurrent(spawn);
+    auto max     = EQ_GetSpawnHPMax(spawn);
 
-    uint32_t hpMultiplied = hpCurrent * hpMax;
+    uint32_t multiplied = current * 100;
 
-    if (hpMultiplied == 0)
+    // prevent divide by zero
+    if (multiplied == 0)
     {
         return 0;
     }
 
-    return hpMultiplied / 100;
+    return (uint32_t)(multiplied / max);
+}
+
+uint32_t EQ_GetSpawnManaCurrent(uint32_t spawn)
+{
+    return EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_MANA_CURRENT);
+}
+
+uint32_t EQ_GetSpawnManaMax(uint32_t spawn)
+{
+    return EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_MANA_MAX);
 }
 
 uint32_t EQ_GetSpawnManaPercent(uint32_t spawn)
 {
-    uint32_t manaCurrent = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_MANA_CURRENT);
-    uint32_t manaMax     = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_MANA_MAX);
+    auto current = EQ_GetSpawnManaCurrent(spawn);
+    auto max     = EQ_GetSpawnManaMax(spawn);
 
-    uint32_t manaMultiplied = manaCurrent * manaMax;
+    uint32_t multiplied = current * 100;
 
-    if (manaMultiplied == 0)
+    // prevent divide by zero
+    if (multiplied == 0)
     {
         return 0;
     }
 
-    return manaMultiplied / 100;
+    return (uint32_t)(multiplied / max);
+}
+
+uint32_t EQ_GetSpawnEnduranceCurrent(uint32_t spawn)
+{
+    return EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_ENDURANCE_CURRENT);
+}
+
+uint32_t EQ_GetSpawnEnduranceMax(uint32_t spawn)
+{
+    return EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_ENDURANCE_MAX);
+}
+
+uint32_t EQ_GetSpawnEndurancePercent(uint32_t spawn)
+{
+    auto current = EQ_GetSpawnEnduranceCurrent(spawn);
+    auto max     = EQ_GetSpawnEnduranceMax(spawn);
+
+    uint32_t multiplied = current * 100;
+
+    // prevent divide by zero
+    if (multiplied == 0)
+    {
+        return 0;
+    }
+
+    return (uint32_t)(multiplied / max);
+}
+
+uint32_t EQ_GetSpawnFollowSpawn(uint32_t spawn)
+{
+    return EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_FOLLOW_SPAWN);
+}
+
+void EQ_SetSpawnHeading(uint32_t spawn, float heading)
+{
+    EQ_WriteMemory<float>(spawn + EQ_OFFSET_SPAWN_HEADING, heading);
 }
 
 void EQ_SetSpawnHeight(uint32_t spawn, float height)
 {
     ((EQClass::EQPlayer*)spawn)->ChangeHeight(height, 0.0f, 1.0f, 0);
+}
+
+void EQ_SetSpawnFollowSpawn(uint32_t spawn, uint32_t followSpawn)
+{
+    EQ_WriteMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_FOLLOW_SPAWN, followSpawn);
+}
+
+void EQ_TurnPlayerTowardsSpawn(uint32_t spawn)
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
+    auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
+
+    auto spawnY = EQ_GetSpawnY(spawn);
+    auto spawnX = EQ_GetSpawnX(spawn);
+
+    float heading = EQ_GetBearing(playerSpawnY, playerSpawnX, spawnY, spawnX);
+
+    EQ_SetSpawnHeading(playerSpawn, heading);
 }
 
 void EQ_InterpretCommand(const char* text)
@@ -306,11 +797,6 @@ void EQ_InterpretCommand(const char* text)
 void EQ_ExecuteCommand(uint32_t commandID, int isActive)
 {
     EQ_FUNCTION_ExecuteCmd(commandID, isActive, 0, 0);
-}
-
-HWND EQ_GetWindow()
-{
-    return EQ_ReadMemory<HWND>(EQ_ADDRESS_POINTER_WINDOW_HWND);
 }
 
 void EQ_WriteChatText(const char* text)
@@ -333,57 +819,9 @@ void EQ_DrawTextEx(const char* text, int x, int y, int color)
     EQ_CLASS_POINTER_CDisplay->WriteTextHD2(text, x, y, color);
 }
 
-bool EQ_IsInGame()
-{
-    uint32_t everquest = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CEverQuest);
-    if (everquest == NULL)
-    {
-        return NULL;
-    }
-
-    uint32_t gameState = EQ_ReadMemory<uint32_t>(everquest + EQ_OFFSET_CEverQuest_GAME_STATE);
-
-    return gameState == EQ_GAME_STATE_IN_GAME;
-}
-
-uint32_t EQ_GetTimer()
-{
-    uint32_t display = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CDisplay);
-    if (display == NULL)
-    {
-        return NULL;
-    }
-
-    return EQ_ReadMemory<uint32_t>(display + EQ_OFFSET_CDisplay_TIMER);
-}
-
-bool EQ_HasTimeElapsed(uint32_t& timer, uint32_t& interval)
-{
-    uint32_t currentTimer = EQ_GetTimer();
-
-    if ((currentTimer - timer) > interval)
-    {
-        timer = currentTimer;
-        return true;
-    }
-
-    return false;
-}
-
-uint32_t EQ_GetCamera()
-{
-    uint32_t display = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CDisplay);
-    if (display == NULL)
-    {
-        return NULL;
-    }
-
-    return EQ_ReadMemory<uint32_t>(display + EQ_OFFSET_CDisplay_CAMERA);
-}
-
 void EQ_SetCameraPitch(float pitch)
 {
-    uint32_t camera = EQ_GetCamera();
+    auto camera = EQ_GetCamera();
     if (camera == NULL)
     {
         return;
@@ -394,7 +832,7 @@ void EQ_SetCameraPitch(float pitch)
 
 void EQ_SetCameraFieldOfView(float fieldOfView)
 {
-    uint32_t camera = EQ_GetCamera();
+    auto camera = EQ_GetCamera();
     if (camera == NULL)
     {
         return;
@@ -407,7 +845,7 @@ bool EQ_WorldSpaceToScreenSpace(float worldX, float worldY, float worldZ, float&
 {
     // this function uses hardcoded offsets
 
-    uint32_t camera = EQ_GetCamera();
+    auto camera = EQ_GetCamera();
     if (camera == NULL)
     {
         return false;
@@ -468,6 +906,29 @@ bool EQ_WorldSpaceToScreenSpace(float worldX, float worldY, float worldZ, float&
     return true;
 }
 
+void EQ_StopFollow()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn != NULL)
+    {
+        EQ_SetSpawnFollowSpawn(playerSpawn, 0);
+        EQ_SetAutoRun(false);
+    }
+}
+
+void EQ_FollowTarget()
+{
+    auto targetSpawn = EQ_GetTargetSpawn();
+    if (targetSpawn != NULL)
+    {
+        auto playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn != NULL)
+        {
+            EQ_SetSpawnFollowSpawn(playerSpawn, targetSpawn);
+        }
+    }
+}
+
 void EQ_TurnPlayerTowardsTarget()
 {
     auto targetSpawn = EQ_GetTargetSpawn();
@@ -476,44 +937,32 @@ void EQ_TurnPlayerTowardsTarget()
         return;
     }
 
-    auto playerSpawn = EQ_GetPlayerSpawn();
-    if (playerSpawn == NULL)
-    {
-        return;
-    }
-
-    float playerSpawnY = EQ_ReadMemory<float>(playerSpawn + EQ_OFFSET_SPAWN_Y);
-    float playerSpawnX = EQ_ReadMemory<float>(playerSpawn + EQ_OFFSET_SPAWN_X);
-
-    float targetSpawnY = EQ_ReadMemory<float>(targetSpawn + EQ_OFFSET_SPAWN_Y);
-    float targetSpawnX = EQ_ReadMemory<float>(targetSpawn + EQ_OFFSET_SPAWN_X);
-
-    float bearing = EQ_FUNCTION_get_bearing(playerSpawnY, playerSpawnX, targetSpawnY, targetSpawnX);
-
-    EQ_WriteMemory<float>(playerSpawn + EQ_OFFSET_SPAWN_HEADING, bearing);
+    EQ_TurnPlayerTowardsSpawn(targetSpawn);
 }
 
-void EQAPP_GetNPCSpawnIDListSortedByDistance(std::vector<uint32_t>& spawnIDList)
+std::vector<uint32_t> EQAPP_GetNPCSpawnIDListSortedByDistance()
 {
+    std::vector<uint32_t> spawnIDList;
+
     auto playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)
     {
-        return;
+        return spawnIDList;
     }
 
     std::map<float, uint32_t> spawnList;
 
-    float playerSpawnY = EQ_ReadMemory<float>(playerSpawn + EQ_OFFSET_SPAWN_Y);
-    float playerSpawnX = EQ_ReadMemory<float>(playerSpawn + EQ_OFFSET_SPAWN_X);
-    float playerSpawnZ = EQ_ReadMemory<float>(playerSpawn + EQ_OFFSET_SPAWN_Z);
+    auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
+    auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
+    auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
 
     auto spawn = EQ_GetFirstSpawn();
     while (spawn != NULL)
     {
-        int spawnType = EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_TYPE);
+        auto spawnType = EQ_GetSpawnType(spawn);
         if (spawnType != EQ_SPAWN_TYPE_NPC)
         {
-            spawn = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_NEXT);
+            spawn = EQ_GetSpawnNext(spawn);
             continue;
         }
 
@@ -522,25 +971,25 @@ void EQAPP_GetNPCSpawnIDListSortedByDistance(std::vector<uint32_t>& spawnIDList)
 
         if (strstr(spawnName, "`s Mount") != 0)
         {
-            spawn = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_NEXT);
+            spawn = EQ_GetSpawnNext(spawn);
             continue;
         }
 
         if (strstr(spawnName, "Aura ") != 0)
         {
-            spawn = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_NEXT);
+            spawn = EQ_GetSpawnNext(spawn);
             continue;
         }
 
         if (strstr(spawnName, " Aura") != 0)
         {
-            spawn = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_NEXT);
+            spawn = EQ_GetSpawnNext(spawn);
             continue;
         }
 
-        float spawnY = EQ_ReadMemory<float>(spawn + EQ_OFFSET_SPAWN_Y);
-        float spawnX = EQ_ReadMemory<float>(spawn + EQ_OFFSET_SPAWN_X);
-        float spawnZ = EQ_ReadMemory<float>(spawn + EQ_OFFSET_SPAWN_Z);
+        float spawnY = EQ_GetSpawnY(spawn);
+        float spawnX = EQ_GetSpawnX(spawn);
+        float spawnZ = EQ_GetSpawnZ(spawn);
 
         float spawnDistance = EQ_CalculateDistance3D(playerSpawnX, playerSpawnY, playerSpawnZ, spawnX, spawnY, spawnZ);
 
@@ -549,21 +998,21 @@ void EQAPP_GetNPCSpawnIDListSortedByDistance(std::vector<uint32_t>& spawnIDList)
         bool result = EQ_WorldSpaceToScreenSpace(spawnX, spawnY, spawnZ, screenX, screenY);
         if (result == false)
         {
-            spawn = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_NEXT);
+            spawn = EQ_GetSpawnNext(spawn);
             continue;
         }
 
-        uint32_t spawnID = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_ID);
+        uint32_t spawnID = EQ_GetSpawnID(spawn);
 
         spawnList.insert({spawnDistance, spawnID});
 
-        spawn = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_NEXT);
+        spawn = EQ_GetSpawnNext(spawn);
     }
-
-    spawnIDList.clear();
 
     for (auto& s : spawnList)
     {
         spawnIDList.push_back(s.second);
     }
+
+    return spawnIDList;
 }
