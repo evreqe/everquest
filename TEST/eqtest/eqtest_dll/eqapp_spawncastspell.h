@@ -30,7 +30,7 @@ uint32_t g_SpawnCastSpellDrawTextY = 200;
 void EQAPP_SpawnCastSpell_Toggle();
 void EQAPP_SpawnCastSpell_Execute();
 void EQAPP_SpawnCastSpell_DrawText();
-void EQAPP_SpawnCastSpell_HandleEvent_CEverQuest__StartCasting(void* this_ptr, EQ::CEverQuest__StartCasting_Message_ptr message);
+void EQAPP_SpawnCastSpell_HandleEvent_CEverQuest__StartCasting(void* this_ptr, EQMessage::CEverQuest__StartCasting_ptr message);
 
 void EQAPP_SpawnCastSpell_Toggle()
 {
@@ -147,7 +147,7 @@ void EQAPP_SpawnCastSpell_DrawText()
     EQ_DrawTextEx(drawText.str().c_str(), g_SpawnCastSpellDrawTextX, g_SpawnCastSpellDrawTextY, EQ_DRAW_TEXT_COLOR_WHITE);
 }
 
-void EQAPP_SpawnCastSpell_HandleEvent_CEverQuest__StartCasting(void* this_ptr, EQ::CEverQuest__StartCasting_Message_ptr message)
+void EQAPP_SpawnCastSpell_HandleEvent_CEverQuest__StartCasting(void* this_ptr, EQMessage::CEverQuest__StartCasting_ptr message)
 {
     auto spawn = EQ_GetSpawnByID(message->SpawnID);
     if (spawn == NULL)

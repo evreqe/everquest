@@ -2,13 +2,15 @@
 
 std::unordered_map<uint32_t, std::string> g_SpellList; // ID, Name
 
+std::string g_SpellListFileName = "spells_us.txt";
+
 void EQAPP_SpellList_Load();
 void EQAPP_SpellList_LoadEx(const char* filename);
 std::string EQAPP_SpellList_GetNameByID(uint32_t spellID);
 
 void EQAPP_SpellList_Load()
 {
-    EQAPP_SpellList_LoadEx("spells_us.txt");
+    EQAPP_SpellList_LoadEx(g_SpellListFileName.c_str());
 }
 
 void EQAPP_SpellList_LoadEx(const char* filename)
@@ -20,7 +22,7 @@ void EQAPP_SpellList_LoadEx(const char* filename)
         std::stringstream ss;
         ss << "failed to open file: " << filename;
 
-        EQAPP_PrintDebugMessage(__FUNCTION__, ss.str());
+        EQAPP_PrintDebugText(__FUNCTION__, ss.str());
         return;
     }
 
@@ -63,8 +65,6 @@ std::string EQAPP_SpellList_GetNameByID(uint32_t spellID)
     {
         return it->second;
     }
-    else
-    {
-        return std::string();
-    }
+
+    return std::string();
 }

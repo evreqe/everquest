@@ -6,10 +6,7 @@
 #include <string>
 
 #include "eq_constants.h"
-#include "eq_alternateabilities.h"
-#include "eq_virtualkeycodes.h"
-#include "eq_executecmd.h"
-#include "eq_keys.h"
+#include "eq_messages.h"
 
 uint32_t EQ_ADDRESS_CLIENT_VERSION_DATE = 0xADBC88; // WinMain()    "Starting EverQuest (Built %s %s)"    CrashDetected()    "Client Version: %s %s\n"
 #define EQ_STRING_CLIENT_VERSION_DATE "Mar  9 2018"
@@ -22,7 +19,7 @@ uint32_t EQ_ADDRESS_CLIENT_VERSION_TIME = 0xADBC7C; // WinMain()    "Starting Ev
 uint32_t EQ_BASE_ADDRESS_VALUE    = 0x400000;
 
 uint32_t EQ_ADDRESS_AUTO_ATTACK    = 0xFBD537; // uint8_t    // Attack
-uint32_t EQ_ADDRESS_AUTO_FIRE      = 0x0; // uint8_t    // Autofire
+uint32_t EQ_ADDRESS_AUTO_FIRE      = 0xFBD538; // uint8_t    // Autofire
 uint32_t EQ_ADDRESS_AUTO_RUN       = 0xF35C70; // uint32_t
 uint32_t EQ_ADDRESS_MOUSE_LOOK     = 0xF35C52; // uint8_t    // MouseLook
 uint32_t EQ_ADDRESS_NET_STATUS     = 0xF35C55; // uint8_t    byte_F30435 = sub_9CFF30("Defaults", "NetStat", 0, 0); // 0xF30435
@@ -827,3 +824,131 @@ LABEL_106:
   }
 */
 
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem    = 0x779040;
+/*
+if ( dword_FBD53C <= 0 )
+{
+    v30 = *(_DWORD **)(v6 + 37448);
+    a5 = -1;
+    a3 = -1;
+    sub_9B8F70(v30, (int)v7, &a5, &a3);
+    v31 = sub_9B8D10((_DWORD *)*(_DWORD *)(v6 + 37448), a5);
+    *(_DWORD *)(v6 + 624) = v31;
+    if ( v31 <= 0xC7 )
+    {
+    if ( *(_DWORD *)(184 * v31 + v6 + 760) == *((_DWORD *)dword_F25F34 + 1415) )
+    {
+        v32 = sub_579000();
+        sub_579710(v32, "You cannot purchase an item from yourself!", (void *)0xD, (void *)1, (void *)1, 0);
+        return 0;
+    }
+    if ( *(_DWORD *)(184 * v31 + v6 + 788) <= 1 )
+    {
+        sub_779040((_DWORD *)v6, 1); // CBazaarSearchWnd__BuyItem()
+    }
+    else
+    {
+        (*(void (__thiscall **)(_DWORD *, int *))(*v7 + 252))(v7, &v43);
+        v33 = *(_DWORD *)(184 * *(_DWORD *)(v6 + 624) + v6 + 788);
+        sub_873A50(dword_E74DA8, v6, v33, v33, v43, v44, (void *)1, 0, 0, 0);
+    }
+    }
+}
+return 0;
+*/
+/*
+char __thiscall sub_779040(_DWORD *this, int a2) // CBazaarSearchWnd__BuyItem()
+{
+  _DWORD *v2; // esi
+  signed int v3; // eax
+  char *v4; // ecx
+  int v5; // eax
+  int v6; // eax
+  void *v7; // ecx
+  int v8; // ST00_4
+  void *v10; // [esp-1Ch] [ebp-34h]
+  char *v11; // [esp-18h] [ebp-30h]
+  int v12; // [esp-14h] [ebp-2Ch]
+  void *v13; // [esp-10h] [ebp-28h]
+  void *v14; // [esp-Ch] [ebp-24h]
+  int v15; // [esp-8h] [ebp-20h]
+  char *v16; // [esp-4h] [ebp-1Ch]
+  int v17; // [esp+0h] [ebp-18h]
+  int v18; // [esp+14h] [ebp-4h]
+
+  v2 = this;
+  v3 = this[156];
+  if ( v3 < 0 || v3 >= 200 || !dword_E74EA0 ) // CBazaarConfirmationWnd pointer
+    return 0;
+  v17 = a2;
+  v4 = (char *)&this[46 * v3];
+  v16 = v4 + 796;
+  v15 = *((_DWORD *)v4 + 196);
+  v5 = *((unsigned __int16 *)v2 + 314);
+  v14 = (void *)*((_DWORD *)v4 + 190);
+  v13 = (void *)*((_DWORD *)v4 + 193);
+  v12 = v5;
+  v11 = v4;
+  sub_998F70((void **)&v11, v4 + 632);
+  v6 = 46 * v2[156];
+  v10 = v7;
+  v18 = 0;
+  sub_998F70(&v10, &v2[v6 + 174]);
+  v8 = v2[46 * v2[156] + 195];
+  v18 = -1;
+  sub_538850((char *)dword_E74EA0, v8, v10, v11, v12, v13, v14, v15, v16, v17);
+  sub_9C4C80((int)v2, (int *)&v14);
+  sub_9C6340((_DWORD *)dword_E74EA0, (int)v14, v15, (int)v16, v17);
+  v17 = 1;
+  v16 = (char *)1;
+  v15 = 1;
+  (*(void (__stdcall **)(signed int, signed int, signed int))(*(_DWORD *)dword_E74EA0 + 216))(1, 1, 1);
+  sub_9C67A0((void *)dword_E74EA0, 1);
+  return 1;
+}
+*/
+
+uint32_t EQ_ADDRESS_POINTER_CBazaarConfirmationWnd    = 0xE74EA0;
+
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarConfirmationWnd__WndNotification    = 0x538710;
+
+/*
+int __thiscall sub_538710(_DWORD *this, int a2, int a3, int a4)
+{
+  _DWORD *v4; // ebp
+  int v5; // esi
+  char v6; // bl
+
+  v4 = this;
+  if ( a3 != 1 )
+    return sub_9D3310((void **)this, a2, a3, a4);
+  v5 = a2;
+  if ( a2 == this[151] || a2 == this[154] )
+  {
+    ++dword_FBD53C;
+    a2 = 59;
+    if ( (unsigned int)((*(_DWORD *)(dword_FBFD88 + 234968) - *(_DWORD *)(dword_FBFD88 + 234964)) >> 2) < 0x14 )
+      sub_732270((_DWORD *)(dword_FBFD88 + 234964), (unsigned int *)&a2);
+    v4[157] = (v5 == v4[151]) + 1;
+    if ( *(_DWORD *)dword_F2679C )
+    {
+      word_F25F48 = sub_94D430(6247, 0);
+      if ( v4 != (_DWORD *)-624 )
+        qmemcpy(&dword_F25F4A, v4 + 156, 0x11Cu);
+      v6 = sub_8EF920(*(int *)dword_F2679C, 4, &word_F25F48, 286);
+      j_j__free(0);
+      --dword_10E0E94;
+      if ( v6 )
+        sub_8ECAD0(*(int *)dword_F2679C);
+      else
+        sub_57B3F0((_DWORD *)dword_D402C8, (LPCRITICAL_SECTION **)dword_F2679C);
+    }
+    else if ( !byte_F35BA4 )
+    {
+      sub_99D110("Attempt to send message %d on a void connection.", 103);
+    }
+  }
+  (*(void (__thiscall **)(_DWORD *, _DWORD, signed int, signed int))(*v4 + 216))(v4, 0, 1, 1);
+  return 0;
+}
+*/

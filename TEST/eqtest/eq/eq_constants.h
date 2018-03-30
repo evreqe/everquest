@@ -1,10 +1,17 @@
 #pragma once
 
+#include "eq_alternateabilities.h"
+#include "eq_executecmd.h"
+#include "eq_keys.h"
+#include "eq_virtualkeycodes.h"
+#include "eq_zones.h"
+
 const float EQ_PI = 3.14159265358979f;
 
 #define EQ_NUM_HOT_BARS       11    // 10 + 1, potion belt was removed and replaced with another hotbar
 #define EQ_NUM_HOT_BUTTONS    12
 #define EQ_NUM_SPELLS         59999
+#define EQ_NUM_SPELL_GEMS     12
 
 #define EQ_OFFSET_CEverQuest_GAME_STATE    0x5C8 // uint32_t, 1480 decimal    "Gamestate at crash = %d\n"
 
@@ -76,9 +83,35 @@ const float EQ_PI = 3.14159265358979f;
 const float EQ_CAMERA_FIELD_OF_VIEW_DEFAULT       = 45.0f;
 const float EQ_CAMERA_FIELD_OF_VIEW_DRUID_MASK    = 60.0f;
 
-const float EQ_CAMERA_PITCH_DEFAULT    = -8.5f;      // center view
+const float EQ_CAMERA_PITCH_DEFAULT    = -8.5f;      // center view or look forward
 const float EQ_CAMERA_PITCH_MIN        = -136.5f;    // look down
 const float EQ_CAMERA_PITCH_MAX        = 119.5f;     // look up
+
+#define EQ_OFFSET_CXWnd_IS_OPEN 0x22  // uint8_t
+
+#define EQ_OFFSET_CBazaarSearchWnd_BUY_ITEM_LIST_INDEX    0x270 // uint32_t    index of the item in the search list to buy
+#define EQ_OFFSET_CBazaarSearchWnd_FIRST_ITEM             0x278 // first item in the search list starts here
+#define EQ_OFFSET_CBazaarSearchWnd_TRADER_NAME            0x278 // char[64]
+#define EQ_OFFSET_CBazaarSearchWnd_ITEM_NAME              0x2B8 // char[64]
+#define EQ_OFFSET_CBazaarSearchWnd_ITEM_PRICE             0x304 // uint32_t
+#define EQ_OFFSET_CBazaarSearchWnd_ITEM_ID                0x310 // uint32_t
+#define EQ_OFFSET_CBazaarSearchWnd_ITEM_QUANTITY          0x314 // uint32_t
+#define EQ_OFFSET_CBazaarSearchWnd_SECOND_ITEM            0x330 // second item in the search list starts here
+
+#define EQ_SIZE_CBazaarSearchWnd_TRADER_NAME    64 // 0x40
+#define EQ_SIZE_CBazaarSearchWnd_ITEM_NAME      64 // 0x40
+
+#define EQ_OFFSET_CBazaarConfirmationWnd_XWND_BUTTON_TO_ME         0x25C // uint32_t pointer    "To Me" button
+#define EQ_OFFSET_CBazaarConfirmationWnd_XWND_BUTTON_TO_PARCELS    0x268 // uint32_t pointer    "To Parcels" button
+#define EQ_OFFSET_CBazaarConfirmationWnd_XWND_BUTTON_CANCEL        0x26C // uint32_t pointer    "Cancel" button
+#define EQ_OFFSET_CBazaarConfirmationWnd_TRADER_NAME               0x2C4 // char[64]
+#define EQ_OFFSET_CBazaarConfirmationWnd_ITEM_NAME                 0x324 // char[64]
+#define EQ_OFFSET_CBazaarConfirmationWnd_ITEM_ID                   0x378 // uint32_t
+#define EQ_OFFSET_CBazaarConfirmationWnd_ITEM_PRICE                0x37C // uint32_t
+#define EQ_OFFSET_CBazaarConfirmationWnd_ITEM_QUANTITY             0x388 // uint32_t
+
+#define EQ_SIZE_CBazaarConfirmationWnd_TRADER_NAME    64 // 0x40
+#define EQ_SIZE_CBazaarConfirmationWnd_ITEM_NAME      64 // 0x40
 
 #define EQ_CHAT_TEXT_COLOR_YELLOW    15
 
@@ -104,53 +137,24 @@ const float EQ_CAMERA_PITCH_MAX        = 119.5f;     // look up
 #define EQ_DRAW_TEXT_COLOR_DEFAULT_6     19 // ARGB 0xFF606060
 #define EQ_DRAW_TEXT_COLOR_BLACK_2       20 // ARGB 0xFF000000
 
-#define EQ_ZONE_ID_BAZAAR         151 // The Bazaar
-#define EQ_ZONE_ID_NEXUS          152 // The Nexus
-#define EQ_ZONE_ID_POKNOWLEDGE    202 // Plane of Knowledge
-#define EQ_ZONE_ID_POTRANQUILITY  203 // Plane of Tranquility
-#define EQ_ZONE_ID_GUILDLOBBY     344 // The Guild Lobby
-#define EQ_ZONE_ID_GUILDHALL      345 // Guild Hall
-#define EQ_ZONE_ID_BARTER         346 // The Barter Hall
-
-std::unordered_map<uint32_t, std::string> EQ_TABLE_ZONE_NAME =
-{
-    {EQ_ZONE_ID_BAZAAR,           "The Bazaar"},
-    {EQ_ZONE_ID_NEXUS,            "The Nexus"},
-    {EQ_ZONE_ID_POKNOWLEDGE,      "Plane of Knowledge"},
-    {EQ_ZONE_ID_POTRANQUILITY,    "Plane of Tranquility"},
-    {EQ_ZONE_ID_GUILDLOBBY,       "The Guild Lobby"},
-    {EQ_ZONE_ID_GUILDHALL,        "Guild Hall"},
-    {EQ_ZONE_ID_BARTER,           "The Barter Hall"},
-};
-
-std::unordered_map<uint32_t, std::string> EQ_TABLE_ZONE_SHORT_NAME =
-{
-    {EQ_ZONE_ID_BAZAAR,           "bazaar"},
-    {EQ_ZONE_ID_NEXUS,            "nexus"},
-    {EQ_ZONE_ID_POKNOWLEDGE,      "poknowledge"},
-    {EQ_ZONE_ID_POTRANQUILITY,    "potranquility"},
-    {EQ_ZONE_ID_GUILDLOBBY,       "guildlobby"},
-    {EQ_ZONE_ID_GUILDHALL,        "guildhall"},
-    {EQ_ZONE_ID_BARTER,           "barter"},
-};
-
-#define EQ_RACE_UNKNOWN      0
-#define EQ_RACE_HUMAN        1
-#define EQ_RACE_BARBARIAN    2
-#define EQ_RACE_ERUDITE      3
-#define EQ_RACE_WOOD_ELF     4
-#define EQ_RACE_HIGH_ELF     5
-#define EQ_RACE_DARK_ELF     6
-#define EQ_RACE_HALF_ELF     7
-#define EQ_RACE_DWARF        8
-#define EQ_RACE_TROLL        9
-#define EQ_RACE_OGRE         10
-#define EQ_RACE_HALFLING     11
-#define EQ_RACE_GNOME        12
-#define EQ_RACE_IKSAR        128
-#define EQ_RACE_VAH_SHIR     130
-#define EQ_RACE_FROGLOK      330
-#define EQ_RACE_DRAKKIN      -1 // TODO
+#define EQ_RACE_UNKNOWN          0
+#define EQ_RACE_HUMAN            1
+#define EQ_RACE_BARBARIAN        2
+#define EQ_RACE_ERUDITE          3
+#define EQ_RACE_WOOD_ELF         4
+#define EQ_RACE_HIGH_ELF         5
+#define EQ_RACE_DARK_ELF         6
+#define EQ_RACE_HALF_ELF         7
+#define EQ_RACE_DWARF            8
+#define EQ_RACE_TROLL            9
+#define EQ_RACE_OGRE             10
+#define EQ_RACE_HALFLING         11
+#define EQ_RACE_GNOME            12
+#define EQ_RACE_INVISIBLE_MAN    127 // Enchanter pet
+#define EQ_RACE_IKSAR            128
+#define EQ_RACE_VAH_SHIR         130
+#define EQ_RACE_FROGLOK          330
+#define EQ_RACE_DRAKKIN          522
 
 std::unordered_map<uint32_t, std::string> EQ_TABLE_RACE_NAME =
 {
@@ -263,12 +267,23 @@ std::unordered_map<uint32_t, std::string> EQ_TABLE_CLASS_SHORT_NAME =
     ////{EQ_CLASS_MERCHANT,        "MERCHANT"},
 };
 
-namespace EQ
-{
-    typedef struct _CEverQuest__StartCasting_Message
-    {
-        uint32_t SpellID;
-        uint16_t SpawnID;
-        uint16_t SpellCastTime;
-    } CEverQuest__StartCasting_Message, *CEverQuest__StartCasting_Message_ptr;
-} // namespace EQ
+#define EQ_XWND_MESSAGE_LEFT_CLICK           1
+#define EQ_XWND_MESSAGE_LEFT_MOUSE_UP        2
+#define EQ_XWND_MESSAGE_RIGHT_CLICK          3
+#define EQ_XWND_MESSAGE_LEFT_DOUBLE_CLICK    4
+#define EQ_XWND_MESSAGE_HIT_ENTER            6
+#define EQ_XWND_MESSAGE_CLOSE                10
+#define EQ_XWND_MESSAGE_NEW_VALUE            14
+#define EQ_XWND_MESSAGE_UNKNOWN              19
+#define EQ_XWND_MESSAGE_MENU_SELECT          20
+#define EQ_XWND_MESSAGE_MOUSE_OVER           21
+#define EQ_XWND_MESSAGE_HISTORY              22
+#define EQ_XWND_MESSAGE_LEFT_CLICK_HOLD      23
+#define EQ_XWND_MESSAGE_LINK                 27
+#define EQ_XWND_MESSAGE_FOCUS                33
+#define EQ_XWND_MESSAGE_LOST_FOCUS           34
+
+#define EQ_XWND_KEYBOARD_FLAG_SHIFT    1
+#define EQ_XWND_KEYBOARD_FLAG_CTRL     2
+#define EQ_XWND_KEYBOARD_FLAG_LALT     4
+#define EQ_XWND_KEYBOARD_FLAG_RALT     8

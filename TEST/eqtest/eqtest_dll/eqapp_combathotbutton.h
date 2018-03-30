@@ -4,6 +4,8 @@
 
 bool g_CombatHotButtonIsEnabled = false;
 
+float g_CombatHotButtonMeleeDistance = 25.0f;
+
 EQApp::Timer g_CombatHotButtonTimer = EQAPP_Timer_GetTimeNow();
 EQApp::TimerInterval g_CombatHotButtonTimerInterval = 6;
 
@@ -48,7 +50,7 @@ void EQAPP_CombatHotButton_Execute()
     }
 
     float targetSpawnDistance = EQ_GetSpawnDistance(targetSpawn);
-    if (targetSpawnDistance > 25.0f)
+    if (targetSpawnDistance > g_CombatHotButtonMeleeDistance)
     {
         return;
     }

@@ -6,6 +6,7 @@ namespace EQAlternateAbilities
 namespace Shared
 {
     const uint32_t BindAffinity    = 679;
+    const uint32_t Gate            = 1217;
 } // namespace Shared
 
 namespace General
@@ -45,7 +46,6 @@ namespace Special
     const uint32_t Summon_Tome_of_the_Heros_Journey       = 1687;
     const uint32_t Throne_of_Heroes                       = 511;
 } // namespace Special
-
 
 namespace Warrior
 {
@@ -240,7 +240,7 @@ namespace Druid
     const uint32_t Veil_of_the_Underbrush               = 232;
 
     //Class
-    const uint32_t Blessing_of_Ro                          = 935;
+    const uint32_t Blessing_of_Ro                          = 935; // requires Fire Beetle Eye reagent to cast
     const uint32_t Blessing_of_Tunare                      = 959;
     const uint32_t Convergence_of_Spirits                  = 519;
     const uint32_t Destructive_Vortex                      = 953;

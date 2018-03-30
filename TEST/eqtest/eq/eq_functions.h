@@ -133,13 +133,23 @@ void EQ_TurnPlayerTowardsTarget();
 
 std::vector<uint32_t> EQAPP_GetNPCSpawnIDListSortedByDistance();
 
+bool EQ_IsCXWndOpen(uint32_t xwnd);
+
+bool EQ_BazaarSearchWindow_IsOpen();
+void EQ_BazaarSearchWindow_FindItems();
+bool EQ_BazaarSearchWindow_BuyItem(uint32_t listIndex);
+
+bool EQ_BazaarConfirmationWindow_IsOpen();
+void EQ_BazaarConfirmationWindow_ClickToParcelsButton();
+void EQ_BazaarConfirmationWindow_ClickCancelButton();
+
 /* functions */
 
 template <class T>
 void EQ_Log(const char* text, T number)
 {
     std::fstream file;
-    file.open("Logs/eqlog.txt", std::ios::out | std::ios::app);
+    file.open("Logs/log.txt", std::ios::out | std::ios::app);
     file << "[" << __TIME__ << "] " << text << " (" << number << ")" << " Hex(" << std::hex << number << std::dec << ")" << std::endl;
     file.close();
 }
@@ -300,12 +310,12 @@ bool EQ_IsZoneIDSafe(uint32_t zoneID)
 {
     if
     (
-        zoneID == EQ_ZONE_ID_BAZAAR ||
-        zoneID == EQ_ZONE_ID_NEXUS ||
-        zoneID == EQ_ZONE_ID_POKNOWLEDGE ||
-        zoneID == EQ_ZONE_ID_POTRANQUILITY ||
-        zoneID == EQ_ZONE_ID_GUILDLOBBY ||
-        zoneID == EQ_ZONE_ID_GUILDHALL ||
+        zoneID == EQ_ZONE_ID_BAZAAR           ||
+        zoneID == EQ_ZONE_ID_NEXUS            ||
+        zoneID == EQ_ZONE_ID_POKNOWLEDGE      ||
+        zoneID == EQ_ZONE_ID_POTRANQUILITY    ||
+        zoneID == EQ_ZONE_ID_GUILDLOBBY       ||
+        zoneID == EQ_ZONE_ID_GUILDHALL        ||
         zoneID == EQ_ZONE_ID_BARTER
     )
     {
@@ -485,8 +495,14 @@ uint32_t EQ_GetSpawnPrevious(uint32_t spawn)
 
 std::string EQ_GetSpawnName(uint32_t spawn)
 {
+    if (spawn == NULL)
+    {
+        return std::string();
+    }
+
     char spawnName[EQ_SIZE_SPAWN_NAME];
-    memcpy(spawnName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_NAME), sizeof(spawnName));
+    ////memcpy(spawnName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_NAME), sizeof(spawnName));
+    std::memmove(spawnName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_NAME), sizeof(spawnName));
 
     if (strlen(spawnName) == 0)
     {
@@ -516,8 +532,14 @@ std::string EQ_GetSpawnName(uint32_t spawn)
 
 std::string EQ_GetSpawnLastName(uint32_t spawn)
 {
+    if (spawn == NULL)
+    {
+        return std::string();
+    }
+
     char spawnLastName[EQ_SIZE_SPAWN_LAST_NAME];
-    memcpy(spawnLastName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_LAST_NAME), sizeof(spawnLastName));
+    ////memcpy(spawnLastName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_LAST_NAME), sizeof(spawnLastName));
+    std::memmove(spawnLastName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_LAST_NAME), sizeof(spawnLastName));
 
     if (strlen(spawnLastName) == 0)
     {
@@ -573,7 +595,7 @@ float EQ_GetSpawnDistance(uint32_t spawn)
     auto playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)
     {
-        return 0.0f;
+        return -1.0f;
     }
 
     auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
@@ -686,7 +708,7 @@ uint32_t EQ_GetSpawnHPPercent(uint32_t spawn)
     uint32_t multiplied = current * 100;
 
     // prevent divide by zero
-    if (multiplied == 0)
+    if (multiplied == 0 || max == 0)
     {
         return 0;
     }
@@ -712,7 +734,7 @@ uint32_t EQ_GetSpawnManaPercent(uint32_t spawn)
     uint32_t multiplied = current * 100;
 
     // prevent divide by zero
-    if (multiplied == 0)
+    if (multiplied == 0 || max == 0)
     {
         return 0;
     }
@@ -738,7 +760,7 @@ uint32_t EQ_GetSpawnEndurancePercent(uint32_t spawn)
     uint32_t multiplied = current * 100;
 
     // prevent divide by zero
-    if (multiplied == 0)
+    if (multiplied == 0 || max == 0)
     {
         return 0;
     }
@@ -788,10 +810,12 @@ void EQ_TurnPlayerTowardsSpawn(uint32_t spawn)
 void EQ_InterpretCommand(const char* text)
 {
     auto playerSpawn = EQ_GetPlayerSpawn();
-    if (playerSpawn != NULL)
+    if (playerSpawn == NULL)
     {
-        EQ_CLASS_POINTER_CEverQuest->InterpretCmd((EQClass::EQPlayer*)playerSpawn, text);
+        return;
     }
+
+    EQ_CLASS_POINTER_CEverQuest->InterpretCmd((EQClass::EQPlayer*)playerSpawn, text);
 }
 
 void EQ_ExecuteCommand(uint32_t commandID, int isActive)
@@ -909,24 +933,30 @@ bool EQ_WorldSpaceToScreenSpace(float worldX, float worldY, float worldZ, float&
 void EQ_StopFollow()
 {
     auto playerSpawn = EQ_GetPlayerSpawn();
-    if (playerSpawn != NULL)
+    if (playerSpawn == NULL)
     {
-        EQ_SetSpawnFollowSpawn(playerSpawn, 0);
-        EQ_SetAutoRun(false);
+        return;
     }
+
+    EQ_SetSpawnFollowSpawn(playerSpawn, 0);
+    EQ_SetAutoRun(false);
 }
 
 void EQ_FollowTarget()
 {
     auto targetSpawn = EQ_GetTargetSpawn();
-    if (targetSpawn != NULL)
+    if (targetSpawn == NULL)
     {
-        auto playerSpawn = EQ_GetPlayerSpawn();
-        if (playerSpawn != NULL)
-        {
-            EQ_SetSpawnFollowSpawn(playerSpawn, targetSpawn);
-        }
+        return;
     }
+
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    EQ_SetSpawnFollowSpawn(playerSpawn, targetSpawn);
 }
 
 void EQ_TurnPlayerTowardsTarget()
@@ -967,7 +997,8 @@ std::vector<uint32_t> EQAPP_GetNPCSpawnIDListSortedByDistance()
         }
 
         char spawnName[EQ_SIZE_SPAWN_NAME];
-        memcpy(spawnName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_NAME), sizeof(spawnName));
+        ////memcpy(spawnName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_NAME), sizeof(spawnName));
+        std::memmove(spawnName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_NAME), sizeof(spawnName));
 
         if (strstr(spawnName, "`s Mount") != 0)
         {
@@ -1015,4 +1046,131 @@ std::vector<uint32_t> EQAPP_GetNPCSpawnIDListSortedByDistance()
     }
 
     return spawnIDList;
+}
+
+bool EQ_IsCXWndOpen(uint32_t xwnd)
+{
+    uint8_t isOpen = EQ_ReadMemory<uint8_t>(xwnd + EQ_OFFSET_CXWnd_IS_OPEN);
+
+    return (isOpen == 1);
+}
+
+bool EQ_BazaarSearchWindow_IsOpen()
+{
+    uint32_t bazaarSearchWindow = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
+    if (bazaarSearchWindow == NULL)
+    {
+        return false;
+    }
+
+    if (EQ_IsCXWndOpen(bazaarSearchWindow) == false)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+void EQ_BazaarSearchWindow_FindItems()
+{
+    EQ_CLASS_POINTER_CBazaarSearchWnd->doQuery();
+}
+
+bool EQ_BazaarSearchWindow_BuyItem(uint32_t listIndex)
+{
+    uint32_t bazaarSearchWindow = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
+    if (bazaarSearchWindow == NULL)
+    {
+        return false;
+    }
+
+    if (EQ_IsCXWndOpen(bazaarSearchWindow) == false)
+    {
+        return false;
+    }
+
+    EQ_WriteMemory<uint32_t>(bazaarSearchWindow + EQ_OFFSET_CBazaarSearchWnd_BUY_ITEM_LIST_INDEX, listIndex);
+
+    uint32_t itemID = EQ_ReadMemory<uint32_t>(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_FIRST_ITEM * listIndex) + EQ_OFFSET_CBazaarSearchWnd_ITEM_ID);
+    if (itemID == 0)
+    {
+        return false;
+    }
+
+    uint32_t itemPrice = EQ_ReadMemory<uint32_t>(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_FIRST_ITEM * listIndex) + EQ_OFFSET_CBazaarSearchWnd_ITEM_PRICE);
+    if (itemPrice == 0)
+    {
+        return false;
+    }
+
+    uint32_t itemQuantity = EQ_ReadMemory<uint32_t>(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_FIRST_ITEM * listIndex) + EQ_OFFSET_CBazaarSearchWnd_ITEM_QUANTITY);
+    if (itemQuantity == 0)
+    {
+        return false;
+    }
+
+    bool result = EQ_CLASS_POINTER_CBazaarSearchWnd->BuyItem(itemQuantity);
+
+    return result;
+}
+
+bool EQ_BazaarConfirmationWindow_IsOpen()
+{
+    uint32_t bazaarConfirmationWindow = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd);
+    if (bazaarConfirmationWindow == NULL)
+    {
+        return false;
+    }
+
+    if (EQ_IsCXWndOpen(bazaarConfirmationWindow) == false)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+
+void EQ_BazaarConfirmationWindow_ClickToParcelsButton()
+{
+    uint32_t bazaarConfirmationWindow = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd);
+    if (bazaarConfirmationWindow == NULL)
+    {
+        return;
+    }
+
+    if (EQ_IsCXWndOpen(bazaarConfirmationWindow) == false)
+    {
+        return;
+    }
+
+    uint32_t xwndButtonToParcels = EQ_ReadMemory<uint32_t>(bazaarConfirmationWindow + EQ_OFFSET_CBazaarConfirmationWnd_XWND_BUTTON_TO_PARCELS);
+    if (xwndButtonToParcels == NULL)
+    {
+        return;
+    }
+
+    EQ_CLASS_POINTER_CBazaarConfirmationWnd->WndNotification(xwndButtonToParcels, EQ_XWND_MESSAGE_LEFT_CLICK, (void*)0);
+}
+
+void EQ_BazaarConfirmationWindow_ClickCancelButton()
+{
+    uint32_t bazaarConfirmationWindow = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd);
+    if (bazaarConfirmationWindow == NULL)
+    {
+        return;
+    }
+
+    if (EQ_IsCXWndOpen(bazaarConfirmationWindow) == false)
+    {
+        return;
+    }
+
+    uint32_t xwndButtonCancel = EQ_ReadMemory<uint32_t>(bazaarConfirmationWindow + EQ_OFFSET_CBazaarConfirmationWnd_XWND_BUTTON_CANCEL);
+    if (xwndButtonCancel == NULL)
+    {
+        return;
+    }
+
+    EQ_CLASS_POINTER_CBazaarConfirmationWnd->WndNotification(xwndButtonCancel, EQ_XWND_MESSAGE_LEFT_CLICK, (void*)0);
 }

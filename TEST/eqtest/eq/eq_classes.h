@@ -14,6 +14,7 @@ namespace EQClass
     class CXWndManager;
 
     class CBazaarSearchWnd;
+    class CBazaarConfirmationWnd;
 } // namespace EQClass
 
 /* CEverQuest */
@@ -23,7 +24,7 @@ class EQClass::CEverQuest
 public:
     void CEverQuest::InterpretCmd(class EQPlayer* player, const char* text);
     void CEverQuest::dsp_chat(const char* text, int textColor, bool one_1, bool one_2, bool zero_1);
-    void CEverQuest::StartCasting(EQ::CEverQuest__StartCasting_Message_ptr message);
+    void CEverQuest::StartCasting(EQMessage::CEverQuest__StartCasting_ptr message);
 };
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::InterpretCmd(class EQPlayer* player, const char* text), EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd);
@@ -32,8 +33,8 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__InterpretCmd)(void* this_p
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::dsp_chat(const char* text, int textColor, bool one_1, bool one_2, bool zero_1), EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__dsp_chat)(void* this_ptr, const char* text, int textColor, bool one_1, bool one_2, bool zero_1);
 
-EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::StartCasting(EQ::CEverQuest__StartCasting_Message_ptr message), EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__StartCasting)(void* this_ptr, EQ::CEverQuest__StartCasting_Message_ptr message);
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::StartCasting(EQMessage::CEverQuest__StartCasting_ptr message), EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__StartCasting)(void* this_ptr, EQMessage::CEverQuest__StartCasting_ptr message);
 
 ////EQClass::CEverQuest** EQ_CLASS_POINTER_CEverQuest_pptr = (EQClass::CEverQuest**)EQ_ADDRESS_POINTER_CEverQuest;
 ////#define EQ_CLASS_POINTER_CEverQuest (*EQ_CLASS_POINTER_CEverQuest_pptr)
@@ -114,6 +115,7 @@ class EQClass::CBazaarSearchWnd
 public:
     void CBazaarSearchWnd::AddItemToList(char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11);
     void CBazaarSearchWnd::doQuery();
+    bool CBazaarSearchWnd::BuyItem(int quantity);
 };
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CBazaarSearchWnd::AddItemToList(char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11), EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList);
@@ -122,7 +124,26 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarSearchWnd__AddItemToList)(void*
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CBazaarSearchWnd::doQuery(), EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarSearchWnd__doQuery)(void* this_ptr);
 
+EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::CBazaarSearchWnd::BuyItem(int quantity), EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarSearchWnd__BuyItem)(void* this_ptr, int quantity);
+
 ////EQClass::CBazaarSearchWnd** EQ_CLASS_POINTER_CBazaarSearchWnd_pptr = (EQClass::CBazaarSearchWnd**)EQ_ADDRESS_POINTER_CBazaarSearchWnd;
 ////#define EQ_CLASS_POINTER_CBazaarSearchWnd (*EQ_CLASS_POINTER_CBazaarSearchWnd_pptr)
 EQClass::CBazaarSearchWnd** EQ_CLASS_POINTER_CBazaarSearchWnd_pptr;
 EQClass::CBazaarSearchWnd* EQ_CLASS_POINTER_CBazaarSearchWnd;
+
+/* CBazaarConfirmationWnd */
+
+class EQClass::CBazaarConfirmationWnd
+{
+public:
+    int CBazaarConfirmationWnd::WndNotification(uint32_t xwndAddress, uint32_t xwndMessage, void* unknown);
+};
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::CBazaarConfirmationWnd::WndNotification(uint32_t xwndAddress, uint32_t xwndMessage, void* unknown), EQ_ADDRESS_FUNCTION_CBazaarConfirmationWnd__WndNotification);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarConfirmationWnd__WndNotification)(void* this_ptr, uint32_t xwndAddress, uint32_t xwndMessage, void* unknown);
+
+////EQClass::CBazaarConfirmationWnd** EQ_CLASS_POINTER_CBazaarConfirmationWnd_pptr = (EQClass::CBazaarConfirmationWnd**)EQ_ADDRESS_POINTER_CBazaarConfirmationWnd;
+////#define EQ_CLASS_POINTER_CBazaarConfirmationWnd (*EQ_CLASS_POINTER_CBazaarConfirmationWnd_pptr)
+EQClass::CBazaarConfirmationWnd** EQ_CLASS_POINTER_CBazaarConfirmationWnd_pptr;
+EQClass::CBazaarConfirmationWnd* EQ_CLASS_POINTER_CBazaarConfirmationWnd;

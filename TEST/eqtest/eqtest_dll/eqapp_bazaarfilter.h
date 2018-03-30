@@ -2,7 +2,7 @@
 
 bool g_BazaarFilterIsEnabled = false;
 
-bool g_BazaarFilterDoQueryIsEnabled = false;
+bool g_BazaarFilterBeepIsEnabled = false;
 
 EQApp::Timer g_BazaarFilterDoQueryTimer = EQAPP_Timer_GetTimeNow();
 EQApp::TimerInterval g_BazaarFilterDoQueryTimerInterval = 10;
@@ -15,11 +15,11 @@ uint32_t g_BazaarFilterItemPriceMinimum = 1;
 uint32_t g_BazaarFilterItemPriceMaximum = 1000 * 1000;
 
 void EQAPP_BazaarFilter_Toggle();
+void EQAPP_BazaarFilter_Beep_Toggle();
 void EQAPP_BazaarFilter_Load();
 void EQAPP_BazaarFilter_LoadEx(const char* filename);
 bool EQAPP_BazaarFilter_HandleEvent_CBazaarSearchWnd__AddItemToList(char* itemName, uint32_t itemPrice, char* traderName);
-void EQAPP_BazaarFilter_DoQuery_Toggle();
-void EQAPP_BazaarFilter_DoQuery();
+void EQAPP_BazaarFilter_PrintItemNameList();
 
 void EQAPP_BazaarFilter_Toggle()
 {
@@ -32,9 +32,18 @@ void EQAPP_BazaarFilter_Toggle()
     }
 }
 
+void EQAPP_BazaarFilter_Beep_Toggle()
+{
+    EQ_ToggleBool(g_BazaarFilterBeepIsEnabled);
+    EQAPP_PrintBool("Bazaar Filter Beep", g_BazaarFilterBeepIsEnabled);
+}
+
 void EQAPP_BazaarFilter_Load()
 {
-    EQAPP_BazaarFilter_LoadEx("eqbazaarfilter.txt");
+    std::stringstream fileName;
+    fileName << g_EQAppName << "-bazaarfilter.txt";
+
+    EQAPP_BazaarFilter_LoadEx(fileName.str().c_str());
 }
 
 void EQAPP_BazaarFilter_LoadEx(const char* filename)
@@ -46,7 +55,7 @@ void EQAPP_BazaarFilter_LoadEx(const char* filename)
         std::stringstream ss;
         ss << "failed to open file: " << filename;
 
-        EQAPP_PrintDebugMessage(__FUNCTION__, ss.str());
+        EQAPP_PrintDebugText(__FUNCTION__, ss.str());
         return;
     }
 
@@ -120,23 +129,23 @@ bool EQAPP_BazaarFilter_HandleEvent_CBazaarSearchWnd__AddItemToList(char* itemNa
         bShouldAddItemToList = false;
     }
 
+    if (bShouldAddItemToList == true)
+    {
+        if (g_BazaarFilterBeepIsEnabled == true)
+        {
+            EQAPP_Beep();
+        }
+    }
+
     return bShouldAddItemToList;
 }
 
-void EQAPP_BazaarFilter_DoQuery_Toggle()
+void EQAPP_BazaarFilter_PrintItemNameList()
 {
-    EQ_ToggleBool(g_BazaarFilterDoQueryIsEnabled);
-    EQAPP_PrintBool("Bazaar Filter Do Query", g_BazaarFilterDoQueryIsEnabled);
-}
+    std::cout << "Bazaar Filter Item Name List:" << std::endl;
 
-void EQAPP_BazaarFilter_DoQuery()
-{
-    // click Find Items button
-
-    if (EQAPP_Timer_HasTimeElapsed(g_BazaarFilterDoQueryTimer, g_BazaarFilterDoQueryTimerInterval) == false)
+    for (auto& itemName : g_BazaarFilterItemNameList)
     {
-        return;
+        std::cout << itemName << std::endl;
     }
-
-    EQ_CLASS_POINTER_CBazaarSearchWnd->doQuery();
 }

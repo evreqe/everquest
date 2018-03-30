@@ -53,6 +53,7 @@ void EQAPP_AutoAlternateAbility_Execute()
     }
 
     std::vector<uint32_t> alternateAbilityList;
+    alternateAbilityList.reserve(32);
 
     auto spawnClass = EQ_GetSpawnClass(playerSpawn);
 

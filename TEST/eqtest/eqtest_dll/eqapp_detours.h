@@ -18,6 +18,8 @@ EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__dsp_chat);
 
 EQ_MACRO_FUNCTION_DefineDetour(CBazaarSearchWnd__AddItemToList);
 
+EQ_MACRO_FUNCTION_DefineDetour(CBazaarConfirmationWnd__WndNotification);
+
 char* __cdecl EQAPP_DETOURED_FUNCTION_CrashDetected();
 int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown);
 int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive, void* unknown, int zero);
@@ -28,10 +30,12 @@ int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__FollowPlayerAI(void* this_ptr, 
 int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__ChangeHeight(void* this_ptr, void* not_used, float height, float a2, float a3, int a4);
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__InterpretCmd(void* this_ptr, void* not_used, class EQPlayer* player, const char* text);
-int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__StartCasting(void* this_ptr, void* not_used, EQ::CEverQuest__StartCasting_Message_ptr message);
+int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__StartCasting(void* this_ptr, void* not_used, EQMessage::CEverQuest__StartCasting_ptr message);
 int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void* not_used, const char* text, int textColor, bool one_1, bool one_2, bool zero_1);
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* this_ptr, void* not_used, char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11);
+
+int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarConfirmationWnd__WndNotification(void* this_ptr, void* not_used, uint32_t xwndAddress, uint32_t xwndMessage, void* unknown);
 
 void EQAPP_Detours_Load()
 {
@@ -49,6 +53,8 @@ void EQAPP_Detours_Load()
     EQ_MACRO_FUNCTION_AddDetour(CEverQuest__dsp_chat);
 
     EQ_MACRO_FUNCTION_AddDetour(CBazaarSearchWnd__AddItemToList);
+
+    ////EQ_MACRO_FUNCTION_AddDetour(CBazaarConfirmationWnd__WndNotification);
 }
 
 void EQAPP_Detours_Unload()
@@ -67,6 +73,8 @@ void EQAPP_Detours_Unload()
     EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__dsp_chat);
 
     EQ_MACRO_FUNCTION_RemoveDetour(CBazaarSearchWnd__AddItemToList);
+
+    ////EQ_MACRO_FUNCTION_RemoveDetour(CBazaarConfirmationWnd__WndNotification);
 }
 
 char* __cdecl EQAPP_DETOURED_FUNCTION_CrashDetected()
@@ -93,6 +101,11 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
         return EQAPP_REAL_FUNCTION_DrawNetStatus(x, y, unknown);
     }
 
+    if (EQ_IsInGame() == false)
+    {
+        return EQAPP_REAL_FUNCTION_DrawNetStatus(x, y, unknown);
+    }
+
     if (g_EQAppIsLoaded == 0)
     {
         EQAPP_Load();
@@ -111,6 +124,30 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
     if (EQAPP_Timer_HasTimeElapsed(g_EQAppWindowTitleTimer, g_EQAppWindowTitleTimerInterval) == true)
     {
         EQAPP_SetWindowTitleToPlayerSpawnName();
+    }
+
+    if (g_BoxChatIsEnabled == true)
+    {
+        if (g_BoxChatIsConnected == true)
+        {
+            EQAPP_BoxChat_Execute();
+        }
+        else
+        {
+            if (g_BoxChatAutoConnect == true)
+            {
+                if (EQAPP_Timer_HasTimeElapsed(g_BoxChatAutoConnectTimer, g_BoxChatAutoConnectTimerInterval) == true)
+                {
+                    if (EQAPP_BoxChat_IsServerRunning() == true)
+                    {
+                        if (g_EQAppPlayerName.size() != 0)
+                        {
+                            EQAPP_BoxChat_Connect(g_EQAppPlayerName);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     if (g_SleepIsEnabled == true)
@@ -161,9 +198,9 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
         EQAPP_ChangeHeight_Execute();
     }
 
-    if (g_BazaarFilterDoQueryIsEnabled == true)
+    if (g_BazaarBotIsEnabled == true)
     {
-        EQAPP_BazaarFilter_DoQuery();
+        EQAPP_BazaarBot_Execute();
     }
 
     EQAPP_Console_Print();
@@ -277,7 +314,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__InterpretCmd(void* this_ptr, 
     return EQAPP_REAL_FUNCTION_CEverQuest__InterpretCmd(this_ptr, player, text);
 }
 
-int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__StartCasting(void* this_ptr, void* not_used, EQ::CEverQuest__StartCasting_Message_ptr message)
+int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__StartCasting(void* this_ptr, void* not_used, EQMessage::CEverQuest__StartCasting_ptr message)
 {
     if (g_EQAppShouldUnload == 1)
     {
@@ -383,4 +420,20 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* thi
     }
 
     return EQAPP_REAL_FUNCTION_CBazaarSearchWnd__AddItemToList(this_ptr, itemName, itemPrice, traderName, a4, a5, a6, a7, a8, a9, a10, a11);
+}
+
+int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarConfirmationWnd__WndNotification(void* this_ptr, void* not_used, uint32_t xwndAddress, uint32_t xwndMessage, void* unknown)
+{
+    if (g_EQAppShouldUnload == 1)
+    {
+        return EQAPP_REAL_FUNCTION_CBazaarConfirmationWnd__WndNotification(this_ptr, xwndAddress, xwndMessage, unknown);
+    }
+
+    std::cout << "----------------------------------------" << std::endl;
+    std::cout << "CBazaarConfirmationWnd::WndNotification() XWnd: " << std::hex << xwndAddress << std::dec << std::endl;
+    std::cout << "CBazaarConfirmationWnd::WndNotification() Message: " << xwndMessage << std::endl;
+    std::cout << "CBazaarConfirmationWnd::WndNotification() Unknown: " << unknown << std::endl;
+    std::cout << "----------------------------------------" << std::endl;
+
+    return EQAPP_REAL_FUNCTION_CBazaarConfirmationWnd__WndNotification(this_ptr, xwndAddress, xwndMessage, unknown);
 }

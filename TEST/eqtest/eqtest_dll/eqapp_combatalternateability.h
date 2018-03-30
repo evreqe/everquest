@@ -75,9 +75,11 @@ void EQAPP_CombatAlternateAbility_Execute()
         return;
     }
 
-    auto playerEndurancePercent = EQ_GetSpawnEnduranceCurrent(playerSpawn);
+    auto spawnHPPercent = EQ_GetSpawnHPPercent(playerSpawn);
+    auto spawnEndurancePercent = EQ_GetSpawnEndurancePercent(playerSpawn);
 
     std::vector<uint32_t> alternateAbilityList;
+    alternateAbilityList.reserve(32);
 
     alternateAbilityList.push_back(EQAlternateAbilities::Special::Banestrike);
 
@@ -115,7 +117,7 @@ void EQAPP_CombatAlternateAbility_Execute()
 
     if (playerSpawnClass == EQ_CLASS_BARD)
     {
-        if (playerEndurancePercent > 50)
+        if (spawnEndurancePercent > 75)
         {
             alternateAbilityList.push_back(EQAlternateAbilities::Bard::Boastful_Bellow);
             alternateAbilityList.push_back(EQAlternateAbilities::Bard::Vainglorious_Shout);
@@ -137,13 +139,17 @@ void EQAPP_CombatAlternateAbility_Execute()
         alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Rampage);
         alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Blinding_Fury);
         alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Drawn_to_Blood);
-        alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Blood_Pact);
         alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Desperation);
         alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Vehement_Rage);
-        alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Savage_Spirit);
         alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Fundament_Third_Spire_of_Savagery);
         alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Juggernaut_Surge);
-        alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Untamed_Rage);
+
+        if (spawnHPPercent > 90)
+        {
+            alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Blood_Pact);
+            alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Savage_Spirit);
+            alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Untamed_Rage);
+        }
     }
 
     for (auto& alternateAbility : alternateAbilityList)

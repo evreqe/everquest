@@ -17,6 +17,9 @@ EQApp::Timer g_BoxChatInterpretCommandTimer = EQAPP_Timer_GetTimeNow();
 EQApp::Timer g_BoxChatKeepAliveTimer = EQAPP_Timer_GetTimeNow();
 EQApp::TimerInterval g_BoxChatKeepAliveTimerInterval = 3;
 
+EQApp::Timer g_BoxChatAutoConnectTimer = EQAPP_Timer_GetTimeNow();
+EQApp::TimerInterval g_BoxChatAutoConnectTimerInterval = 3;
+
 char g_BoxChatServerIPAddress[EQBCS_STRING_MAX];
 char g_BoxChatServerPort[EQBCS_STRING_MAX];
 
@@ -39,6 +42,7 @@ void EQAPP_BoxChat_DisconnectEx();
 bool EQAPP_BoxChat_SendText(std::string text);
 void EQAPP_BoxChat_Execute();
 void EQAPP_BoxChat_InterpretCommands();
+bool EQAPP_BoxChat_IsServerRunning();
 
 void EQAPP_BoxChat_Toggle()
 {
@@ -310,4 +314,51 @@ void EQAPP_BoxChat_InterpretCommands()
     std::cout << "Box Chat Interpret Command: " << commandText << std::endl;
 
     EQ_InterpretCommand(commandText.c_str());
+}
+
+bool EQAPP_BoxChat_IsServerRunning()
+{
+    bool result = false;
+
+    HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
+    if (snapshot == INVALID_HANDLE_VALUE)
+    {
+        return result;
+    }
+
+    PROCESSENTRY32 pe32 = {0};
+    pe32.dwSize = sizeof(pe32);
+
+    if (Process32First(snapshot, &pe32))
+    {
+        for (;;)
+        {
+            if(lstrcmpi(pe32.szExeFile, L"eqbcs.exe") == 0)
+            {
+                result = true;
+                break;
+            }
+
+            if (!Process32Next(snapshot, &pe32))
+            {
+                if (GetLastError() != ERROR_NO_MORE_FILES)
+                {
+                    result = false;
+                }
+
+                break;
+            }
+            else
+            {
+                if (GetLastError() != ERROR_NO_MORE_FILES)
+                {
+                    result = false;
+                }
+            }
+        }
+
+        CloseHandle(snapshot);
+    }
+
+    return result;
 }

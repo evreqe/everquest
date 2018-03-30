@@ -119,5 +119,14 @@
     <ClInclude Include="eqapp_followai.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\eq\eq_messages.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\eq\eq_zones.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_bazaarbot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

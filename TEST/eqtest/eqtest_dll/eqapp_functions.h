@@ -6,11 +6,11 @@ template <class T>
 void EQAPP_Log(const char* text, T number);
 
 void EQAPP_PrintBool(const char* text, bool& b);
-void EQAPP_PrintDebugMessage(const char* functionName, const std::string& text);
+void EQAPP_PrintDebugText(const char* functionName, const std::string& text);
 
 void EQAPP_EnableDebugPrivileges();
 DWORD EQAPP_GetModuleBaseAddress(DWORD processID, const wchar_t* moduleName);
-bool EQAPP_IsForegroundWindowCurrentProcessId();
+bool EQAPP_IsForegroundWindowCurrentProcessID();
 bool EQAPP_IsKeyDown(int vkKey);
 
 uint32_t EQAPP_GetRandomNumber(uint32_t low, uint32_t high);
@@ -28,11 +28,11 @@ void EQAPP_SetWindowTitleToPlayerSpawnName();
 template <class T>
 void EQAPP_Log(const char* text, T number)
 {
-    std::stringstream filePath;
-    filePath << "eqtestlog.txt";
+    std::stringstream fileName;
+    fileName << g_EQAppName << "-log.txt";
 
     std::fstream file;
-    file.open(filePath.str().c_str(), std::ios::out | std::ios::app);
+    file.open(fileName.str().c_str(), std::ios::out | std::ios::app);
     file << "[" << __TIME__ << "] " << text << " (" << number << ")" << " Hex(" << std::hex << number << std::dec << ")" << std::endl;
     file.close();
 }
@@ -42,9 +42,9 @@ void EQAPP_PrintBool(const char* text, bool& b)
     std::cout << text << ": " << (b ? "On" : "Off") << std::endl;
 }
 
-void EQAPP_PrintDebugMessage(const char* functionName, const std::string& text)
+void EQAPP_PrintDebugText(const char* functionName, const std::string& text)
 {
-    if (g_EQAppDebugMessageIsEnabled == false)
+    if (g_EQAppDebugTextIsEnabled == false)
     {
         return;
     }
@@ -112,7 +112,7 @@ DWORD EQAPP_GetModuleBaseAddress(DWORD processID, const wchar_t* moduleName)
     return moduleBaseAddress;
 }
 
-bool EQAPP_IsForegroundWindowCurrentProcessId()
+bool EQAPP_IsForegroundWindowCurrentProcessID()
 {
     HWND foregroundHwnd = GetForegroundWindow();
 
@@ -182,7 +182,7 @@ std::string EQAPP_ReadFileContents(const char* filename)
         std::stringstream ss;
         ss << "failed to open file: " << filePathStr;
 
-        EQAPP_PrintDebugMessage(__FUNCTION__, ss.str());
+        EQAPP_PrintDebugText(__FUNCTION__, ss.str());
         return std::string();
     }
 
@@ -207,7 +207,7 @@ void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list, 
         std::stringstream ss;
         ss << "failed to open file: " << filePathStr;
 
-        EQAPP_PrintDebugMessage(__FUNCTION__, ss.str());
+        EQAPP_PrintDebugText(__FUNCTION__, ss.str());
         return;
     }
 

@@ -4,6 +4,11 @@
 
 bool g_ESPIsEnabled = false;
 
+bool g_ESPHeightFilterIsEnabled = false;
+
+float g_ESPHeightFilterDistanceLow  = 10.0f;
+float g_ESPHeightFilterDistanceHigh = 10.0f;
+
 bool g_ESPShowSpawnIDIsEnabled = false;
 
 float g_ESPDistance = 400.0f;
@@ -18,6 +23,12 @@ void EQAPP_ESP_Toggle()
 {
     EQ_ToggleBool(g_ESPIsEnabled);
     EQAPP_PrintBool("ESP", g_ESPIsEnabled);
+}
+
+void EQAPP_ESP_HeightFilter_Toggle()
+{
+    EQ_ToggleBool(g_ESPHeightFilterIsEnabled);
+    EQAPP_PrintBool("ESP Height Filter", g_ESPHeightFilterIsEnabled);
 }
 
 void EQAPP_ESP_ShowSpawnID_Toggle()
@@ -83,6 +94,26 @@ void EQAPP_ESP_Execute()
             {
                 spawn = EQ_GetSpawnNext(spawn);
                 continue;
+            }
+
+            if (g_ESPHeightFilterIsEnabled == true)
+            {
+                if (spawnZ < playerSpawnZ)
+                {
+                    if ((playerSpawnZ - spawnZ) > g_ESPHeightFilterDistanceLow)
+                    {
+                        spawn = EQ_GetSpawnNext(spawn);
+                        continue;
+                    }
+                }
+                else if (spawnZ > playerSpawnZ)
+                {
+                    if ((spawnZ - playerSpawnZ) > g_ESPHeightFilterDistanceHigh)
+                    {
+                        spawn = EQ_GetSpawnNext(spawn);
+                        continue;
+                    }
+                }
             }
         }
 

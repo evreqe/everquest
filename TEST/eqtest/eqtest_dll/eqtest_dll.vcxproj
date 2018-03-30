@@ -164,11 +164,14 @@
     <ClInclude Include="..\eq\eq_keys.h" />
     <ClInclude Include="..\eq\eq_macros.h" />
     <ClInclude Include="..\eq\eq_memory.h" />
+    <ClInclude Include="..\eq\eq_messages.h" />
     <ClInclude Include="..\eq\eq_virtualkeycodes.h" />
+    <ClInclude Include="..\eq\eq_zones.h" />
     <ClInclude Include="eqapp.h" />
     <ClInclude Include="eqapp_alwaysattack.h" />
     <ClInclude Include="eqapp_alwayshotbutton.h" />
     <ClInclude Include="eqapp_autoalternateability.h" />
+    <ClInclude Include="eqapp_bazaarbot.h" />
     <ClInclude Include="eqapp_bazaarfilter.h" />
     <ClInclude Include="eqapp_boxchat.h" />
     <ClInclude Include="eqapp_changeheight.h" />

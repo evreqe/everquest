@@ -2,6 +2,8 @@
 
 bool g_SleepIsEnabled = false;
 
+DWORD g_SleepInterval = 100; // delay in milliseconds
+
 void EQAPP_Sleep_Toggle();
 void EQAPP_Sleep_Execute();
 
@@ -13,5 +15,5 @@ void EQAPP_Sleep_Toggle()
 
 void EQAPP_Sleep_Execute()
 {
-    Sleep(100);
+    Sleep(g_SleepInterval);
 }

@@ -58,6 +58,7 @@
 #include "eqapp_autoalternateability.h"
 #include "eqapp_combatalternateability.h"
 #include "eqapp_bazaarfilter.h"
+#include "eqapp_bazaarbot.h"
 #include "eqapp_changeheight.h"
 #include "eqapp_spawncastspell.h"
 #include "eqapp_followai.h"
@@ -72,10 +73,23 @@
 
 void EQAPP_Load()
 {
+    g_EQAppPlayerName = EQ_GetPlayerSpawnName();
+
     EQAPP_BazaarFilter_Load();
     EQAPP_SpellList_Load();
 
     EQAPP_SetWindowTitleToPlayerSpawnName();
+
+    if (g_BoxChatAutoConnect == true)
+    {
+        if (EQAPP_BoxChat_IsServerRunning() == true)
+        {
+            if (g_EQAppPlayerName.size() != 0)
+            {
+                EQAPP_BoxChat_Connect(g_EQAppPlayerName);
+            }
+        }
+    }
 
     std::string timeText = EQAPP_Timer_GetTimeAsString();
 
@@ -126,9 +140,6 @@ void EQAPP_InitializeAddressesAndPointers()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight);
 
-    ////EQAPP_FixAddress(EQ_ADDRESS_POINTER_PLAYER_CHARACTER);
-    ////EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQ_Character__eqspa_movement_rate);
-
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CXWndManager);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows);
 
@@ -145,6 +156,10 @@ void EQAPP_InitializeAddressesAndPointers()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__HandleBazaarMsg);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem);
+
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarConfirmationWnd__WndNotification);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -162,30 +177,15 @@ void EQAPP_InitializeAddressesAndPointers()
 
     EQ_CLASS_POINTER_CBazaarSearchWnd_pptr = (EQClass::CBazaarSearchWnd**)EQ_ADDRESS_POINTER_CBazaarSearchWnd;
     EQ_CLASS_POINTER_CBazaarSearchWnd = (*EQ_CLASS_POINTER_CBazaarSearchWnd_pptr);
+
+    EQ_CLASS_POINTER_CBazaarConfirmationWnd_pptr = (EQClass::CBazaarConfirmationWnd**)EQ_ADDRESS_POINTER_CBazaarConfirmationWnd;
+    EQ_CLASS_POINTER_CBazaarConfirmationWnd = (*EQ_CLASS_POINTER_CBazaarConfirmationWnd_pptr);
 }
 
 DWORD WINAPI EQAPP_ThreadLoop(LPVOID param)
 {
     while (g_EQAppShouldUnload == 0)
     {
-        if (g_BoxChatIsEnabled == true)
-        {
-            if (g_BoxChatIsConnected == true)
-            {
-                EQAPP_BoxChat_Execute();
-            }
-            else
-            {
-                if (g_BoxChatAutoConnect == true)
-                {
-                    if (g_EQAppPlayerName.size() != 0)
-                    {
-                        EQAPP_BoxChat_Connect(g_EQAppPlayerName);
-                    }
-                }
-            }
-        }
-
         Sleep(100);
     }
 

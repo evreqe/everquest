@@ -24,6 +24,7 @@ std::map<std::string, std::function<void()>> g_InterpretCmdList =
     {"//CombatAlternateAbility",       &EQAPP_CombatAlternateAbility_Toggle},
     {"//CAA",                          &EQAPP_CombatAlternateAbility_Toggle},
     {"//ESP",                          &EQAPP_ESP_Toggle},
+    {"//ESPHeightFilter",              &EQAPP_ESP_HeightFilter_Toggle},
     {"//ESPShowSpawnID",               &EQAPP_ESP_ShowSpawnID_Toggle},
     {"//ChangeHeight",                 &EQAPP_ChangeHeight_Toggle},
     {"//CH",                           &EQAPP_ChangeHeight_Toggle},
@@ -34,22 +35,38 @@ std::map<std::string, std::function<void()>> g_InterpretCmdList =
     {"//LoadBazaarFilter",             &EQAPP_BazaarFilter_Load},
     {"//BazaarFilter",                 &EQAPP_BazaarFilter_Toggle},
     {"//BF",                           &EQAPP_BazaarFilter_Toggle},
-    {"//BazaarFilterDoQuery",          &EQAPP_BazaarFilter_DoQuery_Toggle},
-    {"//BFDQ",                         &EQAPP_BazaarFilter_DoQuery_Toggle},
+    {"//BazaarFilterBeep",             &EQAPP_BazaarFilter_Beep_Toggle},
+    {"//BFB",                          &EQAPP_BazaarFilter_Beep_Toggle},
+    {"//BazaarFilterList",             &EQAPP_BazaarFilter_PrintItemNameList},
+    {"//BFL",                          &EQAPP_BazaarFilter_PrintItemNameList},
+    {"//BFB",                          &EQAPP_BazaarFilter_Beep_Toggle},
+    {"//BazaarBot",                    &EQAPP_BazaarBot_Toggle},
+    {"//BB",                           &EQAPP_BazaarBot_Toggle},
     {"//FollowAI",                     &EQAPP_FollowAI_Toggle},
     ////{"//Null",                         &EQAPP_InterpretCmd_NULL},
     {"//Test",                         &EQAPP_InterpretCmd_NULL},
+    {"//Pause",                        &EQAPP_InterpretCmd_NULL},
+    {"//Beep",                         &EQAPP_InterpretCmd_NULL},
+    {"//BazaarFindItems",              &EQAPP_InterpretCmd_NULL},
+    {"//BazaarBuyItem",                &EQAPP_InterpretCmd_NULL},
+    {"//BazaarToParcels",              &EQAPP_InterpretCmd_NULL},
+    {"//Screencap",                    &EQAPP_InterpretCmd_NULL},
     {"//Screenshot",                   &EQAPP_InterpretCmd_NULL},
     {"//Origin",                       &EQAPP_InterpretCmd_NULL},
     {"//Gate",                         &EQAPP_InterpretCmd_NULL},
+    {"//MassGroupBuff",                &EQAPP_InterpretCmd_NULL},
+    {"//MGB",                          &EQAPP_InterpretCmd_NULL},
     {"//ThroneOfHeroes",               &EQAPP_InterpretCmd_NULL},
     {"//GuildLobby",                   &EQAPP_InterpretCmd_NULL},
     {"//HarmonicDissonance",           &EQAPP_InterpretCmd_NULL},
     {"//TheaterOfBlood",               &EQAPP_InterpretCmd_NULL},
     {"//BindAffinity",                 &EQAPP_InterpretCmd_NULL},
     {"//Identify",                     &EQAPP_InterpretCmd_NULL},
+    {"//ID",                           &EQAPP_InterpretCmd_NULL},
     {"//LessonOfTheDevoted",           &EQAPP_InterpretCmd_NULL},
+    {"//EXP",                          &EQAPP_InterpretCmd_NULL},
     {"//ExpedientRecovery",            &EQAPP_InterpretCmd_NULL},
+    {"//RES",                          &EQAPP_InterpretCmd_NULL},
     {"//SteadfastServant",             &EQAPP_InterpretCmd_NULL},
     {"//WindowTitle",                  &EQAPP_InterpretCmd_NULL},
     {"//AcceptInvite",                 &EQAPP_InterpretCmd_NULL},
@@ -68,6 +85,7 @@ std::map<std::string, std::function<void()>> g_InterpretCmdList =
     {"//Follow",                       &EQAPP_InterpretCmd_NULL},
     {"//StopFollow",                   &EQAPP_InterpretCmd_NULL},
     {"//StopCast",                     &EQAPP_InterpretCmd_NULL},
+    {"//StopSong",                     &EQAPP_InterpretCmd_NULL},
     {"//StopAction",                   &EQAPP_InterpretCmd_NULL},
     {"//ClearTarget",                  &EQAPP_InterpretCmd_NULL},
     {"//CloseTopWindow",               &EQAPP_InterpretCmd_NULL},
@@ -77,7 +95,10 @@ std::map<std::string, std::function<void()>> g_InterpretCmdList =
     {"//Use",                          &EQAPP_InterpretCmd_NULL},
     {"//Jump",                         &EQAPP_InterpretCmd_NULL},
     {"//Duck",                         &EQAPP_InterpretCmd_NULL},
+    {"//Crouch",                       &EQAPP_InterpretCmd_NULL},
     {"//SitStand",                     &EQAPP_InterpretCmd_NULL},
+    {"//Sit",                          &EQAPP_InterpretCmd_NULL},
+    {"//Stand",                        &EQAPP_InterpretCmd_NULL},
     {"//RunWalk",                      &EQAPP_InterpretCmd_NULL},
     {"//ConfirmNo",                    &EQAPP_InterpretCmd_NULL},
     {"//ConfirmYes",                   &EQAPP_InterpretCmd_NULL},
@@ -100,13 +121,15 @@ std::map<std::string, std::function<void()>> g_InterpretCmdList =
     {"//CloseBags",                    &EQAPP_InterpretCmd_NULL},
     {"//HotButton1",                   &EQAPP_InterpretCmd_NULL},
     {"//HotButton1_1",                 &EQAPP_InterpretCmd_NULL},
+    {"//Discipline1",                  &EQAPP_InterpretCmd_NULL},
     {"//XTargetCycle",                 &EQAPP_InterpretCmd_NULL},
     {"//XTarget1",                     &EQAPP_InterpretCmd_NULL},
-    {"//Potion1",                      &EQAPP_InterpretCmd_NULL},
+    ////{"//Potion1",                      &EQAPP_InterpretCmd_NULL},
     {"//ESPFindName",                  &EQAPP_InterpretCmd_NULL},
     {"//ESPFindLastName",              &EQAPP_InterpretCmd_NULL},
     {"//Multiline",                    &EQAPP_InterpretCmd_NULL},
     {"//MultilineRandom",              &EQAPP_InterpretCmd_NULL},
+    {"//Cast",                         &EQAPP_InterpretCmd_NULL},
     {"//CastRandom",                   &EQAPP_InterpretCmd_NULL},
     {"//DoAbility",                    &EQAPP_InterpretCmd_NULL},
     {"//DoAbilityRandom",              &EQAPP_InterpretCmd_NULL},
@@ -144,6 +167,21 @@ bool EQAPP_InterpretCmd_HandleEvent_CEverQuest__InterpretCmd(void* this_ptr, cla
     if (commandText.size() == 0)
     {
         return true;
+    }
+
+    // delete comments from command text
+    std::string::size_type findComment1 = commandText.find(" #");
+    if (findComment1 != std::string::npos)
+    {
+        commandText = commandText.substr(0, findComment1);
+    }
+    else
+    {
+        std::string::size_type findComment2 = commandText.find("#");
+        if (findComment2 != std::string::npos)
+        {
+            commandText = commandText.substr(0, findComment2);
+        }
     }
 
     if (commandText.find("%PlayerID") != std::string::npos)
@@ -337,12 +375,53 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
     {
         EQ_WriteChatText("Test!");
 
-        EQ_InterpretCommand("/say hail");
+        return true;
+    }
+
+    if (commandText == "//Beep")
+    {
+        EQAPP_Beep();
 
         return true;
     }
 
-    if (commandText == "//Screenshot")
+    if (commandText == "//BazaarFindItems")
+    {
+        if (EQ_BazaarConfirmationWindow_IsOpen() == false)
+        {
+            if (EQ_BazaarSearchWindow_IsOpen() == true)
+            {
+                EQ_BazaarSearchWindow_FindItems();
+            }
+        }
+
+        return true;
+    }
+
+    if (commandText == "//BazaarBuyItem")
+    {
+        if (EQ_BazaarConfirmationWindow_IsOpen() == false)
+        {
+            if (EQ_BazaarSearchWindow_IsOpen() == true)
+            {
+                EQ_BazaarSearchWindow_BuyItem(0);
+            }
+        }
+
+        return true;
+    }
+
+    if (commandText == "//BazaarToParcels")
+    {
+        if (EQ_BazaarConfirmationWindow_IsOpen() == true)
+        {
+            EQ_BazaarConfirmationWindow_ClickToParcelsButton();
+        }
+
+        return true;
+    }
+
+    if (commandText == "//Screencap" || commandText == "//Screenshot")
     {
         EQ_ExecuteCommand(EQ_EXECUTECMD_SCREENCAP, 1);
 
@@ -361,17 +440,15 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
 
     if (commandText == "//Gate")
     {
-        // TODO: per class
+        std::stringstream ss;
+        ss << "/alt activate " << EQAlternateAbilities::Shared::Gate;
 
-        //std::stringstream ss;
-        //ss << "/alt activate " << EQAlternateAbilities::;
-
-        //EQ_InterpretCommand(ss.str().c_str());
+        EQ_InterpretCommand(ss.str().c_str());
 
         return true;
     }
 
-    if (commandText == "//MassGroupBuff")
+    if (commandText == "//MassGroupBuff" || commandText == "//MGB")
     {
         // TODO: per class
 
@@ -413,7 +490,7 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (commandText == "//Identify")
+    if (commandText == "//Identify" || commandText == "//ID")
     {
         std::stringstream ss;
         ss << "/alt activate " << EQAlternateAbilities::General::Identify;
@@ -423,7 +500,7 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (commandText == "//LessonOfTheDevoted")
+    if (commandText == "//LessonOfTheDevoted" || commandText == "//EXP")
     {
         std::stringstream ss;
         ss << "/alt activate " << EQAlternateAbilities::Special::Lesson_of_the_Devoted;
@@ -433,7 +510,7 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (commandText == "//ExpendientRecovery")
+    if (commandText == "//ExpendientRecovery" || commandText == "//RES")
     {
         std::stringstream ss;
         ss << "/alt activate " << EQAlternateAbilities::Special::Expedient_Recovery;
@@ -679,6 +756,14 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
         return true;
     }
 
+    if (commandText == "//StopSong")
+    {
+        EQ_InterpretCommand("/stopsong");
+        EQ_InterpretCommand("/melody");
+
+        return true;
+    }
+
     if (commandText == "//StopAction")
     {
         EQ_ExecuteCommand(EQ_EXECUTECMD_CMD_STOP_ACTION, 1);
@@ -738,9 +823,17 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (commandText == "//Duck")
+    if (commandText == "//Duck" || commandText == "//Crouch")
     {
-        EQ_ExecuteCommand(EQ_EXECUTECMD_DUCK, 1);
+        auto playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn != NULL)
+        {
+            auto spawnStandingState = EQ_GetSpawnStandingState(playerSpawn);
+            if (spawnStandingState != EQ_STANDING_STATE_DUCKING)
+            {
+                EQ_ExecuteCommand(EQ_EXECUTECMD_DUCK, 1);
+            }
+        }
 
         return true;
     }
@@ -748,6 +841,36 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
     if (commandText == "//SitStand")
     {
         EQ_ExecuteCommand(EQ_EXECUTECMD_SIT_STAND, 1);
+
+        return true;
+    }
+
+    if (commandText == "//Sit")
+    {
+        auto playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn != NULL)
+        {
+            auto spawnStandingState = EQ_GetSpawnStandingState(playerSpawn);
+            if (spawnStandingState != EQ_STANDING_STATE_SITTING)
+            {
+                EQ_ExecuteCommand(EQ_EXECUTECMD_SIT_STAND, 1);
+            }
+        }
+
+        return true;
+    }
+
+    if (commandText == "//Stand")
+    {
+        auto playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn != NULL)
+        {
+            auto spawnStandingState = EQ_GetSpawnStandingState(playerSpawn);
+            if (spawnStandingState != EQ_STANDING_STATE_STANDING)
+            {
+                EQ_InterpretCommand("/stand");
+            }
+        }
 
         return true;
     }
@@ -1594,6 +1717,46 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
         EQ_ExecuteCommand(EQ_EXECUTECMD_HOT11_12, 1);
     }
 
+    if (commandText == "//Discipline1")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_CMD_OPENING_ATTACK1, 1);
+    }
+
+    if (commandText == "//Discipline2")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_CMD_OPENING_ATTACK2, 1);
+    }
+
+    if (commandText == "//Discipline3")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_CMD_OPENING_ATTACK3, 1);
+    }
+
+    if (commandText == "//Discipline4")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_CMD_OPENING_ATTACK4, 1);
+    }
+
+    if (commandText == "//Discipline5")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_CMD_OPENING_ATTACK5, 1);
+    }
+
+    if (commandText == "//Discipline6")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_CMD_OPENING_ATTACK6, 1);
+    }
+
+    if (commandText == "//Discipline7")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_CMD_OPENING_ATTACK7, 1);
+    }
+
+    if (commandText == "//Discipline8")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_CMD_OPENING_ATTACK8, 1);
+    }
+
     if (commandText == "//XTargetCycle")
     {
         EQ_ExecuteCommand(EQ_EXECUTECMD_CYCLE_XTARGET, 1);
@@ -1911,6 +2074,29 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
         return true;
     }
 
+    if (EQAPP_String_StartsWith(commandText, "//Cast ") == true)
+    {
+        std::string numberStr = EQAPP_String_GetAfter(commandText, " ");
+        if (numberStr.size() != 0)
+        {
+            signed int number = std::stoi(numberStr);
+
+            if (number > 0 && number < (EQ_NUM_SPELL_GEMS + 1))
+            {
+                std::stringstream ss;
+                ss << "/cast " << number;
+
+                // cast the spell multiple times in case of fizzles
+                for (unsigned int i = 0; i < 4; i++)
+                {
+                    EQ_InterpretCommand(ss.str().c_str());
+                }
+            }
+        }
+
+        return true;
+    }
+
     if (EQAPP_String_StartsWith(commandText, "//CastRandom ") == true)
     {
         EQAPP_InterpretCmd_InterpretArgumentsRandom(commandText, "/cast ");
@@ -1982,8 +2168,6 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
 
     if (commandText == "//BoxChatConnect" || commandText == "//BCC")
     {
-        g_BoxChatAutoConnect = false;
-
         std::string playerSpawnName = EQ_GetPlayerSpawnName();
         if (playerSpawnName.size() != 0)
         {
@@ -1995,8 +2179,6 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
             EQAPP_SetWindowTitleToPlayerSpawnName();
         }
 
-        g_BoxChatAutoConnect = true;
-
         return true;
     }
 
@@ -2007,42 +2189,54 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (g_BoxChatIsConnected == false)
+
+    if (EQAPP_String_StartsWith(commandText, "//BoxChatTell ") == true || EQAPP_String_StartsWith(commandText, "//BCT ") == true)
     {
-        std::cout << "Error: You must first connect to the Box Chat server!" << std::endl;
+        if (g_BoxChatIsConnected == false)
+        {
+            std::cout << "Error: You must first connect to the Box Chat server!" << std::endl;
+            return true;
+        }
+
+        std::string name = EQAPP_String_GetAfter(commandText, " ");
+        if (name.size() != 0)
+        {
+            EQAPP_BoxChat_SendText(commandText);
+
+            std::cout << "Box Chat to '" << name << "': " << commandText << std::endl;
+        }
+
+        return true;
     }
-    else
+
+    if (EQAPP_String_StartsWith(commandText, "//BoxChatOthers ") == true || EQAPP_String_StartsWith(commandText, "//BCA ") == true)
     {
-        if (EQAPP_String_StartsWith(commandText, "//BoxChatTell ") == true || EQAPP_String_StartsWith(commandText, "//BCT ") == true)
+        if (g_BoxChatIsConnected == false)
         {
-            std::string name = EQAPP_String_GetAfter(commandText, " ");
-            if (name.size() != 0)
-            {
-                EQAPP_BoxChat_SendText(commandText);
-
-                std::cout << "Box Chat to '" << name << "': " << commandText << std::endl;
-            }
-
+            std::cout << "Error: You must first connect to the Box Chat server!" << std::endl;
             return true;
         }
 
-        if (EQAPP_String_StartsWith(commandText, "//BoxChatOthers ") == true || EQAPP_String_StartsWith(commandText, "//BCA ") == true)
+        EQAPP_BoxChat_SendText(commandText);
+
+        std::cout << "Box Chat to Others: " << commandText << std::endl;
+
+        return true;
+    }
+
+    if (EQAPP_String_StartsWith(commandText, "//BoxChatAll ") == true || EQAPP_String_StartsWith(commandText, "//BCAA ") == true)
+    {
+        if (g_BoxChatIsConnected == false)
         {
-            EQAPP_BoxChat_SendText(commandText);
-
-            std::cout << "Box Chat to Others: " << commandText << std::endl;
-
+            std::cout << "Error: You must first connect to the Box Chat server!" << std::endl;
             return true;
         }
 
-        if (EQAPP_String_StartsWith(commandText, "//BoxChatAll ") == true || EQAPP_String_StartsWith(commandText, "//BCAA ") == true)
-        {
-            EQAPP_BoxChat_SendText(commandText);
+        EQAPP_BoxChat_SendText(commandText);
 
-            std::cout << "Box Chat to All: " << commandText << std::endl;
+        std::cout << "Box Chat to All: " << commandText << std::endl;
 
-            return true;
-        }
+        return true;
     }
 
     return false;

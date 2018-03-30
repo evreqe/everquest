@@ -75,7 +75,9 @@ void EQAPP_HUD_Execute()
         if (playerSpawn != NULL)
         {
             std::stringstream ss1;
-            ss1 << "- HP%: " << EQ_GetSpawnHPPercent(playerSpawn);
+            ss1 << "- HP: " << EQ_GetSpawnHPPercent(playerSpawn) << "%";
+            ss1 << " MP: " << EQ_GetSpawnManaPercent(playerSpawn) << "%";
+            ss1 << " END: " << EQ_GetSpawnEndurancePercent(playerSpawn) << "%";
 
             EQAPP_HUD_DrawText(ss1.str().c_str());
         }
@@ -89,6 +91,16 @@ void EQAPP_HUD_Execute()
     if (g_ESPIsEnabled == true)
     {
         EQAPP_HUD_DrawText("- ESP");
+    }
+
+    if (g_ESPHeightFilterIsEnabled == true)
+    {
+        EQAPP_HUD_DrawText("- ESP Height Filter");
+    }
+
+    if (g_ESPShowSpawnIDIsEnabled == true)
+    {
+        EQAPP_HUD_DrawText("- ESP Show Spawn ID");
     }
 
     if (g_ChangeHeightIsEnabled == true)
@@ -106,9 +118,14 @@ void EQAPP_HUD_Execute()
         EQAPP_HUD_DrawText("- Bazaar Filter");
     }
 
-    if (g_BazaarFilterDoQueryIsEnabled == true)
+    if (g_BazaarFilterBeepIsEnabled == true)
     {
-        EQAPP_HUD_DrawText("- Bazaar Filter Do Query");
+        EQAPP_HUD_DrawText("- Bazaar Filter Beep");
+    }
+
+    if (g_BazaarBotIsEnabled == true)
+    {
+        EQAPP_HUD_DrawText("- Bazaar Bot");
     }
 
 /*
