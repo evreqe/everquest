@@ -7,6 +7,8 @@ bool g_AutoAlternateAbilityIsEnabled = true;
 EQApp::Timer g_AutoAlternateAbilityTimer = EQAPP_Timer_GetTimeNow();
 EQApp::TimerInterval g_AutoAlternateAbilityTimerInterval = 3;
 
+uint32_t g_AutoAlternateAbilityList_reserve = 128;
+
 void EQAPP_AutoAlternateAbility_Toggle();
 void EQAPP_AutoAlternateAbility_Execute();
 
@@ -53,7 +55,7 @@ void EQAPP_AutoAlternateAbility_Execute()
     }
 
     std::vector<uint32_t> alternateAbilityList;
-    alternateAbilityList.reserve(32);
+    alternateAbilityList.reserve(g_AutoAlternateAbilityList_reserve);
 
     auto spawnClass = EQ_GetSpawnClass(playerSpawn);
 

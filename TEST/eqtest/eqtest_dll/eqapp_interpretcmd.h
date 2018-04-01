@@ -31,6 +31,8 @@ std::map<std::string, std::function<void()>> g_InterpretCmdList =
     {"//LoadSpellList",                &EQAPP_SpellList_Load},
     {"//SpawnCastSpell",               &EQAPP_SpawnCastSpell_Toggle},
     {"//SCS",                          &EQAPP_SpawnCastSpell_Toggle},
+    {"//SpawnCastSpellGroupChat",      &EQAPP_SpawnCastSpell_GroupChat_Toggle},
+    {"//SCSGC",                        &EQAPP_SpawnCastSpell_GroupChat_Toggle},
     {"//HUD",                          &EQAPP_HUD_Toggle},
     {"//LoadBazaarFilter",             &EQAPP_BazaarFilter_Load},
     {"//BazaarFilter",                 &EQAPP_BazaarFilter_Toggle},
@@ -46,10 +48,16 @@ std::map<std::string, std::function<void()>> g_InterpretCmdList =
     ////{"//Null",                         &EQAPP_InterpretCmd_NULL},
     {"//Test",                         &EQAPP_InterpretCmd_NULL},
     {"//Pause",                        &EQAPP_InterpretCmd_NULL},
+    {"//InGame",                       &EQAPP_InterpretCmd_NULL},
     {"//Beep",                         &EQAPP_InterpretCmd_NULL},
+    {"//BazaarDoQuery",                &EQAPP_InterpretCmd_NULL},
     {"//BazaarFindItems",              &EQAPP_InterpretCmd_NULL},
-    {"//BazaarBuyItem",                &EQAPP_InterpretCmd_NULL},
+    {"//BazaarUpdateTraders",          &EQAPP_InterpretCmd_NULL},
+    {"//BazaarReset",                  &EQAPP_InterpretCmd_NULL},
+    {"//BazaarBuy",                    &EQAPP_InterpretCmd_NULL},
     {"//BazaarToParcels",              &EQAPP_InterpretCmd_NULL},
+    {"//BazaarBeginTrader",            &EQAPP_InterpretCmd_NULL},
+    {"//BazaarEndTrader",              &EQAPP_InterpretCmd_NULL},
     {"//Screencap",                    &EQAPP_InterpretCmd_NULL},
     {"//Screenshot",                   &EQAPP_InterpretCmd_NULL},
     {"//Origin",                       &EQAPP_InterpretCmd_NULL},
@@ -181,6 +189,19 @@ bool EQAPP_InterpretCmd_HandleEvent_CEverQuest__InterpretCmd(void* this_ptr, cla
         if (findComment2 != std::string::npos)
         {
             commandText = commandText.substr(0, findComment2);
+        }
+    }
+
+    if (commandText.find("%PlayerName") != std::string::npos)
+    {
+        auto playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn != NULL)
+        {
+            auto spawnName = EQ_GetSpawnName(playerSpawn);
+            if (spawnName.size() != 0)
+            {
+                EQAPP_String_ReplaceAll(commandText, "%PlayerName", spawnName);
+            }
         }
     }
 
@@ -378,9 +399,29 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
         return true;
     }
 
+    if (commandText == "//InGame")
+    {
+        g_EQAppIsInGame = true;
+
+        return true;
+    }
+
     if (commandText == "//Beep")
     {
         EQAPP_Beep();
+
+        return true;
+    }
+
+    if (commandText == "//BazaarDoQuery")
+    {
+        if (EQ_BazaarConfirmationWindow_IsOpen() == false)
+        {
+            if (EQ_BazaarSearchWindow_IsOpen() == true)
+            {
+                EQ_BazaarSearchWindow_DoQuery();
+            }
+        }
 
         return true;
     }
@@ -391,14 +432,40 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
         {
             if (EQ_BazaarSearchWindow_IsOpen() == true)
             {
-                EQ_BazaarSearchWindow_FindItems();
+                EQ_BazaarSearchWindow_ClickFindItemsButton();
             }
         }
 
         return true;
     }
 
-    if (commandText == "//BazaarBuyItem")
+    if (commandText == "//BazaarUpdateTraders")
+    {
+        if (EQ_BazaarConfirmationWindow_IsOpen() == false)
+        {
+            if (EQ_BazaarSearchWindow_IsOpen() == true)
+            {
+                EQ_BazaarSearchWindow_ClickUpdateTradersButton();
+            }
+        }
+
+        return true;
+    }
+
+    if (commandText == "//BazaarReset")
+    {
+        if (EQ_BazaarConfirmationWindow_IsOpen() == false)
+        {
+            if (EQ_BazaarSearchWindow_IsOpen() == true)
+            {
+                EQ_BazaarSearchWindow_ClickResetButton();
+            }
+        }
+
+        return true;
+    }
+
+    if (commandText == "//BazaarBuy")
     {
         if (EQ_BazaarConfirmationWindow_IsOpen() == false)
         {
@@ -416,6 +483,26 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
         if (EQ_BazaarConfirmationWindow_IsOpen() == true)
         {
             EQ_BazaarConfirmationWindow_ClickToParcelsButton();
+        }
+
+        return true;
+    }
+
+    if (commandText == "//BazaarBeginTrader")
+    {
+        if (EQ_BazaarWindow_IsOpen() == true)
+        {
+            EQ_BazaarWindow_ClickBeginTraderButton();
+        }
+
+        return true;
+    }
+
+    if (commandText == "//BazaarEndTrader")
+    {
+        if (EQ_BazaarWindow_IsOpen() == true)
+        {
+            EQ_BazaarWindow_ClickEndTraderButton();
         }
 
         return true;
@@ -2235,6 +2322,54 @@ bool EQAPP_InterpretCmd_HandleCommandText(std::string commandText)
         EQAPP_BoxChat_SendText(commandText);
 
         std::cout << "Box Chat to All: " << commandText << std::endl;
+
+        return true;
+    }
+
+    if (commandText == "//SpawnList")
+    {
+        std::cout << "Spawn List:" << std::endl;
+
+        auto spawn = EQ_GetFirstSpawn();
+
+        while (spawn != NULL)
+        {
+            std::stringstream ss;
+
+            if (EQ_GetSpawnClass(spawn) == EQ_CLASS_OBJECT)
+            {
+                ss << "* ";
+            }
+
+            ss << "[" << EQ_GetSpawnLevel(spawn) << "]";
+
+            auto spawnName = EQ_GetSpawnName(spawn);
+            if (spawnName.size() != 0)
+            {
+                ss << " " << spawnName;
+            }
+
+            auto spawnType = EQ_GetSpawnType(spawn);
+            if (spawnType == EQ_SPAWN_TYPE_NPC)
+            {
+                auto spawnLastName = EQ_GetSpawnLastName(spawn);
+                if (spawnLastName.size() != 0)
+                {
+                    ss << " (" << spawnLastName << ")";
+                }
+            }
+
+            ss << " -";
+
+            ss << " Type=" << spawnType;
+            ss << " Race=" << EQ_GetSpawnRace(spawn);
+            ss << " Class=" << EQ_GetSpawnClass(spawn);
+            ss << " Height=" << EQ_GetSpawnHeight(spawn);
+
+            std::cout << ss.str() << std::endl;
+
+            spawn = EQ_GetSpawnNext(spawn);
+        }
 
         return true;
     }

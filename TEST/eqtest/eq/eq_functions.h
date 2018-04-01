@@ -133,15 +133,27 @@ void EQ_TurnPlayerTowardsTarget();
 
 std::vector<uint32_t> EQAPP_GetNPCSpawnIDListSortedByDistance();
 
-bool EQ_IsCXWndOpen(uint32_t xwnd);
+bool EQ_CXWnd_IsOpen(uint32_t xwndAddressPointer);
 
 bool EQ_BazaarSearchWindow_IsOpen();
-void EQ_BazaarSearchWindow_FindItems();
+void EQ_BazaarSearchWindow_DoQuery();
 bool EQ_BazaarSearchWindow_BuyItem(uint32_t listIndex);
+signed int EQ_BazaarSearchWindow_GetBuyItemListIndex();
+uint32_t EQ_BazaarSearchWindow_GetItemID(uint32_t listIndex);
+uint32_t EQ_BazaarSearchWindow_GetItemQuantity(uint32_t listIndex);
+uint32_t EQ_BazaarSearchWindow_GetItemPrice(uint32_t listIndex);
+std::string EQ_BazaarSearchWindow_GetItemName(uint32_t listIndex);
+bool EQ_BazaarSearchWindow_ClickFindItemsButton();
+bool EQ_BazaarSearchWindow_ClickUpdateTradersButton();
+bool EQ_BazaarSearchWindow_ClickResetButton();
 
 bool EQ_BazaarConfirmationWindow_IsOpen();
-void EQ_BazaarConfirmationWindow_ClickToParcelsButton();
-void EQ_BazaarConfirmationWindow_ClickCancelButton();
+bool EQ_BazaarConfirmationWindow_ClickToParcelsButton();
+bool EQ_BazaarConfirmationWindow_ClickCancelButton();
+
+bool EQ_BazaarWindow_IsOpen();
+bool EQ_BazaarWindow_ClickBeginTraderButton();
+bool EQ_BazaarWindow_ClickEndTraderButton();
 
 /* functions */
 
@@ -996,23 +1008,18 @@ std::vector<uint32_t> EQAPP_GetNPCSpawnIDListSortedByDistance()
             continue;
         }
 
-        char spawnName[EQ_SIZE_SPAWN_NAME];
-        ////memcpy(spawnName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_NAME), sizeof(spawnName));
-        std::memmove(spawnName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_NAME), sizeof(spawnName));
-
-        if (strstr(spawnName, "`s Mount") != 0)
+        auto spawnName = EQ_GetSpawnName(spawn);
+        if (spawnName.find("`s Mount") != std::string::npos)
         {
             spawn = EQ_GetSpawnNext(spawn);
             continue;
         }
 
-        if (strstr(spawnName, "Aura ") != 0)
-        {
-            spawn = EQ_GetSpawnNext(spawn);
-            continue;
-        }
+        auto spawnRace = EQ_GetSpawnRace(spawn);
+        auto spawnClass = EQ_GetSpawnClass(spawn);
 
-        if (strstr(spawnName, " Aura") != 0)
+        // skip auras
+        if (spawnRace == EQ_RACE_INVISIBLE_MAN && spawnClass == EQ_CLASS_OBJECT)
         {
             spawn = EQ_GetSpawnNext(spawn);
             continue;
@@ -1048,30 +1055,25 @@ std::vector<uint32_t> EQAPP_GetNPCSpawnIDListSortedByDistance()
     return spawnIDList;
 }
 
-bool EQ_IsCXWndOpen(uint32_t xwnd)
+bool EQ_CXWnd_IsOpen(uint32_t xwndAddressPointer)
 {
-    uint8_t isOpen = EQ_ReadMemory<uint8_t>(xwnd + EQ_OFFSET_CXWnd_IS_OPEN);
+    uint32_t window = EQ_ReadMemory<uint32_t>(xwndAddressPointer);
+    if (window == NULL)
+    {
+        return false;
+    }
+
+    uint8_t isOpen = EQ_ReadMemory<uint8_t>(window + EQ_OFFSET_CXWnd_IS_OPEN);
 
     return (isOpen == 1);
 }
 
 bool EQ_BazaarSearchWindow_IsOpen()
 {
-    uint32_t bazaarSearchWindow = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
-    if (bazaarSearchWindow == NULL)
-    {
-        return false;
-    }
-
-    if (EQ_IsCXWndOpen(bazaarSearchWindow) == false)
-    {
-        return false;
-    }
-
-    return true;
+    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CBazaarSearchWnd) == true);
 }
 
-void EQ_BazaarSearchWindow_FindItems()
+void EQ_BazaarSearchWindow_DoQuery()
 {
     EQ_CLASS_POINTER_CBazaarSearchWnd->doQuery();
 }
@@ -1084,7 +1086,8 @@ bool EQ_BazaarSearchWindow_BuyItem(uint32_t listIndex)
         return false;
     }
 
-    if (EQ_IsCXWndOpen(bazaarSearchWindow) == false)
+    uint8_t isOpen = EQ_ReadMemory<uint8_t>(bazaarSearchWindow + EQ_OFFSET_CXWnd_IS_OPEN);
+    if (isOpen == 0)
     {
         return false;
     }
@@ -1114,63 +1117,301 @@ bool EQ_BazaarSearchWindow_BuyItem(uint32_t listIndex)
     return result;
 }
 
-bool EQ_BazaarConfirmationWindow_IsOpen()
+signed int EQ_BazaarSearchWindow_GetBuyItemListIndex()
 {
-    uint32_t bazaarConfirmationWindow = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd);
-    if (bazaarConfirmationWindow == NULL)
+    uint32_t bazaarSearchWindow = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
+    if (bazaarSearchWindow == NULL)
+    {
+        return -1;
+    }
+
+    uint8_t isOpen = EQ_ReadMemory<uint8_t>(bazaarSearchWindow + EQ_OFFSET_CXWnd_IS_OPEN);
+    if (isOpen == 0)
+    {
+        return -1;
+    }
+
+    uint32_t buyItemListIndex = EQ_ReadMemory<uint32_t>(bazaarSearchWindow + EQ_OFFSET_CBazaarSearchWnd_BUY_ITEM_LIST_INDEX);
+
+    return buyItemListIndex;
+}
+
+uint32_t EQ_BazaarSearchWindow_GetItemID(uint32_t listIndex)
+{
+    uint32_t bazaarSearchWindow = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
+    if (bazaarSearchWindow == NULL)
+    {
+        return 0;
+    }
+
+    uint8_t isOpen = EQ_ReadMemory<uint8_t>(bazaarSearchWindow + EQ_OFFSET_CXWnd_IS_OPEN);
+    if (isOpen == 0)
+    {
+        return 0;
+    }
+
+    uint32_t itemID = EQ_ReadMemory<uint32_t>(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_FIRST_ITEM * listIndex) + EQ_OFFSET_CBazaarSearchWnd_ITEM_ID);
+
+    return itemID;
+}
+
+uint32_t EQ_BazaarSearchWindow_GetItemQuantity(uint32_t listIndex)
+{
+    uint32_t bazaarSearchWindow = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
+    if (bazaarSearchWindow == NULL)
+    {
+        return 0;
+    }
+
+    uint8_t isOpen = EQ_ReadMemory<uint8_t>(bazaarSearchWindow + EQ_OFFSET_CXWnd_IS_OPEN);
+    if (isOpen == 0)
+    {
+        return 0;
+    }
+
+    uint32_t itemID = EQ_ReadMemory<uint32_t>(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_FIRST_ITEM * listIndex) + EQ_OFFSET_CBazaarSearchWnd_ITEM_ID);
+    if (itemID == 0)
+    {
+        return 0;
+    }
+
+    uint32_t itemQuantity = EQ_ReadMemory<uint32_t>(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_FIRST_ITEM * listIndex) + EQ_OFFSET_CBazaarSearchWnd_ITEM_QUANTITY);
+
+    return itemQuantity;
+}
+
+uint32_t EQ_BazaarSearchWindow_GetItemPrice(uint32_t listIndex)
+{
+    uint32_t bazaarSearchWindow = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
+    if (bazaarSearchWindow == NULL)
+    {
+        return 0;
+    }
+
+    uint8_t isOpen = EQ_ReadMemory<uint8_t>(bazaarSearchWindow + EQ_OFFSET_CXWnd_IS_OPEN);
+    if (isOpen == 0)
+    {
+        return 0;
+    }
+
+    uint32_t itemID = EQ_ReadMemory<uint32_t>(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_FIRST_ITEM * listIndex) + EQ_OFFSET_CBazaarSearchWnd_ITEM_ID);
+    if (itemID == 0)
+    {
+        return 0;
+    }
+
+    uint32_t itemPrice = EQ_ReadMemory<uint32_t>(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_FIRST_ITEM * listIndex) + EQ_OFFSET_CBazaarSearchWnd_ITEM_PRICE);
+
+    return itemPrice;
+}
+
+std::string EQ_BazaarSearchWindow_GetItemName(uint32_t listIndex)
+{
+    uint32_t bazaarSearchWindow = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
+    if (bazaarSearchWindow == NULL)
+    {
+        return std::string();
+    }
+
+    uint8_t isOpen = EQ_ReadMemory<uint8_t>(bazaarSearchWindow + EQ_OFFSET_CXWnd_IS_OPEN);
+    if (isOpen == 0)
+    {
+        return std::string();
+    }
+
+    uint32_t itemID = EQ_ReadMemory<uint32_t>(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_FIRST_ITEM * listIndex) + EQ_OFFSET_CBazaarSearchWnd_ITEM_ID);
+    if (itemID == 0)
+    {
+        return std::string();
+    }
+
+    char itemName[EQ_SIZE_CBazaarSearchWnd_ITEM_NAME];
+    std::memmove(itemName, (LPVOID)(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_FIRST_ITEM * listIndex) + EQ_OFFSET_CBazaarSearchWnd_ITEM_NAME), sizeof(itemName));
+
+    return itemName;
+}
+
+bool EQ_BazaarSearchWindow_ClickFindItemsButton()
+{
+    uint32_t window = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
+    if (window == NULL)
     {
         return false;
     }
 
-    if (EQ_IsCXWndOpen(bazaarConfirmationWindow) == false)
+    uint8_t isOpen = EQ_ReadMemory<uint8_t>(window + EQ_OFFSET_CXWnd_IS_OPEN);
+    if (isOpen == 0)
     {
         return false;
     }
+
+    uint32_t button = EQ_ReadMemory<uint32_t>(window + EQ_OFFSET_CBazaarSearchWnd_XWND_BUTTON_FIND_ITEMS);
+    if (button == NULL)
+    {
+        return false;
+    }
+
+    EQ_CLASS_POINTER_CBazaarSearchWnd->WndNotification(button, EQ_XWND_MESSAGE_LEFT_CLICK, (void*)0);
 
     return true;
 }
 
-
-void EQ_BazaarConfirmationWindow_ClickToParcelsButton()
+bool EQ_BazaarSearchWindow_ClickUpdateTradersButton()
 {
-    uint32_t bazaarConfirmationWindow = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd);
-    if (bazaarConfirmationWindow == NULL)
+    uint32_t window = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
+    if (window == NULL)
     {
-        return;
+        return false;
     }
 
-    if (EQ_IsCXWndOpen(bazaarConfirmationWindow) == false)
+    uint8_t isOpen = EQ_ReadMemory<uint8_t>(window + EQ_OFFSET_CXWnd_IS_OPEN);
+    if (isOpen == 0)
     {
-        return;
+        return false;
     }
 
-    uint32_t xwndButtonToParcels = EQ_ReadMemory<uint32_t>(bazaarConfirmationWindow + EQ_OFFSET_CBazaarConfirmationWnd_XWND_BUTTON_TO_PARCELS);
-    if (xwndButtonToParcels == NULL)
+    uint32_t button = EQ_ReadMemory<uint32_t>(window + EQ_OFFSET_CBazaarSearchWnd_XWND_BUTTON_UPDATE_TRADERS);
+    if (button == NULL)
     {
-        return;
+        return false;
     }
 
-    EQ_CLASS_POINTER_CBazaarConfirmationWnd->WndNotification(xwndButtonToParcels, EQ_XWND_MESSAGE_LEFT_CLICK, (void*)0);
+    EQ_CLASS_POINTER_CBazaarSearchWnd->WndNotification(button, EQ_XWND_MESSAGE_LEFT_CLICK, (void*)0);
+
+    return true;
 }
 
-void EQ_BazaarConfirmationWindow_ClickCancelButton()
+bool EQ_BazaarSearchWindow_ClickResetButton()
 {
-    uint32_t bazaarConfirmationWindow = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd);
-    if (bazaarConfirmationWindow == NULL)
+    uint32_t window = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
+    if (window == NULL)
     {
-        return;
+        return false;
     }
 
-    if (EQ_IsCXWndOpen(bazaarConfirmationWindow) == false)
+    uint8_t isOpen = EQ_ReadMemory<uint8_t>(window + EQ_OFFSET_CXWnd_IS_OPEN);
+    if (isOpen == 0)
     {
-        return;
+        return false;
     }
 
-    uint32_t xwndButtonCancel = EQ_ReadMemory<uint32_t>(bazaarConfirmationWindow + EQ_OFFSET_CBazaarConfirmationWnd_XWND_BUTTON_CANCEL);
-    if (xwndButtonCancel == NULL)
+    uint32_t button = EQ_ReadMemory<uint32_t>(window + EQ_OFFSET_CBazaarSearchWnd_XWND_BUTTON_RESET);
+    if (button == NULL)
     {
-        return;
+        return false;
     }
 
-    EQ_CLASS_POINTER_CBazaarConfirmationWnd->WndNotification(xwndButtonCancel, EQ_XWND_MESSAGE_LEFT_CLICK, (void*)0);
+    EQ_CLASS_POINTER_CBazaarSearchWnd->WndNotification(button, EQ_XWND_MESSAGE_LEFT_CLICK, (void*)0);
+
+    return true;
+}
+
+bool EQ_BazaarConfirmationWindow_IsOpen()
+{
+    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd) == true);
+}
+
+bool EQ_BazaarConfirmationWindow_ClickToParcelsButton()
+{
+    uint32_t window = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd);
+    if (window == NULL)
+    {
+        return false;
+    }
+
+    uint8_t isOpen = EQ_ReadMemory<uint8_t>(window + EQ_OFFSET_CXWnd_IS_OPEN);
+    if (isOpen == 0)
+    {
+        return false;
+    }
+
+    uint32_t button = EQ_ReadMemory<uint32_t>(window + EQ_OFFSET_CBazaarConfirmationWnd_XWND_BUTTON_TO_PARCELS);
+    if (button == NULL)
+    {
+        return false;
+    }
+
+    EQ_CLASS_POINTER_CBazaarConfirmationWnd->WndNotification(button, EQ_XWND_MESSAGE_LEFT_CLICK, (void*)0);
+
+    return true;
+}
+
+bool EQ_BazaarConfirmationWindow_ClickCancelButton()
+{
+    uint32_t window = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd);
+    if (window == NULL)
+    {
+        return false;
+    }
+
+    uint8_t isOpen = EQ_ReadMemory<uint8_t>(window + EQ_OFFSET_CXWnd_IS_OPEN);
+    if (isOpen == 0)
+    {
+        return false;
+    }
+
+    uint32_t button = EQ_ReadMemory<uint32_t>(window + EQ_OFFSET_CBazaarConfirmationWnd_XWND_BUTTON_CANCEL);
+    if (button == NULL)
+    {
+        return false;
+    }
+
+    EQ_CLASS_POINTER_CBazaarConfirmationWnd->WndNotification(button, EQ_XWND_MESSAGE_LEFT_CLICK, (void*)0);
+
+    return true;
+}
+
+bool EQ_BazaarWindow_IsOpen()
+{
+    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CBazaarWnd) == true);
+}
+
+bool EQ_BazaarWindow_ClickBeginTraderButton()
+{
+    uint32_t window = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarWnd);
+    if (window == NULL)
+    {
+        return false;
+    }
+
+    uint8_t isOpen = EQ_ReadMemory<uint8_t>(window + EQ_OFFSET_CXWnd_IS_OPEN);
+    if (isOpen == 0)
+    {
+        return false;
+    }
+
+    uint32_t button = EQ_ReadMemory<uint32_t>(window + EQ_OFFSET_CBazaarWnd_XWND_BUTTON_BEGIN_TRADER);
+    if (button == NULL)
+    {
+        return false;
+    }
+
+    EQ_CLASS_POINTER_CBazaarWnd->WndNotification(button, EQ_XWND_MESSAGE_LEFT_CLICK, (void*)0);
+
+    return true;
+}
+
+bool EQ_BazaarWindow_ClickEndTraderButton()
+{
+    uint32_t window = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarWnd);
+    if (window == NULL)
+    {
+        return false;
+    }
+
+    uint8_t isOpen = EQ_ReadMemory<uint8_t>(window + EQ_OFFSET_CXWnd_IS_OPEN);
+    if (isOpen == 0)
+    {
+        return false;
+    }
+
+    uint32_t button = EQ_ReadMemory<uint32_t>(window + EQ_OFFSET_CBazaarWnd_XWND_BUTTON_END_TRADER);
+    if (button == NULL)
+    {
+        return false;
+    }
+
+    EQ_CLASS_POINTER_CBazaarWnd->WndNotification(button, EQ_XWND_MESSAGE_LEFT_CLICK, (void*)0);
+
+    return true;
 }

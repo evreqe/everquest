@@ -952,3 +952,8 @@ int __thiscall sub_538710(_DWORD *this, int a2, int a3, int a4)
   return 0;
 }
 */
+
+// Trader window
+uint32_t EQ_ADDRESS_POINTER_CBazaarWnd    = 0xE74E70;
+
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarWnd__WndNotification    = 0x77D300;

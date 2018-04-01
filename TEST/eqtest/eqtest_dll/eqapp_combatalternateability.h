@@ -7,6 +7,8 @@ bool g_CombatAlternateAbilityIsEnabled = true;
 EQApp::Timer g_CombatAlternateAbilityTimer = EQAPP_Timer_GetTimeNow();
 EQApp::TimerInterval g_CombatAlternateAbilityTimerInterval = 6;
 
+uint32_t g_CombatAlternateAbilityList_reserve = 128;
+
 void EQAPP_CombatAlternateAbility_Toggle();
 void EQAPP_CombatAlternateAbility_Execute();
 
@@ -79,7 +81,7 @@ void EQAPP_CombatAlternateAbility_Execute()
     auto spawnEndurancePercent = EQ_GetSpawnEndurancePercent(playerSpawn);
 
     std::vector<uint32_t> alternateAbilityList;
-    alternateAbilityList.reserve(32);
+    alternateAbilityList.reserve(g_CombatAlternateAbilityList_reserve);
 
     alternateAbilityList.push_back(EQAlternateAbilities::Special::Banestrike);
 

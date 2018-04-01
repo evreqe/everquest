@@ -17,6 +17,8 @@ namespace EQApp
 bool g_SpawnCastSpellIsEnabled = true;
 bool g_SpawnCastSpellESPIsEnabled = true;
 
+bool g_SpawnCastSpellGroupChatIsEnabled = true;
+
 std::vector<EQApp::SpawnCastSpell_sharedptr> g_SpawnCastSpellList;
 
 uint32_t g_SpawnCastSpellMinimumCastTime = 3000;
@@ -28,6 +30,7 @@ uint32_t g_SpawnCastSpellDrawTextX = 1000;
 uint32_t g_SpawnCastSpellDrawTextY = 200;
 
 void EQAPP_SpawnCastSpell_Toggle();
+void EQAPP_SpawnCastSpell_GroupChat_Toggle();
 void EQAPP_SpawnCastSpell_Execute();
 void EQAPP_SpawnCastSpell_DrawText();
 void EQAPP_SpawnCastSpell_HandleEvent_CEverQuest__StartCasting(void* this_ptr, EQMessage::CEverQuest__StartCasting_ptr message);
@@ -36,6 +39,12 @@ void EQAPP_SpawnCastSpell_Toggle()
 {
     EQ_ToggleBool(g_SpawnCastSpellIsEnabled);
     EQAPP_PrintBool("Spawn Cast Spell", g_SpawnCastSpellIsEnabled);
+}
+
+void EQAPP_SpawnCastSpell_GroupChat_Toggle()
+{
+    EQ_ToggleBool(g_SpawnCastSpellGroupChatIsEnabled);
+    EQAPP_PrintBool("Spawn Cast Spell Group Chat", g_SpawnCastSpellGroupChatIsEnabled);
 }
 
 void EQAPP_SpawnCastSpell_Execute()
@@ -171,6 +180,39 @@ void EQAPP_SpawnCastSpell_HandleEvent_CEverQuest__StartCasting(void* this_ptr, E
     if (spellName.size() == 0)
     {
         return;
+    }
+
+    if (g_SpawnCastSpellGroupChatIsEnabled == true)
+    {
+        auto playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn != NULL)
+        {
+            if (spawn == playerSpawn)
+            {
+                auto spawnClass = EQ_GetSpawnClass(playerSpawn);
+                if (spawnClass != EQ_CLASS_BARD)
+                {
+                    auto spawnName = EQ_GetPlayerSpawnName();
+                    if (spawnName.size() != 0)
+                    {
+                        std::stringstream ss;
+                        ss << "/gsay casting " << spellName;
+
+                        auto targetSpawn = EQ_GetTargetSpawn();
+                        if (targetSpawn != NULL)
+                        {
+                            auto targetName = EQ_GetTargetSpawnName();
+                            if (targetName.size() != 0)
+                            {
+                                ss << " on " << targetName;
+                            }
+                        }
+
+                        EQ_InterpretCommand(ss.str().c_str());
+                    }
+                }
+            }
+        }
     }
 
     // update if spawn already exists in the list

@@ -26,8 +26,6 @@ EQApp::TimerInterval EQAPP_Timer_GetTimeElapsed(EQApp::Timer& timer)
 
 bool EQAPP_Timer_HasTimeElapsed(EQApp::Timer& timer, EQApp::TimerInterval timerInterval)
 {
-    auto timeNow = EQAPP_Timer_GetTimeNow();
-
     auto timeElapsed = EQAPP_Timer_GetTimeElapsed(timer);
     if (timeElapsed >= timerInterval)
     {

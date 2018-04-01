@@ -2,6 +2,8 @@
 
 std::unordered_map<uint32_t, std::string> g_SpellList; // ID, Name
 
+uint32_t g_SpellList_reserve = EQ_NUM_SPELLS + 1;
+
 std::string g_SpellListFileName = "spells_us.txt";
 
 void EQAPP_SpellList_Load();
@@ -27,6 +29,7 @@ void EQAPP_SpellList_LoadEx(const char* filename)
     }
 
     g_SpellList.clear();
+    g_SpellList.reserve(g_SpellList_reserve);
 
     std::string line;
     while (std::getline(file, line))

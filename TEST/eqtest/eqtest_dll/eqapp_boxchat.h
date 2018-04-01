@@ -67,7 +67,7 @@ void EQAPP_BoxChat_Unload()
 
 bool EQAPP_BoxChat_Connect(std::string connectName)
 {
-    g_BoxChatInterpretCommandList.clear();
+    EQAPP_BoxChat_Load();
 
     // functions WSAStartup() and WSACleanup() are not needed
     // because the game already calls them for us

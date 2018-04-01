@@ -123,6 +123,8 @@ void EQAPP_ESP_Execute()
         if (result == true)
         {
             auto spawnType = EQ_GetSpawnType(spawn);
+            auto spawnRace = EQ_GetSpawnRace(spawn);
+            auto spawnClass = EQ_GetSpawnClass(spawn);
 
             if (spawnType == EQ_SPAWN_TYPE_NPC)
             {
@@ -132,13 +134,8 @@ void EQAPP_ESP_Execute()
                     continue;
                 }
 
-                if (EQAPP_String_Contains(spawnName, "Aura ") == true)
-                {
-                    spawn = EQ_GetSpawnNext(spawn);
-                    continue;
-                }
-
-                if (EQAPP_String_Contains(spawnName, " Aura") == true)
+                // skip auras
+                if (spawnRace == EQ_RACE_INVISIBLE_MAN && spawnClass == EQ_CLASS_OBJECT)
                 {
                     spawn = EQ_GetSpawnNext(spawn);
                     continue;
@@ -146,8 +143,6 @@ void EQAPP_ESP_Execute()
             }
 
             auto spawnLevel = EQ_GetSpawnLevel(spawn);
-            auto spawnRace = EQ_GetSpawnRace(spawn);
-            auto spawnClass = EQ_GetSpawnClass(spawn);
 
             std::stringstream espText;
             espText << "[" << spawnLevel;

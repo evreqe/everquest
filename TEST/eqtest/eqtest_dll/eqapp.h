@@ -17,6 +17,8 @@ volatile int g_EQAppShouldUnload = 0;
 
 const int g_EQAppKillSwitchKey = VK_F12;
 
+bool g_EQAppIsInGame = false;
+
 bool g_EQAppDebugTextIsEnabled = false;
 
 std::string g_EQAppPlayerName;

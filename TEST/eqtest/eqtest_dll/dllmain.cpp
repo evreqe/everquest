@@ -161,6 +161,9 @@ void EQAPP_InitializeAddressesAndPointers()
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarConfirmationWnd__WndNotification);
 
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CBazaarWnd);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarWnd__WndNotification);
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////
 
     EQ_CLASS_POINTER_EQPlayerManager_pptr = (EQClass::EQPlayerManager**)EQ_ADDRESS_POINTER_EQPlayerManager;
@@ -180,6 +183,9 @@ void EQAPP_InitializeAddressesAndPointers()
 
     EQ_CLASS_POINTER_CBazaarConfirmationWnd_pptr = (EQClass::CBazaarConfirmationWnd**)EQ_ADDRESS_POINTER_CBazaarConfirmationWnd;
     EQ_CLASS_POINTER_CBazaarConfirmationWnd = (*EQ_CLASS_POINTER_CBazaarConfirmationWnd_pptr);
+
+    EQ_CLASS_POINTER_CBazaarWnd_pptr = (EQClass::CBazaarWnd**)EQ_ADDRESS_POINTER_CBazaarWnd;
+    EQ_CLASS_POINTER_CBazaarWnd = (*EQ_CLASS_POINTER_CBazaarWnd_pptr);
 }
 
 DWORD WINAPI EQAPP_ThreadLoop(LPVOID param)

@@ -89,8 +89,6 @@ char* __cdecl EQAPP_DETOURED_FUNCTION_CrashDetected()
         std::cout << "********** CRASH DETECTED **********" << std::endl;
     }
 
-    ////return "CrashDetected()";
-
     return EQAPP_REAL_FUNCTION_CrashDetected();
 }
 
@@ -109,6 +107,8 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
     if (g_EQAppIsLoaded == 0)
     {
         EQAPP_Load();
+
+        g_EQAppIsInGame = true;
     }
 
     // kill switch
@@ -119,11 +119,18 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
         return EQAPP_REAL_FUNCTION_DrawNetStatus(x, y, unknown);
     }
 
+    if (g_EQAppIsInGame == false)
+    {
+        return EQAPP_REAL_FUNCTION_DrawNetStatus(x, y, unknown);
+    }
+
     g_EQAppPlayerName = EQ_GetPlayerSpawnName();
 
     if (EQAPP_Timer_HasTimeElapsed(g_EQAppWindowTitleTimer, g_EQAppWindowTitleTimerInterval) == true)
     {
         EQAPP_SetWindowTitleToPlayerSpawnName();
+
+        EQ_InterpretCommand("/fontface Arial"); // April Fool's fix
     }
 
     if (g_BoxChatIsEnabled == true)
@@ -356,6 +363,48 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void
 
     int result = EQAPP_REAL_FUNCTION_CEverQuest__dsp_chat(this_ptr, text, textColor, one_1, one_2, zero_1);
 
+    if (EQAPP_String_StartsWith(chatText, "LOADING, PLEASE WAIT...") == true)
+    {
+        g_EQAppIsInGame = false;
+    }
+
+    if (EQAPP_String_StartsWith(chatText, "You have entered") == true)
+    {
+        g_EQAppIsInGame = true;
+    }
+
+    if (g_BazaarBotIsEnabled == true)
+    {
+        if (EQAPP_String_StartsWith(chatText, "Your attempt to purchase") == true)
+        {
+            if (EQAPP_String_Contains(chatText, "failed because your bazaar data is out of date.") == true)
+            {
+                if (EQ_BazaarSearchWindow_IsOpen() == true)
+                {
+                    g_BazaarBotFindItemsTimer = EQAPP_Timer_GetTimeNow();
+
+                    EQ_BazaarSearchWindow_ClickFindItemsButton();
+                }
+            }
+
+            if (EQAPP_String_Contains(chatText, "failed because you already possess that lore item.") == true)
+            {
+                signed int buyItemListIndex = EQ_BazaarSearchWindow_GetBuyItemListIndex();
+                if (buyItemListIndex != -1)
+                {
+                    std::string itemName = EQ_BazaarSearchWindow_GetItemName(buyItemListIndex);
+                    if (itemName.size() != 0)
+                    {
+                        g_BazaarBotLoreItemsList.push_back(itemName);
+
+                        std::cout << "[Bazaar Bot] " << itemName << " added to the lore items list." << std::endl;
+                    }
+                }
+            }
+        }
+    }
+
+/*
     // Drunkard's Stein anniversary quest
     if (EQAPP_String_Contains(chatText, "Galdorin Visigothe says") == true)
     {
@@ -397,6 +446,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void
             }
         }
     }
+*/
 
     return result;
 }
@@ -416,6 +466,21 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* thi
         if (bShouldAddItemToList == false)
         {
             return 1;
+        }
+    }
+
+    if (g_BazaarBotIsEnabled == true)
+    {
+        std::string itemNameStr = itemName;
+
+        for (auto& loreItemName : g_BazaarBotLoreItemsList)
+        {
+            if (itemNameStr == loreItemName)
+            {
+                std::cout << "[Bazaar Bot] " << itemName << " was NOT added to the search list because it was found in the lore items list." << std::endl;
+
+                return 1;
+            }
         }
     }
 

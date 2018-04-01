@@ -8,6 +8,7 @@ EQApp::Timer g_BazaarFilterDoQueryTimer = EQAPP_Timer_GetTimeNow();
 EQApp::TimerInterval g_BazaarFilterDoQueryTimerInterval = 10;
 
 std::vector<std::string> g_BazaarFilterItemNameList;
+uint32_t g_BazaarFilterItemNameList_reserve = 1024;
 
 // 1    = 1cp    one copper piece
 // 1000 = 1pp    one platinum piece
@@ -60,6 +61,7 @@ void EQAPP_BazaarFilter_LoadEx(const char* filename)
     }
 
     g_BazaarFilterItemNameList.clear();
+    g_BazaarFilterItemNameList.reserve(g_BazaarFilterItemNameList_reserve);
 
     std::string line;
     while (std::getline(file, line))

@@ -89,21 +89,25 @@ const float EQ_CAMERA_PITCH_MAX        = 119.5f;     // look up
 
 #define EQ_OFFSET_CXWnd_IS_OPEN 0x22  // uint8_t
 
-#define EQ_OFFSET_CBazaarSearchWnd_BUY_ITEM_LIST_INDEX    0x270 // uint32_t    index of the item in the search list to buy
-#define EQ_OFFSET_CBazaarSearchWnd_FIRST_ITEM             0x278 // first item in the search list starts here
-#define EQ_OFFSET_CBazaarSearchWnd_TRADER_NAME            0x278 // char[64]
-#define EQ_OFFSET_CBazaarSearchWnd_ITEM_NAME              0x2B8 // char[64]
-#define EQ_OFFSET_CBazaarSearchWnd_ITEM_PRICE             0x304 // uint32_t
-#define EQ_OFFSET_CBazaarSearchWnd_ITEM_ID                0x310 // uint32_t
-#define EQ_OFFSET_CBazaarSearchWnd_ITEM_QUANTITY          0x314 // uint32_t
-#define EQ_OFFSET_CBazaarSearchWnd_SECOND_ITEM            0x330 // second item in the search list starts here
+#define EQ_OFFSET_CBazaarSearchWnd_BUY_ITEM_LIST_INDEX           0x270  // uint32_t    index of the item in the search list to buy
+#define EQ_OFFSET_CBazaarSearchWnd_FIRST_ITEM                    0x278  // first item in the search list starts here
+#define EQ_OFFSET_CBazaarSearchWnd_TRADER_NAME                   0x278  // char[64]
+#define EQ_OFFSET_CBazaarSearchWnd_ITEM_NAME                     0x2B8  // char[64]
+#define EQ_OFFSET_CBazaarSearchWnd_ITEM_PRICE                    0x304  // uint32_t
+#define EQ_OFFSET_CBazaarSearchWnd_ITEM_ID                       0x310  // uint32_t
+#define EQ_OFFSET_CBazaarSearchWnd_ITEM_QUANTITY                 0x314  // uint32_t
+#define EQ_OFFSET_CBazaarSearchWnd_SECOND_ITEM                   0x330  // second item in the search list starts here
+#define EQ_OFFSET_CBazaarSearchWnd_XWND_BUTTON_FIND_ITEMS        0x924C // uint32_t pointer    "Find Items" button        "BZR_QueryButton"
+#define EQ_OFFSET_CBazaarSearchWnd_XWND_BUTTON_UPDATE_TRADERS    0x9254 // uint32_t pointer    "Update Traders" button    "BZR_UpdatePlayerButton"
+#define EQ_OFFSET_CBazaarSearchWnd_XWND_BUTTON_RESET             0x9268 // uint32_t pointer    "Reset" button             "BZR_Default"
+#define EQ_OFFSET_CBazaarSearchWnd_XWND_BUTTON_BUY               0x926C // uint32_t pointer    "Buy" button               "BZR_BuyButton"
 
 #define EQ_SIZE_CBazaarSearchWnd_TRADER_NAME    64 // 0x40
 #define EQ_SIZE_CBazaarSearchWnd_ITEM_NAME      64 // 0x40
 
-#define EQ_OFFSET_CBazaarConfirmationWnd_XWND_BUTTON_TO_ME         0x25C // uint32_t pointer    "To Me" button
-#define EQ_OFFSET_CBazaarConfirmationWnd_XWND_BUTTON_TO_PARCELS    0x268 // uint32_t pointer    "To Parcels" button
-#define EQ_OFFSET_CBazaarConfirmationWnd_XWND_BUTTON_CANCEL        0x26C // uint32_t pointer    "Cancel" button
+#define EQ_OFFSET_CBazaarConfirmationWnd_XWND_BUTTON_TO_ME         0x25C // uint32_t pointer    "To Me" button         "BZC_UseTokenButton"
+#define EQ_OFFSET_CBazaarConfirmationWnd_XWND_BUTTON_TO_PARCELS    0x268 // uint32_t pointer    "To Parcels" button    "BZC_UsePlatButton"
+#define EQ_OFFSET_CBazaarConfirmationWnd_XWND_BUTTON_CANCEL        0x26C // uint32_t pointer    "Cancel" button        "BZC_CancelButton"
 #define EQ_OFFSET_CBazaarConfirmationWnd_TRADER_NAME               0x2C4 // char[64]
 #define EQ_OFFSET_CBazaarConfirmationWnd_ITEM_NAME                 0x324 // char[64]
 #define EQ_OFFSET_CBazaarConfirmationWnd_ITEM_ID                   0x378 // uint32_t
@@ -112,6 +116,9 @@ const float EQ_CAMERA_PITCH_MAX        = 119.5f;     // look up
 
 #define EQ_SIZE_CBazaarConfirmationWnd_TRADER_NAME    64 // 0x40
 #define EQ_SIZE_CBazaarConfirmationWnd_ITEM_NAME      64 // 0x40
+
+#define EQ_OFFSET_CBazaarWnd_XWND_BUTTON_BEGIN_TRADER    0x258 // uint32_t pointer    "Begin Trader" button    "BZW_Start_Button"
+#define EQ_OFFSET_CBazaarWnd_XWND_BUTTON_END_TRADER      0x25C // uint32_t pointer    "End Trader" button      "BZW_End_Button"
 
 #define EQ_CHAT_TEXT_COLOR_YELLOW    15
 
@@ -218,6 +225,14 @@ std::unordered_map<uint32_t, std::string> EQ_TABLE_RACE_SHORT_NAME =
 #define EQ_CLASS_MERCENARY           17
 #define EQ_CLASS_BANKER              40
 #define EQ_CLASS_MERCHANT            41
+#define EQ_CLASS_OBJECT                      62 // auras, controllers, crates, tents, corpses, etc
+#define EQ_CLASS_GUILD_BANKER                66
+#define EQ_CLASS_FELLOWSHIP_REGISTRAR        69
+#define EQ_CLASS_FACTION_MERCHANT            70 // faction merchant?
+#define EQ_CLASS_MERCENARY_LIAISON           71
+#define EQ_CLASS_REAL_ESTATE_MERCHANT        72
+#define EQ_CLASS_LOYALTY_MERCHANT            73
+#define EQ_CLASS_TRIBUTE_MASTER              74
 
 std::unordered_map<uint32_t, std::string> EQ_TABLE_CLASS_NAME =
 {
@@ -241,6 +256,15 @@ std::unordered_map<uint32_t, std::string> EQ_TABLE_CLASS_NAME =
     {EQ_CLASS_MERCENARY,       "Mercenary"},
     {EQ_CLASS_BANKER,          "Banker"},
     {EQ_CLASS_MERCHANT,        "Merchant"},
+
+    {EQ_CLASS_OBJECT,                      "Object"},
+    {EQ_CLASS_GUILD_BANKER,                "Guild Banker"},
+    {EQ_CLASS_FELLOWSHIP_REGISTRAR,        "Fellowship Registrar"},
+    {EQ_CLASS_FACTION_MERCHANT,            "Faction Merchant"},
+    {EQ_CLASS_MERCENARY_LIAISON,           "Mercenary Liaison"},
+    {EQ_CLASS_REAL_ESTATE_MERCHANT,        "Real Estate Merchant"},
+    {EQ_CLASS_LOYALTY_MERCHANT,            "Loyalty Merchant"},
+    {EQ_CLASS_TRIBUTE_MASTER,              "Tribute Master"},
 };
 
 std::unordered_map<uint32_t, std::string> EQ_TABLE_CLASS_SHORT_NAME =
