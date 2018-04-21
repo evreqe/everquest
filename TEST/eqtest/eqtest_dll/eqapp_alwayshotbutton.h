@@ -30,7 +30,7 @@ void EQAPP_AlwaysHotButton_Execute()
         return;
     }
 
-    if (g_AlwaysHotButtonIndex < 0 || g_AlwaysHotButtonIndex > (EQ_NUM_HOT_BUTTONS - 1))
+    if (g_AlwaysHotButtonIndex < 0 || g_AlwaysHotButtonIndex > (EQ_NUM_HOTBAR_BUTTONS - 1))
     {
         return;
     }

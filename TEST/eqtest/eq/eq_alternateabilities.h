@@ -5,9 +5,23 @@ namespace EQAlternateAbilities
 
 namespace Shared
 {
-    const uint32_t BindAffinity    = 679;
-    const uint32_t Gate            = 1217;
+    const uint32_t Bind_Affinity         = 679;
+    const uint32_t Gate                  = 1217;
+    const uint32_t Tranquil_Blessings    = 992;
 } // namespace Shared
+
+// CLR DRU SHM
+namespace Priest
+{
+    const uint32_t Mass_Group_Buff    = 35;
+} // namespace Priest
+
+
+// NEC WIZ MAG ENC
+namespace Caster
+{
+    const uint32_t Mass_Group_Buff    = 264;
+} // namespace Caster
 
 namespace General
 {
@@ -88,6 +102,16 @@ namespace Warrior
     const uint32_t Wars_Sheols_Heroic_Blade                    = 2007;
 } // namespace Warrior
 
+namespace Paladin
+{
+    //
+} // namespace Paladin
+
+namespace Shadowknight
+{
+    //
+} // namespace Shadowknight
+
 namespace Cleric
 {
     // Archetype
@@ -142,68 +166,6 @@ namespace Cleric
     const uint32_t Veturikas_Perseverance                = 798;
     const uint32_t Ward_of_Purity                        = 506;
 } // namespace Cleric
-
-namespace Enchanter
-{
-    // Archetype
-    const uint32_t Arcane_Whisper                            = 636;
-    const uint32_t Bind_Affinity                             = 679;
-    const uint32_t Bind_Sight                                = 661;
-    const uint32_t Companions_Aegis                          = 441;
-    const uint32_t Companions_Discipline                     = 195;
-    const uint32_t Companions_Fortification                  = 3707;
-    const uint32_t Companions_Intervening_Divine_Aura        = 1580;
-    const uint32_t Companions_Suspension                     = 176;
-    const uint32_t Dimensional_Instability                   = 639;
-    const uint32_t Eradicate_Magic                           = 547;
-    const uint32_t Focus_of_Arcanum                          = 1211;
-    const uint32_t Forceful_Rejuvenation                     = 7003;
-    const uint32_t Friendly_Stasis                           = 8702;
-    const uint32_t Gate                                      = 1217;
-    const uint32_t Group_Perfect_Invisibility                = 1210;
-    const uint32_t Group_Perfected_Invisibility_to_Undead    = 280;
-    const uint32_t Improved_Twincast                         = 515;
-    const uint32_t Mass_Group_Buff                           = 264;
-    const uint32_t Perfected_Invisibility                    = 3812;
-    const uint32_t Perfected_Invisibility_to_Undead          = 291;
-    const uint32_t Perfected_Levitation                      = 1202;
-    const uint32_t Self_Stasis                               = 1120;
-    const uint32_t Silent_Casting                            = 500;
-    const uint32_t Summon_Companion                          = 1215;
-    const uint32_t Tranquil_Blessings                        = 992;
-
-    // Class
-    const uint32_t Azure_Mind_Crystal                       = 633;
-    const uint32_t Beam_of_Slumber                          = 8700;
-    const uint32_t Beguilers_Banishment                     = 3550;
-    const uint32_t Beguilers_Directed_Banishment            = 3551;
-    const uint32_t Bite_of_Tashani                          = 1125;
-    const uint32_t Blanket_of_Forgetfulness                 = 2206;
-    const uint32_t Calculated_Insanity                      = 534;
-    const uint32_t Chromatic_Haze                           = 2205;
-    const uint32_t Crippling_Aurora                         = 535;
-    const uint32_t Dimensional_Shield                       = 492;
-    const uint32_t Dire_Charm                               = 521;
-    const uint32_t Doppleganger                             = 261;
-    const uint32_t Dreary_Deeds                             = 753;
-    const uint32_t Eldritch_Rune                            = 173;
-    const uint32_t Fog_of_Memories                          = 1124;
-    const uint32_t Fundament_First_Spire_of_Enchantment     = 1380;
-    const uint32_t Fundament_Second_Spire_of_Enchantment    = 1381;
-    const uint32_t Fundament_Third_Spire_of_Enchantment     = 1382;
-    const uint32_t Gather_Mana                              = 57;
-    const uint32_t Glyph_Spray                              = 578;
-    const uint32_t Mental_Contortion                        = 602;
-    const uint32_t Mind_Over_Matter                         = 413;
-    const uint32_t Noctambulate                             = 409;
-    const uint32_t Orators_Unity                            = 1170;
-    const uint32_t Phantasmal_Opponent                      = 1122;
-    const uint32_t Reactive_Rune                            = 2209;
-    const uint32_t Rune_of_Banishment                       = 2200;
-    const uint32_t Sanguine_Mind_Crystal                    = 632;
-    const uint32_t Soothing_Words                           = 414;
-    const uint32_t Veil_of_Mindshadow                       = 791;
-} // namespace Enchanter
 
 namespace Druid
 {
@@ -271,6 +233,88 @@ namespace Druid
     const uint32_t Wrath_of_the_Wild                       = 170;
 
 } // namespace Druid
+
+namespace Shaman
+{
+    //
+} // namespace Shaman
+
+namespace Necromancer
+{
+    //
+} // namespace Necromancer
+
+namespace Wizard
+{
+    //
+} // namespace Wizard
+
+namespace Magician
+{
+    //
+} // namespace Magician
+
+namespace Enchanter
+{
+    // Archetype
+    const uint32_t Arcane_Whisper                            = 636;
+    const uint32_t Bind_Affinity                             = 679;
+    const uint32_t Bind_Sight                                = 661;
+    const uint32_t Companions_Aegis                          = 441;
+    const uint32_t Companions_Discipline                     = 195;
+    const uint32_t Companions_Fortification                  = 3707;
+    const uint32_t Companions_Intervening_Divine_Aura        = 1580;
+    const uint32_t Companions_Suspension                     = 176;
+    const uint32_t Dimensional_Instability                   = 639;
+    const uint32_t Eradicate_Magic                           = 547;
+    const uint32_t Focus_of_Arcanum                          = 1211;
+    const uint32_t Forceful_Rejuvenation                     = 7003;
+    const uint32_t Friendly_Stasis                           = 8702;
+    const uint32_t Gate                                      = 1217;
+    const uint32_t Group_Perfect_Invisibility                = 1210;
+    const uint32_t Group_Perfected_Invisibility_to_Undead    = 280;
+    const uint32_t Improved_Twincast                         = 515;
+    const uint32_t Mass_Group_Buff                           = 264;
+    const uint32_t Perfected_Invisibility                    = 3812;
+    const uint32_t Perfected_Invisibility_to_Undead          = 291;
+    const uint32_t Perfected_Levitation                      = 1202;
+    const uint32_t Self_Stasis                               = 1120;
+    const uint32_t Silent_Casting                            = 500;
+    const uint32_t Summon_Companion                          = 1215;
+    const uint32_t Tranquil_Blessings                        = 992;
+
+    // Class
+    const uint32_t Azure_Mind_Crystal                       = 633;
+    const uint32_t Beam_of_Slumber                          = 8700;
+    const uint32_t Beguilers_Banishment                     = 3550;
+    const uint32_t Beguilers_Directed_Banishment            = 3551;
+    const uint32_t Bite_of_Tashani                          = 1125;
+    const uint32_t Blanket_of_Forgetfulness                 = 2206;
+    const uint32_t Calculated_Insanity                      = 534;
+    const uint32_t Chromatic_Haze                           = 2205;
+    const uint32_t Crippling_Aurora                         = 535;
+    const uint32_t Dimensional_Shield                       = 492;
+    const uint32_t Dire_Charm                               = 521;
+    const uint32_t Doppleganger                             = 261;
+    const uint32_t Dreary_Deeds                             = 753;
+    const uint32_t Eldritch_Rune                            = 173;
+    const uint32_t Fog_of_Memories                          = 1124;
+    const uint32_t Fundament_First_Spire_of_Enchantment     = 1380;
+    const uint32_t Fundament_Second_Spire_of_Enchantment    = 1381;
+    const uint32_t Fundament_Third_Spire_of_Enchantment     = 1382;
+    const uint32_t Gather_Mana                              = 57;
+    const uint32_t Glyph_Spray                              = 578;
+    const uint32_t Mental_Contortion                        = 602;
+    const uint32_t Mind_Over_Matter                         = 413;
+    const uint32_t Noctambulate                             = 409;
+    const uint32_t Orators_Unity                            = 1170;
+    const uint32_t Phantasmal_Opponent                      = 1122;
+    const uint32_t Reactive_Rune                            = 2209;
+    const uint32_t Rune_of_Banishment                       = 2200;
+    const uint32_t Sanguine_Mind_Crystal                    = 632;
+    const uint32_t Soothing_Words                           = 414;
+    const uint32_t Veil_of_Mindshadow                       = 791;
+} // namespace Enchanter
 
 namespace Bard
 {
@@ -345,13 +389,5 @@ namespace Berserker
     const uint32_t Untamed_Rage                              = 374;
     const uint32_t War_Cry_of_the_Braxi                      = 1013;
 } // namespace Berserker
-
-namespace Shadowknight
-{
-} // namespace Shadowknight
- 
-namespace Paladin
-{
-} // namespace Paladin
 
 } // namespace EQAlternateAbilities

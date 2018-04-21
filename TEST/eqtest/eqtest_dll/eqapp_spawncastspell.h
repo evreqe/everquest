@@ -1,5 +1,7 @@
 #pragma once
 
+#include "eqapp_spelllist.h"
+
 namespace EQApp
 {
     typedef struct _SpawnCastSpell

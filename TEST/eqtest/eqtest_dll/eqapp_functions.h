@@ -2,8 +2,7 @@
 
 #include "eqapp.h"
 
-template <class T>
-void EQAPP_Log(const char* text, T number);
+void EQAPP_Log(const char* text);
 
 void EQAPP_PrintBool(const char* text, bool& b);
 void EQAPP_PrintDebugText(const char* functionName, const std::string& text);
@@ -11,29 +10,28 @@ void EQAPP_PrintDebugText(const char* functionName, const std::string& text);
 void EQAPP_EnableDebugPrivileges();
 DWORD EQAPP_GetModuleBaseAddress(DWORD processID, const wchar_t* moduleName);
 bool EQAPP_IsForegroundWindowCurrentProcessID();
-bool EQAPP_IsKeyDown(int vkKey);
-
+bool EQAPP_IsVKKeyDown(int vkKey);
 uint32_t EQAPP_GetRandomNumber(uint32_t low, uint32_t high);
-
 void EQAPP_PlaySound(const char* filename);
+void EQAPP_StopSound();
 void EQAPP_Beep();
 void EQAPP_BeepEx(UINT beepType);
 bool EQAPP_FileExists(const char* fileName);
 void EQAPP_DeleteFileContents(const char* filename);
-std::string EQAPP_ReadFileContents(const char* filename);
-void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list, bool coutLines = true);
+std::string EQAPP_ReadFileToString(const char* filename);
+void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list, bool printLines = true);
+std::vector<uint32_t> EQAPP_GetNPCSpawnIDListSortedByDistance();
+bool EQAPP_IsInGame();
+void EQAPP_CopyTextToClipboard(const char* text);
 
-void EQAPP_SetWindowTitleToPlayerSpawnName();
-
-template <class T>
-void EQAPP_Log(const char* text, T number)
+void EQAPP_Log(const char* text)
 {
     std::stringstream fileName;
-    fileName << g_EQAppName << "-log.txt";
+    fileName << g_EQAppName << "/log.txt";
 
     std::fstream file;
     file.open(fileName.str().c_str(), std::ios::out | std::ios::app);
-    file << "[" << __TIME__ << "] " << text << " (" << number << ")" << " Hex(" << std::hex << number << std::dec << ")" << std::endl;
+    file << "[" << __TIME__ << "] " << text << std::endl;
     file.close();
 }
 
@@ -122,7 +120,7 @@ bool EQAPP_IsForegroundWindowCurrentProcessID()
     return (foregroundProcessId == GetCurrentProcessId());
 }
 
-bool EQAPP_IsKeyDown(int vkKey)
+bool EQAPP_IsVKKeyDown(int vkKey)
 {
     if (GetAsyncKeyState(vkKey) & 0x8000)
     {
@@ -142,7 +140,15 @@ uint32_t EQAPP_GetRandomNumber(uint32_t low, uint32_t high)
 
 void EQAPP_PlaySound(const char* filename)
 {
-    PlaySoundA(filename, 0, SND_FILENAME | SND_NODEFAULT | SND_ASYNC);
+    std::stringstream filePath;
+    filePath << g_EQAppName << "/sounds/" << filename;
+
+    PlaySoundA(filePath.str().c_str(), NULL, SND_FILENAME | SND_NODEFAULT | SND_ASYNC);
+}
+
+void EQAPP_StopSound()
+{
+    PlaySoundA(NULL, NULL, NULL);
 }
 
 void EQAPP_Beep()
@@ -168,7 +174,7 @@ void EQAPP_DeleteFileContents(const char* filename)
     file.close();
 }
 
-std::string EQAPP_ReadFileContents(const char* filename)
+std::string EQAPP_ReadFileToString(const char* filename)
 {
     std::stringstream filePath;
     filePath << g_EQAppName << "/" << filename;
@@ -186,14 +192,15 @@ std::string EQAPP_ReadFileContents(const char* filename)
         return std::string();
     }
 
-    std::string fileContents((std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>()));
+    std::stringstream buffer;
+    buffer << file.rdbuf();
 
     file.close();
 
-    return fileContents;
+    return buffer.str();
 }
 
-void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list, bool coutLines)
+void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list, bool printLines)
 {
     std::stringstream filePath;
     filePath << g_EQAppName << "/" << filename;
@@ -224,7 +231,7 @@ void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list, 
             continue;
         }
 
-        if (coutLines == true)
+        if (printLines == true)
         {
             std::cout << filename << ": " << line << std::endl;
         }
@@ -235,20 +242,95 @@ void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list, 
     file.close();
 }
 
-void EQAPP_SetWindowTitleToPlayerSpawnName()
+std::vector<uint32_t> EQAPP_GetNPCSpawnIDListSortedByDistance()
 {
-    std::string playerSpawnName = EQ_GetPlayerSpawnName();
-    if (playerSpawnName.size() != 0)
+    std::vector<uint32_t> spawnIDList;
+
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
     {
-        std::stringstream ss;
-        ss << "EQ: " << playerSpawnName;
-
-        HWND hwnd = EQ_GetWindow();
-        if (hwnd != NULL)
-        {
-            ////std::cout << "Window HWND: " << std::hex << hwnd << std::dec << std::endl;
-
-            SetWindowTextA(hwnd, ss.str().c_str());
-        }
+        return spawnIDList;
     }
+
+    std::map<float, uint32_t> spawnList;
+
+    auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
+    auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
+    auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
+
+    auto spawn = EQ_GetFirstSpawn();
+    while (spawn != NULL)
+    {
+        auto spawnType = EQ_GetSpawnType(spawn);
+        if (spawnType != EQ_SPAWN_TYPE_NPC)
+        {
+            spawn = EQ_GetSpawnNext(spawn);
+            continue;
+        }
+
+        // skip mounts
+        auto spawnName = EQ_GetSpawnName(spawn);
+        if (spawnName.find("`s Mount") != std::string::npos)
+        {
+            spawn = EQ_GetSpawnNext(spawn);
+            continue;
+        }
+
+        auto spawnRace = EQ_GetSpawnRace(spawn);
+        auto spawnClass = EQ_GetSpawnClass(spawn);
+
+        // skip auras
+        if (spawnRace == EQ_RACE_INVISIBLE_MAN && spawnClass == EQ_CLASS_OBJECT)
+        {
+            spawn = EQ_GetSpawnNext(spawn);
+            continue;
+        }
+
+        float spawnY = EQ_GetSpawnY(spawn);
+        float spawnX = EQ_GetSpawnX(spawn);
+        float spawnZ = EQ_GetSpawnZ(spawn);
+
+        float spawnDistance = EQ_CalculateDistance3D(playerSpawnX, playerSpawnY, playerSpawnZ, spawnX, spawnY, spawnZ);
+
+        float screenX = -1.0f;
+        float screenY = -1.0f;
+        bool result = EQ_WorldSpaceToScreenSpace(spawnX, spawnY, spawnZ, screenX, screenY);
+        if (result == false)
+        {
+            spawn = EQ_GetSpawnNext(spawn);
+            continue;
+        }
+
+        uint32_t spawnID = EQ_GetSpawnID(spawn);
+
+        spawnList.insert({spawnDistance, spawnID});
+
+        spawn = EQ_GetSpawnNext(spawn);
+    }
+
+    for (auto& s : spawnList)
+    {
+        spawnIDList.push_back(s.second);
+    }
+
+    return spawnIDList;
+}
+
+bool EQAPP_IsInGame()
+{
+    return g_EQAppIsInGame;
+}
+
+void EQAPP_CopyTextToClipboard(const char* text)
+{
+    size_t length = strlen(text) + 1;
+
+    HGLOBAL memory = GlobalAlloc(GMEM_MOVEABLE, length);
+    memcpy(GlobalLock(memory), text, length);
+    GlobalUnlock(memory);
+
+    OpenClipboard(0);
+    EmptyClipboard();
+    SetClipboardData(CF_TEXT, memory);
+    CloseClipboard();
 }

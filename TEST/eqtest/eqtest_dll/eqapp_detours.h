@@ -1,5 +1,26 @@
 #pragma once
 
+#include "eqapp_alwaysattack.h"
+#include "eqapp_alwayshotbutton.h"
+#include "eqapp_autoalternateability.h"
+#include "eqapp_autogroup.h"
+#include "eqapp_bazaarbot.h"
+#include "eqapp_bazaarfilter.h"
+#include "eqapp_boxchat.h"
+#include "eqapp_changeheight.h"
+#include "eqapp_combatalternateability.h"
+#include "eqapp_combathotbutton.h"
+#include "eqapp_console.h"
+#include "eqapp_esp.h"
+#include "eqapp_followai.h"
+#include "eqapp_hud.h"
+#include "eqapp_interpretcmd.h"
+#include "eqapp_lua.h"
+#include "eqapp_sleep.h"
+#include "eqapp_spawncastspell.h"
+#include "eqapp_spelllist.h"
+#include "eqapp_windowtitle.h"
+
 void EQAPP_Detours_Load();
 void EQAPP_Detours_Unload();
 
@@ -18,7 +39,7 @@ EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__dsp_chat);
 
 EQ_MACRO_FUNCTION_DefineDetour(CBazaarSearchWnd__AddItemToList);
 
-EQ_MACRO_FUNCTION_DefineDetour(CBazaarConfirmationWnd__WndNotification);
+////EQ_MACRO_FUNCTION_DefineDetour(CBazaarConfirmationWnd__WndNotification);
 
 char* __cdecl EQAPP_DETOURED_FUNCTION_CrashDetected();
 int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown);
@@ -35,7 +56,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* this_ptr, void* not_used, char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11);
 
-int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarConfirmationWnd__WndNotification(void* this_ptr, void* not_used, uint32_t xwndAddress, uint32_t xwndMessage, void* unknown);
+////int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarConfirmationWnd__WndNotification(void* this_ptr, void* not_used, uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
 
 void EQAPP_Detours_Load()
 {
@@ -124,32 +145,40 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
         return EQAPP_REAL_FUNCTION_DrawNetStatus(x, y, unknown);
     }
 
-    g_EQAppPlayerName = EQ_GetPlayerSpawnName();
-
-    if (EQAPP_Timer_HasTimeElapsed(g_EQAppWindowTitleTimer, g_EQAppWindowTitleTimerInterval) == true)
+    if (g_LuaIsEnabled == true)
     {
-        EQAPP_SetWindowTitleToPlayerSpawnName();
+        EQAPP_Lua_EventScriptList_ExecuteFunction("OnDrawNetStatus");
+    }
 
-        EQ_InterpretCommand("/fontface Arial"); // April Fool's fix
+    if (g_WindowTitleIsEnabled == true)
+    {
+        if (EQAPP_Timer_HasTimeElapsed(g_WindowTitleTimer, g_WindowTitleTimerInterval) == true)
+        {
+            EQAPP_WindowTitle_Execute();
+        }
     }
 
     if (g_BoxChatIsEnabled == true)
     {
         if (g_BoxChatIsConnected == true)
         {
-            EQAPP_BoxChat_Execute();
+            if (g_BazaarBotIsEnabled == false)
+            {
+                EQAPP_BoxChat_Execute();
+            }
         }
         else
         {
-            if (g_BoxChatAutoConnect == true)
+            if (g_BoxChatAutoConnectIsEnabled == true)
             {
                 if (EQAPP_Timer_HasTimeElapsed(g_BoxChatAutoConnectTimer, g_BoxChatAutoConnectTimerInterval) == true)
                 {
                     if (EQAPP_BoxChat_IsServerRunning() == true)
                     {
-                        if (g_EQAppPlayerName.size() != 0)
+                        std::string playerSpawnName = EQ_GetPlayerSpawnName();
+                        if (playerSpawnName.size() != 0)
                         {
-                            EQAPP_BoxChat_Connect(g_EQAppPlayerName);
+                            EQAPP_BoxChat_Connect(playerSpawnName);
                         }
                     }
                 }
@@ -165,14 +194,6 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
     if (g_HUDIsEnabled == true)
     {
         EQAPP_HUD_Execute();
-    }
-
-    if (g_BoxChatIsEnabled == true)
-    {
-        if (g_BoxChatIsConnected == true)
-        {
-            EQAPP_BoxChat_Execute();
-        }
     }
 
     if (g_AlwaysAttackIsEnabled == true)
@@ -251,6 +272,11 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawWindows(void* this_ptr,
     if (g_EQAppShouldUnload == 1)
     {
         return EQAPP_REAL_FUNCTION_CXWndManager__DrawWindows(this_ptr);
+    }
+
+    if (g_LuaIsEnabled == true)
+    {
+        EQAPP_Lua_EventScriptList_ExecuteFunction("OnDrawWindows");
     }
 
     if (g_ESPIsEnabled == true)
@@ -363,90 +389,37 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void
 
     int result = EQAPP_REAL_FUNCTION_CEverQuest__dsp_chat(this_ptr, text, textColor, one_1, one_2, zero_1);
 
-    if (EQAPP_String_StartsWith(chatText, "LOADING, PLEASE WAIT...") == true)
+    if (chatText == "LOADING, PLEASE WAIT...")
     {
         g_EQAppIsInGame = false;
     }
 
-    if (EQAPP_String_StartsWith(chatText, "You have entered") == true)
+    if (EQAPP_String_BeginsWith(chatText, "You have entered") == true)
     {
         g_EQAppIsInGame = true;
     }
 
+    if (g_AutoGroupIsEnabled == true)
+    {
+        EQAPP_AutoGroup_HandleEvent_CEverQuest__dsp_chat(chatText, textColor);
+    }
+
     if (g_BazaarBotIsEnabled == true)
     {
-        if (EQAPP_String_StartsWith(chatText, "Your attempt to purchase") == true)
-        {
-            if (EQAPP_String_Contains(chatText, "failed because your bazaar data is out of date.") == true)
-            {
-                if (EQ_BazaarSearchWindow_IsOpen() == true)
-                {
-                    g_BazaarBotFindItemsTimer = EQAPP_Timer_GetTimeNow();
-
-                    EQ_BazaarSearchWindow_ClickFindItemsButton();
-                }
-            }
-
-            if (EQAPP_String_Contains(chatText, "failed because you already possess that lore item.") == true)
-            {
-                signed int buyItemListIndex = EQ_BazaarSearchWindow_GetBuyItemListIndex();
-                if (buyItemListIndex != -1)
-                {
-                    std::string itemName = EQ_BazaarSearchWindow_GetItemName(buyItemListIndex);
-                    if (itemName.size() != 0)
-                    {
-                        g_BazaarBotLoreItemsList.push_back(itemName);
-
-                        std::cout << "[Bazaar Bot] " << itemName << " added to the lore items list." << std::endl;
-                    }
-                }
-            }
-        }
+        EQAPP_BazaarBot_HandleEvent_CEverQuest__dsp_chat(chatText, textColor);
     }
 
-/*
-    // Drunkard's Stein anniversary quest
-    if (EQAPP_String_Contains(chatText, "Galdorin Visigothe says") == true)
+    if (g_LuaIsEnabled == true)
     {
-        auto targetSpawn = EQ_GetTargetSpawn();
-        if (targetSpawn != NULL)
+        for (auto& script : g_LuaEventScriptList)
         {
-            std::string targetSpawnName = EQ_GetSpawnName(targetSpawn);
-            if (EQAPP_String_Contains(targetSpawnName, "Galdorin Visigothe") == true)
+            sol::protected_function luaFunction = script->LuaState["OnChatText"];
+            if (luaFunction.valid() == true)
             {
-                if (EQAPP_String_Contains(chatText, "My stinky stein has rough dirty lips,") == true)
-                {
-                    EQ_InterpretCommand("/say My stinky stein has rough dirty lips,");
-                }
-
-                if (EQAPP_String_Contains(chatText, "but she loves a deep carouse.") == true)
-                {
-                    EQ_InterpretCommand("/say but she loves a deep carouse.");
-                }
-
-                if (EQAPP_String_Contains(chatText, "Beer or ale are her great trips.") == true)
-                {
-                    EQ_InterpretCommand("/say Beer or ale are her great trips.");
-                }
-
-                if (EQAPP_String_Contains(chatText, "No matter how many vows") == true)
-                {
-                    EQ_InterpretCommand("/say No matter how many vows");
-                }
-
-                if (EQAPP_String_Contains(chatText, "I make or break, my drinking glass") == true)
-                {
-                    EQ_InterpretCommand("/say I make or break, my drinking glass");
-                }
-
-                if (EQAPP_String_Contains(chatText, "reminds me of my lovely Brasse.") == true)
-                {
-                    EQ_InterpretCommand("/say reminds me of my lovely Brasse.");
-                }
+                luaFunction(text, textColor);
             }
         }
     }
-*/
 
     return result;
 }
@@ -471,34 +444,31 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* thi
 
     if (g_BazaarBotIsEnabled == true)
     {
-        std::string itemNameStr = itemName;
-
-        for (auto& loreItemName : g_BazaarBotLoreItemsList)
+        bool bShouldAddItemToList = EQAPP_BazaarBot_HandleEvent_CBazaarSearchWnd__AddItemToList(itemName, itemPrice, traderName);
+        if (bShouldAddItemToList == false)
         {
-            if (itemNameStr == loreItemName)
-            {
-                std::cout << "[Bazaar Bot] " << itemName << " was NOT added to the search list because it was found in the lore items list." << std::endl;
-
-                return 1;
-            }
+            return 1;
         }
     }
 
     return EQAPP_REAL_FUNCTION_CBazaarSearchWnd__AddItemToList(this_ptr, itemName, itemPrice, traderName, a4, a5, a6, a7, a8, a9, a10, a11);
 }
 
-int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarConfirmationWnd__WndNotification(void* this_ptr, void* not_used, uint32_t xwndAddress, uint32_t xwndMessage, void* unknown)
+/*
+int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarConfirmationWnd__WndNotification(void* this_ptr, void* not_used, uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown)
 {
     if (g_EQAppShouldUnload == 1)
     {
-        return EQAPP_REAL_FUNCTION_CBazaarConfirmationWnd__WndNotification(this_ptr, xwndAddress, xwndMessage, unknown);
+        return EQAPP_REAL_FUNCTION_CBazaarConfirmationWnd__WndNotification(this_ptr, cxwndAddress, cxwndMessage, unknown);
     }
 
     std::cout << "----------------------------------------" << std::endl;
-    std::cout << "CBazaarConfirmationWnd::WndNotification() XWnd: " << std::hex << xwndAddress << std::dec << std::endl;
-    std::cout << "CBazaarConfirmationWnd::WndNotification() Message: " << xwndMessage << std::endl;
+    std::cout << "CBazaarConfirmationWnd::WndNotification() CXWnd: " << std::hex << cxwndAddress << std::dec << std::endl;
+    std::cout << "CBazaarConfirmationWnd::WndNotification() Message: " << cxwndMessage << std::endl;
     std::cout << "CBazaarConfirmationWnd::WndNotification() Unknown: " << unknown << std::endl;
     std::cout << "----------------------------------------" << std::endl;
 
-    return EQAPP_REAL_FUNCTION_CBazaarConfirmationWnd__WndNotification(this_ptr, xwndAddress, xwndMessage, unknown);
+    return EQAPP_REAL_FUNCTION_CBazaarConfirmationWnd__WndNotification(this_ptr, cxwndAddress, cxwndMessage, unknown);
 }
+*/
+

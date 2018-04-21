@@ -79,7 +79,7 @@ void EQAPP_CombatHotButton_Execute()
         return;
     }
 
-    if (g_CombatHotButtonIndex < 0 || g_CombatHotButtonIndex > (EQ_NUM_HOT_BUTTONS - 1))
+    if (g_CombatHotButtonIndex < 0 || g_CombatHotButtonIndex > (EQ_NUM_HOTBAR_BUTTONS - 1))
     {
         return;
     }

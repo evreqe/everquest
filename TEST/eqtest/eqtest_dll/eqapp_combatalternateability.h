@@ -4,6 +4,8 @@
 
 bool g_CombatAlternateAbilityIsEnabled = true;
 
+float g_CombatAlternateAbilityMeleeDistance = 25.0f;
+
 EQApp::Timer g_CombatAlternateAbilityTimer = EQAPP_Timer_GetTimeNow();
 EQApp::TimerInterval g_CombatAlternateAbilityTimerInterval = 6;
 
@@ -48,7 +50,7 @@ void EQAPP_CombatAlternateAbility_Execute()
     }
 
     float targetSpawnDistance = EQ_GetSpawnDistance(targetSpawn);
-    if (targetSpawnDistance > 25.0f)
+    if (targetSpawnDistance > g_CombatAlternateAbilityMeleeDistance)
     {
         return;
     }

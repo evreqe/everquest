@@ -19,10 +19,6 @@ void EQ_WriteMemoryString(uint32_t address, const char* value);
 template <class T>
 T EQ_ReadMemory(uintptr_t address)
 {
-#ifdef _DEBUG
-    EQ_Log("EQ_ReadMemory() Address: ", address);
-#endif
-
     T* buffer = (T*)address;
     return (*buffer);
 }
@@ -30,10 +26,6 @@ T EQ_ReadMemory(uintptr_t address)
 template <class T>
 void EQ_WriteMemory(uintptr_t address, T value)
 {
-#ifdef _DEBUG
-    EQ_Log("EQ_WriteMemory() Address: ", address);
-#endif
-
     T* buffer = (T*)address;
     *buffer = value;
 }

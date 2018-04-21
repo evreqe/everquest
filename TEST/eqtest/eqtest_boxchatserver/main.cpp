@@ -16,11 +16,11 @@
 #include <iphlpapi.h>
 #pragma comment(lib, "ws2_32.lib")
 
-#define EQBCS_PORT_NUMBER 29015
+#define EQ_BCS_PORT_NUMBER 29015
 
-#define EQBCS_CLIENTS_MAX 32
+#define EQ_BCS_CLIENTS_MAX 32
 
-#define EQBCS_STRING_MAX 4096
+#define EQ_BCS_STRING_MAX 4096
 
 std::string EQ_BCS_JoinStrings(const std::vector<std::string> &elements, const std::string &separator)
 {       
@@ -61,12 +61,13 @@ int main(int argc , char *argv[])
 {
     std::cout << "EverQuest Box Chat Server" << std::endl;
 
-    std::cout << "Port: " << EQBCS_PORT_NUMBER << std::endl;
+    std::cout << "Port: " << EQ_BCS_PORT_NUMBER << std::endl;
 
     WSADATA wsaData;
 
-    SOCKET clientSocket[EQBCS_CLIENTS_MAX];
-    char clientSocketName[EQBCS_CLIENTS_MAX][EQBCS_STRING_MAX];
+    SOCKET clientSocket[EQ_BCS_CLIENTS_MAX];
+    char clientName[EQ_BCS_CLIENTS_MAX][EQ_BCS_STRING_MAX];
+    char clientChannel[EQ_BCS_CLIENTS_MAX][EQ_BCS_STRING_MAX];
 
     SOCKET listenSocket;
     SOCKET acceptSocket;
@@ -80,13 +81,17 @@ int main(int argc , char *argv[])
 
     fd_set fdSetRead;
 
-    char recvBuffer[EQBCS_STRING_MAX];
+    char recvBuffer[EQ_BCS_STRING_MAX];
 
-    for (size_t i = 0 ; i < EQBCS_CLIENTS_MAX; i++)
+    for (size_t i = 0 ; i < EQ_BCS_CLIENTS_MAX; i++)
     {
         clientSocket[i] = 0;
-        memset(clientSocketName[i], 0, EQBCS_STRING_MAX);
-        strcpy_s(clientSocketName[i], EQBCS_STRING_MAX, "UNKNOWN");
+
+        memset(clientName[i], 0, EQ_BCS_STRING_MAX);
+        strcpy_s(clientName[i], EQ_BCS_STRING_MAX, "UNKNOWN");
+
+        memset(clientChannel[i], 0, EQ_BCS_STRING_MAX);
+        strcpy_s(clientChannel[i], EQ_BCS_STRING_MAX, "Default");
     }
 
     std::cout << "Initializing Winsock..." << std::endl;
@@ -108,7 +113,7 @@ int main(int argc , char *argv[])
 
     server.sin_family      = AF_INET;
     server.sin_addr.s_addr = INADDR_ANY;
-    server.sin_port        = htons(EQBCS_PORT_NUMBER);
+    server.sin_port        = htons(EQ_BCS_PORT_NUMBER);
 
     std::cout << "Binding listen socket..." << std::endl;
 
@@ -132,7 +137,7 @@ int main(int argc , char *argv[])
         FD_ZERO(&fdSetRead);
         FD_SET(listenSocket, &fdSetRead);
 
-        for (size_t i = 0 ; i < EQBCS_CLIENTS_MAX; i++)
+        for (size_t i = 0 ; i < EQ_BCS_CLIENTS_MAX; i++)
         {
             recvSocket = clientSocket[i];
 
@@ -165,7 +170,7 @@ int main(int argc , char *argv[])
             //const char* connectMessage = "Connected to EverQuest Box Chat Server\n";
             //send(acceptSocket, connectMessage, strlen(connectMessage), 0);
 
-            for (size_t i = 0; i < EQBCS_CLIENTS_MAX; i++)
+            for (size_t i = 0; i < EQ_BCS_CLIENTS_MAX; i++)
             {
                 if (clientSocket[i] == 0)
                 {
@@ -176,7 +181,7 @@ int main(int argc , char *argv[])
             }
         }
 
-        for (size_t i = 0; i < EQBCS_CLIENTS_MAX; i++)
+        for (size_t i = 0; i < EQ_BCS_CLIENTS_MAX; i++)
         {
             recvSocket = clientSocket[i];
 
@@ -189,25 +194,31 @@ int main(int argc , char *argv[])
                 {
                     std::cout << "Client disconnected because keep alive failed."
                                 << " Socket: " << clientSocket[i]
-                                << ", Name: " << clientSocketName[i]
+                                << ", Name: " << clientName[i]
                                 << std::endl;
 
                     closesocket(recvSocket);
+
                     clientSocket[i] = 0;
-                    memset(clientSocketName[i], 0, EQBCS_STRING_MAX);
-                    strcpy_s(clientSocketName[i], EQBCS_STRING_MAX, "UNKNOWN");
+
+                    memset(clientName[i], 0, EQ_BCS_STRING_MAX);
+                    strcpy_s(clientName[i], EQ_BCS_STRING_MAX, "UNKNOWN");
+
+                    memset(clientChannel[i], 0, EQ_BCS_STRING_MAX);
+                    strcpy_s(clientChannel[i], EQ_BCS_STRING_MAX, "Default");
                 }
 
-                memset(recvBuffer, 0, EQBCS_STRING_MAX);
+                memset(recvBuffer, 0, EQ_BCS_STRING_MAX);
 
-                int recvResult = recv(recvSocket, recvBuffer, EQBCS_STRING_MAX, 0);
+                int recvResult = recv(recvSocket, recvBuffer, EQ_BCS_STRING_MAX, 0);
 
                 int errorCode = WSAGetLastError();
                 if (errorCode == WSAECONNRESET)
                 {
                     std::cout << "Client disconnected unexpectedly."
                                 << " Socket: " << clientSocket[i]
-                                << ", Name: " << clientSocketName[i]
+                                << ", Name: " << clientName[i]
+                                << ", Channel: " << clientChannel[i]
                                 << std::endl;
 
                     //const char* disconnectMessage = "Disconnected from EverQuest Box Chat Server\n";
@@ -216,24 +227,33 @@ int main(int argc , char *argv[])
                     closesocket(recvSocket);
 
                     clientSocket[i] = 0;
-                    memset(clientSocketName[i], 0, EQBCS_STRING_MAX);
-                    strcpy_s(clientSocketName[i], EQBCS_STRING_MAX, "UNKNOWN");
+
+                    memset(clientName[i], 0, EQ_BCS_STRING_MAX);
+                    strcpy_s(clientName[i], EQ_BCS_STRING_MAX, "UNKNOWN");
+
+                    memset(clientChannel[i], 0, EQ_BCS_STRING_MAX);
+                    strcpy_s(clientChannel[i], EQ_BCS_STRING_MAX, "Default");
                 }
 
                 if (recvResult == SOCKET_ERROR)
                 {
                     std::cout << "Client disconnected."
                               << " Socket: " << clientSocket[i]
-                              << ", Name: " << clientSocketName[i]
+                              << ", Name: " << clientName[i]
                               << std::endl;
 
                     //const char* disconnectMessage = "Disconnected from EverQuest Box Chat Server\n";
                     //send(recvSocket, disconnectMessage, strlen(disconnectMessage), 0);
 
                     closesocket(recvSocket);
+
                     clientSocket[i] = 0;
-                    memset(clientSocketName[i], 0, EQBCS_STRING_MAX);
-                    strcpy_s(clientSocketName[i], EQBCS_STRING_MAX, "UNKNOWN");
+
+                    memset(clientName[i], 0, EQ_BCS_STRING_MAX);
+                    strcpy_s(clientName[i], EQ_BCS_STRING_MAX, "UNKNOWN");
+
+                    memset(clientChannel[i], 0, EQ_BCS_STRING_MAX);
+                    strcpy_s(clientChannel[i], EQ_BCS_STRING_MAX, "Default");
                 }
                 else
                 {
@@ -251,17 +271,17 @@ int main(int argc , char *argv[])
 
                     for (auto& token : recvTokens)
                     {
-                        std::cout << "#" << clientSocketName[i] << ": " << token << std::endl;
+                        std::cout << "#" << clientName[i] << " (" << clientChannel[i] << "): " << token << std::endl;
 
                         std::vector<std::string> textTokens = EQ_BCS_SplitString(token, ' ');
 
                         if (textTokens.size() > 1)
                         {
-                            if (textTokens.at(0) == "$ConnectName")
+                            if (textTokens.at(0) == "$ClientName")
                             {
                                 std::string name = textTokens.at(1);
 
-                                for (size_t k = 0; k < EQBCS_CLIENTS_MAX; k++)
+                                for (size_t k = 0; k < EQ_BCS_CLIENTS_MAX; k++)
                                 {
                                     if (clientSocket[k] == recvSocket)
                                     {
@@ -269,7 +289,26 @@ int main(int argc , char *argv[])
                                                   << "' has been linked to client socket " << clientSocket[k]
                                                   << std::endl;
 
-                                        strcpy_s(clientSocketName[k], EQBCS_STRING_MAX, name.c_str());
+                                        strcpy_s(clientName[k], EQ_BCS_STRING_MAX, name.c_str());
+
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (textTokens.at(0) == "$ClientChannel")
+                            {
+                                std::string name = textTokens.at(1);
+
+                                for (size_t k = 0; k < EQ_BCS_CLIENTS_MAX; k++)
+                                {
+                                    if (clientSocket[k] == recvSocket)
+                                    {
+                                        std::cout << "Channel '" << name
+                                                  << "' has been linked to client socket " << clientSocket[k]
+                                                  << std::endl;
+
+                                        strcpy_s(clientChannel[k], EQ_BCS_STRING_MAX, name.c_str());
 
                                         break;
                                     }
@@ -277,6 +316,7 @@ int main(int argc , char *argv[])
                             }
 
                             bool bBCT  = false;
+                            bool bBCTC = false;
                             bool bBCA  = false;
                             bool bBCAA = false;
 
@@ -285,6 +325,17 @@ int main(int argc , char *argv[])
                             if (textTokens.at(0) == "//BCT" || textTokens.at(0) == "//BoxChatTell")
                             {
                                 bBCT  = true;
+                                bBCTC = false;
+                                bBCA  = false;
+                                bBCAA = false;
+
+                                bBroadcast = true;
+                            }
+
+                            if (textTokens.at(0) == "//BCTC" || textTokens.at(0) == "//BoxChatTellChannel")
+                            {
+                                bBCT  = false;
+                                bBCTC = true;
                                 bBCA  = false;
                                 bBCAA = false;
 
@@ -294,6 +345,7 @@ int main(int argc , char *argv[])
                             if (textTokens.at(0) == "//BCA" || textTokens.at(0) == "//BoxChatOthers")
                             {
                                 bBCT  = false;
+                                bBCTC = false;
                                 bBCA  = true;
                                 bBCAA = false;
 
@@ -303,6 +355,7 @@ int main(int argc , char *argv[])
                             if (textTokens.at(0) == "//BCAA" || textTokens.at(0) == "//BoxChatAll")
                             {
                                 bBCT  = false;
+                                bBCTC = false;
                                 bBCA  = false;
                                 bBCAA = true;
 
@@ -311,17 +364,22 @@ int main(int argc , char *argv[])
 
                             if (bBroadcast == true)
                             {
-                                for (size_t j = 0; j < EQBCS_CLIENTS_MAX; j++)
+                                for (size_t j = 0; j < EQ_BCS_CLIENTS_MAX; j++)
                                 {
                                     if (clientSocket[j] == 0)
                                     {
                                         continue;
                                     }
 
-                                    // skip clients with empty names
-                                    if (bBCT == true)
+                                    // skip clients with empty names or UNKNOWN
+                                    if (bBCT == true || bBCTC == true)
                                     {
-                                        if (strlen(clientSocketName[j]) == 0)
+                                        if (strlen(clientName[j]) == 0)
+                                        {
+                                            continue;
+                                        }
+
+                                        if (strcmp(clientName[j], "UNKNOWN") == 0)
                                         {
                                             continue;
                                         }
@@ -330,27 +388,27 @@ int main(int argc , char *argv[])
                                     sendSocket = clientSocket[j];
 
                                     // do not send BCA broadcasts to the sender
-                                    if (bBCT == false && bBCA == true && bBCAA == false && sendSocket == recvSocket)
+                                    if (sendSocket == recvSocket)
                                     {
-                                        continue;
+                                        if (bBCT == false && bBCTC == false && bBCA == true && bBCAA == false)
+                                        {
+                                            continue;
+                                        }
                                     }
 
-                                    std::string connectName = "";
-
                                     std::vector<std::string>::const_iterator textTokenFirst = textTokens.begin();
-                                    std::vector<std::string>::const_iterator textTokenLast = textTokens.end();
+                                    std::vector<std::string>::const_iterator textTokenLast  = textTokens.end();
 
                                     if (bBCT == true)
                                     {
-                                        connectName = textTokens.at(1);
-
-                                        if (connectName.size() == 0)
+                                        std::string sendToClientName = textTokens.at(1);
+                                        if (sendToClientName.size() == 0)
                                         {
                                             continue;
                                         }
 
                                         // skip clients that do not match the BCT tell name
-                                        if (connectName != clientSocketName[j])
+                                        if (clientName[j] != sendToClientName)
                                         {
                                             continue;
                                         }
@@ -358,8 +416,27 @@ int main(int argc , char *argv[])
                                         if (textTokens.size() > 2)
                                         {
                                             textTokenFirst = textTokens.begin() + 2;
-                                            textTokenLast = textTokens.end();
+                                            textTokenLast  = textTokens.end();
+                                        }
+                                    }
+                                    if (bBCTC == true)
+                                    {
+                                        std::string sendToChannelName = textTokens.at(1);
+                                        if (sendToChannelName.size() == 0)
+                                        {
+                                            continue;
+                                        }
 
+                                        // skip clients that do not match the BCTC tell name
+                                        if (clientChannel[j] != sendToChannelName)
+                                        {
+                                            continue;
+                                        }
+
+                                        if (textTokens.size() > 2)
+                                        {
+                                            textTokenFirst = textTokens.begin() + 2;
+                                            textTokenLast  = textTokens.end();
                                         }
                                     }
                                     else
@@ -367,26 +444,23 @@ int main(int argc , char *argv[])
                                         if (textTokens.size() > 1)
                                         {
                                             textTokenFirst = textTokens.begin() + 1;
-                                            textTokenLast = textTokens.end();
+                                            textTokenLast  = textTokens.end();
                                         }
                                     }
 
                                     std::vector<std::string> textTokensEx(textTokenFirst, textTokenLast);
-
                                     if (textTokensEx.size() == 0)
                                     {
                                         continue;
                                     }
 
                                     std::string textTokensExStr = EQ_BCS_JoinStrings(textTokensEx, " ");
-
                                     if (textTokensExStr.size() == 0)
                                     {
                                         continue;
                                     }
 
                                     std::vector<std::string> commandTokens = EQ_BCS_SplitString(textTokensExStr, ';');
-
                                     if (commandTokens.size() == 0)
                                     {
                                         continue;
@@ -426,7 +500,7 @@ int main(int argc , char *argv[])
     closesocket(recvSocket);
     closesocket(sendSocket);
 
-    for (size_t i = 0; i < EQBCS_CLIENTS_MAX; i++)
+    for (size_t i = 0; i < EQ_BCS_CLIENTS_MAX; i++)
     {
         closesocket(clientSocket[i]);
     }

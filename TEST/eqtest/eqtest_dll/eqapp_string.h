@@ -1,26 +1,39 @@
 #pragma once
 
+#include <algorithm>
 #include <sstream>
 #include <string>
 #include <vector>
 
 bool EQAPP_String_Contains(std::string& subject, const std::string& search);
-bool EQAPP_String_StartsWith(std::string& subject, const std::string& search);
+bool EQAPP_String_BeginsWith(std::string& subject, const std::string& search);
+bool EQAPP_String_EndsWith(std::string& subject, const std::string& search);
 void EQAPP_String_ReplaceAll(std::string& subject, const std::string& search, const std::string& replace);
 std::string EQAPP_String_GetBetween(std::string& subject, const std::string& begin, const std::string& end);
 std::string EQAPP_String_GetBefore(const std::string& subject, const std::string& search);
 std::string EQAPP_String_GetAfter(const std::string& subject, const std::string& search);
 std::string EQAPP_String_JoinStrings(const std::vector<std::string>& elements, const std::string& separator);
 std::vector<std::string> EQAPP_String_Split(const std::string& subject, char delimiter);
+bool EQAPP_String_IsDigits(const std::string &subject);
 
 bool EQAPP_String_Contains(std::string& subject, const std::string& search)
 {
     return (subject.find(search) != std::string::npos);
 }
 
-bool EQAPP_String_StartsWith(std::string& subject, const std::string& search)
+bool EQAPP_String_BeginsWith(std::string& subject, const std::string& search)
 {
     return (subject.compare(0, search.size(), search) == 0);
+}
+
+bool EQAPP_String_EndsWith(std::string& subject, const std::string& search)
+{
+    if (subject.length() >= search.length())
+    {
+        return (subject.compare (subject.length() - search.length(), search.length(), search) == 0);
+    }
+
+    return false;
 }
 
 void EQAPP_String_ReplaceAll(std::string& subject, const std::string& search, const std::string& replace)
@@ -54,7 +67,7 @@ std::string EQAPP_String_GetBefore(const std::string& subject, const std::string
 {
     std::string result = std::string();
 
-    std::string::size_type pos = subject.find_first_of(search);
+    std::string::size_type pos = subject.find(search);
     if (pos != std::string::npos)
     {
         result = subject.substr(0, pos);
@@ -67,10 +80,10 @@ std::string EQAPP_String_GetAfter(const std::string& subject, const std::string&
 {
     std::string result = std::string();
 
-    std::string::size_type pos = subject.find_first_of(search);
+    std::string::size_type pos = subject.find(search);
     if (pos != std::string::npos)
     {
-        result = subject.substr(pos + 1);
+        result = subject.substr(pos + search.length(), subject.length());
     }
 
     return result;
@@ -109,4 +122,9 @@ std::vector<std::string> EQAPP_String_Split(const std::string& subject, char del
     for (std::string token; std::getline(iss, token, delimiter); tokens.push_back(token));
 
     return tokens;
+}
+
+bool EQAPP_String_IsDigits(const std::string &subject)
+{
+    return std::all_of(subject.begin(), subject.end(), ::isdigit);
 }

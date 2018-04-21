@@ -119,13 +119,13 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;EQTEST_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Code\!libraries\detours;D:\Code\everquest\eqtest\eq;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Code\!libraries\detours;D:\Code\!libraries\luajit-2.0.5\src;D:\Code\!libraries\sol2-2.20.0;D:\Code\everquest\eqtest\eq;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>D:\Code\!libraries\detours</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Code\!libraries\detours;D:\Code\!libraries\luajit-2.0.5\src</AdditionalLibraryDirectories>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <AdditionalOptions>/OUT:"D:\Code\everquest\eqtest\Release\eqtest.dll" %(AdditionalOptions)</AdditionalOptions>
     </Link>
@@ -158,9 +158,9 @@
     <ClInclude Include="..\eq\eq_alternateabilities.h" />
     <ClInclude Include="..\eq\eq_classes.h" />
     <ClInclude Include="..\eq\eq_constants.h" />
+    <ClInclude Include="..\eq\eq_cxwnd.h" />
     <ClInclude Include="..\eq\eq_executecmd.h" />
     <ClInclude Include="..\eq\eq_functions.h" />
-    <ClInclude Include="..\eq\eq_graphicsdll.h" />
     <ClInclude Include="..\eq\eq_keys.h" />
     <ClInclude Include="..\eq\eq_macros.h" />
     <ClInclude Include="..\eq\eq_memory.h" />
@@ -171,6 +171,7 @@
     <ClInclude Include="eqapp_alwaysattack.h" />
     <ClInclude Include="eqapp_alwayshotbutton.h" />
     <ClInclude Include="eqapp_autoalternateability.h" />
+    <ClInclude Include="eqapp_autogroup.h" />
     <ClInclude Include="eqapp_bazaarbot.h" />
     <ClInclude Include="eqapp_bazaarfilter.h" />
     <ClInclude Include="eqapp_boxchat.h" />
@@ -185,11 +186,13 @@
     <ClInclude Include="eqapp_hud.h" />
     <ClInclude Include="eqapp_ini.h" />
     <ClInclude Include="eqapp_interpretcmd.h" />
+    <ClInclude Include="eqapp_lua.h" />
     <ClInclude Include="eqapp_sleep.h" />
     <ClInclude Include="eqapp_spawncastspell.h" />
     <ClInclude Include="eqapp_spelllist.h" />
     <ClInclude Include="eqapp_string.h" />
     <ClInclude Include="eqapp_timer.h" />
+    <ClInclude Include="eqapp_windowtitle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

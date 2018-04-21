@@ -42,7 +42,7 @@ void EQAPP_BazaarFilter_Beep_Toggle()
 void EQAPP_BazaarFilter_Load()
 {
     std::stringstream fileName;
-    fileName << g_EQAppName << "-bazaarfilter.txt";
+    fileName << g_EQAppName << "/bazaarfilter.txt";
 
     EQAPP_BazaarFilter_LoadEx(fileName.str().c_str());
 }
@@ -71,7 +71,7 @@ void EQAPP_BazaarFilter_LoadEx(const char* filename)
             continue;
         }
 
-        if (EQAPP_String_StartsWith(line, "#") == true)
+        if (EQAPP_String_BeginsWith(line, "#") == true)
         {
             continue;
         }
@@ -100,7 +100,7 @@ bool EQAPP_BazaarFilter_HandleEvent_CBazaarSearchWnd__AddItemToList(char* itemNa
 
         if (itemNameFilter.size() > 1)
         {
-            if (EQAPP_String_StartsWith(itemNameFilter, "@") == true)
+            if (EQAPP_String_BeginsWith(itemNameFilter, "@") == true)
             {
                 itemNameFilter.erase(0, 1);
 

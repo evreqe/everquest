@@ -10,11 +10,18 @@ float g_ESPHeightFilterDistanceLow  = 10.0f;
 float g_ESPHeightFilterDistanceHigh = 10.0f;
 
 bool g_ESPShowSpawnIDIsEnabled = false;
+bool g_ESPShowSpawnRaceIsEnabled = false;
+bool g_ESPShowSpawnClassIsEnabled = false;
 
 float g_ESPDistance = 400.0f;
 
 std::string g_ESPFindSpawnName;
 std::string g_ESPFindSpawnLastName;
+
+uint32_t g_ESPFindSpawnLevel = 0;
+uint32_t g_ESPFindSpawnType = EQ_SPAWN_TYPE_UNKNOWN;
+uint32_t g_ESPFindSpawnRace = EQ_RACE_UNKNOWN;
+uint32_t g_ESPFindSpawnClass = EQ_CLASS_UNKNOWN;
 
 void EQAPP_ESP_Toggle();
 void EQAPP_ESP_Execute();
@@ -35,6 +42,18 @@ void EQAPP_ESP_ShowSpawnID_Toggle()
 {
     EQ_ToggleBool(g_ESPShowSpawnIDIsEnabled);
     EQAPP_PrintBool("ESP Show Spawn ID", g_ESPShowSpawnIDIsEnabled);
+}
+
+void EQAPP_ESP_ShowSpawnRace_Toggle()
+{
+    EQ_ToggleBool(g_ESPShowSpawnRaceIsEnabled);
+    EQAPP_PrintBool("ESP Show Spawn Race", g_ESPShowSpawnRaceIsEnabled);
+}
+
+void EQAPP_ESP_ShowSpawnClass_Toggle()
+{
+    EQ_ToggleBool(g_ESPShowSpawnClassIsEnabled);
+    EQAPP_PrintBool("ESP Show Spawn Class", g_ESPShowSpawnClassIsEnabled);
 }
 
 void EQAPP_ESP_Execute()
@@ -60,9 +79,21 @@ void EQAPP_ESP_Execute()
             continue;
         }
 
-        bool bIgnoreDistance = false;
-
         std::string spawnName = EQ_GetSpawnName(spawn);
+        std::string spawnLastName = EQ_GetSpawnLastName(spawn);
+
+        auto spawnY = EQ_GetSpawnY(spawn);
+        auto spawnX = EQ_GetSpawnX(spawn);
+        auto spawnZ = EQ_GetSpawnZ(spawn);
+
+        float spawnDistance = EQ_CalculateDistance(playerSpawnX, playerSpawnY, spawnX, spawnY);
+
+        auto spawnType = EQ_GetSpawnType(spawn);
+        auto spawnLevel = EQ_GetSpawnLevel(spawn);
+        auto spawnRace = EQ_GetSpawnRace(spawn);
+        auto spawnClass = EQ_GetSpawnClass(spawn);
+
+        bool bIgnoreDistance = false;
 
         if (g_ESPFindSpawnName.size() != 0)
         {
@@ -72,8 +103,6 @@ void EQAPP_ESP_Execute()
             }
         }
 
-        std::string spawnLastName = EQ_GetSpawnLastName(spawn);
-
         if (g_ESPFindSpawnLastName.size() != 0)
         {
             if (EQAPP_String_Contains(spawnLastName, g_ESPFindSpawnLastName) == true)
@@ -82,11 +111,37 @@ void EQAPP_ESP_Execute()
             }
         }
 
-        auto spawnY = EQ_GetSpawnY(spawn);
-        auto spawnX = EQ_GetSpawnX(spawn);
-        auto spawnZ = EQ_GetSpawnZ(spawn);
+        if (g_ESPFindSpawnType != EQ_SPAWN_TYPE_UNKNOWN)
+        {
+            if (spawnType == g_ESPFindSpawnType)
+            {
+                bIgnoreDistance = true;
+            }
+        }
 
-        float spawnDistance = EQ_CalculateDistance(playerSpawnX, playerSpawnY, spawnX, spawnY);
+        if (g_ESPFindSpawnLevel != 0)
+        {
+            if (spawnLevel >= g_ESPFindSpawnLevel)
+            {
+                bIgnoreDistance = true;
+            }
+        }
+
+        if (g_ESPFindSpawnRace != EQ_RACE_UNKNOWN)
+        {
+            if (spawnRace == g_ESPFindSpawnRace)
+            {
+                bIgnoreDistance = true;
+            }
+        }
+
+        if (g_ESPFindSpawnClass != EQ_CLASS_UNKNOWN)
+        {
+            if (spawnClass == g_ESPFindSpawnClass)
+            {
+                bIgnoreDistance = true;
+            }
+        }
 
         if (EQ_IsMouseLookEnabled() == false && bIgnoreDistance == false)
         {
@@ -122,12 +177,9 @@ void EQAPP_ESP_Execute()
         bool result = EQ_WorldSpaceToScreenSpace(spawnX, spawnY, spawnZ, screenX, screenY);
         if (result == true)
         {
-            auto spawnType = EQ_GetSpawnType(spawn);
-            auto spawnRace = EQ_GetSpawnRace(spawn);
-            auto spawnClass = EQ_GetSpawnClass(spawn);
-
             if (spawnType == EQ_SPAWN_TYPE_NPC)
             {
+                // skip mounts
                 if (EQAPP_String_Contains(spawnName, "`s Mount") == true)
                 {
                     spawn = EQ_GetSpawnNext(spawn);
@@ -141,8 +193,6 @@ void EQAPP_ESP_Execute()
                     continue;
                 }
             }
-
-            auto spawnLevel = EQ_GetSpawnLevel(spawn);
 
             std::stringstream espText;
             espText << "[" << spawnLevel;
@@ -214,6 +264,20 @@ void EQAPP_ESP_Execute()
                 auto spawnID = EQ_GetSpawnID(spawn);
 
                 espText << "\n(ID: " << spawnID << ")";
+            }
+
+            if (g_ESPShowSpawnRaceIsEnabled == true)
+            {
+                auto spawnRace = EQ_GetSpawnRace(spawn);
+
+                espText << "\n(Race: " << spawnRace << ")";
+            }
+
+            if (g_ESPShowSpawnClassIsEnabled == true)
+            {
+                auto spawnClass = EQ_GetSpawnClass(spawn);
+
+                espText << "\n(Class: " << spawnClass << ")";
             }
 
             int textColor = EQ_DRAW_TEXT_COLOR_WHITE;

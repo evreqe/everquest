@@ -8,26 +8,24 @@
 #include "eq_constants.h"
 #include "eq_messages.h"
 
-uint32_t EQ_ADDRESS_CLIENT_VERSION_DATE = 0xADBC88; // WinMain()    "Starting EverQuest (Built %s %s)"    CrashDetected()    "Client Version: %s %s\n"
-#define EQ_STRING_CLIENT_VERSION_DATE "Mar  9 2018"
+uint32_t EQ_ADDRESS_CLIENT_VERSION_DATE = 0xABF23C; // WinMain()    "Starting EverQuest (Built %s %s)"    CrashDetected()    "Client Version: %s %s\n"
+#define EQ_STRING_CLIENT_VERSION_DATE "Apr  9 2018"
 #define EQ_SIZE_CLIENT_VERSION_DATE 12
 
-uint32_t EQ_ADDRESS_CLIENT_VERSION_TIME = 0xADBC7C; // WinMain()    "Starting EverQuest (Built %s %s)"    CrashDetected()    "Client Version: %s %s\n"
-#define EQ_STRING_CLIENT_VERSION_TIME "14:46:10"
+uint32_t EQ_ADDRESS_CLIENT_VERSION_TIME = 0xABF230; // WinMain()    "Starting EverQuest (Built %s %s)"    CrashDetected()    "Client Version: %s %s\n"
+#define EQ_STRING_CLIENT_VERSION_TIME "21:46:39"
 #define EQ_SIZE_CLIENT_VERSION_TIME 9
 
-uint32_t EQ_BASE_ADDRESS_VALUE    = 0x400000;
-
-uint32_t EQ_ADDRESS_AUTO_ATTACK    = 0xFBD537; // uint8_t    // Attack
-uint32_t EQ_ADDRESS_AUTO_FIRE      = 0xFBD538; // uint8_t    // Autofire
-uint32_t EQ_ADDRESS_AUTO_RUN       = 0xF35C70; // uint32_t
-uint32_t EQ_ADDRESS_MOUSE_LOOK     = 0xF35C52; // uint8_t    // MouseLook
-uint32_t EQ_ADDRESS_NET_STATUS     = 0xF35C55; // uint8_t    byte_F30435 = sub_9CFF30("Defaults", "NetStat", 0, 0); // 0xF30435
+uint32_t EQ_ADDRESS_AUTO_ATTACK    = 0xF0B507; // uint8_t    // Attack
+uint32_t EQ_ADDRESS_AUTO_FIRE      = 0xF0B508; // uint8_t    // Autofire
+uint32_t EQ_ADDRESS_AUTO_RUN       = 0xE6C8B8; // uint32_t
+uint32_t EQ_ADDRESS_MOUSE_LOOK     = 0xE6C89A; // uint8_t    // MouseLook
+uint32_t EQ_ADDRESS_NET_STATUS     = 0xE6C89D; // uint8_t    byte_F30435 = sub_9CFF30("Defaults", "NetStat", 0, 0); // 0xF30435
 /*
 search for 1 and 0
 */
 
-uint32_t EQ_ADDRESS_POINTER_WINDOW_HWND = 0xFBFF48; // HWND hWnd    // HWnd
+uint32_t EQ_ADDRESS_POINTER_WINDOW_HWND = 0xF0EA94; // HWND hWnd    // in IDA press G, jump to address: hWnd
 /*
     PostMessageA(hWnd, 0x4647u, 0x4247u, (LPARAM)v3);
 */
@@ -36,11 +34,41 @@ uint32_t EQ_ADDRESS_POINTER_WINDOW_HWND = 0xFBFF48; // HWND hWnd    // HWnd
     PostMessageA(hWnd, 0x4646u, 0x4246u, (LPARAM)v11);
 */
 
-uint32_t EQ_ADDRESS_POINTER_StringTable    = 0xF26798; // pinstStringTable
+uint32_t EQ_ADDRESS_POINTER_StringTable    = 0xE5F024; // pinstStringTable
 
-uint32_t EQ_ADDRESS_FUNCTION_StringTable__getString    = 0x964D20; // "%s (%d)"    "ERROR: String not found."
+uint32_t EQ_ADDRESS_FUNCTION_StringTable__getString    = 0x89FCB0; // "%s (%d)"    "ERROR: String not found."
 
-uint32_t EQ_ADDRESS_FUNCTION_CrashDetected    = 0x73FEE0; // "Crash (char = %s, zone = %s)\n"    "Local Player's World location at time of crash: %f, %f, %f.\n"    "Gamestate at crash = %d\n"    "Crash Details: %s\n"
+uint32_t EQ_ADDRESS_POINTER_build_token_string_PARAM    = 0x58BB90; // calls StringTable__getString()
+/*
+_BYTE *__cdecl sub_58BB90(_BYTE *a1, unsigned int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9, int a10, int a11)
+{
+  char *v11; // eax
+  int v13; // [esp+0h] [ebp-24h]
+  int v14; // [esp+4h] [ebp-20h]
+  int v15; // [esp+8h] [ebp-1Ch]
+  int v16; // [esp+Ch] [ebp-18h]
+  int v17; // [esp+10h] [ebp-14h]
+  int v18; // [esp+14h] [ebp-10h]
+  int v19; // [esp+18h] [ebp-Ch]
+  int v20; // [esp+1Ch] [ebp-8h]
+  int v21; // [esp+20h] [ebp-4h]
+
+  v13 = a3;
+  v14 = a4;
+  v15 = a5;
+  v16 = a6;
+  v17 = a7;
+  v18 = a8;
+  v19 = a9;
+  v20 = a10;
+  v21 = a11;
+  v11 = StringTable__getString(dword_E5F024, a2, 0);
+  sub_5ABB90(a1, v11, (int)&v13, -1, 0);
+  return a1;
+}
+*/
+
+uint32_t EQ_ADDRESS_FUNCTION_CrashDetected    = 0x694830; // "Crash (char = %s, zone = %s)\n"    "Local Player's World location at time of crash: %f, %f, %f.\n"    "Gamestate at crash = %d\n"    "Crash Details: %s\n"
 /*
   sub_8A4150("Fatal error occurred in mainthread! (Release Client #630)\n");
   strcat(byte_FBC576, "Fatal error in mainthread! (Release Client #630)\n");
@@ -89,8 +117,8 @@ uint32_t EQ_ADDRESS_FUNCTION_CrashDetected    = 0x73FEE0; // "Crash (char = %s, 
   }
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_DrawNetStatus    = 0x6B9860; // "%ldms"    "%0.2f%%"
-uint32_t EQ_ADDRESS_FUNCTION_ExecuteCmd       = 0x6243B0; // "ExecuteCmd has received a CMD_EXITGAME.\n"    "/%s %s"    "%c%s %s "    "help.html"
+uint32_t EQ_ADDRESS_FUNCTION_DrawNetStatus    = 0x6163A0; // "%ldms"    "%0.2f%%"
+uint32_t EQ_ADDRESS_FUNCTION_ExecuteCmd       = 0x586860; // "ExecuteCmd has received a CMD_EXITGAME.\n"    "/%s %s"    "%c%s %s "    "help.html"
 /*
 ExecuteCmd()
 case 508:
@@ -106,9 +134,9 @@ sub_8A55C0(
 */
 
 // class EQPlayer
-uint32_t EQ_ADDRESS_POINTER_EQPlayerManager    = 0xFBEBC0; // pinstSpawnManager
+uint32_t EQ_ADDRESS_POINTER_EQPlayerManager    = 0xF0D310; // pinstSpawnManager
 
-uint32_t EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID      = 0x6E27A0; // "Your inventory is full!"
+uint32_t EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID      = 0x63E030; // "Your inventory is full!"
 /*
 case 0xD:
       result = (_DWORD *)sub_5E2420((void *)dword_FB5090, *(_DWORD *)(a3 + 4)); // EQPlayerManager__GetSpawnByID and pinstSpawnManager
@@ -149,7 +177,7 @@ LABEL_53:
       return result;
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName    = 0x6E27C0; // "Incorrect Usage. Type /xtarget for correct usage."
+uint32_t EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName    = 0x63E050; // "Incorrect Usage. Type /xtarget for correct usage."
 /*
 if ( !sub_8A3560(&v32, 0) || (sub_89F500(&v32), v8 = sub_89E950(&v28) - 1, v8 < 0) )
       {
@@ -208,10 +236,8 @@ while ( *(_DWORD *)(result + 4) != v7 )
 */
 
 // class EQPlayer
-uint32_t EQ_ADDRESS_POINTER_TARGET_SPAWN        = 0xF25EF0; // pinstTarget    ExecuteCmd() case 355 CLEAR_TARGET
-uint32_t EQ_ADDRESS_POINTER_CONTROLLED_SPAWN    = 0x0; // pinstControlledPlayer
-uint32_t EQ_ADDRESS_POINTER_LOCAL_SPAWN         = 0xF287A8; // pinstLocalPlayer    "Local Player's World location at time of crash: %f, %f, %f.\n"
-uint32_t EQ_ADDRESS_POINTER_PLAYER_SPAWN        = EQ_ADDRESS_POINTER_LOCAL_SPAWN;
+uint32_t EQ_ADDRESS_POINTER_TARGET_SPAWN        = 0xE5F1A4; // pinstTarget    ExecuteCmd() case CLEAR_TARGET
+uint32_t EQ_ADDRESS_POINTER_PLAYER_SPAWN        = 0xE5F150; // pinstLocalPlayer    "Local Player's World location at time of crash: %f, %f, %f.\n"
 /*
 if ( dword_F21FE8 ) // PlayerSpawn
   {
@@ -222,7 +248,7 @@ if ( dword_F21FE8 ) // PlayerSpawn
   }
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI    = 0x6D63F0; // search for xref to autorun
+uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI    = 0x632070; // search for xref to autorun
 /*
 EQPlayer__FollowPlayerAI()
     if ( v21 + 15.0 <= *(float *)(v1 + 564) ) // Follow Distance 1
@@ -246,7 +272,7 @@ EQPlayer__FollowPlayerAI()
     }
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight    = 0x6EAC30; // PlayerZoneClient__ChangeHeight    "%s is now able to kill anyone (or be killed) as if they were an NPC." and "FORMAT: /becomenpc"
+uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight    = 0x645CC0; // PlayerZoneClient__ChangeHeight    "%s is now able to kill anyone (or be killed) as if they were an NPC." and "FORMAT: /becomenpc"
 /*
 v25 = sub_569850(v18);
 sprintf(&v59, "Changing %s to race: %s.", dword_F26020 + 164, v25);
@@ -306,18 +332,18 @@ v10 = 0.0;
 */
 
 // class CXWndManager
-uint32_t EQ_ADDRESS_POINTER_CXWndManager    = 0x1739C64; // pinstCXWndManager
+uint32_t EQ_ADDRESS_POINTER_CXWndManager    = 0x169B650; // pinstCXWndManager
 
-uint32_t EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows    = 0x9C96F0; // "DoAllDrawing() failed\n"    GetTickCount()
+uint32_t EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows    = 0x905AC0; // "DoAllDrawing() failed\n"    GetTickCount()
 
 // class CEverQuest
-uint32_t EQ_ADDRESS_POINTER_CEverQuest    = 0xFBFD88; // pinstCEverQuest
+uint32_t EQ_ADDRESS_POINTER_CEverQuest    = 0xF0EBE8; // pinstCEverQuest
 /*
 CEverQuest__InterpretCmd()
 if ( *(_DWORD *)(dword_10C1418 + 1480) == 5 ) // gamestate == in-game
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd    = 0x6861C0; // "#%s %s"
+uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd    = 0x5E7050; // "#%s %s"
 /*
 CEverQuest__InterpretCmd()
 switch ( byte_F334A0 )
@@ -354,13 +380,13 @@ default:
 }
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat        = 0x579710; // "You cannot purchase an item from yourself!"
+uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat        = 0x4E1190; // "You cannot purchase an item from yourself!"
 /*
 CEverQuest__InterpretCmd()
 sub_4764B0(v9, v8, 273, 1, 1, 0); // CEverQuest__dsp_chat
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting    = 0x66D260; // "%s <%s>"
+uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting    = 0x5CE4D0; // "%s <%s>"
 /*
   if ( v13 && v13 != 3 && v13 != 7 )
   {
@@ -378,12 +404,12 @@ uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting    = 0x66D260; // "%s <%s>
 */
 
 // class CDisplay
-uint32_t EQ_ADDRESS_POINTER_CDisplay    = 0xF25F08; // pinstCDisplay    "CDisplay::CreatePlayerActor - FATAL ERROR - mySpriteDef is NULL. "
+uint32_t EQ_ADDRESS_POINTER_CDisplay    = 0xE5F3B8; // pinstCDisplay    "CDisplay::CreatePlayerActor - FATAL ERROR - mySpriteDef is NULL. "
 /*
 CDisplay::CreatePlayerActor(*(float *)&a1, (int)dword_F20698, 0, 0, 1, 2, 1, 0);
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2    = 0x5C2A00; // "%ldms"    "%0.2f%%"
+uint32_t EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2    = 0x5270B0; // "%ldms"    "%0.2f%%"
 /*
 DrawNetStatus()
     sprintf(&Dest, "%0.2f%%", v8 * 100.0);
@@ -392,14 +418,53 @@ DrawNetStatus()
     CDisplay__WriteTextHD2(&Dest, (unsigned __int16)a1 + 64, (unsigned __int16)a2, (void *)12);
 */
 
-uint32_t EQ_ADDRESS_POINTER_CBazaarSearchWnd    = 0xE74DB4;
+uint32_t EQ_ADDRESS_FUNCTION_CXWnd__IsReallyVisible    = 0x901A60; // "MapSkin" "AtlasSkin"
+/*
+sub_932730(3, &v47);
+    v25 = (const CHAR *)sub_8D5B70(&lpMem);
+    sub_90C760("Main", "MapSkin", v25);
+    sub_75FE20(0);
+    LOBYTE(v48) = 14;
+    if ( lpMem )
+      sub_8D7860(lpMem);
+    lpMem = 0;
+    v48 = 15;
+    if ( v47 )
+      sub_8D7860(v47);
+  }
+  v48 = -1;
+LABEL_15:
+  if ( (unsigned __int8)sub_8FF710(v4) )
+  {
+    if ( !*((_DWORD *)v4 + 206) || (v12 = *((_DWORD *)v4 + 207)) != 0 && sub_901A60(v12) ) // sub_901A60 == CXWnd__IsReallyVisible()
+    {
+      switch ( v7 )
+      {
+        case 6:
+          return 0;
+        case 14:
+          v30 = (_BYTE *)*((_DWORD *)v4 + 193);
+          if ( v6 == v30 )
+          {
+            (*(void (__stdcall **)(LPVOID *))(*(_DWORD *)v30 + 384))(&lpMem);
+            v48 = 16;
+            *((_DWORD *)v4 + 399) = sub_8D6F00(&lpMem);
+            v4[1623] = 1;
+            v48 = 17;
+            if ( lpMem )
+              sub_8D7860(lpMem);
+            v48 = -1;
+          }
+*/
 
-uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__WndNotification    = 0x77A3A0; // "You cannot purchase an item from yourself!"    "9999999"
+uint32_t EQ_ADDRESS_POINTER_CBazaarSearchWnd    = 0xDAAE04;
+
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__WndNotification    = 0x6C9950; // "You cannot purchase an item from yourself!"    "9999999"
 /*
 sub_8EB690("BazaarSearchWnd", "HideTraders", *(_BYTE *)(v26 + 492));
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__HandleBazaarMsg    = 0x77B520; // "You successfully purchased %d %s(s) from %s."    " The item has been sent to your parcels."
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__HandleBazaarMsg    = 0x6CAA30; // "You successfully purchased %d %s(s) from %s."    "The item has been sent to your parcels."
 /*
 else
 {
@@ -429,7 +494,7 @@ case 5514u: // 0x5D3Au
           break;
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList    = 0x778250;
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList    = 0x6C78A0;
 /*
   result = 0;
   v13 = this;
@@ -582,7 +647,7 @@ do
 }
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery    = 0x778AF0;
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery    = 0x6C8130;
 /*
 CBazaarSearchWnd__WndNotification()
 
@@ -824,7 +889,7 @@ LABEL_106:
   }
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem    = 0x779040;
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem    = 0x6C8660;
 /*
 if ( dword_FBD53C <= 0 )
 {
@@ -908,9 +973,9 @@ char __thiscall sub_779040(_DWORD *this, int a2) // CBazaarSearchWnd__BuyItem()
 }
 */
 
-uint32_t EQ_ADDRESS_POINTER_CBazaarConfirmationWnd    = 0xE74EA0;
+uint32_t EQ_ADDRESS_POINTER_CBazaarConfirmationWnd    = 0xDAAB74;
 
-uint32_t EQ_ADDRESS_FUNCTION_CBazaarConfirmationWnd__WndNotification    = 0x538710;
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarConfirmationWnd__WndNotification    = 0x4A33D0;
 
 /*
 int __thiscall sub_538710(_DWORD *this, int a2, int a3, int a4)
@@ -954,6 +1019,350 @@ int __thiscall sub_538710(_DWORD *this, int a2, int a3, int a4)
 */
 
 // Trader window
-uint32_t EQ_ADDRESS_POINTER_CBazaarWnd    = 0xE74E70;
+uint32_t EQ_ADDRESS_POINTER_CBazaarWnd    = 0xDAAE7C;
 
-uint32_t EQ_ADDRESS_FUNCTION_CBazaarWnd__WndNotification    = 0x77D300;
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarWnd__WndNotification    = 0x6CC530;
+/*
+int __thiscall sub_77D300(int this, int a2, int a3, void **a4)
+{
+  int v4; // ebx
+  int v5; // ebp
+  int v6; // esi
+  char v7; // cl
+  char v8; // bl
+  char *v9; // eax
+  int result; // eax
+  int v11; // esi
+  int *v12; // edi
+  int v13; // esi
+  _DWORD *v14; // ecx
+  char *v15; // eax
+  char v16; // bl
+  char *v17; // eax
+  char v18; // bl
+  signed int v19; // eax
+  char *v20; // eax
+  char v21; // bl
+  char *v22; // eax
+  char v23; // bl
+  char *v24; // eax
+  _DWORD *v25; // ecx
+  void *v26; // ecx
+  char v27; // [esp+13h] [ebp-A5h]
+  int v28; // [esp+14h] [ebp-A4h]
+  int v29; // [esp+18h] [ebp-A0h]
+  int v30; // [esp+1Ch] [ebp-9Ch]
+  char v31; // [esp+20h] [ebp-98h]
+  char v32; // [esp+24h] [ebp-94h]
+  char v33; // [esp+28h] [ebp-90h]
+  int v34; // [esp+2Ch] [ebp-8Ch]
+  char v35; // [esp+30h] [ebp-88h]
+  int v36; // [esp+48h] [ebp-70h]
+  int v37; // [esp+4Ch] [ebp-6Ch]
+  char v38; // [esp+50h] [ebp-68h]
+  int v39; // [esp+68h] [ebp-50h]
+  int v40; // [esp+6Ch] [ebp-4Ch]
+  char v41; // [esp+70h] [ebp-48h]
+  int v42; // [esp+88h] [ebp-30h]
+  int v43; // [esp+8Ch] [ebp-2Ch]
+  char v44; // [esp+90h] [ebp-28h]
+  int v45; // [esp+A8h] [ebp-10h]
+  int v46; // [esp+B4h] [ebp-4h]
+
+  v4 = 0;
+  v5 = this;
+  v29 = 0;
+  if ( a3 == 1 )
+  {
+    if ( a2 == *(_DWORD *)(this + 612) )
+    {
+      v6 = sub_7811B0((volatile signed __int32 ***)this);
+      if ( *(_DWORD *)(v5 + 580) == -1 )
+        goto LABEL_18;
+      if ( !sub_77E380((_DWORD *)v5) )
+        goto LABEL_18;
+      v7 = *(_BYTE *)(v5 + 2548);
+      if ( !v7 )
+        goto LABEL_18;
+      if ( *(_BYTE *)(*(_DWORD *)(v5 + 580) + v5 + 2284) )
+      {
+        sub_781330(&v34);
+        sub_9A0EC0(&v35, (char *)(*(_DWORD *)(v5 + 596) + 52));
+        v36 = v6;
+        v34 = 3;
+        if ( *(_DWORD *)dword_F2679C )
+        {
+          word_F25F48 = sub_94D430(31402, 0);
+          qmemcpy(&dword_F25F4A, &v34, 0x20u);
+          v8 = sub_8EF920(*(int *)dword_F2679C, 4, &word_F25F48, 34);
+          j_j__free(0);
+          --dword_10E0E94;
+          if ( v8 )
+            sub_8ECAD0(*(int *)dword_F2679C);
+          else
+            sub_57B3F0((_DWORD *)dword_D402C8, (LPCRITICAL_SECTION **)dword_F2679C);
+          v9 = StringTable__getString(dword_F26798, 0x1A60u, 0);
+        }
+        else
+        {
+          if ( !byte_F35BA4 )
+            sub_99D110("Attempt to send message %d on a void connection.", 170);
+          v9 = StringTable__getString(dword_F26798, 0x1A60u, 0);
+        }
+      }
+      else
+      {
+        if ( !v7 )
+        {
+LABEL_18:
+          sub_77C8F0((_DWORD *)v5);
+          return 0;
+        }
+        v9 = StringTable__getString(dword_F26798, 0x1A61u, 0);
+      }
+      sub_77FF30((char **)v5, v9, (void *)0xF);
+      goto LABEL_18;
+    }
+    if ( a2 == *(_DWORD *)(this + 624) )
+    {
+      v11 = sub_7811B0((volatile signed __int32 ***)this);
+      if ( v11 )
+      {
+        v12 = (int *)(v5 + 596);
+        if ( *(_DWORD *)(v5 + 596) )
+        {
+          if ( *(_BYTE *)(v5 + 2548) )
+          {
+            sub_781330(&v40);
+            v42 = v11;
+            v13 = 0;
+            v40 = 3;
+            v30 = 0;
+            do
+            {
+              v4 |= 1u;
+              v28 = v4;
+              if ( !*sub_781430((_DWORD *)v5, &v31, v13)
+                || *(_BYTE *)(v13 + v5 + 2284)
+                || (v14 = (_DWORD *)*sub_781430((_DWORD *)v5, &v32, v13),
+                    v4 |= 2u,
+                    v46 = 1,
+                    v28 = v4,
+                    v29 = v4,
+                    v27 = 1,
+                    !sub_94B110(v14, v12, 1)) )
+              {
+                v27 = 0;
+              }
+              v46 = 0;
+              if ( v4 & 2 )
+              {
+                v4 &= 0xFFFFFFFD;
+                v28 = v4;
+                v29 = v4;
+                sub_88DAD0(&v32);
+              }
+              v46 = -1;
+              if ( v4 & 1 )
+              {
+                v4 &= 0xFFFFFFFE;
+                v28 = v4;
+                sub_88DAD0(&v31);
+              }
+              if ( v27 )
+              {
+                v15 = (char *)(*sub_781430((_DWORD *)v5, &v33, v13) + 52);
+                v46 = 2;
+                sub_9A0EC0(&v41, v15);
+                v46 = -1;
+                sub_88DAD0(&v33);
+                if ( *(_DWORD *)dword_F2679C )
+                {
+                  word_F25F48 = sub_94D430(31402, 0);
+                  qmemcpy(&dword_F25F4A, &v40, 0x20u);
+                  v16 = sub_8EF920(*(int *)dword_F2679C, 4, &word_F25F48, 34);
+                  j_j__free(0);
+                  --dword_10E0E94;
+                  if ( !v16 )
+                    sub_57B3F0((_DWORD *)dword_D402C8, (LPCRITICAL_SECTION **)dword_F2679C);
+                  v13 = v30;
+                  v12 = (int *)(v5 + 596);
+                  v4 = v28;
+                }
+                else if ( !byte_F35BA4 )
+                {
+                  sub_99D110("Attempt to send message %d on a void connection.", 170);
+                }
+              }
+              v30 = ++v13;
+            }
+            while ( v13 < 200 );
+          }
+        }
+      }
+      sub_77C8F0((_DWORD *)v5);
+      return 0;
+    }
+    if ( a2 == *(_DWORD *)(this + 628) )
+    {
+      if ( *(_DWORD *)(this + 596) && *(_BYTE *)(this + 2548) )
+      {
+        sub_781330(&v37);
+        v17 = (char *)(*(_DWORD *)(v5 + 596) + 52);
+        v37 = 3;
+        sub_9A0EC0(&v38, v17);
+        v39 = 0;
+        if ( *(_DWORD *)dword_F2679C )
+        {
+          word_F25F48 = sub_94D430(31402, 0);
+          qmemcpy(&dword_F25F4A, &v37, 0x20u);
+          v18 = sub_8EF920(*(int *)dword_F2679C, 4, &word_F25F48, 34);
+          j_j__free(0);
+          --dword_10E0E94;
+          if ( v18 )
+            sub_8ECAD0(*(int *)dword_F2679C);
+          else
+            sub_57B3F0((_DWORD *)dword_D402C8, (LPCRITICAL_SECTION **)dword_F2679C);
+        }
+        else if ( !byte_F35BA4 )
+        {
+          sub_99D110("Attempt to send message %d on a void connection.", 170);
+        }
+        sub_77DAE0((_DWORD *)v5, (int *)(v5 + 596), 0);
+      }
+      sub_77C8F0((_DWORD *)v5);
+      return 0;
+    }
+    if ( a2 == *(_DWORD *)(this + 600) )
+    {
+      v19 = sub_77F2A0((_DWORD *)this);
+      if ( v19 == -1 )
+      {
+        v20 = StringTable__getString(dword_F26798, 0x1A57u, 0);
+      }
+      else
+      {
+        if ( v19 != -2 )
+          return 0;
+        v20 = StringTable__getString(dword_F26798, 0x1A62u, 0);
+      }
+      sub_77FF30((char **)v5, v20, (void *)0xF);
+      return 0;
+    }
+    if ( a2 == *(_DWORD *)(this + 616) )
+    {
+      if ( *(_BYTE *)(this + 2548) )
+      {
+        if ( *(_DWORD *)dword_F2679C )
+        {
+          word_F25F48 = sub_94D430(31402, 0);
+          dword_F25F4A = 11;
+          qword_F25F4E = 0i64;
+          v21 = sub_8EF920(*(int *)dword_F2679C, 4, &word_F25F48, 14);
+          j_j__free(0);
+          --dword_10E0E94;
+          if ( v21 )
+            sub_8ECAD0(*(int *)dword_F2679C);
+          else
+            sub_57B3F0((_DWORD *)dword_D402C8, (LPCRITICAL_SECTION **)dword_F2679C);
+          return 0;
+        }
+        if ( !byte_F35BA4 )
+          sub_99D110("Attempt to send message %d on a void connection.", 170);
+      }
+      return 0;
+    }
+    if ( a2 == *(_DWORD *)(this + 608) )
+    {
+      *(_DWORD *)(this + 588) = 0;
+      sub_77E190((_DWORD *)this);
+      if ( *(_DWORD *)(v5 + 580) != -1 && sub_77E380((_DWORD *)v5) && *(_BYTE *)(v5 + 2548) )
+      {
+        sub_781330(&v43);
+        v22 = (char *)(*(_DWORD *)(v5 + 596) + 52);
+        v43 = 3;
+        sub_9A0EC0(&v44, v22);
+        v45 = 0;
+        if ( *(_DWORD *)dword_F2679C )
+        {
+          word_F25F48 = sub_94D430(31402, 0);
+          qmemcpy(&dword_F25F4A, &v43, 0x20u);
+          v23 = sub_8EF920(*(int *)dword_F2679C, 4, &word_F25F48, 34);
+          j_j__free(0);
+          --dword_10E0E94;
+          if ( v23 )
+            sub_8ECAD0(*(int *)dword_F2679C);
+          else
+            sub_57B3F0((_DWORD *)dword_D402C8, (LPCRITICAL_SECTION **)dword_F2679C);
+        }
+        else if ( !byte_F35BA4 )
+        {
+          sub_99D110("Attempt to send message %d on a void connection.", 170);
+        }
+        sub_77DAE0((_DWORD *)v5, (int *)(v5 + 596), 0);
+      }
+      sub_77C8F0((_DWORD *)v5);
+      result = 0;
+    }
+    else
+    {
+      if ( a2 == *(_DWORD *)(this + 604) )
+      {
+        sub_77C830((char *)this);
+        v29 = 0;
+        v46 = 3;
+        sub_77DAE0((_DWORD *)v5, &v29, 0);
+        v46 = -1;
+        sub_88DAD0(&v29);
+        return 0;
+      }
+      if ( a2 == *(_DWORD *)(this + 648) )
+      {
+        if ( dword_F287A8 )
+        {
+          sub_6338B0(dword_F287A8, (unsigned int)Directory);
+          return 0;
+        }
+        return 0;
+      }
+      v24 = 0;
+      v25 = (_DWORD *)(this + 632);
+      while ( a2 != *v25 )
+      {
+        ++v24;
+        ++v25;
+        if ( (signed int)v24 >= 4 )
+          goto LABEL_97;
+      }
+      sub_77E7C0((_DWORD *)v5, v24, (void *)0xFFFFFFFF);
+      result = 0;
+    }
+  }
+  else
+  {
+    if ( a3 != 3 )
+    {
+      if ( a3 == 39 )
+      {
+        v26 = *(void **)(this + 592);
+        if ( v26 != (void *)-1 )
+        {
+          sub_77E7C0((_DWORD *)v5, v26, *a4);
+          *(_DWORD *)(v5 + 592) = -1;
+          return 0;
+        }
+      }
+      else if ( a3 == 10 )
+      {
+        sub_77C830((char *)this);
+        byte_10CCD48 = 0;
+        *(_BYTE *)(v5 + 2548) = 0;
+        sub_7E43B0((_DWORD *)dword_E74E40, 0);
+      }
+    }
+LABEL_97:
+    result = sub_9D3310((void **)v5, a2, a3, (int)a4);
+  }
+  return result;
+}
+*/

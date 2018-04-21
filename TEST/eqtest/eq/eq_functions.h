@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include <sstream>
+#include <unordered_map>
 
 #include <cstdint>
 #include <cstring>
@@ -25,8 +27,7 @@ typedef int (__cdecl* EQ_FUNCTION_TYPE_ExecuteCmd)(uint32_t commandID, int isAct
 
 /* function prototypes */
 
-template <class T>
-void EQ_Log(const char* text, T number);
+void EQ_Log(const char* text);
 
 void EQ_ToggleBool(bool& b);
 
@@ -38,7 +39,6 @@ float EQ_GetBearing(float y1, float x1, float y2, float x2);
 
 bool EQ_IsPointInsideRectangle(int pointX, int pointY, int rectX, int rectY, int rectWidth, int rectHeight);
 void EQ_ColorARGB_Darken(uint32_t& colorARGB, float percent);
-void EQ_CopyStringToClipboard(const std::string& str);
 
 uint32_t EQ_GetGameState();
 bool EQ_IsInGame();
@@ -78,8 +78,10 @@ uint32_t EQ_GetSpawnPrevious(uint32_t spawn);
 std::string EQ_GetSpawnName(uint32_t spawn);
 std::string EQ_GetSpawnLastName(uint32_t spawn);
 
-std::string EQ_GetTargetSpawnName();
 std::string EQ_GetPlayerSpawnName();
+std::string EQ_GetPlayerSpawnLastName();
+std::string EQ_GetTargetSpawnName();
+std::string EQ_GetPlayerSpawnLastName();
 
 bool EQ_IsSpawnWithinDistance(uint32_t spawn, float distance);
 float EQ_GetSpawnDistance(uint32_t spawn);
@@ -113,11 +115,17 @@ void EQ_SetSpawnHeight(uint32_t spawn, float height);
 void EQ_SetSpawnFollowSpawn(uint32_t spawn, uint32_t followSpawn);
 void EQ_TurnPlayerTowardsSpawn(uint32_t spawn);
 
+bool EQ_IsSpawnClassTank(uint32_t spawn); // WAR PAL SHD
+bool EQ_IsSpawnClassPriest(uint32_t spawn); // CLR DRU SHM
+bool EQ_IsSpawnClassCaster(uint32_t spawn); // NEC WIZ MAG ENC
+bool EQ_IsSpawnClassMelee(uint32_t spawn); // BER MNK ROG
+bool EQ_IsSpawnClassHybrid(uint32_t spawn); // BRD BST RNG
+
 void EQ_InterpretCommand(const char* text);
 void EQ_ExecuteCommand(uint32_t commandID, int isActive);
 
-void EQ_WriteChatText(const char* text);
-void EQ_WriteChatTextEx(const char* text, int color);
+void EQ_PrintTextToChat(const char* text);
+void EQ_PrintTextToChatEx(const char* text, int color);
 
 void EQ_DrawText(const char* text, int x, int y);
 void EQ_DrawTextEx(const char* text, int x, int y, int color);
@@ -127,13 +135,15 @@ void EQ_SetCameraFieldOfView(float fieldOfView);
 
 bool EQ_WorldSpaceToScreenSpace(float worldX, float worldY, float worldZ, float& screenX, float& screenY);
 
+void EQ_PlaySound(const char* filename);
+void EQ_StopSound();
+
 void EQ_StopFollow();
 void EQ_FollowTarget();
 void EQ_TurnPlayerTowardsTarget();
 
-std::vector<uint32_t> EQAPP_GetNPCSpawnIDListSortedByDistance();
-
-bool EQ_CXWnd_IsOpen(uint32_t xwndAddressPointer);
+bool EQ_CXWnd_IsOpen(uint32_t cxwndAddressPointer);
+bool EQ_CXWnd_ClickButton(uint32_t cxwndAddressPointer, uint32_t cxwndButtonOffset);
 
 bool EQ_BazaarSearchWindow_IsOpen();
 void EQ_BazaarSearchWindow_DoQuery();
@@ -155,14 +165,20 @@ bool EQ_BazaarWindow_IsOpen();
 bool EQ_BazaarWindow_ClickBeginTraderButton();
 bool EQ_BazaarWindow_ClickEndTraderButton();
 
+std::string EQ_GetZoneNameByKey(uint32_t key);
+std::string EQ_GetZoneShortNameByKey(uint32_t key);
+std::string EQ_GetRaceNameByKey(uint32_t key);
+std::string EQ_GetRaceShortNameByKey(uint32_t key);
+std::string EQ_GetClassNameByKey(uint32_t key);
+std::string EQ_GetClassShortNameByKey(uint32_t key);
+
 /* functions */
 
-template <class T>
-void EQ_Log(const char* text, T number)
+void EQ_Log(const char* text)
 {
     std::fstream file;
-    file.open("Logs/log.txt", std::ios::out | std::ios::app);
-    file << "[" << __TIME__ << "] " << text << " (" << number << ")" << " Hex(" << std::hex << number << std::dec << ")" << std::endl;
+    file.open("Logs/eq-log.txt", std::ios::out | std::ios::app);
+    file << "[" << __TIME__ << "] " << text << std::endl;
     file.close();
 }
 
@@ -270,18 +286,6 @@ void EQ_ColorARGB_Darken(uint32_t& colorARGB, float percent)
     blue  = (uint32_t)(blue  * percent);
 
     colorARGB = (alpha << 24) + (red << 16) + (green << 8) + blue;
-}
-
-void EQ_CopyStringToClipboard(const std::string& str)
-{
-    HGLOBAL mem = GlobalAlloc(GMEM_MOVEABLE, str.size() + 1);
-    memcpy(GlobalLock(mem), str.c_str(), str.size() + 1);
-    GlobalUnlock(mem);
-
-    OpenClipboard(0);
-    EmptyClipboard();
-    SetClipboardData(CF_TEXT, mem);
-    CloseClipboard();
 }
 
 uint32_t EQ_GetGameState()
@@ -561,6 +565,28 @@ std::string EQ_GetSpawnLastName(uint32_t spawn)
     return spawnLastName;
 }
 
+std::string EQ_GetPlayerSpawnName()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return std::string();
+    }
+
+    return EQ_GetSpawnName(playerSpawn);
+}
+
+std::string EQ_GetPlayerSpawnLastName()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return std::string();
+    }
+
+    return EQ_GetSpawnLastName(playerSpawn);
+}
+
 std::string EQ_GetTargetSpawnName()
 {
     auto targetSpawn = EQ_GetTargetSpawn();
@@ -572,15 +598,15 @@ std::string EQ_GetTargetSpawnName()
     return EQ_GetSpawnName(targetSpawn);
 }
 
-std::string EQ_GetPlayerSpawnName()
+std::string EQ_GetTargetSpawnLastName()
 {
-    auto playerSpawn = EQ_GetPlayerSpawn();
-    if (playerSpawn == NULL)
+    auto targetSpawn = EQ_GetTargetSpawn();
+    if (targetSpawn == NULL)
     {
         return std::string();
     }
 
-    return EQ_GetSpawnName(playerSpawn);
+    return EQ_GetSpawnLastName(targetSpawn);
 }
 
 bool EQ_IsSpawnWithinDistance(uint32_t spawn, float distance)
@@ -819,6 +845,97 @@ void EQ_TurnPlayerTowardsSpawn(uint32_t spawn)
     EQ_SetSpawnHeading(playerSpawn, heading);
 }
 
+// WAR PAL SHD
+bool EQ_IsSpawnClassTank(uint32_t spawn)
+{
+    auto spawnClass = EQ_GetSpawnClass(spawn);
+
+    if
+    (
+        spawnClass == EQ_CLASS_WARRIOR         ||
+        spawnClass == EQ_CLASS_PALADIN         ||
+        spawnClass == EQ_CLASS_SHADOWKNIGHT
+    )
+    {
+        return true;
+    }
+
+    return false;
+}
+
+// CLR DRU SHM
+bool EQ_IsSpawnClassPriest(uint32_t spawn)
+{
+    auto spawnClass = EQ_GetSpawnClass(spawn);
+
+    if
+    (
+        spawnClass == EQ_CLASS_CLERIC    ||
+        spawnClass == EQ_CLASS_DRUID     ||
+        spawnClass == EQ_CLASS_SHAMAN
+    )
+    {
+        return true;
+    }
+
+    return false;
+}
+
+// NEC WIZ MAG ENC
+bool EQ_IsSpawnClassCaster(uint32_t spawn)
+{
+    auto spawnClass = EQ_GetSpawnClass(spawn);
+
+    if
+    (
+        spawnClass == EQ_CLASS_NECROMANCER    ||
+        spawnClass == EQ_CLASS_WIZARD         ||
+        spawnClass == EQ_CLASS_MAGICIAN       ||
+        spawnClass == EQ_CLASS_ENCHANTER
+    )
+    {
+        return true;
+    }
+
+    return false;
+}
+
+// BER MNK ROG
+bool EQ_IsSpawnClassMelee(uint32_t spawn)
+{
+    auto spawnClass = EQ_GetSpawnClass(spawn);
+
+    if
+    (
+        spawnClass == EQ_CLASS_BERSERKER    ||
+        spawnClass == EQ_CLASS_MONK         ||
+        spawnClass == EQ_CLASS_ROGUE
+    )
+    {
+        return true;
+    }
+
+    return false;
+}
+
+// BRD BST RNG
+bool EQ_IsSpawnClassHybrid(uint32_t spawn)
+{
+    auto spawnClass = EQ_GetSpawnClass(spawn);
+
+    if
+    (
+        spawnClass == EQ_CLASS_BARD         ||
+        spawnClass == EQ_CLASS_BEASTLORD    ||
+        spawnClass == EQ_CLASS_RANGER
+    )
+    {
+        return true;
+    }
+
+    return false;
+}
+
 void EQ_InterpretCommand(const char* text)
 {
     auto playerSpawn = EQ_GetPlayerSpawn();
@@ -835,12 +952,12 @@ void EQ_ExecuteCommand(uint32_t commandID, int isActive)
     EQ_FUNCTION_ExecuteCmd(commandID, isActive, 0, 0);
 }
 
-void EQ_WriteChatText(const char* text)
+void EQ_PrintTextToChat(const char* text)
 {
     EQ_CLASS_POINTER_CEverQuest->dsp_chat(text, EQ_CHAT_TEXT_COLOR_YELLOW, 1, 1, 0);
 }
 
-void EQ_WriteChatTextEx(const char* text, int color)
+void EQ_PrintTextToChatEx(const char* text, int color)
 {
     EQ_CLASS_POINTER_CEverQuest->dsp_chat(text, color, 1, 1, 0);
 }
@@ -877,6 +994,19 @@ void EQ_SetCameraFieldOfView(float fieldOfView)
     EQ_WriteMemory<float>(camera + EQ_OFFSET_CAMERA_FIELD_OF_VIEW, fieldOfView);
 }
 
+void EQ_PlaySound(const char* filename)
+{
+    std::stringstream filePath;
+    filePath << "sounds/" << filename;
+
+    PlaySoundA(filePath.str().c_str(), NULL, SND_FILENAME | SND_NODEFAULT | SND_ASYNC);
+}
+
+void EQ_StopSound()
+{
+    PlaySoundA(NULL, NULL, NULL);
+}
+
 bool EQ_WorldSpaceToScreenSpace(float worldX, float worldY, float worldZ, float& screenX, float& screenY)
 {
     // this function uses hardcoded offsets
@@ -905,16 +1035,16 @@ bool EQ_WorldSpaceToScreenSpace(float worldX, float worldY, float worldZ, float&
     float camera_0x1B0 = EQ_ReadMemory<float>(camera + 0xC0); // X
     float camera_0x1B4 = EQ_ReadMemory<float>(camera + 0xC4); // Z
 
-    float v4 = camera_0x1AC - worldY; // changed add to substract because Seeds of Destruction or newer has backwards coordinates
-    float v5 = camera_0x1B0 - worldX; // changed add to substract because Seeds of Destruction or newer has backwards coordinates
-    float v6 = camera_0x1B4 - worldZ; // changed add to substract because Seeds of Destruction or newer has backwards coordinates
+    float v4 = camera_0x1AC - worldY; // changed add to substract because Titanium client or newer has backwards coordinates
+    float v5 = camera_0x1B0 - worldX; // changed add to substract because Titanium client or newer has backwards coordinates
+    float v6 = camera_0x1B4 - worldZ; // changed add to substract because Titanium client or newer has backwards coordinates
 
     float v10 = v6 * camera_0x268 + v5 * camera_0x264 + v4 * camera_0x260;
     float v11 = v6 * camera_0x274 + v5 * camera_0x270 + v4 * camera_0x26C;
     float v7  = v6 * camera_0x244 + v5 * camera_0x238 + v4 * camera_0x22C;
 
     // point is offscreen
-    if (v7 >= camera_0x1A0) // changed <= to >= because Seeds of Destruction or newer has backwards coordinates
+    if (v7 >= camera_0x1A0) // changed <= to >= because Titanium client or newer has backwards coordinates
     {
         screenX = -1.0f;
         screenY = -1.0f;
@@ -982,82 +1112,9 @@ void EQ_TurnPlayerTowardsTarget()
     EQ_TurnPlayerTowardsSpawn(targetSpawn);
 }
 
-std::vector<uint32_t> EQAPP_GetNPCSpawnIDListSortedByDistance()
+bool EQ_CXWnd_IsOpen(uint32_t cxwndAddressPointer)
 {
-    std::vector<uint32_t> spawnIDList;
-
-    auto playerSpawn = EQ_GetPlayerSpawn();
-    if (playerSpawn == NULL)
-    {
-        return spawnIDList;
-    }
-
-    std::map<float, uint32_t> spawnList;
-
-    auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
-    auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
-    auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
-
-    auto spawn = EQ_GetFirstSpawn();
-    while (spawn != NULL)
-    {
-        auto spawnType = EQ_GetSpawnType(spawn);
-        if (spawnType != EQ_SPAWN_TYPE_NPC)
-        {
-            spawn = EQ_GetSpawnNext(spawn);
-            continue;
-        }
-
-        auto spawnName = EQ_GetSpawnName(spawn);
-        if (spawnName.find("`s Mount") != std::string::npos)
-        {
-            spawn = EQ_GetSpawnNext(spawn);
-            continue;
-        }
-
-        auto spawnRace = EQ_GetSpawnRace(spawn);
-        auto spawnClass = EQ_GetSpawnClass(spawn);
-
-        // skip auras
-        if (spawnRace == EQ_RACE_INVISIBLE_MAN && spawnClass == EQ_CLASS_OBJECT)
-        {
-            spawn = EQ_GetSpawnNext(spawn);
-            continue;
-        }
-
-        float spawnY = EQ_GetSpawnY(spawn);
-        float spawnX = EQ_GetSpawnX(spawn);
-        float spawnZ = EQ_GetSpawnZ(spawn);
-
-        float spawnDistance = EQ_CalculateDistance3D(playerSpawnX, playerSpawnY, playerSpawnZ, spawnX, spawnY, spawnZ);
-
-        float screenX = -1.0f;
-        float screenY = -1.0f;
-        bool result = EQ_WorldSpaceToScreenSpace(spawnX, spawnY, spawnZ, screenX, screenY);
-        if (result == false)
-        {
-            spawn = EQ_GetSpawnNext(spawn);
-            continue;
-        }
-
-        uint32_t spawnID = EQ_GetSpawnID(spawn);
-
-        spawnList.insert({spawnDistance, spawnID});
-
-        spawn = EQ_GetSpawnNext(spawn);
-    }
-
-    for (auto& s : spawnList)
-    {
-        spawnIDList.push_back(s.second);
-    }
-
-    return spawnIDList;
-}
-
-bool EQ_CXWnd_IsOpen(uint32_t xwndAddressPointer)
-{
-    uint32_t window = EQ_ReadMemory<uint32_t>(xwndAddressPointer);
+    uint32_t window = EQ_ReadMemory<uint32_t>(cxwndAddressPointer);
     if (window == NULL)
     {
         return false;
@@ -1066,6 +1123,33 @@ bool EQ_CXWnd_IsOpen(uint32_t xwndAddressPointer)
     uint8_t isOpen = EQ_ReadMemory<uint8_t>(window + EQ_OFFSET_CXWnd_IS_OPEN);
 
     return (isOpen == 1);
+
+    ////return ((EQClass::CXWnd*)window)->IsReallyVisible();
+}
+
+bool EQ_CXWnd_ClickButton(uint32_t cxwndAddressPointer, uint32_t cxwndButtonOffset)
+{
+    uint32_t window = EQ_ReadMemory<uint32_t>(cxwndAddressPointer);
+    if (window == NULL)
+    {
+        return false;
+    }
+
+    uint8_t isOpen = EQ_ReadMemory<uint8_t>(window + EQ_OFFSET_CXWnd_IS_OPEN);
+    if (isOpen == 0)
+    {
+        return false;
+    }
+
+    uint32_t button = EQ_ReadMemory<uint32_t>(window + cxwndButtonOffset);
+    if (button == NULL)
+    {
+        return false;
+    }
+
+    ((EQClass::CXWnd*)window)->WndNotification(button, EQ_CXWND_MESSAGE_LEFT_CLICK, (void*)0);
+
+    return true;
 }
 
 bool EQ_BazaarSearchWindow_IsOpen()
@@ -1233,77 +1317,17 @@ std::string EQ_BazaarSearchWindow_GetItemName(uint32_t listIndex)
 
 bool EQ_BazaarSearchWindow_ClickFindItemsButton()
 {
-    uint32_t window = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
-    if (window == NULL)
-    {
-        return false;
-    }
-
-    uint8_t isOpen = EQ_ReadMemory<uint8_t>(window + EQ_OFFSET_CXWnd_IS_OPEN);
-    if (isOpen == 0)
-    {
-        return false;
-    }
-
-    uint32_t button = EQ_ReadMemory<uint32_t>(window + EQ_OFFSET_CBazaarSearchWnd_XWND_BUTTON_FIND_ITEMS);
-    if (button == NULL)
-    {
-        return false;
-    }
-
-    EQ_CLASS_POINTER_CBazaarSearchWnd->WndNotification(button, EQ_XWND_MESSAGE_LEFT_CLICK, (void*)0);
-
-    return true;
+    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CBazaarSearchWnd, EQ_OFFSET_CBazaarSearchWnd_BUTTON_FIND_ITEMS);
 }
 
 bool EQ_BazaarSearchWindow_ClickUpdateTradersButton()
 {
-    uint32_t window = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
-    if (window == NULL)
-    {
-        return false;
-    }
-
-    uint8_t isOpen = EQ_ReadMemory<uint8_t>(window + EQ_OFFSET_CXWnd_IS_OPEN);
-    if (isOpen == 0)
-    {
-        return false;
-    }
-
-    uint32_t button = EQ_ReadMemory<uint32_t>(window + EQ_OFFSET_CBazaarSearchWnd_XWND_BUTTON_UPDATE_TRADERS);
-    if (button == NULL)
-    {
-        return false;
-    }
-
-    EQ_CLASS_POINTER_CBazaarSearchWnd->WndNotification(button, EQ_XWND_MESSAGE_LEFT_CLICK, (void*)0);
-
-    return true;
+    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CBazaarSearchWnd, EQ_OFFSET_CBazaarSearchWnd_BUTTON_UPDATE_TRADERS);
 }
 
 bool EQ_BazaarSearchWindow_ClickResetButton()
 {
-    uint32_t window = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
-    if (window == NULL)
-    {
-        return false;
-    }
-
-    uint8_t isOpen = EQ_ReadMemory<uint8_t>(window + EQ_OFFSET_CXWnd_IS_OPEN);
-    if (isOpen == 0)
-    {
-        return false;
-    }
-
-    uint32_t button = EQ_ReadMemory<uint32_t>(window + EQ_OFFSET_CBazaarSearchWnd_XWND_BUTTON_RESET);
-    if (button == NULL)
-    {
-        return false;
-    }
-
-    EQ_CLASS_POINTER_CBazaarSearchWnd->WndNotification(button, EQ_XWND_MESSAGE_LEFT_CLICK, (void*)0);
-
-    return true;
+    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CBazaarSearchWnd, EQ_OFFSET_CBazaarSearchWnd_BUTTON_RESET);
 }
 
 bool EQ_BazaarConfirmationWindow_IsOpen()
@@ -1313,52 +1337,12 @@ bool EQ_BazaarConfirmationWindow_IsOpen()
 
 bool EQ_BazaarConfirmationWindow_ClickToParcelsButton()
 {
-    uint32_t window = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd);
-    if (window == NULL)
-    {
-        return false;
-    }
-
-    uint8_t isOpen = EQ_ReadMemory<uint8_t>(window + EQ_OFFSET_CXWnd_IS_OPEN);
-    if (isOpen == 0)
-    {
-        return false;
-    }
-
-    uint32_t button = EQ_ReadMemory<uint32_t>(window + EQ_OFFSET_CBazaarConfirmationWnd_XWND_BUTTON_TO_PARCELS);
-    if (button == NULL)
-    {
-        return false;
-    }
-
-    EQ_CLASS_POINTER_CBazaarConfirmationWnd->WndNotification(button, EQ_XWND_MESSAGE_LEFT_CLICK, (void*)0);
-
-    return true;
+    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd, EQ_OFFSET_CBazaarConfirmationWnd_BUTTON_TO_PARCELS);
 }
 
 bool EQ_BazaarConfirmationWindow_ClickCancelButton()
 {
-    uint32_t window = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd);
-    if (window == NULL)
-    {
-        return false;
-    }
-
-    uint8_t isOpen = EQ_ReadMemory<uint8_t>(window + EQ_OFFSET_CXWnd_IS_OPEN);
-    if (isOpen == 0)
-    {
-        return false;
-    }
-
-    uint32_t button = EQ_ReadMemory<uint32_t>(window + EQ_OFFSET_CBazaarConfirmationWnd_XWND_BUTTON_CANCEL);
-    if (button == NULL)
-    {
-        return false;
-    }
-
-    EQ_CLASS_POINTER_CBazaarConfirmationWnd->WndNotification(button, EQ_XWND_MESSAGE_LEFT_CLICK, (void*)0);
-
-    return true;
+    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd, EQ_OFFSET_CBazaarConfirmationWnd_BUTTON_CANCEL);
 }
 
 bool EQ_BazaarWindow_IsOpen()
@@ -1368,50 +1352,76 @@ bool EQ_BazaarWindow_IsOpen()
 
 bool EQ_BazaarWindow_ClickBeginTraderButton()
 {
-    uint32_t window = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarWnd);
-    if (window == NULL)
-    {
-        return false;
-    }
-
-    uint8_t isOpen = EQ_ReadMemory<uint8_t>(window + EQ_OFFSET_CXWnd_IS_OPEN);
-    if (isOpen == 0)
-    {
-        return false;
-    }
-
-    uint32_t button = EQ_ReadMemory<uint32_t>(window + EQ_OFFSET_CBazaarWnd_XWND_BUTTON_BEGIN_TRADER);
-    if (button == NULL)
-    {
-        return false;
-    }
-
-    EQ_CLASS_POINTER_CBazaarWnd->WndNotification(button, EQ_XWND_MESSAGE_LEFT_CLICK, (void*)0);
-
-    return true;
+    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CBazaarWnd, EQ_OFFSET_CBazaarWnd_BUTTON_BEGIN_TRADER);
 }
 
 bool EQ_BazaarWindow_ClickEndTraderButton()
 {
-    uint32_t window = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarWnd);
-    if (window == NULL)
+    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CBazaarWnd, EQ_OFFSET_CBazaarWnd_BUTTON_END_TRADER);
+}
+
+std::string EQ_GetZoneNameByKey(uint32_t key)
+{
+    auto it = EQ_TABLE_ZONE_NAME.find(key);
+    if (it != EQ_TABLE_ZONE_NAME.end())
     {
-        return false;
+        return it->second;
     }
 
-    uint8_t isOpen = EQ_ReadMemory<uint8_t>(window + EQ_OFFSET_CXWnd_IS_OPEN);
-    if (isOpen == 0)
+    return std::string();
+}
+
+std::string EQ_GetZoneShortNameByKey(uint32_t key)
+{
+    auto it = EQ_TABLE_ZONE_SHORT_NAME.find(key);
+    if (it != EQ_TABLE_ZONE_SHORT_NAME.end())
     {
-        return false;
+        return it->second;
     }
 
-    uint32_t button = EQ_ReadMemory<uint32_t>(window + EQ_OFFSET_CBazaarWnd_XWND_BUTTON_END_TRADER);
-    if (button == NULL)
+    return std::string();
+}
+
+std::string EQ_GetRaceNameByKey(uint32_t key)
+{
+    auto it = EQ_TABLE_RACE_NAME.find(key);
+    if (it != EQ_TABLE_RACE_NAME.end())
     {
-        return false;
+        return it->second;
     }
 
-    EQ_CLASS_POINTER_CBazaarWnd->WndNotification(button, EQ_XWND_MESSAGE_LEFT_CLICK, (void*)0);
+    return std::string();
+}
 
-    return true;
+std::string EQ_GetRaceShortNameByKey(uint32_t key)
+{
+    auto it = EQ_TABLE_RACE_SHORT_NAME.find(key);
+    if (it != EQ_TABLE_RACE_SHORT_NAME.end())
+    {
+        return it->second;
+    }
+
+    return std::string();
+}
+
+std::string EQ_GetClassNameByKey(uint32_t key)
+{
+    auto it = EQ_TABLE_CLASS_NAME.find(key);
+    if (it != EQ_TABLE_CLASS_NAME.end())
+    {
+        return it->second;
+    }
+
+    return std::string();
+}
+
+std::string EQ_GetClassShortNameByKey(uint32_t key)
+{
+    auto it = EQ_TABLE_CLASS_SHORT_NAME.find(key);
+    if (it != EQ_TABLE_CLASS_SHORT_NAME.end())
+    {
+        return it->second;
+    }
+
+    return std::string();
 }

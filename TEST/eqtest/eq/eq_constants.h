@@ -1,17 +1,24 @@
 #pragma once
 
 #include "eq_alternateabilities.h"
+#include "eq_cxwnd.h"
 #include "eq_executecmd.h"
 #include "eq_keys.h"
 #include "eq_virtualkeycodes.h"
 #include "eq_zones.h"
 
+const char* EQ_WINDOW_TITLE_DEFAULT = "EverQuest";
+
+const uint32_t EQ_BASE_ADDRESS_VALUE = 0x400000;
+
 const float EQ_PI = 3.14159265358979f;
 
-#define EQ_NUM_HOT_BARS       11    // 10 + 1, potion belt was removed and replaced with another hotbar
-#define EQ_NUM_HOT_BUTTONS    12
-#define EQ_NUM_SPELLS         59999
-#define EQ_NUM_SPELL_GEMS     12
+#define EQ_NUM_HOTBARS           11    // 10 + 1, potion belt was removed and replaced with another hotbar
+#define EQ_NUM_HOTBAR_BUTTONS    12
+#define EQ_NUM_SPELLS            59999
+#define EQ_NUM_SPELL_GEMS        12
+#define EQ_NUM_BAGS              10    // number of bags you can hold in your inventory
+#define EQ_NUM_BAG_SLOTS         40    // number of slots a bag can have
 
 #define EQ_OFFSET_CEverQuest_GAME_STATE    0x5C8 // uint32_t, 1480 decimal    "Gamestate at crash = %d\n"
 
@@ -34,18 +41,18 @@ const float EQ_PI = 3.14159265358979f;
 #define EQ_OFFSET_SPAWN_HEIGHT                   0x13C    // float
 #define EQ_OFFSET_SPAWN_ID                       0x148    // uint32_t
 // ******************** randomized after each patch ******************** //    #define PLAYERZONECLIENT
-#define EQ_OFFSET_SPAWN_ZONE_ID                  0x240    // uint32_t
-#define EQ_OFFSET_SPAWN_LEVEL                    0x500    // uint8_t
-#define EQ_OFFSET_SPAWN_RACE                     0xF8C    // uint32_t
-#define EQ_OFFSET_SPAWN_CLASS                    0xF94    // uint32_t
-#define EQ_OFFSET_SPAWN_STANDING_STATE           0x494    // uint8_t
-#define EQ_OFFSET_SPAWN_HP_CURRENT               0x3B0    // uint32_t
-#define EQ_OFFSET_SPAWN_HP_MAX                   0x570    // uint32_t
-#define EQ_OFFSET_SPAWN_MANA_CURRENT             0x508    // uint32_t
-#define EQ_OFFSET_SPAWN_MANA_MAX                 0x3E0    // uint32_t
-#define EQ_OFFSET_SPAWN_ENDURANCE_CURRENT        0x2B4    // uint32_t
-#define EQ_OFFSET_SPAWN_ENDURANCE_MAX            0x490    // uint32_t
-#define EQ_OFFSET_SPAWN_FOLLOW_SPAWN             0xF1C    // uint32_t pointer
+#define EQ_OFFSET_SPAWN_ZONE_ID                  0x5E0    // uint32_t
+#define EQ_OFFSET_SPAWN_LEVEL                    0x1D7    // uint8_t
+#define EQ_OFFSET_SPAWN_RACE                     0xF88    // uint32_t
+#define EQ_OFFSET_SPAWN_CLASS                    0xF90    // uint32_t
+#define EQ_OFFSET_SPAWN_STANDING_STATE           0x5B8    // uint8_t
+#define EQ_OFFSET_SPAWN_HP_CURRENT               0x5F8    // uint32_t
+#define EQ_OFFSET_SPAWN_HP_MAX                   0x268    // uint32_t
+#define EQ_OFFSET_SPAWN_MANA_CURRENT             0x314    // uint32_t
+#define EQ_OFFSET_SPAWN_MANA_MAX                 0x5C0    // uint32_t
+#define EQ_OFFSET_SPAWN_ENDURANCE_CURRENT        0x4BC    // uint32_t
+#define EQ_OFFSET_SPAWN_ENDURANCE_MAX            0x398    // uint32_t
+#define EQ_OFFSET_SPAWN_FOLLOW_SPAWN             0xF18    // uint32_t pointer
 
 #define EQ_SIZE_SPAWN_NAME         64 // 0x40
 #define EQ_SIZE_SPAWN_LAST_NAME    32 // 0x20
@@ -53,6 +60,7 @@ const float EQ_PI = 3.14159265358979f;
 #define EQ_SPAWN_TYPE_PLAYER    0
 #define EQ_SPAWN_TYPE_NPC       1
 #define EQ_SPAWN_TYPE_CORPSE    2
+#define EQ_SPAWN_TYPE_UNKNOWN   254 // custom value for our use
 
 #define EQ_STANDING_STATE_STANDING    100
 #define EQ_STANDING_STATE_FROZEN      102 // stunned, mesmerized or feared    "You lose control of yourself!"
@@ -87,41 +95,9 @@ const float EQ_CAMERA_PITCH_DEFAULT    = -8.5f;      // center view or look forw
 const float EQ_CAMERA_PITCH_MIN        = -136.5f;    // look down
 const float EQ_CAMERA_PITCH_MAX        = 119.5f;     // look up
 
-#define EQ_OFFSET_CXWnd_IS_OPEN 0x22  // uint8_t
-
-#define EQ_OFFSET_CBazaarSearchWnd_BUY_ITEM_LIST_INDEX           0x270  // uint32_t    index of the item in the search list to buy
-#define EQ_OFFSET_CBazaarSearchWnd_FIRST_ITEM                    0x278  // first item in the search list starts here
-#define EQ_OFFSET_CBazaarSearchWnd_TRADER_NAME                   0x278  // char[64]
-#define EQ_OFFSET_CBazaarSearchWnd_ITEM_NAME                     0x2B8  // char[64]
-#define EQ_OFFSET_CBazaarSearchWnd_ITEM_PRICE                    0x304  // uint32_t
-#define EQ_OFFSET_CBazaarSearchWnd_ITEM_ID                       0x310  // uint32_t
-#define EQ_OFFSET_CBazaarSearchWnd_ITEM_QUANTITY                 0x314  // uint32_t
-#define EQ_OFFSET_CBazaarSearchWnd_SECOND_ITEM                   0x330  // second item in the search list starts here
-#define EQ_OFFSET_CBazaarSearchWnd_XWND_BUTTON_FIND_ITEMS        0x924C // uint32_t pointer    "Find Items" button        "BZR_QueryButton"
-#define EQ_OFFSET_CBazaarSearchWnd_XWND_BUTTON_UPDATE_TRADERS    0x9254 // uint32_t pointer    "Update Traders" button    "BZR_UpdatePlayerButton"
-#define EQ_OFFSET_CBazaarSearchWnd_XWND_BUTTON_RESET             0x9268 // uint32_t pointer    "Reset" button             "BZR_Default"
-#define EQ_OFFSET_CBazaarSearchWnd_XWND_BUTTON_BUY               0x926C // uint32_t pointer    "Buy" button               "BZR_BuyButton"
-
-#define EQ_SIZE_CBazaarSearchWnd_TRADER_NAME    64 // 0x40
-#define EQ_SIZE_CBazaarSearchWnd_ITEM_NAME      64 // 0x40
-
-#define EQ_OFFSET_CBazaarConfirmationWnd_XWND_BUTTON_TO_ME         0x25C // uint32_t pointer    "To Me" button         "BZC_UseTokenButton"
-#define EQ_OFFSET_CBazaarConfirmationWnd_XWND_BUTTON_TO_PARCELS    0x268 // uint32_t pointer    "To Parcels" button    "BZC_UsePlatButton"
-#define EQ_OFFSET_CBazaarConfirmationWnd_XWND_BUTTON_CANCEL        0x26C // uint32_t pointer    "Cancel" button        "BZC_CancelButton"
-#define EQ_OFFSET_CBazaarConfirmationWnd_TRADER_NAME               0x2C4 // char[64]
-#define EQ_OFFSET_CBazaarConfirmationWnd_ITEM_NAME                 0x324 // char[64]
-#define EQ_OFFSET_CBazaarConfirmationWnd_ITEM_ID                   0x378 // uint32_t
-#define EQ_OFFSET_CBazaarConfirmationWnd_ITEM_PRICE                0x37C // uint32_t
-#define EQ_OFFSET_CBazaarConfirmationWnd_ITEM_QUANTITY             0x388 // uint32_t
-
-#define EQ_SIZE_CBazaarConfirmationWnd_TRADER_NAME    64 // 0x40
-#define EQ_SIZE_CBazaarConfirmationWnd_ITEM_NAME      64 // 0x40
-
-#define EQ_OFFSET_CBazaarWnd_XWND_BUTTON_BEGIN_TRADER    0x258 // uint32_t pointer    "Begin Trader" button    "BZW_Start_Button"
-#define EQ_OFFSET_CBazaarWnd_XWND_BUTTON_END_TRADER      0x25C // uint32_t pointer    "End Trader" button      "BZW_End_Button"
-
 #define EQ_CHAT_TEXT_COLOR_YELLOW    15
 
+// CEverQuest__WriteTextHD2()    draws text on the screen
 #define EQ_DRAW_TEXT_COLOR_BLACK         0  // ARGB 0xFF000000
 #define EQ_DRAW_TEXT_COLOR_DEFAULT       1  // ARGB 0xFF606060
 #define EQ_DRAW_TEXT_COLOR_DARK_GREEN    2  // ARGB 0xFF008000
@@ -157,11 +133,12 @@ const float EQ_CAMERA_PITCH_MAX        = 119.5f;     // look up
 #define EQ_RACE_OGRE             10
 #define EQ_RACE_HALFLING         11
 #define EQ_RACE_GNOME            12
-#define EQ_RACE_INVISIBLE_MAN    127 // Enchanter pet
+#define EQ_RACE_INVISIBLE_MAN    127 // enchanter pets, auras, etc
 #define EQ_RACE_IKSAR            128
 #define EQ_RACE_VAH_SHIR         130
 #define EQ_RACE_FROGLOK          330
 #define EQ_RACE_DRAKKIN          522
+#define EQ_RACE_CAMPFIRE         567 // fellowship campfires, etc
 
 std::unordered_map<uint32_t, std::string> EQ_TABLE_RACE_NAME =
 {
@@ -223,6 +200,22 @@ std::unordered_map<uint32_t, std::string> EQ_TABLE_RACE_SHORT_NAME =
 #define EQ_CLASS_BEASTLORD           15
 #define EQ_CLASS_BERSERKER           16
 #define EQ_CLASS_MERCENARY           17
+#define EQ_CLASS_WARRIOR_GM          20 // guildmaster
+#define EQ_CLASS_CLERIC_GM           21
+#define EQ_CLASS_PALADIN_GM          22
+#define EQ_CLASS_RANGER_GM           23
+#define EQ_CLASS_SHADOWKNIGHT_GM     24
+#define EQ_CLASS_DRUID_GM            25
+#define EQ_CLASS_MONK_GM             26
+#define EQ_CLASS_BARD_GM             27
+#define EQ_CLASS_ROGUE_GM            28
+#define EQ_CLASS_SHAMAN_GM           29
+#define EQ_CLASS_NECROMANCER_GM      30
+#define EQ_CLASS_WIZARD_GM           31
+#define EQ_CLASS_MAGICIAN_GM         32
+#define EQ_CLASS_ENCHANTER_GM        33
+#define EQ_CLASS_BEASTLORD_GM        34
+#define EQ_CLASS_BERSERKER_GM        35
 #define EQ_CLASS_BANKER              40
 #define EQ_CLASS_MERCHANT            41
 #define EQ_CLASS_OBJECT                      62 // auras, controllers, crates, tents, corpses, etc
@@ -291,23 +284,3 @@ std::unordered_map<uint32_t, std::string> EQ_TABLE_CLASS_SHORT_NAME =
     ////{EQ_CLASS_MERCHANT,        "MERCHANT"},
 };
 
-#define EQ_XWND_MESSAGE_LEFT_CLICK           1
-#define EQ_XWND_MESSAGE_LEFT_MOUSE_UP        2
-#define EQ_XWND_MESSAGE_RIGHT_CLICK          3
-#define EQ_XWND_MESSAGE_LEFT_DOUBLE_CLICK    4
-#define EQ_XWND_MESSAGE_HIT_ENTER            6
-#define EQ_XWND_MESSAGE_CLOSE                10
-#define EQ_XWND_MESSAGE_NEW_VALUE            14
-#define EQ_XWND_MESSAGE_UNKNOWN              19
-#define EQ_XWND_MESSAGE_MENU_SELECT          20
-#define EQ_XWND_MESSAGE_MOUSE_OVER           21
-#define EQ_XWND_MESSAGE_HISTORY              22
-#define EQ_XWND_MESSAGE_LEFT_CLICK_HOLD      23
-#define EQ_XWND_MESSAGE_LINK                 27
-#define EQ_XWND_MESSAGE_FOCUS                33
-#define EQ_XWND_MESSAGE_LOST_FOCUS           34
-
-#define EQ_XWND_KEYBOARD_FLAG_SHIFT    1
-#define EQ_XWND_KEYBOARD_FLAG_CTRL     2
-#define EQ_XWND_KEYBOARD_FLAG_LALT     4
-#define EQ_XWND_KEYBOARD_FLAG_RALT     8

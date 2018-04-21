@@ -21,12 +21,7 @@ bool g_EQAppIsInGame = false;
 
 bool g_EQAppDebugTextIsEnabled = false;
 
-std::string g_EQAppPlayerName;
-
 std::mt19937 g_EQAppRandomEngine((uint32_t)std::chrono::high_resolution_clock::now().time_since_epoch().count());
-
-EQApp::Timer g_EQAppWindowTitleTimer = EQAPP_Timer_GetTimeNow();
-EQApp::TimerInterval g_EQAppWindowTitleTimerInterval = 3;
 
 HMODULE g_EQAppModule;
 

@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <array>
 #include <bitset>
 #include <chrono>
 #include <fstream>
@@ -13,7 +14,9 @@
 #include <sstream>
 #include <unordered_map>
 #include <vector>
-#include <array>
+
+#include <filesystem>
+namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not available yet
 
 #include <cstdio>
 #include <cstdlib>
@@ -41,8 +44,18 @@
 #include <psapi.h>
 #pragma comment(lib, "psapi.lib")
 
+// Microsoft Detours 1.5
 #include "detours.h"
 #pragma comment(lib, "detours.lib")
+
+// LuaJIT
+#include "lua.hpp"
+#pragma comment(lib, "lua51.lib")
+#pragma comment(lib, "luajit.lib")
+
+// sol lua wrapper
+// https://github.com/ThePhD/sol2
+#include <sol.hpp>
 
 #include "eq.h"
 #include "eq_functions.h"
@@ -50,45 +63,55 @@
 #include "eqapp.h"
 #include "eqapp_functions.h"
 
-#include "eqapp_spelllist.h"
-
 #include "eqapp_alwaysattack.h"
 #include "eqapp_alwayshotbutton.h"
-#include "eqapp_combathotbutton.h"
 #include "eqapp_autoalternateability.h"
-#include "eqapp_combatalternateability.h"
-#include "eqapp_bazaarfilter.h"
+#include "eqapp_autogroup.h"
 #include "eqapp_bazaarbot.h"
-#include "eqapp_changeheight.h"
-#include "eqapp_spawncastspell.h"
-#include "eqapp_followai.h"
-#include "eqapp_esp.h"
-#include "eqapp_sleep.h"
+#include "eqapp_bazaarfilter.h"
 #include "eqapp_boxchat.h"
-
-#include "eqapp_hud.h"
+#include "eqapp_changeheight.h"
+#include "eqapp_combatalternateability.h"
+#include "eqapp_combathotbutton.h"
 #include "eqapp_console.h"
-#include "eqapp_interpretcmd.h"
 #include "eqapp_detours.h"
+#include "eqapp_esp.h"
+#include "eqapp_followai.h"
+#include "eqapp_hud.h"
+#include "eqapp_interpretcmd.h"
+#include "eqapp_lua.h"
+#include "eqapp_sleep.h"
+#include "eqapp_spawncastspell.h"
+#include "eqapp_spelllist.h"
+#include "eqapp_windowtitle.h"
 
 void EQAPP_Load()
 {
-    g_EQAppPlayerName = EQ_GetPlayerSpawnName();
-
-    EQAPP_BazaarFilter_Load();
+    EQAPP_Lua_Load();
+    EQAPP_Lua_EventScriptList_Load();
     EQAPP_SpellList_Load();
+    EQAPP_BazaarFilter_Load();
 
-    EQAPP_SetWindowTitleToPlayerSpawnName();
+    if (g_WindowTitleIsEnabled == true)
+    {
+        EQAPP_WindowTitle_Execute();
+    }
 
-    if (g_BoxChatAutoConnect == true)
+    if (g_BoxChatIsEnabled == true && g_BoxChatAutoConnectIsEnabled == true)
     {
         if (EQAPP_BoxChat_IsServerRunning() == true)
         {
-            if (g_EQAppPlayerName.size() != 0)
+            std::string playerSpawnName = EQ_GetPlayerSpawnName();
+            if (playerSpawnName.size() != 0)
             {
-                EQAPP_BoxChat_Connect(g_EQAppPlayerName);
+                EQAPP_BoxChat_Connect(playerSpawnName);
             }
         }
+    }
+
+    if (g_LuaIsEnabled == true)
+    {
+        EQAPP_Lua_EventScriptList_ExecuteFunction("OnLoad");
     }
 
     std::string timeText = EQAPP_Timer_GetTimeAsString();
@@ -100,6 +123,14 @@ void EQAPP_Load()
 
 void EQAPP_Unload()
 {
+    if (g_LuaIsEnabled == true)
+    {
+        EQAPP_Lua_EventScriptList_ExecuteFunction("OnUnload");
+    }
+
+    g_WindowTitleIsEnabled = false;
+    EQAPP_WindowTitle_Reset();
+
     std::string timeText = EQAPP_Timer_GetTimeAsString();
 
     std::cout << g_EQAppNameEx << " Unloaded!    " << timeText;
@@ -109,6 +140,11 @@ void EQAPP_Unload()
 
 void EQAPP_FixAddress(uint32_t& address)
 {
+    if (address == 0)
+    {
+        return;
+    }
+
     uint32_t baseAddress = (uint32_t)GetModuleHandle(NULL);
 
     address = (address - EQ_BASE_ADDRESS_VALUE) + baseAddress;
@@ -129,8 +165,6 @@ void EQAPP_InitializeAddressesAndPointers()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_ExecuteCmd);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_TARGET_SPAWN);
-    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CONTROLLED_SPAWN);
-    EQAPP_FixAddress(EQ_ADDRESS_POINTER_LOCAL_SPAWN);
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_PLAYER_SPAWN);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_EQPlayerManager);
@@ -150,6 +184,8 @@ void EQAPP_InitializeAddressesAndPointers()
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CDisplay);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2);
+
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CXWnd__IsReallyVisible);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__WndNotification);

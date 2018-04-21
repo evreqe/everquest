@@ -8,7 +8,10 @@ bool g_BoxChatIsEnabled = true;
 
 bool g_BoxChatIsConnected = false;
 
-bool g_BoxChatAutoConnect = true;
+bool g_BoxChatAutoConnectIsEnabled = true;
+
+std::string g_BoxChatClientName = "UNKNOWN";
+std::string g_BoxChatChannelName = "Default";
 
 std::list<std::string> g_BoxChatInterpretCommandList;
 
@@ -34,12 +37,14 @@ struct addrinfo* g_BoxChatAddressInfo_ptr = NULL;
 struct addrinfo g_BoxChatAddressInfoHints;
 
 void EQAPP_BoxChat_Toggle();
+void EQAPP_BoxChat_AutoConnect_Toggle();
 void EQAPP_BoxChat_Load();
 void EQAPP_BoxChat_Unload();
-bool EQAPP_BoxChat_Connect(std::string connectName);
+bool EQAPP_BoxChat_Connect(std::string clientName);
 void EQAPP_BoxChat_Disconnect();
 void EQAPP_BoxChat_DisconnectEx();
 bool EQAPP_BoxChat_SendText(std::string text);
+bool EQAPP_BoxChat_SetChannel(std::string channelName);
 void EQAPP_BoxChat_Execute();
 void EQAPP_BoxChat_InterpretCommands();
 bool EQAPP_BoxChat_IsServerRunning();
@@ -48,6 +53,12 @@ void EQAPP_BoxChat_Toggle()
 {
     EQ_ToggleBool(g_BoxChatIsEnabled);
     EQAPP_PrintBool("Box Chat", g_BoxChatIsEnabled);
+}
+
+void EQAPP_BoxChat_AutoConnect_Toggle()
+{
+    EQ_ToggleBool(g_BoxChatAutoConnectIsEnabled);
+    EQAPP_PrintBool("Box Chat Auto Connect", g_BoxChatAutoConnectIsEnabled);
 }
 
 void EQAPP_BoxChat_Load()
@@ -65,7 +76,7 @@ void EQAPP_BoxChat_Unload()
     closesocket(g_BoxChatSocket);
 }
 
-bool EQAPP_BoxChat_Connect(std::string connectName)
+bool EQAPP_BoxChat_Connect(std::string clientName)
 {
     EQAPP_BoxChat_Load();
 
@@ -112,12 +123,12 @@ bool EQAPP_BoxChat_Connect(std::string connectName)
     {
         if (g_BoxChatSocket != INVALID_SOCKET)
         {
-            std::stringstream ssConnectMessage;
-            ssConnectMessage << "$ConnectName " << connectName << "\n";
+            std::stringstream ssClientNameMessage;
+            ssClientNameMessage << "$ClientName " << clientName << "\n";
 
-            std::string strConnectMessage = ssConnectMessage.str();
+            std::string strClientNameMessage = ssClientNameMessage.str();
 
-            if (send(g_BoxChatSocket, strConnectMessage.c_str(), strConnectMessage.size(), 0) == SOCKET_ERROR)
+            if (send(g_BoxChatSocket, strClientNameMessage.c_str(), strClientNameMessage.size(), 0) == SOCKET_ERROR)
             {
                 freeaddrinfo(g_BoxChatAddressInfoResult);
                 EQAPP_BoxChat_DisconnectEx();
@@ -125,6 +136,8 @@ bool EQAPP_BoxChat_Connect(std::string connectName)
             }
 
             std::cout << "Box Chat connected." << std::endl;
+
+            g_BoxChatClientName = clientName;
 
             freeaddrinfo(g_BoxChatAddressInfoResult);
             g_BoxChatIsConnected = true;
@@ -139,9 +152,7 @@ bool EQAPP_BoxChat_Connect(std::string connectName)
 
 void EQAPP_BoxChat_Disconnect()
 {
-    closesocket(g_BoxChatSocket);
-
-    g_BoxChatIsConnected = false;
+    EQAPP_BoxChat_DisconnectEx();
 
     std::cout << "Box Chat disconnected." << std::endl;
 }
@@ -151,6 +162,9 @@ void EQAPP_BoxChat_DisconnectEx()
     closesocket(g_BoxChatSocket);
 
     g_BoxChatIsConnected = false;
+
+    g_BoxChatClientName = "UNKNOWN";
+    g_BoxChatChannelName = "Default";
 }
 
 bool EQAPP_BoxChat_SendText(std::string text)
@@ -162,6 +176,20 @@ bool EQAPP_BoxChat_SendText(std::string text)
     }
 
     return true;
+}
+
+bool EQAPP_BoxChat_SetChannel(std::string channelName)
+{
+    std::stringstream ss;
+    ss << "$ClientChannel " << channelName;
+
+    if (EQAPP_BoxChat_SendText(ss.str()) == true)
+    {
+        g_BoxChatChannelName = channelName;
+        return true;
+    }
+
+    return false;
 }
 
 void EQAPP_BoxChat_Execute()
@@ -285,7 +313,7 @@ void EQAPP_BoxChat_InterpretCommands()
 
     EQApp::TimerInterval timeInterval = 1;
 
-    if (EQAPP_String_StartsWith(commandText, "//Pause ") == true)
+    if (EQAPP_String_BeginsWith(commandText, "//Pause ") == true)
     {
         std::string timeStr = EQAPP_String_GetAfter(commandText, " ");
         if (timeStr.size() != 0)

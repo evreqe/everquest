@@ -32,7 +32,7 @@ void EQAPP_Console_Print()
     // print redirected cout to the chat window
     for (std::string text; std::getline(g_ConsoleStringStream, text, '\n');)
     {
-        EQ_WriteChatText(text.c_str());
+        EQ_PrintTextToChat(text.c_str());
     }
 
     g_ConsoleStringStream.str(std::string());

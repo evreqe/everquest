@@ -12,6 +12,7 @@ namespace EQClass
     class EQPlayer;
 
     class CXWndManager;
+    class CXWnd;
 
     class CBazaarSearchWnd;
     class CBazaarConfirmationWnd;
@@ -109,19 +110,32 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CXWndManager__DrawWindows)(void* this_
 EQClass::CXWndManager** EQ_CLASS_POINTER_CXWndManager_pptr;
 EQClass::CXWndManager* EQ_CLASS_POINTER_CXWndManager;
 
+/* CXWnd */
+
+class EQClass::CXWnd
+{
+public:
+    int CXWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
+    bool CXWnd::IsReallyVisible(); // is open
+};
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CXWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::CXWnd::IsReallyVisible(), EQ_ADDRESS_FUNCTION_CXWnd__IsReallyVisible);
+
 /* CBazaarSearchWnd */
 
 class EQClass::CBazaarSearchWnd
 {
 public:
-    int CBazaarSearchWnd::WndNotification(uint32_t xwndAddress, uint32_t xwndMessage, void* unknown);
+    int CBazaarSearchWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
     void CBazaarSearchWnd::AddItemToList(char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11);
     void CBazaarSearchWnd::doQuery();
     bool CBazaarSearchWnd::BuyItem(int quantity);
 };
 
-EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::CBazaarSearchWnd::WndNotification(uint32_t xwndAddress, uint32_t xwndMessage, void* unknown), EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__WndNotification);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarSearchWnd__WndNotification)(void* this_ptr, uint32_t xwndAddress, uint32_t xwndMessage, void* unknown);
+EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::CBazaarSearchWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__WndNotification);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarSearchWnd__WndNotification)(void* this_ptr, uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CBazaarSearchWnd::AddItemToList(char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11), EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarSearchWnd__AddItemToList)(void* this_ptr, char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11);
@@ -142,11 +156,11 @@ EQClass::CBazaarSearchWnd* EQ_CLASS_POINTER_CBazaarSearchWnd;
 class EQClass::CBazaarConfirmationWnd
 {
 public:
-    int CBazaarConfirmationWnd::WndNotification(uint32_t xwndAddress, uint32_t xwndMessage, void* unknown);
+    int CBazaarConfirmationWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
 };
 
-EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::CBazaarConfirmationWnd::WndNotification(uint32_t xwndAddress, uint32_t xwndMessage, void* unknown), EQ_ADDRESS_FUNCTION_CBazaarConfirmationWnd__WndNotification);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarConfirmationWnd__WndNotification)(void* this_ptr, uint32_t xwndAddress, uint32_t xwndMessage, void* unknown);
+EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::CBazaarConfirmationWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_ADDRESS_FUNCTION_CBazaarConfirmationWnd__WndNotification);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarConfirmationWnd__WndNotification)(void* this_ptr, uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
 
 ////EQClass::CBazaarConfirmationWnd** EQ_CLASS_POINTER_CBazaarConfirmationWnd_pptr = (EQClass::CBazaarConfirmationWnd**)EQ_ADDRESS_POINTER_CBazaarConfirmationWnd;
 ////#define EQ_CLASS_POINTER_CBazaarConfirmationWnd (*EQ_CLASS_POINTER_CBazaarConfirmationWnd_pptr)
@@ -158,11 +172,11 @@ EQClass::CBazaarConfirmationWnd* EQ_CLASS_POINTER_CBazaarConfirmationWnd;
 class EQClass::CBazaarWnd
 {
 public:
-    int CBazaarWnd::WndNotification(uint32_t xwndAddress, uint32_t xwndMessage, void* unknown);
+    int CBazaarWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
 };
 
-EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::CBazaarWnd::WndNotification(uint32_t xwndAddress, uint32_t xwndMessage, void* unknown), EQ_ADDRESS_FUNCTION_CBazaarWnd__WndNotification);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarWnd__WndNotification)(void* this_ptr, uint32_t xwndAddress, uint32_t xwndMessage, void* unknown);
+EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::CBazaarWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_ADDRESS_FUNCTION_CBazaarWnd__WndNotification);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarWnd__WndNotification)(void* this_ptr, uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
 
 ////EQClass::CBazaarWnd** EQ_CLASS_POINTER_CBazaarWnd_pptr = (EQClass::CBazaarWnd**)EQ_ADDRESS_POINTER_CBazaarWnd;
 ////#define EQ_CLASS_POINTER_CBazaarWnd (*EQ_CLASS_POINTER_CBazaarWnd_pptr)

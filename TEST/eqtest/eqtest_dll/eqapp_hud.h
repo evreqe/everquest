@@ -1,5 +1,16 @@
 #pragma once
 
+#include "eqapp_alwaysattack.h"
+#include "eqapp_alwayshotbutton.h"
+#include "eqapp_autoalternateability.h"
+#include "eqapp_bazaarbot.h"
+#include "eqapp_bazaarfilter.h"
+#include "eqapp_boxchat.h"
+#include "eqapp_combatalternateability.h"
+#include "eqapp_combathotbutton.h"
+#include "eqapp_esp.h"
+#include "eqapp_sleep.h"
+
 bool g_HUDIsEnabled = true;
 
 uint32_t g_HUDXDefault = 200;
@@ -32,6 +43,17 @@ void EQAPP_HUD_Execute()
     g_HUDY = g_HUDYDefault;
 
     EQAPP_HUD_DrawText("EQTEST");
+
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn != NULL)
+    {
+        std::stringstream ss1;
+        ss1 << "- HP: " << EQ_GetSpawnHPPercent(playerSpawn) << "%";
+        ss1 << " MP: " << EQ_GetSpawnManaPercent(playerSpawn) << "%";
+        ss1 << " END: " << EQ_GetSpawnEndurancePercent(playerSpawn) << "%";
+
+        EQAPP_HUD_DrawText(ss1.str().c_str());
+    }
 
     if (g_SleepIsEnabled == true)
     {
@@ -70,17 +92,6 @@ void EQAPP_HUD_Execute()
     if (g_AutoAlternateAbilityIsEnabled == true)
     {
         EQAPP_HUD_DrawText("- Auto Alternate Ability");
-
-        auto playerSpawn = EQ_GetPlayerSpawn();
-        if (playerSpawn != NULL)
-        {
-            std::stringstream ss1;
-            ss1 << "- HP: " << EQ_GetSpawnHPPercent(playerSpawn) << "%";
-            ss1 << " MP: " << EQ_GetSpawnManaPercent(playerSpawn) << "%";
-            ss1 << " END: " << EQ_GetSpawnEndurancePercent(playerSpawn) << "%";
-
-            EQAPP_HUD_DrawText(ss1.str().c_str());
-        }
     }
 
     if (g_CombatAlternateAbilityIsEnabled == true)
@@ -103,6 +114,17 @@ void EQAPP_HUD_Execute()
         EQAPP_HUD_DrawText("- ESP Show Spawn ID");
     }
 
+    if (g_ESPShowSpawnRaceIsEnabled == true)
+    {
+        EQAPP_HUD_DrawText("- ESP Show Spawn Race");
+    }
+
+    if (g_ESPShowSpawnClassIsEnabled == true)
+    {
+        EQAPP_HUD_DrawText("- ESP Show Spawn Class");
+    }
+
+/*
     if (g_ChangeHeightIsEnabled == true)
     {
         EQAPP_HUD_DrawText("- Change Height");
@@ -112,6 +134,12 @@ void EQAPP_HUD_Execute()
     {
         EQAPP_HUD_DrawText("- Spawn Cast Spell");
     }
+
+    if (g_SpawnCastSpellGroupChatIsEnabled == true)
+    {
+        EQAPP_HUD_DrawText("- Spawn Cast Spell Group Chat");
+    }
+*/
 
     if (g_BazaarFilterIsEnabled == true)
     {

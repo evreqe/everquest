@@ -2,6 +2,8 @@
 
 bool g_FollowAIIsEnabled = true;
 
+bool g_FollowAIUseZAxisIsEnabled = false;
+
 float g_FollowAIDistancePlayer = 15.0f;
 float g_FollowAIDistanceNPC    = 10.0f;
 float g_FollowAIDistanceCorpse = 5.0f;
@@ -18,6 +20,16 @@ void EQAPP_FollowAI_Toggle()
     {
         EQ_StopFollow();
     }
+}
+
+void EQAPP_FollowAI_UseZAxis_Toggle()
+{
+    EQ_ToggleBool(g_FollowAIUseZAxisIsEnabled);
+    EQAPP_PrintBool("Follow AI Use Z-Axis", g_FollowAIUseZAxisIsEnabled);
+
+    // look forward
+    EQ_ExecuteCommand(EQ_EXECUTECMD_FIRST_PERSON_CAMERA, 1);
+    EQ_ExecuteCommand(EQ_EXECUTECMD_CENTERVIEW, 1);
 }
 
 void EQAPP_FollowAI_Execute()
@@ -66,4 +78,29 @@ void EQAPP_FollowAI_Execute()
     }
 
     EQ_SetAutoRun(true);
+
+    if (g_FollowAIUseZAxisIsEnabled == true)
+    {
+        auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
+        auto followSpawnZ = EQ_GetSpawnZ(followSpawn);
+
+        if ((followSpawnZ - 1.0f) > playerSpawnZ)
+        {
+            // look up
+            EQ_ExecuteCommand(EQ_EXECUTECMD_FIRST_PERSON_CAMERA, 1);
+            EQ_ExecuteCommand(EQ_EXECUTECMD_PITCHUP, 1);
+        }
+        else if ((followSpawnZ + 1.0f) < playerSpawnZ)
+        {
+            // look down
+            EQ_ExecuteCommand(EQ_EXECUTECMD_FIRST_PERSON_CAMERA, 1);
+            EQ_ExecuteCommand(EQ_EXECUTECMD_PITCHDOWN, 1);
+        }
+        else
+        {
+            // look forward
+            EQ_ExecuteCommand(EQ_EXECUTECMD_FIRST_PERSON_CAMERA, 1);
+            EQ_ExecuteCommand(EQ_EXECUTECMD_CENTERVIEW, 1);
+        }
+    }
 }
