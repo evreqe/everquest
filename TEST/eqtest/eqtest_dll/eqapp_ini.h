@@ -27,7 +27,7 @@ float EQAPP_INI_ReadFloat(const char* filename, const char* section, const char*
     char bufferResult[1024];
     GetPrivateProfileStringA(section, key, bufferDefault, bufferResult, sizeof(bufferResult), filename);
 
-    auto result = std::stof(bufferResult); //(float)atof(bufferResult);
+    auto result = std::stof(bufferResult);
 
     return result;
 }

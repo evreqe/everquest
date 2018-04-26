@@ -1,11 +1,9 @@
 #pragma once
 
-#include "eq_alternateabilities.h"
-#include "eq_cxwnd.h"
-#include "eq_executecmd.h"
-#include "eq_keys.h"
-#include "eq_virtualkeycodes.h"
-#include "eq_zones.h"
+#include <cstdint>
+
+#include <string>
+#include <unordered_map>
 
 const char* EQ_WINDOW_TITLE_DEFAULT = "EverQuest";
 
@@ -34,6 +32,7 @@ const float EQ_PI = 3.14159265358979f;
 #define EQ_OFFSET_SPAWN_Y                        0x64     // float
 #define EQ_OFFSET_SPAWN_X                        0x68     // float
 #define EQ_OFFSET_SPAWN_Z                        0x6C     // float
+#define EQ_OFFSET_SPAWN_MOVEMENT_SPEED           0x7C     // float    // how fast you are moving while walking, running, riding a mount, etc
 #define EQ_OFFSET_SPAWN_HEADING                  0x80     // float
 #define EQ_OFFSET_SPAWN_NAME_NUMBERED            0xA4     // char[64]
 #define EQ_OFFSET_SPAWN_NAME                     0xE4     // char[64]
@@ -41,18 +40,19 @@ const float EQ_PI = 3.14159265358979f;
 #define EQ_OFFSET_SPAWN_HEIGHT                   0x13C    // float
 #define EQ_OFFSET_SPAWN_ID                       0x148    // uint32_t
 // ******************** randomized after each patch ******************** //    #define PLAYERZONECLIENT
-#define EQ_OFFSET_SPAWN_ZONE_ID                  0x5E0    // uint32_t
-#define EQ_OFFSET_SPAWN_LEVEL                    0x1D7    // uint8_t
-#define EQ_OFFSET_SPAWN_RACE                     0xF88    // uint32_t
-#define EQ_OFFSET_SPAWN_CLASS                    0xF90    // uint32_t
-#define EQ_OFFSET_SPAWN_STANDING_STATE           0x5B8    // uint8_t
-#define EQ_OFFSET_SPAWN_HP_CURRENT               0x5F8    // uint32_t
-#define EQ_OFFSET_SPAWN_HP_MAX                   0x268    // uint32_t
-#define EQ_OFFSET_SPAWN_MANA_CURRENT             0x314    // uint32_t
-#define EQ_OFFSET_SPAWN_MANA_MAX                 0x5C0    // uint32_t
-#define EQ_OFFSET_SPAWN_ENDURANCE_CURRENT        0x4BC    // uint32_t
-#define EQ_OFFSET_SPAWN_ENDURANCE_MAX            0x398    // uint32_t
-#define EQ_OFFSET_SPAWN_FOLLOW_SPAWN             0xF18    // uint32_t pointer
+#define EQ_OFFSET_SPAWN_ZONE_ID                  0x298    // uint32_t
+#define EQ_OFFSET_SPAWN_LEVEL                    0x24C    // uint8_t
+#define EQ_OFFSET_SPAWN_RACE                     0xF94    // uint32_t
+#define EQ_OFFSET_SPAWN_CLASS                    0xF9C    // uint32_t
+#define EQ_OFFSET_SPAWN_STANDING_STATE           0x211    // uint8_t
+#define EQ_OFFSET_SPAWN_HP_CURRENT               0x280    // uint32_t
+#define EQ_OFFSET_SPAWN_HP_MAX                   0x200    // uint32_t
+#define EQ_OFFSET_SPAWN_MANA_CURRENT             0x408    // uint32_t
+#define EQ_OFFSET_SPAWN_MANA_MAX                 0x4A8    // uint32_t
+#define EQ_OFFSET_SPAWN_ENDURANCE_CURRENT        0x244    // uint32_t
+#define EQ_OFFSET_SPAWN_ENDURANCE_MAX            0x600    // uint32_t
+#define EQ_OFFSET_SPAWN_FOLLOW_SPAWN             0xF24    // uint32_t pointer
+// ********************************************************************* //
 
 #define EQ_SIZE_SPAWN_NAME         64 // 0x40
 #define EQ_SIZE_SPAWN_LAST_NAME    32 // 0x20
@@ -62,6 +62,14 @@ const float EQ_PI = 3.14159265358979f;
 #define EQ_SPAWN_TYPE_CORPSE    2
 #define EQ_SPAWN_TYPE_UNKNOWN   254 // custom value for our use
 
+std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_SPAWN_TYPE_NAME =
+{
+    {EQ_SPAWN_TYPE_PLAYER,      "Player"},
+    {EQ_SPAWN_TYPE_NPC,         "NPC"},
+    {EQ_SPAWN_TYPE_CORPSE,      "Corpse"},
+    {EQ_SPAWN_TYPE_UNKNOWN,     "Unknown"},
+};
+
 #define EQ_STANDING_STATE_STANDING    100
 #define EQ_STANDING_STATE_FROZEN      102 // stunned, mesmerized or feared    "You lose control of yourself!"
 #define EQ_STANDING_STATE_KNEELING    105 // looting or binding wounds
@@ -69,6 +77,17 @@ const float EQ_PI = 3.14159265358979f;
 #define EQ_STANDING_STATE_DUCKING     111 // crouching
 #define EQ_STANDING_STATE_FEIGN_DEATH 115 // pretending to be dead
 #define EQ_STANDING_STATE_DEAD        120
+
+std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_STANDING_STATE_NAME =
+{
+    {EQ_STANDING_STATE_STANDING,       "Standing"},
+    {EQ_STANDING_STATE_FROZEN,         "Frozen"},
+    {EQ_STANDING_STATE_KNEELING,       "Kneeling"},
+    {EQ_STANDING_STATE_SITTING,        "Sitting"},
+    {EQ_STANDING_STATE_DUCKING,        "Ducking"},
+    {EQ_STANDING_STATE_FEIGN_DEATH,    "Feign Death"},
+    {EQ_STANDING_STATE_DEAD,           "Dead"},
+};
 
 #define EQ_OFFSET_CDisplay_CAMERA    0x118 // uint32_t pointer
 #define EQ_OFFSET_CDisplay_TIMER     0x154 // uint32_t
@@ -95,7 +114,29 @@ const float EQ_CAMERA_PITCH_DEFAULT    = -8.5f;      // center view or look forw
 const float EQ_CAMERA_PITCH_MIN        = -136.5f;    // look down
 const float EQ_CAMERA_PITCH_MAX        = 119.5f;     // look up
 
-#define EQ_CHAT_TEXT_COLOR_YELLOW    15
+#define EQ_CHAT_TEXT_COLOR_WHITE_0           0
+#define EQ_CHAT_TEXT_COLOR_DEFAULT           1
+#define EQ_CHAT_TEXT_COLOR_DARK_GREEN        2
+#define EQ_CHAT_TEXT_COLOR_DEFAULT_2         3
+#define EQ_CHAT_TEXT_COLOR_DARK_BLUE         4
+#define EQ_CHAT_TEXT_COLOR_PINK              5
+#define EQ_CHAT_TEXT_COLOR_DARK_GRAY         6
+#define EQ_CHAT_TEXT_COLOR_WHITE_2           7
+#define EQ_CHAT_TEXT_COLOR_DEFAULT_3         8
+#define EQ_CHAT_TEXT_COLOR_DEFAULT_4         9
+#define EQ_CHAT_TEXT_COLOR_WHITE             10
+#define EQ_CHAT_TEXT_COLOR_DEFAULT_5         11
+#define EQ_CHAT_TEXT_COLOR_GRAY              12
+#define EQ_CHAT_TEXT_COLOR_RED               13
+#define EQ_CHAT_TEXT_COLOR_GREEN             14
+#define EQ_CHAT_TEXT_COLOR_YELLOW            15
+#define EQ_CHAT_TEXT_COLOR_BLUE              16
+#define EQ_CHAT_TEXT_COLOR_BLUE_2            17
+#define EQ_CHAT_TEXT_COLOR_TEAL              18
+#define EQ_CHAT_TEXT_COLOR_DEFAULT_6         19
+#define EQ_CHAT_TEXT_COLOR_WHITE_20          20
+#define EQ_CHAT_TEXT_COLOR_ORANGE            21
+#define EQ_CHAT_TEXT_COLOR_BROWN             22
 
 // CEverQuest__WriteTextHD2()    draws text on the screen
 #define EQ_DRAW_TEXT_COLOR_BLACK         0  // ARGB 0xFF000000
@@ -120,6 +161,29 @@ const float EQ_CAMERA_PITCH_MAX        = 119.5f;     // look up
 #define EQ_DRAW_TEXT_COLOR_DEFAULT_6     19 // ARGB 0xFF606060
 #define EQ_DRAW_TEXT_COLOR_BLACK_2       20 // ARGB 0xFF000000
 
+#define EQ_DIRECTION_NORTH         0
+#define EQ_DIRECTION_NORTH_WEST    1
+#define EQ_DIRECTION_NORTH_EAST    2
+#define EQ_DIRECTION_SOUTH         3
+#define EQ_DIRECTION_SOUTH_WEST    4
+#define EQ_DIRECTION_SOUTH_EAST    5
+#define EQ_DIRECTION_WEST          6
+#define EQ_DIRECTION_EAST          7
+#define EQ_DIRECTION_UNKNOWN       254
+
+std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_DIRECTION_NAME =
+{
+    {EQ_DIRECTION_NORTH,         "North"},
+    {EQ_DIRECTION_NORTH_WEST,    "Northwest"},
+    {EQ_DIRECTION_NORTH_EAST,    "Northeast"},
+    {EQ_DIRECTION_SOUTH,         "South"},
+    {EQ_DIRECTION_SOUTH_WEST,    "Southwest"},
+    {EQ_DIRECTION_SOUTH_EAST,    "Southeast"},
+    {EQ_DIRECTION_WEST,          "West"},
+    {EQ_DIRECTION_EAST,          "East"},
+    {EQ_DIRECTION_UNKNOWN,          "Unknown"},
+};
+
 #define EQ_RACE_UNKNOWN          0
 #define EQ_RACE_HUMAN            1
 #define EQ_RACE_BARBARIAN        2
@@ -140,7 +204,7 @@ const float EQ_CAMERA_PITCH_MAX        = 119.5f;     // look up
 #define EQ_RACE_DRAKKIN          522
 #define EQ_RACE_CAMPFIRE         567 // fellowship campfires, etc
 
-std::unordered_map<uint32_t, std::string> EQ_TABLE_RACE_NAME =
+std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_RACE_NAME =
 {
     {EQ_RACE_UNKNOWN,      "Unknown"},
     {EQ_RACE_HUMAN,        "Human"},
@@ -161,7 +225,7 @@ std::unordered_map<uint32_t, std::string> EQ_TABLE_RACE_NAME =
     {EQ_RACE_DRAKKIN,      "Drakkin"},
 };
 
-std::unordered_map<uint32_t, std::string> EQ_TABLE_RACE_SHORT_NAME =
+std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_RACE_SHORT_NAME =
 {
     {EQ_RACE_UNKNOWN,      "UNK"},
     {EQ_RACE_HUMAN,        "HUM"},
@@ -227,7 +291,7 @@ std::unordered_map<uint32_t, std::string> EQ_TABLE_RACE_SHORT_NAME =
 #define EQ_CLASS_LOYALTY_MERCHANT            73
 #define EQ_CLASS_TRIBUTE_MASTER              74
 
-std::unordered_map<uint32_t, std::string> EQ_TABLE_CLASS_NAME =
+std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_CLASS_NAME =
 {
     {EQ_CLASS_UNKNOWN,         "Unknown"},
     {EQ_CLASS_WARRIOR,         "Warrior"},
@@ -260,7 +324,7 @@ std::unordered_map<uint32_t, std::string> EQ_TABLE_CLASS_NAME =
     {EQ_CLASS_TRIBUTE_MASTER,              "Tribute Master"},
 };
 
-std::unordered_map<uint32_t, std::string> EQ_TABLE_CLASS_SHORT_NAME =
+std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_CLASS_SHORT_NAME =
 {
     {EQ_CLASS_UNKNOWN,         "UNK"},
     {EQ_CLASS_WARRIOR,         "WAR"},

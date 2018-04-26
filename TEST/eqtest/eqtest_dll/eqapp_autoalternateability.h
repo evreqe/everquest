@@ -10,12 +10,30 @@ EQApp::TimerInterval g_AutoAlternateAbilityTimerInterval = 3;
 uint32_t g_AutoAlternateAbilityList_reserve = 128;
 
 void EQAPP_AutoAlternateAbility_Toggle();
+void EQAPP_AutoAlternateAbility_On();
+void EQAPP_AutoAlternateAbility_Off();
 void EQAPP_AutoAlternateAbility_Execute();
 
 void EQAPP_AutoAlternateAbility_Toggle()
 {
     EQ_ToggleBool(g_AutoAlternateAbilityIsEnabled);
     EQAPP_PrintBool("Auto Alternate Ability", g_AutoAlternateAbilityIsEnabled);
+}
+
+void EQAPP_AutoAlternateAbility_On()
+{
+    if (g_AutoAlternateAbilityIsEnabled == false)
+    {
+        EQAPP_AutoAlternateAbility_Toggle();
+    }
+}
+
+void EQAPP_AutoAlternateAbility_Off()
+{
+    if (g_AutoAlternateAbilityIsEnabled == true)
+    {
+        EQAPP_AutoAlternateAbility_Toggle();
+    }
 }
 
 void EQAPP_AutoAlternateAbility_Execute()

@@ -13,7 +13,7 @@
 #define EQ_ZONE_ID_GUILDHALL      345 // Guild Hall
 #define EQ_ZONE_ID_BARTER         346 // The Barter Hall
 
-std::unordered_map<uint32_t, std::string> EQ_TABLE_ZONE_NAME =
+std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_ZONE_NAME =
 {
     {EQ_ZONE_ID_BAZAAR,           "The Bazaar"},
     {EQ_ZONE_ID_NEXUS,            "The Nexus"},
@@ -24,7 +24,7 @@ std::unordered_map<uint32_t, std::string> EQ_TABLE_ZONE_NAME =
     {EQ_ZONE_ID_BARTER,           "The Barter Hall"},
 };
 
-std::unordered_map<uint32_t, std::string> EQ_TABLE_ZONE_SHORT_NAME =
+std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_ZONE_SHORT_NAME =
 {
     {EQ_ZONE_ID_BAZAAR,           "bazaar"},
     {EQ_ZONE_ID_NEXUS,            "nexus"},

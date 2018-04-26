@@ -17,8 +17,28 @@ sol::state g_LuaState;
 
 std::vector<EQApp::LuaEventScript_sharedptr> g_LuaEventScriptList;
 
+EQApp::Timer g_LuaOneSecondTimer = EQAPP_Timer_GetTimeNow();
+EQApp::TimerInterval g_LuaOneSecondTimerInterval = 1;
+
+EQApp::Timer g_LuaThreeSecondsTimer = EQAPP_Timer_GetTimeNow();
+EQApp::TimerInterval g_LuaThreeSecondsTimerInterval = 3;
+
+EQApp::Timer g_LuaSixSecondsTimer = EQAPP_Timer_GetTimeNow();
+EQApp::TimerInterval g_LuaSixSecondsTimerInterval = 6; // 1 tick
+
+EQApp::Timer g_LuaOneMinuteTimer = EQAPP_Timer_GetTimeNow();
+EQApp::TimerInterval g_LuaOneMinuteTimerInterval = 60;
+
+EQApp::Timer g_LuaOneHourTimer = EQAPP_Timer_GetTimeNow();
+EQApp::TimerInterval g_LuaOneHourTimerInterval = 3600; // 60 * 60;
+
+void EQAPP_Lua_Toggle();
+
 void EQAPP_Lua_Load();
+void EQAPP_Lua_On();
+void EQAPP_Lua_Off();
 void EQAPP_Lua_OpenLibraries(sol::state* state);
+void EQAPP_Lua_ResetTimers();
 void EQAPP_Lua_EventScriptList_Load();
 void EQAPP_Lua_EventScriptList_Print();
 void EQAPP_Lua_EventScriptList_ExecuteFunction(const char* functionName);
@@ -26,6 +46,30 @@ void EQAPP_Lua_ScriptFolder_Print();
 bool EQAPP_Lua_ExecuteCode(sol::state* state, const char* text);
 bool EQAPP_Lua_ExecuteFile(sol::state* state, const char* filename);
 void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state);
+
+void EQAPP_Lua_Toggle()
+{
+    EQ_ToggleBool(g_LuaIsEnabled);
+    EQAPP_PrintBool("Lua", g_LuaIsEnabled);
+
+    EQAPP_Lua_ResetTimers();
+}
+
+void EQAPP_Lua_On()
+{
+    if (g_LuaIsEnabled == false)
+    {
+        EQAPP_Lua_Toggle();
+    }
+}
+
+void EQAPP_Lua_Off()
+{
+    if (g_LuaIsEnabled == true)
+    {
+        EQAPP_Lua_Toggle();
+    }
+}
 
 void EQAPP_Lua_Load()
 {
@@ -52,8 +96,23 @@ void EQAPP_Lua_OpenLibraries(sol::state* state)
     );
 }
 
+void EQAPP_Lua_ResetTimers()
+{
+    g_LuaOneSecondTimer = EQAPP_Timer_GetTimeNow();
+
+    g_LuaThreeSecondsTimer = EQAPP_Timer_GetTimeNow();
+
+    g_LuaSixSecondsTimer = EQAPP_Timer_GetTimeNow();
+
+    g_LuaOneMinuteTimer = EQAPP_Timer_GetTimeNow();
+
+    g_LuaOneHourTimer = EQAPP_Timer_GetTimeNow();
+}
+
 void EQAPP_Lua_EventScriptList_Load()
 {
+    EQAPP_Lua_ResetTimers();
+
     g_LuaEventScriptList.clear();
 
     std::stringstream folderPath;
@@ -106,7 +165,15 @@ void EQAPP_Lua_EventScriptList_ExecuteFunction(const char* functionName)
         sol::protected_function luaFunction = script->LuaState[functionName];
         if (luaFunction.valid() == true)
         {
-            luaFunction();
+            sol::protected_function_result result = luaFunction();
+            if (result.valid() == false)
+            {
+                std::cout << "Lua filename: " << script->Filename << std::endl;
+
+                sol::error error = result;
+
+                std::cout << "Lua error: " << error.what() << std::endl;
+            }
         }
     }
 }
@@ -134,7 +201,7 @@ bool EQAPP_Lua_ExecuteCode(sol::state* state, const char* text)
         return result;
     };
 
-    auto result = state->script(text, simpleHandler);
+    sol::protected_function_result result = state->script(text, simpleHandler);
     if (result.valid() == false)
     {
         sol::error error = result;
@@ -184,6 +251,8 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQAPP_BeepEx", EQAPP_BeepEx);
     state->set_function("EQAPP_IsInGame", EQAPP_IsInGame);
     state->set_function("EQAPP_CopyTextToClipboard", EQAPP_CopyTextToClipboard);
+    state->set_function("EQAPP_PrintSpawnList", EQAPP_PrintSpawnList);
+    state->set_function("EQAPP_PrintLocation", EQAPP_PrintLocation);
 
     // EQ constants
     state->set("EQ_WINDOW_TITLE_DEFAULT", EQ_WINDOW_TITLE_DEFAULT);
@@ -204,7 +273,29 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set("EQ_CAMERA_FIELD_OF_VIEW_DEFAULT", EQ_CAMERA_FIELD_OF_VIEW_DEFAULT);
     state->set("EQ_CAMERA_FIELD_OF_VIEW_DRUID_MASK", EQ_CAMERA_FIELD_OF_VIEW_DRUID_MASK);
 
+    state->set("EQ_CHAT_TEXT_COLOR_WHITE_0", EQ_CHAT_TEXT_COLOR_WHITE_0);
+    state->set("EQ_CHAT_TEXT_COLOR_DEFAULT", EQ_CHAT_TEXT_COLOR_DEFAULT);
+    state->set("EQ_CHAT_TEXT_COLOR_DARK_GREEN", EQ_CHAT_TEXT_COLOR_DARK_GREEN);
+    state->set("EQ_CHAT_TEXT_COLOR_DEFAULT_2", EQ_CHAT_TEXT_COLOR_DEFAULT_2);
+    state->set("EQ_CHAT_TEXT_COLOR_DARK_BLUE", EQ_CHAT_TEXT_COLOR_DARK_BLUE);
+    state->set("EQ_CHAT_TEXT_COLOR_PINK", EQ_CHAT_TEXT_COLOR_PINK);
+    state->set("EQ_CHAT_TEXT_COLOR_DARK_GRAY", EQ_CHAT_TEXT_COLOR_DARK_GRAY);
+    state->set("EQ_CHAT_TEXT_COLOR_WHITE_2", EQ_CHAT_TEXT_COLOR_WHITE_2);
+    state->set("EQ_CHAT_TEXT_COLOR_DEFAULT_3", EQ_CHAT_TEXT_COLOR_DEFAULT_3);
+    state->set("EQ_CHAT_TEXT_COLOR_DEFAULT_4", EQ_CHAT_TEXT_COLOR_DEFAULT_4);
+    state->set("EQ_CHAT_TEXT_COLOR_WHITE", EQ_CHAT_TEXT_COLOR_WHITE);
+    state->set("EQ_CHAT_TEXT_COLOR_DEFAULT_5", EQ_CHAT_TEXT_COLOR_DEFAULT_5);
+    state->set("EQ_CHAT_TEXT_COLOR_GRAY", EQ_CHAT_TEXT_COLOR_GRAY);
+    state->set("EQ_CHAT_TEXT_COLOR_RED", EQ_CHAT_TEXT_COLOR_RED);
+    state->set("EQ_CHAT_TEXT_COLOR_GREEN", EQ_CHAT_TEXT_COLOR_GREEN);
     state->set("EQ_CHAT_TEXT_COLOR_YELLOW", EQ_CHAT_TEXT_COLOR_YELLOW);
+    state->set("EQ_CHAT_TEXT_COLOR_BLUE", EQ_CHAT_TEXT_COLOR_BLUE);
+    state->set("EQ_CHAT_TEXT_COLOR_BLUE_2", EQ_CHAT_TEXT_COLOR_BLUE_2);
+    state->set("EQ_CHAT_TEXT_COLOR_TEAL", EQ_CHAT_TEXT_COLOR_TEAL);
+    state->set("EQ_CHAT_TEXT_COLOR_DEFAULT_6", EQ_CHAT_TEXT_COLOR_DEFAULT_6);
+    state->set("EQ_CHAT_TEXT_COLOR_WHITE_20", EQ_CHAT_TEXT_COLOR_WHITE_20);
+    state->set("EQ_CHAT_TEXT_COLOR_ORANGE", EQ_CHAT_TEXT_COLOR_ORANGE);
+    state->set("EQ_CHAT_TEXT_COLOR_BROWN", EQ_CHAT_TEXT_COLOR_BROWN);
 
     state->set("EQ_DRAW_TEXT_COLOR_BLACK", EQ_DRAW_TEXT_COLOR_BLACK);
     state->set("EQ_DRAW_TEXT_COLOR_DEFAULT", EQ_DRAW_TEXT_COLOR_DEFAULT);
@@ -227,6 +318,16 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set("EQ_DRAW_TEXT_COLOR_TEAL", EQ_DRAW_TEXT_COLOR_TEAL);
     state->set("EQ_DRAW_TEXT_COLOR_DEFAULT_6", EQ_DRAW_TEXT_COLOR_DEFAULT_6);
     state->set("EQ_DRAW_TEXT_COLOR_BLACK_2", EQ_DRAW_TEXT_COLOR_BLACK_2);
+
+    state->set("EQ_DIRECTION_NORTH", EQ_DIRECTION_NORTH);
+    state->set("EQ_DIRECTION_NORTH_WEST", EQ_DIRECTION_NORTH_WEST);
+    state->set("EQ_DIRECTION_NORTH_EAST", EQ_DIRECTION_NORTH_EAST);
+    state->set("EQ_DIRECTION_SOUTH", EQ_DIRECTION_SOUTH);
+    state->set("EQ_DIRECTION_SOUTH_WEST", EQ_DIRECTION_SOUTH_WEST);
+    state->set("EQ_DIRECTION_SOUTH_EAST", EQ_DIRECTION_SOUTH_EAST);
+    state->set("EQ_DIRECTION_WEST", EQ_DIRECTION_WEST);
+    state->set("EQ_DIRECTION_EAST", EQ_DIRECTION_EAST);
+    state->set("EQ_DIRECTION_UNKNOWN", EQ_DIRECTION_UNKNOWN);
 
     state->set("EQ_RACE_UNKNOWN", EQ_RACE_UNKNOWN);
     state->set("EQ_RACE_HUMAN", EQ_RACE_HUMAN);
@@ -905,6 +1006,7 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_GetSpawnNext", EQ_GetSpawnNext);
     state->set_function("EQ_GetSpawnPrevious", EQ_GetSpawnPrevious);
 
+    state->set_function("EQ_GetSpawnNumbered", EQ_GetSpawnNameNumbered);
     state->set_function("EQ_GetSpawnName", EQ_GetSpawnName);
     state->set_function("EQ_GetSpawnLastName", EQ_GetSpawnLastName);
 
@@ -914,12 +1016,14 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_GetTargetSpawnLastName", EQ_GetTargetSpawnLastName);
 
     state->set_function("EQ_IsSpawnWithinDistance", EQ_IsSpawnWithinDistance);
+    state->set_function("EQ_IsSpawnWithinDistanceOfLocation", EQ_IsSpawnWithinDistanceOfLocation);
     state->set_function("EQ_GetSpawnDistance", EQ_GetSpawnDistance);
     state->set_function("EQ_GetSpawnDistance3D", EQ_GetSpawnDistance3D);
 
     state->set_function("EQ_GetSpawnY", EQ_GetSpawnY);
     state->set_function("EQ_GetSpawnX", EQ_GetSpawnX);
     state->set_function("EQ_GetSpawnZ", EQ_GetSpawnZ);
+    state->set_function("EQ_GetSpawnMovementSpeed", EQ_GetSpawnMovementSpeed);
     state->set_function("EQ_GetSpawnHeading", EQ_GetSpawnHeading);
     state->set_function("EQ_GetSpawnType", EQ_GetSpawnType);
     state->set_function("EQ_GetSpawnHeight", EQ_GetSpawnHeight);
@@ -939,10 +1043,13 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_GetSpawnEnduranceMax", EQ_GetSpawnEnduranceMax);
     state->set_function("EQ_GetSpawnEndurancePercent", EQ_GetSpawnEndurancePercent);
     state->set_function("EQ_GetSpawnFollowSpawn", EQ_GetSpawnFollowSpawn);
+    state->set_function("EQ_GetSpawnDirection", EQ_GetSpawnDirection);
 
     state->set_function("EQ_SetSpawnHeading", EQ_SetSpawnHeading);
     state->set_function("EQ_SetSpawnHeight", EQ_SetSpawnHeight);
     state->set_function("EQ_SetSpawnFollowSpawn", EQ_SetSpawnFollowSpawn);
+
+    state->set_function("EQ_TurnSpawnTowardsLocation", EQ_TurnSpawnTowardsLocation);
     state->set_function("EQ_TurnPlayerTowardsSpawn", EQ_TurnPlayerTowardsSpawn);
 
     state->set_function("EQ_IsSpawnClassTank", EQ_IsSpawnClassTank);
@@ -960,8 +1067,13 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_DrawText", EQ_DrawText);
     state->set_function("EQ_DrawTextEx", EQ_DrawTextEx);
 
+    state->set_function("EQ_GetCameraPitch", EQ_GetCameraPitch);
+    state->set_function("EQ_GetCameraFieldOfView", EQ_GetCameraFieldOfView);
+    state->set_function("EQ_GetCameraDrawDistance", EQ_GetCameraDrawDistance);
+
     state->set_function("EQ_SetCameraPitch", EQ_SetCameraPitch);
     state->set_function("EQ_SetCameraFieldOfView", EQ_SetCameraFieldOfView);
+    state->set_function("EQ_SetCameraDrawDistance", EQ_SetCameraDrawDistance);
 
     state->set_function("EQ_PlaySound", EQ_PlaySound);
     state->set_function("EQ_StopSound", EQ_StopSound);
@@ -970,10 +1082,16 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_FollowTarget", EQ_FollowTarget);
     state->set_function("EQ_TurnPlayerTowardsTarget", EQ_TurnPlayerTowardsTarget);
 
+    state->set_function("EQ_GetSpawnTypeNameByKey", EQ_GetSpawnTypeNameByKey);
+    state->set_function("EQ_GetStandingStateNameByKey", EQ_GetStandingStateNameByKey);
+    state->set_function("EQ_GetDirectionNameByKey", EQ_GetDirectionNameByKey);
     state->set_function("EQ_GetZoneNameByKey", EQ_GetZoneNameByKey);
     state->set_function("EQ_GetZoneShortNameByKey", EQ_GetZoneShortNameByKey);
     state->set_function("EQ_GetRaceNameByKey", EQ_GetRaceNameByKey);
     state->set_function("EQ_GetRaceShortNameByKey", EQ_GetRaceShortNameByKey);
     state->set_function("EQ_GetClassNameByKey", EQ_GetClassNameByKey);
     state->set_function("EQ_GetClassShortNameByKey", EQ_GetClassShortNameByKey);
+
+    state->set_function("EQ_UseAlternateAbility", EQ_UseAlternateAbility);
+    state->set_function("EQ_UseDiscipline", EQ_UseDiscipline);
 }

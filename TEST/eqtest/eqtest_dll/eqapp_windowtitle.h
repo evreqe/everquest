@@ -6,6 +6,8 @@ EQApp::Timer g_WindowTitleTimer = EQAPP_Timer_GetTimeNow();
 EQApp::TimerInterval g_WindowTitleTimerInterval = 3;
 
 void EQAPP_WindowTitle_Toggle();
+void EQAPP_WindowTitle_On();
+void EQAPP_WindowTitle_Off();
 void EQAPP_WindowTitle_Reset();
 void EQAPP_WindowTitle_Execute();
 
@@ -17,6 +19,22 @@ void EQAPP_WindowTitle_Toggle()
     if (g_WindowTitleIsEnabled == false)
     {
         EQAPP_WindowTitle_Reset();
+    }
+}
+
+void EQAPP_WindowTitle_On()
+{
+    if (g_WindowTitleIsEnabled == false)
+    {
+        EQAPP_WindowTitle_Toggle();
+    }
+}
+
+void EQAPP_WindowTitle_Off()
+{
+    if (g_WindowTitleIsEnabled == true)
+    {
+        EQAPP_WindowTitle_Toggle();
     }
 }
 

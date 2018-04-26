@@ -10,12 +10,36 @@ EQApp::TimerInterval g_AlwaysHotButtonTimerInterval = 1;
 signed int g_AlwaysHotButtonIndex = -1;
 
 void EQAPP_AlwaysHotButton_Toggle();
+void EQAPP_AlwaysHotButton_On();
+void EQAPP_AlwaysHotButton_Off();
+void EQAPP_AlwaysHotButton_SetIndex(signed int index);
 void EQAPP_AlwaysHotButton_Execute();
 
 void EQAPP_AlwaysHotButton_Toggle()
 {
     EQ_ToggleBool(g_AlwaysHotButtonIsEnabled);
     EQAPP_PrintBool("Always HotButton", g_AlwaysHotButtonIsEnabled);
+}
+
+void EQAPP_AlwaysHotButton_On()
+{
+    if (g_AlwaysHotButtonIsEnabled == false)
+    {
+        EQAPP_AlwaysHotButton_Toggle();
+    }
+}
+
+void EQAPP_AlwaysHotButton_Off()
+{
+    if (g_AlwaysHotButtonIsEnabled == true)
+    {
+        EQAPP_AlwaysHotButton_Toggle();
+    }
+}
+
+void EQAPP_AlwaysHotButton_SetIndex(signed int index)
+{
+    g_AlwaysHotButtonIndex = index;
 }
 
 void EQAPP_AlwaysHotButton_Execute()

@@ -15,6 +15,10 @@ std::string EQAPP_String_GetAfter(const std::string& subject, const std::string&
 std::string EQAPP_String_JoinStrings(const std::vector<std::string>& elements, const std::string& separator);
 std::vector<std::string> EQAPP_String_Split(const std::string& subject, char delimiter);
 bool EQAPP_String_IsDigits(const std::string &subject);
+bool EQAPP_String_IsUppercase(const std::string &subject);
+bool EQAPP_String_IsLowercase(const std::string &subject);
+std::string EQAPP_String_ToLowercase(const std::string& subject);
+std::string EQAPP_String_ToUppercase(const std::string& subject);
 
 bool EQAPP_String_Contains(std::string& subject, const std::string& search)
 {
@@ -127,4 +131,30 @@ std::vector<std::string> EQAPP_String_Split(const std::string& subject, char del
 bool EQAPP_String_IsDigits(const std::string &subject)
 {
     return std::all_of(subject.begin(), subject.end(), ::isdigit);
+}
+
+bool EQAPP_String_IsLowercase(const std::string &subject)
+{
+    return std::all_of(subject.begin(), subject.end(), ::islower);
+}
+
+bool EQAPP_String_IsUppercase(const std::string &subject)
+{
+    return std::all_of(subject.begin(), subject.end(), ::isupper);
+}
+
+std::string EQAPP_String_ToLowercase(const std::string& subject)
+{
+    std::string str = subject;
+    std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+
+    return str;
+}
+
+std::string EQAPP_String_ToUppercase(const std::string& subject)
+{
+    std::string str = subject;
+    std::transform(str.begin(), str.end(), str.begin(), ::toupper);
+
+    return str;
 }

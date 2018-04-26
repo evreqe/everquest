@@ -14,6 +14,8 @@ EQApp::TimerInterval g_BazaarBotToParcelsTimerInterval = 1;
 std::vector<std::string> g_BazaarBotLoreItemsList;
 
 void EQAPP_BazaarBot_Toggle();
+void EQAPP_BazaarBot_On();
+void EQAPP_BazaarBot_Off();
 void EQAPP_BazaarBot_Execute();
 void EQAPP_BazaarBot_ResetLoreItems();
 
@@ -30,6 +32,22 @@ void EQAPP_BazaarBot_Toggle()
     EQAPP_PrintBool("Bazaar Bot", g_BazaarBotIsEnabled);
 
     EQAPP_BazaarBot_ResetLoreItems();
+}
+
+void EQAPP_BazaarBot_On()
+{
+    if (g_BazaarBotIsEnabled == false)
+    {
+        EQAPP_BazaarBot_Toggle();
+    }
+}
+
+void EQAPP_BazaarBot_Off()
+{
+    if (g_BazaarBotIsEnabled == true)
+    {
+        EQAPP_BazaarBot_Toggle();
+    }
 }
 
 void EQAPP_BazaarBot_Execute()

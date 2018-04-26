@@ -8,6 +8,8 @@ EQApp::Timer g_AlwaysAttackTimer = EQAPP_Timer_GetTimeNow();
 EQApp::TimerInterval g_AlwaysAttackTimerInterval = 1;
 
 void EQAPP_AlwaysAttack_Toggle();
+void EQAPP_AlwaysAttack_On();
+void EQAPP_AlwaysAttack_Off();
 void EQAPP_AlwaysAttack_Execute();
 
 void EQAPP_AlwaysAttack_Toggle()
@@ -18,6 +20,22 @@ void EQAPP_AlwaysAttack_Toggle()
     if (g_AlwaysAttackIsEnabled == false)
     {
         EQ_SetAutoAttack(false);
+    }
+}
+
+void EQAPP_AlwaysAttack_On()
+{
+    if (g_AlwaysAttackIsEnabled == false)
+    {
+        EQAPP_AlwaysAttack_Toggle();
+    }
+}
+
+void EQAPP_AlwaysAttack_Off()
+{
+    if (g_AlwaysAttackIsEnabled == true)
+    {
+        EQAPP_AlwaysAttack_Toggle();
     }
 }
 

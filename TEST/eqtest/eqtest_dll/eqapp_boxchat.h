@@ -37,6 +37,8 @@ struct addrinfo* g_BoxChatAddressInfo_ptr = NULL;
 struct addrinfo g_BoxChatAddressInfoHints;
 
 void EQAPP_BoxChat_Toggle();
+void EQAPP_BoxChat_On();
+void EQAPP_BoxChat_Off();
 void EQAPP_BoxChat_AutoConnect_Toggle();
 void EQAPP_BoxChat_Load();
 void EQAPP_BoxChat_Unload();
@@ -53,6 +55,22 @@ void EQAPP_BoxChat_Toggle()
 {
     EQ_ToggleBool(g_BoxChatIsEnabled);
     EQAPP_PrintBool("Box Chat", g_BoxChatIsEnabled);
+}
+
+void EQAPP_BoxChat_On()
+{
+    if (g_BoxChatIsEnabled == false)
+    {
+        EQAPP_BoxChat_Toggle();
+    }
+}
+
+void EQAPP_BoxChat_Off()
+{
+    if (g_BoxChatIsEnabled == true)
+    {
+        EQAPP_BoxChat_Toggle();
+    }
 }
 
 void EQAPP_BoxChat_AutoConnect_Toggle()

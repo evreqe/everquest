@@ -23,6 +23,8 @@ void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list, 
 std::vector<uint32_t> EQAPP_GetNPCSpawnIDListSortedByDistance();
 bool EQAPP_IsInGame();
 void EQAPP_CopyTextToClipboard(const char* text);
+void EQAPP_PrintSpawnList();
+void EQAPP_PrintLocation();
 
 void EQAPP_Log(const char* text)
 {
@@ -334,3 +336,71 @@ void EQAPP_CopyTextToClipboard(const char* text)
     SetClipboardData(CF_TEXT, memory);
     CloseClipboard();
 }
+
+void EQAPP_PrintSpawnList()
+{
+    auto spawn = EQ_GetFirstSpawn();
+
+    while (spawn != NULL)
+    {
+        std::stringstream ss;
+
+        if (EQ_GetSpawnClass(spawn) == EQ_CLASS_OBJECT)
+        {
+            ss << "* ";
+        }
+
+        ss << "[" << EQ_GetSpawnLevel(spawn) << "]";
+
+        auto spawnName = EQ_GetSpawnName(spawn);
+        if (spawnName.size() != 0)
+        {
+            ss << " " << spawnName;
+        }
+
+        auto spawnType = EQ_GetSpawnType(spawn);
+        if (spawnType == EQ_SPAWN_TYPE_NPC)
+        {
+            auto spawnLastName = EQ_GetSpawnLastName(spawn);
+            if (spawnLastName.size() != 0)
+            {
+                ss << " (" << spawnLastName << ")";
+            }
+        }
+
+        ss << " -";
+
+        ss << " Type=" << spawnType;
+        ss << " Race=" << EQ_GetSpawnRace(spawn);
+        ss << " Class=" << EQ_GetSpawnClass(spawn);
+        ss << " Height=" << EQ_GetSpawnHeight(spawn);
+
+        std::cout << ss.str() << std::endl;
+
+        spawn = EQ_GetSpawnNext(spawn);
+    }
+}
+
+void EQAPP_PrintLocation()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn != NULL)
+    {
+        auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
+        auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
+        auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
+
+        std::cout << "Your location is " << playerSpawnY << ", " << playerSpawnX << ", " << playerSpawnZ << "." << std::endl;
+    }
+
+    auto targetSpawn = EQ_GetTargetSpawn();
+    if (targetSpawn != NULL)
+    {
+        auto targetSpawnY = EQ_GetSpawnY(targetSpawn);
+        auto targetSpawnX = EQ_GetSpawnX(targetSpawn);
+        auto targetSpawnZ = EQ_GetSpawnZ(targetSpawn);
+
+        std::cout << "Your target's location is " << targetSpawnY << ", " << targetSpawnX << ", " << targetSpawnZ << "." << std::endl;
+    }
+}
+

@@ -21,9 +21,10 @@
 #define EQ_CXWND_KEYBOARD_FLAG_LALT     4
 #define EQ_CXWND_KEYBOARD_FLAG_RALT     8
 
-// !!!!! changes after every patch !!!!!
-// April 9 2018
-#define EQ_OFFSET_CXWnd_IS_OPEN 0x150  // uint8_t    CXWnd__IsReallyVisible()
+// ******************** randomized after each patch ******************** //
+// April 24 2018
+#define EQ_OFFSET_CXWnd_IS_OPEN 0x7A  // uint8_t    CXWnd__IsReallyVisible()
+// ********************************************************************* //
 
 #define EQ_VFTABLE_INDEX_CXWnd__WndNotification    0x88
 #define EQ_VFTABLE_INDEX_CXWnd__Activate           0x90 // show window

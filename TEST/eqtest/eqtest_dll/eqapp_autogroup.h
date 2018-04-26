@@ -8,12 +8,30 @@ EQApp::Timer g_AutoGroupTimer = EQAPP_Timer_GetTimeNow();
 EQApp::TimerInterval g_AutoGroupTimerInterval = 3;
 
 void EQAPP_AutoGroup_Toggle();
+void EQAPP_AutoGroup_On();
+void EQAPP_AutoGroup_Off();
 void EQAPP_AutoGroup_HandleEvent_CEverQuest__dsp_chat(std::string text, int textColor);
 
 void EQAPP_AutoGroup_Toggle()
 {
     EQ_ToggleBool(g_AutoGroupIsEnabled);
     EQAPP_PrintBool("Auto Group", g_AutoGroupIsEnabled);
+}
+
+void EQAPP_AutoGroup_On()
+{
+    if (g_AutoGroupIsEnabled == false)
+    {
+        EQAPP_AutoGroup_Toggle();
+    }
+}
+
+void EQAPP_AutoGroup_Off()
+{
+    if (g_AutoGroupIsEnabled == true)
+    {
+        EQAPP_AutoGroup_Toggle();
+    }
 }
 
 void EQAPP_AutoGroup_HandleEvent_CEverQuest__dsp_chat(std::string text, int textColor)

@@ -1,7 +1,9 @@
 #pragma once
 
 #include "eq.h"
+#include "eq_cxwnd.h"
 #include "eq_macros.h"
+#include "eq_messages.h"
 
 namespace EQClass
 {
@@ -116,10 +118,16 @@ class EQClass::CXWnd
 {
 public:
     int CXWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
+    void CXWnd::Activate();
+    void CXWnd::Deactivate();
     bool CXWnd::IsReallyVisible(); // is open
 };
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CXWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CXWnd::Activate(), EQ_VFTABLE_INDEX_CXWnd__Activate);
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CXWnd::Deactivate(), EQ_VFTABLE_INDEX_CXWnd__Deactivate);
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::CXWnd::IsReallyVisible(), EQ_ADDRESS_FUNCTION_CXWnd__IsReallyVisible);
 

@@ -24,12 +24,34 @@ uint32_t g_ESPFindSpawnRace = EQ_RACE_UNKNOWN;
 uint32_t g_ESPFindSpawnClass = EQ_CLASS_UNKNOWN;
 
 void EQAPP_ESP_Toggle();
+void EQAPP_ESP_On();
+void EQAPP_ESP_Off();
+void EQAPP_ESP_HeightFilter_Toggle();
+void EQAPP_ESP_ShowSpawnID_Toggle();
+void EQAPP_ESP_ShowSpawnRace_Toggle();
+void EQAPP_ESP_ShowSpawnClass_Toggle();
 void EQAPP_ESP_Execute();
 
 void EQAPP_ESP_Toggle()
 {
     EQ_ToggleBool(g_ESPIsEnabled);
     EQAPP_PrintBool("ESP", g_ESPIsEnabled);
+}
+
+void EQAPP_ESP_On()
+{
+    if (g_ESPIsEnabled == false)
+    {
+        EQAPP_ESP_Toggle();
+    }
+}
+
+void EQAPP_ESP_Off()
+{
+    if (g_ESPIsEnabled == true)
+    {
+        EQAPP_ESP_Toggle();
+    }
 }
 
 void EQAPP_ESP_HeightFilter_Toggle()
@@ -209,10 +231,10 @@ void EQAPP_ESP_Execute()
 
             if (bShowSpawnClass == true)
             {
-                auto spawnClassIt = EQ_TABLE_CLASS_SHORT_NAME.find(spawnClass);
-                if (spawnClassIt != EQ_TABLE_CLASS_SHORT_NAME.end())
+                auto spawnClassName = EQ_GetClassShortNameByKey(spawnClass);
+                if (spawnClassName.size() != 0)
                 {
-                    espText << " " << spawnClassIt->second;
+                    espText << " " << spawnClassName;
                 }
             }
 

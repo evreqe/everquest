@@ -12,12 +12,36 @@ EQApp::TimerInterval g_CombatHotButtonTimerInterval = 6;
 signed int g_CombatHotButtonIndex = -1;
 
 void EQAPP_CombatHotButton_Toggle();
+void EQAPP_CombatHotButton_On();
+void EQAPP_CombatHotButton_Off();
+void EQAPP_CombatHotButton_SetIndex(signed int index);
 void EQAPP_CombatHotButton_Execute();
 
 void EQAPP_CombatHotButton_Toggle()
 {
     EQ_ToggleBool(g_CombatHotButtonIsEnabled);
     EQAPP_PrintBool("Combat HotButton", g_CombatHotButtonIsEnabled);
+}
+
+void EQAPP_CombatHotButton_On()
+{
+    if (g_CombatHotButtonIsEnabled == false)
+    {
+        EQAPP_CombatHotButton_Toggle();
+    }
+}
+
+void EQAPP_CombatHotButton_Off()
+{
+    if (g_CombatHotButtonIsEnabled == true)
+    {
+        EQAPP_CombatHotButton_Toggle();
+    }
+}
+
+void EQAPP_CombatHotButton_SetIndex(signed int index)
+{
+    g_CombatHotButtonIndex = index;
 }
 
 void EQAPP_CombatHotButton_Execute()

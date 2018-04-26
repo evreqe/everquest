@@ -4,11 +4,14 @@ bool g_FollowAIIsEnabled = true;
 
 bool g_FollowAIUseZAxisIsEnabled = false;
 
-float g_FollowAIDistancePlayer = 15.0f;
-float g_FollowAIDistanceNPC    = 10.0f;
+float g_FollowAIDistancePlayer = 5.0f;
+float g_FollowAIDistanceNPC    = 5.0f;
 float g_FollowAIDistanceCorpse = 5.0f;
 
 void EQAPP_FollowAI_Toggle();
+void EQAPP_FollowAI_On();
+void EQAPP_FollowAI_Off();
+void EQAPP_FollowAI_UseZAxis_Toggle();
 void EQAPP_FollowAI_Execute();
 
 void EQAPP_FollowAI_Toggle()
@@ -19,6 +22,22 @@ void EQAPP_FollowAI_Toggle()
     if (g_FollowAIIsEnabled == false)
     {
         EQ_StopFollow();
+    }
+}
+
+void EQAPP_FollowAI_On()
+{
+    if (g_FollowAIIsEnabled == false)
+    {
+        EQAPP_FollowAI_Toggle();
+    }
+}
+
+void EQAPP_FollowAI_Off()
+{
+    if (g_FollowAIIsEnabled == true)
+    {
+        EQAPP_FollowAI_Toggle();
     }
 }
 
@@ -46,21 +65,20 @@ void EQAPP_FollowAI_Execute()
         return;
     }
 
-    EQ_TurnPlayerTowardsSpawn(followSpawn);
-
     float followSpawnDistance = EQ_GetSpawnDistance(followSpawn);
 
     auto followSpawnType = EQ_GetSpawnType(followSpawn);
 
-    if (followSpawnType = EQ_SPAWN_TYPE_PLAYER)
+    if (followSpawnType == EQ_SPAWN_TYPE_PLAYER)
     {
         if (followSpawnDistance < g_FollowAIDistancePlayer)
         {
             EQ_SetAutoRun(false);
+
             return;
         }
     }
-    else if (followSpawnType = EQ_SPAWN_TYPE_NPC)
+    else if (followSpawnType == EQ_SPAWN_TYPE_NPC)
     {
         if (followSpawnDistance < g_FollowAIDistanceNPC)
         {
@@ -68,7 +86,7 @@ void EQAPP_FollowAI_Execute()
             return;
         }
     }
-    else if (followSpawnType = EQ_SPAWN_TYPE_CORPSE)
+    else if (followSpawnType == EQ_SPAWN_TYPE_CORPSE)
     {
         if (followSpawnDistance < g_FollowAIDistanceCorpse)
         {
@@ -79,6 +97,9 @@ void EQAPP_FollowAI_Execute()
 
     EQ_SetAutoRun(true);
 
+    EQ_TurnPlayerTowardsSpawn(followSpawn);
+
+    // follow while swimming or levitating
     if (g_FollowAIUseZAxisIsEnabled == true)
     {
         auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);

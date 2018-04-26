@@ -6,12 +6,14 @@ EQApp::Timer g_ChangeHeightTimer = EQAPP_Timer_GetTimeNow();
 EQApp::TimerInterval g_ChangeHeightTimerInterval = 3;
 
 float g_ChangeHeightMinimumHeightCrashCheck = 1.0f;
-float g_ChangeHeightMaximumHeightCrashCheck = 20.0f;
+float g_ChangeHeightMaximumHeightCrashCheck = 100.0f;
 
 float g_ChangeHeightMinimumHeight = 1.0f;
 float g_ChangeHeightMaximumHeight = 5.0f;
 
 void EQAPP_ChangeHeight_Toggle();
+void EQAPP_ChangeHeight_On();
+void EQAPP_ChangeHeight_Off();
 void EQAPP_ChangeHeight_Execute();
 bool EQAPP_ChangeHeight_SetSpawnHeight(uint32_t spawn);
 
@@ -19,6 +21,22 @@ void EQAPP_ChangeHeight_Toggle()
 {
     EQ_ToggleBool(g_ChangeHeightIsEnabled);
     EQAPP_PrintBool("Change Height", g_ChangeHeightIsEnabled);
+}
+
+void EQAPP_ChangeHeight_On()
+{
+    if (g_ChangeHeightIsEnabled == false)
+    {
+        EQAPP_ChangeHeight_Toggle();
+    }
+}
+
+void EQAPP_ChangeHeight_Off()
+{
+    if (g_ChangeHeightIsEnabled == true)
+    {
+        EQAPP_ChangeHeight_Toggle();
+    }
 }
 
 void EQAPP_ChangeHeight_Execute()

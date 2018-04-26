@@ -12,12 +12,30 @@ EQApp::TimerInterval g_CombatAlternateAbilityTimerInterval = 6;
 uint32_t g_CombatAlternateAbilityList_reserve = 128;
 
 void EQAPP_CombatAlternateAbility_Toggle();
+void EQAPP_CombatAlternateAbility_On();
+void EQAPP_CombatAlternateAbility_Off();
 void EQAPP_CombatAlternateAbility_Execute();
 
 void EQAPP_CombatAlternateAbility_Toggle()
 {
     EQ_ToggleBool(g_CombatAlternateAbilityIsEnabled);
     EQAPP_PrintBool("Combat Alternate Ability", g_CombatAlternateAbilityIsEnabled);
+}
+
+void EQAPP_CombatAlternateAbility_On()
+{
+    if (g_CombatAlternateAbilityIsEnabled == false)
+    {
+        EQAPP_CombatAlternateAbility_Toggle();
+    }
+}
+
+void EQAPP_CombatAlternateAbility_Off()
+{
+    if (g_CombatAlternateAbilityIsEnabled == true)
+    {
+        EQAPP_CombatAlternateAbility_Toggle();
+    }
 }
 
 void EQAPP_CombatAlternateAbility_Execute()

@@ -16,6 +16,8 @@ uint32_t g_BazaarFilterItemPriceMinimum = 1;
 uint32_t g_BazaarFilterItemPriceMaximum = 1000 * 1000;
 
 void EQAPP_BazaarFilter_Toggle();
+void EQAPP_BazaarFilter_On();
+void EQAPP_BazaarFilter_Off();
 void EQAPP_BazaarFilter_Beep_Toggle();
 void EQAPP_BazaarFilter_Load();
 void EQAPP_BazaarFilter_LoadEx(const char* filename);
@@ -30,6 +32,22 @@ void EQAPP_BazaarFilter_Toggle()
     if (g_BazaarFilterIsEnabled == true)
     {
         EQAPP_BazaarFilter_Load();
+    }
+}
+
+void EQAPP_BazaarFilter_On()
+{
+    if (g_BazaarFilterIsEnabled == false)
+    {
+        EQAPP_BazaarFilter_Toggle();
+    }
+}
+
+void EQAPP_BazaarFilter_Off()
+{
+    if (g_BazaarFilterIsEnabled == true)
+    {
+        EQAPP_BazaarFilter_Toggle();
     }
 }
 

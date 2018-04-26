@@ -29,9 +29,6 @@
     <ClInclude Include="eqapp_functions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="eqapp_interpretcmd.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="eqapp_console.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -135,6 +132,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_windowtitle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_interpretcommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\eq\eq_addresses.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

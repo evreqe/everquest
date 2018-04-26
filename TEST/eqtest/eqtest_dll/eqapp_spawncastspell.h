@@ -17,8 +17,8 @@ namespace EQApp
 }
 
 bool g_SpawnCastSpellIsEnabled = true;
-bool g_SpawnCastSpellESPIsEnabled = true;
 
+bool g_SpawnCastSpellESPIsEnabled = true;
 bool g_SpawnCastSpellGroupChatIsEnabled = true;
 
 std::vector<EQApp::SpawnCastSpell_sharedptr> g_SpawnCastSpellList;
@@ -32,6 +32,9 @@ uint32_t g_SpawnCastSpellDrawTextX = 1000;
 uint32_t g_SpawnCastSpellDrawTextY = 200;
 
 void EQAPP_SpawnCastSpell_Toggle();
+void EQAPP_SpawnCastSpell_On();
+void EQAPP_SpawnCastSpell_Off();
+void EQAPP_SpawnCastSpell_ESP_Toggle();
 void EQAPP_SpawnCastSpell_GroupChat_Toggle();
 void EQAPP_SpawnCastSpell_Execute();
 void EQAPP_SpawnCastSpell_DrawText();
@@ -41,6 +44,28 @@ void EQAPP_SpawnCastSpell_Toggle()
 {
     EQ_ToggleBool(g_SpawnCastSpellIsEnabled);
     EQAPP_PrintBool("Spawn Cast Spell", g_SpawnCastSpellIsEnabled);
+}
+
+void EQAPP_SpawnCastSpell_On()
+{
+    if (g_SpawnCastSpellIsEnabled == false)
+    {
+        EQAPP_SpawnCastSpell_Toggle();
+    }
+}
+
+void EQAPP_SpawnCastSpell_Off()
+{
+    if (g_SpawnCastSpellIsEnabled == true)
+    {
+        EQAPP_SpawnCastSpell_Toggle();
+    }
+}
+
+void EQAPP_SpawnCastSpell_ESP_Toggle()
+{
+    EQ_ToggleBool(g_SpawnCastSpellESPIsEnabled);
+    EQAPP_PrintBool("Spawn Cast Spell ESP", g_SpawnCastSpellESPIsEnabled);
 }
 
 void EQAPP_SpawnCastSpell_GroupChat_Toggle()
