@@ -63,6 +63,8 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//AutoGroupOn",                  &EQAPP_AutoGroup_On},
     {"//AutoGroupOff",                 &EQAPP_AutoGroup_Off},
     {"//AG",                           &EQAPP_AutoGroup_Toggle},
+    {"//AGOn",                         &EQAPP_AutoGroup_On},
+    {"//AGOff",                        &EQAPP_AutoGroup_Off},
     {"//BoxChat",                      &EQAPP_BoxChat_Toggle},
     {"//BoxChatOn",                    &EQAPP_BoxChat_On},
     {"//BoxChatOff",                   &EQAPP_BoxChat_Off},
@@ -81,14 +83,21 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//ESPOn",                        &EQAPP_ESP_On},
     {"//ESPOff",                       &EQAPP_ESP_Off},
     {"//ESPHeightFilter",              &EQAPP_ESP_HeightFilter_Toggle},
+    {"//ESPHF",                        &EQAPP_ESP_HeightFilter_Toggle},
     {"//ESPShowSpawnID",               &EQAPP_ESP_ShowSpawnID_Toggle},
+    {"//ESPID",                        &EQAPP_ESP_ShowSpawnID_Toggle},
     {"//ESPShowSpawnRace",             &EQAPP_ESP_ShowSpawnRace_Toggle},
+    {"//ESPRace",                      &EQAPP_ESP_ShowSpawnRace_Toggle},
     {"//ESPShowSpawnClass",            &EQAPP_ESP_ShowSpawnClass_Toggle},
+    {"//ESPClass",                     &EQAPP_ESP_ShowSpawnClass_Toggle},
     {"//ChangeHeight",                 &EQAPP_ChangeHeight_Toggle},
     {"//ChangeHeightOn",               &EQAPP_ChangeHeight_On},
     {"//ChangeHeightOff",              &EQAPP_ChangeHeight_Off},
     {"//CH",                           &EQAPP_ChangeHeight_Toggle},
+    {"//CHOn",                         &EQAPP_ChangeHeight_On},
+    {"//CHOff",                        &EQAPP_ChangeHeight_Off},
     {"//LoadSpellList",                &EQAPP_SpellList_Load},
+    {"//LSL",                          &EQAPP_SpellList_Load},
     {"//SpawnCastSpell",               &EQAPP_SpawnCastSpell_Toggle},
     {"//SpawnCastSpellOn",             &EQAPP_SpawnCastSpell_On},
     {"//SpawnCastSpellOff",            &EQAPP_SpawnCastSpell_Off},
@@ -103,17 +112,19 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//HUDOn",                        &EQAPP_HUD_On},
     {"//HUDOff",                       &EQAPP_HUD_Off},
     {"//HUDDebugText",                 &EQAPP_HUD_DebugText_Toggle},
+    {"//HUDDT",                        &EQAPP_HUD_DebugText_Toggle},
     {"//LoadBazaarFilter",             &EQAPP_BazaarFilter_Load},
     {"//LBF",                          &EQAPP_BazaarFilter_Load},
     {"//BazaarFilter",                 &EQAPP_BazaarFilter_Toggle},
     {"//BazaarFilterOn",               &EQAPP_BazaarFilter_On},
     {"//BazaarFilterOff",              &EQAPP_BazaarFilter_Off},
     {"//BF",                           &EQAPP_BazaarFilter_Toggle},
+    {"//BFOn",                         &EQAPP_BazaarFilter_On},
+    {"//BFOff",                        &EQAPP_BazaarFilter_Off},
     {"//BazaarFilterBeep",             &EQAPP_BazaarFilter_Beep_Toggle},
     {"//BFB",                          &EQAPP_BazaarFilter_Beep_Toggle},
     {"//BazaarFilterList",             &EQAPP_BazaarFilter_PrintItemNameList},
     {"//BFL",                          &EQAPP_BazaarFilter_PrintItemNameList},
-    {"//BFB",                          &EQAPP_BazaarFilter_Beep_Toggle},
     {"//BazaarBot",                    &EQAPP_BazaarBot_Toggle},
     {"//BazaarBotOn",                  &EQAPP_BazaarBot_On},
     {"//BazaarBotOff",                 &EQAPP_BazaarBot_Off},
@@ -121,16 +132,29 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//BBOn",                         &EQAPP_BazaarBot_On},
     {"//BBOff",                        &EQAPP_BazaarBot_Off},
     {"//FollowAI",                     &EQAPP_FollowAI_Toggle},
+    {"//FollowAIOn",                   &EQAPP_FollowAI_On},
+    {"//FollowAIOff",                  &EQAPP_FollowAI_Off},
     {"//FAI",                          &EQAPP_FollowAI_Toggle},
+    {"//FAIOn",                        &EQAPP_FollowAI_On},
+    {"//FAIOff",                       &EQAPP_FollowAI_Off},
     {"//FollowAIUseZAxis",             &EQAPP_FollowAI_UseZAxis_Toggle},
     {"//FAIUZA",                       &EQAPP_FollowAI_UseZAxis_Toggle},
     {"//WindowTitle",                  &EQAPP_WindowTitle_Toggle},
     {"//WindowTitleOn",                &EQAPP_WindowTitle_On},
     {"//WindowTitleOff",               &EQAPP_WindowTitle_Off},
+    {"//WT",                           &EQAPP_WindowTitle_Toggle},
+    {"//WTOn",                         &EQAPP_WindowTitle_On},
+    {"//WTOff",                        &EQAPP_WindowTitle_Off},
     {"//Lua",                          &EQAPP_Lua_Toggle},
     {"//LuaOn",                        &EQAPP_Lua_On},
     {"//LuaOff",                       &EQAPP_Lua_Off},
     {"//LuaResetTimers",               &EQAPP_Lua_ResetTimers},
+    {"//FreeCamera",                   &EQAPP_FreeCamera_Toggle},
+    {"//FreeCameraOn",                 &EQAPP_FreeCamera_On},
+    {"//FreeCameraOff",                &EQAPP_FreeCamera_Off},
+    {"//FC",                           &EQAPP_FreeCamera_Toggle},
+    {"//FCOn",                         &EQAPP_FreeCamera_On},
+    {"//FCOff",                        &EQAPP_FreeCamera_Off},
     ////
     ////{"//Null",                         &EQAPP_InterpretCommand_NULL},
     ////
@@ -1066,12 +1090,15 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         std::string numberStr = EQAPP_String_GetAfter(commandText, " ");
         if (numberStr.size() != 0)
         {
-            float number = std::stof(numberStr);
-            if (number > 0.0f)
+            if (EQAPP_String_IsDigits(numberStr) == true)
             {
-                EQ_SetCameraFieldOfView(number);
+                float number = std::stof(numberStr);
+                if (number > 0.0f)
+                {
+                    EQ_SetCameraFieldOfView(number);
 
-                std::cout << "Field of View: " << number << std::endl;
+                    std::cout << "Field of View: " << number << std::endl;
+                }
             }
         }
 
@@ -1083,12 +1110,15 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         std::string numberStr = EQAPP_String_GetAfter(commandText, " ");
         if (numberStr.size() != 0)
         {
-            float number = std::stof(numberStr);
-            if (number > 0.0f)
+            if (EQAPP_String_IsDigits(numberStr) == true)
             {
-                EQ_SetCameraDrawDistance(number);
+                float number = std::stof(numberStr);
+                if (number > 0.0f)
+                {
+                    EQ_SetCameraDrawDistance(number);
 
-                std::cout << "Draw Distance: " << number << std::endl;
+                    std::cout << "Draw Distance: " << number << std::endl;
+                }
             }
         }
 
@@ -1135,18 +1165,21 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
     if (EQAPP_String_BeginsWith(commandText, "//ChangeTargetHeight ") == true)
     {
-        std::string heightStr = EQAPP_String_GetAfter(commandText, " ");
-        if (heightStr.size() != 0)
+        std::string numberStr = EQAPP_String_GetAfter(commandText, " ");
+        if (numberStr.size() != 0)
         {
-            float height = std::stof(heightStr);
-            if (height > 0.0f)
+            if (EQAPP_String_IsDigits(numberStr) == true)
             {
-                auto targetSpawn = EQ_GetTargetSpawn();
-                if (targetSpawn != NULL)
+                float height = std::stof(numberStr);
+                if (height > 0.0f)
                 {
-                    EQ_SetSpawnHeight(targetSpawn, height);
+                    auto targetSpawn = EQ_GetTargetSpawn();
+                    if (targetSpawn != NULL)
+                    {
+                        EQ_SetSpawnHeight(targetSpawn, height);
 
-                    std::cout << "Change Target Height: " << height << std::endl;
+                        std::cout << "Change Target Height: " << height << std::endl;
+                    }
                 }
             }
         }
@@ -1156,10 +1189,10 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
     if (EQAPP_String_BeginsWith(commandText, "//Face ") == true)
     {
-        std::string nameStr = EQAPP_String_GetAfter(commandText, " ");
-        if (nameStr.size() != 0)
+        std::string spawnName = EQAPP_String_GetAfter(commandText, " ");
+        if (spawnName.size() != 0)
         {
-            auto spawn = EQ_GetSpawnByName(nameStr.c_str());
+            auto spawn = EQ_GetSpawnByName(spawnName.c_str());
             if (spawn != NULL)
             {
                 EQ_TurnPlayerTowardsSpawn(spawn);
@@ -1265,20 +1298,23 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
     if (EQAPP_String_BeginsWith(commandText, "//TargetID ") == true)
     {
-        std::string spawnIDStr = EQAPP_String_GetAfter(commandText, " ");
-        if (spawnIDStr.size() != 0)
+        std::string numberStr = EQAPP_String_GetAfter(commandText, " ");
+        if (numberStr.size() != 0)
         {
-            uint32_t spawnID = std::stoul(spawnIDStr);
-
-            auto playerSpawn = EQ_GetPlayerSpawn();
-            if (playerSpawn != NULL)
+            if (EQAPP_String_IsDigits(numberStr) == true)
             {
-                auto spawn = EQ_GetSpawnByID(spawnID);
-                if (spawn != NULL)
-                {
-                    EQ_SetTargetSpawn(spawn);
+                uint32_t spawnID = std::stoul(numberStr);
 
-                    std::cout << "Target by ID: " << spawnIDStr << std::endl;
+                auto playerSpawn = EQ_GetPlayerSpawn();
+                if (playerSpawn != NULL)
+                {
+                    auto spawn = EQ_GetSpawnByID(spawnID);
+                    if (spawn != NULL)
+                    {
+                        EQ_SetTargetSpawn(spawn);
+
+                        std::cout << "Target by ID: " << spawnID << std::endl;
+                    }
                 }
             }
         }
@@ -2757,13 +2793,16 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         std::string numberStr = EQAPP_String_GetAfter(commandText, " ");
         if (numberStr.size() != 0)
         {
-            signed int number = std::stoi(numberStr);
-
-            if (number > 0 && number < (EQ_NUM_HOTBAR_BUTTONS + 1))
+            if (EQAPP_String_IsDigits(numberStr) == true)
             {
-                g_CombatHotButtonIndex = number - 1;
+                signed int number = std::stoi(numberStr);
 
-                std::cout << "Combat HotButton: " << number << std::endl;
+                if (number > 0 && number < (EQ_NUM_HOTBAR_BUTTONS + 1))
+                {
+                    g_CombatHotButtonIndex = number - 1;
+
+                    std::cout << "Combat HotButton: " << number << std::endl;
+                }
             }
         }
 
@@ -2775,13 +2814,16 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         std::string numberStr = EQAPP_String_GetAfter(commandText, " ");
         if (numberStr.size() != 0)
         {
-            signed int number = std::stoi(numberStr);
-
-            if (number > 0 && number < (EQ_NUM_HOTBAR_BUTTONS + 1))
+            if (EQAPP_String_IsDigits(numberStr) == true)
             {
-                g_AlwaysHotButtonIndex = number - 1;
+                signed int number = std::stoi(numberStr);
 
-                std::cout << "Always HotButton: " << number << std::endl;
+                if (number > 0 && number < (EQ_NUM_HOTBAR_BUTTONS + 1))
+                {
+                    g_AlwaysHotButtonIndex = number - 1;
+
+                    std::cout << "Always HotButton: " << number << std::endl;
+                }
             }
         }
 
@@ -2799,12 +2841,12 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
     if (EQAPP_String_BeginsWith(commandText, "//ESPFindName ") == true)
     {
-        std::string name = EQAPP_String_GetAfter(commandText, " ");
-        if (name.size() != 0)
+        std::string findText = EQAPP_String_GetAfter(commandText, " ");
+        if (findText.size() != 0)
         {
-            g_ESPFindSpawnName = name;
+            g_ESPFindSpawnName = findText;
 
-            std::cout << "ESP Find Spawn Name: " << name << std::endl;
+            std::cout << "ESP Find Spawn Name: " << findText << std::endl;
         }
 
         return true;
@@ -2821,12 +2863,12 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
     if (EQAPP_String_BeginsWith(commandText, "//ESPFindLastName ") == true)
     {
-        std::string name = EQAPP_String_GetAfter(commandText, " ");
-        if (name.size() != 0)
+        std::string findText = EQAPP_String_GetAfter(commandText, " ");
+        if (findText.size() != 0)
         {
-            g_ESPFindSpawnLastName = name;
+            g_ESPFindSpawnLastName = findText;
 
-            std::cout << "ESP Find Spawn Last Name: " << name << std::endl;
+            std::cout << "ESP Find Spawn Last Name: " << findText << std::endl;
         }
 
         return true;
@@ -2879,14 +2921,17 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
     if (EQAPP_String_BeginsWith(commandText, "//ESPFindLevel ") == true)
     {
-        std::string spawnLevelStr = EQAPP_String_GetAfter(commandText, " ");
-        if (spawnLevelStr.size() != 0)
+        std::string numberStr = EQAPP_String_GetAfter(commandText, " ");
+        if (numberStr.size() != 0)
         {
-            uint32_t spawnLevel = std::stoul(spawnLevelStr);
+            if (EQAPP_String_IsDigits(numberStr) == true)
+            {
+                uint32_t spawnLevel = std::stoul(numberStr);
 
-            g_ESPFindSpawnLevel = spawnLevel;
+                g_ESPFindSpawnLevel = spawnLevel;
 
-            std::cout << "ESP Find Spawn Level: " << g_ESPFindSpawnLevel << std::endl;
+                std::cout << "ESP Find Spawn Level: " << g_ESPFindSpawnLevel << std::endl;
+            }
         }
 
         return true;
@@ -2903,14 +2948,17 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
     if (EQAPP_String_BeginsWith(commandText, "//ESPFindRace ") == true)
     {
-        std::string spawnRaceStr = EQAPP_String_GetAfter(commandText, " ");
-        if (spawnRaceStr.size() != 0)
+        std::string numberStr = EQAPP_String_GetAfter(commandText, " ");
+        if (numberStr.size() != 0)
         {
-            uint32_t spawnRace = std::stoul(spawnRaceStr);
+            if (EQAPP_String_IsDigits(numberStr) == true)
+            {
+                uint32_t spawnRace = std::stoul(numberStr);
 
-            g_ESPFindSpawnRace = spawnRace;
+                g_ESPFindSpawnRace = spawnRace;
 
-            std::cout << "ESP Find Spawn Race: " << g_ESPFindSpawnRace << std::endl;
+                std::cout << "ESP Find Spawn Race: " << g_ESPFindSpawnRace << std::endl;
+            }
         }
 
         return true;
@@ -2954,14 +3002,17 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
     if (EQAPP_String_BeginsWith(commandText, "//ESPFindClass ") == true)
     {
-        std::string spawnClassStr = EQAPP_String_GetAfter(commandText, " ");
-        if (spawnClassStr.size() != 0)
+        std::string numberStr = EQAPP_String_GetAfter(commandText, " ");
+        if (numberStr.size() != 0)
         {
-            uint32_t spawnClass = std::stoul(spawnClassStr);
+            if (EQAPP_String_IsDigits(numberStr) == true)
+            {
+                uint32_t spawnClass = std::stoul(numberStr);
 
-            g_ESPFindSpawnClass = spawnClass;
+                g_ESPFindSpawnClass = spawnClass;
 
-            std::cout << "ESP Find Spawn Class: " << g_ESPFindSpawnClass << std::endl;
+                std::cout << "ESP Find Spawn Class: " << g_ESPFindSpawnClass << std::endl;
+            }
         }
 
         return true;
@@ -2986,17 +3037,20 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         std::string numberStr = EQAPP_String_GetAfter(commandText, " ");
         if (numberStr.size() != 0)
         {
-            signed int number = std::stoi(numberStr);
-
-            if (number > 0 && number < (EQ_NUM_SPELL_GEMS + 1))
+            if (EQAPP_String_IsDigits(numberStr) == true)
             {
-                std::stringstream ss;
-                ss << "/cast " << number;
+                uint32_t number = std::stoul(numberStr);
 
-                // cast the spell multiple times in case of fizzles
-                for (unsigned int i = 0; i < 4; i++)
+                if (number > 0 && number < (EQ_NUM_SPELL_GEMS + 1))
                 {
-                    EQ_InterpretCommand(ss.str().c_str());
+                    std::stringstream ss;
+                    ss << "/cast " << number;
+
+                    // cast the spell multiple times in case of fizzles
+                    for (unsigned int i = 0; i < 4; i++)
+                    {
+                        EQ_InterpretCommand(ss.str().c_str());
+                    }
                 }
             }
         }
@@ -3280,7 +3334,10 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
                     for (auto& token : tokens)
                     {
-                        ss << " " << token;
+                        if (EQAPP_String_IsDigits(token) == true)
+                        {
+                            ss << " " << token;
+                        }
                     }
 
                     EQ_InterpretCommand(ss.str().c_str());

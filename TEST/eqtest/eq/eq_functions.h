@@ -36,6 +36,8 @@ float EQ_CalculateDistance3D(float x1, float y1, float z1, float x2, float y2, f
 bool EQ_IsWithinDistance(float x1, float y1, float x2, float y2, float distance);
 
 float EQ_GetBearing(float y1, float x1, float y2, float x2);
+void EQ_FixHeading(float& heading);
+float EQ_GetRadians(float degrees);
 
 bool EQ_IsPointInsideRectangle(int pointX, int pointY, int rectX, int rectY, int rectWidth, int rectHeight);
 void EQ_ColorARGB_Darken(uint32_t& colorARGB, float percent);
@@ -119,7 +121,15 @@ void EQ_SetSpawnHeight(uint32_t spawn, float height);
 void EQ_SetSpawnFollowSpawn(uint32_t spawn, uint32_t followSpawn);
 
 void EQ_TurnSpawnTowardsLocation(uint32_t spawn, float y, float x);
+void EQ_TurnSpawnAwayFromLocation(uint32_t spawn, float y, float x);
 void EQ_TurnPlayerTowardsSpawn(uint32_t spawn);
+void EQ_TurnPlayerAwayFromSpawn(uint32_t spawn);
+void EQ_TurnPlayerTowardsTarget();
+void EQ_TurnPlayerAwayFromTarget();
+
+bool EQ_IsSpawnBehindSpawn(uint32_t  spawn1, uint32_t  spawn2);
+bool EQ_IsSpawnBehindSpawnEx(uint32_t  spawn1, uint32_t  spawn2, float angle);
+bool EQ_IsPlayerBehindTarget();
 
 bool EQ_IsSpawnClassTank(uint32_t spawn); // WAR PAL SHD
 bool EQ_IsSpawnClassPriest(uint32_t spawn); // CLR DRU SHM
@@ -136,6 +146,10 @@ void EQ_PrintTextToChatEx(const char* text, int color);
 void EQ_DrawText(const char* text, int x, int y);
 void EQ_DrawTextEx(const char* text, int x, int y, int color);
 
+void EQ_DrawLine(float lineBeginX, float lineBeginY, float lineBeginZ, float lineEndX, float lineEndY, float lineEndZ, uint32_t colorARGB);
+void EQ_DrawLine3D(float lineBeginX, float lineBeginY, float lineBeginZ, float lineEndX, float lineEndY, float lineEndZ, uint32_t colorARGB);
+void EQ_DrawRectangle(float x, float y, float width, float height, uint32_t colorARGB, bool isFilled);
+
 float EQ_GetCameraPitch();
 float EQ_GetCameraFieldOfView();
 float EQ_GetCameraDrawDistance();
@@ -144,14 +158,14 @@ void EQ_SetCameraPitch(float pitch);
 void EQ_SetCameraFieldOfView(float fieldOfView);
 void EQ_SetCameraDrawDistance(float drawDistance);
 
-bool EQ_WorldSpaceToScreenSpace(float worldX, float worldY, float worldZ, float& screenX, float& screenY);
+bool EQ_WorldSpaceToScreenSpace(float worldY, float worldX, float worldZ, float& screenX, float& screenY);
+bool EQ_WorldSpaceToScreenSpaceEx(float worldY, float worldX, float worldZ, float& screenX, float& screenY);
 
 void EQ_PlaySound(const char* filename);
 void EQ_StopSound();
 
 void EQ_StopFollow();
 void EQ_FollowTarget();
-void EQ_TurnPlayerTowardsTarget();
 
 bool EQ_CXWnd_IsOpen(uint32_t cxwndAddressPointer);
 bool EQ_CXWnd_Open(uint32_t cxwndAddressPointer);
@@ -282,6 +296,19 @@ float EQ_GetBearing(float y1, float x1, float y2, float x2)
     }
 
     return result;
+}
+
+void EQ_FixHeading(float& heading)
+{
+    if (heading < 0.0f)
+    {
+        heading = heading + EQ_HEADING_MAX;
+    }
+}
+
+float EQ_GetRadians(float degrees)
+{
+    return degrees * EQ_PI / EQ_HEADING_MAX_HALF;
 }
 
 bool EQ_IsPointInsideRectangle(int pointX, int pointY, int rectX, int rectY, int rectWidth, int rectHeight)
@@ -942,6 +969,16 @@ void EQ_TurnSpawnTowardsLocation(uint32_t spawn, float y, float x)
     auto spawnY = EQ_GetSpawnY(spawn);
     auto spawnX = EQ_GetSpawnX(spawn);
 
+    float heading = EQ_GetBearing(spawnY, spawnX, y, x);
+
+    EQ_SetSpawnHeading(spawn, heading);
+}
+
+void EQ_TurnSpawnAwayFromLocation(uint32_t spawn, float y, float x)
+{
+    auto spawnY = EQ_GetSpawnY(spawn);
+    auto spawnX = EQ_GetSpawnX(spawn);
+
     float heading = EQ_GetBearing(y, x, spawnY, spawnX);
 
     EQ_SetSpawnHeading(spawn, heading);
@@ -959,6 +996,92 @@ void EQ_TurnPlayerTowardsSpawn(uint32_t spawn)
     auto spawnX = EQ_GetSpawnX(spawn);
 
     EQ_TurnSpawnTowardsLocation(playerSpawn, spawnY, spawnX);
+}
+
+void EQ_TurnPlayerAwayFromSpawn(uint32_t spawn)
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    auto spawnY = EQ_GetSpawnY(spawn);
+    auto spawnX = EQ_GetSpawnX(spawn);
+
+    EQ_TurnSpawnAwayFromLocation(playerSpawn, spawnY, spawnX);
+}
+
+void EQ_TurnPlayerTowardsTarget()
+{
+    auto targetSpawn = EQ_GetTargetSpawn();
+    if (targetSpawn == NULL)
+    {
+        return;
+    }
+
+    EQ_TurnPlayerTowardsSpawn(targetSpawn);
+}
+
+void EQ_TurnPlayerAwayFromTarget()
+{
+    auto targetSpawn = EQ_GetTargetSpawn();
+    if (targetSpawn == NULL)
+    {
+        return;
+    }
+
+    EQ_TurnPlayerAwayFromSpawn(targetSpawn);
+}
+
+bool EQ_IsSpawnBehindSpawn(uint32_t spawn1, uint32_t spawn2)
+{
+    // use 512 / 8 = 64 for tighter angle
+    // use 512 / 4 = 128 for wider angle
+
+    if (EQ_IsSpawnBehindSpawnEx(spawn1, spawn2, 64.0f) == true)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool EQ_IsSpawnBehindSpawnEx(uint32_t spawn1, uint32_t spawn2, float angle)
+{
+    float heading1 = EQ_GetSpawnHeading(spawn1);
+    float heading2 = EQ_GetSpawnHeading(spawn2);
+
+    float headingDifference = std::fabsf(heading1 - heading2);
+
+    if (headingDifference <= angle)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool EQ_IsPlayerBehindTarget()
+{
+    auto targetSpawn = EQ_GetTargetSpawn();
+    if (targetSpawn == NULL)
+    {
+        return false;
+    }
+
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return false;
+    }
+
+    if (EQ_IsSpawnBehindSpawnEx(playerSpawn, targetSpawn, 64.0f) == true)
+    {
+        return true;
+    }
+
+    return false;
 }
 
 // WAR PAL SHD
@@ -1088,6 +1211,111 @@ void EQ_DrawTextEx(const char* text, int x, int y, int color)
     EQ_CLASS_POINTER_CDisplay->WriteTextHD2(text, x, y, color);
 }
 
+void EQ_DrawLine(float lineBeginX, float lineBeginY, float lineBeginZ, float lineEndX, float lineEndY, float lineEndZ, uint32_t colorARGB)
+{
+    if (EQ_ADDRESS_POINTER_CRender == 0)
+    {
+        return;
+    }
+
+    EQ::Point lineBegin;
+    lineBegin.Y = lineBeginY;
+    lineBegin.X = lineBeginX;
+    lineBegin.Z = lineBeginZ;
+
+    EQ::Point lineEnd;
+    lineEnd.Y = lineEndY;
+    lineEnd.X = lineEndX;
+    lineEnd.Z = lineEndZ;
+
+    EQ_CLASS_POINTER_CRender->DrawLine(lineBegin, lineEnd, colorARGB);
+}
+
+void EQ_DrawRectangle(float x, float y, float width, float height, uint32_t colorARGB, bool isFilled)
+{
+    if (EQ_ADDRESS_POINTER_CRender == 0)
+    {
+        return;
+    }
+
+    if (isFilled == true)
+    {
+        EQ::Rectangle rectangle;
+
+        // top left
+        rectangle.X1 = x;
+        rectangle.Y1 = y;
+        rectangle.Z1 = 1.0f;
+
+        // top right
+        rectangle.X2 = x + width;
+        rectangle.Y2 = y;
+        rectangle.Z2 = 1.0f;
+
+        // bottom right
+        rectangle.X3 = x + width;
+        rectangle.Y3 = y + height;
+        rectangle.Z3 = 1.0f;
+
+        // bottom left
+        rectangle.X4 = x;
+        rectangle.Y4 = y + height;
+        rectangle.Z4 = 1.0f;
+
+        EQ_CLASS_POINTER_CRender->DrawFilledRectangle(rectangle, colorARGB);
+    }
+    else
+    {
+        EQ::Point p1;
+        EQ::Point p2;
+        EQ::Point p3;
+        EQ::Point p4;
+
+        // top left
+        p1.X = x;
+        p1.Y = y;
+        p1.Z = 1.0f;
+
+        // top right
+        p2.X = x + width;
+        p2.Y = y;
+        p2.Z = 1.0f;
+
+        // bottom right
+        p3.X = x + width;
+        p3.Y = y + height;
+        p3.Z = 1.0f;
+
+        // bottom left
+        p4.X = x;
+        p4.Y = y + height;
+        p4.Z = 1.0f;
+
+        EQ_CLASS_POINTER_CRender->DrawLine(p1, p2, colorARGB);
+        EQ_CLASS_POINTER_CRender->DrawLine(p2, p3, colorARGB);
+        EQ_CLASS_POINTER_CRender->DrawLine(p3, p4, colorARGB);
+        EQ_CLASS_POINTER_CRender->DrawLine(p4, p1, colorARGB);
+    }
+}
+
+void EQ_DrawLine3D(float lineBeginX, float lineBeginY, float lineBeginZ, float lineEndX, float lineEndY, float lineEndZ, uint32_t colorARGB)
+{
+    if (EQ_ADDRESS_POINTER_CRender == 0)
+    {
+        return;
+    }
+
+    float screenBeginX = 0.0f;
+    float screenBeginY = 0.0f;
+    bool resultBegin = EQ_WorldSpaceToScreenSpace(lineBeginY, lineBeginX, lineBeginZ, screenBeginX, screenBeginY);
+
+    float screenEndX = 0.0f;
+    float screenEndY = 0.0f;
+    bool resultEnd = EQ_WorldSpaceToScreenSpace(lineEndY, lineEndX, lineEndZ, screenEndX, screenEndY);
+
+    EQ_DrawLine(screenBeginX, screenBeginY, 1.0f, screenEndX, screenEndY, 1.0f, colorARGB);
+}
+
 float EQ_GetCameraPitch()
 {
     auto camera = EQ_GetCamera();
@@ -1167,7 +1395,23 @@ void EQ_StopSound()
     PlaySoundA(NULL, NULL, NULL);
 }
 
-bool EQ_WorldSpaceToScreenSpace(float worldX, float worldY, float worldZ, float& screenX, float& screenY)
+bool EQ_WorldSpaceToScreenSpace(float worldY, float worldX, float worldZ, float& screenX, float& screenY)
+{
+    auto camera = EQ_GetCamera();
+    if (camera == NULL)
+    {
+        return false;
+    }
+
+    EQ::Location location;
+    location.Y = worldY;
+    location.X = worldX;
+    location.Z = worldZ;
+
+    return ((EQClass::CCamera*)camera)->WorldSpaceToScreenSpace(location, screenX, screenY);
+}
+
+bool EQ_WorldSpaceToScreenSpaceEx(float worldY, float worldX, float worldZ, float& screenX, float& screenY)
 {
     // this function uses hardcoded offsets
 
@@ -1259,17 +1503,6 @@ void EQ_FollowTarget()
     }
 
     EQ_SetSpawnFollowSpawn(playerSpawn, targetSpawn);
-}
-
-void EQ_TurnPlayerTowardsTarget()
-{
-    auto targetSpawn = EQ_GetTargetSpawn();
-    if (targetSpawn == NULL)
-    {
-        return;
-    }
-
-    EQ_TurnPlayerTowardsSpawn(targetSpawn);
 }
 
 bool EQ_CXWnd_IsOpen(uint32_t cxwndAddressPointer)

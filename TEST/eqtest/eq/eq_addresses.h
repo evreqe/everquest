@@ -1365,3 +1365,59 @@ LABEL_97:
   return result;
 }
 */
+
+// addresses for CCamera are calculated at run time
+uint32_t EQ_ADDRESS_POINTER_CCamera    = 0x0;
+
+uint32_t EQ_ADDRESS_FUNCTION_CCamera__SetCameraLocation    = 0x0;
+
+uint32_t EQ_ADDRESS_POINTER_CRender    = 0x169A598; // __DrawHandler_x    "%s..."
+/*
+LPVOID __userpurge sub_53FEC0@<eax>(int a1@<ecx>, float *a2@<ebp>, int a3, int a4)
+{
+  int v4; // esi
+  bool v5; // bl
+  unsigned int v6; // edi
+  char *v8; // eax
+
+  v4 = a1;
+  *(_DWORD *)(a1 + 532) = a3;
+  v5 = rand() % 20 == 0;
+  v6 = sub_8D7E50();
+  if ( *(_DWORD *)(v4 + 532) > 100 )
+    *(_DWORD *)(v4 + 532) = 100;
+  if ( !a4 )
+  {
+    *(_BYTE *)(v4 + 20) = 0;
+    return sub_53FFA0(v4, v5, a2, (float *)v4); // draw loading screen function
+  }
+  if ( byte_DA9F60 && dword_DA9F64 + 3000 > v6 )
+    return sub_53FFA0(v4, v5, a2, (float *)v4); // draw loading screen function
+  if ( !v5 )
+  {
+    sub_480C20(v4 + 20, (int)"%s...", a4);
+    byte_DA9F60 = 0;
+    return sub_53FFA0(v4, v5, a2, (float *)v4); // draw loading screen function
+  }
+  do
+    v8 = off_BD8DE8[rand() % 92];
+  while ( !v8 );
+  sub_480C20(v4 + 20, (int)"%s...", (int)v8);
+  dword_DA9F64 = v6;
+  byte_DA9F60 = 1;
+  return sub_53FFA0(v4, 92, a2, (float *)v4); // draw loading screen function
+}
+*/
+/*
+
+(*(void (__stdcall **)(float *, unsigned int))(v8 + 0xA0))(&v47, 0xFF000000); // CRender::DrawFilledRectangle()    t3dDeferQuad
+
+(*(void (__stdcall **)(float *, float *, _DWORD, float *, float *, int))(*(_DWORD *)CRender__dword_169A598 + 0x88))( // CRender::DrawLine()    t3dDeferLine
+          &v47,
+          &v50,
+          *(void **)((char *)&v40 + 3),
+          v28,
+          v29,
+          v30);
+
+*/

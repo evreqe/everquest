@@ -1,6 +1,7 @@
 #pragma once
 
 #include "eq.h"
+#include "eq_constants.h"
 #include "eq_cxwnd.h"
 #include "eq_macros.h"
 #include "eq_messages.h"
@@ -19,6 +20,10 @@ namespace EQClass
     class CBazaarSearchWnd;
     class CBazaarConfirmationWnd;
     class CBazaarWnd;
+
+    // EQGraphicsDX9.dll
+    class CCamera;
+    class CRender;
 } // namespace EQClass
 
 /* CEverQuest */
@@ -123,6 +128,10 @@ public:
     bool CXWnd::IsReallyVisible(); // is open
 };
 
+#define EQ_VFTABLE_INDEX_CXWnd__WndNotification    0x88
+#define EQ_VFTABLE_INDEX_CXWnd__Activate           0x90 // show window
+#define EQ_VFTABLE_INDEX_CXWnd__Deactivate         0x94 // hide window
+
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CXWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CXWnd::Activate(), EQ_VFTABLE_INDEX_CXWnd__Activate);
@@ -190,3 +199,43 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarWnd__WndNotification)(void* thi
 ////#define EQ_CLASS_POINTER_CBazaarWnd (*EQ_CLASS_POINTER_CBazaarWnd_pptr)
 EQClass::CBazaarWnd** EQ_CLASS_POINTER_CBazaarWnd_pptr;
 EQClass::CBazaarWnd* EQ_CLASS_POINTER_CBazaarWnd;
+
+/* CCamera */
+
+class EQClass::CCamera
+{
+public:
+    int CCamera::SetCameraLocation(EQ::Location& location, bool canSetLocation);
+    bool CCamera::WorldSpaceToScreenSpace(EQ::Location& location, float& screenX, float& screenY);
+};
+
+#define EQ_VFTABLE_INDEX_CCamera__SetCameraLocation          0x38
+#define EQ_VFTABLE_INDEX_CCamera__WorldSpaceToScreenSpace    0x74
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CCamera::SetCameraLocation(EQ::Location& location, bool canSetLocation), EQ_VFTABLE_INDEX_CCamera__SetCameraLocation);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CCamera__SetCameraLocation)(void* this_ptr, EQ::Location& location, bool canSetLocation);
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CCamera::WorldSpaceToScreenSpace(EQ::Location& location, float& screenX, float& screenY), EQ_VFTABLE_INDEX_CCamera__WorldSpaceToScreenSpace);
+
+// calculated at run time
+EQClass::CCamera** EQ_CLASS_POINTER_CCamera_pptr;
+EQClass::CCamera* EQ_CLASS_POINTER_CCamera;
+
+/* CRender */
+
+class EQClass::CRender
+{
+public:
+    bool CRender::DrawLine(EQ::Point& lineBegin, EQ::Point& lineEnd, uint32_t colorARGB);
+    bool CRender::DrawFilledRectangle(EQ::Rectangle& rectangle, uint32_t colorARGB);
+};
+
+#define EQ_VFTABLE_INDEX_CRender__DrawLine               0x88
+#define EQ_VFTABLE_INDEX_CRender__DrawFilledRectangle    0xA0
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawLine(EQ::Point& lineBegin, EQ::Point& lineEnd, uint32_t colorARGB), EQ_VFTABLE_INDEX_CRender__DrawLine);
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawFilledRectangle(EQ::Rectangle& rectangle, uint32_t colorARGB), EQ_VFTABLE_INDEX_CRender__DrawFilledRectangle);
+
+EQClass::CRender** EQ_CLASS_POINTER_CRender_pptr;
+EQClass::CRender* EQ_CLASS_POINTER_CRender;

@@ -296,7 +296,7 @@ std::vector<uint32_t> EQAPP_GetNPCSpawnIDListSortedByDistance()
 
         float screenX = -1.0f;
         float screenY = -1.0f;
-        bool result = EQ_WorldSpaceToScreenSpace(spawnX, spawnY, spawnZ, screenX, screenY);
+        bool result = EQ_WorldSpaceToScreenSpace(spawnY, spawnX, spawnZ, screenX, screenY);
         if (result == false)
         {
             spawn = EQ_GetSpawnNext(spawn);

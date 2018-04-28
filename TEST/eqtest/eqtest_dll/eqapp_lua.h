@@ -1050,7 +1050,14 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_SetSpawnFollowSpawn", EQ_SetSpawnFollowSpawn);
 
     state->set_function("EQ_TurnSpawnTowardsLocation", EQ_TurnSpawnTowardsLocation);
+    state->set_function("EQ_TurnSpawnAwayFromLocation", EQ_TurnSpawnTowardsLocation);
     state->set_function("EQ_TurnPlayerTowardsSpawn", EQ_TurnPlayerTowardsSpawn);
+    state->set_function("EQ_TurnPlayerAwayFromSpawn", EQ_TurnPlayerTowardsSpawn);
+    state->set_function("EQ_TurnPlayerTowardsTarget", EQ_TurnPlayerTowardsTarget);
+    state->set_function("EQ_TurnPlayerAwayFromTarget", EQ_TurnPlayerTowardsTarget);
+
+    state->set_function("EQ_IsSpawnBehindSpawn", EQ_IsSpawnBehindSpawn);
+    state->set_function("EQ_IsSpawnBehindSpawnEx", EQ_IsSpawnBehindSpawnEx);
 
     state->set_function("EQ_IsSpawnClassTank", EQ_IsSpawnClassTank);
     state->set_function("EQ_IsSpawnClassPriest", EQ_IsSpawnClassPriest);
@@ -1066,6 +1073,9 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
 
     state->set_function("EQ_DrawText", EQ_DrawText);
     state->set_function("EQ_DrawTextEx", EQ_DrawTextEx);
+    state->set_function("EQ_DrawLine", EQ_DrawLine);
+    state->set_function("EQ_DrawLine3D", EQ_DrawLine3D);
+    state->set_function("EQ_DrawRectangle", EQ_DrawRectangle);
 
     state->set_function("EQ_GetCameraPitch", EQ_GetCameraPitch);
     state->set_function("EQ_GetCameraFieldOfView", EQ_GetCameraFieldOfView);
@@ -1080,7 +1090,6 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
 
     state->set_function("EQ_StopFollow", EQ_StopFollow);
     state->set_function("EQ_FollowTarget", EQ_FollowTarget);
-    state->set_function("EQ_TurnPlayerTowardsTarget", EQ_TurnPlayerTowardsTarget);
 
     state->set_function("EQ_GetSpawnTypeNameByKey", EQ_GetSpawnTypeNameByKey);
     state->set_function("EQ_GetStandingStateNameByKey", EQ_GetStandingStateNameByKey);

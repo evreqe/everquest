@@ -26,10 +26,6 @@
 #define EQ_OFFSET_CXWnd_IS_OPEN 0x7A  // uint8_t    CXWnd__IsReallyVisible()
 // ********************************************************************* //
 
-#define EQ_VFTABLE_INDEX_CXWnd__WndNotification    0x88
-#define EQ_VFTABLE_INDEX_CXWnd__Activate           0x90 // show window
-#define EQ_VFTABLE_INDEX_CXWnd__Deactivate         0x94 // hide window
-
 // search for one of these strings to find the
 // function where all of the CXWnd windows are created:
 // "Initializing game UI."

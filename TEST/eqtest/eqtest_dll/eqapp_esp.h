@@ -108,6 +108,13 @@ void EQAPP_ESP_Execute()
         auto spawnX = EQ_GetSpawnX(spawn);
         auto spawnZ = EQ_GetSpawnZ(spawn);
 
+/*
+        if (spawn == targetSpawn)
+        {
+            EQ_DrawLineWorldToScreen(playerSpawnX, playerSpawnY, playerSpawnZ, spawnX, spawnY, spawnZ, 0xFF00FF00);
+        }
+*/
+
         float spawnDistance = EQ_CalculateDistance(playerSpawnX, playerSpawnY, spawnX, spawnY);
 
         auto spawnType = EQ_GetSpawnType(spawn);
@@ -196,7 +203,7 @@ void EQAPP_ESP_Execute()
 
         float screenX = -1.0f;
         float screenY = -1.0f;
-        bool result = EQ_WorldSpaceToScreenSpace(spawnX, spawnY, spawnZ, screenX, screenY);
+        bool result = EQ_WorldSpaceToScreenSpace(spawnY, spawnX, spawnZ, screenX, screenY);
         if (result == true)
         {
             if (spawnType == EQ_SPAWN_TYPE_NPC)

@@ -143,6 +143,11 @@ void EQAPP_HUD_Execute()
         }
     }
 
+    if (g_FreeCameraIsEnabled == true)
+    {
+        EQAPP_HUD_DrawText("- Free Camera");
+    }
+
     if (g_AlwaysAttackIsEnabled == true)
     {
         EQAPP_HUD_DrawText("- Always Attack");

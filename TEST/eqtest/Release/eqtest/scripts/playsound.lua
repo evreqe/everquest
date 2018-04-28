@@ -1,0 +1,1 @@
+EQ_PlaySound("powar_ambience.wav")

@@ -11,12 +11,17 @@ const uint32_t EQ_BASE_ADDRESS_VALUE = 0x400000;
 
 const float EQ_PI = 3.14159265358979f;
 
+const float EQ_HEADING_MAX = 512.0f;
+const float EQ_HEADING_MAX_HALF = 256.0f;
+
 #define EQ_NUM_HOTBARS           11    // 10 + 1, potion belt was removed and replaced with another hotbar
 #define EQ_NUM_HOTBAR_BUTTONS    12
 #define EQ_NUM_SPELLS            59999
-#define EQ_NUM_SPELL_GEMS        12
+#define EQ_NUM_SPELL_GEMS        18
 #define EQ_NUM_BAGS              10    // number of bags you can hold in your inventory
 #define EQ_NUM_BAG_SLOTS         40    // number of slots a bag can have
+
+#define EQ_SPELL_ID_NULL 0xFFFFFFFF
 
 #define EQ_OFFSET_CEverQuest_GAME_STATE    0x5C8 // uint32_t, 1480 decimal    "Gamestate at crash = %d\n"
 
@@ -92,12 +97,15 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_STANDING_STATE_NAME =
 #define EQ_OFFSET_CDisplay_CAMERA    0x118 // uint32_t pointer
 #define EQ_OFFSET_CDisplay_TIMER     0x154 // uint32_t
 
+#define EQ_OFFSET_CAMERA_VFTABLE                       0x00 // uint32_t pointer
 #define EQ_OFFSET_CAMERA_FIELD_OF_VIEW                 0x04 // float
 #define EQ_OFFSET_CAMERA_ASPECT_RATIO                  0x08 // float
 #define EQ_OFFSET_CAMERA_UNKNOWN_0x0C                  0x0C // float, 0.0 to 1.0
 #define EQ_OFFSET_CAMERA_DRAW_DISTANCE                 0x14 // float
 #define EQ_OFFSET_CAMERA_ACTOR_CLIP_PLANE              0x1C // float
 #define EQ_OFFSET_CAMERA_SHADOW_CLIP_PLANE             0x24 // float
+#define EQ_OFFSET_CAMERA_DRAW_DISTANCE_EX              0x28 // float
+#define EQ_OFFSET_CAMERA_FAR_CLIP_PLANE                0x2C // float
 #define EQ_OFFSET_CAMERA_SCREEN_WIDTH_HALF             0x38 // float
 #define EQ_OFFSET_CAMERA_SCREEN_HEIGHT_HALF            0x3C // float
 #define EQ_OFFSET_CAMERA_HEADING                       0xB0 // float, yaw
@@ -181,7 +189,7 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_DIRECTION_NAME =
     {EQ_DIRECTION_SOUTH_EAST,    "Southeast"},
     {EQ_DIRECTION_WEST,          "West"},
     {EQ_DIRECTION_EAST,          "East"},
-    {EQ_DIRECTION_UNKNOWN,          "Unknown"},
+    {EQ_DIRECTION_UNKNOWN,       "Unknown"},
 };
 
 #define EQ_RACE_UNKNOWN          0
@@ -348,3 +356,45 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_CLASS_SHORT_NAME =
     ////{EQ_CLASS_MERCHANT,        "MERCHANT"},
 };
 
+namespace EQ
+{
+    typedef struct _Location
+    {
+        float Y;
+        float X;
+        float Z;
+    } Location, *Location_ptr;
+
+    typedef struct _Point
+    {
+        float X;
+        float Y;
+        float Z;
+    } Point, *Point_ptr;
+
+    typedef struct _Line
+    {
+        float X1;
+        float Y1;
+        float Z1;
+        float X2;
+        float Y2;
+        float Z2;
+    } Line, *Line_ptr;
+
+    typedef struct _Rectangle
+    {
+        float X1;
+        float Y1;
+        float Z1;
+        float X2;
+        float Y2;
+        float Z2;
+        float X3;
+        float Y3;
+        float Z3;
+        float X4;
+        float Y4;
+        float Z4;
+    } Rectangle, *Rectangle_ptr;
+} // namespace EQ

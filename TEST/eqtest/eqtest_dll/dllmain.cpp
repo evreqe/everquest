@@ -77,6 +77,7 @@ namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not avai
 #include "eqapp_detours.h"
 #include "eqapp_esp.h"
 #include "eqapp_followai.h"
+#include "eqapp_freecamera.h"
 #include "eqapp_hud.h"
 #include "eqapp_interpretcommand.h"
 #include "eqapp_lua.h"
@@ -204,6 +205,8 @@ void EQAPP_InitializeAddressesAndPointers()
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CBazaarWnd);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarWnd__WndNotification);
 
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CRender);
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////
 
     if (EQ_ADDRESS_POINTER_EQPlayerManager != 0)
@@ -246,6 +249,12 @@ void EQAPP_InitializeAddressesAndPointers()
     {
         EQ_CLASS_POINTER_CBazaarWnd_pptr = (EQClass::CBazaarWnd**)EQ_ADDRESS_POINTER_CBazaarWnd;
         EQ_CLASS_POINTER_CBazaarWnd = (*EQ_CLASS_POINTER_CBazaarWnd_pptr);
+    }
+
+    if (EQ_ADDRESS_POINTER_CRender != 0)
+    {
+        EQ_CLASS_POINTER_CRender_pptr = (EQClass::CRender**)EQ_ADDRESS_POINTER_CRender;
+        EQ_CLASS_POINTER_CRender = (*EQ_CLASS_POINTER_CRender_pptr);
     }
 }
 

@@ -13,8 +13,9 @@
 #include "eqapp_console.h"
 #include "eqapp_esp.h"
 #include "eqapp_followai.h"
+#include "eqapp_freecamera.h"
 #include "eqapp_hud.h"
-#include "EQAPP_InterpretCommand.h"
+#include "eqapp_interpretcommand.h"
 #include "eqapp_lua.h"
 #include "eqapp_sleep.h"
 #include "eqapp_spawncastspell.h"
@@ -38,6 +39,8 @@ EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__dsp_chat);
 
 EQ_MACRO_FUNCTION_DefineDetour(CBazaarSearchWnd__AddItemToList);
 
+EQ_MACRO_FUNCTION_DefineDetour(CCamera__SetCameraLocation);
+
 char* __cdecl EQAPP_DETOURED_FUNCTION_CrashDetected();
 int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown);
 int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive, void* unknown, int zero);
@@ -51,6 +54,8 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__StartCasting(void* this_ptr, 
 int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void* not_used, const char* text, int textColor, bool one_1, bool one_2, bool zero_1);
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* this_ptr, void* not_used, char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11);
+
+int __fastcall EQAPP_DETOURED_FUNCTION_CCamera__SetCameraLocation(void* this_ptr, void* not_used, EQ::Location& location, bool canSetLocation);
 
 void EQAPP_Detours_Load()
 {
@@ -89,6 +94,20 @@ void EQAPP_Detours_Load()
     if (EQ_ADDRESS_POINTER_CBazaarSearchWnd != 0)
     {
         EQ_MACRO_FUNCTION_AddDetour(CBazaarSearchWnd__AddItemToList);
+    }
+
+    EQ_ADDRESS_POINTER_CCamera = EQ_GetCamera();
+    if (EQ_ADDRESS_POINTER_CCamera != 0)
+    {
+        auto EQ_VFTABLE_CCamera = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CCamera + EQ_OFFSET_CAMERA_VFTABLE);
+        if (EQ_VFTABLE_CCamera != 0)
+        {
+            EQ_ADDRESS_FUNCTION_CCamera__SetCameraLocation = EQ_ReadMemory<uint32_t>(EQ_VFTABLE_CCamera + EQ_VFTABLE_INDEX_CCamera__SetCameraLocation);
+            if (EQ_ADDRESS_FUNCTION_CCamera__SetCameraLocation != 0)
+            {
+                EQ_MACRO_FUNCTION_AddDetour(CCamera__SetCameraLocation);
+            }
+        }
     }
 }
 
@@ -129,6 +148,20 @@ void EQAPP_Detours_Unload()
     if (EQ_ADDRESS_POINTER_CBazaarSearchWnd != 0)
     {
         EQ_MACRO_FUNCTION_RemoveDetour(CBazaarSearchWnd__AddItemToList);
+    }
+
+    EQ_ADDRESS_POINTER_CCamera = EQ_GetCamera();
+    if (EQ_ADDRESS_POINTER_CCamera != 0)
+    {
+        auto EQ_VFTABLE_CCamera = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CCamera + EQ_OFFSET_CAMERA_VFTABLE);
+        if (EQ_VFTABLE_CCamera != 0)
+        {
+            EQ_ADDRESS_FUNCTION_CCamera__SetCameraLocation = EQ_ReadMemory<uint32_t>(EQ_VFTABLE_CCamera + EQ_VFTABLE_INDEX_CCamera__SetCameraLocation);
+            if (EQ_ADDRESS_FUNCTION_CCamera__SetCameraLocation != 0)
+            {
+                EQ_MACRO_FUNCTION_RemoveDetour(CCamera__SetCameraLocation);
+            }
+        }
     }
 }
 
@@ -262,6 +295,7 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
     if (g_LuaIsEnabled == true)
     {
         EQAPP_Lua_EventScriptList_ExecuteFunction("OnDrawNetStatus");
+        EQAPP_Lua_EventScriptList_ExecuteFunction("OnDrawOverUI");
         EQAPP_Lua_EventScriptList_ExecuteFunction("OnFrame");
 
         if (EQAPP_Timer_HasTimeElapsed(g_LuaOneSecondTimer, g_LuaOneSecondTimerInterval) == true)
@@ -293,6 +327,14 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
 
     EQAPP_Console_Print();
 
+/*
+    EQ_DrawLine(100.0f, 200.0f, 1.0f, 800.0f, 900.0f, 1.0f, 0xFFFF00FF);
+
+    EQ_DrawRectangle(400.0f, 400.0f, 100.0f, 100.0f, 0xFF00FF00, true);
+
+    EQ_DrawRectangle(800.0f, 800.0f, 100.0f, 100.0f, 0x40FF0000, false);
+*/
+
     return EQAPP_REAL_FUNCTION_DrawNetStatus(x, y, unknown);
 }
 
@@ -316,7 +358,7 @@ int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive,
                 int resultValue = result;
                 if (resultValue == 1)
                 {
-                    return 1;
+                    return 1; ////EQAPP_REAL_FUNCTION_ExecuteCmd(EQ_EXECUTECMD_TOGGLE_MEMINFO, 0, unknown, zero);
                 }
             }
             else
@@ -327,6 +369,15 @@ int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive,
 
                 std::cout << "Lua error: " << error.what() << std::endl;
             }
+        }
+    }
+
+    if (g_FreeCameraIsEnabled == true)
+    {
+        bool result = EQAPP_FreeCamera_HandleEvent_ExecuteCmd(commandID, isActive, zero);
+        if (result == true)
+        {
+            return 1; ////EQAPP_REAL_FUNCTION_ExecuteCmd(EQ_EXECUTECMD_TOGGLE_MEMINFO, 0, unknown, zero);
         }
     }
 
@@ -354,6 +405,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawWindows(void* this_ptr,
     if (g_LuaIsEnabled == true)
     {
         EQAPP_Lua_EventScriptList_ExecuteFunction("OnDrawWindows");
+        EQAPP_Lua_EventScriptList_ExecuteFunction("OnDrawUnderUI");
     }
 
     return EQAPP_REAL_FUNCTION_CXWndManager__DrawWindows(this_ptr);
@@ -463,11 +515,15 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void
 
     if (chatText == "LOADING, PLEASE WAIT...")
     {
+        g_FreeCameraIsEnabled = false;
+
         g_EQAppIsInGame = false;
     }
 
     if (EQAPP_String_BeginsWith(chatText, "You have entered") == true)
     {
+        g_FreeCameraIsEnabled = false;
+
         g_EQAppIsInGame = true;
 
         if (g_LuaIsEnabled == true)
@@ -566,4 +622,20 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* thi
     }
 
     return EQAPP_REAL_FUNCTION_CBazaarSearchWnd__AddItemToList(this_ptr, itemName, itemPrice, traderName, a4, a5, a6, a7, a8, a9, a10, a11);
+}
+
+int __fastcall EQAPP_DETOURED_FUNCTION_CCamera__SetCameraLocation(void* this_ptr, void* not_used, EQ::Location& location, bool canSetLocation)
+{
+    if (g_EQAppShouldUnload == 1)
+    {
+        return EQAPP_REAL_FUNCTION_CCamera__SetCameraLocation(this_ptr, location, canSetLocation);
+    }
+
+    if (g_FreeCameraIsEnabled == true)
+    {
+        EQAPP_FreeCamera_Execute();
+        return -1;
+    }
+
+    return EQAPP_REAL_FUNCTION_CCamera__SetCameraLocation(this_ptr, location, canSetLocation);
 }

@@ -95,9 +95,9 @@ void EQAPP_FollowAI_Execute()
         }
     }
 
-    EQ_SetAutoRun(true);
-
     EQ_TurnPlayerTowardsSpawn(followSpawn);
+
+    EQ_SetAutoRun(true);
 
     // follow while swimming or levitating
     if (g_FollowAIUseZAxisIsEnabled == true)
