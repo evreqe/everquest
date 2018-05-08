@@ -14,6 +14,14 @@ const float EQ_PI = 3.14159265358979f;
 const float EQ_HEADING_MAX = 512.0f;
 const float EQ_HEADING_MAX_HALF = 256.0f;
 
+const float EQ_SPAWN_PITCH_DEFAULT    = 0.0f;       // center view or look forward
+const float EQ_SPAWN_PITCH_MIN        = -128.0f;    // look down
+const float EQ_SPAWN_PITCH_MAX        = 128.0f;     // look up
+
+const float EQ_SPAWN_HEADING_SPEED_DEFAULT    = 0.0f;      // stop turning
+const float EQ_SPAWN_HEADING_SPEED_MIN        = -12.0f;    // turning right
+const float EQ_SPAWN_HEADING_SPEED_MAX        = 12.0f;     // turning left
+
 #define EQ_NUM_HOTBARS           11    // 10 + 1, potion belt was removed and replaced with another hotbar
 #define EQ_NUM_HOTBAR_BUTTONS    12
 #define EQ_NUM_SPELLS            59999
@@ -21,7 +29,13 @@ const float EQ_HEADING_MAX_HALF = 256.0f;
 #define EQ_NUM_BAGS              10    // number of bags you can hold in your inventory
 #define EQ_NUM_BAG_SLOTS         40    // number of slots a bag can have
 
+#define EQ_BAZAAR_SEARCH_MAX_RESULTS_PER_TRADER 200 // max number of results you can get when searching
+
 #define EQ_SPELL_ID_NULL 0xFFFFFFFF
+
+#define EQ_UPDATE_ITEM_SLOT_HEAD         0
+#define EQ_UPDATE_ITEM_SLOT_PRIMARY      7
+#define EQ_UPDATE_ITEM_SLOT_SECONDARY    8
 
 #define EQ_OFFSET_CEverQuest_GAME_STATE    0x5C8 // uint32_t, 1480 decimal    "Gamestate at crash = %d\n"
 
@@ -30,33 +44,55 @@ const float EQ_HEADING_MAX_HALF = 256.0f;
 #define EQ_OFFSET_EQPlayerManager_FIRST_SPAWN    0x08
 #define EQ_OFFSET_EQPlayerManager_LAST_SPAWN     0x0C
 
+#define EQ_OFFSET_CXWndManager_FONTS_ARRAY    0x11C
+
+// EQPlayer
 // double check offsets after patch!
-#define EQ_OFFSET_SPAWN_PREVIOUS                 0x04     // uint32_t pointer
-#define EQ_OFFSET_SPAWN_NEXT                     0x08     // uint32_t pointer
-#define EQ_OFFSET_SPAWN_LAST_NAME                0x38     // char[32]
-#define EQ_OFFSET_SPAWN_Y                        0x64     // float
-#define EQ_OFFSET_SPAWN_X                        0x68     // float
-#define EQ_OFFSET_SPAWN_Z                        0x6C     // float
-#define EQ_OFFSET_SPAWN_MOVEMENT_SPEED           0x7C     // float    // how fast you are moving while walking, running, riding a mount, etc
-#define EQ_OFFSET_SPAWN_HEADING                  0x80     // float
-#define EQ_OFFSET_SPAWN_NAME_NUMBERED            0xA4     // char[64]
-#define EQ_OFFSET_SPAWN_NAME                     0xE4     // char[64]
-#define EQ_OFFSET_SPAWN_TYPE                     0x125    // uint8_t
-#define EQ_OFFSET_SPAWN_HEIGHT                   0x13C    // float
-#define EQ_OFFSET_SPAWN_ID                       0x148    // uint32_t
+#define EQ_OFFSET_SPAWN_PREVIOUS                           0x04     // uint32_t pointer
+#define EQ_OFFSET_SPAWN_NEXT                               0x08     // uint32_t pointer
+#define EQ_OFFSET_SPAWN_JUMP_STRENGTH                      0x10     // float    // how high up you will jump, not forward
+#define EQ_OFFSET_SPAWN_SWIM_STRENGTH                      0x14     // float
+#define EQ_OFFSET_SPAWN_MOVEMENT_SPEED_BONUS               0x18     // float    // spells like SoW
+#define EQ_OFFSET_SPAWN_AREA_FRICTION                      0x1C     // float    // sliding on slippery surfaces or walking up slopes
+#define EQ_OFFSET_SPAWN_ACCELERATION_FRICTION              0x20     // float    // sliding on slippery surfaces or walking up slopes
+#define EQ_OFFSET_SPAWN_COLLIDE_WITH_ACTOR_TYPE            0x24     // uint32_t
+#define EQ_OFFSET_SPAWN_FLOOR_Z                            0x28     // float    // z-axis location where feet touch the ground
+#define EQ_OFFSET_SPAWN_LAST_NAME                          0x38     // char[32]
+#define EQ_OFFSET_SPAWN_Y                                  0x64     // float
+#define EQ_OFFSET_SPAWN_X                                  0x68     // float
+#define EQ_OFFSET_SPAWN_Z                                  0x6C     // float
+#define EQ_OFFSET_SPAWN_MOVEMENT_SPEED                     0x7C     // float    // how fast you are moving while walking, running, riding a mount, etc
+#define EQ_OFFSET_SPAWN_HEADING                            0x80     // float    // turning
+#define EQ_OFFSET_SPAWN_HEADING_SPEED                      0x8C     // float    // turning speed, -12 to 12
+#define EQ_OFFSET_SPAWN_PITCH                              0x90     // float    // look down and up, -128 to 128    // look forward, 0
+#define EQ_OFFSET_SPAWN_UNDERWATER_ENVIRONMENT_TYPE        0x94     // uint32_t    // touching water or lava, etc
+#define EQ_OFFSET_SPAWN_HEAD_ENVIRONMENT_TYPE              0xA0     // uint8_t
+#define EQ_OFFSET_SPAWN_FEET_ENVIRONMENT_TYPE              0xA1     // uint8_t
+#define EQ_OFFSET_SPAWN_BODY_ENVIRONMENT_TYPE              0xA2     // uint8_t
+#define EQ_OFFSET_SPAWN_NAME_NUMBERED                      0xA4     // char[64]
+#define EQ_OFFSET_SPAWN_NAME                               0xE4     // char[64]
+#define EQ_OFFSET_SPAWN_TYPE                               0x125    // uint8_t
+#define EQ_OFFSET_SPAWN_HEIGHT_Z                           0x138    // float    // height of player in z-axis units
+#define EQ_OFFSET_SPAWN_HEIGHT                             0x13C    // float    // determines height, width, length, bounding radius, etc
+#define EQ_OFFSET_SPAWN_ID                                 0x148    // uint32_t
+#define EQ_OFFSET_SPAWN_STATE_FLAGS                        0x14C    // uint32_t    // uses bitwise flags (AND, OR)
+#define EQ_OFFSET_SPAWN_VEHICLE_SPAWN                      0x150    // uint32_t    // boats, airships, etc
+#define EQ_OFFSET_SPAWN_MOUNT_SPAWN                        0x154    // uint32_t    // horses, etc
+#define EQ_OFFSET_SPAWN_MOUNT_RIDER_SPAWN                  0x158    // uint32_t    // spawn that is riding the mount
+#define EQ_OFFSET_SPAWN_IS_TARGETABLE                      0x160    // uint8_t
 // ******************** randomized after each patch ******************** //    #define PLAYERZONECLIENT
-#define EQ_OFFSET_SPAWN_ZONE_ID                  0x298    // uint32_t
-#define EQ_OFFSET_SPAWN_LEVEL                    0x24C    // uint8_t
-#define EQ_OFFSET_SPAWN_RACE                     0xF94    // uint32_t
-#define EQ_OFFSET_SPAWN_CLASS                    0xF9C    // uint32_t
-#define EQ_OFFSET_SPAWN_STANDING_STATE           0x211    // uint8_t
-#define EQ_OFFSET_SPAWN_HP_CURRENT               0x280    // uint32_t
-#define EQ_OFFSET_SPAWN_HP_MAX                   0x200    // uint32_t
-#define EQ_OFFSET_SPAWN_MANA_CURRENT             0x408    // uint32_t
-#define EQ_OFFSET_SPAWN_MANA_MAX                 0x4A8    // uint32_t
-#define EQ_OFFSET_SPAWN_ENDURANCE_CURRENT        0x244    // uint32_t
-#define EQ_OFFSET_SPAWN_ENDURANCE_MAX            0x600    // uint32_t
-#define EQ_OFFSET_SPAWN_FOLLOW_SPAWN             0xF24    // uint32_t pointer
+#define EQ_OFFSET_SPAWN_ZONE_ID                    0x298    // uint32_t
+#define EQ_OFFSET_SPAWN_LEVEL                      0x24C    // uint8_t
+#define EQ_OFFSET_SPAWN_RACE                       0xF94    // uint32_t
+#define EQ_OFFSET_SPAWN_CLASS                      0xF9C    // uint32_t
+#define EQ_OFFSET_SPAWN_STANDING_STATE             0x211    // uint8_t
+#define EQ_OFFSET_SPAWN_HP_CURRENT                 0x280    // uint32_t
+#define EQ_OFFSET_SPAWN_HP_MAX                     0x200    // uint32_t
+#define EQ_OFFSET_SPAWN_MANA_CURRENT               0x408    // uint32_t
+#define EQ_OFFSET_SPAWN_MANA_MAX                   0x4A8    // uint32_t
+#define EQ_OFFSET_SPAWN_ENDURANCE_CURRENT          0x244    // uint32_t
+#define EQ_OFFSET_SPAWN_ENDURANCE_MAX              0x600    // uint32_t
+#define EQ_OFFSET_SPAWN_FOLLOW_SPAWN               0xF24    // uint32_t pointer    // the spawn you are auto-following
 // ********************************************************************* //
 
 #define EQ_SIZE_SPAWN_NAME         64 // 0x40
@@ -74,6 +110,30 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_SPAWN_TYPE_NAME =
     {EQ_SPAWN_TYPE_CORPSE,      "Corpse"},
     {EQ_SPAWN_TYPE_UNKNOWN,     "Unknown"},
 };
+
+#define EQ_ACTOR_TYPE_UNDEFINED        0
+#define EQ_ACTOR_TYPE_PLAYER           1
+#define EQ_ACTOR_TYPE_CORPSE           2
+#define EQ_ACTOR_TYPE_SWITCH           3
+#define EQ_ACTOR_TYPE_DOOR             3    // doors are switches
+#define EQ_ACTOR_TYPE_MISSILE          4
+#define EQ_ACTOR_TYPE_OBJECT           5
+#define EQ_ACTOR_TYPE_LADDER           6
+#define EQ_ACTOR_TYPE_TREE             7
+#define EQ_ACTOR_TYPE_WALL             8
+#define EQ_ACTOR_TYPE_PLACED_OBJECT    9
+
+#define EQ_ENVIRONMENT_TYPE_WATER    5
+
+#define EQ_SPAWN_STATE_FLAGS_IDLE                         0
+#define EQ_SPAWN_STATE_FLAGS_OPEN                         1
+#define EQ_SPAWN_STATE_FLAGS_WEAPON_SHEATHED              2
+#define EQ_SPAWN_STATE_FLAGS_AGGRESIVE                    4
+#define EQ_SPAWN_STATE_FLAGS_FORCED_AGGRESIVE             8
+#define EQ_SPAWN_STATE_FLAGS_INSTRUMENT_EQUIPPED          16
+#define EQ_SPAWN_STATE_FLAGS_STUNNED                      32
+#define EQ_SPAWN_STATE_FLAGS_PRIMARY_WEAPON_EQUIPPED      64
+#define EQ_SPAWN_STATE_FLAGS_SECONDARY_WEAPON_EQUIPPED    128
 
 #define EQ_STANDING_STATE_STANDING    100
 #define EQ_STANDING_STATE_FROZEN      102 // stunned, mesmerized or feared    "You lose control of yourself!"
@@ -94,26 +154,27 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_STANDING_STATE_NAME =
     {EQ_STANDING_STATE_DEAD,           "Dead"},
 };
 
-#define EQ_OFFSET_CDisplay_CAMERA    0x118 // uint32_t pointer
+#define EQ_OFFSET_CDisplay_CAMERA    0x118 // uint32_t pointer (CCamera)
 #define EQ_OFFSET_CDisplay_TIMER     0x154 // uint32_t
 
-#define EQ_OFFSET_CAMERA_VFTABLE                       0x00 // uint32_t pointer
-#define EQ_OFFSET_CAMERA_FIELD_OF_VIEW                 0x04 // float
-#define EQ_OFFSET_CAMERA_ASPECT_RATIO                  0x08 // float
-#define EQ_OFFSET_CAMERA_UNKNOWN_0x0C                  0x0C // float, 0.0 to 1.0
-#define EQ_OFFSET_CAMERA_DRAW_DISTANCE                 0x14 // float
-#define EQ_OFFSET_CAMERA_ACTOR_CLIP_PLANE              0x1C // float
-#define EQ_OFFSET_CAMERA_SHADOW_CLIP_PLANE             0x24 // float
-#define EQ_OFFSET_CAMERA_DRAW_DISTANCE_EX              0x28 // float
-#define EQ_OFFSET_CAMERA_FAR_CLIP_PLANE                0x2C // float
-#define EQ_OFFSET_CAMERA_SCREEN_WIDTH_HALF             0x38 // float
-#define EQ_OFFSET_CAMERA_SCREEN_HEIGHT_HALF            0x3C // float
-#define EQ_OFFSET_CAMERA_HEADING                       0xB0 // float, yaw
-#define EQ_OFFSET_CAMERA_PITCH                         0xB4 // float, pitch
-#define EQ_OFFSET_CAMERA_ROTATION                      0xB8 // float, roll
-#define EQ_OFFSET_CAMERA_Y                             0xBC // float
-#define EQ_OFFSET_CAMERA_X                             0xC0 // float
-#define EQ_OFFSET_CAMERA_Z                             0xC4 // float
+// class CCamera
+#define EQ_OFFSET_CCamera_VFTABLE                       0x00 // uint32_t pointer
+#define EQ_OFFSET_CCamera_FIELD_OF_VIEW                 0x04 // float
+#define EQ_OFFSET_CCamera_ASPECT_RATIO                  0x08 // float
+#define EQ_OFFSET_CCamera_UNKNOWN_0x0C                  0x0C // float, 0.0 to 1.0
+#define EQ_OFFSET_CCamera_DRAW_DISTANCE                 0x14 // float
+#define EQ_OFFSET_CCamera_ACTOR_CLIP_PLANE              0x1C // float
+#define EQ_OFFSET_CCamera_SHADOW_CLIP_PLANE             0x24 // float
+#define EQ_OFFSET_CCamera_DRAW_DISTANCE_EX              0x28 // float
+#define EQ_OFFSET_CCamera_FAR_CLIP_PLANE                0x2C // float
+#define EQ_OFFSET_CCamera_SCREEN_WIDTH_HALF             0x38 // float
+#define EQ_OFFSET_CCamera_SCREEN_HEIGHT_HALF            0x3C // float
+#define EQ_OFFSET_CCamera_HEADING                       0xB0 // float, yaw
+#define EQ_OFFSET_CCamera_PITCH                         0xB4 // float, pitch
+#define EQ_OFFSET_CCamera_ROTATION                      0xB8 // float, roll
+#define EQ_OFFSET_CCamera_Y                             0xBC // float
+#define EQ_OFFSET_CCamera_X                             0xC0 // float
+#define EQ_OFFSET_CCamera_Z                             0xC4 // float
 
 const float EQ_CAMERA_FIELD_OF_VIEW_DEFAULT       = 45.0f;
 const float EQ_CAMERA_FIELD_OF_VIEW_DRUID_MASK    = 60.0f;
@@ -168,6 +229,22 @@ const float EQ_CAMERA_PITCH_MAX        = 119.5f;     // look up
 #define EQ_DRAW_TEXT_COLOR_TEAL          18 // ARGB 0xFF00F0F0
 #define EQ_DRAW_TEXT_COLOR_DEFAULT_6     19 // ARGB 0xFF606060
 #define EQ_DRAW_TEXT_COLOR_BLACK_2       20 // ARGB 0xFF000000
+
+#define EQ_COLOR_ARGB_RED        0xFFFF0000
+#define EQ_COLOR_ARGB_ORANGE     0xFFFF8000
+#define EQ_COLOR_ARGB_YELLOW     0xFFFFFF00
+#define EQ_COLOR_ARGB_GREEN      0xFF00FF00
+#define EQ_COLOR_ARGB_BLUE       0xFF0000FF
+#define EQ_COLOR_ARGB_PURPLE     0xFF8000FF
+#define EQ_COLOR_ARGB_PINK       0xFFFF80FF
+#define EQ_COLOR_ARGB_MAGENTA    0xFFFF00FF
+#define EQ_COLOR_ARGB_TEAL       0xFF00FFFF
+#define EQ_COLOR_ARGB_BROWN      0xFF804000
+#define EQ_COLOR_ARGB_JADE       0xFF00FF80
+#define EQ_COLOR_ARGB_GREY       0xFF808080
+#define EQ_COLOR_ARGB_SILVER     0xFFC0C0C0
+#define EQ_COLOR_ARGB_WHITE      0xFFFFFFFF
+#define EQ_COLOR_ARGB_BLACK      0xFF000000
 
 #define EQ_DIRECTION_NORTH         0
 #define EQ_DIRECTION_NORTH_WEST    1
@@ -397,4 +474,14 @@ namespace EQ
         float Y4;
         float Z4;
     } Rectangle, *Rectangle_ptr;
+
+    typedef struct _CXStr
+    {
+        /*0x00*/   DWORD   Font;            // maybe, dont know.  04 = Window 01 = button
+        /*0x04*/   DWORD   MaxLength;
+        /*0x08*/   DWORD   Length;
+        /*0x0C*/   BOOL    Encoding;        // 0: ASCII, 1:Unicode
+        /*0x10*/   PCRITICAL_SECTION pLock;
+        /*0x14*/   char Text[1024];
+    } CXStr, *CXStr_ptr;
 } // namespace EQ

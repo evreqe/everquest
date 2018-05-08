@@ -1,5 +1,17 @@
 #pragma once
 
+namespace EQAPP
+{
+    enum BazaarFilterType : uint8_t
+    {
+        Equals,
+        DoesNotContain,
+        Contains,
+        BeginsWith,
+        EndsWith
+    };
+}
+
 bool g_BazaarFilterIsEnabled = false;
 
 bool g_BazaarFilterBeepIsEnabled = false;
@@ -12,8 +24,8 @@ uint32_t g_BazaarFilterItemNameList_reserve = 1024;
 
 // 1    = 1cp    one copper piece
 // 1000 = 1pp    one platinum piece
-uint32_t g_BazaarFilterItemPriceMinimum = 1;
-uint32_t g_BazaarFilterItemPriceMaximum = 1000 * 1000;
+uint32_t g_BazaarFilterItemPriceMinimum = 1;          // 1cp
+uint32_t g_BazaarFilterItemPriceMaximum = 1000 * 100; // 100pp
 
 void EQAPP_BazaarFilter_Toggle();
 void EQAPP_BazaarFilter_On();
@@ -74,7 +86,7 @@ void EQAPP_BazaarFilter_LoadEx(const char* filename)
         std::stringstream ss;
         ss << "failed to open file: " << filename;
 
-        EQAPP_PrintDebugText(__FUNCTION__, ss.str());
+        EQAPP_PrintDebugText(__FUNCTION__, ss.str().c_str());
         return;
     }
 
@@ -114,19 +126,37 @@ bool EQAPP_BazaarFilter_HandleEvent_CBazaarSearchWnd__AddItemToList(char* itemNa
         std::string itemNameAdd = itemName;
         std::string itemNameFilter = filterItemName;
 
-        bool bUseExactComparsion = true;
+        EQAPP::BazaarFilterType filterType = EQAPP::BazaarFilterType::Equals;
 
         if (itemNameFilter.size() > 1)
         {
-            if (EQAPP_String_BeginsWith(itemNameFilter, "@") == true)
+            if (EQAPP_String_BeginsWith(itemNameFilter, "!") == true)
             {
                 itemNameFilter.erase(0, 1);
 
-                bUseExactComparsion = false;
+                filterType = EQAPP::BazaarFilterType::DoesNotContain;
+            }
+            else if (EQAPP_String_BeginsWith(itemNameFilter, "@") == true)
+            {
+                itemNameFilter.erase(0, 1);
+
+                filterType = EQAPP::BazaarFilterType::Contains;
+            }
+            else if (EQAPP_String_BeginsWith(itemNameFilter, "{") == true)
+            {
+                itemNameFilter.erase(0, 1);
+
+                filterType = EQAPP::BazaarFilterType::BeginsWith;
+            }
+            else if (EQAPP_String_BeginsWith(itemNameFilter, "}") == true)
+            {
+                itemNameFilter.erase(0, 1);
+
+                filterType = EQAPP::BazaarFilterType::EndsWith;
             }
         }
 
-        if (bUseExactComparsion == true)
+        if (filterType == EQAPP::BazaarFilterType::Equals)
         {
             if (itemNameAdd == itemNameFilter)
             {
@@ -134,9 +164,33 @@ bool EQAPP_BazaarFilter_HandleEvent_CBazaarSearchWnd__AddItemToList(char* itemNa
                 break;
             }
         }
-        else
+        else if (filterType == EQAPP::BazaarFilterType::DoesNotContain)
+        {
+            if (EQAPP_String_Contains(itemNameAdd, itemNameFilter) == false)
+            {
+                bShouldAddItemToList = true;
+                break;
+            }
+        }
+        else if (filterType == EQAPP::BazaarFilterType::Contains)
         {
             if (EQAPP_String_Contains(itemNameAdd, itemNameFilter) == true)
+            {
+                bShouldAddItemToList = true;
+                break;
+            }
+        }
+        else if (filterType == EQAPP::BazaarFilterType::BeginsWith)
+        {
+            if (EQAPP_String_BeginsWith(itemNameAdd, itemNameFilter) == true)
+            {
+                bShouldAddItemToList = true;
+                break;
+            }
+        }
+        else if (filterType == EQAPP::BazaarFilterType::EndsWith)
+        {
+            if (EQAPP_String_EndsWith(itemNameAdd, itemNameFilter) == true)
             {
                 bShouldAddItemToList = true;
                 break;

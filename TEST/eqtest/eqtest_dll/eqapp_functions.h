@@ -5,7 +5,8 @@
 void EQAPP_Log(const char* text);
 
 void EQAPP_PrintBool(const char* text, bool& b);
-void EQAPP_PrintDebugText(const char* functionName, const std::string& text);
+void EQAPP_PrintDebugText(const char* functionName, const char* text);
+void EQAPP_ToggleDebugText();
 
 void EQAPP_EnableDebugPrivileges();
 DWORD EQAPP_GetModuleBaseAddress(DWORD processID, const wchar_t* moduleName);
@@ -42,7 +43,7 @@ void EQAPP_PrintBool(const char* text, bool& b)
     std::cout << text << ": " << (b ? "On" : "Off") << std::endl;
 }
 
-void EQAPP_PrintDebugText(const char* functionName, const std::string& text)
+void EQAPP_PrintDebugText(const char* functionName, const char* text)
 {
     if (g_EQAppDebugTextIsEnabled == false)
     {
@@ -50,6 +51,12 @@ void EQAPP_PrintDebugText(const char* functionName, const std::string& text)
     }
 
     std::cout << "[DEBUG] " << functionName << "(): " << text << std::endl;
+}
+
+void EQAPP_ToggleDebugText()
+{
+    EQ_ToggleBool(g_EQAppDebugTextIsEnabled);
+    EQAPP_PrintBool("Debug Text", g_EQAppDebugTextIsEnabled);
 }
 
 void EQAPP_EnableDebugPrivileges()
@@ -190,7 +197,7 @@ std::string EQAPP_ReadFileToString(const char* filename)
         std::stringstream ss;
         ss << "failed to open file: " << filePathStr;
 
-        EQAPP_PrintDebugText(__FUNCTION__, ss.str());
+        EQAPP_PrintDebugText(__FUNCTION__, ss.str().c_str());
         return std::string();
     }
 
@@ -216,7 +223,7 @@ void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list, 
         std::stringstream ss;
         ss << "failed to open file: " << filePathStr;
 
-        EQAPP_PrintDebugText(__FUNCTION__, ss.str());
+        EQAPP_PrintDebugText(__FUNCTION__, ss.str().c_str());
         return;
     }
 
@@ -292,7 +299,7 @@ std::vector<uint32_t> EQAPP_GetNPCSpawnIDListSortedByDistance()
         float spawnX = EQ_GetSpawnX(spawn);
         float spawnZ = EQ_GetSpawnZ(spawn);
 
-        float spawnDistance = EQ_CalculateDistance3D(playerSpawnX, playerSpawnY, playerSpawnZ, spawnX, spawnY, spawnZ);
+        float spawnDistance = EQ_CalculateDistance3D(playerSpawnY, playerSpawnX, playerSpawnZ, spawnY, spawnX, spawnZ);
 
         float screenX = -1.0f;
         float screenY = -1.0f;

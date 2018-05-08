@@ -1,6 +1,6 @@
 #pragma once
 
-std::unordered_map<uint32_t, std::string> g_SpellList; // ID, Name
+std::unordered_map<uint32_t, std::string> g_SpellList; // <Spell ID, Spell Name>
 
 uint32_t g_SpellList_reserve = EQ_NUM_SPELLS + 1;
 
@@ -24,7 +24,7 @@ void EQAPP_SpellList_LoadEx(const char* filename)
         std::stringstream ss;
         ss << "failed to open file: " << filename;
 
-        EQAPP_PrintDebugText(__FUNCTION__, ss.str());
+        EQAPP_PrintDebugText(__FUNCTION__, ss.str().c_str());
         return;
     }
 

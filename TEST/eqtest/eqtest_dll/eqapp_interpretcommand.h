@@ -32,6 +32,7 @@ void EQAPP_InterpretCommand_NULL()
 std::map<std::string, std::function<void()>> g_InterpretCommandList =
 {
     {"//Unload",                       &EQAPP_Unload},
+    {"//DebugText",                    &EQAPP_ToggleDebugText},
     {"//Sleep",                        &EQAPP_Sleep_Toggle},
     {"//SleepOn",                      &EQAPP_Sleep_On},
     {"//SleepOff",                     &EQAPP_Sleep_Off},
@@ -79,6 +80,7 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//CAA",                          &EQAPP_CombatAlternateAbility_Toggle},
     {"//CAAOn",                        &EQAPP_CombatAlternateAbility_On},
     {"//CAAOff",                       &EQAPP_CombatAlternateAbility_Off},
+    {"//ConsolePrint",                 &EQAPP_Console_Print_Toggle},
     {"//ESP",                          &EQAPP_ESP_Toggle},
     {"//ESPOn",                        &EQAPP_ESP_On},
     {"//ESPOff",                       &EQAPP_ESP_Off},
@@ -139,6 +141,8 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//FAIOff",                       &EQAPP_FollowAI_Off},
     {"//FollowAIUseZAxis",             &EQAPP_FollowAI_UseZAxis_Toggle},
     {"//FAIUZA",                       &EQAPP_FollowAI_UseZAxis_Toggle},
+    {"//FollowZ",                      &EQAPP_FollowAI_UseZAxis_Toggle},
+    {"//FZ",                           &EQAPP_FollowAI_UseZAxis_Toggle},
     {"//WindowTitle",                  &EQAPP_WindowTitle_Toggle},
     {"//WindowTitleOn",                &EQAPP_WindowTitle_On},
     {"//WindowTitleOff",               &EQAPP_WindowTitle_Off},
@@ -159,6 +163,7 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     ////{"//Null",                         &EQAPP_InterpretCommand_NULL},
     ////
     {"//Test",                         &EQAPP_InterpretCommand_NULL},
+    {"//TestChatTextColors",           &EQAPP_InterpretCommand_NULL},
     {"//Pause",                        &EQAPP_InterpretCommand_NULL},
     {"//InGame",                       &EQAPP_InterpretCommand_NULL},
     {"//NotInGame",                    &EQAPP_InterpretCommand_NULL},
@@ -212,8 +217,6 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//SPTM",                         &EQAPP_InterpretCommand_NULL},
     {"//SummonResupplyAgent",          &EQAPP_InterpretCommand_NULL},
     {"//SRA",                          &EQAPP_InterpretCommand_NULL},
-    {"//SummonTomeOfTheHerosJourney",  &EQAPP_InterpretCommand_NULL},
-    {"//STOTHJ",                       &EQAPP_InterpretCommand_NULL},
     {"//AutoAttack",                   &EQAPP_InterpretCommand_NULL},
     {"//AutoAttackOn",                 &EQAPP_InterpretCommand_NULL},
     {"//AutoAttackOff",                &EQAPP_InterpretCommand_NULL},
@@ -277,12 +280,15 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//TetherCamera",                 &EQAPP_InterpretCommand_NULL},
     {"//OpenBags",                     &EQAPP_InterpretCommand_NULL},
     {"//CloseBags",                    &EQAPP_InterpretCommand_NULL},
+    {"//InspectBuffs",                 &EQAPP_InterpretCommand_NULL},
+    {"//Consider",                     &EQAPP_InterpretCommand_NULL},
+    {"//Party1",                       &EQAPP_InterpretCommand_NULL},
+    {"//Group1",                       &EQAPP_InterpretCommand_NULL},
     {"//HotButton1",                   &EQAPP_InterpretCommand_NULL},
     {"//HotButton1_1",                 &EQAPP_InterpretCommand_NULL},
     {"//Discipline1",                  &EQAPP_InterpretCommand_NULL},
     {"//XTargetCycle",                 &EQAPP_InterpretCommand_NULL},
     {"//XTarget1",                     &EQAPP_InterpretCommand_NULL},
-    ////{"//Potion1",                      &EQAPP_InterpretCommand_NULL},
     {"//UseItemCharm",                 &EQAPP_InterpretCommand_NULL},
     {"//UseItemLeftEar",               &EQAPP_InterpretCommand_NULL},
     {"//UseItemHead",                  &EQAPP_InterpretCommand_NULL},
@@ -357,6 +363,10 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//Script",                       &EQAPP_InterpretCommand_NULL},
     {"//LoadScripts",                  &EQAPP_InterpretCommand_NULL},
     {"//Echo",                         &EQAPP_InterpretCommand_NULL},
+    {"//ItemSlotPrimary",              &EQAPP_InterpretCommand_NULL},
+    {"//ItemSlotSecondary",            &EQAPP_InterpretCommand_NULL},
+    {"//ItemSlotHead",                 &EQAPP_InterpretCommand_NULL},
+    {"//IfPlayerIsNotMoving",          &EQAPP_InterpretCommand_NULL},
 };
 
 bool EQAPP_InterpretCommand_HandleEvent_CEverQuest__InterpretCmd(void* this_ptr, class EQPlayer* player, const char* commandText_);
@@ -495,13 +505,7 @@ void EQAPP_InterpretCommand_InterpretArguments(const std::string& commandText, c
         return;
     }
 
-    if (EQAPP_String_Contains(commandTextAfterSpace, ",") == false)
-    {
-        return;
-    }
-
     std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
-
     if (tokens.size() == 0)
     {
         return;
@@ -524,13 +528,7 @@ void EQAPP_InterpretCommand_InterpretArgumentsRandom(const std::string& commandT
         return;
     }
 
-    if (EQAPP_String_Contains(commandTextAfterSpace, ",") == false)
-    {
-        return;
-    }
-
     std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
-
     if (tokens.size() == 0)
     {
         return;
@@ -817,6 +815,13 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
+    if (commandText == "//Campfire")
+    {
+        EQ_UseItem("Fellowship Registration Insignia");
+
+        return true;
+    }
+
     if (commandText == "//Origin")
     {
         EQ_UseAlternateAbility(EQAlternateAbilities::General::Origin);
@@ -966,13 +971,6 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
     if (commandText == "//SummonResupplyAgent" || commandText == "//SRA")
     {
         EQ_UseAlternateAbility(EQAlternateAbilities::Special::Summon_Resupply_Agent);
-
-        return true;
-    }
-
-    if (commandText == "//SummonTomeOfTheHerosJourney" || commandText == "//STOTHJ")
-    {
-        EQ_UseAlternateAbility(EQAlternateAbilities::Special::Summon_Tome_of_the_Heros_Journey);
 
         return true;
     }
@@ -1578,6 +1576,55 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
     if (commandText == "//CloseBags")
     {
         EQ_ExecuteCommand(EQ_EXECUTECMD_CLOSE_INV_BAGS, 1);
+
+        return true;
+    }
+
+    if (commandText == "//Consider")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_CONSIDER, 1);
+
+        return true;
+    }
+
+    if (commandText == "//InspectBuffs")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_CMD_INSPECT_BUFFS, 1);
+
+        return true;
+    }
+
+    if (commandText == "//Party1" || commandText == "//Group1")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_PARTY1, 1);
+
+        return true;
+    }
+
+    if (commandText == "//Party2" || commandText == "//Group2")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_PARTY2, 1);
+
+        return true;
+    }
+
+    if (commandText == "//Party3" || commandText == "//Group3")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_PARTY3, 1);
+
+        return true;
+    }
+
+    if (commandText == "//Party4" || commandText == "//Group4")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_PARTY4, 1);
+
+        return true;
+    }
+
+    if (commandText == "//Party5" || commandText == "//Group5")
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_PARTY5, 1);
 
         return true;
     }
@@ -2513,45 +2560,6 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
-/*
-    // potion belt was removed and replaced with hotbar 11
-
-    if (commandText == "//Potion1")
-    {
-        EQ_ExecuteCommand(EQ_EXECUTECMD_POTION_SLOT_1, 1);
-
-        return true;
-    }
-
-    if (commandText == "//Potion2")
-    {
-        EQ_ExecuteCommand(EQ_EXECUTECMD_POTION_SLOT_2, 1);
-
-        return true;
-    }
-
-    if (commandText == "//Potion3")
-    {
-        EQ_ExecuteCommand(EQ_EXECUTECMD_POTION_SLOT_3, 1);
-
-        return true;
-    }
-
-    if (commandText == "//Potion4")
-    {
-        EQ_ExecuteCommand(EQ_EXECUTECMD_POTION_SLOT_4, 1);
-
-        return true;
-    }
-
-    if (commandText == "//Potion5")
-    {
-        EQ_ExecuteCommand(EQ_EXECUTECMD_POTION_SLOT_5, 1);
-
-        return true;
-    }
-*/
-
     if (commandText == "//UseItemCharm")
     {
         EQ_InterpretCommand("/useitem 0");
@@ -3195,12 +3203,16 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
             return true;
         }
 
-        std::string name = EQAPP_String_GetAfter(commandText, " ");
-        if (name.size() != 0)
+        std::vector<std::string> tokens = EQAPP_String_Split(commandText, ' ');
+        if (tokens.size() > 2)
         {
-            EQAPP_BoxChat_SendText(commandText);
+            std::string name = tokens.at(1);
+            if (name.size() != 0)
+            {
+                EQAPP_BoxChat_SendText(commandText);
 
-            std::cout << "Box Chat to '" << name << "': " << commandText << std::endl;
+                std::cout << "Box Chat to '" << name << "': " << commandText << std::endl;
+            }
         }
 
         return true;
@@ -3214,12 +3226,16 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
             return true;
         }
 
-        std::string name = EQAPP_String_GetAfter(commandText, " ");
-        if (name.size() != 0)
+        std::vector<std::string> tokens = EQAPP_String_Split(commandText, ' ');
+        if (tokens.size() > 2)
         {
-            EQAPP_BoxChat_SendText(commandText);
+            std::string name = tokens.at(1);
+            if (name.size() != 0)
+            {
+                EQAPP_BoxChat_SendText(commandText);
 
-            std::cout << "Box Chat to Channel '" << name << "': " << commandText << std::endl;
+                std::cout << "Box Chat to Channel '" << name << "': " << commandText << std::endl;
+            }
         }
 
         return true;
@@ -3321,27 +3337,24 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
         if (commandTextAfterSpace.size() != 0)
         {
-            if (EQAPP_String_Contains(commandTextAfterSpace, ",") == true)
+            std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
+            if (tokens.size() != 0)
             {
-                std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
-                if (tokens.size() != 0)
+                EQ_InterpretCommand("/stopsong");
+                EQ_InterpretCommand("/melody");
+
+                std::stringstream ss;
+                ss << "/melody";
+
+                for (auto& token : tokens)
                 {
-                    EQ_InterpretCommand("/stopsong");
-                    EQ_InterpretCommand("/melody");
-
-                    std::stringstream ss;
-                    ss << "/melody";
-
-                    for (auto& token : tokens)
+                    if (EQAPP_String_IsDigits(token) == true)
                     {
-                        if (EQAPP_String_IsDigits(token) == true)
-                        {
-                            ss << " " << token;
-                        }
+                        ss << " " << token;
                     }
-
-                    EQ_InterpretCommand(ss.str().c_str());
                 }
+
+                EQ_InterpretCommand(ss.str().c_str());
             }
         }
 
@@ -3412,6 +3425,70 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         if (commandTextAfterSpace.size() != 0)
         {
             EQ_PrintTextToChat(commandTextAfterSpace.c_str());
+        }
+
+        return true;
+    }
+
+    if (EQAPP_String_BeginsWith(commandText, "//ItemSlotPrimary ") == true)
+    {
+        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+        if (commandTextAfterSpace.size() != 0)
+        {
+            auto playerSpawn = EQ_GetPlayerSpawn();
+            if (playerSpawn != NULL)
+            {
+                EQ_SetSpawnItemSlotPrimary(playerSpawn, commandTextAfterSpace.c_str());
+            }
+        }
+
+        return true;
+    }
+
+    if (EQAPP_String_BeginsWith(commandText, "//ItemSlotSecondary ") == true)
+    {
+        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+        if (commandTextAfterSpace.size() != 0)
+        {
+            auto playerSpawn = EQ_GetPlayerSpawn();
+            if (playerSpawn != NULL)
+            {
+                EQ_SetSpawnItemSlotSecondary(playerSpawn, commandTextAfterSpace.c_str());
+            }
+        }
+
+        return true;
+    }
+
+    if (EQAPP_String_BeginsWith(commandText, "//ItemSlotHead ") == true)
+    {
+        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+        if (commandTextAfterSpace.size() != 0)
+        {
+            auto playerSpawn = EQ_GetPlayerSpawn();
+            if (playerSpawn != NULL)
+            {
+                EQ_SetSpawnItemSlotHead(playerSpawn, commandTextAfterSpace.c_str());
+            }
+        }
+
+        return true;
+    }
+
+    if (EQAPP_String_BeginsWith(commandText, "//IfPlayerIsNotMoving ") == true)
+    {
+        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+        if (commandTextAfterSpace.size() != 0)
+        {
+            auto playerSpawn = EQ_GetPlayerSpawn();
+            if (playerSpawn != NULL)
+            {
+                auto spawnMovementSpeed = EQ_GetSpawnMovementSpeed(playerSpawn);
+                if (spawnMovementSpeed == 0.0f)
+                {
+                    EQ_InterpretCommand(commandTextAfterSpace.c_str());
+                }
+            }
         }
 
         return true;

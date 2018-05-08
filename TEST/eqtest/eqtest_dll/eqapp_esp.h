@@ -108,14 +108,7 @@ void EQAPP_ESP_Execute()
         auto spawnX = EQ_GetSpawnX(spawn);
         auto spawnZ = EQ_GetSpawnZ(spawn);
 
-/*
-        if (spawn == targetSpawn)
-        {
-            EQ_DrawLineWorldToScreen(playerSpawnX, playerSpawnY, playerSpawnZ, spawnX, spawnY, spawnZ, 0xFF00FF00);
-        }
-*/
-
-        float spawnDistance = EQ_CalculateDistance(playerSpawnX, playerSpawnY, spawnX, spawnY);
+        float spawnDistance = EQ_CalculateDistance(playerSpawnY, playerSpawnX, spawnY, spawnX);
 
         auto spawnType = EQ_GetSpawnType(spawn);
         auto spawnLevel = EQ_GetSpawnLevel(spawn);

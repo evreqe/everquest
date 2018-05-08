@@ -114,6 +114,111 @@ uint32_t EQ_ADDRESS_FUNCTION_CrashDetected    = 0x693730; // "Crash (char = %s, 
   }
 */
 
+uint32_t EQ_ADDRESS_FUNCTION_CastRay    = 0x58CE20; // called by CastRay2 function
+/*
+int __cdecl CastRay(int a1, float a2, float a3, float a4)
+{
+  int v5; // eax
+  int v6; // [esp-4h] [ebp-14h]
+  float v7; // [esp+0h] [ebp-10h]
+  float v8; // [esp+4h] [ebp-Ch]
+  float v9; // [esp+8h] [ebp-8h]
+
+  if ( !a1 )
+    return 0;
+  v5 = *(_DWORD *)a1;
+  v9 = a4;
+  v8 = a3;
+  v7 = a2;
+  (*(void (__thiscall **)(int, int *))(v5 + 0x88))(a1, &v6);
+  return CastRay2(a1, a1 + 0x64, v6, v7, v8, v9);
+}
+*/
+
+uint32_t EQ_ADDRESS_FUNCTION_CastRay2    = 0x58CE70; // CCollisionInfoLineSegmentVisibility::`vftable'
+/*
+.rdata:00B0116C ; const CCollisionInfoLineSegmentVisibility::`vftable'
+.rdata:00B0116C ??_7CCollisionInfoLineSegmentVisibility@@6B@ dd offset sub_8729A0 // search for xref
+*/
+/*
+has a function that has an xref to CCollisionInfoLineSegment::`vftable'
+*/
+/*
+int __usercall CastRay2@<eax>(int a1@<esi>, int a2, int a3, float a4, float a5, float a6)
+{
+  double v7; // st6
+  double v8; // st5
+  double v9; // st2
+  int v10; // eax
+  signed int v11; // esi
+  void **v12; // [esp+0h] [ebp-B8h]
+  LPVOID lpMem; // [esp+60h] [ebp-58h]
+  char v14; // [esp+66h] [ebp-52h]
+  int v15; // [esp+68h] [ebp-50h]
+  char v16; // [esp+6Ch] [ebp-4Ch]
+  float v17; // [esp+94h] [ebp-24h]
+  float v18; // [esp+98h] [ebp-20h]
+  float v19; // [esp+9Ch] [ebp-1Ch]
+  float v20; // [esp+A0h] [ebp-18h]
+  float v21; // [esp+A4h] [ebp-14h]
+  float v22; // [esp+A8h] [ebp-10h]
+  int v23; // [esp+B4h] [ebp-4h]
+
+  if ( sub_8AF080((_DWORD *)dword_E5AE14, dword_E6BA04) )
+    return 1;
+  v7 = *(float *)(a2 + 4);
+  v8 = *(float *)(a2 + 8);
+  if ( a3 == dword_BE1074 || a3 == dword_BE1078 || a3 == dword_BE1068 )
+    v8 = v8 + 1.0;
+  if ( flt_E59714 == a4
+    && flt_E59718 == a5
+    && flt_E5971C == a6
+    && flt_E59708 == *(float *)a2
+    && flt_E5970C == v7
+    && flt_E59710 == v8 )
+  {
+    return dword_E59720;
+  }
+  v9 = *(float *)a2;
+  flt_E59708 = *(float *)a2;
+  v17 = v9;
+  flt_E5970C = v7;
+  v18 = v7;
+  flt_E59710 = v8;
+  v19 = v8;
+  flt_E59714 = a4;
+  flt_E59718 = a5;
+  flt_E5971C = a6;
+  v20 = a4 - v9;
+  v21 = a5 - v7;
+  v22 = a6 - v8;
+  sub_4C4910((float *)&v12, &v17);
+  v12 = &CCollisionInfoLineSegmentVisibility::`vftable';
+  v15 = 1;
+  v14 = 1;
+  v16 = 0;
+  v10 = *(_DWORD *)dword_169A5A4;
+  v23 = 0;
+  if ( (*(unsigned __int8 (__stdcall **)(int))(v10 + 68))(a1)
+    && (**(unsigned __int8 (__stdcall ***)(void ***))dword_169A5A4)(&v12) )
+  {
+    dword_E59720 = 0;
+    v11 = 0;
+  }
+  else
+  {
+    dword_E59720 = 1;
+    v11 = 1;
+  }
+  v23 = 1;
+  v12 = &CCollisionInfoBase::`vftable';
+  LOBYTE(v23) = 4;
+  if ( lpMem )
+    sub_8D63D0(lpMem);
+  return v11;
+}
+*/
+
 uint32_t EQ_ADDRESS_FUNCTION_DrawNetStatus    = 0x615100; // "%ldms"    "%0.2f%%"
 uint32_t EQ_ADDRESS_FUNCTION_ExecuteCmd       = 0x5858B0; // "ExecuteCmd has received a CMD_EXITGAME.\n"    "/%s %s"    "%c%s %s "    "help.html"
 /*
@@ -328,8 +433,44 @@ v10 = 0.0;
     }
 */
 
+// used to be CDisplay__UpdateItemSlot in 2002 client
+uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__UpdateItemSlot    = 0x636AF0; // "IT36" "IT159" "IT10758" "IT10742"
+
 // class CXWndManager
 uint32_t EQ_ADDRESS_POINTER_CXWndManager    = 0x1699650; // pinstCXWndManager
+/*
+CDisplay__WriteTextHD2():
+  if ( pinstCXWndManager__dword_1699650 )
+  {
+    v14 = 0;
+    v13 = 0;
+    v12 = a3;
+    v11 = a2;
+    v14 = *(_DWORD *)(pinstCXWndManager__dword_1699650 + 280);
+    v13 = *(_DWORD *)(pinstCXWndManager__dword_1699650 + 276);
+    sub_8D3F80(&lpMem, a1);
+    v8 = __OFSUB__(*(_DWORD *)(pinstCXWndManager__dword_1699650 + 284), 2);
+    v6 = *(_DWORD *)(pinstCXWndManager__dword_1699650 + 284) == 2;
+    v7 = *(_DWORD *)(pinstCXWndManager__dword_1699650 + 284) - 2 < 0;
+    v15 = 0;
+    if ( (unsigned __int8)(v7 ^ v8) | v6 || (v9 = *(_DWORD *)(pinstCXWndManager__dword_1699650 + 0x120)) == 0 )
+      sub_476D30((void *)(pinstCXWndManager__dword_1699650 + 0x11C));
+    CTextureFont__DrawWrappedText(
+      *(_DWORD **)(v9 + 8),
+      &lpMem,
+      a2,
+      a3,
+      *(_DWORD *)(pinstCXWndManager__dword_1699650 + 0x114) - a2,
+      (int)&v11,
+      (int)v5,
+      1,
+      0);
+    v15 = 1;
+    if ( lpMem )
+      sub_8D63D0(lpMem);
+  }
+  return 1;
+*/
 
 uint32_t EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows    = 0x9046D0; // "DoAllDrawing() failed\n"    GetTickCount()
 
@@ -456,14 +597,13 @@ LABEL_15:
           }
 */
 
-uint32_t EQ_ADDRESS_POINTER_CBazaarSearchWnd    = 0x0;
+uint32_t EQ_ADDRESS_POINTER_CPlayerWindow   = 0xDA8E08; // "PlayerWindow"
 
-uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__WndNotification    = 0x0; // "You cannot purchase an item from yourself!"    "9999999"
-/*
-sub_8EB690("BazaarSearchWnd", "HideTraders", *(_BYTE *)(v26 + 492));
-*/
+uint32_t EQ_ADDRESS_POINTER_CBazaarSearchWnd    = 0xDA8E04; // "BazaarSearchWnd"
 
-uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__HandleBazaarMsg    = 0x0; // "You successfully purchased %d %s(s) from %s."    "The item has been sent to your parcels."
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__WndNotification    = 0x0; //0x6C8A00; // // not needed, can use VFTable index    "You cannot purchase an item from yourself!"    "9999999"
+
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__HandleBazaarMsg    = 0x6C9AE0; // "You successfully purchased %d %s(s) from %s."    "The item has been sent to your parcels."
 /*
 else
 {
@@ -493,7 +633,7 @@ case 5514u: // 0x5D3Au
           break;
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList    = 0x0;
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList    = 0x6C6950;
 /*
   result = 0;
   v13 = this;
@@ -646,7 +786,7 @@ do
 }
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery    = 0x0;
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery    = 0x6C71E0;
 /*
 CBazaarSearchWnd__WndNotification()
 
@@ -888,7 +1028,7 @@ LABEL_106:
   }
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem    = 0x0;
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem    = 0x6C7710;
 /*
 if ( dword_FBD53C <= 0 )
 {
@@ -972,399 +1112,14 @@ char __thiscall sub_779040(_DWORD *this, int a2) // CBazaarSearchWnd__BuyItem()
 }
 */
 
-uint32_t EQ_ADDRESS_POINTER_CBazaarConfirmationWnd    = 0x0;
+uint32_t EQ_ADDRESS_POINTER_CBazaarConfirmationWnd    = 0xDA8B74; // "BazaarConfirmationWnd"
 
-uint32_t EQ_ADDRESS_FUNCTION_CBazaarConfirmationWnd__WndNotification    = 0x0;
-
-/*
-int __thiscall sub_538710(_DWORD *this, int a2, int a3, int a4)
-{
-  _DWORD *v4; // ebp
-  int v5; // esi
-  char v6; // bl
-
-  v4 = this;
-  if ( a3 != 1 )
-    return sub_9D3310((void **)this, a2, a3, a4);
-  v5 = a2;
-  if ( a2 == this[151] || a2 == this[154] )
-  {
-    ++dword_FBD53C;
-    a2 = 59;
-    if ( (unsigned int)((*(_DWORD *)(dword_FBFD88 + 234968) - *(_DWORD *)(dword_FBFD88 + 234964)) >> 2) < 0x14 )
-      sub_732270((_DWORD *)(dword_FBFD88 + 234964), (unsigned int *)&a2);
-    v4[157] = (v5 == v4[151]) + 1;
-    if ( *(_DWORD *)dword_F2679C )
-    {
-      word_F25F48 = sub_94D430(6247, 0);
-      if ( v4 != (_DWORD *)-624 )
-        qmemcpy(&dword_F25F4A, v4 + 156, 0x11Cu);
-      v6 = sub_8EF920(*(int *)dword_F2679C, 4, &word_F25F48, 286);
-      j_j__free(0);
-      --dword_10E0E94;
-      if ( v6 )
-        sub_8ECAD0(*(int *)dword_F2679C);
-      else
-        sub_57B3F0((_DWORD *)dword_D402C8, (LPCRITICAL_SECTION **)dword_F2679C);
-    }
-    else if ( !byte_F35BA4 )
-    {
-      sub_99D110("Attempt to send message %d on a void connection.", 103);
-    }
-  }
-  (*(void (__thiscall **)(_DWORD *, _DWORD, signed int, signed int))(*v4 + 216))(v4, 0, 1, 1);
-  return 0;
-}
-*/
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarConfirmationWnd__WndNotification    = 0x0; //0x4A3300; // not needed, can use VFTable index
 
 // Trader window
-uint32_t EQ_ADDRESS_POINTER_CBazaarWnd    = 0x0;
+uint32_t EQ_ADDRESS_POINTER_CBazaarWnd    = 0xDA8E7C; // "BazaarWnd"
 
-uint32_t EQ_ADDRESS_FUNCTION_CBazaarWnd__WndNotification    = 0x0;
-/*
-int __thiscall sub_77D300(int this, int a2, int a3, void **a4)
-{
-  int v4; // ebx
-  int v5; // ebp
-  int v6; // esi
-  char v7; // cl
-  char v8; // bl
-  char *v9; // eax
-  int result; // eax
-  int v11; // esi
-  int *v12; // edi
-  int v13; // esi
-  _DWORD *v14; // ecx
-  char *v15; // eax
-  char v16; // bl
-  char *v17; // eax
-  char v18; // bl
-  signed int v19; // eax
-  char *v20; // eax
-  char v21; // bl
-  char *v22; // eax
-  char v23; // bl
-  char *v24; // eax
-  _DWORD *v25; // ecx
-  void *v26; // ecx
-  char v27; // [esp+13h] [ebp-A5h]
-  int v28; // [esp+14h] [ebp-A4h]
-  int v29; // [esp+18h] [ebp-A0h]
-  int v30; // [esp+1Ch] [ebp-9Ch]
-  char v31; // [esp+20h] [ebp-98h]
-  char v32; // [esp+24h] [ebp-94h]
-  char v33; // [esp+28h] [ebp-90h]
-  int v34; // [esp+2Ch] [ebp-8Ch]
-  char v35; // [esp+30h] [ebp-88h]
-  int v36; // [esp+48h] [ebp-70h]
-  int v37; // [esp+4Ch] [ebp-6Ch]
-  char v38; // [esp+50h] [ebp-68h]
-  int v39; // [esp+68h] [ebp-50h]
-  int v40; // [esp+6Ch] [ebp-4Ch]
-  char v41; // [esp+70h] [ebp-48h]
-  int v42; // [esp+88h] [ebp-30h]
-  int v43; // [esp+8Ch] [ebp-2Ch]
-  char v44; // [esp+90h] [ebp-28h]
-  int v45; // [esp+A8h] [ebp-10h]
-  int v46; // [esp+B4h] [ebp-4h]
-
-  v4 = 0;
-  v5 = this;
-  v29 = 0;
-  if ( a3 == 1 )
-  {
-    if ( a2 == *(_DWORD *)(this + 612) )
-    {
-      v6 = sub_7811B0((volatile signed __int32 ***)this);
-      if ( *(_DWORD *)(v5 + 580) == -1 )
-        goto LABEL_18;
-      if ( !sub_77E380((_DWORD *)v5) )
-        goto LABEL_18;
-      v7 = *(_BYTE *)(v5 + 2548);
-      if ( !v7 )
-        goto LABEL_18;
-      if ( *(_BYTE *)(*(_DWORD *)(v5 + 580) + v5 + 2284) )
-      {
-        sub_781330(&v34);
-        sub_9A0EC0(&v35, (char *)(*(_DWORD *)(v5 + 596) + 52));
-        v36 = v6;
-        v34 = 3;
-        if ( *(_DWORD *)dword_F2679C )
-        {
-          word_F25F48 = sub_94D430(31402, 0);
-          qmemcpy(&dword_F25F4A, &v34, 0x20u);
-          v8 = sub_8EF920(*(int *)dword_F2679C, 4, &word_F25F48, 34);
-          j_j__free(0);
-          --dword_10E0E94;
-          if ( v8 )
-            sub_8ECAD0(*(int *)dword_F2679C);
-          else
-            sub_57B3F0((_DWORD *)dword_D402C8, (LPCRITICAL_SECTION **)dword_F2679C);
-          v9 = StringTable__getString(dword_F26798, 0x1A60u, 0);
-        }
-        else
-        {
-          if ( !byte_F35BA4 )
-            sub_99D110("Attempt to send message %d on a void connection.", 170);
-          v9 = StringTable__getString(dword_F26798, 0x1A60u, 0);
-        }
-      }
-      else
-      {
-        if ( !v7 )
-        {
-LABEL_18:
-          sub_77C8F0((_DWORD *)v5);
-          return 0;
-        }
-        v9 = StringTable__getString(dword_F26798, 0x1A61u, 0);
-      }
-      sub_77FF30((char **)v5, v9, (void *)0xF);
-      goto LABEL_18;
-    }
-    if ( a2 == *(_DWORD *)(this + 624) )
-    {
-      v11 = sub_7811B0((volatile signed __int32 ***)this);
-      if ( v11 )
-      {
-        v12 = (int *)(v5 + 596);
-        if ( *(_DWORD *)(v5 + 596) )
-        {
-          if ( *(_BYTE *)(v5 + 2548) )
-          {
-            sub_781330(&v40);
-            v42 = v11;
-            v13 = 0;
-            v40 = 3;
-            v30 = 0;
-            do
-            {
-              v4 |= 1u;
-              v28 = v4;
-              if ( !*sub_781430((_DWORD *)v5, &v31, v13)
-                || *(_BYTE *)(v13 + v5 + 2284)
-                || (v14 = (_DWORD *)*sub_781430((_DWORD *)v5, &v32, v13),
-                    v4 |= 2u,
-                    v46 = 1,
-                    v28 = v4,
-                    v29 = v4,
-                    v27 = 1,
-                    !sub_94B110(v14, v12, 1)) )
-              {
-                v27 = 0;
-              }
-              v46 = 0;
-              if ( v4 & 2 )
-              {
-                v4 &= 0xFFFFFFFD;
-                v28 = v4;
-                v29 = v4;
-                sub_88DAD0(&v32);
-              }
-              v46 = -1;
-              if ( v4 & 1 )
-              {
-                v4 &= 0xFFFFFFFE;
-                v28 = v4;
-                sub_88DAD0(&v31);
-              }
-              if ( v27 )
-              {
-                v15 = (char *)(*sub_781430((_DWORD *)v5, &v33, v13) + 52);
-                v46 = 2;
-                sub_9A0EC0(&v41, v15);
-                v46 = -1;
-                sub_88DAD0(&v33);
-                if ( *(_DWORD *)dword_F2679C )
-                {
-                  word_F25F48 = sub_94D430(31402, 0);
-                  qmemcpy(&dword_F25F4A, &v40, 0x20u);
-                  v16 = sub_8EF920(*(int *)dword_F2679C, 4, &word_F25F48, 34);
-                  j_j__free(0);
-                  --dword_10E0E94;
-                  if ( !v16 )
-                    sub_57B3F0((_DWORD *)dword_D402C8, (LPCRITICAL_SECTION **)dword_F2679C);
-                  v13 = v30;
-                  v12 = (int *)(v5 + 596);
-                  v4 = v28;
-                }
-                else if ( !byte_F35BA4 )
-                {
-                  sub_99D110("Attempt to send message %d on a void connection.", 170);
-                }
-              }
-              v30 = ++v13;
-            }
-            while ( v13 < 200 );
-          }
-        }
-      }
-      sub_77C8F0((_DWORD *)v5);
-      return 0;
-    }
-    if ( a2 == *(_DWORD *)(this + 628) )
-    {
-      if ( *(_DWORD *)(this + 596) && *(_BYTE *)(this + 2548) )
-      {
-        sub_781330(&v37);
-        v17 = (char *)(*(_DWORD *)(v5 + 596) + 52);
-        v37 = 3;
-        sub_9A0EC0(&v38, v17);
-        v39 = 0;
-        if ( *(_DWORD *)dword_F2679C )
-        {
-          word_F25F48 = sub_94D430(31402, 0);
-          qmemcpy(&dword_F25F4A, &v37, 0x20u);
-          v18 = sub_8EF920(*(int *)dword_F2679C, 4, &word_F25F48, 34);
-          j_j__free(0);
-          --dword_10E0E94;
-          if ( v18 )
-            sub_8ECAD0(*(int *)dword_F2679C);
-          else
-            sub_57B3F0((_DWORD *)dword_D402C8, (LPCRITICAL_SECTION **)dword_F2679C);
-        }
-        else if ( !byte_F35BA4 )
-        {
-          sub_99D110("Attempt to send message %d on a void connection.", 170);
-        }
-        sub_77DAE0((_DWORD *)v5, (int *)(v5 + 596), 0);
-      }
-      sub_77C8F0((_DWORD *)v5);
-      return 0;
-    }
-    if ( a2 == *(_DWORD *)(this + 600) )
-    {
-      v19 = sub_77F2A0((_DWORD *)this);
-      if ( v19 == -1 )
-      {
-        v20 = StringTable__getString(dword_F26798, 0x1A57u, 0);
-      }
-      else
-      {
-        if ( v19 != -2 )
-          return 0;
-        v20 = StringTable__getString(dword_F26798, 0x1A62u, 0);
-      }
-      sub_77FF30((char **)v5, v20, (void *)0xF);
-      return 0;
-    }
-    if ( a2 == *(_DWORD *)(this + 616) )
-    {
-      if ( *(_BYTE *)(this + 2548) )
-      {
-        if ( *(_DWORD *)dword_F2679C )
-        {
-          word_F25F48 = sub_94D430(31402, 0);
-          dword_F25F4A = 11;
-          qword_F25F4E = 0i64;
-          v21 = sub_8EF920(*(int *)dword_F2679C, 4, &word_F25F48, 14);
-          j_j__free(0);
-          --dword_10E0E94;
-          if ( v21 )
-            sub_8ECAD0(*(int *)dword_F2679C);
-          else
-            sub_57B3F0((_DWORD *)dword_D402C8, (LPCRITICAL_SECTION **)dword_F2679C);
-          return 0;
-        }
-        if ( !byte_F35BA4 )
-          sub_99D110("Attempt to send message %d on a void connection.", 170);
-      }
-      return 0;
-    }
-    if ( a2 == *(_DWORD *)(this + 608) )
-    {
-      *(_DWORD *)(this + 588) = 0;
-      sub_77E190((_DWORD *)this);
-      if ( *(_DWORD *)(v5 + 580) != -1 && sub_77E380((_DWORD *)v5) && *(_BYTE *)(v5 + 2548) )
-      {
-        sub_781330(&v43);
-        v22 = (char *)(*(_DWORD *)(v5 + 596) + 52);
-        v43 = 3;
-        sub_9A0EC0(&v44, v22);
-        v45 = 0;
-        if ( *(_DWORD *)dword_F2679C )
-        {
-          word_F25F48 = sub_94D430(31402, 0);
-          qmemcpy(&dword_F25F4A, &v43, 0x20u);
-          v23 = sub_8EF920(*(int *)dword_F2679C, 4, &word_F25F48, 34);
-          j_j__free(0);
-          --dword_10E0E94;
-          if ( v23 )
-            sub_8ECAD0(*(int *)dword_F2679C);
-          else
-            sub_57B3F0((_DWORD *)dword_D402C8, (LPCRITICAL_SECTION **)dword_F2679C);
-        }
-        else if ( !byte_F35BA4 )
-        {
-          sub_99D110("Attempt to send message %d on a void connection.", 170);
-        }
-        sub_77DAE0((_DWORD *)v5, (int *)(v5 + 596), 0);
-      }
-      sub_77C8F0((_DWORD *)v5);
-      result = 0;
-    }
-    else
-    {
-      if ( a2 == *(_DWORD *)(this + 604) )
-      {
-        sub_77C830((char *)this);
-        v29 = 0;
-        v46 = 3;
-        sub_77DAE0((_DWORD *)v5, &v29, 0);
-        v46 = -1;
-        sub_88DAD0(&v29);
-        return 0;
-      }
-      if ( a2 == *(_DWORD *)(this + 648) )
-      {
-        if ( dword_F287A8 )
-        {
-          sub_6338B0(dword_F287A8, (unsigned int)Directory);
-          return 0;
-        }
-        return 0;
-      }
-      v24 = 0;
-      v25 = (_DWORD *)(this + 632);
-      while ( a2 != *v25 )
-      {
-        ++v24;
-        ++v25;
-        if ( (signed int)v24 >= 4 )
-          goto LABEL_97;
-      }
-      sub_77E7C0((_DWORD *)v5, v24, (void *)0xFFFFFFFF);
-      result = 0;
-    }
-  }
-  else
-  {
-    if ( a3 != 3 )
-    {
-      if ( a3 == 39 )
-      {
-        v26 = *(void **)(this + 592);
-        if ( v26 != (void *)-1 )
-        {
-          sub_77E7C0((_DWORD *)v5, v26, *a4);
-          *(_DWORD *)(v5 + 592) = -1;
-          return 0;
-        }
-      }
-      else if ( a3 == 10 )
-      {
-        sub_77C830((char *)this);
-        byte_10CCD48 = 0;
-        *(_BYTE *)(v5 + 2548) = 0;
-        sub_7E43B0((_DWORD *)dword_E74E40, 0);
-      }
-    }
-LABEL_97:
-    result = sub_9D3310((void **)v5, a2, a3, (int)a4);
-  }
-  return result;
-}
-*/
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarWnd__WndNotification    = 0x0; //0x6CB440; // not needed, can use VFTable index
 
 // addresses for CCamera are calculated at run time
 uint32_t EQ_ADDRESS_POINTER_CCamera    = 0x0;

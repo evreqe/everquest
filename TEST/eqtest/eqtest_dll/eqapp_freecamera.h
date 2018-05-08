@@ -61,12 +61,12 @@ void EQAPP_FreeCamera_Execute()
 
     if (EQAPP_IsVKKeyDown(VK_UP) == true)
     {
-        float cameraY = EQ_ReadMemory<float>(camera + EQ_OFFSET_CAMERA_Y);
-        float cameraX = EQ_ReadMemory<float>(camera + EQ_OFFSET_CAMERA_X);
-        float cameraZ = EQ_ReadMemory<float>(camera + EQ_OFFSET_CAMERA_Z);
+        float cameraY = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_Y);
+        float cameraX = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_X);
+        float cameraZ = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_Z);
 
-        float cameraHeading = EQ_ReadMemory<float>(camera + EQ_OFFSET_CAMERA_HEADING);
-        float cameraPitch   = EQ_ReadMemory<float>(camera + EQ_OFFSET_CAMERA_PITCH);
+        float cameraHeading = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_HEADING);
+        float cameraPitch   = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_PITCH);
 
         cameraHeading = cameraHeading - 128.0f;
 
@@ -90,19 +90,19 @@ void EQAPP_FreeCamera_Execute()
 
         cameraZ += addZ * g_FreeCameraMultiplier;
 
-        EQ_WriteMemory<float>(camera + EQ_OFFSET_CAMERA_Y, cameraY);
-        EQ_WriteMemory<float>(camera + EQ_OFFSET_CAMERA_X, cameraX);
-        EQ_WriteMemory<float>(camera + EQ_OFFSET_CAMERA_Z, cameraZ);
+        EQ_WriteMemory<float>(camera + EQ_OFFSET_CCamera_Y, cameraY);
+        EQ_WriteMemory<float>(camera + EQ_OFFSET_CCamera_X, cameraX);
+        EQ_WriteMemory<float>(camera + EQ_OFFSET_CCamera_Z, cameraZ);
     }
 
     if (EQAPP_IsVKKeyDown(VK_DOWN) == true)
     {
-        float cameraY = EQ_ReadMemory<float>(camera + EQ_OFFSET_CAMERA_Y);
-        float cameraX = EQ_ReadMemory<float>(camera + EQ_OFFSET_CAMERA_X);
-        float cameraZ = EQ_ReadMemory<float>(camera + EQ_OFFSET_CAMERA_Z);
+        float cameraY = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_Y);
+        float cameraX = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_X);
+        float cameraZ = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_Z);
 
-        float cameraHeading = EQ_ReadMemory<float>(camera + EQ_OFFSET_CAMERA_HEADING);
-        float cameraPitch   = EQ_ReadMemory<float>(camera + EQ_OFFSET_CAMERA_PITCH);
+        float cameraHeading = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_HEADING);
+        float cameraPitch   = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_PITCH);
 
         cameraHeading = cameraHeading - 128.0f;
 
@@ -126,19 +126,19 @@ void EQAPP_FreeCamera_Execute()
 
         cameraZ -= addZ * g_FreeCameraMultiplier;
 
-        EQ_WriteMemory<float>(camera + EQ_OFFSET_CAMERA_Y, cameraY);
-        EQ_WriteMemory<float>(camera + EQ_OFFSET_CAMERA_X, cameraX);
-        EQ_WriteMemory<float>(camera + EQ_OFFSET_CAMERA_Z, cameraZ);
+        EQ_WriteMemory<float>(camera + EQ_OFFSET_CCamera_Y, cameraY);
+        EQ_WriteMemory<float>(camera + EQ_OFFSET_CCamera_X, cameraX);
+        EQ_WriteMemory<float>(camera + EQ_OFFSET_CCamera_Z, cameraZ);
     }
 
     if (EQAPP_IsVKKeyDown(VK_LEFT) == true)
     {
-        float cameraY = EQ_ReadMemory<float>(camera + EQ_OFFSET_CAMERA_Y);
-        float cameraX = EQ_ReadMemory<float>(camera + EQ_OFFSET_CAMERA_X);
-        float cameraZ = EQ_ReadMemory<float>(camera + EQ_OFFSET_CAMERA_Z);
+        float cameraY = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_Y);
+        float cameraX = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_X);
+        float cameraZ = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_Z);
 
-        float cameraHeading = EQ_ReadMemory<float>(camera + EQ_OFFSET_CAMERA_HEADING);
-        float cameraPitch   = EQ_ReadMemory<float>(camera + EQ_OFFSET_CAMERA_PITCH);
+        float cameraHeading = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_HEADING);
+        float cameraPitch   = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_PITCH);
 
         EQ_FixHeading(cameraHeading);
 
@@ -160,19 +160,19 @@ void EQAPP_FreeCamera_Execute()
 
         cameraZ += addZ * g_FreeCameraMultiplier;
 
-        EQ_WriteMemory<float>(camera + EQ_OFFSET_CAMERA_Y, cameraY);
-        EQ_WriteMemory<float>(camera + EQ_OFFSET_CAMERA_X, cameraX);
-        EQ_WriteMemory<float>(camera + EQ_OFFSET_CAMERA_Z, cameraZ);
+        EQ_WriteMemory<float>(camera + EQ_OFFSET_CCamera_Y, cameraY);
+        EQ_WriteMemory<float>(camera + EQ_OFFSET_CCamera_X, cameraX);
+        EQ_WriteMemory<float>(camera + EQ_OFFSET_CCamera_Z, cameraZ);
     }
 
     if (EQAPP_IsVKKeyDown(VK_RIGHT) == true)
     {
-        float cameraY = EQ_ReadMemory<float>(camera + EQ_OFFSET_CAMERA_Y);
-        float cameraX = EQ_ReadMemory<float>(camera + EQ_OFFSET_CAMERA_X);
-        float cameraZ = EQ_ReadMemory<float>(camera + EQ_OFFSET_CAMERA_Z);
+        float cameraY = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_Y);
+        float cameraX = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_X);
+        float cameraZ = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_Z);
 
-        float cameraHeading = EQ_ReadMemory<float>(camera + EQ_OFFSET_CAMERA_HEADING);
-        float cameraPitch   = EQ_ReadMemory<float>(camera + EQ_OFFSET_CAMERA_PITCH);
+        float cameraHeading = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_HEADING);
+        float cameraPitch   = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_PITCH);
 
         cameraHeading = cameraHeading + 256.0f;
 
@@ -196,9 +196,9 @@ void EQAPP_FreeCamera_Execute()
 
         cameraZ += addZ * g_FreeCameraMultiplier;
 
-        EQ_WriteMemory<float>(camera + EQ_OFFSET_CAMERA_Y, cameraY);
-        EQ_WriteMemory<float>(camera + EQ_OFFSET_CAMERA_X, cameraX);
-        EQ_WriteMemory<float>(camera + EQ_OFFSET_CAMERA_Z, cameraZ);
+        EQ_WriteMemory<float>(camera + EQ_OFFSET_CCamera_Y, cameraY);
+        EQ_WriteMemory<float>(camera + EQ_OFFSET_CCamera_X, cameraX);
+        EQ_WriteMemory<float>(camera + EQ_OFFSET_CCamera_Z, cameraZ);
     }
 }
 

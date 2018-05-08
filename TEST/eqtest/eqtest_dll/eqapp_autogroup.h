@@ -10,6 +10,7 @@ EQApp::TimerInterval g_AutoGroupTimerInterval = 3;
 void EQAPP_AutoGroup_Toggle();
 void EQAPP_AutoGroup_On();
 void EQAPP_AutoGroup_Off();
+void EQAPP_AutoGroup_Execute();
 void EQAPP_AutoGroup_HandleEvent_CEverQuest__dsp_chat(std::string text, int textColor);
 
 void EQAPP_AutoGroup_Toggle()
@@ -31,6 +32,20 @@ void EQAPP_AutoGroup_Off()
     if (g_AutoGroupIsEnabled == true)
     {
         EQAPP_AutoGroup_Toggle();
+    }
+}
+
+void EQAPP_AutoGroup_Execute()
+{
+    if (g_AutoGroupIsInvited == true)
+    {
+        if (EQAPP_Timer_HasTimeElapsed(g_AutoGroupTimer, g_AutoGroupTimerInterval) == true)
+        {
+            EQ_ExecuteCommand(EQ_EXECUTECMD_CLEAR_TARGET, 1);
+            EQ_ExecuteCommand(EQ_EXECUTECMD_INVITE_FOLLOW, 1);
+
+            g_AutoGroupIsInvited = false;
+        }
     }
 }
 
@@ -58,12 +73,5 @@ void EQAPP_AutoGroup_HandleEvent_CEverQuest__dsp_chat(std::string text, int text
         EQ_ExecuteCommand(EQ_EXECUTECMD_CLEAR_TARGET, 1);
     }
 
-    if (g_AutoGroupIsInvited == true)
-    {
-        if (EQAPP_Timer_HasTimeElapsed(g_AutoGroupTimer, g_AutoGroupTimerInterval) == true)
-        {
-            EQ_ExecuteCommand(EQ_EXECUTECMD_CLEAR_TARGET, 1);
-            EQ_ExecuteCommand(EQ_EXECUTECMD_INVITE_FOLLOW, 1);
-        }
-    }
+    EQAPP_AutoGroup_Execute();
 }

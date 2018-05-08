@@ -89,7 +89,6 @@ namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not avai
 void EQAPP_Load()
 {
     EQAPP_Lua_Load();
-    EQAPP_Lua_EventScriptList_Load();
     EQAPP_SpellList_Load();
     EQAPP_BazaarFilter_Load();
 
@@ -117,7 +116,7 @@ void EQAPP_Load()
 
     std::string timeText = EQAPP_Timer_GetTimeAsString();
 
-    std::cout << g_EQAppNameEx << " Loaded!    " << timeText;
+    std::cout << "Loaded!    " << timeText;
 
     g_EQAppIsLoaded = 1;
 }
@@ -134,7 +133,7 @@ void EQAPP_Unload()
 
     std::string timeText = EQAPP_Timer_GetTimeAsString();
 
-    std::cout << g_EQAppNameEx << " Unloaded!    " << timeText;
+    std::cout << "Unloaded!    " << timeText;
 
     g_EQAppShouldUnload = 1;
 }
@@ -166,6 +165,8 @@ void EQAPP_InitializeAddressesAndPointers()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_build_token_string_PARAM);
 
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CrashDetected);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CastRay);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CastRay2);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_DrawNetStatus);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_ExecuteCmd);
 
@@ -178,6 +179,7 @@ void EQAPP_InitializeAddressesAndPointers()
 
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__UpdateItemSlot);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CXWndManager);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows);
@@ -191,6 +193,8 @@ void EQAPP_InitializeAddressesAndPointers()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2);
 
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CXWnd__IsReallyVisible);
+
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CPlayerWindow);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__WndNotification);

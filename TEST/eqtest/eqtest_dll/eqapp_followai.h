@@ -4,9 +4,9 @@ bool g_FollowAIIsEnabled = true;
 
 bool g_FollowAIUseZAxisIsEnabled = false;
 
-float g_FollowAIDistancePlayer = 5.0f;
-float g_FollowAIDistanceNPC    = 5.0f;
-float g_FollowAIDistanceCorpse = 5.0f;
+float g_FollowAIDistancePlayer = 10.0f;
+float g_FollowAIDistanceNPC    = 10.0f;
+float g_FollowAIDistanceCorpse = 10.0f;
 
 void EQAPP_FollowAI_Toggle();
 void EQAPP_FollowAI_On();
@@ -65,6 +65,8 @@ void EQAPP_FollowAI_Execute()
         return;
     }
 
+    EQ_TurnPlayerTowardsSpawn(followSpawn);
+
     float followSpawnDistance = EQ_GetSpawnDistance(followSpawn);
 
     auto followSpawnType = EQ_GetSpawnType(followSpawn);
@@ -94,8 +96,6 @@ void EQAPP_FollowAI_Execute()
             return;
         }
     }
-
-    EQ_TurnPlayerTowardsSpawn(followSpawn);
 
     EQ_SetAutoRun(true);
 

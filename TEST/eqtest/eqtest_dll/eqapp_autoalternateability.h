@@ -155,11 +155,6 @@ void EQAPP_AutoAlternateAbility_Execute()
 
     if (spawnClass == EQ_CLASS_DRUID)
     {
-        if (spawnHPPercent < 10)
-        {
-            alternateAbilityList.push_back(EQAlternateAbilities::Druid::Exodus);
-        }
-
         if (spawnHPPercent < 75)
         {
             // Archetype
@@ -211,10 +206,7 @@ void EQAPP_AutoAlternateAbility_Execute()
 
     for (auto& alternateAbility : alternateAbilityList)
     {
-        std::stringstream ss;
-        ss << "/alt activate " << alternateAbility;
-
-        EQ_InterpretCommand(ss.str().c_str());
+        EQ_UseAlternateAbility(alternateAbility);
     }
 }
 

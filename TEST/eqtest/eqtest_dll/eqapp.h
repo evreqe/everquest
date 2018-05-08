@@ -23,6 +23,11 @@ bool g_EQAppDebugTextIsEnabled = false;
 
 std::mt19937 g_EQAppRandomEngine((uint32_t)std::chrono::high_resolution_clock::now().time_since_epoch().count());
 
+EQApp::Timer g_EQAppDebugTimer = EQAPP_Timer_GetTimeNow();
+EQApp::TimerInterval g_EQAppDebugTimerInterval = 1;
+
+uint32_t g_ItemDefinitionIndex = 0;
+
 HMODULE g_EQAppModule;
 
 HANDLE g_EQAppHandleThreadLoad;

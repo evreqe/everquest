@@ -148,26 +148,23 @@ void EQAPP_BazaarBot_ToParcels_Execute()
 
 void EQAPP_BazaarBot_HandleEvent_CEverQuest__dsp_chat(std::string text, int textColor)
 {
+    bool bResult = true;
+
     if (text == "That item is no longer for sale in the bazaar.")
     {
-        if (EQ_BazaarSearchWindow_IsOpen() == true)
-        {
-            g_BazaarBotFindItemsTimer = EQAPP_Timer_GetTimeNow();
-
-            EQ_BazaarSearchWindow_ClickFindItemsButton();
-        }
+        bResult = false;
     }
 
     if (EQAPP_String_BeginsWith(text, "Your attempt to purchase") == true)
     {
+        if (EQAPP_String_Contains(text, "was unsuccessful.") == true)
+        {
+            bResult = false;
+        }
+
         if (EQAPP_String_Contains(text, "failed because your bazaar data is out of date.") == true)
         {
-            if (EQ_BazaarSearchWindow_IsOpen() == true)
-            {
-                g_BazaarBotFindItemsTimer = EQAPP_Timer_GetTimeNow();
-
-                EQ_BazaarSearchWindow_ClickFindItemsButton();
-            }
+            bResult = false;
         }
 
         if (EQAPP_String_Contains(text, "failed because you already possess that lore item.") == true)
@@ -183,6 +180,18 @@ void EQAPP_BazaarBot_HandleEvent_CEverQuest__dsp_chat(std::string text, int text
                     std::cout << "[Bazaar Bot] " << itemName << " added to the lore items list." << std::endl;
                 }
             }
+
+            bResult = false;
+        }
+    }
+
+    if (bResult == false)
+    {
+        if (EQ_BazaarSearchWindow_IsOpen() == true)
+        {
+            g_BazaarBotFindItemsTimer = EQAPP_Timer_GetTimeNow();
+
+            EQ_BazaarSearchWindow_ClickFindItemsButton();
         }
     }
 }

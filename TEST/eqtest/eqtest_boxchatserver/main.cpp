@@ -6,10 +6,10 @@
 
 #include <algorithm>
 #include <iostream>
-#include <string>
 #include <sstream>
-#include <vector>
+#include <string>
 #include <unordered_map>
+#include <vector>
 
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -419,7 +419,7 @@ int main(int argc , char *argv[])
                                             textTokenLast  = textTokens.end();
                                         }
                                     }
-                                    if (bBCTC == true)
+                                    else if (bBCTC == true)
                                     {
                                         std::string sendToChannelName = textTokens.at(1);
                                         if (sendToChannelName.size() == 0)

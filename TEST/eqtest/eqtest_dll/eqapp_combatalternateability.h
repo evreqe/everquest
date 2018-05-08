@@ -7,7 +7,7 @@ bool g_CombatAlternateAbilityIsEnabled = true;
 float g_CombatAlternateAbilityMeleeDistance = 25.0f;
 
 EQApp::Timer g_CombatAlternateAbilityTimer = EQAPP_Timer_GetTimeNow();
-EQApp::TimerInterval g_CombatAlternateAbilityTimerInterval = 6;
+EQApp::TimerInterval g_CombatAlternateAbilityTimerInterval = 3;
 
 uint32_t g_CombatAlternateAbilityList_reserve = 128;
 
@@ -85,20 +85,26 @@ void EQAPP_CombatAlternateAbility_Execute()
         return;
     }
 
-    auto spawnStandingState = EQ_GetSpawnStandingState(playerSpawn);
-    if (spawnStandingState != EQ_STANDING_STATE_STANDING)
+    auto playerSpawnStandingState = EQ_GetSpawnStandingState(playerSpawn);
+    if (playerSpawnStandingState != EQ_STANDING_STATE_STANDING)
     {
         return;
     }
 
-    auto spawnZoneID = EQ_GetSpawnZoneID(playerSpawn);
-    if (EQ_IsZoneIDSafe(spawnZoneID) == true)
+    auto playerSpawnZoneID = EQ_GetSpawnZoneID(playerSpawn);
+    if (EQ_IsZoneIDSafe(playerSpawnZoneID) == true)
     {
         return;
     }
 
-    auto spawnHPPercent = EQ_GetSpawnHPPercent(playerSpawn);
-    auto spawnEndurancePercent = EQ_GetSpawnEndurancePercent(playerSpawn);
+    auto playerSpawnMovementSpeed = EQ_GetSpawnMovementSpeed(playerSpawn);
+    if (playerSpawnMovementSpeed > 0.0f)
+    {
+        return;
+    }
+
+    auto playerSpawnHPPercent = EQ_GetSpawnHPPercent(playerSpawn);
+    auto playerSpawnEndurancePercent = EQ_GetSpawnEndurancePercent(playerSpawn);
 
     std::vector<uint32_t> alternateAbilityList;
     alternateAbilityList.reserve(g_CombatAlternateAbilityList_reserve);
@@ -139,7 +145,7 @@ void EQAPP_CombatAlternateAbility_Execute()
 
     if (playerSpawnClass == EQ_CLASS_BARD)
     {
-        if (spawnEndurancePercent > 75)
+        if (playerSpawnEndurancePercent > 75)
         {
             alternateAbilityList.push_back(EQAlternateAbilities::Bard::Boastful_Bellow);
             alternateAbilityList.push_back(EQAlternateAbilities::Bard::Vainglorious_Shout);
@@ -166,7 +172,7 @@ void EQAPP_CombatAlternateAbility_Execute()
         alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Fundament_Third_Spire_of_Savagery);
         alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Juggernaut_Surge);
 
-        if (spawnHPPercent > 90)
+        if (playerSpawnHPPercent > 90)
         {
             alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Blood_Pact);
             alternateAbilityList.push_back(EQAlternateAbilities::Berserker::Savage_Spirit);
@@ -176,9 +182,6 @@ void EQAPP_CombatAlternateAbility_Execute()
 
     for (auto& alternateAbility : alternateAbilityList)
     {
-        std::stringstream ss;
-        ss << "/alt activate " << alternateAbility;
-
-        EQ_InterpretCommand(ss.str().c_str());
+        EQ_UseAlternateAbility(alternateAbility);
     }
 }

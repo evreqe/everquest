@@ -32,6 +32,7 @@ EQ_MACRO_FUNCTION_DefineDetour(ExecuteCmd);
 EQ_MACRO_FUNCTION_DefineDetour(CXWndManager__DrawWindows);
 
 EQ_MACRO_FUNCTION_DefineDetour(EQPlayer__FollowPlayerAI);
+EQ_MACRO_FUNCTION_DefineDetour(EQPlayer__UpdateItemSlot);
 
 EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__InterpretCmd);
 EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__StartCasting);
@@ -48,6 +49,7 @@ int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive,
 int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawWindows(void* this_ptr, void* not_used);
 
 int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__FollowPlayerAI(void* this_ptr, void* not_used);
+int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__UpdateItemSlot(void* this_ptr, void* not_used, uint8_t updateItemSlot, const char* itemDefinition, bool b1, bool serverSide, bool b3);
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__InterpretCmd(void* this_ptr, void* not_used, class EQPlayer* player, const char* text);
 int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__StartCasting(void* this_ptr, void* not_used, EQMessage::CEverQuest__StartCasting_ptr message);
@@ -84,6 +86,11 @@ void EQAPP_Detours_Load()
         EQ_MACRO_FUNCTION_AddDetour(EQPlayer__FollowPlayerAI);
     }
 
+    if (EQ_ADDRESS_FUNCTION_EQPlayer__UpdateItemSlot != 0)
+    {
+        EQ_MACRO_FUNCTION_AddDetour(EQPlayer__UpdateItemSlot);
+    }
+
     if (EQ_ADDRESS_POINTER_CEverQuest != 0)
     {
         EQ_MACRO_FUNCTION_AddDetour(CEverQuest__InterpretCmd);
@@ -99,7 +106,7 @@ void EQAPP_Detours_Load()
     EQ_ADDRESS_POINTER_CCamera = EQ_GetCamera();
     if (EQ_ADDRESS_POINTER_CCamera != 0)
     {
-        auto EQ_VFTABLE_CCamera = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CCamera + EQ_OFFSET_CAMERA_VFTABLE);
+        auto EQ_VFTABLE_CCamera = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CCamera + EQ_OFFSET_CCamera_VFTABLE);
         if (EQ_VFTABLE_CCamera != 0)
         {
             EQ_ADDRESS_FUNCTION_CCamera__SetCameraLocation = EQ_ReadMemory<uint32_t>(EQ_VFTABLE_CCamera + EQ_VFTABLE_INDEX_CCamera__SetCameraLocation);
@@ -138,6 +145,11 @@ void EQAPP_Detours_Unload()
         EQ_MACRO_FUNCTION_RemoveDetour(EQPlayer__FollowPlayerAI);
     }
 
+    if (EQ_ADDRESS_FUNCTION_EQPlayer__UpdateItemSlot != 0)
+    {
+        EQ_MACRO_FUNCTION_RemoveDetour(EQPlayer__UpdateItemSlot);
+    }
+
     if (EQ_ADDRESS_POINTER_CEverQuest != 0)
     {
         EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__InterpretCmd);
@@ -153,7 +165,7 @@ void EQAPP_Detours_Unload()
     EQ_ADDRESS_POINTER_CCamera = EQ_GetCamera();
     if (EQ_ADDRESS_POINTER_CCamera != 0)
     {
-        auto EQ_VFTABLE_CCamera = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CCamera + EQ_OFFSET_CAMERA_VFTABLE);
+        auto EQ_VFTABLE_CCamera = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CCamera + EQ_OFFSET_CCamera_VFTABLE);
         if (EQ_VFTABLE_CCamera != 0)
         {
             EQ_ADDRESS_FUNCTION_CCamera__SetCameraLocation = EQ_ReadMemory<uint32_t>(EQ_VFTABLE_CCamera + EQ_VFTABLE_INDEX_CCamera__SetCameraLocation);
@@ -267,6 +279,11 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
         EQAPP_AlwaysHotButton_Execute();
     }
 
+    if (g_AutoGroupIsEnabled == true)
+    {
+        EQAPP_AutoGroup_Execute();
+    }
+
     if (g_CombatHotButtonIsEnabled == true)
     {
         EQAPP_CombatHotButton_Execute();
@@ -335,6 +352,98 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
     EQ_DrawRectangle(800.0f, 800.0f, 100.0f, 100.0f, 0x40FF0000, false);
 */
 
+/*
+    if (EQAPP_IsVKKeyDown(EQ_VK_PAGE_UP) == true)
+    {
+        auto playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn != NULL)
+        {
+            g_ItemDefinitionIndex++;
+
+            std::stringstream ss;
+            ss << "IT" << g_ItemDefinitionIndex;
+
+            EQ_SetSpawnItemSlotPrimary(playerSpawn, "IT");
+            EQ_SetSpawnItemSlotSecondary(playerSpawn, ss.str().c_str());
+        }
+    }
+
+    if (EQAPP_IsVKKeyDown(EQ_VK_PAGE_DOWN) == true)
+    {
+        auto playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn != NULL)
+        {
+            g_ItemDefinitionIndex--;
+
+            std::stringstream ss;
+            ss << "IT" << g_ItemDefinitionIndex;
+
+            EQ_SetSpawnItemSlotPrimary(playerSpawn, "IT");
+            EQ_SetSpawnItemSlotSecondary(playerSpawn, ss.str().c_str());
+        }
+    }
+
+    std::stringstream ss;
+    ss << "IT" << g_ItemDefinitionIndex;
+
+    EQ_DrawTextEx(ss.str().c_str(), 800, 400, EQ_DRAW_TEXT_COLOR_YELLOW);
+*/
+
+    auto targetSpawn = EQ_GetTargetSpawn();
+    if (targetSpawn != NULL)
+    {
+        std::stringstream ss;
+
+        auto spawnStateFlags = EQ_ReadMemory<uint32_t>(targetSpawn + EQ_OFFSET_SPAWN_STATE_FLAGS);
+
+        if (spawnStateFlags & EQ_SPAWN_STATE_FLAGS_IDLE)
+        {
+            ss << "Idle\n";
+        }
+
+        if (spawnStateFlags & EQ_SPAWN_STATE_FLAGS_OPEN)
+        {
+            ss << "Open\n";
+        }
+
+        if (spawnStateFlags & EQ_SPAWN_STATE_FLAGS_WEAPON_SHEATHED)
+        {
+            ss << "Weapon Sheathed\n";
+        }
+
+        if (spawnStateFlags & EQ_SPAWN_STATE_FLAGS_AGGRESIVE)
+        {
+            ss << "Aggresive\n";
+        }
+
+        if (spawnStateFlags & EQ_SPAWN_STATE_FLAGS_FORCED_AGGRESIVE)
+        {
+            ss << "Forced Aggresive\n";
+        }
+
+        if (spawnStateFlags & EQ_SPAWN_STATE_FLAGS_INSTRUMENT_EQUIPPED)
+        {
+            ss << "Instrument Equipped\n";
+        }
+
+        if (spawnStateFlags & EQ_SPAWN_STATE_FLAGS_STUNNED)
+        {
+            ss << "Stunned\n";
+        }
+
+        if (spawnStateFlags & EQ_SPAWN_STATE_FLAGS_PRIMARY_WEAPON_EQUIPPED)
+        {
+            ss << "Primary Weapon Equipped\n";
+        }
+
+        if (spawnStateFlags & EQ_SPAWN_STATE_FLAGS_SECONDARY_WEAPON_EQUIPPED)
+        {
+            ss << "Secondary Weapon Equipped\n";
+        }
+
+        EQ_DrawTextEx(ss.str().c_str(), 800, 200, EQ_DRAW_TEXT_COLOR_YELLOW);
+    }
+
     return EQAPP_REAL_FUNCTION_DrawNetStatus(x, y, unknown);
 }
 
@@ -381,7 +490,14 @@ int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive,
         }
     }
 
-    return EQAPP_REAL_FUNCTION_ExecuteCmd(commandID, isActive, unknown, zero);
+    int result = EQAPP_REAL_FUNCTION_ExecuteCmd(commandID, isActive, unknown, zero);
+
+    if (commandID == EQ_EXECUTECMD_USER1_CAMERA || commandID == EQ_EXECUTECMD_USER1_CAMERA)
+    {
+        EQ_ExecuteCommand(EQ_EXECUTECMD_CENTERVIEW, 1);
+    }
+
+    return result;
 }
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawWindows(void* this_ptr, void* not_used)
@@ -425,6 +541,52 @@ int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__FollowPlayerAI(void* this_ptr, 
     }
 
     return EQAPP_REAL_FUNCTION_EQPlayer__FollowPlayerAI(this_ptr);
+}
+
+int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__UpdateItemSlot(void* this_ptr, void* not_used, uint8_t updateItemSlot, const char* itemDefinition, bool b1, bool serverSide, bool b3)
+{
+    if (g_EQAppShouldUnload == 1)
+    {
+        return EQAPP_REAL_FUNCTION_EQPlayer__UpdateItemSlot(this_ptr, updateItemSlot, itemDefinition, b1, serverSide, b3);
+    }
+
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn != NULL)
+    {
+        if ((uint32_t)this_ptr == playerSpawn)
+        {
+            for (auto& script : g_LuaEventScriptList)
+            {
+                sol::protected_function luaFunction = script->LuaState["OnUpdateItemSlot"];
+                if (luaFunction.valid() == true)
+                {
+                    sol::protected_function_result result = luaFunction(updateItemSlot, itemDefinition);
+                    if (result.valid() == true)
+                    {
+                        int resultValue = result.get<int>(0);
+                        if (resultValue == 1)
+                        {
+                            std::string resultItemDefinition = result.get<std::string>(1);
+                            if (resultItemDefinition.size() != 0)
+                            {
+                                return EQAPP_REAL_FUNCTION_EQPlayer__UpdateItemSlot(this_ptr, updateItemSlot, resultItemDefinition.c_str(), b1, serverSide, b3);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        std::cout << "Lua filename: " << script->Filename << std::endl;
+
+                        sol::error error = result;
+
+                        std::cout << "Lua error: " << error.what() << std::endl;
+                    }
+                }
+            }
+        }
+    }
+
+    return EQAPP_REAL_FUNCTION_EQPlayer__UpdateItemSlot(this_ptr, updateItemSlot, itemDefinition, b1, serverSide, b3);
 }
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__InterpretCmd(void* this_ptr, void* not_used, class EQPlayer* player, const char* text)
@@ -523,6 +685,8 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void
     if (EQAPP_String_BeginsWith(chatText, "You have entered") == true)
     {
         g_FreeCameraIsEnabled = false;
+
+        g_AutoGroupIsInvited = false;
 
         g_EQAppIsInGame = true;
 

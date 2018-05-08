@@ -10,11 +10,15 @@ local function TryToZone(direction, distance, y, x ,z)
 
         if EQ_IsSpawnWithinDistanceOfLocation(playerSpawn, distance, y, x, z) == true then
 
-            EQ_PrintTextToChat("Trying to zone...")
+            if EQ_CanSpawnCastRayToLocation(playerSpawn, y, x, z) == true then
 
-            EQ_InterpretCommand("//FirstPersonCamera")
-            EQ_InterpretCommand("//CenterView")
-            EQ_InterpretCommand("//Use")
+                EQ_PrintTextToChat("Trying to zone...")
+
+                EQ_InterpretCommand("//FirstPersonCamera")
+                EQ_InterpretCommand("//CenterView")
+                EQ_InterpretCommand("//Use")
+
+            end
 
         end
 
