@@ -9,5 +9,4 @@ function OnInterpretCommand(text)
        return 1
     end
 
-    return 0
 end

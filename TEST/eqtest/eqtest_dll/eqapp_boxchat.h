@@ -357,7 +357,10 @@ void EQAPP_BoxChat_InterpretCommands()
 
     g_BoxChatInterpretCommandList.pop_front();
 
-    std::cout << "Box Chat Interpret Command: " << commandText << std::endl;
+    std::stringstream ss;
+    ss << "commandText=" << commandText;
+
+    EQAPP_PrintDebugText(__FUNCTION__, ss.str().c_str());
 
     EQ_InterpretCommand(commandText.c_str());
 }

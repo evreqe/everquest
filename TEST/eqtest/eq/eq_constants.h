@@ -22,6 +22,12 @@ const float EQ_SPAWN_HEADING_SPEED_DEFAULT    = 0.0f;      // stop turning
 const float EQ_SPAWN_HEADING_SPEED_MIN        = -12.0f;    // turning right
 const float EQ_SPAWN_HEADING_SPEED_MAX        = 12.0f;     // turning left
 
+const float EQ_MELEE_DISTANCE_MIN    = 14.0f; // get_melee_range()
+const float EQ_MELEE_DISTANCE_MAX    = 75.0f; // get_melee_range()
+
+const uint32_t EQ_FAR_CLIP_PLANE_MIN = 0;
+const uint32_t EQ_FAR_CLIP_PLANE_MAX = 20;
+
 #define EQ_NUM_HOTBARS           11    // 10 + 1, potion belt was removed and replaced with another hotbar
 #define EQ_NUM_HOTBAR_BUTTONS    12
 #define EQ_NUM_SPELLS            59999
@@ -81,18 +87,18 @@ const float EQ_SPAWN_HEADING_SPEED_MAX        = 12.0f;     // turning left
 #define EQ_OFFSET_SPAWN_MOUNT_RIDER_SPAWN                  0x158    // uint32_t    // spawn that is riding the mount
 #define EQ_OFFSET_SPAWN_IS_TARGETABLE                      0x160    // uint8_t
 // ******************** randomized after each patch ******************** //    #define PLAYERZONECLIENT
-#define EQ_OFFSET_SPAWN_ZONE_ID                    0x298    // uint32_t
-#define EQ_OFFSET_SPAWN_LEVEL                      0x24C    // uint8_t
-#define EQ_OFFSET_SPAWN_RACE                       0xF94    // uint32_t
-#define EQ_OFFSET_SPAWN_CLASS                      0xF9C    // uint32_t
-#define EQ_OFFSET_SPAWN_STANDING_STATE             0x211    // uint8_t
-#define EQ_OFFSET_SPAWN_HP_CURRENT                 0x280    // uint32_t
-#define EQ_OFFSET_SPAWN_HP_MAX                     0x200    // uint32_t
-#define EQ_OFFSET_SPAWN_MANA_CURRENT               0x408    // uint32_t
-#define EQ_OFFSET_SPAWN_MANA_MAX                   0x4A8    // uint32_t
-#define EQ_OFFSET_SPAWN_ENDURANCE_CURRENT          0x244    // uint32_t
-#define EQ_OFFSET_SPAWN_ENDURANCE_MAX              0x600    // uint32_t
-#define EQ_OFFSET_SPAWN_FOLLOW_SPAWN               0xF24    // uint32_t pointer    // the spawn you are auto-following
+#define EQ_OFFSET_SPAWN_ZONE_ID                    0x4C0    // uint32_t
+#define EQ_OFFSET_SPAWN_LEVEL                      0x401    // uint8_t
+#define EQ_OFFSET_SPAWN_RACE                       0xF8C    // uint32_t
+#define EQ_OFFSET_SPAWN_CLASS                      0xF94    // uint32_t
+#define EQ_OFFSET_SPAWN_STANDING_STATE             0x344    // uint8_t
+#define EQ_OFFSET_SPAWN_HP_CURRENT                 0x4A8    // uint32_t
+#define EQ_OFFSET_SPAWN_HP_MAX                     0x320    // uint32_t
+#define EQ_OFFSET_SPAWN_MANA_CURRENT               0x240    // uint32_t
+#define EQ_OFFSET_SPAWN_MANA_MAX                   0x404    // uint32_t
+#define EQ_OFFSET_SPAWN_ENDURANCE_CURRENT          0x3E8    // uint32_t
+#define EQ_OFFSET_SPAWN_ENDURANCE_MAX              0x228    // uint32_t
+#define EQ_OFFSET_SPAWN_FOLLOW_SPAWN               0xF1C    // uint32_t pointer    // the spawn you are auto-following
 // ********************************************************************* //
 
 #define EQ_SIZE_SPAWN_NAME         64 // 0x40

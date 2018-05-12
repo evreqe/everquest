@@ -2,7 +2,7 @@
 
 bool g_SleepIsEnabled = false;
 
-DWORD g_SleepInterval = 100; // delay in milliseconds
+uint32_t g_SleepInterval = 100; // delay in milliseconds
 
 void EQAPP_Sleep_Toggle();
 void EQAPP_Sleep_On();

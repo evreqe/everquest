@@ -28,6 +28,13 @@ typedef int (__cdecl* EQ_FUNCTION_TYPE_CastRay)(uint32_t spawn, float y, float x
 EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQ_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive, void* unknown, int zero), EQ_ADDRESS_FUNCTION_ExecuteCmd);
 typedef int (__cdecl* EQ_FUNCTION_TYPE_ExecuteCmd)(uint32_t commandID, int isActive, void* unknown, int zero);
 
+EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQ_FUNCTION_GetExecuteCmdIDByName(const char* commandName), EQ_ADDRESS_FUNCTION_GetExecuteCmdIDByName);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_GetExecuteCmdIDByName)(const char* commandName);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(char* __cdecl EQ_FUNCTION_GetExecuteCmdNameByID(int commandID), EQ_ADDRESS_FUNCTION_GetExecuteCmdNameByID);
+typedef char* (__cdecl* EQ_FUNCTION_TYPE_GetExecuteCmdNameByID)(int commandID);
+
+
 /* function prototypes */
 
 void EQ_Log(const char* text);
@@ -67,6 +74,11 @@ void EQ_SetAutoFire(bool b);
 void EQ_SetAutoRun(bool b);
 void EQ_SetMouseLook(bool b);
 
+void EQ_SetFogDistanceBegin(float distance);
+void EQ_SetFogDistanceEnd(float distance);
+void EQ_SetFarClipPlane(uint32_t value);
+void EQ_SetFarClipPlanePercent(uint32_t percent);
+
 uint32_t EQ_GetSpawnByID(uint32_t spawnID);
 uint32_t EQ_GetSpawnByName(const char* spawnName);
 
@@ -78,7 +90,7 @@ uint32_t EQ_GetTargetSpawn();
 
 void EQ_SetTargetSpawn(uint32_t spawn);
 
-std::string EQ_GetPlayerSpawnNumbered();
+std::string EQ_GetPlayerSpawnNameNumbered();
 std::string EQ_GetPlayerSpawnName();
 std::string EQ_GetPlayerSpawnLastName();
 
@@ -129,6 +141,9 @@ float EQ_GetSpawnHeading(uint32_t spawn);
 float EQ_GetSpawnHeadingSpeed(uint32_t spawn);
 float EQ_GetSpawnPitch(uint32_t spawn);
 uint32_t EQ_GetSpawnUnderwaterEnvironmentType(uint32_t spawn);
+uint32_t EQ_GetSpawnHeadEnvironmentType(uint32_t spawn);
+uint32_t EQ_GetSpawnFeetEnvironmentType(uint32_t spawn);
+uint32_t EQ_GetSpawnBodyEnvironmentType(uint32_t spawn);
 uint32_t EQ_GetSpawnType(uint32_t spawn);
 float EQ_GetSpawnHeightZ(uint32_t spawn);
 float EQ_GetSpawnHeight(uint32_t spawn);
@@ -160,6 +175,7 @@ void EQ_SetSpawnHeading(uint32_t spawn, float heading);
 void EQ_SetSpawnPitch(uint32_t spawn, float pitch);
 void EQ_SetSpawnHeight(uint32_t spawn, float height);
 void EQ_SetSpawnFollowSpawn(uint32_t spawn, uint32_t followSpawn);
+
 bool EQ_SetSpawnItemSlot(uint32_t spawn, uint32_t updateItemSlot, const char* itemDefinition);
 bool EQ_SetSpawnItemSlotPrimary(uint32_t spawn, const char* itemDefinition);
 bool EQ_SetSpawnItemSlotSecondary(uint32_t spawn, const char* itemDefinition);
@@ -176,6 +192,9 @@ void EQ_TurnPlayerAwayFromTarget();
 
 void EQ_InterpretCommand(const char* text);
 void EQ_ExecuteCommand(uint32_t commandID, int isActive);
+void EQ_ExecuteCommandEx(const char* commandName, int isActive);
+uint32_t EQ_GetExecuteCommandIDByName(const char* commandName);
+std::string EQ_GetExecuteCommandNameByID(uint32_t commandID);
 
 void EQ_PrintTextToChat(const char* text);
 void EQ_PrintTextToChatEx(const char* text, int color);
@@ -233,6 +252,7 @@ bool EQ_BazaarWindow_ClickBeginTraderButton();
 bool EQ_BazaarWindow_ClickEndTraderButton();
 
 std::string EQ_StringMap_GetValueByKey(std::unordered_map<uint32_t, std::string>& stringMap, uint32_t key);
+uint32_t EQ_StringMap_GetKeyByValue(std::unordered_map<uint32_t, std::string>& stringMap, std::string value);
 std::string EQ_GetSpawnTypeNameByKey(uint32_t key);
 std::string EQ_GetStandingStateNameByKey(uint32_t key);
 std::string EQ_GetDirectionNameByKey(uint32_t key);
@@ -531,6 +551,56 @@ void EQ_SetMouseLook(bool b)
     uint8_t value = (uint8_t)b;
 
     EQ_WriteMemory<uint8_t>(EQ_ADDRESS_MOUSE_LOOK, value);
+}
+
+void EQ_SetFogDistanceBegin(float distance)
+{
+    EQ_WriteMemory<float>(EQ_ADDRESS_FOG_DISTANCE_BEGIN, distance);
+}
+
+void EQ_SetFogDistanceEnd(float distance)
+{
+    EQ_WriteMemory<float>(EQ_ADDRESS_FOG_DISTANCE_END, distance);
+}
+
+void EQ_SetFarClipPlane(uint32_t value)
+{
+    if (value >= EQ_FAR_CLIP_PLANE_MAX && value <= EQ_FAR_CLIP_PLANE_MAX)
+    {
+        EQ_WriteMemory<uint32_t>(EQ_ADDRESS_FAR_CLIP_PLANE, value);
+    }
+}
+
+void EQ_SetFarClipPlanePercent(uint32_t percent)
+{
+    uint32_t value = 100;
+
+    if (percent > 0)
+    {
+        if (percent > 100)
+        {
+            value = 100;
+        }
+        else
+        {
+            if (EQ_FAR_CLIP_PLANE_MAX > 0)
+            {
+                uint32_t percentPerValue = 100 / EQ_FAR_CLIP_PLANE_MAX;
+
+                value = percent / percentPerValue;
+            }
+            else
+            {
+                value = 0;
+            }
+        }
+    }
+    else
+    {
+        value = 0;
+    }
+
+    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_FAR_CLIP_PLANE, value);
 }
 
 uint32_t EQ_GetSpawnByID(uint32_t spawnID)
@@ -1291,21 +1361,45 @@ uint32_t EQ_GetSpawnDirection(uint32_t spawn)
 void EQ_SetSpawnAreaFriction(uint32_t spawn, float friction)
 {
     EQ_WriteMemory<float>(spawn + EQ_OFFSET_SPAWN_AREA_FRICTION, friction);
+
+    auto spawnMountSpawn = EQ_GetSpawnMountSpawn(spawn);
+    if (spawnMountSpawn != NULL)
+    {
+        EQ_WriteMemory<float>(spawnMountSpawn + EQ_OFFSET_SPAWN_AREA_FRICTION, friction);
+    }
 }
 
 void EQ_SetSpawnAccelerationFriction(uint32_t spawn, float friction)
 {
     EQ_WriteMemory<float>(spawn + EQ_OFFSET_SPAWN_ACCELERATION_FRICTION, friction);
+
+    auto spawnMountSpawn = EQ_GetSpawnMountSpawn(spawn);
+    if (spawnMountSpawn != NULL)
+    {
+        EQ_WriteMemory<float>(spawnMountSpawn + EQ_OFFSET_SPAWN_ACCELERATION_FRICTION, friction);
+    }
 }
 
 void EQ_SetSpawnHeading(uint32_t spawn, float heading)
 {
     EQ_WriteMemory<float>(spawn + EQ_OFFSET_SPAWN_HEADING, heading);
+
+    auto spawnMountSpawn = EQ_GetSpawnMountSpawn(spawn);
+    if (spawnMountSpawn != NULL)
+    {
+        EQ_WriteMemory<float>(spawnMountSpawn + EQ_OFFSET_SPAWN_HEADING, heading);
+    }
 }
 
 void EQ_SetSpawnPitch(uint32_t spawn, float pitch)
 {
     EQ_WriteMemory<float>(spawn + EQ_OFFSET_SPAWN_PITCH, pitch);
+
+    auto spawnMountSpawn = EQ_GetSpawnMountSpawn(spawn);
+    if (spawnMountSpawn != NULL)
+    {
+        EQ_WriteMemory<float>(spawnMountSpawn + EQ_OFFSET_SPAWN_PITCH, pitch);
+    }
 }
 
 void EQ_SetSpawnHeight(uint32_t spawn, float height)
@@ -1440,6 +1534,23 @@ void EQ_ExecuteCommand(uint32_t commandID, int isActive)
     EQ_FUNCTION_ExecuteCmd(commandID, isActive, 0, 0);
 }
 
+void EQ_ExecuteCommandEx(const char* commandName, int isActive)
+{
+    int commandID = EQ_FUNCTION_GetExecuteCmdIDByName(commandName);
+
+    EQ_ExecuteCommand(commandID, isActive);
+}
+
+uint32_t EQ_GetExecuteCommandIDByName(const char* commandName)
+{
+    return EQ_FUNCTION_GetExecuteCmdIDByName(commandName);
+}
+
+std::string EQ_GetExecuteCommandNameByID(uint32_t commandID)
+{
+    return EQ_FUNCTION_GetExecuteCmdNameByID(commandID);
+}
+
 void EQ_PrintTextToChat(const char* text)
 {
     EQ_CLASS_POINTER_CEverQuest->dsp_chat(text, EQ_CHAT_TEXT_COLOR_YELLOW, 1, 1, 0);
@@ -1468,13 +1579,13 @@ void EQ_DrawLine(float lineBeginX, float lineBeginY, float lineEndX, float lineE
     }
 
     EQ::Point lineBegin;
-    lineBegin.Y = lineBeginY;
     lineBegin.X = lineBeginX;
+    lineBegin.Y = lineBeginY;
     lineBegin.Z = 1.0f;
 
     EQ::Point lineEnd;
-    lineEnd.Y = lineEndY;
     lineEnd.X = lineEndX;
+    lineEnd.Y = lineEndY;
     lineEnd.Z = 1.0f;
 
     EQ_CLASS_POINTER_CRender->DrawLine(lineBegin, lineEnd, colorARGB);
@@ -2111,6 +2222,19 @@ std::string EQ_StringMap_GetValueByKey(std::unordered_map<uint32_t, std::string>
     }
 
     return std::string();
+}
+
+uint32_t EQ_StringMap_GetKeyByValue(std::unordered_map<uint32_t, std::string>& stringMap, std::string value)
+{
+    for (auto it = stringMap.begin(); it != stringMap.end(); ++it)
+    {
+        if (it->second == value)
+        {
+            return it->first;
+        }
+    }
+
+    return 0xFFFFFFFF;
 }
 
 std::string EQ_GetSpawnTypeNameByKey(uint32_t key)

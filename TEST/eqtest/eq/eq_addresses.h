@@ -5,24 +5,42 @@
 #include <string>
 #include <unordered_map>
 
-uint32_t EQ_ADDRESS_CLIENT_VERSION_DATE = 0xABD24C; // WinMain()    "Starting EverQuest (Built %s %s)"    CrashDetected()    "Client Version: %s %s\n"
-#define EQ_STRING_CLIENT_VERSION_DATE "Apr 24 2018"
+uint32_t EQ_ADDRESS_CLIENT_VERSION_DATE = 0xABD314; // WinMain()    "Starting EverQuest (Built %s %s)"    CrashDetected()    "Client Version: %s %s\n"
+#define EQ_STRING_CLIENT_VERSION_DATE "May  7 2018"
 #define EQ_SIZE_CLIENT_VERSION_DATE 12
 
-uint32_t EQ_ADDRESS_CLIENT_VERSION_TIME = 0xABD240; // WinMain()    "Starting EverQuest (Built %s %s)"    CrashDetected()    "Client Version: %s %s\n"
-#define EQ_STRING_CLIENT_VERSION_TIME "09:41:38"
+uint32_t EQ_ADDRESS_CLIENT_VERSION_TIME = 0xABD308; // WinMain()    "Starting EverQuest (Built %s %s)"    CrashDetected()    "Client Version: %s %s\n"
+#define EQ_STRING_CLIENT_VERSION_TIME "16:06:33"
 #define EQ_SIZE_CLIENT_VERSION_TIME 9
 
-uint32_t EQ_ADDRESS_AUTO_ATTACK    = 0xF09507; // uint8_t    // /attack
-uint32_t EQ_ADDRESS_AUTO_FIRE      = 0xF09508; // uint8_t    // /autofire
-uint32_t EQ_ADDRESS_AUTO_RUN       = 0xE6A8B8; // uint32_t
-uint32_t EQ_ADDRESS_MOUSE_LOOK     = 0xE6A89A; // uint8_t    // holding down right-click to look around
-uint32_t EQ_ADDRESS_NET_STATUS     = 0xE6A89D; // uint8_t    byte_F30435 = sub_9CFF30("Defaults", "NetStat", 0, 0); // 0xF30435
+uint32_t EQ_ADDRESS_AUTO_ATTACK    = 0xF09563; // uint8_t    // /attack
+uint32_t EQ_ADDRESS_AUTO_FIRE      = 0xF09564; // uint8_t    // /autofire
+uint32_t EQ_ADDRESS_AUTO_RUN       = 0xE6A910; // uint32_t
+uint32_t EQ_ADDRESS_MOUSE_LOOK     = 0xE6A8F2; // uint8_t    // holding down right-click to look around
+uint32_t EQ_ADDRESS_NET_STATUS     = 0xE6A8F5; // uint8_t    byte_F30435 = sub_9CFF30("Defaults", "NetStat", 0, 0); // 0xF30435
 /*
 search for 1 and 0
 */
 
-uint32_t EQ_ADDRESS_POINTER_WINDOW_HWND = 0xF0CA94; // HWND hWnd    // in IDA press G, jump to address: hWnd
+uint32_t EQ_ADDRESS_FOG_DISTANCE_BEGIN    = 0xE6AD2C;    // float
+uint32_t EQ_ADDRESS_FOG_DISTANCE_END      = 0xE6AD30;    // float
+uint32_t EQ_ADDRESS_FAR_CLIP_PLANE        = 0xE6BD7C;    // uint32_t, values 0-20
+/*
+search for "ClipPlane" and "FogScale"
+*/
+/*
+sub_90BF80("Options", "ClipPlane", (int)v134);
+sub_90BFA0("Options", "FogScale", flt_E6BEB4);
+result = flt_E6AD2C + (flt_E6AD30 - flt_E6AD2C) * ((double)(signed int)dword_E6BD7C * 0.050000001);
+
+    result = flt_FOG_DISTANCE_BEGIN + (flt_FOG_DISTANCE_END - flt_FOG_DISTANCE_BEGIN) * ((double)(signed int)dword_FAR_CLIP_PLANE * 0.050000001);
+
+v294 = result;
+sub_52B3F0((float *)dword_E5D410, v294);
+sub_795A10((_DWORD **)dword_DA9368, dword_E6BD7C);
+*/
+
+uint32_t EQ_ADDRESS_POINTER_WINDOW_HWND = 0xF0CAEC; // HWND hWnd    // in IDA press G, jump to address: hWnd
 /*
     PostMessageA(hWnd, 0x4647u, 0x4247u, (LPARAM)v3);
 */
@@ -31,9 +49,9 @@ uint32_t EQ_ADDRESS_POINTER_WINDOW_HWND = 0xF0CA94; // HWND hWnd    // in IDA pr
     PostMessageA(hWnd, 0x4646u, 0x4246u, (LPARAM)v11);
 */
 
-uint32_t EQ_ADDRESS_POINTER_StringTable    = 0xE5D024; // pinstStringTable
+uint32_t EQ_ADDRESS_POINTER_StringTable    = 0xE5D07C; // pinstStringTable
 
-uint32_t EQ_ADDRESS_FUNCTION_StringTable__getString    = 0x89E810; // "%s (%d)"    "ERROR: String not found."
+uint32_t EQ_ADDRESS_FUNCTION_StringTable__getString    = 0x89F620; // "%s (%d)"    "ERROR: String not found."
 
 uint32_t EQ_ADDRESS_FUNCTION_build_token_string_PARAM    = 0x0; // calls StringTable__getString()
 /*
@@ -65,7 +83,7 @@ _BYTE *__cdecl sub_58BB90(_BYTE *a1, unsigned int a2, int a3, int a4, int a5, in
 }
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CrashDetected    = 0x693730; // "Crash (char = %s, zone = %s)\n"    "Local Player's World location at time of crash: %f, %f, %f.\n"    "Gamestate at crash = %d\n"    "Crash Details: %s\n"
+uint32_t EQ_ADDRESS_FUNCTION_CrashDetected    = 0x693930; // "Crash (char = %s, zone = %s)\n"    "Local Player's World location at time of crash: %f, %f, %f.\n"    "Gamestate at crash = %d\n"    "Crash Details: %s\n"
 /*
   sub_8A4150("Fatal error occurred in mainthread! (Release Client #630)\n");
   strcat(byte_FBC576, "Fatal error in mainthread! (Release Client #630)\n");
@@ -114,7 +132,7 @@ uint32_t EQ_ADDRESS_FUNCTION_CrashDetected    = 0x693730; // "Crash (char = %s, 
   }
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CastRay    = 0x58CE20; // called by CastRay2 function
+uint32_t EQ_ADDRESS_FUNCTION_CastRay    = 0x58CBA0; // called by CastRay2 function
 /*
 int __cdecl CastRay(int a1, float a2, float a3, float a4)
 {
@@ -135,7 +153,7 @@ int __cdecl CastRay(int a1, float a2, float a3, float a4)
 }
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CastRay2    = 0x58CE70; // CCollisionInfoLineSegmentVisibility::`vftable'
+uint32_t EQ_ADDRESS_FUNCTION_CastRay2    = 0x58CBF0; // CCollisionInfoLineSegmentVisibility::`vftable'
 /*
 .rdata:00B0116C ; const CCollisionInfoLineSegmentVisibility::`vftable'
 .rdata:00B0116C ??_7CCollisionInfoLineSegmentVisibility@@6B@ dd offset sub_8729A0 // search for xref
@@ -219,8 +237,8 @@ int __usercall CastRay2@<eax>(int a1@<esi>, int a2, int a3, float a4, float a5, 
 }
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_DrawNetStatus    = 0x615100; // "%ldms"    "%0.2f%%"
-uint32_t EQ_ADDRESS_FUNCTION_ExecuteCmd       = 0x5858B0; // "ExecuteCmd has received a CMD_EXITGAME.\n"    "/%s %s"    "%c%s %s "    "help.html"
+uint32_t EQ_ADDRESS_FUNCTION_DrawNetStatus    = 0x615320; // "%ldms"    "%0.2f%%"
+uint32_t EQ_ADDRESS_FUNCTION_ExecuteCmd       = 0x585550; // "ExecuteCmd has received a CMD_EXITGAME.\n"    "/%s %s"    "%c%s %s "    "help.html"
 /*
 ExecuteCmd()
 case 508:
@@ -235,10 +253,40 @@ sub_8A55C0(
     sub_523550(508, 0, 0, 0); // ExecuteCmd
 */
 
-// class EQPlayer
-uint32_t EQ_ADDRESS_POINTER_EQPlayerManager    = 0xF0B310; // pinstSpawnManager
+uint32_t EQ_ADDRESS_FUNCTION_GetExecuteCmdIDByName    = 0x58A020; // "AUTORUN" xref    char[] array of about 520
+/*
+int __cdecl GetExecuteCmdIDByName(const char *a1)
+{
+  int v1; // esi
+  int v2; // eax
 
-uint32_t EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID      = 0x63CF80; // "Your inventory is full!"
+  v1 = 0;
+  while ( 1 )
+  {
+    v2 = strcmp(off_BE0088[v1], a1);
+    if ( v2 )
+      v2 = -(v2 < 0) | 1;
+    if ( !v2 )
+      break;
+    if ( (unsigned int)++v1 >= 520 )
+      return 0;
+  }
+  return v1;
+}
+*/
+
+uint32_t EQ_ADDRESS_FUNCTION_GetExecuteCmdNameByID    = 0x58A010; // "AUTORUN" xref    char[] array of about 520
+/*
+char *__cdecl GetExecuteCmdNameByID(int a1)
+{
+  return off_BE0088[a1];
+}
+*/
+
+// class EQPlayer
+uint32_t EQ_ADDRESS_POINTER_EQPlayerManager    = 0xF0B368; // pinstSpawnManager
+
+uint32_t EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID      = 0x63CCA0; // "Your inventory is full!"
 /*
 case 0xD:
       result = (_DWORD *)sub_5E2420((void *)dword_FB5090, *(_DWORD *)(a3 + 4)); // EQPlayerManager__GetSpawnByID and pinstSpawnManager
@@ -279,7 +327,7 @@ LABEL_53:
       return result;
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName    = 0x63CFA0; // "Incorrect Usage. Type /xtarget for correct usage."
+uint32_t EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName    = 0x63CCC0; // "Incorrect Usage. Type /xtarget for correct usage."
 /*
 if ( !sub_8A3560(&v32, 0) || (sub_89F500(&v32), v8 = sub_89E950(&v28) - 1, v8 < 0) )
       {
@@ -337,9 +385,11 @@ while ( *(_DWORD *)(result + 4) != v7 )
 }
 */
 
+uint32_t EQ_ADDRESS_FUNCTIOIN_EQPlayerManager__GetPlayerFromPartialName = 0x63CD50;
+
 // class EQPlayer
-uint32_t EQ_ADDRESS_POINTER_TARGET_SPAWN        = 0xE5D1A4; // pinstTarget    ExecuteCmd() case CLEAR_TARGET
-uint32_t EQ_ADDRESS_POINTER_PLAYER_SPAWN        = 0xE5D150; // pinstLocalPlayer    "Local Player's World location at time of crash: %f, %f, %f.\n"
+uint32_t EQ_ADDRESS_POINTER_TARGET_SPAWN        = 0xE5D1FC; // pinstTarget    ExecuteCmd() case CLEAR_TARGET
+uint32_t EQ_ADDRESS_POINTER_PLAYER_SPAWN        = 0xE5D1A8; // pinstLocalPlayer    "Local Player's World location at time of crash: %f, %f, %f.\n"
 /*
 if ( dword_F21FE8 ) // PlayerSpawn
   {
@@ -350,7 +400,7 @@ if ( dword_F21FE8 ) // PlayerSpawn
   }
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI    = 0x630B20; // search for xref to autorun
+uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI    = 0x630C50; // search for xref to autorun
 /*
 EQPlayer__FollowPlayerAI()
     if ( v21 + 15.0 <= *(float *)(v1 + 564) ) // Follow Distance 1
@@ -374,7 +424,7 @@ EQPlayer__FollowPlayerAI()
     }
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight    = 0x644C00; // PlayerZoneClient__ChangeHeight    "%s is now able to kill anyone (or be killed) as if they were an NPC." and "FORMAT: /becomenpc"
+uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight    = 0x644920; // PlayerZoneClient__ChangeHeight    "%s is now able to kill anyone (or be killed) as if they were an NPC." and "FORMAT: /becomenpc"
 /*
 v25 = sub_569850(v18);
 sprintf(&v59, "Changing %s to race: %s.", dword_F26020 + 164, v25);
@@ -433,11 +483,11 @@ v10 = 0.0;
     }
 */
 
-// used to be CDisplay__UpdateItemSlot in 2002 client
-uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__UpdateItemSlot    = 0x636AF0; // "IT36" "IT159" "IT10758" "IT10742"
+// this is CDisplay__UpdateItemSlot in Mac client
+uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__UpdateItemSlot    = 0x6367F0; // "IT36" "IT159" "IT10758" "IT10742"
 
 // class CXWndManager
-uint32_t EQ_ADDRESS_POINTER_CXWndManager    = 0x1699650; // pinstCXWndManager
+uint32_t EQ_ADDRESS_POINTER_CXWndManager    = 0x16996C0; // pinstCXWndManager
 /*
 CDisplay__WriteTextHD2():
   if ( pinstCXWndManager__dword_1699650 )
@@ -472,18 +522,34 @@ CDisplay__WriteTextHD2():
   return 1;
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows    = 0x9046D0; // "DoAllDrawing() failed\n"    GetTickCount()
+uint32_t EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows    = 0x905570; // "DoAllDrawing() failed\n"    GetTickCount()
 
 // class CEverQuest
-uint32_t EQ_ADDRESS_POINTER_CEverQuest    = 0xF0CBE8; // pinstCEverQuest
+uint32_t EQ_ADDRESS_POINTER_CEverQuest    = 0xF0CC40; // pinstCEverQuest
 /*
 CEverQuest__InterpretCmd()
 if ( *(_DWORD *)(dword_10C1418 + 1480) == 5 ) // gamestate == in-game
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__EnterZone    = 0x5D3430; // "Initializing world."    "Zone initialized."
+uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__EnterZone    = 0x5D3220; // "Initializing world."    "Zone initialized."
+/*
+    sub_8D8140("Resetting cameras.");
+    (*(void (__stdcall **)(_DWORD))(*(_DWORD *)dword_E6BEA8 + 24))(11.0);
+    (*(void (__stdcall **)(_DWORD))(*(_DWORD *)dword_E6BEA8 + 32))(500.0);
+    (*(void (__stdcall **)(_DWORD))(*(_DWORD *)dword_E6BEA8 + 16))(-1.0);
+    (*(void (__stdcall **)(_DWORD))(*(_DWORD *)dword_E6BEA8 + 20))(-7.9990001);
+    (*(void (__stdcall **)(_DWORD))(*(_DWORD *)dword_E6BEA8 + 40))(90.0);
+    sub_8D8140("Resetting overlays.");
+    dword_E5D154 = 0;
+    dword_E5D160 = 0;
+    dword_E5D158 = 0;
+    dword_E5D15C = 0;
+    dword_F09510 = 0;
+    sub_690AD0();
+    sub_8D8140("Zone initialized.");
+*/
 
-uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd    = 0x5E5FF0; // "#%s %s"
+uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd    = 0x5E5F20; // "#%s %s"
 /*
 CEverQuest__InterpretCmd()
 switch ( byte_F334A0 )
@@ -520,13 +586,13 @@ default:
 }
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat        = 0x4E12C0; // "You cannot purchase an item from yourself!"
+uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat        = 0x4E10A0; // "You cannot purchase an item from yourself!"
 /*
 CEverQuest__InterpretCmd()
 sub_4764B0(v9, v8, 273, 1, 1, 0); // CEverQuest__dsp_chat
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting    = 0x5CD460; // "%s <%s>"
+uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting    = 0x5CD270; // "%s <%s>"
 /*
   if ( v13 && v13 != 3 && v13 != 7 )
   {
@@ -544,12 +610,12 @@ uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting    = 0x5CD460; // "%s <%s>
 */
 
 // class CDisplay
-uint32_t EQ_ADDRESS_POINTER_CDisplay    = 0xE5D3B8; // pinstCDisplay    "CDisplay::CreatePlayerActor - FATAL ERROR - mySpriteDef is NULL. "
+uint32_t EQ_ADDRESS_POINTER_CDisplay    = 0xE5D410; // pinstCDisplay    "CDisplay::CreatePlayerActor - FATAL ERROR - mySpriteDef is NULL. "
 /*
 CDisplay::CreatePlayerActor(*(float *)&a1, (int)dword_F20698, 0, 0, 1, 2, 1, 0);
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2    = 0x527490; // "%ldms"    "%0.2f%%"
+uint32_t EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2    = 0x527310; // "%ldms"    "%0.2f%%"
 /*
 DrawNetStatus()
     sprintf(&Dest, "%0.2f%%", v8 * 100.0);
@@ -558,7 +624,7 @@ DrawNetStatus()
     CDisplay__WriteTextHD2(&Dest, (unsigned __int16)a1 + 64, (unsigned __int16)a2, (void *)12);
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CXWnd__IsReallyVisible    = 0x9005D0; // "MapSkin" "AtlasSkin"
+uint32_t EQ_ADDRESS_FUNCTION_CXWnd__IsReallyVisible    = 0x9014B0; // "MapSkin" "AtlasSkin"
 /*
 sub_932730(3, &v47);
     v25 = (const CHAR *)sub_8D5B70(&lpMem);
@@ -597,13 +663,13 @@ LABEL_15:
           }
 */
 
-uint32_t EQ_ADDRESS_POINTER_CPlayerWindow   = 0xDA8E08; // "PlayerWindow"
+uint32_t EQ_ADDRESS_POINTER_CPlayerWindow   = 0xDA8E6C; // "PlayerWindow"
 
-uint32_t EQ_ADDRESS_POINTER_CBazaarSearchWnd    = 0xDA8E04; // "BazaarSearchWnd"
+uint32_t EQ_ADDRESS_POINTER_CBazaarSearchWnd    = 0xDA8E58; // "BazaarSearchWnd"
 
-uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__WndNotification    = 0x0; //0x6C8A00; // // not needed, can use VFTable index    "You cannot purchase an item from yourself!"    "9999999"
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__WndNotification    = 0x0; // not needed, can use VFTable index    "You cannot purchase an item from yourself!"    "9999999"
 
-uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__HandleBazaarMsg    = 0x6C9AE0; // "You successfully purchased %d %s(s) from %s."    "The item has been sent to your parcels."
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__HandleBazaarMsg    = 0x6C9930; // "You successfully purchased %d %s(s) from %s."    "The item has been sent to your parcels."
 /*
 else
 {
@@ -633,7 +699,7 @@ case 5514u: // 0x5D3Au
           break;
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList    = 0x6C6950;
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList    = 0x6C67A0;
 /*
   result = 0;
   v13 = this;
@@ -786,7 +852,7 @@ do
 }
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery    = 0x6C71E0;
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery    = 0x6C7030;
 /*
 CBazaarSearchWnd__WndNotification()
 
@@ -1028,7 +1094,7 @@ LABEL_106:
   }
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem    = 0x6C7710;
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem    = 0x6C7560;
 /*
 if ( dword_FBD53C <= 0 )
 {
@@ -1112,21 +1178,20 @@ char __thiscall sub_779040(_DWORD *this, int a2) // CBazaarSearchWnd__BuyItem()
 }
 */
 
-uint32_t EQ_ADDRESS_POINTER_CBazaarConfirmationWnd    = 0xDA8B74; // "BazaarConfirmationWnd"
+uint32_t EQ_ADDRESS_POINTER_CBazaarConfirmationWnd    = 0xDA8BC0; // "BazaarConfirmationWnd"
 
-uint32_t EQ_ADDRESS_FUNCTION_CBazaarConfirmationWnd__WndNotification    = 0x0; //0x4A3300; // not needed, can use VFTable index
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarConfirmationWnd__WndNotification    = 0x0; // not needed, can use VFTable index
 
 // Trader window
-uint32_t EQ_ADDRESS_POINTER_CBazaarWnd    = 0xDA8E7C; // "BazaarWnd"
+uint32_t EQ_ADDRESS_POINTER_CBazaarWnd    = 0xDA8F54; // "BazaarWnd"
 
-uint32_t EQ_ADDRESS_FUNCTION_CBazaarWnd__WndNotification    = 0x0; //0x6CB440; // not needed, can use VFTable index
+uint32_t EQ_ADDRESS_FUNCTION_CBazaarWnd__WndNotification    = 0x0; // not needed, can use VFTable index
 
-// addresses for CCamera are calculated at run time
-uint32_t EQ_ADDRESS_POINTER_CCamera    = 0x0;
+uint32_t EQ_ADDRESS_POINTER_CCamera    = 0x0; // addresses for CCamera are calculated at run time
 
-uint32_t EQ_ADDRESS_FUNCTION_CCamera__SetCameraLocation    = 0x0;
+uint32_t EQ_ADDRESS_FUNCTION_CCamera__SetCameraLocation    = 0x0; // addresses for CCamera are calculated at run time
 
-uint32_t EQ_ADDRESS_POINTER_CRender    = 0x169A598; // __DrawHandler_x    "%s..."
+uint32_t EQ_ADDRESS_POINTER_CRender    = 0x169A608; // __DrawHandler_x    "ResetDevice() failed!" CRender+0x64()    EQ_LoadingS__SetProgressBar() "%s..."    CDisplay__WriteTextHD2() follow draw text functions
 /*
 LPVOID __userpurge sub_53FEC0@<eax>(int a1@<ecx>, float *a2@<ebp>, int a3, int a4)
 {

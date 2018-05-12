@@ -26,3 +26,7 @@
 (EQ_FUNCTION_TYPE_##functionName)DetourFunction((PBYTE)EQ_ADDRESS_FUNCTION_##functionName, (PBYTE)EQAPP_DETOURED_FUNCTION_##functionName)
 
 #define EQ_MACRO_FUNCTION_RemoveDetour(functionName) DetourRemove((PBYTE)EQAPP_REAL_FUNCTION_##functionName, (PBYTE)EQAPP_DETOURED_FUNCTION_##functionName)
+
+#define EQ_MACRO_FUNCTION_VariableToString(variable) (void(variable), #variable)
+
+#define EQ_MACRO_FUNCTION_TypeToString(type) (void(sizeof(type)), #type)

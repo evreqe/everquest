@@ -4,12 +4,12 @@
 
 bool g_CombatHotButtonIsEnabled = false;
 
-float g_CombatHotButtonMeleeDistance = 25.0f;
-
 EQApp::Timer g_CombatHotButtonTimer = EQAPP_Timer_GetTimeNow();
 EQApp::TimerInterval g_CombatHotButtonTimerInterval = 6;
 
 signed int g_CombatHotButtonIndex = -1;
+
+float g_CombatHotButtonDistance = 25.0f;
 
 void EQAPP_CombatHotButton_Toggle();
 void EQAPP_CombatHotButton_On();
@@ -74,7 +74,7 @@ void EQAPP_CombatHotButton_Execute()
     }
 
     float targetSpawnDistance = EQ_GetSpawnDistance(targetSpawn);
-    if (targetSpawnDistance > g_CombatHotButtonMeleeDistance)
+    if (targetSpawnDistance > g_CombatHotButtonDistance)
     {
         return;
     }
@@ -91,14 +91,14 @@ void EQAPP_CombatHotButton_Execute()
         return;
     }
 
-    auto spawnStandingState = EQ_GetSpawnStandingState(playerSpawn);
-    if (spawnStandingState != EQ_STANDING_STATE_STANDING)
+    auto playerSpawnStandingState = EQ_GetSpawnStandingState(playerSpawn);
+    if (playerSpawnStandingState != EQ_STANDING_STATE_STANDING)
     {
         return;
     }
 
-    auto spawnZoneID = EQ_GetSpawnZoneID(playerSpawn);
-    if (EQ_IsZoneIDSafe(spawnZoneID) == true)
+    auto playerSpawnZoneID = EQ_GetSpawnZoneID(playerSpawn);
+    if (EQ_IsZoneIDSafe(playerSpawnZoneID) == true)
     {
         return;
     }

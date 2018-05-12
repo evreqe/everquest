@@ -18,15 +18,15 @@ function OnFrame()
     local playerX = EQ_GetSpawnX(playerSpawn)
     local playerZ = EQ_GetSpawnZ(playerSpawn)
 
-    local lineColor = 0xFFFFFFFF
+    local lineColorARGB = 0xFFFFFFFF -- white
 
     local castRayResult = EQ_CanSpawnCastRayToLocation(playerSpawn, targetY, targetX, targetZ)
     if castRayResult == true then
-        lineColor = 0xFF00FF00
+        lineColorARGB = 0xFF00FF00 -- green
     else
-        lineColor = 0xFFFF0000
+        lineColorARGB = 0xFFFF0000 -- red
     end
 
-    EQ_DrawLine3D(playerY, playerX, playerZ, targetY, targetX, targetZ, lineColor)
+    EQ_DrawLine3D(playerY, playerX, playerZ, targetY, targetX, targetZ, lineColorARGB)
 
 end

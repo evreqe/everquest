@@ -232,6 +232,7 @@ public:
     bool CRender::DrawFilledRectangle(EQ::Rectangle& rectangle, uint32_t colorARGB);
 };
 
+#define EQ_VFTABLE_INDEX_CRender__ResetDevice            0x64    // "ResetDevice() failed!"
 #define EQ_VFTABLE_INDEX_CRender__DrawLine               0x88
 #define EQ_VFTABLE_INDEX_CRender__DrawWrappedText        0x94
 #define EQ_VFTABLE_INDEX_CRender__DrawFilledRectangle    0xA0

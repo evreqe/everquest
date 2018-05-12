@@ -3,7 +3,7 @@
   <CheatEntries>
     <CheatEntry>
       <ID>70</ID>
-      <Description>"EverQuest TEST Client - April 24 2018"</Description>
+      <Description>"EverQuest TEST Client - May 7 2018"</Description>
       <LastState Value="" RealAddress="00000000"/>
       <GroupHeader>1</GroupHeader>
     </CheatEntry>
@@ -16,7 +16,7 @@
     <CheatEntry>
       <ID>24</ID>
       <Description>"eqgame.exe"</Description>
-      <LastState Value="00905A4D" RealAddress="012B0000"/>
+      <LastState Value="00905A4D" RealAddress="003B0000"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>eqgame.exe</Address>
@@ -37,7 +37,7 @@
     <CheatEntry>
       <ID>221</ID>
       <Description>"EQGraphicsDX9.dll"</Description>
-      <LastState Value="00905A4D" RealAddress="599C0000"/>
+      <LastState Value="00905A4D" RealAddress="6B440000"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>EQGraphicsDX9.dll</Address>
@@ -45,7 +45,7 @@
     <CheatEntry>
       <ID>222</ID>
       <Description>"Graphics DLL pointer"</Description>
-      <LastState Value="599C0000" RealAddress="0254A7C4"/>
+      <LastState Value="00000000" RealAddress="0164A7C4"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>eqgame.exe+129A7C4</Address>
@@ -53,7 +53,7 @@
     <CheatEntry>
       <ID>246</ID>
       <Description>"pointer"</Description>
-      <LastState Value="06669810" RealAddress="0254A594"/>
+      <LastState Value="00010282" RealAddress="0164A594"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>eqgame.exe-400000+169A594</Address>
@@ -61,7 +61,7 @@
     <CheatEntry>
       <ID>247</ID>
       <Description>"CRender pointer (#define __DrawHandler_x)"</Description>
-      <LastState Value="06777870" RealAddress="0254A598"/>
+      <LastState Value="00000000" RealAddress="0164A598"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>eqgame.exe-400000+169A598</Address>
@@ -69,7 +69,6 @@
         <CheatEntry>
           <ID>248</ID>
           <Description>"0x00 VFTable (search for const CRender::`vftable')"</Description>
-          <LastState Value="59B36A64" RealAddress="06777870"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe-400000+169A598</Address>
@@ -80,7 +79,6 @@
             <CheatEntry>
               <ID>249</ID>
               <Description>"0x88 Draw Line (t3dDeferLine)"</Description>
-              <LastState Value="59A497F0" RealAddress="59B36AEC"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe-400000+169A598</Address>
@@ -92,7 +90,6 @@
             <CheatEntry>
               <ID>253</ID>
               <Description>"0x8C"</Description>
-              <LastState Value="59A49850" RealAddress="59B36AF0"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe-400000+169A598</Address>
@@ -104,7 +101,6 @@
             <CheatEntry>
               <ID>255</ID>
               <Description>"0x90"</Description>
-              <LastState Value="59A49910" RealAddress="59B36AF4"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe-400000+169A598</Address>
@@ -116,7 +112,6 @@
             <CheatEntry>
               <ID>254</ID>
               <Description>"0x94 Draw Text (t3dDeferTextA)"</Description>
-              <LastState Value="59A498A0" RealAddress="59B36AF8"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe-400000+169A598</Address>
@@ -128,7 +123,6 @@
             <CheatEntry>
               <ID>256</ID>
               <Description>"0x98"</Description>
-              <LastState Value="59A49920" RealAddress="59B36AFC"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe-400000+169A598</Address>
@@ -140,7 +134,6 @@
             <CheatEntry>
               <ID>257</ID>
               <Description>"0x9C"</Description>
-              <LastState Value="59A49970" RealAddress="59B36B00"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe-400000+169A598</Address>
@@ -152,7 +145,6 @@
             <CheatEntry>
               <ID>250</ID>
               <Description>"0xA0 Draw Filled Rectangle (t3dDeferQuad)"</Description>
-              <LastState Value="59A49A00" RealAddress="59B36B04"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe-400000+169A598</Address>
@@ -164,7 +156,6 @@
             <CheatEntry>
               <ID>252</ID>
               <Description>"0xB4"</Description>
-              <LastState Value="59A54310" RealAddress="59B36B18"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe-400000+169A598</Address>
@@ -180,7 +171,7 @@
     <CheatEntry>
       <ID>237</ID>
       <Description>"pointer (before "Graphics DLL Version" string in hex view)"</Description>
-      <LastState Value="066A1D60" RealAddress="0254A59C"/>
+      <LastState Value="00000000" RealAddress="0164A59C"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>eqgame.exe+129A59C</Address>
@@ -188,7 +179,6 @@
         <CheatEntry>
           <ID>235</ID>
           <Description>"0x00 VFTable"</Description>
-          <LastState Value="59B34D30" RealAddress="066A1D60"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe+129A59C</Address>
@@ -199,7 +189,6 @@
             <CheatEntry>
               <ID>236</ID>
               <Description>"0x50 t3dGetRegionNumberFromWorldAndXYZ"</Description>
-              <LastState Value="59A2C030" RealAddress="59B34D80"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe+129A59C</Address>
@@ -221,59 +210,73 @@
     <CheatEntry>
       <ID>9</ID>
       <Description>"Net Status"</Description>
-      <LastState Value="1" RealAddress="01D1A89D"/>
+      <LastState Value="0" RealAddress="00E1A89D"/>
       <VariableType>Byte</VariableType>
       <Address>eqgame.exe-400000+E6A89D</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>110</ID>
       <Description>"Auto Attack"</Description>
-      <LastState Value="0" RealAddress="01DBB507"/>
+      <LastState Value="0" RealAddress="00EB9563"/>
       <VariableType>Byte</VariableType>
-      <Address>eqgame.exe-400000+F0B507</Address>
+      <Address>eqgame.exe-400000+F09563</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>22</ID>
       <Description>"Auto Fire"</Description>
-      <LastState Value="0" RealAddress="01DBB508"/>
+      <LastState Value="5" RealAddress="00EBB508"/>
       <VariableType>Byte</VariableType>
       <Address>eqgame.exe-400000+F0B508</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>77</ID>
       <Description>"Auto Run"</Description>
-      <LastState Value="0" RealAddress="01D1A8B8"/>
+      <LastState Value="0" RealAddress="00E1A910"/>
       <VariableType>4 Bytes</VariableType>
-      <Address>eqgame.exe-400000+E6A8B8</Address>
+      <Address>eqgame.exe-400000+E6A910</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>73</ID>
       <Description>"Mouse Look"</Description>
-      <LastState Value="0" RealAddress="01D1C89A"/>
+      <LastState Value="0" RealAddress="00E1A8F2"/>
       <VariableType>Byte</VariableType>
-      <Address>eqgame.exe-400000+E6C89A</Address>
+      <Address>eqgame.exe-400000+E6A8F2</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>326</ID>
+      <Description>"Fog Scale (search for "FogScale")"</Description>
+      <LastState Value="4" RealAddress="00E1BEB4"/>
+      <VariableType>Float</VariableType>
+      <Address>eqgame.exe-400000+E6BEB4</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>216</ID>
       <Description>"Fog Draw Distance Begin (search for "FogScale")"</Description>
-      <LastState Value="2000" RealAddress="01D1ACD8"/>
+      <LastState Value="50" RealAddress="00E1AD2C"/>
       <VariableType>Float</VariableType>
-      <Address>eqgame.exe-400000+E6ACD8</Address>
+      <Address>eqgame.exe-400000+E6AD2C</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>220</ID>
-      <Description>"Fog Draw Distance End (search for "qrg")"</Description>
-      <LastState Value="2000" RealAddress="01D1AC84"/>
+      <Description>"Fog Draw Distance End (search for "FogScale")"</Description>
+      <LastState Value="1350" RealAddress="00E1AD30"/>
       <VariableType>Float</VariableType>
-      <Address>eqgame.exe-400000+E6AC84</Address>
+      <Address>eqgame.exe-400000+E6AD30</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>325</ID>
+      <Description>"Far Clip Plane (0-20) (search for "ClipPlane")"</Description>
+      <LastState Value="20" RealAddress="00E1BD7C"/>
+      <VariableType>4 Bytes</VariableType>
+      <Address>eqgame.exe-400000+E6BD7C</Address>
     </CheatEntry>
     <CheatEntry>
       <ID>10</ID>
       <Description>"Target Spawn"</Description>
-      <LastState Value="00000000" RealAddress="01D0D1A4"/>
+      <LastState Value="00000000" RealAddress="00E0D1FC"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
-      <Address>eqgame.exe-400000+E5D1A4</Address>
+      <Address>eqgame.exe-400000+E5D1FC</Address>
       <CheatEntries>
         <CheatEntry>
           <ID>25</ID>
@@ -375,7 +378,7 @@
           <Unicode>0</Unicode>
           <CodePage>0</CodePage>
           <ZeroTerminate>1</ZeroTerminate>
-          <Address>eqgame.exe-400000+E5D1A4</Address>
+          <Address>eqgame.exe-400000+E5D1FC</Address>
           <Offsets>
             <Offset>38</Offset>
           </Offsets>
@@ -515,7 +518,7 @@
           <Unicode>0</Unicode>
           <CodePage>0</CodePage>
           <ZeroTerminate>1</ZeroTerminate>
-          <Address>eqgame.exe-400000+E5D1A4</Address>
+          <Address>eqgame.exe-400000+E5D1FC</Address>
           <Offsets>
             <Offset>E4</Offset>
           </Offsets>
@@ -528,86 +531,6 @@
           <Offsets>
             <Offset>125</Offset>
           </Offsets>
-        </CheatEntry>
-        <CheatEntry>
-          <ID>303</ID>
-          <Description>"0x128 Body Type"</Description>
-          <ShowAsHex>1</ShowAsHex>
-          <VariableType>4 Bytes</VariableType>
-          <Address>eqgame.exe-400000+E5D1A4</Address>
-          <Offsets>
-            <Offset>128</Offset>
-          </Offsets>
-          <CheatEntries>
-            <CheatEntry>
-              <ID>304</ID>
-              <Description>"0x00"</Description>
-              <ShowAsHex>1</ShowAsHex>
-              <VariableType>4 Bytes</VariableType>
-              <Address>eqgame.exe-400000+E5D1A4</Address>
-              <Offsets>
-                <Offset>0</Offset>
-                <Offset>128</Offset>
-              </Offsets>
-            </CheatEntry>
-            <CheatEntry>
-              <ID>305</ID>
-              <Description>"0x04"</Description>
-              <ShowAsHex>1</ShowAsHex>
-              <VariableType>4 Bytes</VariableType>
-              <Address>eqgame.exe-400000+E5D1A4</Address>
-              <Offsets>
-                <Offset>4</Offset>
-                <Offset>128</Offset>
-              </Offsets>
-              <CheatEntries>
-                <CheatEntry>
-                  <ID>306</ID>
-                  <Description>"0x00"</Description>
-                  <VariableType>4 Bytes</VariableType>
-                  <Address>eqgame.exe-400000+E5D1A4</Address>
-                  <Offsets>
-                    <Offset>0</Offset>
-                    <Offset>4</Offset>
-                    <Offset>128</Offset>
-                  </Offsets>
-                </CheatEntry>
-                <CheatEntry>
-                  <ID>307</ID>
-                  <Description>"0x04"</Description>
-                  <VariableType>4 Bytes</VariableType>
-                  <Address>eqgame.exe-400000+E5D1A4</Address>
-                  <Offsets>
-                    <Offset>4</Offset>
-                    <Offset>4</Offset>
-                    <Offset>128</Offset>
-                  </Offsets>
-                </CheatEntry>
-                <CheatEntry>
-                  <ID>308</ID>
-                  <Description>"0x08"</Description>
-                  <VariableType>4 Bytes</VariableType>
-                  <Address>eqgame.exe-400000+E5D1A4</Address>
-                  <Offsets>
-                    <Offset>8</Offset>
-                    <Offset>4</Offset>
-                    <Offset>128</Offset>
-                  </Offsets>
-                </CheatEntry>
-                <CheatEntry>
-                  <ID>309</ID>
-                  <Description>"0x0C"</Description>
-                  <VariableType>4 Bytes</VariableType>
-                  <Address>eqgame.exe-400000+E5D1A4</Address>
-                  <Offsets>
-                    <Offset>C</Offset>
-                    <Offset>4</Offset>
-                    <Offset>128</Offset>
-                  </Offsets>
-                </CheatEntry>
-              </CheatEntries>
-            </CheatEntry>
-          </CheatEntries>
         </CheatEntry>
         <CheatEntry>
           <ID>76</ID>
@@ -690,111 +613,111 @@
         </CheatEntry>
         <CheatEntry>
           <ID>95</ID>
-          <Description>"0x298 Zone ID !"</Description>
+          <Description>"0x4C0 Zone ID"</Description>
           <VariableType>4 Bytes</VariableType>
-          <Address>eqgame.exe-400000+E5D1A4</Address>
+          <Address>eqgame.exe-400000+E5D1FC</Address>
           <Offsets>
-            <Offset>298</Offset>
+            <Offset>4C0</Offset>
           </Offsets>
         </CheatEntry>
         <CheatEntry>
           <ID>58</ID>
-          <Description>"0x24C Level !"</Description>
+          <Description>"0x401 Level"</Description>
           <VariableType>Byte</VariableType>
-          <Address>eqgame.exe-400000+E5D1A4</Address>
+          <Address>eqgame.exe-400000+E5D1FC</Address>
           <Offsets>
-            <Offset>24C</Offset>
+            <Offset>401</Offset>
           </Offsets>
         </CheatEntry>
         <CheatEntry>
           <ID>104</ID>
-          <Description>"0xF94 Race !"</Description>
+          <Description>"0xF8C Race"</Description>
           <VariableType>4 Bytes</VariableType>
-          <Address>eqgame.exe-400000+E5D1A4</Address>
+          <Address>eqgame.exe-400000+E5D1FC</Address>
+          <Offsets>
+            <Offset>F8C</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>112</ID>
+          <Description>"0xF94 Class"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>eqgame.exe-400000+E5D1FC</Address>
           <Offsets>
             <Offset>F94</Offset>
           </Offsets>
         </CheatEntry>
         <CheatEntry>
-          <ID>112</ID>
-          <Description>"0xF9C Class !"</Description>
-          <VariableType>4 Bytes</VariableType>
-          <Address>eqgame.exe-400000+E5D1A4</Address>
-          <Offsets>
-            <Offset>F9C</Offset>
-          </Offsets>
-        </CheatEntry>
-        <CheatEntry>
           <ID>98</ID>
-          <Description>"0x211 Standing State !"</Description>
+          <Description>"0x344 Standing State"</Description>
           <VariableType>Byte</VariableType>
-          <Address>eqgame.exe-400000+E5D1A4</Address>
+          <Address>eqgame.exe-400000+E5D1FC</Address>
           <Offsets>
-            <Offset>211</Offset>
+            <Offset>344</Offset>
           </Offsets>
         </CheatEntry>
         <CheatEntry>
           <ID>96</ID>
-          <Description>"0x5F8 HP Current !"</Description>
+          <Description>"0x4A8 HP Current"</Description>
           <VariableType>4 Bytes</VariableType>
-          <Address>eqgame.exe-400000+E5F1A4</Address>
+          <Address>eqgame.exe-400000+E5D1FC</Address>
           <Offsets>
-            <Offset>5F8</Offset>
+            <Offset>4A8</Offset>
           </Offsets>
         </CheatEntry>
         <CheatEntry>
           <ID>99</ID>
-          <Description>"0x268 HP Max !"</Description>
+          <Description>"0x320 HP Max"</Description>
           <VariableType>4 Bytes</VariableType>
-          <Address>eqgame.exe-400000+E5F1A4</Address>
+          <Address>eqgame.exe-400000+E5D1FC</Address>
           <Offsets>
-            <Offset>268</Offset>
+            <Offset>320</Offset>
           </Offsets>
         </CheatEntry>
         <CheatEntry>
           <ID>100</ID>
-          <Description>"0x314 Mana Current !"</Description>
+          <Description>"0x240 Mana Current"</Description>
           <VariableType>4 Bytes</VariableType>
-          <Address>eqgame.exe-400000+E5F1A4</Address>
+          <Address>eqgame.exe-400000+E5D1FC</Address>
           <Offsets>
-            <Offset>314</Offset>
+            <Offset>240</Offset>
           </Offsets>
         </CheatEntry>
         <CheatEntry>
           <ID>101</ID>
-          <Description>"0x5C0 Mana Max !"</Description>
+          <Description>"0x404 Mana Max"</Description>
           <VariableType>4 Bytes</VariableType>
-          <Address>eqgame.exe-400000+E5F1A4</Address>
+          <Address>eqgame.exe-400000+E5D1FC</Address>
           <Offsets>
-            <Offset>5C0</Offset>
+            <Offset>404</Offset>
           </Offsets>
         </CheatEntry>
         <CheatEntry>
           <ID>114</ID>
-          <Description>"0x4BC Endurance Current !"</Description>
+          <Description>"0x3E8 Endurance Current"</Description>
           <VariableType>4 Bytes</VariableType>
-          <Address>eqgame.exe-400000+E5F1A4</Address>
+          <Address>eqgame.exe-400000+E5D1FC</Address>
           <Offsets>
-            <Offset>4BC</Offset>
+            <Offset>3E8</Offset>
           </Offsets>
         </CheatEntry>
         <CheatEntry>
           <ID>115</ID>
-          <Description>"0x398 Endurance Max !"</Description>
+          <Description>"0x228 Endurance Max"</Description>
           <VariableType>4 Bytes</VariableType>
-          <Address>eqgame.exe-400000+E5F1A4</Address>
+          <Address>eqgame.exe-400000+E5D1FC</Address>
           <Offsets>
-            <Offset>398</Offset>
+            <Offset>228</Offset>
           </Offsets>
         </CheatEntry>
         <CheatEntry>
           <ID>32</ID>
-          <Description>"0xF24 Follow Spawn !"</Description>
+          <Description>"0xF1C Follow Spawn"</Description>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
-          <Address>eqgame.exe-400000+E5D1A4</Address>
+          <Address>eqgame.exe-400000+E5D1FC</Address>
           <Offsets>
-            <Offset>F24</Offset>
+            <Offset>F1C</Offset>
           </Offsets>
         </CheatEntry>
       </CheatEntries>
@@ -802,7 +725,7 @@
     <CheatEntry>
       <ID>14</ID>
       <Description>"Player Spawn"</Description>
-      <LastState Value="00000000" RealAddress="01DD0F2C"/>
+      <LastState Value="00000000" RealAddress="00ED0F2C"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>eqgame.exe-400000+F20F2C</Address>
@@ -826,7 +749,7 @@
     <CheatEntry>
       <ID>39</ID>
       <Description>"CEverQuest"</Description>
-      <LastState Value="00000000" RealAddress="01E6FD88"/>
+      <LastState Value="00000000" RealAddress="00F6FD88"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>eqgame.exe-400000+FBFD88</Address>
@@ -845,7 +768,7 @@
     <CheatEntry>
       <ID>160</ID>
       <Description>"CDisplay"</Description>
-      <LastState Value="0ACAE018" RealAddress="01D0D3B8"/>
+      <LastState Value="00000000" RealAddress="00E0D3B8"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>eqgame.exe-400000+E5D3B8</Address>
@@ -853,7 +776,6 @@
         <CheatEntry>
           <ID>161</ID>
           <Description>"0x118 Camera (CCamera pointer)"</Description>
-          <LastState Value="09553C98" RealAddress="0ACAE130"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe-400000+E5D3B8</Address>
@@ -864,7 +786,6 @@
             <CheatEntry>
               <ID>162</ID>
               <Description>"0x00 VFTable (search for "const CCamera::`vftable'")"</Description>
-              <LastState Value="59B2CBC8" RealAddress="09553C98"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe-400000+E5D3B8</Address>
@@ -876,7 +797,6 @@
                 <CheatEntry>
                   <ID>226</ID>
                   <Description>"0x00"</Description>
-                  <LastState Value="599C8660" RealAddress="59B2CBC8"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>eqgame.exe-400000+E5D3B8</Address>
@@ -889,7 +809,6 @@
                 <CheatEntry>
                   <ID>227</ID>
                   <Description>"0x04"</Description>
-                  <LastState Value="599C6F80" RealAddress="59B2CBCC"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>eqgame.exe-400000+E5D3B8</Address>
@@ -902,7 +821,6 @@
                 <CheatEntry>
                   <ID>228</ID>
                   <Description>"0x08"</Description>
-                  <LastState Value="599C7020" RealAddress="59B2CBD0"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>eqgame.exe-400000+E5D3B8</Address>
@@ -915,7 +833,6 @@
                 <CheatEntry>
                   <ID>229</ID>
                   <Description>"0x0C"</Description>
-                  <LastState Value="599C6FA0" RealAddress="59B2CBD4"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>eqgame.exe-400000+E5D3B8</Address>
@@ -928,7 +845,6 @@
                 <CheatEntry>
                   <ID>230</ID>
                   <Description>"0x10 Get Draw Distance"</Description>
-                  <LastState Value="599C7030" RealAddress="59B2CBD8"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>eqgame.exe-400000+E5D3B8</Address>
@@ -941,7 +857,6 @@
                 <CheatEntry>
                   <ID>231</ID>
                   <Description>"0x38 t3dSetCameraLocation (Y, X, Z)"</Description>
-                  <LastState Value="599C8210" RealAddress="59B2CC00"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>eqgame.exe-400000+E5D3B8</Address>
@@ -954,7 +869,6 @@
                 <CheatEntry>
                   <ID>238</ID>
                   <Description>"0x3C Set Heading, Pitch, Rotation"</Description>
-                  <LastState Value="599C8260" RealAddress="59B2CC04"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>eqgame.exe-400000+E5D3B8</Address>
@@ -967,7 +881,6 @@
                 <CheatEntry>
                   <ID>239</ID>
                   <Description>"0x40 Set Y, X, Z"</Description>
-                  <LastState Value="599C8290" RealAddress="59B2CC08"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>eqgame.exe-400000+E5D3B8</Address>
@@ -980,7 +893,6 @@
                 <CheatEntry>
                   <ID>240</ID>
                   <Description>"0x70"</Description>
-                  <LastState Value="599C8400" RealAddress="59B2CC38"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>eqgame.exe-400000+E5D3B8</Address>
@@ -993,7 +905,6 @@
                 <CheatEntry>
                   <ID>245</ID>
                   <Description>"0x74 t3dWorldSpaceToScreenSpace"</Description>
-                  <LastState Value="599C8490" RealAddress="59B2CC3C"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>eqgame.exe-400000+E5D3B8</Address>
@@ -1006,7 +917,6 @@
                 <CheatEntry>
                   <ID>244</ID>
                   <Description>"0x78"</Description>
-                  <LastState Value="599C84D0" RealAddress="59B2CC40"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>eqgame.exe-400000+E5D3B8</Address>
@@ -1019,7 +929,6 @@
                 <CheatEntry>
                   <ID>243</ID>
                   <Description>"0x7C IsWorldLocationVisibleOnScreen"</Description>
-                  <LastState Value="599C8530" RealAddress="59B2CC44"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>eqgame.exe-400000+E5D3B8</Address>
@@ -1032,7 +941,6 @@
                 <CheatEntry>
                   <ID>242</ID>
                   <Description>"0x80"</Description>
-                  <LastState Value="599C8590" RealAddress="59B2CC48"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>eqgame.exe-400000+E5D3B8</Address>
@@ -1045,7 +953,6 @@
                 <CheatEntry>
                   <ID>241</ID>
                   <Description>"0x84"</Description>
-                  <LastState Value="599C85F0" RealAddress="59B2CC4C"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>eqgame.exe-400000+E5D3B8</Address>
@@ -1060,7 +967,6 @@
             <CheatEntry>
               <ID>163</ID>
               <Description>"0x04 Field of View (Default = 45)"</Description>
-              <LastState Value="45" RealAddress="09553C9C"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe-400000+E5D3B8</Address>
               <Offsets>
@@ -1071,7 +977,6 @@
             <CheatEntry>
               <ID>164</ID>
               <Description>"0x08 Aspect Ratio"</Description>
-              <LastState Value="1.685055137" RealAddress="09553CA0"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe-400000+E5D3B8</Address>
               <Offsets>
@@ -1082,7 +987,6 @@
             <CheatEntry>
               <ID>165</ID>
               <Description>"0x0C some scale (0.0 to 1.0)"</Description>
-              <LastState Value="1" RealAddress="09553CA4"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe-400000+E5D3B8</Address>
               <Offsets>
@@ -1093,7 +997,6 @@
             <CheatEntry>
               <ID>166</ID>
               <Description>"0x10"</Description>
-              <LastState Value="1.000661492" RealAddress="09553CA8"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe-400000+E5D3B8</Address>
               <Offsets>
@@ -1104,7 +1007,6 @@
             <CheatEntry>
               <ID>167</ID>
               <Description>"0x14 Draw Distance"</Description>
-              <LastState Value="1512.5" RealAddress="09553CAC"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe-400000+E5D3B8</Address>
               <Offsets>
@@ -1115,7 +1017,6 @@
             <CheatEntry>
               <ID>168</ID>
               <Description>"0x18"</Description>
-              <LastState Value="570" RealAddress="09553CB0"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe-400000+E5D3B8</Address>
               <Offsets>
@@ -1126,7 +1027,6 @@
             <CheatEntry>
               <ID>169</ID>
               <Description>"0x1C Actor Clip Plane (Default = 302500)"</Description>
-              <LastState Value="324900" RealAddress="09553CB4"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe-400000+E5D3B8</Address>
               <Offsets>
@@ -1137,7 +1037,6 @@
             <CheatEntry>
               <ID>170</ID>
               <Description>"0x20"</Description>
-              <LastState Value="260" RealAddress="09553CB8"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe-400000+E5D3B8</Address>
               <Offsets>
@@ -1148,7 +1047,6 @@
             <CheatEntry>
               <ID>171</ID>
               <Description>"0x24 Shadow Clip Plane (Default = 67600)"</Description>
-              <LastState Value="67600" RealAddress="09553CBC"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe-400000+E5D3B8</Address>
               <Offsets>
@@ -1159,7 +1057,6 @@
             <CheatEntry>
               <ID>172</ID>
               <Description>"0x28 Draw Distance Ex"</Description>
-              <LastState Value="1512.5" RealAddress="09553CC0"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe-400000+E5D3B8</Address>
               <Offsets>
@@ -1170,7 +1067,6 @@
             <CheatEntry>
               <ID>173</ID>
               <Description>"0x2C Far Clip Plane"</Description>
-              <LastState Value="2287656.25" RealAddress="09553CC4"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe-400000+E5D3B8</Address>
               <Offsets>
@@ -1181,7 +1077,6 @@
             <CheatEntry>
               <ID>174</ID>
               <Description>"0x30"</Description>
-              <LastState Value="0" RealAddress="09553CC8"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe-400000+E5D3B8</Address>
               <Offsets>
@@ -1192,7 +1087,6 @@
             <CheatEntry>
               <ID>175</ID>
               <Description>"0x34"</Description>
-              <LastState Value="0" RealAddress="09553CCC"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe-400000+E5D3B8</Address>
               <Offsets>
@@ -1313,7 +1207,6 @@
             <CheatEntry>
               <ID>187</ID>
               <Description>"0xB0 Heading (Yaw)"</Description>
-              <LastState Value="51.94953537" RealAddress="09553D48"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe-400000+E5D3B8</Address>
               <Offsets>
@@ -1324,7 +1217,6 @@
             <CheatEntry>
               <ID>188</ID>
               <Description>"0xB4 Pitch"</Description>
-              <LastState Value="478" RealAddress="09553D4C"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe-400000+E5D3B8</Address>
               <Offsets>
@@ -1335,7 +1227,6 @@
             <CheatEntry>
               <ID>189</ID>
               <Description>"0xB8 Rotation (Roll)"</Description>
-              <LastState Value="0" RealAddress="09553D50"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe-400000+E5D3B8</Address>
               <Offsets>
@@ -1346,7 +1237,6 @@
             <CheatEntry>
               <ID>190</ID>
               <Description>"0xBC Y"</Description>
-              <LastState Value="-385.3805542" RealAddress="09553D54"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe-400000+E5D3B8</Address>
               <Offsets>
@@ -1357,7 +1247,6 @@
             <CheatEntry>
               <ID>191</ID>
               <Description>"0xC0 X"</Description>
-              <LastState Value="1236.963135" RealAddress="09553D58"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe-400000+E5D3B8</Address>
               <Offsets>
@@ -1368,7 +1257,6 @@
             <CheatEntry>
               <ID>192</ID>
               <Description>"0xC4 Z"</Description>
-              <LastState Value="-103.558342" RealAddress="09553D5C"/>
               <VariableType>Float</VariableType>
               <Address>eqgame.exe-400000+E5D3B8</Address>
               <Offsets>
@@ -1392,7 +1280,7 @@
     <CheatEntry>
       <ID>116</ID>
       <Description>"CBazaarSearchWnd"</Description>
-      <LastState Value="1F81C010" RealAddress="01C58E04"/>
+      <LastState Value="00000000" RealAddress="00D58E04"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>eqgame.exe-400000+DA8E04</Address>
@@ -1400,7 +1288,6 @@
         <CheatEntry>
           <ID>118</ID>
           <Description>"0x00 VFTable"</Description>
-          <LastState Value="01973524" RealAddress="1F81C010"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe-400000+DA8E04</Address>
@@ -1411,7 +1298,6 @@
             <CheatEntry>
               <ID>197</ID>
               <Description>"0x88 WndNotification"</Description>
-              <LastState Value="01578A00" RealAddress="019735AC"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe-400000+DA8E04</Address>
@@ -1423,6 +1309,7 @@
             <CheatEntry>
               <ID>272</ID>
               <Description>"0x88 WndNotification (IDA Address)"</Description>
+              <LastState Value="152FE900" RealAddress="00578A00"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>00528A00-eqgame.exe+400000</Address>
@@ -1454,7 +1341,6 @@
         <CheatEntry>
           <ID>194</ID>
           <Description>"0x7A CXWnd Is Open (offset changes with every patch)"</Description>
-          <LastState Value="0" RealAddress="1F81C08A"/>
           <VariableType>Byte</VariableType>
           <Address>eqgame.exe-400000+DA8E04</Address>
           <Offsets>
@@ -1464,7 +1350,6 @@
         <CheatEntry>
           <ID>158</ID>
           <Description>"0x260 Buy Button List Index"</Description>
-          <LastState Value="4294967295" RealAddress="1F81C270"/>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe-400000+DA8E04</Address>
           <Offsets>
@@ -1474,7 +1359,6 @@
         <CheatEntry>
           <ID>125</ID>
           <Description>"0x268 Trader Name"</Description>
-          <LastState RealAddress="1F81C278"/>
           <VariableType>String</VariableType>
           <Length>64</Length>
           <Unicode>0</Unicode>
@@ -1488,7 +1372,6 @@
         <CheatEntry>
           <ID>127</ID>
           <Description>"0x2A8 Item Name"</Description>
-          <LastState RealAddress="1F81C2B8"/>
           <VariableType>String</VariableType>
           <Length>64</Length>
           <Unicode>0</Unicode>
@@ -1502,7 +1385,6 @@
         <CheatEntry>
           <ID>130</ID>
           <Description>"0x2F4 Item Price"</Description>
-          <LastState Value="0" RealAddress="1F81C304"/>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe-400000+DA8E04</Address>
           <Offsets>
@@ -1512,7 +1394,6 @@
         <CheatEntry>
           <ID>133</ID>
           <Description>"0x300 Item ID"</Description>
-          <LastState Value="0" RealAddress="1F81C310"/>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe-400000+DA8E04</Address>
           <Offsets>
@@ -1522,7 +1403,6 @@
         <CheatEntry>
           <ID>121</ID>
           <Description>"0x304 Item Quantity"</Description>
-          <LastState Value="0" RealAddress="1F81C314"/>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe-400000+DA8E04</Address>
           <Offsets>
@@ -1532,7 +1412,6 @@
         <CheatEntry>
           <ID>145</ID>
           <Description>"0x320 next Trader Name"</Description>
-          <LastState RealAddress="1F81C330"/>
           <VariableType>String</VariableType>
           <Length>64</Length>
           <Unicode>0</Unicode>
@@ -1546,7 +1425,6 @@
         <CheatEntry>
           <ID>273</ID>
           <Description>"0x923C Find Items button (BZR_QueryButton)"</Description>
-          <LastState Value="3561FF08" RealAddress="1F82524C"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe-400000+DA8E04</Address>
@@ -1557,7 +1435,6 @@
         <CheatEntry>
           <ID>205</ID>
           <Description>"0x9244 Update Traders button (BZR_UpdatePlayerButton)"</Description>
-          <LastState Value="35620BB0" RealAddress="1F825254"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe-400000+DA8E04</Address>
@@ -1568,7 +1445,6 @@
         <CheatEntry>
           <ID>206</ID>
           <Description>"0x9258 Reset button (BZR_Default)"</Description>
-          <LastState Value="3561FC80" RealAddress="1F825268"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe-400000+DA8E04</Address>
@@ -1579,7 +1455,6 @@
         <CheatEntry>
           <ID>207</ID>
           <Description>"0x925C Buy button (BZR_BuyButton)"</Description>
-          <LastState Value="35622500" RealAddress="1F82526C"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe-400000+DA8E04</Address>
@@ -1592,7 +1467,7 @@
     <CheatEntry>
       <ID>119</ID>
       <Description>"CBazaarConfirmationWnd"</Description>
-      <LastState Value="29E53C50" RealAddress="01C58B74"/>
+      <LastState Value="00000002" RealAddress="00D58B74"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>eqgame.exe-400000+DA8B74</Address>
@@ -1600,7 +1475,6 @@
         <CheatEntry>
           <ID>208</ID>
           <Description>"0x00 VFTable"</Description>
-          <LastState Value="0194FF70" RealAddress="29E53C50"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe-400000+DA8B74</Address>
@@ -1611,7 +1485,6 @@
             <CheatEntry>
               <ID>209</ID>
               <Description>"0x88 WndNotification"</Description>
-              <LastState Value="01353300" RealAddress="0194FFF8"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe-400000+DA8B74</Address>
@@ -1741,7 +1614,7 @@
     <CheatEntry>
       <ID>159</ID>
       <Description>"CBazaarWnd"</Description>
-      <LastState Value="1BF81070" RealAddress="01C58E7C"/>
+      <LastState Value="22344BC0" RealAddress="00D58E7C"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>eqgame.exe-400000+DA8E7C</Address>
@@ -1749,7 +1622,7 @@
         <CheatEntry>
           <ID>212</ID>
           <Description>"0x00 VFTable"</Description>
-          <LastState Value="01973A10" RealAddress="1BF81070"/>
+          <LastState Value="00A649C8" RealAddress="22344BC0"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe-400000+DA8E7C</Address>
@@ -1760,7 +1633,7 @@
             <CheatEntry>
               <ID>213</ID>
               <Description>"0x88 WndNotification"</Description>
-              <LastState Value="0157B440" RealAddress="01973A98"/>
+              <LastState Value="005A65D0" RealAddress="00A64A50"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe-400000+DA8E7C</Address>
@@ -1772,6 +1645,7 @@
             <CheatEntry>
               <ID>274</ID>
               <Description>"0x88 WndNotification (IDA Address)"</Description>
+              <LastState Value="0000008D" RealAddress="0057B440"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>52B440-eqgame.exe+400000</Address>
@@ -1825,7 +1699,7 @@
     <CheatEntry>
       <ID>276</ID>
       <Description>"CXWndManager"</Description>
-      <LastState Value="1BF81070" RealAddress="01C58E7C"/>
+      <LastState Value="22344BC0" RealAddress="00D58E7C"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
       <Address>eqgame.exe-400000+DA8E7C</Address>
@@ -1833,7 +1707,6 @@
         <CheatEntry>
           <ID>277</ID>
           <Description>"0x11C Fonts Array"</Description>
-          <LastState Value="0000000B" RealAddress="331EDAFC"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe-400000+1699650</Address>
@@ -1844,7 +1717,6 @@
         <CheatEntry>
           <ID>279</ID>
           <Description>"0x11C 0x00"</Description>
-          <LastState Value="0000000B" RealAddress="331EDAFC"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe-400000+1699650</Address>
@@ -1855,7 +1727,6 @@
         <CheatEntry>
           <ID>278</ID>
           <Description>"0x120 0x04 Array of CTextureFont objects"</Description>
-          <LastState Value="32841078" RealAddress="331EDB00"/>
           <ShowAsHex>1</ShowAsHex>
           <VariableType>4 Bytes</VariableType>
           <Address>eqgame.exe-400000+1699650</Address>
@@ -1866,7 +1737,6 @@
             <CheatEntry>
               <ID>280</ID>
               <Description>"0x00 Font 1"</Description>
-              <LastState Value="23294BB8" RealAddress="32841078"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe-400000+1699650</Address>
@@ -1878,7 +1748,6 @@
             <CheatEntry>
               <ID>281</ID>
               <Description>"0x04 Font 2"</Description>
-              <LastState Value="23294D18" RealAddress="3284107C"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe-400000+1699650</Address>
@@ -1890,7 +1759,6 @@
             <CheatEntry>
               <ID>282</ID>
               <Description>"0x08 Font 3"</Description>
-              <LastState Value="23294C58" RealAddress="32841080"/>
               <ShowAsHex>1</ShowAsHex>
               <VariableType>4 Bytes</VariableType>
               <Address>eqgame.exe-400000+1699650</Address>
@@ -1902,7 +1770,6 @@
                 <CheatEntry>
                   <ID>283</ID>
                   <Description>"0x00"</Description>
-                  <LastState Value="019AB31C" RealAddress="23294C58"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>eqgame.exe-400000+1699650</Address>
@@ -1915,7 +1782,6 @@
                 <CheatEntry>
                   <ID>284</ID>
                   <Description>"0x04"</Description>
-                  <LastState Value="2" RealAddress="23294C5C"/>
                   <VariableType>4 Bytes</VariableType>
                   <Address>eqgame.exe-400000+1699650</Address>
                   <Offsets>
@@ -1927,7 +1793,6 @@
                 <CheatEntry>
                   <ID>285</ID>
                   <Description>"0x08"</Description>
-                  <LastState Value="F5104074" RealAddress="23294C60"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>eqgame.exe-400000+1699650</Address>
@@ -1940,7 +1805,6 @@
                 <CheatEntry>
                   <ID>286</ID>
                   <Description>"0x0C"</Description>
-                  <LastState Value="8800AF00" RealAddress="23294C64"/>
                   <ShowAsHex>1</ShowAsHex>
                   <VariableType>4 Bytes</VariableType>
                   <Address>eqgame.exe-400000+1699650</Address>
@@ -1963,135 +1827,54 @@
       <GroupHeader>1</GroupHeader>
     </CheatEntry>
     <CheatEntry>
-      <ID>259</ID>
-      <Description>"pinstCharData"</Description>
-      <LastState Value="2A44A888" RealAddress="01D0D3C8"/>
+      <ID>320</ID>
+      <Description>"ExecuteCmd list"</Description>
+      <LastState Value="00A5A314" RealAddress="00B99C90"/>
       <ShowAsHex>1</ShowAsHex>
       <VariableType>4 Bytes</VariableType>
-      <Address>eqgame.exe-400000+E5D3C8</Address>
+      <Address>eqgame.exe-400000+BE9C90</Address>
       <CheatEntries>
         <CheatEntry>
-          <ID>260</ID>
-          <Description>"struct _CI2_INFO*    pCI2;"</Description>
-          <LastState Value="2A945480" RealAddress="2A44D0F8"/>
-          <ShowAsHex>1</ShowAsHex>
-          <VariableType>4 Bytes</VariableType>
-          <Address>eqgame.exe-400000+E5D3C8</Address>
+          <ID>321</ID>
+          <Description>"0"</Description>
+          <LastState RealAddress="00A5A314"/>
+          <VariableType>String</VariableType>
+          <Length>32</Length>
+          <Unicode>0</Unicode>
+          <CodePage>0</CodePage>
+          <ZeroTerminate>1</ZeroTerminate>
+          <Address>eqgame.exe-400000+BE9C90</Address>
           <Offsets>
-            <Offset>2870</Offset>
+            <Offset>0</Offset>
           </Offsets>
-          <CheatEntries>
-            <CheatEntry>
-              <ID>261</ID>
-              <Description>"struct  _CHARINFO2* pCharInfo2;"</Description>
-              <LastState Value="294C0758" RealAddress="2A945484"/>
-              <ShowAsHex>1</ShowAsHex>
-              <VariableType>4 Bytes</VariableType>
-              <Address>eqgame.exe-400000+E5D3C8</Address>
-              <Offsets>
-                <Offset>4</Offset>
-                <Offset>2870</Offset>
-              </Offsets>
-              <CheatEntries>
-                <CheatEntry>
-                  <ID>262</ID>
-                  <Description>"DWORD        MemorizedSpells[0x12];"</Description>
-                  <LastState Value="4294967295" RealAddress="294C4130"/>
-                  <VariableType>4 Bytes</VariableType>
-                  <Address>eqgame.exe-400000+E5D3C8</Address>
-                  <Offsets>
-                    <Offset>39D8</Offset>
-                    <Offset>4</Offset>
-                    <Offset>2870</Offset>
-                  </Offsets>
-                </CheatEntry>
-                <CheatEntry>
-                  <ID>263</ID>
-                  <Description>"Spell Gem ID #1"</Description>
-                  <LastState Value="4294967295" RealAddress="294C4130"/>
-                  <VariableType>4 Bytes</VariableType>
-                  <Address>eqgame.exe-400000+E5D3C8</Address>
-                  <Offsets>
-                    <Offset>39D8</Offset>
-                    <Offset>4</Offset>
-                    <Offset>2870</Offset>
-                  </Offsets>
-                </CheatEntry>
-                <CheatEntry>
-                  <ID>264</ID>
-                  <Description>"Spell Gem ID #2"</Description>
-                  <LastState Value="4294967295" RealAddress="294C4134"/>
-                  <VariableType>4 Bytes</VariableType>
-                  <Address>eqgame.exe-400000+E5D3C8</Address>
-                  <Offsets>
-                    <Offset>39DC</Offset>
-                    <Offset>4</Offset>
-                    <Offset>2870</Offset>
-                  </Offsets>
-                </CheatEntry>
-                <CheatEntry>
-                  <ID>265</ID>
-                  <Description>"Spell Gem ID #3"</Description>
-                  <LastState Value="4294967295" RealAddress="294C4138"/>
-                  <VariableType>4 Bytes</VariableType>
-                  <Address>eqgame.exe-400000+E5D3C8</Address>
-                  <Offsets>
-                    <Offset>39E0</Offset>
-                    <Offset>4</Offset>
-                    <Offset>2870</Offset>
-                  </Offsets>
-                </CheatEntry>
-                <CheatEntry>
-                  <ID>266</ID>
-                  <Description>"Spell Gem ID #4"</Description>
-                  <LastState Value="4294967295" RealAddress="294C413C"/>
-                  <VariableType>4 Bytes</VariableType>
-                  <Address>eqgame.exe-400000+E5D3C8</Address>
-                  <Offsets>
-                    <Offset>39E4</Offset>
-                    <Offset>4</Offset>
-                    <Offset>2870</Offset>
-                  </Offsets>
-                </CheatEntry>
-                <CheatEntry>
-                  <ID>271</ID>
-                  <Description>"Spell Gem ID #8"</Description>
-                  <LastState Value="36" RealAddress="294C414C"/>
-                  <VariableType>4 Bytes</VariableType>
-                  <Address>eqgame.exe-400000+E5D3C8</Address>
-                  <Offsets>
-                    <Offset>39F4</Offset>
-                    <Offset>4</Offset>
-                    <Offset>2870</Offset>
-                  </Offsets>
-                </CheatEntry>
-                <CheatEntry>
-                  <ID>269</ID>
-                  <Description>"Spell Gem ID #12"</Description>
-                  <LastState Value="4294967295" RealAddress="294C415C"/>
-                  <VariableType>4 Bytes</VariableType>
-                  <Address>eqgame.exe-400000+E5D3C8</Address>
-                  <Offsets>
-                    <Offset>3A04</Offset>
-                    <Offset>4</Offset>
-                    <Offset>2870</Offset>
-                  </Offsets>
-                </CheatEntry>
-                <CheatEntry>
-                  <ID>270</ID>
-                  <Description>"Spell Gem ID #18"</Description>
-                  <LastState Value="4294967295" RealAddress="294C4174"/>
-                  <VariableType>4 Bytes</VariableType>
-                  <Address>eqgame.exe-400000+E5D3C8</Address>
-                  <Offsets>
-                    <Offset>3A1C</Offset>
-                    <Offset>4</Offset>
-                    <Offset>2870</Offset>
-                  </Offsets>
-                </CheatEntry>
-              </CheatEntries>
-            </CheatEntry>
-          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>323</ID>
+          <Description>"1"</Description>
+          <LastState RealAddress="00A5A31C"/>
+          <VariableType>String</VariableType>
+          <Length>32</Length>
+          <Unicode>0</Unicode>
+          <CodePage>0</CodePage>
+          <ZeroTerminate>1</ZeroTerminate>
+          <Address>eqgame.exe-400000+BE9C90+4</Address>
+          <Offsets>
+            <Offset>0</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>324</ID>
+          <Description>"3"</Description>
+          <LastState RealAddress="00A5A324"/>
+          <VariableType>String</VariableType>
+          <Length>32</Length>
+          <Unicode>0</Unicode>
+          <CodePage>0</CodePage>
+          <ZeroTerminate>1</ZeroTerminate>
+          <Address>eqgame.exe-400000+BE9C90+4+4</Address>
+          <Offsets>
+            <Offset>0</Offset>
+          </Offsets>
         </CheatEntry>
       </CheatEntries>
     </CheatEntry>

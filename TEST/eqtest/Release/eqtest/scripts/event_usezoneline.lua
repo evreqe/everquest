@@ -12,7 +12,7 @@ local function TryToZone(direction, distance, y, x ,z)
 
             if EQ_CanSpawnCastRayToLocation(playerSpawn, y, x, z) == true then
 
-                EQ_PrintTextToChat("Trying to zone...")
+                EQ_PrintTextToChat("[EQTEST] Trying to zone...")
 
                 EQ_InterpretCommand("//FirstPersonCamera")
                 EQ_InterpretCommand("//CenterView")
@@ -55,6 +55,8 @@ function OnOneSecond()
         -- pok to the arena
         TryToZone(EQ_DIRECTION_SOUTH, 15, -456.02, 142.87, -153.87)
 
+        return
+
     end
 
     if playerZoneID == EQ_ZONE_ID_GUILDLOBBY then
@@ -65,6 +67,8 @@ function OnOneSecond()
         -- guild lobby to guild hall
         TryToZone(EQ_DIRECTION_NORTH, 15, 619.96, -48.36, 1.13)
 
+        return
+
     end
 
     -- this doesn't work because guild hall is an instance
@@ -74,12 +78,16 @@ function OnOneSecond()
         -- guild hall to guild lobby
         TryToZone(EQ_DIRECTION_SOUTH, 15, -157.62, -3.09, 3.13)
 
+        return
+
     end
 
     if playerZoneID == EQ_ZONE_ID_BAZAAR then
 
         -- bazaar to pok
         TryToZone(EQ_DIRECTION_EAST, 15, 0.17, -444, -29.22)
+
+        return
 
     end
 
@@ -88,6 +96,8 @@ function OnOneSecond()
         -- nexus to pok
         TryToZone(EQ_DIRECTION_WEST, 15, 45.09, 471.91, -27.98)
 
+        return
+
     end
 
     if playerZoneID == EQ_ZONE_ID_POTRANQUILITY then
@@ -95,6 +105,8 @@ function OnOneSecond()
         -- potranquility to pok
         TryToZone(EQ_DIRECTION_WEST, 10, 772.49, -1446.59, -876.78)
         TryToZone(EQ_DIRECTION_NORTH, 10, 763.45, -1437.17, -876.78)
+
+        return
 
     end
 

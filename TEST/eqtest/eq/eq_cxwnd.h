@@ -23,7 +23,7 @@
 
 // ******************** randomized after each patch ******************** //
 // April 24 2018
-#define EQ_OFFSET_CXWnd_IS_OPEN 0x7A  // uint8_t    CXWnd__IsReallyVisible()
+#define EQ_OFFSET_CXWnd_IS_OPEN 0x3E  // uint8_t    CXWnd__IsReallyVisible()
 // ********************************************************************* //
 
 // search for one of these strings to find the

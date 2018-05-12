@@ -39,7 +39,6 @@ void EQAPP_Lua_On();
 void EQAPP_Lua_Off();
 void EQAPP_Lua_OpenLibraries(sol::state* state);
 void EQAPP_Lua_ResetTimers();
-void EQAPP_Lua_SystemScripts_Load();
 void EQAPP_Lua_EventScriptList_Load();
 void EQAPP_Lua_EventScriptList_Print();
 void EQAPP_Lua_EventScriptList_ExecuteFunction(const char* functionName);
@@ -77,7 +76,6 @@ void EQAPP_Lua_Load()
     EQAPP_Lua_OpenLibraries(&g_LuaState);
     EQAPP_Lua_BindFunctionsAndVariables(&g_LuaState);
 
-    EQAPP_Lua_SystemScripts_Load();
     EQAPP_Lua_EventScriptList_Load();
 }
 
@@ -111,35 +109,6 @@ void EQAPP_Lua_ResetTimers()
     g_LuaOneMinuteTimer = EQAPP_Timer_GetTimeNow();
 
     g_LuaOneHourTimer = EQAPP_Timer_GetTimeNow();
-}
-
-void EQAPP_Lua_SystemScripts_Load()
-{
-    EQAPP_Lua_ResetTimers();
-
-    std::stringstream folderPath;
-    folderPath << g_EQAppName << "/scripts/";
-
-    for (auto& it : std__filesystem::directory_iterator(folderPath.str()))
-    {
-        if (it.path().extension().string() != ".lua")
-        {
-            continue;
-        }
-
-        std::string filename = it.path().filename().string();
-
-        if (EQAPP_String_BeginsWith(filename, "system_") == false)
-        {
-            continue;
-        }
-
-        bool result = EQAPP_Lua_ExecuteFile(&g_LuaState, filename.c_str());
-        if (result == false)
-        {
-            continue;
-        }
-    }
 }
 
 void EQAPP_Lua_EventScriptList_Load()
@@ -302,6 +271,12 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set("EQ_SPAWN_HEADING_SPEED_DEFAULT", EQ_SPAWN_HEADING_SPEED_DEFAULT);
     state->set("EQ_SPAWN_HEADING_SPEED_MIN", EQ_SPAWN_HEADING_SPEED_MIN);
     state->set("EQ_SPAWN_HEADING_SPEED_MAX", EQ_SPAWN_HEADING_SPEED_MAX);
+
+    state->set("EQ_MELEE_DISTANCE_MIN", EQ_MELEE_DISTANCE_MIN);
+    state->set("EQ_MELEE_DISTANCE_MAX", EQ_MELEE_DISTANCE_MAX);
+
+    state->set("EQ_FAR_CLIP_PLANE_MIN", EQ_FAR_CLIP_PLANE_MIN);
+    state->set("EQ_FAR_CLIP_PLANE_MAX", EQ_FAR_CLIP_PLANE_MAX);
 
     state->set("EQ_NUM_HOTBARS", EQ_NUM_HOTBARS);
     state->set("EQ_NUM_HOTBAR_BUTTONS", EQ_NUM_HOTBAR_BUTTONS);
@@ -1044,6 +1019,7 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set("EQ_EXECUTECMD_CMD_TOGGLE_ITEM_OVERFLOW_WND", EQ_EXECUTECMD_CMD_TOGGLE_ITEM_OVERFLOW_WND);
     state->set("EQ_EXECUTECMD_CMD_EVENT_CALENDAR", EQ_EXECUTECMD_CMD_EVENT_CALENDAR);
     state->set("EQ_EXECUTECMD_CMD_TOGGLE_FINDITEM_WND", EQ_EXECUTECMD_CMD_TOGGLE_FINDITEM_WND);
+    state->set("EQ_EXECUTECMD_CMD_HEROSJOURNEY_TEXT", EQ_EXECUTECMD_CMD_HEROSJOURNEY_TEXT);
     state->set("EQ_EXECUTECMD_TOGGLE_FPS", EQ_EXECUTECMD_TOGGLE_FPS);
     state->set("EQ_EXECUTECMD_TOGGLE_AVATAR", EQ_EXECUTECMD_TOGGLE_AVATAR);
     state->set("EQ_EXECUTECMD_TOGGLE_PETITION", EQ_EXECUTECMD_TOGGLE_PETITION);
@@ -1078,12 +1054,15 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_IsWithinDistance", EQ_IsWithinDistance);
 
     state->set_function("EQ_GetBearing", EQ_GetBearing);
+    state->set_function("EQ_GetRadians", EQ_GetRadians);
 
     state->set_function("EQ_IsPointInsideRectangle", EQ_IsPointInsideRectangle);
 
     state->set_function("EQ_GetGameState", EQ_GetGameState);
     state->set_function("EQ_IsInGame", EQ_IsInGame);
     state->set_function("EQ_IsSpellIDValid", EQ_IsSpellIDValid);
+    state->set_function("EQ_IsZoneIDSafe", EQ_IsZoneIDSafe);
+    state->set_function("EQ_GetTimer", EQ_GetTimer);
 
     state->set_function("EQ_IsNetStatusEnabled", EQ_IsNetStatusEnabled);
     state->set_function("EQ_IsAutoAttackEnabled", EQ_IsAutoAttackEnabled);
@@ -1097,6 +1076,11 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_SetAutoRun", EQ_SetAutoRun);
     state->set_function("EQ_SetMouseLook", EQ_SetMouseLook);
 
+    state->set_function("EQ_SetFogDistanceBegin", EQ_SetFogDistanceBegin);
+    state->set_function("EQ_SetFogDistanceEnd", EQ_SetFogDistanceEnd);
+    state->set_function("EQ_SetFarClipPlane", EQ_SetFarClipPlane);
+    state->set_function("EQ_SetFarClipPlanePercent", EQ_SetFarClipPlanePercent);
+
     state->set_function("EQ_GetSpawnByID", EQ_GetSpawnByID);
     state->set_function("EQ_GetSpawnByName", EQ_GetSpawnByName);
 
@@ -1108,33 +1092,68 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
 
     state->set_function("EQ_SetTargetSpawn", EQ_SetTargetSpawn);
 
-    state->set_function("EQ_GetSpawnNext", EQ_GetSpawnNext);
-    state->set_function("EQ_GetSpawnPrevious", EQ_GetSpawnPrevious);
+    state->set_function("EQ_GetPlayerSpawnNameNumbered", EQ_GetPlayerSpawnNameNumbered);
+    state->set_function("EQ_GetPlayerSpawnName", EQ_GetPlayerSpawnName);
+    state->set_function("EQ_GetPlayerSpawnLastName", EQ_GetPlayerSpawnLastName);
+
+    state->set_function("EQ_GetTargetSpawnNameNumbered", EQ_GetTargetSpawnNameNumbered);
+    state->set_function("EQ_GetTargetSpawnName", EQ_GetTargetSpawnName);
+    state->set_function("EQ_GetTargetSpawnLastName", EQ_GetTargetSpawnLastName);
+
+    state->set_function("EQ_GetSpawnDistance", EQ_GetSpawnDistance);
+    state->set_function("EQ_GetSpawnDistance3D", EQ_GetSpawnDistance3D);
+
+    state->set_function("EQ_IsSpawnWithinDistance", EQ_IsSpawnWithinDistance);
+    state->set_function("EQ_IsSpawnWithinDistanceOfLocation", EQ_IsSpawnWithinDistanceOfLocation);
+
+    state->set_function("EQ_CanSpawnCastRayToLocation", EQ_CanSpawnCastRayToLocation);
+
+    state->set_function("EQ_IsSpawnTargetable", EQ_IsSpawnTargetable);
+
+    state->set_function("EQ_IsSpawnSwimming", EQ_IsSpawnSwimming);
+    state->set_function("EQ_IsSpawnSwimmingUnderwater", EQ_IsSpawnSwimmingUnderwater);
+
+    state->set_function("EQ_IsSpawnBehindSpawn", EQ_IsSpawnBehindSpawn);
+    state->set_function("EQ_IsSpawnBehindSpawnEx", EQ_IsSpawnBehindSpawnEx);
+    state->set_function("EQ_IsPlayerBehindTarget", EQ_IsPlayerBehindTarget);
+
+    state->set_function("EQ_IsSpawnClassTank", EQ_IsSpawnClassTank);
+    state->set_function("EQ_IsSpawnClassPriest", EQ_IsSpawnClassPriest);
+    state->set_function("EQ_IsSpawnClassCaster", EQ_IsSpawnClassCaster);
+    state->set_function("EQ_IsSpawnClassMelee", EQ_IsSpawnClassMelee);
+    state->set_function("EQ_IsSpawnClassHybrid", EQ_IsSpawnClassHybrid);
 
     state->set_function("EQ_GetSpawnNumbered", EQ_GetSpawnNameNumbered);
     state->set_function("EQ_GetSpawnName", EQ_GetSpawnName);
     state->set_function("EQ_GetSpawnLastName", EQ_GetSpawnLastName);
 
-    state->set_function("EQ_GetPlayerSpawnName", EQ_GetPlayerSpawnName);
-    state->set_function("EQ_GetPlayerSpawnLastName", EQ_GetPlayerSpawnLastName);
-    state->set_function("EQ_GetTargetSpawnName", EQ_GetTargetSpawnName);
-    state->set_function("EQ_GetTargetSpawnLastName", EQ_GetTargetSpawnLastName);
-
-    state->set_function("EQ_IsSpawnWithinDistance", EQ_IsSpawnWithinDistance);
-    state->set_function("EQ_IsSpawnWithinDistanceOfLocation", EQ_IsSpawnWithinDistanceOfLocation);
-    state->set_function("EQ_GetSpawnDistance", EQ_GetSpawnDistance);
-    state->set_function("EQ_GetSpawnDistance3D", EQ_GetSpawnDistance3D);
-
-    state->set_function("EQ_CanSpawnCastRayToLocation", EQ_CanSpawnCastRayToLocation);
-
+    state->set_function("EQ_GetSpawnNext", EQ_GetSpawnNext);
+    state->set_function("EQ_GetSpawnPrevious", EQ_GetSpawnPrevious);
+    state->set_function("EQ_GetSpawnJumpStrength", EQ_GetSpawnJumpStrength);
+    state->set_function("EQ_GetSpawnMovementSpeedBonus", EQ_GetSpawnMovementSpeedBonus);
+    state->set_function("EQ_GetSpawnAreaFriction", EQ_GetSpawnAreaFriction);
+    state->set_function("EQ_GetSpawnAccelerationFriction", EQ_GetSpawnAccelerationFriction);
+    state->set_function("EQ_GetSpawnCollideWithActorType", EQ_GetSpawnCollideWithActorType);
+    state->set_function("EQ_GetSpawnFloorZ", EQ_GetSpawnFloorZ);
     state->set_function("EQ_GetSpawnY", EQ_GetSpawnY);
     state->set_function("EQ_GetSpawnX", EQ_GetSpawnX);
     state->set_function("EQ_GetSpawnZ", EQ_GetSpawnZ);
     state->set_function("EQ_GetSpawnMovementSpeed", EQ_GetSpawnMovementSpeed);
     state->set_function("EQ_GetSpawnHeading", EQ_GetSpawnHeading);
+    state->set_function("EQ_GetSpawnHeadingSpeed", EQ_GetSpawnHeadingSpeed);
+    state->set_function("EQ_GetSpawnPitch", EQ_GetSpawnPitch);
+    state->set_function("EQ_GetSpawnUnderwaterEnvironmentType", EQ_GetSpawnUnderwaterEnvironmentType);
+    state->set_function("EQ_GetSpawnHeadEnvironmentType", EQ_GetSpawnHeadEnvironmentType);
+    state->set_function("EQ_GetSpawnFeetEnvironmentType", EQ_GetSpawnFeetEnvironmentType);
+    state->set_function("EQ_GetSpawnBodyEnvironmentType", EQ_GetSpawnBodyEnvironmentType);
     state->set_function("EQ_GetSpawnType", EQ_GetSpawnType);
+    state->set_function("EQ_GetSpawnHeightZ", EQ_GetSpawnHeightZ);
     state->set_function("EQ_GetSpawnHeight", EQ_GetSpawnHeight);
     state->set_function("EQ_GetSpawnID", EQ_GetSpawnID);
+    state->set_function("EQ_GetSpawnStateFlags", EQ_GetSpawnStateFlags);
+    state->set_function("EQ_GetSpawnVehicleSpawn", EQ_GetSpawnVehicleSpawn);
+    state->set_function("EQ_GetSpawnMountSpawn", EQ_GetSpawnMountSpawn);
+    state->set_function("EQ_GetSpawnMountRiderSpawn", EQ_GetSpawnMountRiderSpawn);
     state->set_function("EQ_GetSpawnZoneID", EQ_GetSpawnZoneID);
     state->set_function("EQ_GetSpawnLevel", EQ_GetSpawnLevel);
     state->set_function("EQ_GetSpawnRace", EQ_GetSpawnRace);
@@ -1152,7 +1171,10 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_GetSpawnFollowSpawn", EQ_GetSpawnFollowSpawn);
     state->set_function("EQ_GetSpawnDirection", EQ_GetSpawnDirection);
 
+    state->set_function("EQ_SetSpawnAreaFriction", EQ_SetSpawnAreaFriction);
+    state->set_function("EQ_SetSpawnAccelerationFriction", EQ_SetSpawnAccelerationFriction);
     state->set_function("EQ_SetSpawnHeading", EQ_SetSpawnHeading);
+    state->set_function("EQ_SetSpawnPitch", EQ_SetSpawnPitch);
     state->set_function("EQ_SetSpawnHeight", EQ_SetSpawnHeight);
     state->set_function("EQ_SetSpawnFollowSpawn", EQ_SetSpawnFollowSpawn);
 
@@ -1162,23 +1184,19 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_SetSpawnItemSlotHead", EQ_SetSpawnItemSlotHead);
 
     state->set_function("EQ_TurnSpawnTowardsLocation", EQ_TurnSpawnTowardsLocation);
-    state->set_function("EQ_TurnSpawnAwayFromLocation", EQ_TurnSpawnTowardsLocation);
+    state->set_function("EQ_TurnSpawnAwayFromLocation", EQ_TurnSpawnAwayFromLocation);
+    state->set_function("EQ_TurnSpawnTowardsSpawn", EQ_TurnSpawnTowardsSpawn);
+    state->set_function("EQ_TurnSpawnAwayFromSpawn", EQ_TurnSpawnAwayFromSpawn);
     state->set_function("EQ_TurnPlayerTowardsSpawn", EQ_TurnPlayerTowardsSpawn);
-    state->set_function("EQ_TurnPlayerAwayFromSpawn", EQ_TurnPlayerTowardsSpawn);
+    state->set_function("EQ_TurnPlayerAwayFromSpawn", EQ_TurnPlayerAwayFromSpawn);
     state->set_function("EQ_TurnPlayerTowardsTarget", EQ_TurnPlayerTowardsTarget);
-    state->set_function("EQ_TurnPlayerAwayFromTarget", EQ_TurnPlayerTowardsTarget);
-
-    state->set_function("EQ_IsSpawnBehindSpawn", EQ_IsSpawnBehindSpawn);
-    state->set_function("EQ_IsSpawnBehindSpawnEx", EQ_IsSpawnBehindSpawnEx);
-
-    state->set_function("EQ_IsSpawnClassTank", EQ_IsSpawnClassTank);
-    state->set_function("EQ_IsSpawnClassPriest", EQ_IsSpawnClassPriest);
-    state->set_function("EQ_IsSpawnClassCaster", EQ_IsSpawnClassCaster);
-    state->set_function("EQ_IsSpawnClassMelee", EQ_IsSpawnClassMelee);
-    state->set_function("EQ_IsSpawnClassHybrid", EQ_IsSpawnClassHybrid);
+    state->set_function("EQ_TurnPlayerAwayFromTarget", EQ_TurnPlayerAwayFromTarget);
 
     state->set_function("EQ_InterpretCommand", EQ_InterpretCommand);
     state->set_function("EQ_ExecuteCommand", EQ_ExecuteCommand);
+    state->set_function("EQ_ExecuteCommandEx", EQ_ExecuteCommandEx);
+    state->set_function("EQ_GetExecuteCommandIDByName", EQ_GetExecuteCommandIDByName);
+    state->set_function("EQ_GetExecuteCommandNameByID", EQ_GetExecuteCommandNameByID);
 
     state->set_function("EQ_PrintTextToChat", EQ_PrintTextToChat);
     state->set_function("EQ_PrintTextToChatEx", EQ_PrintTextToChatEx);
@@ -1218,4 +1236,5 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_UseAlternateAbility", EQ_UseAlternateAbility);
     state->set_function("EQ_UseDiscipline", EQ_UseDiscipline);
     state->set_function("EQ_UseAbility", EQ_UseAbility);
+    state->set_function("EQ_UseItem", EQ_UseItem);
 }

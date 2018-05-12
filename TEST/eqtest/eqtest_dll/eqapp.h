@@ -43,5 +43,9 @@ BOOL __stdcall DllMain(HMODULE module, DWORD reason, LPVOID reserved);
 void EQAPP_Load();
 void EQAPP_Unload();
 
+template <class T>
+void EQAPP_LoadOption(T& option, const char* optionName, boost::property_tree::ptree& pt);
+void EQAPP_LoadOptions();
+
 void EQAPP_FixAddress(uint32_t& address);
 void EQAPP_InitializeAddressesAndPointers();

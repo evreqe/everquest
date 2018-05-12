@@ -2,7 +2,7 @@
 
 namespace EQAPP
 {
-    enum BazaarFilterType : uint8_t
+    enum class BazaarFilterType : uint8_t
     {
         Equals,
         DoesNotContain,
@@ -24,8 +24,8 @@ uint32_t g_BazaarFilterItemNameList_reserve = 1024;
 
 // 1    = 1cp    one copper piece
 // 1000 = 1pp    one platinum piece
-uint32_t g_BazaarFilterItemPriceMinimum = 1;          // 1cp
-uint32_t g_BazaarFilterItemPriceMaximum = 1000 * 100; // 100pp
+uint32_t g_BazaarFilterItemPriceMinimum = 1;       // 1cp
+uint32_t g_BazaarFilterItemPriceMaximum = 1000;    // 1pp
 
 void EQAPP_BazaarFilter_Toggle();
 void EQAPP_BazaarFilter_On();

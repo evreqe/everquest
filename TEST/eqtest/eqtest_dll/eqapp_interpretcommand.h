@@ -22,6 +22,11 @@
 
 bool g_InterpretCommandIsEnabled = true;
 
+std::list<std::string> g_InterpretCommandQueue;
+
+EQApp::Timer g_InterpretCommandQueueTimer = EQAPP_Timer_GetTimeNow();
+EQApp::TimerInterval g_InterpretCommandQueueTimerInterval = 1;
+
 void EQAPP_InterpretCommand_NULL();
 
 void EQAPP_InterpretCommand_NULL()
@@ -32,6 +37,7 @@ void EQAPP_InterpretCommand_NULL()
 std::map<std::string, std::function<void()>> g_InterpretCommandList =
 {
     {"//Unload",                       &EQAPP_Unload},
+    {"//LoadOptions",                  &EQAPP_LoadOptions},
     {"//DebugText",                    &EQAPP_ToggleDebugText},
     {"//Sleep",                        &EQAPP_Sleep_Toggle},
     {"//SleepOn",                      &EQAPP_Sleep_On},
@@ -143,6 +149,10 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//FAIUZA",                       &EQAPP_FollowAI_UseZAxis_Toggle},
     {"//FollowZ",                      &EQAPP_FollowAI_UseZAxis_Toggle},
     {"//FZ",                           &EQAPP_FollowAI_UseZAxis_Toggle},
+    {"//FollowAIBehind",               &EQAPP_FollowAI_Behind_Toggle},
+    {"//FAIB",                         &EQAPP_FollowAI_Behind_Toggle},
+    {"//FollowB",                      &EQAPP_FollowAI_Behind_Toggle},
+    {"//FB",                           &EQAPP_FollowAI_Behind_Toggle},
     {"//WindowTitle",                  &EQAPP_WindowTitle_Toggle},
     {"//WindowTitleOn",                &EQAPP_WindowTitle_On},
     {"//WindowTitleOff",               &EQAPP_WindowTitle_Off},
@@ -234,6 +244,8 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//FieldOfViewDefault",           &EQAPP_InterpretCommand_NULL},
     {"//FOVDefault",                   &EQAPP_InterpretCommand_NULL},
     {"//DrawDistance",                 &EQAPP_InterpretCommand_NULL},
+    {"//FogDistanceBegin",             &EQAPP_InterpretCommand_NULL},
+    {"//FogDistanceEnd",               &EQAPP_InterpretCommand_NULL},
     {"//ShrinkTarget",                 &EQAPP_InterpretCommand_NULL},
     {"//GrowTarget",                   &EQAPP_InterpretCommand_NULL},
     {"//ChangeTargetHeight",           &EQAPP_InterpretCommand_NULL},
@@ -358,23 +370,90 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//NearbyNPC",                    &EQAPP_InterpretCommand_NULL},
     {"//Melody",                       &EQAPP_InterpretCommand_NULL},
     {"//ScriptFolder",                 &EQAPP_InterpretCommand_NULL},
-    {"//LoadEventScriptList",          &EQAPP_InterpretCommand_NULL},
-    {"//EventScriptList",              &EQAPP_InterpretCommand_NULL},
-    {"//Script",                       &EQAPP_InterpretCommand_NULL},
+    {"//Scripts",                      &EQAPP_InterpretCommand_NULL},
     {"//LoadScripts",                  &EQAPP_InterpretCommand_NULL},
+    {"//LoadSystemScripts",            &EQAPP_InterpretCommand_NULL},
+    {"//LoadEventScriptList",          &EQAPP_InterpretCommand_NULL},
+    {"//LoadEventScripts",             &EQAPP_InterpretCommand_NULL},
+    {"//EventScriptList",              &EQAPP_InterpretCommand_NULL},
     {"//Echo",                         &EQAPP_InterpretCommand_NULL},
     {"//ItemSlotPrimary",              &EQAPP_InterpretCommand_NULL},
     {"//ItemSlotSecondary",            &EQAPP_InterpretCommand_NULL},
     {"//ItemSlotHead",                 &EQAPP_InterpretCommand_NULL},
+    {"//IfPlayerIsMoving",             &EQAPP_InterpretCommand_NULL},
     {"//IfPlayerIsNotMoving",          &EQAPP_InterpretCommand_NULL},
 };
 
+void EQAPP_InterpretCommand_Execute();
+void EQAPP_InterpretCommand_ConvertPercentText(std::string& text);
 bool EQAPP_InterpretCommand_HandleEvent_CEverQuest__InterpretCmd(void* this_ptr, class EQPlayer* player, const char* commandText_);
-bool EQAPP_InterpretCommand_HasQuotes(const std::string& commandText);
 void EQAPP_InterpretCommand_InterpretArguments(const std::string& commandText, const std::string& prependText);
 void EQAPP_InterpretCommand_InterpretArgumentsRandom(const std::string& commandText, const std::string& prependText);
 void EQAPP_InterpretCommand_Execute(std::string commandText);
 bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText);
+
+void EQAPP_InterpretCommand_Execute()
+{
+    if (g_InterpretCommandQueue.size() == 0)
+    {
+        return;
+    }
+
+    if (EQAPP_Timer_HasTimeElapsed(g_InterpretCommandQueueTimer, g_InterpretCommandQueueTimerInterval) == false)
+    {
+        return;
+    }
+
+    EQ_InterpretCommand(g_InterpretCommandQueue.front().c_str());
+
+    g_InterpretCommandQueue.pop_front();
+}
+
+void EQAPP_InterpretCommand_ConvertPercentText(std::string& text)
+{
+    if (text.find("%PlayerName") != std::string::npos)
+    {
+        auto playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn != NULL)
+        {
+            auto spawnName = EQ_GetSpawnName(playerSpawn);
+            if (spawnName.size() != 0)
+            {
+                EQAPP_String_ReplaceAll(text, "%PlayerName", spawnName);
+            }
+        }
+    }
+
+    if (text.find("%PlayerID") != std::string::npos)
+    {
+        auto playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn != NULL)
+        {
+            auto spawnID = EQ_GetSpawnID(playerSpawn);
+
+            std::string strID = std::to_string(spawnID);
+            if (strID.size() != 0)
+            {
+                EQAPP_String_ReplaceAll(text, "%PlayerID", strID);
+            }
+        }
+    }
+
+    if (text.find("%TargetID") != std::string::npos)
+    {
+        auto targetSpawn = EQ_GetTargetSpawn();
+        if (targetSpawn != NULL)
+        {
+            auto spawnID = EQ_GetSpawnID(targetSpawn);
+
+            std::string strID = std::to_string(spawnID);
+            if (strID.size() != 0)
+            {
+                EQAPP_String_ReplaceAll(text, "%TargetID", strID);
+            }
+        }
+    }
+}
 
 bool EQAPP_InterpretCommand_HandleEvent_CEverQuest__InterpretCmd(void* this_ptr, class EQPlayer* player, const char* commandText_)
 {
@@ -389,7 +468,7 @@ bool EQAPP_InterpretCommand_HandleEvent_CEverQuest__InterpretCmd(void* this_ptr,
         return true;
     }
 
-    // delete comments from command text
+    // remove comments from command text
     std::string::size_type findComment1 = commandText.find(" #");
     if (findComment1 != std::string::npos)
     {
@@ -404,48 +483,7 @@ bool EQAPP_InterpretCommand_HandleEvent_CEverQuest__InterpretCmd(void* this_ptr,
         }
     }
 
-    if (commandText.find("%PlayerName") != std::string::npos)
-    {
-        auto playerSpawn = EQ_GetPlayerSpawn();
-        if (playerSpawn != NULL)
-        {
-            auto spawnName = EQ_GetSpawnName(playerSpawn);
-            if (spawnName.size() != 0)
-            {
-                EQAPP_String_ReplaceAll(commandText, "%PlayerName", spawnName);
-            }
-        }
-    }
-
-    if (commandText.find("%PlayerID") != std::string::npos)
-    {
-        auto playerSpawn = EQ_GetPlayerSpawn();
-        if (playerSpawn != NULL)
-        {
-            auto spawnID = EQ_GetSpawnID(playerSpawn);
-
-            std::string strID = std::to_string(spawnID);
-            if (strID.size() != 0)
-            {
-                EQAPP_String_ReplaceAll(commandText, "%PlayerID", strID);
-            }
-        }
-    }
-
-    if (commandText.find("%TargetID") != std::string::npos)
-    {
-        auto targetSpawn = EQ_GetTargetSpawn();
-        if (targetSpawn != NULL)
-        {
-            auto spawnID = EQ_GetSpawnID(targetSpawn);
-
-            std::string strID = std::to_string(spawnID);
-            if (strID.size() != 0)
-            {
-                EQAPP_String_ReplaceAll(commandText, "%TargetID", strID);
-            }
-        }
-    }
+    EQAPP_InterpretCommand_ConvertPercentText(commandText);
 
     std::string firstTwoCharacters = commandText.substr(0, 2);
     if (firstTwoCharacters == "//")
@@ -486,17 +524,6 @@ bool EQAPP_InterpretCommand_HandleEvent_CEverQuest__InterpretCmd(void* this_ptr,
     return false;
 }
 
-bool EQAPP_InterpretCommand_HasQuotes(const std::string& commandText)
-{
-    if (commandText.find("\"") == std::string::npos && commandText.back() != '"')
-    {
-        std::cout << "InterpretCmd Error: Command argument missing quotes." << std::endl;
-        return false;
-    }
-
-    return true;
-}
-
 void EQAPP_InterpretCommand_InterpretArguments(const std::string& commandText, const std::string& prependText)
 {
     std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
@@ -516,7 +543,8 @@ void EQAPP_InterpretCommand_InterpretArguments(const std::string& commandText, c
         std::stringstream ss;
         ss << prependText << token;
 
-        EQ_InterpretCommand(ss.str().c_str());
+        ////EQ_InterpretCommand(ss.str().c_str());
+        g_InterpretCommandQueue.push_back(ss.str());
     }
 }
 
@@ -551,7 +579,8 @@ void EQAPP_InterpretCommand_InterpretArgumentsRandom(const std::string& commandT
     std::stringstream ss;
     ss << prependText << number;
 
-    EQ_InterpretCommand(ss.str().c_str());
+    ////EQ_InterpretCommand(ss.str().c_str());
+    g_InterpretCommandQueue.push_back(ss.str());
 }
 
 void EQAPP_InterpretCommand_Execute(std::string commandText)
@@ -561,7 +590,10 @@ void EQAPP_InterpretCommand_Execute(std::string commandText)
         return;
     }
 
-    std::cout << "InterpretCmd: " << commandText << std::endl;
+    std::stringstream ss;
+    ss << "commandText=" << commandText;
+
+    EQAPP_PrintDebugText(__FUNCTION__, ss.str().c_str());
 
     // handle special commands that are not in the command list
     bool result = EQAPP_InterpretCommand_HandleCommandText(commandText);
@@ -1116,6 +1148,46 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                     EQ_SetCameraDrawDistance(number);
 
                     std::cout << "Draw Distance: " << number << std::endl;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    if (EQAPP_String_BeginsWith(commandText, "//FogDistanceBegin ") == true)
+    {
+        std::string numberStr = EQAPP_String_GetAfter(commandText, " ");
+        if (numberStr.size() != 0)
+        {
+            if (EQAPP_String_IsDigits(numberStr) == true)
+            {
+                float number = std::stof(numberStr);
+                if (number > 0.0f)
+                {
+                    EQ_SetFogDistanceBegin(number);
+
+                    std::cout << "Fog Distance Begin: " << number << std::endl;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    if (EQAPP_String_BeginsWith(commandText, "//FogDistanceEnd ") == true)
+    {
+        std::string numberStr = EQAPP_String_GetAfter(commandText, " ");
+        if (numberStr.size() != 0)
+        {
+            if (EQAPP_String_IsDigits(numberStr) == true)
+            {
+                float number = std::stof(numberStr);
+                if (number > 0.0f)
+                {
+                    EQ_SetFogDistanceEnd(number);
+
+                    std::cout << "Fog Distance End: " << number << std::endl;
                 }
             }
         }
@@ -2956,16 +3028,34 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
     if (EQAPP_String_BeginsWith(commandText, "//ESPFindRace ") == true)
     {
-        std::string numberStr = EQAPP_String_GetAfter(commandText, " ");
-        if (numberStr.size() != 0)
+        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+        if (commandTextAfterSpace.size() != 0)
         {
-            if (EQAPP_String_IsDigits(numberStr) == true)
+            if (EQAPP_String_IsDigits(commandTextAfterSpace) == true)
             {
-                uint32_t spawnRace = std::stoul(numberStr);
+                uint32_t spawnRace = std::stoul(commandTextAfterSpace);
 
                 g_ESPFindSpawnRace = spawnRace;
 
                 std::cout << "ESP Find Spawn Race: " << g_ESPFindSpawnRace << std::endl;
+            }
+            else
+            {
+                auto key = EQ_StringMap_GetKeyByValue(EQ_STRING_MAP_RACE_NAME, commandTextAfterSpace);
+                if (key != 0xFFFFFFFF)
+                {
+                    g_ESPFindSpawnRace = key;
+
+                    std::cout << "ESP Find Spawn Race: " << commandTextAfterSpace << std::endl;
+                }
+
+                auto key2 = EQ_StringMap_GetKeyByValue(EQ_STRING_MAP_RACE_SHORT_NAME, commandTextAfterSpace);
+                if (key2 != 0xFFFFFFFF)
+                {
+                    g_ESPFindSpawnRace = key2;
+
+                    std::cout << "ESP Find Spawn Race: " << commandTextAfterSpace << std::endl;
+                }
             }
         }
 
@@ -3010,16 +3100,34 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
     if (EQAPP_String_BeginsWith(commandText, "//ESPFindClass ") == true)
     {
-        std::string numberStr = EQAPP_String_GetAfter(commandText, " ");
-        if (numberStr.size() != 0)
+        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+        if (commandTextAfterSpace.size() != 0)
         {
-            if (EQAPP_String_IsDigits(numberStr) == true)
+            if (EQAPP_String_IsDigits(commandTextAfterSpace) == true)
             {
-                uint32_t spawnClass = std::stoul(numberStr);
+                uint32_t spawnClass = std::stoul(commandTextAfterSpace);
 
                 g_ESPFindSpawnClass = spawnClass;
 
-                std::cout << "ESP Find Spawn Class: " << g_ESPFindSpawnClass << std::endl;
+                std::cout << "ESP Find Spawn Class: " << EQ_GetClassNameByKey(g_ESPFindSpawnClass) << std::endl;
+            }
+            else
+            {
+                auto key = EQ_StringMap_GetKeyByValue(EQ_STRING_MAP_CLASS_NAME, commandTextAfterSpace);
+                if (key != 0xFFFFFFFF)
+                {
+                    g_ESPFindSpawnClass = key;
+
+                    std::cout << "ESP Find Spawn Class: " << commandTextAfterSpace << std::endl;
+                }
+
+                auto key2 = EQ_StringMap_GetKeyByValue(EQ_STRING_MAP_CLASS_SHORT_NAME, commandTextAfterSpace);
+                if (key2 != 0xFFFFFFFF)
+                {
+                    g_ESPFindSpawnClass = key;
+
+                    std::cout << "ESP Find Spawn Class: " << commandTextAfterSpace << std::endl;
+                }
             }
         }
 
@@ -3361,7 +3469,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (commandText == "//ScriptFolder" || commandText == "//Script")
+    if (commandText == "//ScriptFolder" || commandText == "//Scripts" || commandText == "//Script")
     {
         std::cout << "Script Folder:" << std::endl;
 
@@ -3370,7 +3478,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (commandText == "//LoadEventScriptList" || commandText == "//LoadScripts")
+    if (commandText == "//LoadEventScriptList" || commandText == "//LoadEventScripts" || commandText == "//LoadScripts")
     {
         std::cout << "Loading Event Script list..." << std::endl;
 
@@ -3469,6 +3577,25 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
             if (playerSpawn != NULL)
             {
                 EQ_SetSpawnItemSlotHead(playerSpawn, commandTextAfterSpace.c_str());
+            }
+        }
+
+        return true;
+    }
+
+    if (EQAPP_String_BeginsWith(commandText, "//IfPlayerIsMoving ") == true)
+    {
+        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+        if (commandTextAfterSpace.size() != 0)
+        {
+            auto playerSpawn = EQ_GetPlayerSpawn();
+            if (playerSpawn != NULL)
+            {
+                auto spawnMovementSpeed = EQ_GetSpawnMovementSpeed(playerSpawn);
+                if (spawnMovementSpeed != 0.0f)
+                {
+                    EQ_InterpretCommand(commandTextAfterSpace.c_str());
+                }
             }
         }
 

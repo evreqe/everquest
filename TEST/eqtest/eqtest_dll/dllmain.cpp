@@ -57,6 +57,11 @@ namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not avai
 // https://github.com/ThePhD/sol2
 #include <sol.hpp>
 
+// boost
+#include <boost/optional.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/ini_parser.hpp>
+
 #include "eq.h"
 #include "eq_functions.h"
 
@@ -88,6 +93,8 @@ namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not avai
 
 void EQAPP_Load()
 {
+    EQAPP_LoadOptions();
+
     EQAPP_Lua_Load();
     EQAPP_SpellList_Load();
     EQAPP_BazaarFilter_Load();
@@ -138,6 +145,52 @@ void EQAPP_Unload()
     g_EQAppShouldUnload = 1;
 }
 
+template <class T>
+void EQAPP_LoadOption(T& option, const char* optionName, boost::property_tree::ptree& pt)
+{
+    std::stringstream ssOptionName;
+    ssOptionName << "Options." << optionName;
+
+    boost::optional<T> result = pt.get_optional<T>(ssOptionName.str().c_str());
+    if (result)
+    {
+        option = result.get();
+
+        std::stringstream ssDebugText;
+        ssDebugText << optionName << "=" << option;
+
+        EQAPP_PrintDebugText(__FUNCTION__, ssDebugText.str().c_str());
+    }
+}
+
+void EQAPP_LoadOptions()
+{
+    std::stringstream ssFileName;
+    ssFileName << g_EQAppName << ".ini";
+
+    boost::property_tree::ptree pt;
+    boost::property_tree::read_ini(ssFileName.str().c_str(), pt);
+
+    EQAPP_LoadOption<bool>(g_AlwaysAttackIsEnabled, "bAlwaysAttack", pt);
+    EQAPP_LoadOption<EQApp::TimerInterval>(g_AlwaysAttackTimerInterval, "iAlwaysAttackTimerInterval", pt);
+    EQAPP_LoadOption<float>(g_AlwaysAttackDistance, "fAlwaysAttackDistance", pt);
+
+    EQAPP_LoadOption<bool>(g_AlwaysHotButtonIsEnabled, "bAlwaysHotButton", pt);
+    EQAPP_LoadOption<EQApp::TimerInterval>(g_AlwaysHotButtonTimerInterval, "iAlwaysHotButtonTimerInterval", pt);
+    EQAPP_LoadOption<signed int>(g_AlwaysHotButtonIndex, "iAlwaysHotButtonIndex", pt);
+
+    EQAPP_LoadOption<bool>(g_AutoAlternateAbilityIsEnabled, "bAutoAlternateAbility", pt);
+    EQAPP_LoadOption<EQApp::TimerInterval>(g_AutoAlternateAbilityTimerInterval, "iAutoAlternateAbilityTimerInterval", pt);
+
+    EQAPP_LoadOption<bool>(g_CombatAlternateAbilityIsEnabled, "bCombatAlternateAbility", pt);
+    EQAPP_LoadOption<EQApp::TimerInterval>(g_CombatAlternateAbilityTimerInterval, "iCombatAlternateAbilityTimerInterval", pt);
+
+    EQAPP_LoadOption<bool>(g_CombatHotButtonIsEnabled, "bCombatHotButton", pt);
+    EQAPP_LoadOption<EQApp::TimerInterval>(g_CombatHotButtonTimerInterval, "iCombatHotButtonTimerInterval", pt);
+    EQAPP_LoadOption<signed int>(g_CombatHotButtonIndex, "iCombatHotButtonIndex", pt);
+    EQAPP_LoadOption<float>(g_CombatHotButtonDistance, "fCombatHotButtonDistance", pt);
+}
+
 void EQAPP_FixAddress(uint32_t& address)
 {
     if (address == 0)
@@ -158,6 +211,10 @@ void EQAPP_InitializeAddressesAndPointers()
     EQAPP_FixAddress(EQ_ADDRESS_MOUSE_LOOK);
     EQAPP_FixAddress(EQ_ADDRESS_NET_STATUS);
 
+    EQAPP_FixAddress(EQ_ADDRESS_FOG_DISTANCE_BEGIN);
+    EQAPP_FixAddress(EQ_ADDRESS_FOG_DISTANCE_END);
+    EQAPP_FixAddress(EQ_ADDRESS_FAR_CLIP_PLANE);
+
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_WINDOW_HWND);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_StringTable);
@@ -169,6 +226,8 @@ void EQAPP_InitializeAddressesAndPointers()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CastRay2);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_DrawNetStatus);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_ExecuteCmd);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_GetExecuteCmdIDByName);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_GetExecuteCmdNameByID);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_TARGET_SPAWN);
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_PLAYER_SPAWN);

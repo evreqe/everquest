@@ -342,6 +342,11 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
         }
     }
 
+    if (g_InterpretCommandIsEnabled == true)
+    {
+        EQAPP_InterpretCommand_Execute();
+    }
+
     EQAPP_Console_Print();
 
 /*
@@ -389,6 +394,7 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
     EQ_DrawTextEx(ss.str().c_str(), 800, 400, EQ_DRAW_TEXT_COLOR_YELLOW);
 */
 
+/*
     auto targetSpawn = EQ_GetTargetSpawn();
     if (targetSpawn != NULL)
     {
@@ -443,6 +449,33 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
 
         EQ_DrawTextEx(ss.str().c_str(), 800, 200, EQ_DRAW_TEXT_COLOR_YELLOW);
     }
+*/
+
+/*
+    std::stringstream ss;
+
+    for (unsigned int i = 0; i < 520; i++)
+    {
+        auto commandNameAddress = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_EXECUTE_COMMAND_LIST + (i * 4));
+
+        char commandName[1024];
+        std::memmove(commandName, (LPVOID)(commandNameAddress), sizeof(commandName));
+
+        ss << commandName << '\n';
+    }
+
+    EQ_DrawTextEx(ss.str().c_str(), 800, 200, EQ_DRAW_TEXT_COLOR_YELLOW);
+*/
+
+/*
+    std::stringstream ss;
+
+    ss << "AUTORUN=" << EQ_FUNCTION_GetExecuteCmdIDByName("AUTORUN") << "\n";
+    ss << "USE=" << EQ_FUNCTION_GetExecuteCmdIDByName("USE") << "\n";
+    ss << "CMD_HEROSJOURNEY_TEXT=" << EQ_FUNCTION_GetExecuteCmdIDByName("CMD_HEROSJOURNEY_TEXT") << "\n";
+
+    EQ_DrawTextEx(ss.str().c_str(), 800, 200, EQ_DRAW_TEXT_COLOR_YELLOW);
+*/
 
     return EQAPP_REAL_FUNCTION_DrawNetStatus(x, y, unknown);
 }
@@ -467,7 +500,7 @@ int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive,
                 int resultValue = result;
                 if (resultValue == 1)
                 {
-                    return 1; ////EQAPP_REAL_FUNCTION_ExecuteCmd(EQ_EXECUTECMD_TOGGLE_MEMINFO, 0, unknown, zero);
+                    return 1;
                 }
             }
             else
@@ -486,13 +519,13 @@ int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive,
         bool result = EQAPP_FreeCamera_HandleEvent_ExecuteCmd(commandID, isActive, zero);
         if (result == true)
         {
-            return 1; ////EQAPP_REAL_FUNCTION_ExecuteCmd(EQ_EXECUTECMD_TOGGLE_MEMINFO, 0, unknown, zero);
+            return 1;
         }
     }
 
     int result = EQAPP_REAL_FUNCTION_ExecuteCmd(commandID, isActive, unknown, zero);
 
-    if (commandID == EQ_EXECUTECMD_USER1_CAMERA || commandID == EQ_EXECUTECMD_USER1_CAMERA)
+    if (commandID == EQ_EXECUTECMD_USER1_CAMERA || commandID == EQ_EXECUTECMD_USER2_CAMERA)
     {
         EQ_ExecuteCommand(EQ_EXECUTECMD_CENTERVIEW, 1);
     }
