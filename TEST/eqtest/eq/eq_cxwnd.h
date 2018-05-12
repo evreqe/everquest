@@ -42,6 +42,9 @@
 #define EQ_PLAYER_WINDOW_COMBAT_STATE_STANDING      3   // "A_PWCSStanding"
 #define EQ_PLAYER_WINDOW_COMBAT_STATE_RESTING       4   // "A_PWCSRegen"
 
+#define EQ_OFFSET_CTaskSelectWnd_BUTTON_ACCEPT     0x238    // "Accept" button         "TSEL_AcceptButton"     "AcceptButton"
+#define EQ_OFFSET_CTaskSelectWnd_BUTTON_DECLINE    0x23C    // "Decline All" button    "TSEL_DeclineButton"    "DeclineButton"
+
 #define EQ_OFFSET_CBazaarSearchWnd_BUY_ITEM_LIST_INDEX      0x260  // uint32_t    index of the item in the search list to buy
 #define EQ_OFFSET_CBazaarSearchWnd_FIRST_ITEM               0x268  // first item in the search list starts here
 #define EQ_OFFSET_CBazaarSearchWnd_TRADER_NAME              0x268  // char[64]

@@ -116,6 +116,7 @@ void EQAPP_ESP_Execute()
         auto spawnClass = EQ_GetSpawnClass(spawn);
 
         bool bIgnoreDistance = false;
+        bool bOutOfRange = false;
 
         if (g_ESPFindSpawnName.size() != 0)
         {
@@ -165,9 +166,14 @@ void EQAPP_ESP_Execute()
             }
         }
 
+        if (spawnDistance > g_ESPDistance)
+        {
+            bOutOfRange = true;
+        }
+
         if (EQ_IsMouseLookEnabled() == false && bIgnoreDistance == false)
         {
-            if (spawnDistance > g_ESPDistance)
+            if (bOutOfRange == true)
             {
                 spawn = EQ_GetSpawnNext(spawn);
                 continue;
@@ -310,7 +316,14 @@ void EQAPP_ESP_Execute()
             }
             else if (spawnType == EQ_SPAWN_TYPE_NPC)
             {
-                textColor = EQ_DRAW_TEXT_COLOR_TEAL;
+                if (bOutOfRange == true)
+                {
+                    textColor = EQ_DRAW_TEXT_COLOR_GRAY;
+                }
+                else
+                {
+                    textColor = EQ_DRAW_TEXT_COLOR_TEAL;
+                }
             }
             else if (spawnType == EQ_SPAWN_TYPE_CORPSE)
             {

@@ -183,6 +183,8 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//PlaySoundEx",                  &EQAPP_InterpretCommand_NULL},
     {"//StopSound",                    &EQAPP_InterpretCommand_NULL},
     {"//StopSoundEx",                  &EQAPP_InterpretCommand_NULL},
+    {"//TaskAccept",                   &EQAPP_InterpretCommand_NULL},
+    {"//TaskDecline",                  &EQAPP_InterpretCommand_NULL},
     {"//BazaarDoQuery",                &EQAPP_InterpretCommand_NULL},
     {"//BazaarFindItems",              &EQAPP_InterpretCommand_NULL},
     {"//BazaarUpdateTraders",          &EQAPP_InterpretCommand_NULL},
@@ -741,6 +743,26 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
     if (commandText == "//StopSoundEx")
     {
         EQAPP_StopSound();
+
+        return true;
+    }
+
+    if (commandText == "//TaskAccept")
+    {
+        if (EQ_TaskSelectWindow_IsOpen() == true)
+        {
+            EQ_TaskSelectWindow_ClickAcceptButton();
+        }
+
+        return true;
+    }
+
+    if (commandText == "//TaskDecline")
+    {
+        if (EQ_TaskSelectWindow_IsOpen() == true)
+        {
+            EQ_TaskSelectWindow_ClickAcceptButton();
+        }
 
         return true;
     }

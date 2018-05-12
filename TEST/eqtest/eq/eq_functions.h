@@ -34,7 +34,6 @@ typedef int (__cdecl* EQ_FUNCTION_TYPE_GetExecuteCmdIDByName)(const char* comman
 EQ_MACRO_FUNCTION_FunctionAtAddress(char* __cdecl EQ_FUNCTION_GetExecuteCmdNameByID(int commandID), EQ_ADDRESS_FUNCTION_GetExecuteCmdNameByID);
 typedef char* (__cdecl* EQ_FUNCTION_TYPE_GetExecuteCmdNameByID)(int commandID);
 
-
 /* function prototypes */
 
 void EQ_Log(const char* text);
@@ -73,6 +72,10 @@ void EQ_SetAutoAttack(bool b);
 void EQ_SetAutoFire(bool b);
 void EQ_SetAutoRun(bool b);
 void EQ_SetMouseLook(bool b);
+
+float EQ_GetFogDistanceBegin();
+float EQ_GetFogDistanceEnd();
+uint32_t EQ_GetFarClipPlane();
 
 void EQ_SetFogDistanceBegin(float distance);
 void EQ_SetFogDistanceEnd(float distance);
@@ -229,6 +232,10 @@ bool EQ_CXWnd_Close(uint32_t cxwndAddressPointer);
 bool EQ_CXWnd_ClickButton(uint32_t cxwndAddressPointer, uint32_t cxwndButtonOffset);
 
 uint32_t EQ_PlayerWindow_GetCombatState();
+
+bool EQ_TaskSelectWindow_IsOpen();
+bool EQ_TaskSelectWindow_ClickAcceptButton();
+bool EQ_TaskSelectWindow_ClickDeclineButton();
 
 bool EQ_BazaarSearchWindow_IsOpen();
 void EQ_BazaarSearchWindow_DoQuery();
@@ -553,6 +560,21 @@ void EQ_SetMouseLook(bool b)
     EQ_WriteMemory<uint8_t>(EQ_ADDRESS_MOUSE_LOOK, value);
 }
 
+float EQ_GetFogDistanceBegin()
+{
+    return EQ_ReadMemory<float>(EQ_ADDRESS_FOG_DISTANCE_BEGIN);
+}
+
+float EQ_GetFogDistanceEnd()
+{
+    return EQ_ReadMemory<float>(EQ_ADDRESS_FOG_DISTANCE_END);
+}
+
+uint32_t EQ_GetFarClipPlane()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_FAR_CLIP_PLANE);
+}
+
 void EQ_SetFogDistanceBegin(float distance)
 {
     EQ_WriteMemory<float>(EQ_ADDRESS_FOG_DISTANCE_BEGIN, distance);
@@ -565,7 +587,7 @@ void EQ_SetFogDistanceEnd(float distance)
 
 void EQ_SetFarClipPlane(uint32_t value)
 {
-    if (value >= EQ_FAR_CLIP_PLANE_MAX && value <= EQ_FAR_CLIP_PLANE_MAX)
+    if (value >= EQ_FAR_CLIP_PLANE_MIN && value <= EQ_FAR_CLIP_PLANE_MAX)
     {
         EQ_WriteMemory<uint32_t>(EQ_ADDRESS_FAR_CLIP_PLANE, value);
     }
@@ -1640,39 +1662,39 @@ void EQ_DrawRectangle(float x, float y, float width, float height, uint32_t colo
         rectangle.Y4 = y + height;
         rectangle.Z4 = 1.0f;
 
-        EQ_CLASS_POINTER_CRender->DrawFilledRectangle(rectangle, colorARGB);
+        EQ_CLASS_POINTER_CRender->DrawColoredRectangle(rectangle, colorARGB);
     }
     else
     {
-        EQ::Point p1;
-        EQ::Point p2;
-        EQ::Point p3;
-        EQ::Point p4;
+        EQ::Point point1;
+        EQ::Point point2;
+        EQ::Point point3;
+        EQ::Point point4;
 
         // top left
-        p1.X = x;
-        p1.Y = y;
-        p1.Z = 1.0f;
+        point1.X = x;
+        point1.Y = y;
+        point1.Z = 1.0f;
 
         // top right
-        p2.X = x + width;
-        p2.Y = y;
-        p2.Z = 1.0f;
+        point2.X = x + width;
+        point2.Y = y;
+        point2.Z = 1.0f;
 
         // bottom right
-        p3.X = x + width;
-        p3.Y = y + height;
-        p3.Z = 1.0f;
+        point3.X = x + width;
+        point3.Y = y + height;
+        point3.Z = 1.0f;
 
         // bottom left
-        p4.X = x;
-        p4.Y = y + height;
-        p4.Z = 1.0f;
+        point4.X = x;
+        point4.Y = y + height;
+        point4.Z = 1.0f;
 
-        EQ_CLASS_POINTER_CRender->DrawLine(p1, p2, colorARGB);
-        EQ_CLASS_POINTER_CRender->DrawLine(p2, p3, colorARGB);
-        EQ_CLASS_POINTER_CRender->DrawLine(p3, p4, colorARGB);
-        EQ_CLASS_POINTER_CRender->DrawLine(p4, p1, colorARGB);
+        EQ_CLASS_POINTER_CRender->DrawLine(point1, point2, colorARGB);
+        EQ_CLASS_POINTER_CRender->DrawLine(point2, point3, colorARGB);
+        EQ_CLASS_POINTER_CRender->DrawLine(point3, point4, colorARGB);
+        EQ_CLASS_POINTER_CRender->DrawLine(point4, point1, colorARGB);
     }
 }
 
@@ -1960,6 +1982,21 @@ uint32_t EQ_PlayerWindow_GetCombatState()
     }
 
     return EQ_ReadMemory<uint32_t>(playerWindow + EQ_OFFSET_CPlayerWindow_COMBAT_STATE);
+}
+
+bool EQ_TaskSelectWindow_IsOpen()
+{
+    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CTaskSelectWnd) == true);
+}
+
+bool EQ_TaskSelectWindow_ClickAcceptButton()
+{
+    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CTaskSelectWnd, EQ_OFFSET_CTaskSelectWnd_BUTTON_ACCEPT);
+}
+
+bool EQ_TaskSelectWindow_ClickDeclineButton()
+{
+    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CTaskSelectWnd, EQ_OFFSET_CTaskSelectWnd_BUTTON_DECLINE);
 }
 
 bool EQ_BazaarSearchWindow_IsOpen()

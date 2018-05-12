@@ -254,19 +254,16 @@ void EQAPP_InitializeAddressesAndPointers()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CXWnd__IsReallyVisible);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CPlayerWindow);
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CTaskSelectWnd);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
-    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__WndNotification);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__HandleBazaarMsg);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd);
-    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarConfirmationWnd__WndNotification);
-
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CBazaarWnd);
-    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarWnd__WndNotification);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CRender);
 
@@ -294,6 +291,12 @@ void EQAPP_InitializeAddressesAndPointers()
     {
         EQ_CLASS_POINTER_CDisplay_pptr = (EQClass::CDisplay**)EQ_ADDRESS_POINTER_CDisplay;
         EQ_CLASS_POINTER_CDisplay = (*EQ_CLASS_POINTER_CDisplay_pptr);
+    }
+
+    if (EQ_ADDRESS_POINTER_CTaskSelectWnd != 0)
+    {
+        EQ_CLASS_POINTER_CTaskSelectWnd_pptr = (EQClass::CTaskSelectWnd**)EQ_ADDRESS_POINTER_CTaskSelectWnd;
+        EQ_CLASS_POINTER_CTaskSelectWnd = (*EQ_CLASS_POINTER_CTaskSelectWnd_pptr);
     }
 
     if (EQ_ADDRESS_POINTER_CBazaarSearchWnd != 0)

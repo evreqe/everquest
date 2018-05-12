@@ -663,11 +663,11 @@ LABEL_15:
           }
 */
 
-uint32_t EQ_ADDRESS_POINTER_CPlayerWindow   = 0xDA8E6C; // "PlayerWindow"
+uint32_t EQ_ADDRESS_POINTER_CPlayerWindow    = 0xDA8E6C; // "PlayerWindow"
+
+uint32_t EQ_ADDRESS_POINTER_CTaskSelectWnd    = 0x1021E08; // "TaskSelectWnd"
 
 uint32_t EQ_ADDRESS_POINTER_CBazaarSearchWnd    = 0xDA8E58; // "BazaarSearchWnd"
-
-uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__WndNotification    = 0x0; // not needed, can use VFTable index    "You cannot purchase an item from yourself!"    "9999999"
 
 uint32_t EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__HandleBazaarMsg    = 0x6C9930; // "You successfully purchased %d %s(s) from %s."    "The item has been sent to your parcels."
 /*
@@ -1180,16 +1180,12 @@ char __thiscall sub_779040(_DWORD *this, int a2) // CBazaarSearchWnd__BuyItem()
 
 uint32_t EQ_ADDRESS_POINTER_CBazaarConfirmationWnd    = 0xDA8BC0; // "BazaarConfirmationWnd"
 
-uint32_t EQ_ADDRESS_FUNCTION_CBazaarConfirmationWnd__WndNotification    = 0x0; // not needed, can use VFTable index
-
 // Trader window
 uint32_t EQ_ADDRESS_POINTER_CBazaarWnd    = 0xDA8F54; // "BazaarWnd"
 
-uint32_t EQ_ADDRESS_FUNCTION_CBazaarWnd__WndNotification    = 0x0; // not needed, can use VFTable index
+uint32_t EQ_ADDRESS_POINTER_CCamera    = 0x0; // calculated at runtime
 
-uint32_t EQ_ADDRESS_POINTER_CCamera    = 0x0; // addresses for CCamera are calculated at run time
-
-uint32_t EQ_ADDRESS_FUNCTION_CCamera__SetCameraLocation    = 0x0; // addresses for CCamera are calculated at run time
+uint32_t EQ_ADDRESS_FUNCTION_CCamera__SetCameraLocation    = 0x0; // calculated at runtime
 
 uint32_t EQ_ADDRESS_POINTER_CRender    = 0x169A608; // __DrawHandler_x    "ResetDevice() failed!" CRender+0x64()    EQ_LoadingS__SetProgressBar() "%s..."    CDisplay__WriteTextHD2() follow draw text functions
 /*

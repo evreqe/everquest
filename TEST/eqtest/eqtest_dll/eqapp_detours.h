@@ -350,11 +350,30 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
     EQAPP_Console_Print();
 
 /*
-    EQ_DrawLine(100.0f, 200.0f, 1.0f, 800.0f, 900.0f, 1.0f, 0xFFFF00FF);
+    EQ_DrawLine3D(100.0f, 200.0f, 1.0f, 800.0f, 900.0f, 1.0f, 0xFFFF00FF);
 
     EQ_DrawRectangle(400.0f, 400.0f, 100.0f, 100.0f, 0xFF00FF00, true);
 
     EQ_DrawRectangle(800.0f, 800.0f, 100.0f, 100.0f, 0x40FF0000, false);
+*/
+
+/*
+    {
+
+        uint32_t x = 100;
+        uint32_t y = 100;
+        uint32_t width = 1000;
+        uint32_t height = 1000;
+
+        EQ::CXRect cxrect1;
+
+        cxrect1.X1 = x;
+        cxrect1.Y1 = y;
+        cxrect1.X2 = x + width;
+        cxrect1.Y2 = y + height;
+
+        EQ_CLASS_POINTER_CRender->DrawWrappedText(10, "Testing123 Testing456 Testing789 Testing0", cxrect1, cxrect1, 0xFFFF00FF, 1, 0);
+    }
 */
 
 /*

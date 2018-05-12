@@ -17,6 +17,9 @@ namespace EQClass
     class CXWndManager;
     class CXWnd;
 
+    class CTaskSelectWnd;
+    class CPlayerWindow;
+
     class CBazaarSearchWnd;
     class CBazaarConfirmationWnd;
     class CBazaarWnd;
@@ -45,8 +48,6 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__dsp_chat)(void* this_ptr, 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::StartCasting(EQMessage::CEverQuest__StartCasting_ptr message), EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__StartCasting)(void* this_ptr, EQMessage::CEverQuest__StartCasting_ptr message);
 
-////EQClass::CEverQuest** EQ_CLASS_POINTER_CEverQuest_pptr = (EQClass::CEverQuest**)EQ_ADDRESS_POINTER_CEverQuest;
-////#define EQ_CLASS_POINTER_CEverQuest (*EQ_CLASS_POINTER_CEverQuest_pptr)
 EQClass::CEverQuest** EQ_CLASS_POINTER_CEverQuest_pptr;
 EQClass::CEverQuest* EQ_CLASS_POINTER_CEverQuest;
 
@@ -61,8 +62,6 @@ public:
 EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQClass::CDisplay::WriteTextHD2(const char* text, int x, int y, signed int color), EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__WriteTextHD2)(void* this_ptr, const char* text, int x, int y, signed int color);
 
-////EQClass::CDisplay** EQ_CLASS_POINTER_CDisplay_pptr = (EQClass::CDisplay**)EQ_ADDRESS_POINTER_CDisplay;
-////#define EQ_CLASS_POINTER_CDisplay (*EQ_CLASS_POINTER_CDisplay_pptr)
 EQClass::CDisplay** EQ_CLASS_POINTER_CDisplay_pptr;
 EQClass::CDisplay* EQ_CLASS_POINTER_CDisplay;
 
@@ -81,8 +80,6 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayerManager__GetSpawnByID)(void* t
 EQ_MACRO_FUNCTION_FunctionAtAddress(uint32_t* EQClass::EQPlayerManager::GetSpawnByName(const char* spawnName), EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayerManager__GetSpawnByName)(void* this_ptr, const char* spawnName);
 
-////EQClass::EQPlayerManager** EQ_CLASS_POINTER_EQPlayerManager_pptr = (EQClass::EQPlayerManager**)EQ_ADDRESS_POINTER_EQPlayerManager;
-////#define EQ_CLASS_POINTER_EQPlayerManager (*EQ_CLASS_POINTER_EQPlayerManager_pptr)
 EQClass::EQPlayerManager** EQ_CLASS_POINTER_EQPlayerManager_pptr;
 EQClass::EQPlayerManager* EQ_CLASS_POINTER_EQPlayerManager;
 
@@ -116,8 +113,6 @@ public:
 EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::CXWndManager::DrawWindows(), EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CXWndManager__DrawWindows)(void* this_ptr);
 
-////EQClass::CXWndManager** EQ_CLASS_POINTER_CXWndManager_pptr = (EQClass::CXWndManager**)EQ_ADDRESS_POINTER_CXWndManager;
-////#define EQ_CLASS_POINTER_CXWndManager (*EQ_CLASS_POINTER_CXWndManager_pptr)
 EQClass::CXWndManager** EQ_CLASS_POINTER_CXWndManager_pptr;
 EQClass::CXWndManager* EQ_CLASS_POINTER_CXWndManager;
 
@@ -144,6 +139,19 @@ EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CXWnd::Deactivate(), EQ
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::CXWnd::IsReallyVisible(), EQ_ADDRESS_FUNCTION_CXWnd__IsReallyVisible);
 
+/* CTaskSelectWnd */
+
+class EQClass::CTaskSelectWnd
+{
+public:
+    int CTaskSelectWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
+};
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CTaskSelectWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
+
+EQClass::CTaskSelectWnd** EQ_CLASS_POINTER_CTaskSelectWnd_pptr;
+EQClass::CTaskSelectWnd* EQ_CLASS_POINTER_CTaskSelectWnd;
+
 /* CBazaarSearchWnd */
 
 class EQClass::CBazaarSearchWnd
@@ -166,8 +174,6 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarSearchWnd__doQuery)(void* this_
 EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::CBazaarSearchWnd::BuyItem(int quantity), EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarSearchWnd__BuyItem)(void* this_ptr, int quantity);
 
-////EQClass::CBazaarSearchWnd** EQ_CLASS_POINTER_CBazaarSearchWnd_pptr = (EQClass::CBazaarSearchWnd**)EQ_ADDRESS_POINTER_CBazaarSearchWnd;
-////#define EQ_CLASS_POINTER_CBazaarSearchWnd (*EQ_CLASS_POINTER_CBazaarSearchWnd_pptr)
 EQClass::CBazaarSearchWnd** EQ_CLASS_POINTER_CBazaarSearchWnd_pptr;
 EQClass::CBazaarSearchWnd* EQ_CLASS_POINTER_CBazaarSearchWnd;
 
@@ -181,8 +187,6 @@ public:
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CBazaarConfirmationWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
 
-////EQClass::CBazaarConfirmationWnd** EQ_CLASS_POINTER_CBazaarConfirmationWnd_pptr = (EQClass::CBazaarConfirmationWnd**)EQ_ADDRESS_POINTER_CBazaarConfirmationWnd;
-////#define EQ_CLASS_POINTER_CBazaarConfirmationWnd (*EQ_CLASS_POINTER_CBazaarConfirmationWnd_pptr)
 EQClass::CBazaarConfirmationWnd** EQ_CLASS_POINTER_CBazaarConfirmationWnd_pptr;
 EQClass::CBazaarConfirmationWnd* EQ_CLASS_POINTER_CBazaarConfirmationWnd;
 
@@ -196,8 +200,6 @@ public:
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CBazaarWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
 
-////EQClass::CBazaarWnd** EQ_CLASS_POINTER_CBazaarWnd_pptr = (EQClass::CBazaarWnd**)EQ_ADDRESS_POINTER_CBazaarWnd;
-////#define EQ_CLASS_POINTER_CBazaarWnd (*EQ_CLASS_POINTER_CBazaarWnd_pptr)
 EQClass::CBazaarWnd** EQ_CLASS_POINTER_CBazaarWnd_pptr;
 EQClass::CBazaarWnd* EQ_CLASS_POINTER_CBazaarWnd;
 
@@ -228,20 +230,21 @@ class EQClass::CRender
 {
 public:
     bool CRender::DrawLine(EQ::Point& lineBegin, EQ::Point& lineEnd, uint32_t colorARGB);
-    bool CRender::DrawWrappedText(EQ::CXStr& text, EQ::Rectangle& rectangle, uint32_t font, uint32_t colorARGB, uint16_t flags, int startX);
-    bool CRender::DrawFilledRectangle(EQ::Rectangle& rectangle, uint32_t colorARGB);
+    bool CRender::DrawWrappedText(uint32_t fontStyle, const char* text, EQ::CXRect& cxrect1, EQ::CXRect& cxrect2, uint32_t colorARGB, uint16_t flags, int startX);
+    bool CRender::DrawColoredRectangle(EQ::Rectangle& rectangle, uint32_t colorARGB);
 };
 
-#define EQ_VFTABLE_INDEX_CRender__ResetDevice            0x64    // "ResetDevice() failed!"
-#define EQ_VFTABLE_INDEX_CRender__DrawLine               0x88
-#define EQ_VFTABLE_INDEX_CRender__DrawWrappedText        0x94
-#define EQ_VFTABLE_INDEX_CRender__DrawFilledRectangle    0xA0
+#define EQ_VFTABLE_INDEX_CRender__ResetDevice             0x64    // "ResetDevice() failed!"
+#define EQ_VFTABLE_INDEX_CRender__DrawLine                0x88
+#define EQ_VFTABLE_INDEX_CRender__DrawWrappedText         0x94
+#define EQ_VFTABLE_INDEX_CRender__DrawColoredRectangle    0xA0
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawLine(EQ::Point& lineBegin, EQ::Point& lineEnd, uint32_t colorARGB), EQ_VFTABLE_INDEX_CRender__DrawLine);
 
-EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawWrappedText(EQ::CXStr& text, EQ::Rectangle& rectangle, uint32_t font, uint32_t colorARGB, uint16_t flags, int startX), EQ_VFTABLE_INDEX_CRender__DrawWrappedText);
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawWrappedText(uint32_t fontStyle, const char* text, EQ::CXRect& cxrect1, EQ::CXRect& cxrect2, uint32_t colorARGB, uint16_t flags, int startX), EQ_VFTABLE_INDEX_CRender__DrawWrappedText);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CRender__DrawWrappedText)(void* this_ptr, uint32_t fontStyle, const char* text, EQ::CXRect& cxrect1, EQ::CXRect& cxrect2, uint32_t colorARGB, uint16_t flags, int startX);
 
-EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawFilledRectangle(EQ::Rectangle& rectangle, uint32_t colorARGB), EQ_VFTABLE_INDEX_CRender__DrawFilledRectangle);
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawColoredRectangle(EQ::Rectangle& rectangle, uint32_t colorARGB), EQ_VFTABLE_INDEX_CRender__DrawColoredRectangle);
 
 EQClass::CRender** EQ_CLASS_POINTER_CRender_pptr;
 EQClass::CRender* EQ_CLASS_POINTER_CRender;

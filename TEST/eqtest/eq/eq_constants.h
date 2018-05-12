@@ -50,7 +50,18 @@ const uint32_t EQ_FAR_CLIP_PLANE_MAX = 20;
 #define EQ_OFFSET_EQPlayerManager_FIRST_SPAWN    0x08
 #define EQ_OFFSET_EQPlayerManager_LAST_SPAWN     0x0C
 
-#define EQ_OFFSET_CXWndManager_FONTS_ARRAY    0x11C
+#define EQ_OFFSET_CXWndManager_FONTS_ARRAY    0x11C    // add 0x04 to get the actual array of CTextureFont objects
+
+#define EQ_OFFSET_CTextureFont_STYLE    0x04 // font size and style
+
+// use /chatfontsize to see the font style in the chat window
+#define EQ_FONT_STYLE_MIN 0
+#define EQ_FONT_STYLE_MAX 10
+
+#define EQ_FONT_STYLE_CDisplay__WriteTextHD2    2     // used by the CDisplay::WriteTextHD2() function
+#define EQ_FONT_STYLE_DEFAULT                   3     // default size used in the chat window
+#define EQ_FONT_STYLE_FIXED_WIDTH               9     // small text and all characters are the same size, courier new or fixed sys font face
+#define EQ_FONT_STYLE_NAME_SPRITE               10    // big text with drop shadow, used for text above players/npcs heads
 
 // EQPlayer
 // double check offsets after patch!
@@ -481,13 +492,11 @@ namespace EQ
         float Z4;
     } Rectangle, *Rectangle_ptr;
 
-    typedef struct _CXStr
+    typedef struct _CXRect
     {
-        /*0x00*/   DWORD   Font;            // maybe, dont know.  04 = Window 01 = button
-        /*0x04*/   DWORD   MaxLength;
-        /*0x08*/   DWORD   Length;
-        /*0x0C*/   BOOL    Encoding;        // 0: ASCII, 1:Unicode
-        /*0x10*/   PCRITICAL_SECTION pLock;
-        /*0x14*/   char Text[1024];
-    } CXStr, *CXStr_ptr;
+        uint32_t X1; // Left      // upper left x
+        uint32_t Y1; // Top       // upper left y
+        uint32_t X2; // Right     // lower right x
+        uint32_t Y2; // Bottom    // lower right y
+    } CXRect, *CXRect_ptr;
 } // namespace EQ

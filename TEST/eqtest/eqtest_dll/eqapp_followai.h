@@ -126,20 +126,20 @@ void EQAPP_FollowAI_Execute()
 
         bool bFollowSpawnCastRay = EQ_CanSpawnCastRayToLocation(playerSpawn, followSpawnY, followSpawnX, followSpawnZ);
 
-        uint32_t followSpawnLineColorARGB = 0xFFFF0000;
+        uint32_t followSpawnLineColorARGB = 0xFFFF0000; // red
         if (bFollowSpawnCastRay == true)
         {
-            followSpawnLineColorARGB = 0xFF00FF00;
+            followSpawnLineColorARGB = 0xFF00FF00; // green
         }
 
         EQ_DrawLine3D(playerSpawnY, playerSpawnX, playerSpawnZ, followSpawnY, followSpawnX, followSpawnZ, followSpawnLineColorARGB);
 
         bFollowBehindCanCastRay = EQ_CanSpawnCastRayToLocation(playerSpawn, behindSpawnY, behindSpawnX, behindSpawnZ);
 
-        uint32_t behindSpawnLineColorARGB = 0xFF800000;
+        uint32_t behindSpawnLineColorARGB = 0xFF800000; // dark red
         if (bFollowBehindCanCastRay == true)
         {
-            behindSpawnLineColorARGB = 0xFF008000;
+            behindSpawnLineColorARGB = 0xFF008000; // dark green
         }
 
         EQ_DrawLine3D(playerSpawnY, playerSpawnX, playerSpawnZ, behindSpawnY, behindSpawnX, behindSpawnZ, behindSpawnLineColorARGB);

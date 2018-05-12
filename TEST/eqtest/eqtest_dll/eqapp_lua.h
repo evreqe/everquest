@@ -1076,6 +1076,10 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_SetAutoRun", EQ_SetAutoRun);
     state->set_function("EQ_SetMouseLook", EQ_SetMouseLook);
 
+    state->set_function("EQ_GetFogDistanceBegin", EQ_GetFogDistanceBegin);
+    state->set_function("EQ_GetFogDistanceEnd", EQ_GetFogDistanceEnd);
+    state->set_function("EQ_GetFarClipPlane", EQ_GetFarClipPlane);
+
     state->set_function("EQ_SetFogDistanceBegin", EQ_SetFogDistanceBegin);
     state->set_function("EQ_SetFogDistanceEnd", EQ_SetFogDistanceEnd);
     state->set_function("EQ_SetFarClipPlane", EQ_SetFarClipPlane);
