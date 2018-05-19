@@ -286,9 +286,10 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set("EQ_NUM_BAGS", EQ_NUM_BAGS);
     state->set("EQ_NUM_BAG_SLOTS", EQ_NUM_BAG_SLOTS);
 
-    state->set("EQ_BAZAAR_SEARCH_MAX_RESULTS_PER_TRADER", EQ_BAZAAR_SEARCH_MAX_RESULTS_PER_TRADER);
-
     state->set("EQ_SPELL_ID_NULL", EQ_SPELL_ID_NULL);
+
+    state->set("EQ_FOG_OFF", EQ_FOG_OFF);
+    state->set("EQ_FOG_ON", EQ_FOG_ON);
 
     state->set("EQ_UPDATE_ITEM_SLOT_HEAD", EQ_UPDATE_ITEM_SLOT_HEAD);
     state->set("EQ_UPDATE_ITEM_SLOT_PRIMARY", EQ_UPDATE_ITEM_SLOT_PRIMARY);
@@ -306,13 +307,19 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set("EQ_ACTOR_TYPE_UNDEFINED", EQ_ACTOR_TYPE_UNDEFINED);
     state->set("EQ_ACTOR_TYPE_CORPSE", EQ_ACTOR_TYPE_CORPSE);
     state->set("EQ_ACTOR_TYPE_SWITCH", EQ_ACTOR_TYPE_SWITCH);
-    state->set("EQ_ACTOR_TYPE_DOOR", EQ_ACTOR_TYPE_DOOR);
     state->set("EQ_ACTOR_TYPE_MISSILE", EQ_ACTOR_TYPE_MISSILE);
     state->set("EQ_ACTOR_TYPE_OBJECT", EQ_ACTOR_TYPE_OBJECT);
     state->set("EQ_ACTOR_TYPE_LADDER", EQ_ACTOR_TYPE_LADDER);
     state->set("EQ_ACTOR_TYPE_TREE", EQ_ACTOR_TYPE_TREE);
     state->set("EQ_ACTOR_TYPE_WALL", EQ_ACTOR_TYPE_WALL);
     state->set("EQ_ACTOR_TYPE_PLACED_OBJECT", EQ_ACTOR_TYPE_PLACED_OBJECT);
+
+    state->set("EQ_SWITCH_KEY_ID_NULL", EQ_SWITCH_KEY_ID_NULL);
+
+    state->set("EQ_SWITCH_STATE_CLOSED", EQ_SWITCH_STATE_CLOSED);
+    state->set("EQ_SWITCH_STATE_OPEN", EQ_SWITCH_STATE_OPEN);
+    state->set("EQ_SWITCH_STATE_OPENING", EQ_SWITCH_STATE_OPENING);
+    state->set("EQ_SWITCH_STATE_CLOSING", EQ_SWITCH_STATE_CLOSING);
 
     state->set("EQ_ENVIRONMENT_TYPE_WATER", EQ_ENVIRONMENT_TYPE_WATER);
 
@@ -1642,7 +1649,8 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_SetAutoRun", EQ_SetAutoRun);
     state->set_function("EQ_SetMouseLook", EQ_SetMouseLook);
 
-    state->set_function("EQ_GetFogDistanceBegin", EQ_GetFogDistanceBegin);
+    state->set_function("EQ_IsFogEnabled", EQ_IsFogEnabled);
+    state->set_function("EQ_SetFog", EQ_SetFog);
     state->set_function("EQ_GetFogDistanceEnd", EQ_GetFogDistanceEnd);
     state->set_function("EQ_GetFarClipPlane", EQ_GetFarClipPlane);
 
@@ -1799,8 +1807,6 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_StopFollow", EQ_StopFollow);
     state->set_function("EQ_FollowTarget", EQ_FollowTarget);
 
-    state->set_function("EQ_PlayerWindow_GetCombatState", EQ_PlayerWindow_GetCombatState);
-
     state->set_function("EQ_GetSpawnTypeNameByKey", EQ_GetSpawnTypeNameByKey);
     state->set_function("EQ_GetStandingStateNameByKey", EQ_GetStandingStateNameByKey);
     state->set_function("EQ_GetDirectionNameByKey", EQ_GetDirectionNameByKey);
@@ -1815,4 +1821,10 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_UseDiscipline", EQ_UseDiscipline);
     state->set_function("EQ_UseAbility", EQ_UseAbility);
     state->set_function("EQ_UseItem", EQ_UseItem);
+
+    state->set_function("EQ_UseDoo", EQ_UseDoor);
+    state->set_function("EQ_UseDoorByDistance", EQ_UseDoorByDistance);
+    state->set_function("EQ_SetStateForAllDoors", EQ_SetStateForAllDoors);
+    state->set_function("EQ_OpenAllDoors", EQ_OpenAllDoors);
+    state->set_function("EQ_CloseAllDoors", EQ_CloseAllDoors);
 }

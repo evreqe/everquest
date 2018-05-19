@@ -4,8 +4,6 @@
 #include "eqapp_alwayshotbutton.h"
 #include "eqapp_autoalternateability.h"
 #include "eqapp_autogroup.h"
-#include "eqapp_bazaarbot.h"
-#include "eqapp_bazaarfilter.h"
 #include "eqapp_boxchat.h"
 #include "eqapp_changeheight.h"
 #include "eqapp_combatalternateability.h"
@@ -38,8 +36,6 @@ EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__InterpretCmd);
 EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__StartCasting);
 EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__dsp_chat);
 
-EQ_MACRO_FUNCTION_DefineDetour(CBazaarSearchWnd__AddItemToList);
-
 EQ_MACRO_FUNCTION_DefineDetour(CCamera__SetCameraLocation);
 
 char* __cdecl EQAPP_DETOURED_FUNCTION_CrashDetected();
@@ -54,8 +50,6 @@ int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__UpdateItemSlot(void* this_ptr, 
 int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__InterpretCmd(void* this_ptr, void* not_used, class EQPlayer* player, const char* text);
 int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__StartCasting(void* this_ptr, void* not_used, EQMessage::CEverQuest__StartCasting_ptr message);
 int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void* not_used, const char* text, int textColor, bool one_1, bool one_2, bool zero_1);
-
-int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* this_ptr, void* not_used, char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11);
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CCamera__SetCameraLocation(void* this_ptr, void* not_used, EQ::Location& location, bool canSetLocation);
 
@@ -96,11 +90,6 @@ void EQAPP_Detours_Load()
         EQ_MACRO_FUNCTION_AddDetour(CEverQuest__InterpretCmd);
         EQ_MACRO_FUNCTION_AddDetour(CEverQuest__StartCasting);
         EQ_MACRO_FUNCTION_AddDetour(CEverQuest__dsp_chat);
-    }
-
-    if (EQ_ADDRESS_POINTER_CBazaarSearchWnd != 0)
-    {
-        EQ_MACRO_FUNCTION_AddDetour(CBazaarSearchWnd__AddItemToList);
     }
 
     EQ_ADDRESS_POINTER_CCamera = EQ_GetCamera();
@@ -155,11 +144,6 @@ void EQAPP_Detours_Unload()
         EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__InterpretCmd);
         EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__StartCasting);
         EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__dsp_chat);
-    }
-
-    if (EQ_ADDRESS_POINTER_CBazaarSearchWnd != 0)
-    {
-        EQ_MACRO_FUNCTION_RemoveDetour(CBazaarSearchWnd__AddItemToList);
     }
 
     EQ_ADDRESS_POINTER_CCamera = EQ_GetCamera();
@@ -235,10 +219,7 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
     {
         if (g_BoxChatIsConnected == true)
         {
-            if (g_BazaarBotIsEnabled == false)
-            {
-                EQAPP_BoxChat_Execute();
-            }
+            EQAPP_BoxChat_Execute();
         }
         else
         {
@@ -302,11 +283,6 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
     if (g_ChangeHeightIsEnabled == true)
     {
         EQAPP_ChangeHeight_Execute();
-    }
-
-    if (g_BazaarBotIsEnabled == true)
-    {
-        EQAPP_BazaarBot_Execute();
     }
 
     if (g_LuaIsEnabled == true)
@@ -767,11 +743,6 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void
         EQAPP_AutoGroup_HandleEvent_CEverQuest__dsp_chat(chatText, textColor);
     }
 
-    if (g_BazaarBotIsEnabled == true)
-    {
-        EQAPP_BazaarBot_HandleEvent_CEverQuest__dsp_chat(chatText, textColor);
-    }
-
     if (g_LuaIsEnabled == true)
     {
         for (auto& script : g_LuaEventScriptList)
@@ -801,36 +772,6 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void
     }
 
     return result;
-}
-
-int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* this_ptr, void* not_used, char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11)
-{
-    if (g_EQAppShouldUnload == 1)
-    {
-        return EQAPP_REAL_FUNCTION_CBazaarSearchWnd__AddItemToList(this_ptr, itemName, itemPrice, traderName, a4, a5, a6, a7, a8, a9, a10, a11);
-    }
-
-    ////std::cout << "CBazaarSearchWnd::AddItemToList(): " << itemName << "^" << itemPrice << "^" << traderName << "^" << a4 << "^"  << a5 << "^" << a6 << "^" << a7 << "^" << a8 <<  "^" << a10 << std::endl;
-
-    if (g_BazaarFilterIsEnabled == true)
-    {
-        bool bShouldAddItemToList = EQAPP_BazaarFilter_HandleEvent_CBazaarSearchWnd__AddItemToList(itemName, itemPrice, traderName);
-        if (bShouldAddItemToList == false)
-        {
-            return 1;
-        }
-    }
-
-    if (g_BazaarBotIsEnabled == true)
-    {
-        bool bShouldAddItemToList = EQAPP_BazaarBot_HandleEvent_CBazaarSearchWnd__AddItemToList(itemName, itemPrice, traderName);
-        if (bShouldAddItemToList == false)
-        {
-            return 1;
-        }
-    }
-
-    return EQAPP_REAL_FUNCTION_CBazaarSearchWnd__AddItemToList(this_ptr, itemName, itemPrice, traderName, a4, a5, a6, a7, a8, a9, a10, a11);
 }
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CCamera__SetCameraLocation(void* this_ptr, void* not_used, EQ::Location& location, bool canSetLocation)

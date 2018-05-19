@@ -3,8 +3,6 @@
 #include "eqapp_alwaysattack.h"
 #include "eqapp_alwayshotbutton.h"
 #include "eqapp_autoalternateability.h"
-#include "eqapp_bazaarbot.h"
-#include "eqapp_bazaarfilter.h"
 #include "eqapp_boxchat.h"
 #include "eqapp_combatalternateability.h"
 #include "eqapp_combathotbutton.h"
@@ -225,21 +223,6 @@ void EQAPP_HUD_Execute()
         EQAPP_HUD_DrawText("- Spawn Cast Spell Group Chat");
     }
 */
-
-    if (g_BazaarFilterIsEnabled == true)
-    {
-        EQAPP_HUD_DrawText("- Bazaar Filter");
-    }
-
-    if (g_BazaarFilterBeepIsEnabled == true)
-    {
-        EQAPP_HUD_DrawText("- Bazaar Filter Beep");
-    }
-
-    if (g_BazaarBotIsEnabled == true)
-    {
-        EQAPP_HUD_DrawText("- Bazaar Bot");
-    }
 
 /*
     int drawX = 800;

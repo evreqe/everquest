@@ -4,8 +4,6 @@
 #include "eqapp_alwayshotbutton.h"
 #include "eqapp_autoalternateability.h"
 #include "eqapp_autogroup.h"
-#include "eqapp_bazaarbot.h"
-#include "eqapp_bazaarfilter.h"
 #include "eqapp_boxchat.h"
 #include "eqapp_changeheight.h"
 #include "eqapp_combatalternateability.h"
@@ -99,6 +97,8 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//ESPRace",                      &EQAPP_ESP_ShowSpawnRace_Toggle},
     {"//ESPShowSpawnClass",            &EQAPP_ESP_ShowSpawnClass_Toggle},
     {"//ESPClass",                     &EQAPP_ESP_ShowSpawnClass_Toggle},
+    {"//ESPShowDoors",                 &EQAPP_ESP_ShowDoors_Toggle},
+    {"//ESPDoors",                     &EQAPP_ESP_ShowDoors_Toggle},
     {"//ChangeHeight",                 &EQAPP_ChangeHeight_Toggle},
     {"//ChangeHeightOn",               &EQAPP_ChangeHeight_On},
     {"//ChangeHeightOff",              &EQAPP_ChangeHeight_Off},
@@ -122,24 +122,6 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//HUDOff",                       &EQAPP_HUD_Off},
     {"//HUDDebugText",                 &EQAPP_HUD_DebugText_Toggle},
     {"//HUDDT",                        &EQAPP_HUD_DebugText_Toggle},
-    {"//LoadBazaarFilter",             &EQAPP_BazaarFilter_Load},
-    {"//LBF",                          &EQAPP_BazaarFilter_Load},
-    {"//BazaarFilter",                 &EQAPP_BazaarFilter_Toggle},
-    {"//BazaarFilterOn",               &EQAPP_BazaarFilter_On},
-    {"//BazaarFilterOff",              &EQAPP_BazaarFilter_Off},
-    {"//BF",                           &EQAPP_BazaarFilter_Toggle},
-    {"//BFOn",                         &EQAPP_BazaarFilter_On},
-    {"//BFOff",                        &EQAPP_BazaarFilter_Off},
-    {"//BazaarFilterBeep",             &EQAPP_BazaarFilter_Beep_Toggle},
-    {"//BFB",                          &EQAPP_BazaarFilter_Beep_Toggle},
-    {"//BazaarFilterList",             &EQAPP_BazaarFilter_PrintItemNameList},
-    {"//BFL",                          &EQAPP_BazaarFilter_PrintItemNameList},
-    {"//BazaarBot",                    &EQAPP_BazaarBot_Toggle},
-    {"//BazaarBotOn",                  &EQAPP_BazaarBot_On},
-    {"//BazaarBotOff",                 &EQAPP_BazaarBot_Off},
-    {"//BB",                           &EQAPP_BazaarBot_Toggle},
-    {"//BBOn",                         &EQAPP_BazaarBot_On},
-    {"//BBOff",                        &EQAPP_BazaarBot_Off},
     {"//FollowAI",                     &EQAPP_FollowAI_Toggle},
     {"//FollowAIOn",                   &EQAPP_FollowAI_On},
     {"//FollowAIOff",                  &EQAPP_FollowAI_Off},
@@ -170,6 +152,8 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//FC",                           &EQAPP_FreeCamera_Toggle},
     {"//FCOn",                         &EQAPP_FreeCamera_On},
     {"//FCOff",                        &EQAPP_FreeCamera_Off},
+    {"//OpenAllDoors",                 &EQ_OpenAllDoors},
+    {"//CloseAllDoors",                &EQ_CloseAllDoors},
     ////
     ////{"//Null",                         &EQAPP_InterpretCommand_NULL},
     ////
@@ -184,16 +168,6 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//PlaySoundEx",                  &EQAPP_InterpretCommand_NULL},
     {"//StopSound",                    &EQAPP_InterpretCommand_NULL},
     {"//StopSoundEx",                  &EQAPP_InterpretCommand_NULL},
-    {"//TaskAccept",                   &EQAPP_InterpretCommand_NULL},
-    {"//TaskDecline",                  &EQAPP_InterpretCommand_NULL},
-    {"//BazaarDoQuery",                &EQAPP_InterpretCommand_NULL},
-    {"//BazaarFindItems",              &EQAPP_InterpretCommand_NULL},
-    {"//BazaarUpdateTraders",          &EQAPP_InterpretCommand_NULL},
-    {"//BazaarReset",                  &EQAPP_InterpretCommand_NULL},
-    {"//BazaarBuy",                    &EQAPP_InterpretCommand_NULL},
-    {"//BazaarToParcels",              &EQAPP_InterpretCommand_NULL},
-    {"//BazaarBeginTrader",            &EQAPP_InterpretCommand_NULL},
-    {"//BazaarEndTrader",              &EQAPP_InterpretCommand_NULL},
     {"//Screencap",                    &EQAPP_InterpretCommand_NULL},
     {"//Screenshot",                   &EQAPP_InterpretCommand_NULL},
     {"//Origin",                       &EQAPP_InterpretCommand_NULL},
@@ -247,6 +221,8 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//FieldOfViewDefault",           &EQAPP_InterpretCommand_NULL},
     {"//FOVDefault",                   &EQAPP_InterpretCommand_NULL},
     {"//DrawDistance",                 &EQAPP_InterpretCommand_NULL},
+    {"//FogOff",                       &EQAPP_InterpretCommand_NULL},
+    {"//FogOn",                        &EQAPP_InterpretCommand_NULL},
     {"//FogDistanceBegin",             &EQAPP_InterpretCommand_NULL},
     {"//FogDistanceEnd",               &EQAPP_InterpretCommand_NULL},
     {"//ShrinkTarget",                 &EQAPP_InterpretCommand_NULL},
@@ -385,6 +361,7 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//ItemSlotHead",                 &EQAPP_InterpretCommand_NULL},
     {"//IfPlayerIsMoving",             &EQAPP_InterpretCommand_NULL},
     {"//IfPlayerIsNotMoving",          &EQAPP_InterpretCommand_NULL},
+    {"//UseDoor",                      &EQAPP_InterpretCommand_NULL},
 };
 
 void EQAPP_InterpretCommand_Execute();
@@ -674,9 +651,12 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         std::string numberStr = EQAPP_String_GetAfter(commandText, " ");
         if (numberStr.size() != 0)
         {
-            uint32_t number = std::stoul(numberStr);
+            if (EQAPP_String_IsDigits(numberStr) == true)
+            {
+                uint32_t number = std::stoul(numberStr);
 
-            EQAPP_BeepEx(number);
+                EQAPP_BeepEx(number);
+            }
         }
 
         return true;
@@ -744,121 +724,6 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
     if (commandText == "//StopSoundEx")
     {
         EQAPP_StopSound();
-
-        return true;
-    }
-
-    if (commandText == "//TaskAccept")
-    {
-        if (EQ_TaskSelectWindow_IsOpen() == true)
-        {
-            EQ_TaskSelectWindow_ClickAcceptButton();
-        }
-
-        return true;
-    }
-
-    if (commandText == "//TaskDecline")
-    {
-        if (EQ_TaskSelectWindow_IsOpen() == true)
-        {
-            EQ_TaskSelectWindow_ClickAcceptButton();
-        }
-
-        return true;
-    }
-
-    if (commandText == "//BazaarDoQuery")
-    {
-        if (EQ_BazaarConfirmationWindow_IsOpen() == false)
-        {
-            if (EQ_BazaarSearchWindow_IsOpen() == true)
-            {
-                EQ_BazaarSearchWindow_DoQuery();
-            }
-        }
-
-        return true;
-    }
-
-    if (commandText == "//BazaarFindItems")
-    {
-        if (EQ_BazaarConfirmationWindow_IsOpen() == false)
-        {
-            if (EQ_BazaarSearchWindow_IsOpen() == true)
-            {
-                EQ_BazaarSearchWindow_ClickFindItemsButton();
-            }
-        }
-
-        return true;
-    }
-
-    if (commandText == "//BazaarUpdateTraders")
-    {
-        if (EQ_BazaarConfirmationWindow_IsOpen() == false)
-        {
-            if (EQ_BazaarSearchWindow_IsOpen() == true)
-            {
-                EQ_BazaarSearchWindow_ClickUpdateTradersButton();
-            }
-        }
-
-        return true;
-    }
-
-    if (commandText == "//BazaarReset")
-    {
-        if (EQ_BazaarConfirmationWindow_IsOpen() == false)
-        {
-            if (EQ_BazaarSearchWindow_IsOpen() == true)
-            {
-                EQ_BazaarSearchWindow_ClickResetButton();
-            }
-        }
-
-        return true;
-    }
-
-    if (commandText == "//BazaarBuy")
-    {
-        if (EQ_BazaarConfirmationWindow_IsOpen() == false)
-        {
-            if (EQ_BazaarSearchWindow_IsOpen() == true)
-            {
-                EQ_BazaarSearchWindow_BuyItem(0);
-            }
-        }
-
-        return true;
-    }
-
-    if (commandText == "//BazaarToParcels")
-    {
-        if (EQ_BazaarConfirmationWindow_IsOpen() == true)
-        {
-            EQ_BazaarConfirmationWindow_ClickToParcelsButton();
-        }
-
-        return true;
-    }
-
-    if (commandText == "//BazaarBeginTrader")
-    {
-        if (EQ_BazaarWindow_IsOpen() == true)
-        {
-            EQ_BazaarWindow_ClickBeginTraderButton();
-        }
-
-        return true;
-    }
-
-    if (commandText == "//BazaarEndTrader")
-    {
-        if (EQ_BazaarWindow_IsOpen() == true)
-        {
-            EQ_BazaarWindow_ClickEndTraderButton();
-        }
 
         return true;
     }
@@ -1174,6 +1039,20 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                 }
             }
         }
+
+        return true;
+    }
+
+    if (commandText == "//FogOff")
+    {
+        EQ_SetFog(false);
+
+        return true;
+    }
+
+    if (commandText == "//FogOn")
+    {
+        EQ_SetFog(true);
 
         return true;
     }
@@ -3638,6 +3517,35 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                 {
                     EQ_InterpretCommand(commandTextAfterSpace.c_str());
                 }
+            }
+        }
+
+        return true;
+    }
+
+    if (commandText == "//UseDoor")
+    {
+        EQ_UseDoorByDistance(EQ_USE_DOOR_DISTANCE_DEFAULT);
+
+        return true;
+    }
+
+    if (EQAPP_String_BeginsWith(commandText, "//UseDoor ") == true)
+    {
+        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+        if (commandTextAfterSpace.size() != 0)
+        {
+            if (EQAPP_String_IsDigits(commandTextAfterSpace) == true)
+            {
+                float number = std::stof(commandTextAfterSpace);
+                if (number > 0.0f)
+                {
+                    EQ_UseDoorByDistance(number);
+                }
+            }
+            else
+            {
+                EQ_UseDoor(commandTextAfterSpace.c_str());
             }
         }
 

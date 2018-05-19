@@ -29,6 +29,8 @@ const float EQ_MELEE_DISTANCE_MAX    = 75.0f; // get_melee_range()
 const uint32_t EQ_FAR_CLIP_PLANE_MIN = 0;
 const uint32_t EQ_FAR_CLIP_PLANE_MAX = 20;
 
+const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
+
 #define EQ_NUM_HOTBARS           11    // 10 + 1, potion belt was removed and replaced with another hotbar
 #define EQ_NUM_HOTBAR_BUTTONS    12
 #define EQ_NUM_SPELLS            59999
@@ -36,9 +38,10 @@ const uint32_t EQ_FAR_CLIP_PLANE_MAX = 20;
 #define EQ_NUM_BAGS              10    // number of bags you can hold in your inventory
 #define EQ_NUM_BAG_SLOTS         40    // number of slots a bag can have
 
-#define EQ_BAZAAR_SEARCH_MAX_RESULTS_PER_TRADER 200 // max number of results you can get when searching
-
 #define EQ_SPELL_ID_NULL 0xFFFFFFFF
+
+#define EQ_FOG_OFF    0x00 // uint8_t
+#define EQ_FOG_ON     0xFF // uint8_t
 
 #define EQ_UPDATE_ITEM_SLOT_HEAD         0
 #define EQ_UPDATE_ITEM_SLOT_PRIMARY      7
@@ -101,18 +104,18 @@ const uint32_t EQ_FAR_CLIP_PLANE_MAX = 20;
 #define EQ_OFFSET_SPAWN_MOUNT_RIDER_SPAWN                  0x158    // uint32_t    // spawn that is riding the mount
 #define EQ_OFFSET_SPAWN_IS_TARGETABLE                      0x160    // uint8_t
 // ******************** randomized after each patch ******************** //    #define PLAYERZONECLIENT
-#define EQ_OFFSET_SPAWN_ZONE_ID                    0x4C0    // uint32_t
-#define EQ_OFFSET_SPAWN_LEVEL                      0x401    // uint8_t
-#define EQ_OFFSET_SPAWN_RACE                       0xF8C    // uint32_t
-#define EQ_OFFSET_SPAWN_CLASS                      0xF94    // uint32_t
-#define EQ_OFFSET_SPAWN_STANDING_STATE             0x344    // uint8_t
-#define EQ_OFFSET_SPAWN_HP_CURRENT                 0x4A8    // uint32_t
-#define EQ_OFFSET_SPAWN_HP_MAX                     0x320    // uint32_t
-#define EQ_OFFSET_SPAWN_MANA_CURRENT               0x240    // uint32_t
-#define EQ_OFFSET_SPAWN_MANA_MAX                   0x404    // uint32_t
-#define EQ_OFFSET_SPAWN_ENDURANCE_CURRENT          0x3E8    // uint32_t
-#define EQ_OFFSET_SPAWN_ENDURANCE_MAX              0x228    // uint32_t
-#define EQ_OFFSET_SPAWN_FOLLOW_SPAWN               0xF1C    // uint32_t pointer    // the spawn you are auto-following
+#define EQ_OFFSET_SPAWN_ZONE_ID                    0x5F8    // uint32_t
+#define EQ_OFFSET_SPAWN_LEVEL                      0x571    // uint8_t
+#define EQ_OFFSET_SPAWN_RACE                       0xFA0    // uint32_t
+#define EQ_OFFSET_SPAWN_CLASS                      0xFA8    // uint32_t
+#define EQ_OFFSET_SPAWN_STANDING_STATE             0x2D8    // uint8_t
+#define EQ_OFFSET_SPAWN_HP_CURRENT                 0x3E0    // int64_t
+#define EQ_OFFSET_SPAWN_HP_MAX                     0x5D8    // int64_t
+#define EQ_OFFSET_SPAWN_MANA_CURRENT               0x2DC    // int32_t
+#define EQ_OFFSET_SPAWN_MANA_MAX                   0x5B0    // int32_t
+#define EQ_OFFSET_SPAWN_ENDURANCE_CURRENT          0x608    // uint32_t
+#define EQ_OFFSET_SPAWN_ENDURANCE_MAX              0x21C    // uint32_t
+#define EQ_OFFSET_SPAWN_FOLLOW_SPAWN               0xF30    // uint32_t pointer    // the spawn you are auto-following
 // ********************************************************************* //
 
 #define EQ_SIZE_SPAWN_NAME         64 // 0x40
@@ -134,14 +137,56 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_SPAWN_TYPE_NAME =
 #define EQ_ACTOR_TYPE_UNDEFINED        0
 #define EQ_ACTOR_TYPE_PLAYER           1
 #define EQ_ACTOR_TYPE_CORPSE           2
-#define EQ_ACTOR_TYPE_SWITCH           3
-#define EQ_ACTOR_TYPE_DOOR             3    // doors are switches
+#define EQ_ACTOR_TYPE_SWITCH           3    // doors are switches
 #define EQ_ACTOR_TYPE_MISSILE          4
 #define EQ_ACTOR_TYPE_OBJECT           5
 #define EQ_ACTOR_TYPE_LADDER           6
 #define EQ_ACTOR_TYPE_TREE             7
 #define EQ_ACTOR_TYPE_WALL             8
 #define EQ_ACTOR_TYPE_PLACED_OBJECT    9
+
+#define EQ_OFFSET_EQSwitchManager_NUM_SWITCHES    0x00 // uint32_t
+#define EQ_OFFSET_EQSwitchManager_FIRST_SWITCH    0x04 // uint32_t pointer, class EQSwitch
+
+#define EQ_SWITCH_KEY_ID_NULL    0xFFFFFFFF
+
+#define EQ_SWITCH_STATE_CLOSED     0
+#define EQ_SWITCH_STATE_OPEN       1
+#define EQ_SWITCH_STATE_OPENING    2
+#define EQ_SWITCH_STATE_CLOSING    3
+
+#define EQ_SWITCH_TYPE_0                         0      // used as a static model in the zone, do not use
+#define EQ_SWITCH_TYPE_5                         5      // opens at an angle like a regular door
+#define EQ_SWITCH_TYPE_27                        27     // slides left to right
+#define EQ_SWITCH_TYPE_TOUCH_OR_CLICK_TO_ZONE    57     // pok books
+#define EQ_SWITCH_TYPE_CLICK_TO_ZONE             58     // pok stones, pok to guild lobby, bazaar to pok
+#define EQ_SWITCH_TYPE_59                        59     // pok library elevator, goes up and down
+#define EQ_SWITCH_TYPE_77                        77     // slides up and down
+#define EQ_SWITCH_TYPE_109                       109    // pok library elevator switch, goes backwards and forwards
+#define EQ_SWITCH_TYPE_156                       156    // book rotating in a circle on table in potranquility
+#define EQ_SWITCH_TYPE_158                       158    // book of legends in the pok library, click shows book text
+
+#define EQ_OFFSET_EQSwitch_VFTABLE                0x00 // uint32_t pointer
+#define EQ_OFFSET_EQSwitch_OBJECT_TYPE            0x04 // uint8_t
+#define EQ_OFFSET_EQSwitch_INDEX                  0x05 // uint8_t
+#define EQ_OFFSET_EQSwitch_NAME                   0x06 // char[32]
+#define EQ_OFFSET_EQSwitch_TYPE                   0x26 // uint8_t
+#define EQ_OFFSET_EQSwitch_STATE                  0x27 // uint8_t
+#define EQ_OFFSET_EQSwitch_DEFAULT_Y              0x28 // float
+#define EQ_OFFSET_EQSwitch_DEFAULT_X              0x2C // float
+#define EQ_OFFSET_EQSwitch_DEFAULT_Z              0x30 // float
+#define EQ_OFFSET_EQSwitch_DEFAULT_HEADING        0x34 // float
+#define EQ_OFFSET_EQSwitch_DEFAULT_ANGLE          0x38 // float
+#define EQ_OFFSET_EQSwitch_Y                      0x44 // float
+#define EQ_OFFSET_EQSwitch_X                      0x48 // float
+#define EQ_OFFSET_EQSwitch_Z                      0x4C // float
+#define EQ_OFFSET_EQSwitch_HEADING                0x50 // float
+#define EQ_OFFSET_EQSwitch_ANGLE                  0x54 // float
+#define EQ_OFFSET_EQSwitch_KEY_ID                 0x70 // uint32_t
+#define EQ_OFFSET_EQSwitch_CActor                 0xA4 // uint32_t pointer
+#define EQ_OFFSET_EQSwitch_IS_USEABLE             0xD4 // uint8_t
+
+#define EQ_SIZE_EQSwitch_NAME    32 // 0x20
 
 #define EQ_ENVIRONMENT_TYPE_WATER    5
 

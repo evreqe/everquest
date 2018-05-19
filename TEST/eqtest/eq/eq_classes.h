@@ -14,15 +14,9 @@ namespace EQClass
     class EQPlayerManager;
     class EQPlayer;
 
+    class EQSwitch;
+
     class CXWndManager;
-    class CXWnd;
-
-    class CTaskSelectWnd;
-    class CPlayerWindow;
-
-    class CBazaarSearchWnd;
-    class CBazaarConfirmationWnd;
-    class CBazaarWnd;
 
     // EQGraphicsDX9.dll
     class CCamera;
@@ -102,6 +96,20 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__ChangeHeight)(void* this_ptr
 EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::EQPlayer::UpdateItemSlot(uint8_t updateItemSlot, const char* itemDefinition, bool b1, bool serverSide, bool b3), EQ_ADDRESS_FUNCTION_EQPlayer__UpdateItemSlot);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__UpdateItemSlot)(void* this_ptr, uint8_t updateItemSlot, const char* itemDefinition, bool b1, bool serverSide, bool b3);
 
+/* EQSwitch */
+
+class EQClass::EQSwitch
+{
+public:
+    void EQSwitch::UseSwitch(uint32_t spawnID, uint32_t keyID, uint32_t pickSkill, const void* hitLocation = 0);
+    void EQSwitch::ChangeState(uint8_t state, int zero1, int zero2);
+};
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQSwitch::UseSwitch(uint32_t spawnID, uint32_t keyID, uint32_t pickSkill, const void* hitLocation), EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQSwitch::ChangeState(uint8_t state, int zero1, int zero2), EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState);
+
+
 /* CXWndManager */
 
 class EQClass::CXWndManager
@@ -115,93 +123,6 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CXWndManager__DrawWindows)(void* this_
 
 EQClass::CXWndManager** EQ_CLASS_POINTER_CXWndManager_pptr;
 EQClass::CXWndManager* EQ_CLASS_POINTER_CXWndManager;
-
-/* CXWnd */
-
-class EQClass::CXWnd
-{
-public:
-    int CXWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
-    void CXWnd::Activate();
-    void CXWnd::Deactivate();
-    bool CXWnd::IsReallyVisible(); // is open
-};
-
-#define EQ_VFTABLE_INDEX_CXWnd__WndNotification    0x88
-#define EQ_VFTABLE_INDEX_CXWnd__Activate           0x90 // show window
-#define EQ_VFTABLE_INDEX_CXWnd__Deactivate         0x94 // hide window
-
-EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CXWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
-
-EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CXWnd::Activate(), EQ_VFTABLE_INDEX_CXWnd__Activate);
-
-EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CXWnd::Deactivate(), EQ_VFTABLE_INDEX_CXWnd__Deactivate);
-
-EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::CXWnd::IsReallyVisible(), EQ_ADDRESS_FUNCTION_CXWnd__IsReallyVisible);
-
-/* CTaskSelectWnd */
-
-class EQClass::CTaskSelectWnd
-{
-public:
-    int CTaskSelectWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
-};
-
-EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CTaskSelectWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
-
-EQClass::CTaskSelectWnd** EQ_CLASS_POINTER_CTaskSelectWnd_pptr;
-EQClass::CTaskSelectWnd* EQ_CLASS_POINTER_CTaskSelectWnd;
-
-/* CBazaarSearchWnd */
-
-class EQClass::CBazaarSearchWnd
-{
-public:
-    int CBazaarSearchWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
-    void CBazaarSearchWnd::AddItemToList(char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11);
-    void CBazaarSearchWnd::doQuery();
-    bool CBazaarSearchWnd::BuyItem(int quantity);
-};
-
-EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CBazaarSearchWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
-
-EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CBazaarSearchWnd::AddItemToList(char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11), EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarSearchWnd__AddItemToList)(void* this_ptr, char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11);
-
-EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CBazaarSearchWnd::doQuery(), EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarSearchWnd__doQuery)(void* this_ptr);
-
-EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::CBazaarSearchWnd::BuyItem(int quantity), EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarSearchWnd__BuyItem)(void* this_ptr, int quantity);
-
-EQClass::CBazaarSearchWnd** EQ_CLASS_POINTER_CBazaarSearchWnd_pptr;
-EQClass::CBazaarSearchWnd* EQ_CLASS_POINTER_CBazaarSearchWnd;
-
-/* CBazaarConfirmationWnd */
-
-class EQClass::CBazaarConfirmationWnd
-{
-public:
-    int CBazaarConfirmationWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
-};
-
-EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CBazaarConfirmationWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
-
-EQClass::CBazaarConfirmationWnd** EQ_CLASS_POINTER_CBazaarConfirmationWnd_pptr;
-EQClass::CBazaarConfirmationWnd* EQ_CLASS_POINTER_CBazaarConfirmationWnd;
-
-/* CBazaarWnd */
-
-class EQClass::CBazaarWnd
-{
-public:
-    int CBazaarWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
-};
-
-EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CBazaarWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
-
-EQClass::CBazaarWnd** EQ_CLASS_POINTER_CBazaarWnd_pptr;
-EQClass::CBazaarWnd* EQ_CLASS_POINTER_CBazaarWnd;
 
 /* CCamera */
 

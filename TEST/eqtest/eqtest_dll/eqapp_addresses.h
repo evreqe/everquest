@@ -17,21 +17,21 @@ void EQAPP_FixAddress(uint32_t& address)
 
 void EQAPP_InitializeAddressesAndPointers()
 {
-    EQAPP_FixAddress(EQ_ADDRESS_AUTO_ATTACK);
-    EQAPP_FixAddress(EQ_ADDRESS_AUTO_FIRE);
-    EQAPP_FixAddress(EQ_ADDRESS_AUTO_RUN);
-    EQAPP_FixAddress(EQ_ADDRESS_MOUSE_LOOK);
-    EQAPP_FixAddress(EQ_ADDRESS_NET_STATUS);
+    EQAPP_FixAddress(EQ_ADDRESS_AutoAttack);
+    EQAPP_FixAddress(EQ_ADDRESS_AutoFire);
+    EQAPP_FixAddress(EQ_ADDRESS_AutoRun);
+    EQAPP_FixAddress(EQ_ADDRESS_MouseLook);
+    EQAPP_FixAddress(EQ_ADDRESS_NetStatus);
 
-    EQAPP_FixAddress(EQ_ADDRESS_FOG_DISTANCE_BEGIN);
-    EQAPP_FixAddress(EQ_ADDRESS_FOG_DISTANCE_END);
-    EQAPP_FixAddress(EQ_ADDRESS_FAR_CLIP_PLANE);
+    EQAPP_FixAddress(EQ_ADDRESS_FogEnabled);
+    EQAPP_FixAddress(EQ_ADDRESS_FogDistanceBegin);
+    EQAPP_FixAddress(EQ_ADDRESS_FogDistanceEnd);
+    EQAPP_FixAddress(EQ_ADDRESS_FarClipPlane);
 
-    EQAPP_FixAddress(EQ_ADDRESS_POINTER_WINDOW_HWND);
+    EQAPP_FixAddress(EQ_ADDRESS_WindowHWND);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_StringTable);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_StringTable__getString);
-    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_build_token_string_PARAM);
 
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CrashDetected);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CastRay);
@@ -41,8 +41,8 @@ void EQAPP_InitializeAddressesAndPointers()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_GetExecuteCmdIDByName);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_GetExecuteCmdNameByID);
 
-    EQAPP_FixAddress(EQ_ADDRESS_POINTER_TARGET_SPAWN);
-    EQAPP_FixAddress(EQ_ADDRESS_POINTER_PLAYER_SPAWN);
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_TargetSpawn);
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_PlayerSpawn);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_EQPlayerManager);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID);
@@ -52,6 +52,11 @@ void EQAPP_InitializeAddressesAndPointers()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__UpdateItemSlot);
+
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_EQSwitchManager);
+
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CXWndManager);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows);
@@ -64,19 +69,7 @@ void EQAPP_InitializeAddressesAndPointers()
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CDisplay);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2);
 
-    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CXWnd__IsReallyVisible);
-
-    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CPlayerWindow);
-    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CTaskSelectWnd);
-
-    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
-    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__HandleBazaarMsg);
-    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList);
-    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery);
-    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem);
-
-    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd);
-    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CBazaarWnd);
+    //EQSwitch
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CRender);
 
@@ -104,30 +97,6 @@ void EQAPP_InitializeAddressesAndPointers()
     {
         EQ_CLASS_POINTER_CDisplay_pptr = (EQClass::CDisplay**)EQ_ADDRESS_POINTER_CDisplay;
         EQ_CLASS_POINTER_CDisplay = (*EQ_CLASS_POINTER_CDisplay_pptr);
-    }
-
-    if (EQ_ADDRESS_POINTER_CTaskSelectWnd != 0)
-    {
-        EQ_CLASS_POINTER_CTaskSelectWnd_pptr = (EQClass::CTaskSelectWnd**)EQ_ADDRESS_POINTER_CTaskSelectWnd;
-        EQ_CLASS_POINTER_CTaskSelectWnd = (*EQ_CLASS_POINTER_CTaskSelectWnd_pptr);
-    }
-
-    if (EQ_ADDRESS_POINTER_CBazaarSearchWnd != 0)
-    {
-        EQ_CLASS_POINTER_CBazaarSearchWnd_pptr = (EQClass::CBazaarSearchWnd**)EQ_ADDRESS_POINTER_CBazaarSearchWnd;
-        EQ_CLASS_POINTER_CBazaarSearchWnd = (*EQ_CLASS_POINTER_CBazaarSearchWnd_pptr);
-    }
-
-    if (EQ_ADDRESS_POINTER_CBazaarConfirmationWnd != 0)
-    {
-        EQ_CLASS_POINTER_CBazaarConfirmationWnd_pptr = (EQClass::CBazaarConfirmationWnd**)EQ_ADDRESS_POINTER_CBazaarConfirmationWnd;
-        EQ_CLASS_POINTER_CBazaarConfirmationWnd = (*EQ_CLASS_POINTER_CBazaarConfirmationWnd_pptr);
-    }
-
-    if (EQ_ADDRESS_POINTER_CBazaarWnd != 0)
-    {
-        EQ_CLASS_POINTER_CBazaarWnd_pptr = (EQClass::CBazaarWnd**)EQ_ADDRESS_POINTER_CBazaarWnd;
-        EQ_CLASS_POINTER_CBazaarWnd = (*EQ_CLASS_POINTER_CBazaarWnd_pptr);
     }
 
     if (EQ_ADDRESS_POINTER_CRender != 0)

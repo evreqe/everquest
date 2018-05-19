@@ -77,8 +77,6 @@ namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not avai
 #include "eqapp_alwayshotbutton.h"
 #include "eqapp_autoalternateability.h"
 #include "eqapp_autogroup.h"
-#include "eqapp_bazaarbot.h"
-#include "eqapp_bazaarfilter.h"
 #include "eqapp_boxchat.h"
 #include "eqapp_changeheight.h"
 #include "eqapp_combatalternateability.h"
@@ -104,7 +102,6 @@ void EQAPP_Load()
 
     EQAPP_Lua_Load();
     EQAPP_SpellList_Load();
-    EQAPP_BazaarFilter_Load();
 
     if (g_WindowTitleIsEnabled == true)
     {

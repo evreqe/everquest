@@ -100,18 +100,18 @@ int is_client_version_correct(DWORD process_id, HANDLE process_handle)
 
     DWORD base_address = get_module_base_address(process_id, L"eqgame.exe");
 
-    DWORD date_address = (EQ_ADDRESS_CLIENT_VERSION_DATE - 0x400000) + base_address;
-    DWORD time_address = (EQ_ADDRESS_CLIENT_VERSION_TIME - 0x400000) + base_address;
+    DWORD date_address = (EQ_ADDRESS_ClientVersionDate - 0x400000) + base_address;
+    DWORD time_address = (EQ_ADDRESS_ClientVersionTime - 0x400000) + base_address;
 
-    char date_buffer[EQ_SIZE_CLIENT_VERSION_DATE] = {0};
+    char date_buffer[EQ_SIZE_ClientVersionDate] = {0};
     ReadProcessMemory(process_handle, (LPVOID)date_address, &date_buffer[0], sizeof(date_buffer), 0);
 
-    char time_buffer[EQ_SIZE_CLIENT_VERSION_TIME] = {0};
+    char time_buffer[EQ_SIZE_ClientVersionTime] = {0};
     ReadProcessMemory(process_handle, (LPVOID)time_address, &time_buffer[0], sizeof(time_buffer), 0);
 
-    if (strcmp(date_buffer, EQ_STRING_CLIENT_VERSION_DATE) == 0)
+    if (strcmp(date_buffer, EQ_STRING_ClientVersionDate) == 0)
     {
-        if (strcmp(time_buffer, EQ_STRING_CLIENT_VERSION_TIME) == 0)
+        if (strcmp(time_buffer, EQ_STRING_ClientVersionTime) == 0)
         {
             result = 1;
         }
@@ -120,7 +120,7 @@ int is_client_version_correct(DWORD process_id, HANDLE process_handle)
     if (result == 0)
     {
         char error_text[4096];
-        sprintf_s(error_text, sizeof(error_text), "Expected %s and %s for date and time!", EQ_STRING_CLIENT_VERSION_DATE, EQ_STRING_CLIENT_VERSION_TIME);
+        sprintf_s(error_text, sizeof(error_text), "Expected %s and %s for date and time!", EQ_STRING_ClientVersionDate, EQ_STRING_ClientVersionTime);
 
         MessageBoxA(NULL, error_text, "Inject DLL Error", MB_ICONERROR);
     }

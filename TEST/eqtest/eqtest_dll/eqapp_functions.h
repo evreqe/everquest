@@ -460,4 +460,3 @@ void EQAPP_PrintLocation()
         std::cout << "Your target's location is " << targetSpawnY << ", " << targetSpawnX << ", " << targetSpawnZ << "." << std::endl;
     }
 }
-

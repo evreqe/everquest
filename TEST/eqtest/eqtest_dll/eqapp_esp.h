@@ -13,7 +13,11 @@ bool g_ESPShowSpawnIDIsEnabled = false;
 bool g_ESPShowSpawnRaceIsEnabled = false;
 bool g_ESPShowSpawnClassIsEnabled = false;
 
+bool g_ESPShowDoorsIsEnabled = false;
+
 float g_ESPDistance = 400.0f;
+
+float g_ESPDoorDistance = 100.0f;
 
 std::string g_ESPFindSpawnName;
 std::string g_ESPFindSpawnLastName;
@@ -30,6 +34,8 @@ void EQAPP_ESP_HeightFilter_Toggle();
 void EQAPP_ESP_ShowSpawnID_Toggle();
 void EQAPP_ESP_ShowSpawnRace_Toggle();
 void EQAPP_ESP_ShowSpawnClass_Toggle();
+void EQAPP_ESP_ShowDoors_Toggle();
+void EQAPP_ESP_DrawDoors();
 void EQAPP_ESP_Execute();
 
 void EQAPP_ESP_Toggle()
@@ -76,6 +82,94 @@ void EQAPP_ESP_ShowSpawnClass_Toggle()
 {
     EQ_ToggleBool(g_ESPShowSpawnClassIsEnabled);
     EQAPP_PrintBool("ESP Show Spawn Class", g_ESPShowSpawnClassIsEnabled);
+}
+
+void EQAPP_ESP_ShowDoors_Toggle()
+{
+    EQ_ToggleBool(g_ESPShowDoorsIsEnabled);
+    EQAPP_PrintBool("ESP Show Doors", g_ESPShowDoorsIsEnabled);
+}
+
+void EQAPP_ESP_DrawDoors()
+{
+    auto switchManager = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_EQSwitchManager);
+    if (switchManager == NULL)
+    {
+        return;
+    }
+
+    auto numDoors = EQ_ReadMemory<uint32_t>(switchManager + EQ_OFFSET_EQSwitchManager_NUM_SWITCHES);
+    if (numDoors == 0)
+    {
+        return;
+    }
+
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
+    auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
+    auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
+
+    for (unsigned int i = 0; i < numDoors; i++)
+    {
+        auto door = EQ_ReadMemory<uint32_t>(switchManager + (EQ_OFFSET_EQSwitchManager_FIRST_SWITCH + (i * 0x04)));
+        if (door == NULL)
+        {
+            continue;
+        }
+
+        auto doorY = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_Y);
+        auto doorX = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_X);
+        auto doorZ = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_Z);
+
+        float doorDistance = EQ_CalculateDistance(playerSpawnY, playerSpawnX, doorY, doorX);
+        if (doorDistance > g_ESPDoorDistance)
+        {
+            continue;
+        }
+
+        float screenX = -1.0f;
+        float screenY = -1.0f;
+        bool result = EQ_WorldLocationToScreenLocation(doorY, doorX, doorZ, screenX, screenY);
+        if (result == true)
+        {
+            char doorName[EQ_SIZE_EQSwitch_NAME];
+            std::memmove(doorName, (LPVOID)(door + EQ_OFFSET_EQSwitch_NAME), sizeof(doorName));
+
+            std::stringstream espText;
+            espText << "[Door] " << doorName << " (" << (int)doorDistance << "m)";
+
+            espText << "\nAddress: 0x" << std::hex << (uint32_t)door << std::dec;
+
+            auto doorObjectType = EQ_ReadMemory<uint8_t>(door + EQ_OFFSET_EQSwitch_OBJECT_TYPE);
+            auto doorType = EQ_ReadMemory<uint8_t>(door + EQ_OFFSET_EQSwitch_TYPE);
+
+            espText << "\nObject Type: " << (int)doorObjectType;
+            espText << "\nType: " << (int)doorType;
+
+            espText << "\nY: " << doorY;
+            espText << "\nX: " << doorX;
+            espText << "\nZ: " << doorZ;
+
+            auto doorHeading = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_HEADING);
+            ////auto doorAngle = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_ANGLE);
+
+            espText << "\nHeading: " << doorHeading;
+            ////espText << "\nAngle: " << doorAngle;
+
+            auto doorKeyID = EQ_ReadMemory<uint32_t>(door + EQ_OFFSET_EQSwitch_KEY_ID);
+            auto doorIsUseable = EQ_ReadMemory<uint8_t>(door + EQ_OFFSET_EQSwitch_IS_USEABLE);
+
+            espText << "\nKey ID: " << doorKeyID;
+            espText << "\nIs Useable: " << (int)doorIsUseable;
+
+            EQ_DrawTextEx(espText.str().c_str(), (int)screenX, (int)screenY, EQ_DRAW_TEXT_COLOR_WHITE);
+        }
+    }
 }
 
 void EQAPP_ESP_Execute()
@@ -344,5 +438,10 @@ void EQAPP_ESP_Execute()
         }
 
         spawn = EQ_GetSpawnNext(spawn);
+    }
+
+    if (g_ESPShowDoorsIsEnabled == true)
+    {
+        EQAPP_ESP_DrawDoors();
     }
 }

@@ -107,9 +107,6 @@
     <ClInclude Include="eqapp_spelllist.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="eqapp_bazaarfilter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\eq\eq_constants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -122,13 +119,7 @@
     <ClInclude Include="..\eq\eq_zones.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="eqapp_bazaarbot.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="eqapp_autogroup.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\eq\eq_cxwnd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_lua.h">

@@ -86,6 +86,8 @@ void EQ_SetAutoFire(bool b);
 void EQ_SetAutoRun(bool b);
 void EQ_SetMouseLook(bool b);
 
+bool EQ_IsFogEnabled();
+void EQ_SetFog(bool b);
 float EQ_GetFogDistanceBegin();
 float EQ_GetFogDistanceEnd();
 uint32_t EQ_GetFarClipPlane();
@@ -178,11 +180,11 @@ uint32_t EQ_GetSpawnLevel(uint32_t spawn);
 uint32_t EQ_GetSpawnRace(uint32_t spawn);
 uint32_t EQ_GetSpawnClass(uint32_t spawn);
 uint32_t EQ_GetSpawnStandingState(uint32_t spawn);
-uint32_t EQ_GetSpawnHPCurrent(uint32_t spawn);
-uint32_t EQ_GetSpawnHPMax(uint32_t spawn);
+int64_t EQ_GetSpawnHPCurrent(uint32_t spawn);
+int64_t EQ_GetSpawnHPMax(uint32_t spawn);
 uint32_t EQ_GetSpawnHPPercent(uint32_t spawn);
-uint32_t EQ_GetSpawnManaCurrent(uint32_t spawn);
-uint32_t EQ_GetSpawnManaMax(uint32_t spawn);
+int32_t EQ_GetSpawnManaCurrent(uint32_t spawn);
+int32_t EQ_GetSpawnManaMax(uint32_t spawn);
 uint32_t EQ_GetSpawnManaPercent(uint32_t spawn);
 uint32_t EQ_GetSpawnEnduranceCurrent(uint32_t spawn);
 uint32_t EQ_GetSpawnEnduranceMax(uint32_t spawn);
@@ -246,38 +248,6 @@ void EQ_StopSound();
 void EQ_StopFollow();
 void EQ_FollowTarget();
 
-bool EQ_CXWnd_IsOpen(uint32_t cxwndAddressPointer);
-bool EQ_CXWnd_Open(uint32_t cxwndAddressPointer);
-bool EQ_CXWnd_Close(uint32_t cxwndAddressPointer);
-bool EQ_CXWnd_ClickButton(uint32_t cxwndAddressPointer, uint32_t cxwndButtonOffset);
-
-uint32_t EQ_PlayerWindow_GetCombatState();
-
-bool EQ_TaskSelectWindow_IsOpen();
-bool EQ_TaskSelectWindow_ClickAcceptButton();
-bool EQ_TaskSelectWindow_ClickDeclineButton();
-
-bool EQ_BazaarSearchWindow_IsOpen();
-void EQ_BazaarSearchWindow_DoQuery();
-uint32_t EQ_BazaarSearchWindow_GetListIndexByItemName(const char* itemName, bool useExactComparsion);
-bool EQ_BazaarSearchWindow_BuyItem(uint32_t listIndex);
-signed int EQ_BazaarSearchWindow_GetBuyItemListIndex();
-uint32_t EQ_BazaarSearchWindow_GetItemID(uint32_t listIndex);
-uint32_t EQ_BazaarSearchWindow_GetItemQuantity(uint32_t listIndex);
-uint32_t EQ_BazaarSearchWindow_GetItemPrice(uint32_t listIndex);
-std::string EQ_BazaarSearchWindow_GetItemName(uint32_t listIndex);
-bool EQ_BazaarSearchWindow_ClickFindItemsButton();
-bool EQ_BazaarSearchWindow_ClickUpdateTradersButton();
-bool EQ_BazaarSearchWindow_ClickResetButton();
-
-bool EQ_BazaarConfirmationWindow_IsOpen();
-bool EQ_BazaarConfirmationWindow_ClickToParcelsButton();
-bool EQ_BazaarConfirmationWindow_ClickCancelButton();
-
-bool EQ_BazaarWindow_IsOpen();
-bool EQ_BazaarWindow_ClickBeginTraderButton();
-bool EQ_BazaarWindow_ClickEndTraderButton();
-
 std::string EQ_StringMap_GetValueByKey(std::unordered_map<uint32_t, std::string>& stringMap, uint32_t key);
 uint32_t EQ_StringMap_GetKeyByValue(std::unordered_map<uint32_t, std::string>& stringMap, std::string value);
 std::string EQ_GetSpawnTypeNameByKey(uint32_t key);
@@ -294,6 +264,12 @@ void EQ_UseAlternateAbility(uint32_t alternateAbilityID);
 void EQ_UseDiscipline(const char* disciplineName);
 void EQ_UseAbility(uint32_t abilityNumber);
 void EQ_UseItem(const char* itemName);
+
+void EQ_UseDoor(const char* doorName);
+void EQ_UseDoorByDistance(float distance);
+void EQ_SetStateForAllDoors(uint8_t state);
+void EQ_OpenAllDoors();
+void EQ_CloseAllDoors();
 
 /* functions */
 
@@ -622,7 +598,7 @@ bool EQ_IsZoneIDSafe(uint32_t zoneID)
 
 HWND EQ_GetWindow()
 {
-    return EQ_ReadMemory<HWND>(EQ_ADDRESS_POINTER_WINDOW_HWND);
+    return EQ_ReadMemory<HWND>(EQ_ADDRESS_WindowHWND);
 }
 
 uint32_t EQ_GetTimer()
@@ -649,94 +625,113 @@ uint32_t EQ_GetCamera()
 
 bool EQ_IsNetStatusEnabled()
 {
-    return EQ_ReadMemory<uint8_t>(EQ_ADDRESS_NET_STATUS);
+    return EQ_ReadMemory<uint8_t>(EQ_ADDRESS_NetStatus);
 }
 
 bool EQ_IsAutoAttackEnabled()
 {
-    return EQ_ReadMemory<uint8_t>(EQ_ADDRESS_AUTO_ATTACK);
+    return EQ_ReadMemory<uint8_t>(EQ_ADDRESS_AutoAttack);
 }
 
 bool EQ_IsAutoFireEnabled()
 {
-    return EQ_ReadMemory<uint8_t>(EQ_ADDRESS_AUTO_FIRE);
+    return EQ_ReadMemory<uint8_t>(EQ_ADDRESS_AutoFire);
 }
 
 bool EQ_IsAutoRunEnabled()
 {
-    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_AUTO_RUN);
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_AutoRun);
 }
 
 bool EQ_IsMouseLookEnabled()
 {
-    return EQ_ReadMemory<uint8_t>(EQ_ADDRESS_MOUSE_LOOK);
+    return EQ_ReadMemory<uint8_t>(EQ_ADDRESS_MouseLook);
 }
 
 void EQ_SetNetStatus(bool b)
 {
     uint8_t value = (uint8_t)b;
 
-    EQ_WriteMemory<uint8_t>(EQ_ADDRESS_NET_STATUS, value);
+    EQ_WriteMemory<uint8_t>(EQ_ADDRESS_NetStatus, value);
 }
 
 void EQ_SetAutoAttack(bool b)
 {
     uint8_t value = (uint8_t)b;
 
-    EQ_WriteMemory<uint8_t>(EQ_ADDRESS_AUTO_ATTACK, value);
+    EQ_WriteMemory<uint8_t>(EQ_ADDRESS_AutoAttack, value);
 }
 
 void EQ_SetAutoFire(bool b)
 {
     uint8_t value = (uint8_t)b;
 
-    EQ_WriteMemory<uint8_t>(EQ_ADDRESS_AUTO_FIRE, value);
+    EQ_WriteMemory<uint8_t>(EQ_ADDRESS_AutoFire, value);
 }
 
 void EQ_SetAutoRun(bool b)
 {
     uint32_t value = (uint32_t)b;
 
-    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_AUTO_RUN, value);
+    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_AutoRun, value);
 }
 
 void EQ_SetMouseLook(bool b)
 {
     uint8_t value = (uint8_t)b;
 
-    EQ_WriteMemory<uint8_t>(EQ_ADDRESS_MOUSE_LOOK, value);
+    EQ_WriteMemory<uint8_t>(EQ_ADDRESS_MouseLook, value);
+}
+
+bool EQ_IsFogEnabled()
+{
+    auto value = EQ_ReadMemory<uint8_t>(EQ_ADDRESS_FogEnabled);
+
+    return value == EQ_FOG_ON;
+}
+
+void EQ_SetFog(bool b)
+{
+    uint8_t value = EQ_FOG_OFF;
+
+    if (b == true)
+    {
+        value = EQ_FOG_ON;
+    }
+
+    EQ_WriteMemory<uint8_t>(EQ_ADDRESS_FogEnabled, value);
 }
 
 float EQ_GetFogDistanceBegin()
 {
-    return EQ_ReadMemory<float>(EQ_ADDRESS_FOG_DISTANCE_BEGIN);
+    return EQ_ReadMemory<float>(EQ_ADDRESS_FogDistanceBegin);
 }
 
 float EQ_GetFogDistanceEnd()
 {
-    return EQ_ReadMemory<float>(EQ_ADDRESS_FOG_DISTANCE_END);
+    return EQ_ReadMemory<float>(EQ_ADDRESS_FogDistanceEnd);
 }
 
 uint32_t EQ_GetFarClipPlane()
 {
-    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_FAR_CLIP_PLANE);
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_FarClipPlane);
 }
 
 void EQ_SetFogDistanceBegin(float distance)
 {
-    EQ_WriteMemory<float>(EQ_ADDRESS_FOG_DISTANCE_BEGIN, distance);
+    EQ_WriteMemory<float>(EQ_ADDRESS_FogDistanceBegin, distance);
 }
 
 void EQ_SetFogDistanceEnd(float distance)
 {
-    EQ_WriteMemory<float>(EQ_ADDRESS_FOG_DISTANCE_END, distance);
+    EQ_WriteMemory<float>(EQ_ADDRESS_FogDistanceEnd, distance);
 }
 
 void EQ_SetFarClipPlane(uint32_t value)
 {
     if (value >= EQ_FAR_CLIP_PLANE_MIN && value <= EQ_FAR_CLIP_PLANE_MAX)
     {
-        EQ_WriteMemory<uint32_t>(EQ_ADDRESS_FAR_CLIP_PLANE, value);
+        EQ_WriteMemory<uint32_t>(EQ_ADDRESS_FarClipPlane, value);
     }
 }
 
@@ -769,7 +764,7 @@ void EQ_SetFarClipPlanePercent(uint32_t percent)
         value = 0;
     }
 
-    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_FAR_CLIP_PLANE, value);
+    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_FarClipPlane, value);
 }
 
 uint32_t EQ_GetSpawnByID(uint32_t spawnID)
@@ -830,17 +825,17 @@ uint32_t EQ_GetLastSpawn()
 
 uint32_t EQ_GetPlayerSpawn()
 {
-    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_PLAYER_SPAWN);
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_PlayerSpawn);
 }
 
 uint32_t EQ_GetTargetSpawn()
 {
-    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_TARGET_SPAWN);
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_TargetSpawn);
 }
 
 void EQ_SetTargetSpawn(uint32_t spawn)
 {
-    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_POINTER_TARGET_SPAWN, spawn);
+    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_POINTER_TargetSpawn, spawn);
 }
 
 std::string EQ_GetPlayerSpawnNameNumbered()
@@ -1430,14 +1425,14 @@ uint32_t EQ_GetSpawnStandingState(uint32_t spawn)
     return EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_STANDING_STATE);
 }
 
-uint32_t EQ_GetSpawnHPCurrent(uint32_t spawn)
+int64_t EQ_GetSpawnHPCurrent(uint32_t spawn)
 {
-    return EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_HP_CURRENT);
+    return EQ_ReadMemory<int64_t>(spawn + EQ_OFFSET_SPAWN_HP_CURRENT);
 }
 
-uint32_t EQ_GetSpawnHPMax(uint32_t spawn)
+int64_t EQ_GetSpawnHPMax(uint32_t spawn)
 {
-    return EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_HP_MAX);
+    return EQ_ReadMemory<int64_t>(spawn + EQ_OFFSET_SPAWN_HP_MAX);
 }
 
 uint32_t EQ_GetSpawnHPPercent(uint32_t spawn)
@@ -1445,7 +1440,7 @@ uint32_t EQ_GetSpawnHPPercent(uint32_t spawn)
     auto current = EQ_GetSpawnHPCurrent(spawn);
     auto max     = EQ_GetSpawnHPMax(spawn);
 
-    uint32_t multiplied = current * 100;
+    auto multiplied = current * 100;
 
     // prevent divide by zero
     if (multiplied == 0 || max == 0)
@@ -1456,14 +1451,14 @@ uint32_t EQ_GetSpawnHPPercent(uint32_t spawn)
     return (uint32_t)(multiplied / max);
 }
 
-uint32_t EQ_GetSpawnManaCurrent(uint32_t spawn)
+int32_t EQ_GetSpawnManaCurrent(uint32_t spawn)
 {
-    return EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_MANA_CURRENT);
+    return EQ_ReadMemory<int32_t>(spawn + EQ_OFFSET_SPAWN_MANA_CURRENT);
 }
 
-uint32_t EQ_GetSpawnManaMax(uint32_t spawn)
+int32_t EQ_GetSpawnManaMax(uint32_t spawn)
 {
-    return EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_MANA_MAX);
+    return EQ_ReadMemory<int32_t>(spawn + EQ_OFFSET_SPAWN_MANA_MAX);
 }
 
 uint32_t EQ_GetSpawnManaPercent(uint32_t spawn)
@@ -1471,7 +1466,7 @@ uint32_t EQ_GetSpawnManaPercent(uint32_t spawn)
     auto current = EQ_GetSpawnManaCurrent(spawn);
     auto max     = EQ_GetSpawnManaMax(spawn);
 
-    uint32_t multiplied = current * 100;
+    auto multiplied = current * 100;
 
     // prevent divide by zero
     if (multiplied == 0 || max == 0)
@@ -1497,7 +1492,7 @@ uint32_t EQ_GetSpawnEndurancePercent(uint32_t spawn)
     auto current = EQ_GetSpawnEnduranceCurrent(spawn);
     auto max     = EQ_GetSpawnEnduranceMax(spawn);
 
-    uint32_t multiplied = current * 100;
+    auto multiplied = current * 100;
 
     // prevent divide by zero
     if (multiplied == 0 || max == 0)
@@ -2102,369 +2097,6 @@ void EQ_FollowTarget()
     EQ_SetSpawnFollowSpawn(playerSpawn, targetSpawn);
 }
 
-bool EQ_CXWnd_IsOpen(uint32_t cxwndAddressPointer)
-{
-    if (cxwndAddressPointer == 0)
-    {
-        return false;
-    }
-
-    uint32_t window = EQ_ReadMemory<uint32_t>(cxwndAddressPointer);
-    if (window == NULL)
-    {
-        return false;
-    }
-
-    uint8_t isOpen = EQ_ReadMemory<uint8_t>(window + EQ_OFFSET_CXWnd_IS_OPEN);
-
-    return (isOpen == 1);
-
-    ////return ((EQClass::CXWnd*)window)->IsReallyVisible();
-}
-
-bool EQ_CXWnd_Open(uint32_t cxwndAddressPointer)
-{
-    if (cxwndAddressPointer == 0)
-    {
-        return false;
-    }
-
-    uint32_t window = EQ_ReadMemory<uint32_t>(cxwndAddressPointer);
-    if (window == NULL)
-    {
-        return false;
-    }
-
-    ((EQClass::CXWnd*)window)->Activate();
-
-    return true;
-}
-
-bool EQ_CXWnd_Close(uint32_t cxwndAddressPointer)
-{
-    if (cxwndAddressPointer == 0)
-    {
-        return false;
-    }
-
-    uint32_t window = EQ_ReadMemory<uint32_t>(cxwndAddressPointer);
-    if (window == NULL)
-    {
-        return false;
-    }
-
-    ((EQClass::CXWnd*)window)->Deactivate();
-
-    return true;
-}
-
-bool EQ_CXWnd_ClickButton(uint32_t cxwndAddressPointer, uint32_t cxwndButtonOffset)
-{
-    if (cxwndAddressPointer == 0)
-    {
-        return false;
-    }
-
-    uint32_t window = EQ_ReadMemory<uint32_t>(cxwndAddressPointer);
-    if (window == NULL)
-    {
-        return false;
-    }
-
-    uint8_t isOpen = EQ_ReadMemory<uint8_t>(window + EQ_OFFSET_CXWnd_IS_OPEN);
-    if (isOpen == 0)
-    {
-        return false;
-    }
-
-    uint32_t button = EQ_ReadMemory<uint32_t>(window + cxwndButtonOffset);
-    if (button == NULL)
-    {
-        return false;
-    }
-
-    ((EQClass::CXWnd*)window)->WndNotification(button, EQ_CXWND_MESSAGE_LEFT_CLICK, (void*)0);
-
-    return true;
-}
-
-uint32_t EQ_PlayerWindow_GetCombatState()
-{
-    uint32_t playerWindow = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CPlayerWindow);
-    if (playerWindow == NULL)
-    {
-        return 0xFFFFFFF;
-    }
-
-    return EQ_ReadMemory<uint32_t>(playerWindow + EQ_OFFSET_CPlayerWindow_COMBAT_STATE);
-}
-
-bool EQ_TaskSelectWindow_IsOpen()
-{
-    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CTaskSelectWnd) == true);
-}
-
-bool EQ_TaskSelectWindow_ClickAcceptButton()
-{
-    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CTaskSelectWnd, EQ_OFFSET_CTaskSelectWnd_BUTTON_ACCEPT);
-}
-
-bool EQ_TaskSelectWindow_ClickDeclineButton()
-{
-    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CTaskSelectWnd, EQ_OFFSET_CTaskSelectWnd_BUTTON_DECLINE);
-}
-
-bool EQ_BazaarSearchWindow_IsOpen()
-{
-    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CBazaarSearchWnd) == true);
-}
-
-void EQ_BazaarSearchWindow_DoQuery()
-{
-    EQ_CLASS_POINTER_CBazaarSearchWnd->doQuery();
-}
-
-uint32_t EQ_BazaarSearchWindow_GetListIndexByItemName(const char* itemName, bool useExactComparsion)
-{
-    uint32_t bazaarSearchWindow = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
-    if (bazaarSearchWindow == NULL)
-    {
-        return 0xFFFFFFFF;
-    }
-
-    uint8_t isOpen = EQ_ReadMemory<uint8_t>(bazaarSearchWindow + EQ_OFFSET_CXWnd_IS_OPEN);
-    if (isOpen == 0)
-    {
-        return 0xFFFFFFFF;
-    }
-
-    for (size_t i = 0; i < EQ_BAZAAR_SEARCH_MAX_RESULTS_PER_TRADER; i++)
-    {
-        char itemNameEx[EQ_SIZE_CBazaarSearchWnd_ITEM_NAME];
-        std::memmove(itemNameEx, (LPVOID)(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_ITEM_NAME + (i * EQ_SIZE_CBazaarSearchWnd_ITEM))), sizeof(itemNameEx));
-
-        if (strlen(itemNameEx) == 0)
-        {
-            break;
-        }
-
-        if (useExactComparsion == true)
-        {
-            if (strcmp(itemNameEx, itemName) == 0)
-            {
-                return i;
-            }
-        }
-        else
-        {
-            if (strstr(itemNameEx, itemName) != 0)
-            {
-                return i;
-            }
-        }
-    }
-
-    return 0xFFFFFFFF;
-}
-
-bool EQ_BazaarSearchWindow_BuyItem(uint32_t listIndex)
-{
-    uint32_t bazaarSearchWindow = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
-    if (bazaarSearchWindow == NULL)
-    {
-        return false;
-    }
-
-    uint8_t isOpen = EQ_ReadMemory<uint8_t>(bazaarSearchWindow + EQ_OFFSET_CXWnd_IS_OPEN);
-    if (isOpen == 0)
-    {
-        return false;
-    }
-
-    EQ_WriteMemory<uint32_t>(bazaarSearchWindow + EQ_OFFSET_CBazaarSearchWnd_BUY_ITEM_LIST_INDEX, listIndex);
-
-    uint32_t itemID = EQ_ReadMemory<uint32_t>(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_FIRST_ITEM * listIndex) + EQ_OFFSET_CBazaarSearchWnd_ITEM_ID);
-    if (itemID == 0)
-    {
-        return false;
-    }
-
-    uint32_t itemPrice = EQ_ReadMemory<uint32_t>(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_FIRST_ITEM * listIndex) + EQ_OFFSET_CBazaarSearchWnd_ITEM_PRICE);
-    if (itemPrice == 0)
-    {
-        return false;
-    }
-
-    uint32_t itemQuantity = EQ_ReadMemory<uint32_t>(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_FIRST_ITEM * listIndex) + EQ_OFFSET_CBazaarSearchWnd_ITEM_QUANTITY);
-    if (itemQuantity == 0)
-    {
-        return false;
-    }
-
-    bool result = EQ_CLASS_POINTER_CBazaarSearchWnd->BuyItem(itemQuantity);
-
-    return result;
-}
-
-signed int EQ_BazaarSearchWindow_GetBuyItemListIndex()
-{
-    uint32_t bazaarSearchWindow = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
-    if (bazaarSearchWindow == NULL)
-    {
-        return -1;
-    }
-
-    uint8_t isOpen = EQ_ReadMemory<uint8_t>(bazaarSearchWindow + EQ_OFFSET_CXWnd_IS_OPEN);
-    if (isOpen == 0)
-    {
-        return -1;
-    }
-
-    uint32_t buyItemListIndex = EQ_ReadMemory<uint32_t>(bazaarSearchWindow + EQ_OFFSET_CBazaarSearchWnd_BUY_ITEM_LIST_INDEX);
-
-    return buyItemListIndex;
-}
-
-uint32_t EQ_BazaarSearchWindow_GetItemID(uint32_t listIndex)
-{
-    uint32_t bazaarSearchWindow = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
-    if (bazaarSearchWindow == NULL)
-    {
-        return 0;
-    }
-
-    uint8_t isOpen = EQ_ReadMemory<uint8_t>(bazaarSearchWindow + EQ_OFFSET_CXWnd_IS_OPEN);
-    if (isOpen == 0)
-    {
-        return 0;
-    }
-
-    uint32_t itemID = EQ_ReadMemory<uint32_t>(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_FIRST_ITEM * listIndex) + EQ_OFFSET_CBazaarSearchWnd_ITEM_ID);
-
-    return itemID;
-}
-
-uint32_t EQ_BazaarSearchWindow_GetItemQuantity(uint32_t listIndex)
-{
-    uint32_t bazaarSearchWindow = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
-    if (bazaarSearchWindow == NULL)
-    {
-        return 0;
-    }
-
-    uint8_t isOpen = EQ_ReadMemory<uint8_t>(bazaarSearchWindow + EQ_OFFSET_CXWnd_IS_OPEN);
-    if (isOpen == 0)
-    {
-        return 0;
-    }
-
-    uint32_t itemID = EQ_ReadMemory<uint32_t>(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_FIRST_ITEM * listIndex) + EQ_OFFSET_CBazaarSearchWnd_ITEM_ID);
-    if (itemID == 0)
-    {
-        return 0;
-    }
-
-    uint32_t itemQuantity = EQ_ReadMemory<uint32_t>(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_FIRST_ITEM * listIndex) + EQ_OFFSET_CBazaarSearchWnd_ITEM_QUANTITY);
-
-    return itemQuantity;
-}
-
-uint32_t EQ_BazaarSearchWindow_GetItemPrice(uint32_t listIndex)
-{
-    uint32_t bazaarSearchWindow = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
-    if (bazaarSearchWindow == NULL)
-    {
-        return 0;
-    }
-
-    uint8_t isOpen = EQ_ReadMemory<uint8_t>(bazaarSearchWindow + EQ_OFFSET_CXWnd_IS_OPEN);
-    if (isOpen == 0)
-    {
-        return 0;
-    }
-
-    uint32_t itemID = EQ_ReadMemory<uint32_t>(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_FIRST_ITEM * listIndex) + EQ_OFFSET_CBazaarSearchWnd_ITEM_ID);
-    if (itemID == 0)
-    {
-        return 0;
-    }
-
-    uint32_t itemPrice = EQ_ReadMemory<uint32_t>(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_FIRST_ITEM * listIndex) + EQ_OFFSET_CBazaarSearchWnd_ITEM_PRICE);
-
-    return itemPrice;
-}
-
-std::string EQ_BazaarSearchWindow_GetItemName(uint32_t listIndex)
-{
-    uint32_t bazaarSearchWindow = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
-    if (bazaarSearchWindow == NULL)
-    {
-        return std::string();
-    }
-
-    uint8_t isOpen = EQ_ReadMemory<uint8_t>(bazaarSearchWindow + EQ_OFFSET_CXWnd_IS_OPEN);
-    if (isOpen == 0)
-    {
-        return std::string();
-    }
-
-    uint32_t itemID = EQ_ReadMemory<uint32_t>(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_FIRST_ITEM * listIndex) + EQ_OFFSET_CBazaarSearchWnd_ITEM_ID);
-    if (itemID == 0)
-    {
-        return std::string();
-    }
-
-    char itemName[EQ_SIZE_CBazaarSearchWnd_ITEM_NAME];
-    std::memmove(itemName, (LPVOID)(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_FIRST_ITEM * listIndex) + EQ_OFFSET_CBazaarSearchWnd_ITEM_NAME), sizeof(itemName));
-
-    return itemName;
-}
-
-bool EQ_BazaarSearchWindow_ClickFindItemsButton()
-{
-    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CBazaarSearchWnd, EQ_OFFSET_CBazaarSearchWnd_BUTTON_FIND_ITEMS);
-}
-
-bool EQ_BazaarSearchWindow_ClickUpdateTradersButton()
-{
-    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CBazaarSearchWnd, EQ_OFFSET_CBazaarSearchWnd_BUTTON_UPDATE_TRADERS);
-}
-
-bool EQ_BazaarSearchWindow_ClickResetButton()
-{
-    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CBazaarSearchWnd, EQ_OFFSET_CBazaarSearchWnd_BUTTON_RESET);
-}
-
-bool EQ_BazaarConfirmationWindow_IsOpen()
-{
-    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd) == true);
-}
-
-bool EQ_BazaarConfirmationWindow_ClickToParcelsButton()
-{
-    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd, EQ_OFFSET_CBazaarConfirmationWnd_BUTTON_TO_PARCELS);
-}
-
-bool EQ_BazaarConfirmationWindow_ClickCancelButton()
-{
-    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd, EQ_OFFSET_CBazaarConfirmationWnd_BUTTON_CANCEL);
-}
-
-bool EQ_BazaarWindow_IsOpen()
-{
-    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CBazaarWnd) == true);
-}
-
-bool EQ_BazaarWindow_ClickBeginTraderButton()
-{
-    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CBazaarWnd, EQ_OFFSET_CBazaarWnd_BUTTON_BEGIN_TRADER);
-}
-
-bool EQ_BazaarWindow_ClickEndTraderButton()
-{
-    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CBazaarWnd, EQ_OFFSET_CBazaarWnd_BUTTON_END_TRADER);
-}
-
 std::string EQ_StringMap_GetValueByKey(std::unordered_map<uint32_t, std::string>& stringMap, uint32_t key)
 {
     auto it = stringMap.find(key);
@@ -2564,4 +2196,144 @@ void EQ_UseItem(const char* itemName)
     ss << "/useitem " << itemName;
 
     EQ_InterpretCommand(ss.str().c_str());
+}
+
+void EQ_UseDoor(const char* doorName)
+{
+    auto switchManager = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_EQSwitchManager);
+    if (switchManager == NULL)
+    {
+        return;
+    }
+
+    auto numDoors = EQ_ReadMemory<uint32_t>(switchManager + EQ_OFFSET_EQSwitchManager_NUM_SWITCHES);
+    if (numDoors == 0)
+    {
+        return;
+    }
+
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
+    auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
+    auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
+
+    for (unsigned int i = 0; i < numDoors; i++)
+    {
+        auto door = EQ_ReadMemory<uint32_t>(switchManager + (EQ_OFFSET_EQSwitchManager_FIRST_SWITCH + (i * 0x04)));
+        if (door == NULL)
+        {
+            continue;
+        }
+
+        auto doorY = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_Y);
+        auto doorX = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_X);
+        auto doorZ = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_Z);
+
+        float doorDistance = EQ_CalculateDistance(playerSpawnY, playerSpawnX, doorY, doorX);
+        if (doorDistance > EQ_USE_DOOR_DISTANCE_DEFAULT)
+        {
+            continue;
+        }
+
+        char doorName_[EQ_SIZE_EQSwitch_NAME];
+        std::memmove(doorName_, (LPVOID)(door + EQ_OFFSET_EQSwitch_NAME), sizeof(doorName_));
+
+        if (strcmp(doorName, doorName_) != 0)
+        {
+            continue;
+        }
+
+        auto playerSpawnID = EQ_GetSpawnID(playerSpawn);
+
+        ((EQClass::EQSwitch*)door)->UseSwitch(playerSpawnID, 0, 0, 0);
+    }
+}
+
+void EQ_UseDoorByDistance(float distance)
+{
+    auto switchManager = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_EQSwitchManager);
+    if (switchManager == NULL)
+    {
+        return;
+    }
+
+    auto numDoors = EQ_ReadMemory<uint32_t>(switchManager + EQ_OFFSET_EQSwitchManager_NUM_SWITCHES);
+    if (numDoors == 0)
+    {
+        return;
+    }
+
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
+    auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
+    auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
+
+    for (unsigned int i = 0; i < numDoors; i++)
+    {
+        auto door = EQ_ReadMemory<uint32_t>(switchManager + (EQ_OFFSET_EQSwitchManager_FIRST_SWITCH + (i * 0x04)));
+        if (door == NULL)
+        {
+            continue;
+        }
+
+        auto doorY = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_Y);
+        auto doorX = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_X);
+        auto doorZ = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_Z);
+
+        float doorDistance = EQ_CalculateDistance(playerSpawnY, playerSpawnX, doorY, doorX);
+        if (doorDistance > distance)
+        {
+            continue;
+        }
+
+        auto playerSpawnID = EQ_GetSpawnID(playerSpawn);
+
+        ((EQClass::EQSwitch*)door)->UseSwitch(playerSpawnID, 0, 0, 0);
+    }
+}
+
+void EQ_SetStateForAllDoors(uint8_t state)
+{
+    auto switchManager = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_EQSwitchManager);
+    if (switchManager == NULL)
+    {
+        return;
+    }
+
+    auto numDoors = EQ_ReadMemory<uint32_t>(switchManager + EQ_OFFSET_EQSwitchManager_NUM_SWITCHES);
+    if (numDoors == 0)
+    {
+        return;
+    }
+
+    for (unsigned int i = 0; i < numDoors; i++)
+    {
+        auto door = EQ_ReadMemory<uint32_t>(switchManager + (EQ_OFFSET_EQSwitchManager_FIRST_SWITCH + (i * 0x04)));
+        if (door == NULL)
+        {
+            continue;
+        }
+
+        ((EQClass::EQSwitch*)door)->ChangeState(state, 0, 0);
+    }
+}
+
+void EQ_OpenAllDoors()
+{
+    EQ_SetStateForAllDoors(EQ_SWITCH_STATE_OPENING);
+}
+
+void EQ_CloseAllDoors()
+{
+    EQ_SetStateForAllDoors(EQ_SWITCH_STATE_CLOSING);
 }
