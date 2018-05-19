@@ -51,26 +51,35 @@ void EQAPP_AutoGroup_Execute()
 
 void EQAPP_AutoGroup_HandleEvent_CEverQuest__dsp_chat(std::string text, int textColor)
 {
-    if (text == "To join the group, click on the 'FOLLOW' option, or 'DECLINE' to cancel.")
+    if
+    (
+        EQAPP_String_EndsWith(text, "invites you to join a group.") == true ||
+        text == "To join the group, click on the 'FOLLOW' option, or 'DECLINE' to cancel."
+    )
     {
         g_AutoGroupIsInvited = true;
 
         g_AutoGroupTimer = EQAPP_Timer_GetTimeNow();
+
+        return;
     }
 
     if
     (
+        EQAPP_String_EndsWith(text, "that you agree to join the group.") == true ||
         text == "You have joined the group." ||
         text == "You have been removed from the group." ||
         text == "You cannot invite someone to join your group, only your leader may do so."
     )
     {
         g_AutoGroupIsInvited = false;
+        return;
     }
 
     if (text == "You cannot invite yourself.")
     {
         EQ_ExecuteCommand(EQ_EXECUTECMD_CLEAR_TARGET, 1);
+        return;
     }
 
     EQAPP_AutoGroup_Execute();

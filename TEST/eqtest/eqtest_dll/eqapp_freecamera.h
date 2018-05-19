@@ -68,13 +68,20 @@ void EQAPP_FreeCamera_Execute()
         float cameraHeading = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_HEADING);
         float cameraPitch   = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_PITCH);
 
-        cameraHeading = cameraHeading - 128.0f;
+        bool bIsLookingStraightUpOrDown = true;
+
+        if (cameraPitch > EQ_CAMERA_PITCH_MIN && cameraPitch < EQ_CAMERA_PITCH_MAX)
+        {
+            bIsLookingStraightUpOrDown = false;
+        }
+
+        cameraHeading = cameraHeading + 128.0f;
 
         EQ_FixHeading(cameraHeading);
 
         float cameraHeadingRadians = EQ_GetRadians(cameraHeading);
 
-        cameraPitch = (float)(cameraPitch + std::fabs(EQ_CAMERA_PITCH_DEFAULT)); // remove negative offset from camera pitch
+        cameraPitch = cameraPitch + std::fabs(EQ_CAMERA_PITCH_DEFAULT); // remove negative offset from camera pitch
 
         float cameraPitchRadians = EQ_GetRadians(cameraPitch);
 
@@ -82,10 +89,10 @@ void EQAPP_FreeCamera_Execute()
         float addX = std::cosf(cameraHeadingRadians);
         float addZ = std::sinf(cameraPitchRadians);
 
-        if (std::fabs(cameraPitch) < 90.0f)
+        if (bIsLookingStraightUpOrDown == false)
         {
-            cameraY -= addY * g_FreeCameraMultiplier;
-            cameraX += addX * g_FreeCameraMultiplier;
+            cameraY += addY * g_FreeCameraMultiplier;
+            cameraX -= addX * g_FreeCameraMultiplier;
         }
 
         cameraZ += addZ * g_FreeCameraMultiplier;
@@ -104,13 +111,20 @@ void EQAPP_FreeCamera_Execute()
         float cameraHeading = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_HEADING);
         float cameraPitch   = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_PITCH);
 
+        bool bIsLookingStraightUpOrDown = true;
+
+        if (cameraPitch > EQ_CAMERA_PITCH_MIN && cameraPitch < EQ_CAMERA_PITCH_MAX)
+        {
+            bIsLookingStraightUpOrDown = false;
+        }
+
         cameraHeading = cameraHeading - 128.0f;
 
         EQ_FixHeading(cameraHeading);
 
         float cameraHeadingRadians = EQ_GetRadians(cameraHeading);
 
-        cameraPitch = (float)(cameraPitch + std::fabs(EQ_CAMERA_PITCH_DEFAULT)); // remove negative offset from camera pitch
+        cameraPitch = cameraPitch + std::fabs(EQ_CAMERA_PITCH_DEFAULT); // remove negative offset from camera pitch
 
         float cameraPitchRadians = EQ_GetRadians(cameraPitch);
 
@@ -118,7 +132,7 @@ void EQAPP_FreeCamera_Execute()
         float addX = std::cosf(cameraHeadingRadians);
         float addZ = std::sinf(cameraPitchRadians);
 
-        if (std::fabs(cameraPitch) < 90.0f)
+        if (bIsLookingStraightUpOrDown == false)
         {
             cameraY += addY * g_FreeCameraMultiplier;
             cameraX -= addX * g_FreeCameraMultiplier;
@@ -140,11 +154,18 @@ void EQAPP_FreeCamera_Execute()
         float cameraHeading = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_HEADING);
         float cameraPitch   = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_PITCH);
 
+        bool bIsLookingStraightUpOrDown = true;
+
+        if (cameraPitch > EQ_CAMERA_PITCH_MIN && cameraPitch < EQ_CAMERA_PITCH_MAX)
+        {
+            bIsLookingStraightUpOrDown = false;
+        }
+
         EQ_FixHeading(cameraHeading);
 
         float cameraHeadingRadians = EQ_GetRadians(cameraHeading);
 
-        cameraPitch = (float)(cameraPitch + std::fabs(EQ_CAMERA_PITCH_DEFAULT)); // remove negative offset from camera pitch
+        cameraPitch = cameraPitch + std::fabs(EQ_CAMERA_PITCH_DEFAULT); // remove negative offset from camera pitch
 
         float cameraPitchRadians = EQ_GetRadians(cameraPitch);
 
@@ -152,7 +173,7 @@ void EQAPP_FreeCamera_Execute()
         float addX = std::cosf(cameraHeadingRadians);
         float addZ = std::sinf(cameraPitchRadians);
 
-        if (std::fabs(cameraPitch) < 90.0f)
+        if (bIsLookingStraightUpOrDown == false)
         {
             cameraY -= addY * g_FreeCameraMultiplier;
             cameraX += addX * g_FreeCameraMultiplier;
@@ -174,13 +195,20 @@ void EQAPP_FreeCamera_Execute()
         float cameraHeading = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_HEADING);
         float cameraPitch   = EQ_ReadMemory<float>(camera + EQ_OFFSET_CCamera_PITCH);
 
+        bool bIsLookingStraightUpOrDown = true;
+
+        if (cameraPitch > EQ_CAMERA_PITCH_MIN && cameraPitch < EQ_CAMERA_PITCH_MAX)
+        {
+            bIsLookingStraightUpOrDown = false;
+        }
+
         cameraHeading = cameraHeading + 256.0f;
 
         EQ_FixHeading(cameraHeading);
 
         float cameraHeadingRadians = EQ_GetRadians(cameraHeading);
 
-        cameraPitch = (float)(cameraPitch + std::fabs(EQ_CAMERA_PITCH_DEFAULT)); // remove negative offset from camera pitch
+        cameraPitch = cameraPitch + std::fabs(EQ_CAMERA_PITCH_DEFAULT); // remove negative offset from camera pitch
 
         float cameraPitchRadians = EQ_GetRadians(cameraPitch);
 
@@ -188,7 +216,7 @@ void EQAPP_FreeCamera_Execute()
         float addX = std::cosf(cameraHeadingRadians);
         float addZ = std::sinf(cameraPitchRadians);
 
-        if (std::fabs(cameraPitch) < 90.0f)
+        if (bIsLookingStraightUpOrDown == false)
         {
             cameraY -= addY * g_FreeCameraMultiplier;
             cameraX += addX * g_FreeCameraMultiplier;

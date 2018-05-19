@@ -1,3 +1,3 @@
 function OnLoad()
-    EQ_InterpretCommand("/outputfile inventory");
+    EQ_InterpretCommand("/outputfile inventory")
 end

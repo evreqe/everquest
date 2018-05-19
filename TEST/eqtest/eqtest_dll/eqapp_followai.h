@@ -112,17 +112,7 @@ void EQAPP_FollowAI_Execute()
 
     if (bFollowBehind == true)
     {
-        behindSpawnHeading = behindSpawnHeading - 128.0f;
-
-        EQ_FixHeading(behindSpawnHeading);
-
-        float behindSpawnHeadingRadians = EQ_GetRadians(behindSpawnHeading);
-
-        float behindSpawnAddY = std::sinf(behindSpawnHeadingRadians);
-        float behindSpawnAddX = std::cosf(behindSpawnHeadingRadians);
-
-        behindSpawnY += behindSpawnAddY * g_FollowAIDistanceBehind;
-        behindSpawnX -= behindSpawnAddX * g_FollowAIDistanceBehind;
+        EQ_ApplyVectorBackward(behindSpawnY, behindSpawnX, behindSpawnHeading, g_FollowAIDistanceBehind);
 
         bool bFollowSpawnCastRay = EQ_CanSpawnCastRayToLocation(playerSpawn, followSpawnY, followSpawnX, followSpawnZ);
 

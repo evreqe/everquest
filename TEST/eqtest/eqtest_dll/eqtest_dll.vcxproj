@@ -119,7 +119,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;EQTEST_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Code\!libraries\detours;D:\Code\!libraries\luajit-2.0.5\src;D:\Code\!libraries\sol2-2.20.0;D:\Code\everquest\eqtest\eq;D:\Code\!libraries\boost_1_66_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Code\!libraries\detours;D:\Code\!libraries\luajit-2.0.5\src;D:\Code\!libraries\sol2-2.20.0;D:\Code\everquest\eqtest\eq;D:\Code\!libraries\boost_1_66_0;D:\Code\!libraries\fmt-4.1.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\!libraries\fmt-4.1.0\fmt\format.cc" />
     <ClCompile Include="dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +170,7 @@
     <ClInclude Include="..\eq\eq_virtualkeycodes.h" />
     <ClInclude Include="..\eq\eq_zones.h" />
     <ClInclude Include="eqapp.h" />
+    <ClInclude Include="eqapp_addresses.h" />
     <ClInclude Include="eqapp_alwaysattack.h" />
     <ClInclude Include="eqapp_alwayshotbutton.h" />
     <ClInclude Include="eqapp_autoalternateability.h" />
@@ -188,6 +190,7 @@
     <ClInclude Include="eqapp_hud.h" />
     <ClInclude Include="eqapp_ini.h" />
     <ClInclude Include="eqapp_interpretcommand.h" />
+    <ClInclude Include="eqapp_loadoptions.h" />
     <ClInclude Include="eqapp_lua.h" />
     <ClInclude Include="eqapp_sleep.h" />
     <ClInclude Include="eqapp_spawncastspell.h" />

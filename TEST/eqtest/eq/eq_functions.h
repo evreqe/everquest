@@ -2,6 +2,7 @@
 
 #include <string>
 #include <sstream>
+#include <tuple>
 #include <unordered_map>
 
 #include <cstdint>
@@ -46,11 +47,23 @@ bool EQ_IsWithinDistance(float y1, float x1, float y2, float x2, float distance)
 
 float EQ_GetBearing(float y1, float x1, float y2, float x2);
 void EQ_FixHeading(float& heading);
+float EQ_FixHeadingEx(float heading);
 void EQ_FixPitch(float& pitch);
+float EQ_FixPitchEx(float pitch);
 float EQ_GetRadians(float degrees);
 
+void EQ_ApplyVectorForward(float& y, float& x, float heading, float distance);
+void EQ_ApplyVectorBackward(float& y, float& x, float heading, float distance);
+void EQ_ApplyVectorLeftward(float& y, float& x, float heading, float distance);
+void EQ_ApplyVectorRightward(float& y, float& x, float heading, float distance);
+
+std::tuple<float, float> EQ_ApplyVectorForwardAsTuple(float y, float x, float heading, float distance);
+std::tuple<float, float> EQ_ApplyVectorBackwardAsTuple(float y, float x, float heading, float distance);
+std::tuple<float, float> EQ_ApplyVectorLeftwardAsTuple(float y, float x, float heading, float distance);
+std::tuple<float, float> EQ_ApplyVectorRightwardAsTuple(float y, float x, float heading, float distance);
+
 bool EQ_IsPointInsideRectangle(int pointX, int pointY, int rectangleX, int rectangleY, int rectangleWidth, int rectangleHeight);
-void EQ_ColorARGB_Darken(uint32_t& colorARGB, float percent);
+uint32_t EQ_ColorARGB_Darken(uint32_t colorARGB, float percent);
 
 uint32_t EQ_GetGameState();
 bool EQ_IsInGame();
@@ -105,11 +118,16 @@ float EQ_GetSpawnDistance(uint32_t spawn);
 float EQ_GetSpawnDistance3D(uint32_t spawn);
 
 bool EQ_IsSpawnWithinDistance(uint32_t spawn, float distance);
-bool EQ_IsSpawnWithinDistanceOfLocation(uint32_t spawn, float distance, float y, float x, float z);
+bool EQ_IsSpawnWithinDistanceOfLocation(uint32_t spawn, float y, float x, float z, float distance);
+bool EQ_IsSpawnWithinDistanceOfSpawn(uint32_t spawn1, uint32_t spawn2, float distance);
 
 bool EQ_CanSpawnCastRayToLocation(uint32_t spawn, float y, float x, float z);
+bool EQ_CanSpawnCastRayToSpawn(uint32_t spawn1, uint32_t spawn2);
 
 bool EQ_IsSpawnTargetable(uint32_t spawn);
+
+bool EQ_IsLocationOnScreen(float y, float x, float z);
+bool EQ_IsSpawnOnScreen(uint32_t spawn);
 
 bool EQ_IsSpawnSwimming(uint32_t spawn);
 bool EQ_IsSpawnSwimmingUnderwater(uint32_t spawn);
@@ -118,11 +136,11 @@ bool EQ_IsSpawnBehindSpawn(uint32_t  spawn1, uint32_t  spawn2);
 bool EQ_IsSpawnBehindSpawnEx(uint32_t  spawn1, uint32_t  spawn2, float angle);
 bool EQ_IsPlayerBehindTarget();
 
-bool EQ_IsSpawnClassTank(uint32_t spawn); // WAR PAL SHD
-bool EQ_IsSpawnClassPriest(uint32_t spawn); // CLR DRU SHM
-bool EQ_IsSpawnClassCaster(uint32_t spawn); // NEC WIZ MAG ENC
-bool EQ_IsSpawnClassMelee(uint32_t spawn); // BER MNK ROG
-bool EQ_IsSpawnClassHybrid(uint32_t spawn); // BRD BST RNG
+bool EQ_IsSpawnClassTank(uint32_t spawn);
+bool EQ_IsSpawnClassPriest(uint32_t spawn);
+bool EQ_IsSpawnClassCaster(uint32_t spawn);
+bool EQ_IsSpawnClassMelee(uint32_t spawn);
+bool EQ_IsSpawnClassHybrid(uint32_t spawn);
 
 std::string EQ_GetSpawnNameNumbered(uint32_t spawn);
 std::string EQ_GetSpawnName(uint32_t spawn);
@@ -202,6 +220,7 @@ std::string EQ_GetExecuteCommandNameByID(uint32_t commandID);
 void EQ_PrintTextToChat(const char* text);
 void EQ_PrintTextToChatEx(const char* text, int color);
 
+void EQ_SetDrawTextFontStyle(uint32_t fontStyle);
 void EQ_DrawText(const char* text, int x, int y);
 void EQ_DrawTextEx(const char* text, int x, int y, int color);
 
@@ -217,8 +236,9 @@ void EQ_SetCameraPitch(float pitch);
 void EQ_SetCameraFieldOfView(float fieldOfView);
 void EQ_SetCameraDrawDistance(float drawDistance);
 
-bool EQ_WorldSpaceToScreenSpace(float worldY, float worldX, float worldZ, float& screenX, float& screenY);
-bool EQ_WorldSpaceToScreenSpaceEx(float worldY, float worldX, float worldZ, float& screenX, float& screenY);
+bool EQ_WorldLocationToScreenLocation(float worldY, float worldX, float worldZ, float& screenX, float& screenY);
+bool EQ_WorldLocationToScreenLocationEx(float worldY, float worldX, float worldZ, float& screenX, float& screenY);
+std::tuple<float, float, bool> EQ_WorldLocationToScreenLocationAsTuple(float worldY, float worldX, float worldZ);
 
 void EQ_PlaySound(const char* filename);
 void EQ_StopSound();
@@ -379,6 +399,15 @@ void EQ_FixHeading(float& heading)
     }
 }
 
+float EQ_FixHeadingEx(float heading)
+{
+    float result = heading;
+
+    EQ_FixHeading(result);
+
+    return result;
+}
+
 void EQ_FixPitch(float& pitch)
 {
     if (pitch < EQ_SPAWN_PITCH_MIN)
@@ -391,9 +420,127 @@ void EQ_FixPitch(float& pitch)
     }
 }
 
+float EQ_FixPitchEx(float pitch)
+{
+    float result = pitch;
+
+    EQ_FixPitch(result);
+
+    return result;
+}
+
 float EQ_GetRadians(float degrees)
 {
+    if (degrees == 0.0f)
+    {
+        return 0.0f;
+    }
+
     return degrees * EQ_PI / EQ_HEADING_MAX_HALF;
+}
+
+void EQ_ApplyVectorForward(float& y, float& x, float heading, float distance)
+{
+    heading = heading + 128.0f;
+
+    EQ_FixHeading(heading);
+
+    float headingRadians = EQ_GetRadians(heading);
+
+    float addY = std::sinf(headingRadians);
+    float addX = std::cosf(headingRadians);
+
+    y += addY * distance;
+    x -= addX * distance;
+}
+
+void EQ_ApplyVectorBackward(float& y, float& x, float heading, float distance)
+{
+    heading = heading - 128.0f;
+
+    EQ_FixHeading(heading);
+
+    float headingRadians = EQ_GetRadians(heading);
+
+    float addY = std::sinf(headingRadians);
+    float addX = std::cosf(headingRadians);
+
+    y += addY * distance;
+    x -= addX * distance;
+}
+
+void EQ_ApplyVectorLeftward(float& y, float& x, float heading, float distance)
+{
+    //heading = heading + 0.0f;
+
+    EQ_FixHeading(heading);
+
+    float headingRadians = EQ_GetRadians(heading);
+
+    float addY = std::sinf(headingRadians);
+    float addX = std::cosf(headingRadians);
+
+    y -= addY * distance;
+    x += addX * distance;
+}
+
+void EQ_ApplyVectorRightward(float& y, float& x, float heading, float distance)
+{
+    heading = heading + 256.0f;
+
+    EQ_FixHeading(heading);
+
+    float headingRadians = EQ_GetRadians(heading);
+
+    float addY = std::sinf(headingRadians);
+    float addX = std::cosf(headingRadians);
+
+    y -= addY * distance;
+    x += addX * distance;
+}
+
+// returns <newY, newX>
+std::tuple<float, float> EQ_ApplyVectorForwardAsTuple(float y, float x, float heading, float distance)
+{
+    float resultY = y;
+    float resultX = x;
+
+    EQ_ApplyVectorForward(resultY, resultX, heading, distance);
+
+    return std::make_tuple(resultY, resultX);
+}
+
+// returns <newY, newX>
+std::tuple<float, float> EQ_ApplyVectorBackwardAsTuple(float y, float x, float heading, float distance)
+{
+    float resultY = y;
+    float resultX = x;
+
+    EQ_ApplyVectorBackward(resultY, resultX, heading, distance);
+
+    return std::make_tuple(resultY, resultX);
+}
+
+// returns <newY, newX>
+std::tuple<float, float> EQ_ApplyVectorLeftwardAsTuple(float y, float x, float heading, float distance)
+{
+    float resultY = y;
+    float resultX = x;
+
+    EQ_ApplyVectorLeftward(resultY, resultX, heading, distance);
+
+    return std::make_tuple(resultY, resultX);
+}
+
+// returns <newY, newX>
+std::tuple<float, float> EQ_ApplyVectorRightwardAsTuple(float y, float x, float heading, float distance)
+{
+    float resultY = y;
+    float resultX = x;
+
+    EQ_ApplyVectorRightward(resultY, resultX, heading, distance);
+
+    return std::make_tuple(resultY, resultX);
 }
 
 bool EQ_IsPointInsideRectangle(int pointX, int pointY, int rectangleX, int rectangleY, int rectangleWidth, int rectangleHeight)
@@ -406,7 +553,7 @@ bool EQ_IsPointInsideRectangle(int pointX, int pointY, int rectangleX, int recta
     return true;
 }
 
-void EQ_ColorARGB_Darken(uint32_t& colorARGB, float percent)
+uint32_t EQ_ColorARGB_Darken(uint32_t colorARGB, float percent)
 {
     uint32_t alpha = (colorARGB >> 24) & 0xFF;
     uint32_t red   = (colorARGB >> 16) & 0xFF;
@@ -417,7 +564,7 @@ void EQ_ColorARGB_Darken(uint32_t& colorARGB, float percent)
     green = (uint32_t)(green * percent);
     blue  = (uint32_t)(blue  * percent);
 
-    colorARGB = (alpha << 24) + (red << 16) + (green << 8) + blue;
+    return ((alpha << 24) + (red << 16) + (green << 8) + blue);
 }
 
 uint32_t EQ_GetGameState()
@@ -425,7 +572,7 @@ uint32_t EQ_GetGameState()
     uint32_t everquest = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CEverQuest);
     if (everquest == NULL)
     {
-        return 255;
+        return 0xFFFFFFFF;
     }
 
     return EQ_ReadMemory<uint32_t>(everquest + EQ_OFFSET_CEverQuest_GAME_STATE);
@@ -762,40 +909,6 @@ std::string EQ_GetTargetSpawnLastName()
     return EQ_GetSpawnLastName(targetSpawn);
 }
 
-bool EQ_IsSpawnWithinDistance(uint32_t spawn, float distance)
-{
-    auto playerSpawn = EQ_GetPlayerSpawn();
-    if (playerSpawn == NULL)
-    {
-        return false;
-    }
-
-    auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
-    auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
-
-    auto spawnY = EQ_GetSpawnY(spawn);
-    auto spawnX = EQ_GetSpawnX(spawn);
-
-    bool result = EQ_IsWithinDistance(playerSpawnY, playerSpawnX, spawnY, spawnX, distance);
-
-    return result;
-}
-
-bool EQ_IsSpawnWithinDistanceOfLocation(uint32_t spawn, float distance, float y, float x, float z)
-{
-    auto spawnY = EQ_GetSpawnY(spawn);
-    auto spawnX = EQ_GetSpawnX(spawn);
-    auto spawnZ = EQ_GetSpawnZ(spawn);
-
-    auto diffY = std::fabs(spawnY - y);
-    auto diffX = std::fabs(spawnX - x);
-    auto diffZ = std::fabs(spawnZ - z);
-
-    bool result = (diffY < distance && diffX < distance && diffZ < 10.0f);
-
-    return result;
-}
-
 float EQ_GetSpawnDistance(uint32_t spawn)
 {
     auto playerSpawn = EQ_GetPlayerSpawn();
@@ -836,6 +949,49 @@ float EQ_GetSpawnDistance3D(uint32_t spawn)
     return spawnDistance;
 }
 
+bool EQ_IsSpawnWithinDistance(uint32_t spawn, float distance)
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return false;
+    }
+
+    auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
+    auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
+
+    auto spawnY = EQ_GetSpawnY(spawn);
+    auto spawnX = EQ_GetSpawnX(spawn);
+
+    bool result = EQ_IsWithinDistance(playerSpawnY, playerSpawnX, spawnY, spawnX, distance);
+
+    return result;
+}
+
+bool EQ_IsSpawnWithinDistanceOfLocation(uint32_t spawn, float y, float x, float z, float distance)
+{
+    auto spawnY = EQ_GetSpawnY(spawn);
+    auto spawnX = EQ_GetSpawnX(spawn);
+    auto spawnZ = EQ_GetSpawnZ(spawn);
+
+    auto diffY = std::fabs(spawnY - y);
+    auto diffX = std::fabs(spawnX - x);
+    auto diffZ = std::fabs(spawnZ - z);
+
+    bool result = (diffY < distance && diffX < distance && diffZ < 10.0f);
+
+    return result;
+}
+
+bool EQ_IsSpawnWithinDistanceOfSpawn(uint32_t spawn1, uint32_t spawn2, float distance)
+{
+    auto spawnY = EQ_GetSpawnY(spawn2);
+    auto spawnX = EQ_GetSpawnX(spawn2);
+    auto spawnZ = EQ_GetSpawnZ(spawn2);
+
+    return EQ_IsSpawnWithinDistanceOfLocation(spawn1, distance, spawnY, spawnX, spawnZ);
+}
+
 bool EQ_CanSpawnCastRayToLocation(uint32_t spawn, float y, float x, float z)
 {
     int result = EQ_FUNCTION_CastRay(spawn, y, x, z);
@@ -843,9 +999,34 @@ bool EQ_CanSpawnCastRayToLocation(uint32_t spawn, float y, float x, float z)
     return (result != 0);
 }
 
+bool EQ_CanSpawnCastRayToSpawn(uint32_t spawn1, uint32_t spawn2)
+{
+    auto spawnY = EQ_GetSpawnY(spawn2);
+    auto spawnX = EQ_GetSpawnX(spawn2);
+    auto spawnZ = EQ_GetSpawnZ(spawn2);
+
+    return EQ_CanSpawnCastRayToLocation(spawn1, spawnY, spawnX, spawnZ);
+}
+
 bool EQ_IsSpawnTargetable(uint32_t spawn)
 {
     return EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_IS_TARGETABLE);
+}
+
+bool EQ_IsLocationOnScreen(float y, float x, float z)
+{
+    float screenX = -1.0f;
+    float screenY = -1.0f;
+    return EQ_WorldLocationToScreenLocation(y, x, z, screenX, screenY);
+}
+
+bool EQ_IsSpawnOnScreen(uint32_t spawn)
+{
+    auto spawnY = EQ_GetSpawnY(spawn);
+    auto spawnX = EQ_GetSpawnX(spawn);
+    auto spawnZ = EQ_GetSpawnZ(spawn);
+
+    return EQ_IsLocationOnScreen(spawnY, spawnX, spawnZ);
 }
 
 bool EQ_IsSpawnSwimming(uint32_t spawn)
@@ -1558,7 +1739,7 @@ void EQ_ExecuteCommand(uint32_t commandID, int isActive)
 
 void EQ_ExecuteCommandEx(const char* commandName, int isActive)
 {
-    int commandID = EQ_FUNCTION_GetExecuteCmdIDByName(commandName);
+    uint32_t commandID = EQ_FUNCTION_GetExecuteCmdIDByName(commandName);
 
     EQ_ExecuteCommand(commandID, isActive);
 }
@@ -1570,6 +1751,11 @@ uint32_t EQ_GetExecuteCommandIDByName(const char* commandName)
 
 std::string EQ_GetExecuteCommandNameByID(uint32_t commandID)
 {
+    if (commandID > EQ_EXECUTECMD_ID_MAX)
+    {
+        return "UNKNOWN";
+    }
+
     return EQ_FUNCTION_GetExecuteCmdNameByID(commandID);
 }
 
@@ -1581,6 +1767,40 @@ void EQ_PrintTextToChat(const char* text)
 void EQ_PrintTextToChatEx(const char* text, int color)
 {
     EQ_CLASS_POINTER_CEverQuest->dsp_chat(text, color, 1, 1, 0);
+}
+
+void EQ_SetDrawTextFontStyle(uint32_t fontStyle)
+{
+    if (fontStyle < EQ_FONT_STYLE_MIN || fontStyle > EQ_FONT_STYLE_MAX)
+    {
+        return;
+    }
+
+    auto windowManager = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CXWndManager);
+    if (windowManager == NULL)
+    {
+        return;
+    }
+
+    auto fontsArray = EQ_ReadMemory<uint32_t>(windowManager + EQ_OFFSET_CXWndManager_FONTS_ARRAY);
+    if (fontsArray == NULL)
+    {
+        return;
+    }
+
+    auto fonts = EQ_ReadMemory<uint32_t>(windowManager + (EQ_OFFSET_CXWndManager_FONTS_ARRAY + 0x04)); // have to add offset 0x04 to get actual array from the EQ array class
+    if (fonts == NULL)
+    {
+        return;
+    }
+
+    auto font = EQ_ReadMemory<uint32_t>(fonts + (EQ_FONT_INDEX_CDisplay__WriteTextHD2 * 0x04)); // each font pointer (uint32_t) takes up 0x04 bytes in the array
+    if (font == NULL)
+    {
+        return;
+    }
+
+    EQ_WriteMemory<uint32_t>(font + EQ_OFFSET_CTextureFont_STYLE, fontStyle);
 }
 
 void EQ_DrawText(const char* text, int x, int y)
@@ -1595,49 +1815,34 @@ void EQ_DrawTextEx(const char* text, int x, int y, int color)
 
 void EQ_DrawLine(float lineBeginX, float lineBeginY, float lineEndX, float lineEndY, uint32_t colorARGB)
 {
-    if (EQ_ADDRESS_POINTER_CRender == 0)
-    {
-        return;
-    }
+    EQ::Point pointBegin;
+    pointBegin.X = lineBeginX;
+    pointBegin.Y = lineBeginY;
+    pointBegin.Z = 1.0f;
 
-    EQ::Point lineBegin;
-    lineBegin.X = lineBeginX;
-    lineBegin.Y = lineBeginY;
-    lineBegin.Z = 1.0f;
+    EQ::Point pointEnd;
+    pointEnd.X = lineEndX;
+    pointEnd.Y = lineEndY;
+    pointEnd.Z = 1.0f;
 
-    EQ::Point lineEnd;
-    lineEnd.X = lineEndX;
-    lineEnd.Y = lineEndY;
-    lineEnd.Z = 1.0f;
-
-    EQ_CLASS_POINTER_CRender->DrawLine(lineBegin, lineEnd, colorARGB);
+    EQ_CLASS_POINTER_CRender->DrawLine(pointBegin, pointEnd, colorARGB);
 }
 
 void EQ_DrawLine3D(float lineBeginY, float lineBeginX, float lineBeginZ, float lineEndY, float lineEndX, float lineEndZ, uint32_t colorARGB)
 {
-    if (EQ_ADDRESS_POINTER_CRender == 0)
-    {
-        return;
-    }
-
     float screenBeginX = 0.0f;
     float screenBeginY = 0.0f;
-    bool resultBegin = EQ_WorldSpaceToScreenSpace(lineBeginY, lineBeginX, lineBeginZ, screenBeginX, screenBeginY);
+    bool resultBegin = EQ_WorldLocationToScreenLocation(lineBeginY, lineBeginX, lineBeginZ, screenBeginX, screenBeginY);
 
     float screenEndX = 0.0f;
     float screenEndY = 0.0f;
-    bool resultEnd = EQ_WorldSpaceToScreenSpace(lineEndY, lineEndX, lineEndZ, screenEndX, screenEndY);
+    bool resultEnd = EQ_WorldLocationToScreenLocation(lineEndY, lineEndX, lineEndZ, screenEndX, screenEndY);
 
     EQ_DrawLine(screenBeginX, screenBeginY, screenEndX, screenEndY, colorARGB);
 }
 
 void EQ_DrawRectangle(float x, float y, float width, float height, uint32_t colorARGB, bool isFilled)
 {
-    if (EQ_ADDRESS_POINTER_CRender == 0)
-    {
-        return;
-    }
-
     if (isFilled == true)
     {
         EQ::Rectangle rectangle;
@@ -1777,7 +1982,7 @@ void EQ_StopSound()
     PlaySoundA(NULL, NULL, NULL);
 }
 
-bool EQ_WorldSpaceToScreenSpace(float worldY, float worldX, float worldZ, float& screenX, float& screenY)
+bool EQ_WorldLocationToScreenLocation(float worldY, float worldX, float worldZ, float& screenX, float& screenY)
 {
     auto camera = EQ_GetCamera();
     if (camera == NULL)
@@ -1793,7 +1998,7 @@ bool EQ_WorldSpaceToScreenSpace(float worldY, float worldX, float worldZ, float&
     return ((EQClass::CCamera*)camera)->WorldSpaceToScreenSpace(location, screenX, screenY);
 }
 
-bool EQ_WorldSpaceToScreenSpaceEx(float worldY, float worldX, float worldZ, float& screenX, float& screenY)
+bool EQ_WorldLocationToScreenLocationEx(float worldY, float worldX, float worldZ, float& screenX, float& screenY)
 {
     // this function uses hardcoded offsets
 
@@ -1856,6 +2061,16 @@ bool EQ_WorldSpaceToScreenSpaceEx(float worldY, float worldX, float worldZ, floa
     screenY = a4;
 
     return true;
+}
+
+// returns <screenX, screenY, result>
+std::tuple<float, float, bool> EQ_WorldLocationToScreenLocationAsTuple(float worldY, float worldX, float worldZ)
+{
+    float screenX = -1.0f;
+    float screenY = -1.0f;
+    bool result = EQ_WorldLocationToScreenLocation(worldY, worldX, worldZ, screenX, screenY);
+
+    return std::make_tuple(screenX, screenY, result);
 }
 
 void EQ_StopFollow()

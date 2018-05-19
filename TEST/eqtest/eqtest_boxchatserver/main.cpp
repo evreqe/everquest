@@ -17,9 +17,7 @@
 #pragma comment(lib, "ws2_32.lib")
 
 #define EQ_BCS_PORT_NUMBER 29015
-
 #define EQ_BCS_CLIENTS_MAX 32
-
 #define EQ_BCS_STRING_MAX 4096
 
 std::string EQ_BCS_JoinStrings(const std::vector<std::string> &elements, const std::string &separator)

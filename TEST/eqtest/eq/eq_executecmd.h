@@ -1,6 +1,8 @@
 #pragma once
 
 // ExecuteCmd() function command IDs
+
+constexpr auto EQ_EXECUTECMD_BEGIN_LINE = __LINE__;
 #define EQ_EXECUTECMD_AUTORUN                                                                      0
 #define EQ_EXECUTECMD_JUMP                                                                         1
 #define EQ_EXECUTECMD_FORWARD                                                                      2
@@ -521,6 +523,7 @@
 #define EQ_EXECUTECMD_ROTATE_STATS                                                                 517
 #define EQ_EXECUTECMD_TOGGLE_NPC_TUNE                                                              518
 #define EQ_EXECUTECMD_TOGGLEQAMARKER                                                               519
+constexpr auto EQ_EXECUTECMD_ID_MAX = __LINE__ - EQ_EXECUTECMD_BEGIN_LINE - 2;
 
 // unlisted commands
 #define EQ_EXECUTECMD_CMD_EXITGAME                                                                 526

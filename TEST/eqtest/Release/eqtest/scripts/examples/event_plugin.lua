@@ -12,9 +12,9 @@ function OnUnload()
 
 end
 
-function OnInterpretCommand(text)
+function OnInterpretCommand(commandText)
 
-    if text == "//Plugin" then
+    if commandText == "//Plugin" then
 
         if g_PluginIsEnabled == 0 then
 
@@ -31,7 +31,7 @@ function OnInterpretCommand(text)
         return 1
     end
 
-    if text == "//PluginOn" then
+    if commandText == "//PluginOn" then
 
         g_PluginIsEnabled = 1
         EQ_PrintTextToChat("Plugin: On")
@@ -40,7 +40,7 @@ function OnInterpretCommand(text)
 
     end
 
-    if text == "//PluginOff" then
+    if commandText == "//PluginOff" then
 
         g_PluginIsEnabled = 0
         EQ_PrintTextToChat("Plugin: Off")

@@ -96,7 +96,7 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalOptions>/OUT:"D:\Code\everquest\eqtest\Release\eqbcs.exe" %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/OUT:"D:\Code\everquest\eqtest\Release\eqtestbcs.exe" %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
       <Command>

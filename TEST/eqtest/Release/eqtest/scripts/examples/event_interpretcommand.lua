@@ -1,6 +1,6 @@
-function OnInterpretCommand(text)
+function OnInterpretCommand(commandText)
 
-    if text == "/cheevo" then
+    if commandText == "/cheevo" then
        EQ_PlaySound("achievement.wav")
        EQ_PrintTextToChat("CONGLATURATION !!!")
        EQ_PrintTextToChat("YOU HAVE COMPLETED A GREAT GAME.")

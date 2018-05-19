@@ -14,6 +14,7 @@
 #include "eqapp_esp.h"
 #include "eqapp_followai.h"
 #include "eqapp_hud.h"
+#include "eqapp_loadoptions.h"
 #include "eqapp_lua.h"
 #include "eqapp_sleep.h"
 #include "eqapp_spawncastspell.h"
@@ -629,7 +630,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
     if (commandText == "//Test")
     {
-        EQ_PrintTextToChat("Test!");
+        std::cout << "Testing123" << std::endl;
 
         return true;
     }

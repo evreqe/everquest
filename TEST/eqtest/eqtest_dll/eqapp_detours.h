@@ -542,14 +542,7 @@ int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive,
         }
     }
 
-    int result = EQAPP_REAL_FUNCTION_ExecuteCmd(commandID, isActive, unknown, zero);
-
-    if (commandID == EQ_EXECUTECMD_USER1_CAMERA || commandID == EQ_EXECUTECMD_USER2_CAMERA)
-    {
-        EQ_ExecuteCommand(EQ_EXECUTECMD_CENTERVIEW, 1);
-    }
-
-    return result;
+    return EQAPP_REAL_FUNCTION_ExecuteCmd(commandID, isActive, unknown, zero);
 }
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawWindows(void* this_ptr, void* not_used)

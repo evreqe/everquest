@@ -385,7 +385,7 @@ while ( *(_DWORD *)(result + 4) != v7 )
 }
 */
 
-uint32_t EQ_ADDRESS_FUNCTIOIN_EQPlayerManager__GetPlayerFromPartialName = 0x63CD50;
+uint32_t EQ_ADDRESS_FUNCTION_EQPlayerManager__GetPlayerFromPartialName = 0x63CD50;
 
 // class EQPlayer
 uint32_t EQ_ADDRESS_POINTER_TARGET_SPAWN        = 0xE5D1FC; // pinstTarget    ExecuteCmd() case CLEAR_TARGET

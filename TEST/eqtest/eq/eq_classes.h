@@ -229,7 +229,7 @@ EQClass::CCamera* EQ_CLASS_POINTER_CCamera;
 class EQClass::CRender
 {
 public:
-    bool CRender::DrawLine(EQ::Point& lineBegin, EQ::Point& lineEnd, uint32_t colorARGB);
+    bool CRender::DrawLine(EQ::Point& pointBegin, EQ::Point& pointEnd, uint32_t colorARGB);
     bool CRender::DrawWrappedText(uint32_t fontStyle, const char* text, EQ::CXRect& cxrect1, EQ::CXRect& cxrect2, uint32_t colorARGB, uint16_t flags, int startX);
     bool CRender::DrawColoredRectangle(EQ::Rectangle& rectangle, uint32_t colorARGB);
 };
@@ -239,10 +239,9 @@ public:
 #define EQ_VFTABLE_INDEX_CRender__DrawWrappedText         0x94
 #define EQ_VFTABLE_INDEX_CRender__DrawColoredRectangle    0xA0
 
-EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawLine(EQ::Point& lineBegin, EQ::Point& lineEnd, uint32_t colorARGB), EQ_VFTABLE_INDEX_CRender__DrawLine);
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawLine(EQ::Point& pointBegin, EQ::Point& pointEnd, uint32_t colorARGB), EQ_VFTABLE_INDEX_CRender__DrawLine);
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawWrappedText(uint32_t fontStyle, const char* text, EQ::CXRect& cxrect1, EQ::CXRect& cxrect2, uint32_t colorARGB, uint16_t flags, int startX), EQ_VFTABLE_INDEX_CRender__DrawWrappedText);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CRender__DrawWrappedText)(void* this_ptr, uint32_t fontStyle, const char* text, EQ::CXRect& cxrect1, EQ::CXRect& cxrect2, uint32_t colorARGB, uint16_t flags, int startX);
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawColoredRectangle(EQ::Rectangle& rectangle, uint32_t colorARGB), EQ_VFTABLE_INDEX_CRender__DrawColoredRectangle);
 

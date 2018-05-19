@@ -11,6 +11,7 @@ const uint32_t EQ_BASE_ADDRESS_VALUE = 0x400000;
 
 const float EQ_PI = 3.14159265358979f;
 
+const float EQ_HEADING_MIN = 0.0f;
 const float EQ_HEADING_MAX = 512.0f;
 const float EQ_HEADING_MAX_HALF = 256.0f;
 
@@ -52,12 +53,14 @@ const uint32_t EQ_FAR_CLIP_PLANE_MAX = 20;
 
 #define EQ_OFFSET_CXWndManager_FONTS_ARRAY    0x11C    // add 0x04 to get the actual array of CTextureFont objects
 
-#define EQ_OFFSET_CTextureFont_STYLE    0x04 // font size and style
+#define EQ_OFFSET_CTextureFont_STYLE    0x04 // uint32_t, font size and style
+
+#define EQ_FONT_INDEX_CDisplay__WriteTextHD2    2    // the third font in the fonts array
+
+#define EQ_FONT_STYLE_MIN    0
+#define EQ_FONT_STYLE_MAX    10
 
 // use /chatfontsize to see the font style in the chat window
-#define EQ_FONT_STYLE_MIN 0
-#define EQ_FONT_STYLE_MAX 10
-
 #define EQ_FONT_STYLE_CDisplay__WriteTextHD2    2     // used by the CDisplay::WriteTextHD2() function
 #define EQ_FONT_STYLE_DEFAULT                   3     // default size used in the chat window
 #define EQ_FONT_STYLE_FIXED_WIDTH               9     // small text and all characters are the same size, courier new or fixed sys font face

@@ -10,6 +10,7 @@ void EQAPP_ToggleDebugText();
 
 void EQAPP_EnableDebugPrivileges();
 DWORD EQAPP_GetModuleBaseAddress(DWORD processID, const wchar_t* moduleName);
+bool EQAPP_IsProcessRunning(const wchar_t* filename);
 bool EQAPP_IsForegroundWindowCurrentProcessID();
 bool EQAPP_IsVKKeyDown(int vkKey);
 uint32_t EQAPP_GetRandomNumber(uint32_t low, uint32_t high);
@@ -117,6 +118,55 @@ DWORD EQAPP_GetModuleBaseAddress(DWORD processID, const wchar_t* moduleName)
     }
 
     return moduleBaseAddress;
+}
+
+bool EQAPP_IsProcessRunning(const wchar_t* filename)
+{
+    bool result = false;
+
+    HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
+    if (snapshot == INVALID_HANDLE_VALUE)
+    {
+        return result;
+    }
+
+    PROCESSENTRY32 pe32 = {0};
+    pe32.dwSize = sizeof(pe32);
+
+    if (Process32First(snapshot, &pe32))
+    {
+        for (;;)
+        {
+            std::wstring filenameW = filename;
+
+            if (lstrcmpi(pe32.szExeFile, filename) == 0)
+            {
+                result = true;
+                break;
+            }
+
+            if (!Process32Next(snapshot, &pe32))
+            {
+                if (GetLastError() != ERROR_NO_MORE_FILES)
+                {
+                    result = false;
+                }
+
+                break;
+            }
+            else
+            {
+                if (GetLastError() != ERROR_NO_MORE_FILES)
+                {
+                    result = false;
+                }
+            }
+        }
+
+        CloseHandle(snapshot);
+    }
+
+    return result;
 }
 
 bool EQAPP_IsForegroundWindowCurrentProcessID()
@@ -303,7 +353,7 @@ std::vector<uint32_t> EQAPP_GetNPCSpawnIDListSortedByDistance()
 
         float screenX = -1.0f;
         float screenY = -1.0f;
-        bool result = EQ_WorldSpaceToScreenSpace(spawnY, spawnX, spawnZ, screenX, screenY);
+        bool result = EQ_WorldLocationToScreenLocation(spawnY, spawnX, spawnZ, screenX, screenY);
         if (result == false)
         {
             spawn = EQ_GetSpawnNext(spawn);

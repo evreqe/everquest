@@ -1,14 +1,14 @@
 #pragma once
 
-#define EQBCS_IP_ADDRESS "127.0.0.1"
-#define EQBCS_PORT_NUMBER "29015"
-#define EQBCS_STRING_MAX 4096
-
 bool g_BoxChatIsEnabled = true;
 
 bool g_BoxChatIsConnected = false;
 
 bool g_BoxChatAutoConnectIsEnabled = true;
+
+const char* g_BoxChatProcessFileName = "eqtestbcs.exe";
+
+const wchar_t g_BoxChatProcessFileNameWide[] = L"eqtestbcs.exe";
 
 std::string g_BoxChatClientName = "UNKNOWN";
 std::string g_BoxChatChannelName = "Default";
@@ -23,10 +23,10 @@ EQApp::TimerInterval g_BoxChatKeepAliveTimerInterval = 3;
 EQApp::Timer g_BoxChatAutoConnectTimer = EQAPP_Timer_GetTimeNow();
 EQApp::TimerInterval g_BoxChatAutoConnectTimerInterval = 3;
 
-char g_BoxChatServerIPAddress[EQBCS_STRING_MAX];
-char g_BoxChatServerPort[EQBCS_STRING_MAX];
+std::string g_BoxChatServerIPAddress = "127.0.0.1";
+std::string g_BoxChatServerPort = "29015";
 
-char g_BoxChatRecvBuffer[EQBCS_STRING_MAX] = {0};
+char g_BoxChatRecvBuffer[4096] = {0};
 
 WSADATA g_BoxChatWSAData;
 SOCKET g_BoxChatSocket;
@@ -109,17 +109,7 @@ bool EQAPP_BoxChat_Connect(std::string clientName)
     g_BoxChatAddressInfoHints.ai_socktype = SOCK_STREAM;
     g_BoxChatAddressInfoHints.ai_protocol = IPPROTO_TCP;
 
-    if (strlen(g_BoxChatServerIPAddress) == 0)
-    {
-        strncpy_s(g_BoxChatServerIPAddress, sizeof(g_BoxChatServerIPAddress), EQBCS_IP_ADDRESS, _TRUNCATE);
-    }
-
-    if (strlen(g_BoxChatServerPort) == 0)
-    {
-        strncpy_s(g_BoxChatServerPort, sizeof(g_BoxChatServerPort), EQBCS_PORT_NUMBER, _TRUNCATE);
-    }
-
-    if (getaddrinfo(g_BoxChatServerIPAddress, g_BoxChatServerPort, &g_BoxChatAddressInfoHints, &g_BoxChatAddressInfoResult) != 0)
+    if (getaddrinfo(g_BoxChatServerIPAddress.c_str(), g_BoxChatServerPort.c_str(), &g_BoxChatAddressInfoHints, &g_BoxChatAddressInfoResult) != 0)
     {
         freeaddrinfo(g_BoxChatAddressInfoResult);
         EQAPP_BoxChat_DisconnectEx();
@@ -243,9 +233,9 @@ void EQAPP_BoxChat_Execute()
 
     if (FD_ISSET(g_BoxChatSocket, &g_BoxChatFDSetRead))
     {
-        memset(g_BoxChatRecvBuffer, 0, EQBCS_STRING_MAX);
+        memset(g_BoxChatRecvBuffer, 0, sizeof(g_BoxChatRecvBuffer));
 
-        int recvResult = recv(g_BoxChatSocket, g_BoxChatRecvBuffer, EQBCS_STRING_MAX, 0);
+        int recvResult = recv(g_BoxChatSocket, g_BoxChatRecvBuffer, sizeof(g_BoxChatRecvBuffer), 0);
         if (recvResult <= 0)
         {
             return;
@@ -367,47 +357,5 @@ void EQAPP_BoxChat_InterpretCommands()
 
 bool EQAPP_BoxChat_IsServerRunning()
 {
-    bool result = false;
-
-    HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
-    if (snapshot == INVALID_HANDLE_VALUE)
-    {
-        return result;
-    }
-
-    PROCESSENTRY32 pe32 = {0};
-    pe32.dwSize = sizeof(pe32);
-
-    if (Process32First(snapshot, &pe32))
-    {
-        for (;;)
-        {
-            if(lstrcmpi(pe32.szExeFile, L"eqbcs.exe") == 0)
-            {
-                result = true;
-                break;
-            }
-
-            if (!Process32Next(snapshot, &pe32))
-            {
-                if (GetLastError() != ERROR_NO_MORE_FILES)
-                {
-                    result = false;
-                }
-
-                break;
-            }
-            else
-            {
-                if (GetLastError() != ERROR_NO_MORE_FILES)
-                {
-                    result = false;
-                }
-            }
-        }
-
-        CloseHandle(snapshot);
-    }
-
-    return result;
+    return EQAPP_IsProcessRunning(g_BoxChatProcessFileNameWide);
 }
