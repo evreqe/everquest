@@ -7,6 +7,6 @@ end
 
 function OnDrawWindows()
 
-    EQ_DrawTextEx("OnDrawWindows() test text", 200, 200, EQ_DRAW_TEXT_COLOR_RED)
+    EQ_DrawTextByColor("OnDrawWindows() test text", 200, 200, EQ_DRAW_TEXT_COLOR_RED)
 
 end

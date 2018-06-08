@@ -385,10 +385,10 @@ int main(int argc , char *argv[])
 
                                     sendSocket = clientSocket[j];
 
-                                    // do not send BCA broadcasts to the sender
+                                    // do not send broadcast to the sender
                                     if (sendSocket == recvSocket)
                                     {
-                                        if (bBCT == false && bBCTC == false && bBCA == true && bBCAA == false)
+                                        if (bBCT == true || bBCTC == true || bBCA == true)
                                         {
                                             continue;
                                         }

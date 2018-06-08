@@ -11,9 +11,11 @@ const uint32_t EQ_BASE_ADDRESS_VALUE = 0x400000;
 
 const float EQ_PI = 3.14159265358979f;
 
-const float EQ_HEADING_MIN = 0.0f;
-const float EQ_HEADING_MAX = 512.0f;
-const float EQ_HEADING_MAX_HALF = 256.0f;
+const float EQ_ZONE_GRAVITY_DEFAULT = 0.400000006f;
+
+const float EQ_HEADING_MIN         = 0.0f;
+const float EQ_HEADING_MAX         = 512.0f;
+const float EQ_HEADING_MAX_HALF    = 256.0f;
 
 const float EQ_SPAWN_PITCH_DEFAULT    = 0.0f;       // center view or look forward
 const float EQ_SPAWN_PITCH_MIN        = -128.0f;    // look down
@@ -37,6 +39,10 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_NUM_SPELL_GEMS        18
 #define EQ_NUM_BAGS              10    // number of bags you can hold in your inventory
 #define EQ_NUM_BAG_SLOTS         40    // number of slots a bag can have
+#define EQ_NUM_GROUP_MEMBERS     6
+
+#define EQ_BAZAAR_SEARCH_MAX_RESULTS_PER_TRADER 200
+#define EQ_BAZAAR_SEARCH_LIST_INDEX_NULL 0xFFFFFFFF
 
 #define EQ_SPELL_ID_NULL 0xFFFFFFFF
 
@@ -58,14 +64,14 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 
 #define EQ_OFFSET_CTextureFont_STYLE    0x04 // uint32_t, font size and style
 
-#define EQ_FONT_INDEX_CDisplay__WriteTextHD2    2    // the third font in the fonts array
+#define EQ_FONT_INDEX_DEFAULT    2    // the third font in the fonts array, used by the CDisplay::WriteTextHD2() function
 
 #define EQ_FONT_STYLE_MIN    0
 #define EQ_FONT_STYLE_MAX    10
 
 // use /chatfontsize to see the font style in the chat window
-#define EQ_FONT_STYLE_CDisplay__WriteTextHD2    2     // used by the CDisplay::WriteTextHD2() function
-#define EQ_FONT_STYLE_DEFAULT                   3     // default size used in the chat window
+#define EQ_FONT_STYLE_DEFAULT                   2     // used by the CDisplay::WriteTextHD2() function
+#define EQ_FONT_STYLE_CHAT_WINDOW               3     // default size used in the chat window
 #define EQ_FONT_STYLE_FIXED_WIDTH               9     // small text and all characters are the same size, courier new or fixed sys font face
 #define EQ_FONT_STYLE_NAME_SPRITE               10    // big text with drop shadow, used for text above players/npcs heads
 
@@ -73,21 +79,21 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 // double check offsets after patch!
 #define EQ_OFFSET_SPAWN_PREVIOUS                           0x04     // uint32_t pointer
 #define EQ_OFFSET_SPAWN_NEXT                               0x08     // uint32_t pointer
-#define EQ_OFFSET_SPAWN_JUMP_STRENGTH                      0x10     // float    // how high up you will jump, not forward
+#define EQ_OFFSET_SPAWN_JUMP_STRENGTH                      0x10     // float       // how high up you will jump, not forward
 #define EQ_OFFSET_SPAWN_SWIM_STRENGTH                      0x14     // float
-#define EQ_OFFSET_SPAWN_MOVEMENT_SPEED_BONUS               0x18     // float    // spells like SoW
-#define EQ_OFFSET_SPAWN_AREA_FRICTION                      0x1C     // float    // sliding on slippery surfaces or walking up slopes
-#define EQ_OFFSET_SPAWN_ACCELERATION_FRICTION              0x20     // float    // sliding on slippery surfaces or walking up slopes
+#define EQ_OFFSET_SPAWN_MOVEMENT_SPEED_BONUS               0x18     // float       // spells like SoW
+#define EQ_OFFSET_SPAWN_AREA_FRICTION                      0x1C     // float       // sliding on slippery surfaces or walking up slopes
+#define EQ_OFFSET_SPAWN_ACCELERATION_FRICTION              0x20     // float       // sliding on slippery surfaces or walking up slopes
 #define EQ_OFFSET_SPAWN_COLLIDE_WITH_ACTOR_TYPE            0x24     // uint32_t
-#define EQ_OFFSET_SPAWN_FLOOR_Z                            0x28     // float    // z-axis location where feet touch the ground
+#define EQ_OFFSET_SPAWN_FLOOR_Z                            0x28     // float       // z-axis location where feet touch the ground
 #define EQ_OFFSET_SPAWN_LAST_NAME                          0x38     // char[32]
 #define EQ_OFFSET_SPAWN_Y                                  0x64     // float
 #define EQ_OFFSET_SPAWN_X                                  0x68     // float
 #define EQ_OFFSET_SPAWN_Z                                  0x6C     // float
-#define EQ_OFFSET_SPAWN_MOVEMENT_SPEED                     0x7C     // float    // how fast you are moving while walking, running, riding a mount, etc
-#define EQ_OFFSET_SPAWN_HEADING                            0x80     // float    // turning
-#define EQ_OFFSET_SPAWN_HEADING_SPEED                      0x8C     // float    // turning speed, -12 to 12
-#define EQ_OFFSET_SPAWN_PITCH                              0x90     // float    // look down and up, -128 to 128    // look forward, 0
+#define EQ_OFFSET_SPAWN_MOVEMENT_SPEED                     0x7C     // float       // how fast you are moving while walking, running, riding a mount, etc
+#define EQ_OFFSET_SPAWN_HEADING                            0x80     // float       // turning
+#define EQ_OFFSET_SPAWN_HEADING_SPEED                      0x8C     // float       // turning speed, -12 to 12
+#define EQ_OFFSET_SPAWN_PITCH                              0x90     // float       // look down and up, -128 to 128    // look forward, 0
 #define EQ_OFFSET_SPAWN_UNDERWATER_ENVIRONMENT_TYPE        0x94     // uint32_t    // touching water or lava, etc
 #define EQ_OFFSET_SPAWN_HEAD_ENVIRONMENT_TYPE              0xA0     // uint8_t
 #define EQ_OFFSET_SPAWN_FEET_ENVIRONMENT_TYPE              0xA1     // uint8_t
@@ -95,8 +101,8 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_OFFSET_SPAWN_NAME_NUMBERED                      0xA4     // char[64]
 #define EQ_OFFSET_SPAWN_NAME                               0xE4     // char[64]
 #define EQ_OFFSET_SPAWN_TYPE                               0x125    // uint8_t
-#define EQ_OFFSET_SPAWN_HEIGHT_Z                           0x138    // float    // height of player in z-axis units
-#define EQ_OFFSET_SPAWN_HEIGHT                             0x13C    // float    // determines height, width, length, bounding radius, etc
+#define EQ_OFFSET_SPAWN_HEIGHT_Z                           0x138    // float       // height of player in z-axis units
+#define EQ_OFFSET_SPAWN_HEIGHT                             0x13C    // float       // determines height, width, length, bounding radius, etc
 #define EQ_OFFSET_SPAWN_ID                                 0x148    // uint32_t
 #define EQ_OFFSET_SPAWN_STATE_FLAGS                        0x14C    // uint32_t    // uses bitwise flags (AND, OR)
 #define EQ_OFFSET_SPAWN_VEHICLE_SPAWN                      0x150    // uint32_t    // boats, airships, etc
@@ -142,8 +148,70 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_SPAWN_TYPE_NAME =
 #define EQ_ACTOR_TYPE_OBJECT           5
 #define EQ_ACTOR_TYPE_LADDER           6
 #define EQ_ACTOR_TYPE_TREE             7
-#define EQ_ACTOR_TYPE_WALL             8
+#define EQ_ACTOR_TYPE_WALL             8    // trees
 #define EQ_ACTOR_TYPE_PLACED_OBJECT    9
+
+#define EQ_OFFSET_CActor_Y                          0x2C  // float
+#define EQ_OFFSET_CActor_X                          0x30  // float
+#define EQ_OFFSET_CActor_Z                          0x34  // float
+#define EQ_OFFSET_CActor_APPLICATION_DATA           0x74  // uint32_t pointer, spawn info, switch info, missile info, etc
+#define EQ_OFFSET_CActor_ACTOR_TYPE                 0x78  // uint32_t
+#define EQ_OFFSET_CActor_COLLISION_Y                0x114 // float
+#define EQ_OFFSET_CActor_COLLISION_X                0x118 // float
+#define EQ_OFFSET_CActor_COLLISION_Z                0x11C // float
+#define EQ_OFFSET_CActor_COLLISION_SCALE            0x120 // float, 0.0f to 1.0f, set to 0.0f for no collision
+#define EQ_OFFSET_CActor_ACTOR_DEFINITION_OBJECT    0x178 // uint32_t pointer
+
+#define EQ_OFFSET_ACTOR_DEFINITION_OBJECT_ACTOR_DEFINITION_ADDRESS    0x08 // pointer to char[64] x_ACTORDEF
+
+#define EQ_SIZE_ACTOR_DEFINITION_NAME 0x40 // char[64]
+
+#define EQ_OFFSET_EQZoneInfo_PLAYER_NAME           0x00     // char[64]
+#define EQ_OFFSET_EQZoneInfo_ZONE_LONG_NAME        0xC0     // char[128]
+#define EQ_OFFSET_EQZoneInfo_ZONE_SHORT_NAME       0x2A0    // char[32]
+#define EQ_OFFSET_EQZoneInfo_ZONE_GRAVITY          0x204    // uint32_t
+#define EQ_OFFSET_EQZoneInfo_ZONE_ID               0x334    // uint32_t
+#define EQ_OFFSET_EQZoneInfo_FOG_ENABLED           0x1D6    // uint8_t // 0x00=Off 0xFF=On
+#define EQ_OFFSET_EQZoneInfo_FOG_COLOR_RED         0x1D7    // uint32_t ColorARGB
+#define EQ_OFFSET_EQZoneInfo_FOG_COLOR_GREEN       0x1DB    // uint32_t ColorARGB
+#define EQ_OFFSET_EQZoneInfo_FOG_COLOR_BLUE        0x1DF    // uint32_t ColorARGB
+#define EQ_OFFSET_EQZoneInfo_FOG_DISTANCE_BEGIN    0x1E4    // float[4]
+#define EQ_OFFSET_EQZoneInfo_FOG_DISTANCE_END      0x1F4    // float[4]
+
+#define EQ_SIZE_EQZoneInfo_PLAYER_NAME        0x40    // char[64]
+#define EQ_SIZE_EQZoneInfo_ZONE_LONG_NAME     0x80    // char[128]
+#define EQ_SIZE_EQZoneInfo_ZONE_SHORT_NAME    0x20    // char[32]
+
+#define EQ_OFFSET_Group_GROUP_MEMBERS          0x04    // uint32_t[6]
+#define EQ_OFFSET_Group_GROUP_MEMBER_1         0x04
+#define EQ_OFFSET_Group_GROUP_MEMBER_2         0x08
+#define EQ_OFFSET_Group_GROUP_MEMBER_3         0x0C
+#define EQ_OFFSET_Group_GROUP_MEMBER_4         0x10
+#define EQ_OFFSET_Group_GROUP_MEMBER_5         0x14
+#define EQ_OFFSET_Group_GROUP_MEMBER_6         0x18
+#define EQ_OFFSET_Group_GROUP_MEMBER_LEADER    0x1C
+
+#define EQ_OFFSET_GROUP_MEMBER_NAME                    0x04 // CXStr pointer
+#define EQ_OFFSET_GROUP_MEMBER_IS_MERCENARY            0x08 // uint8_t
+#define EQ_OFFSET_GROUP_MEMBER_MERCENARY_OWNER_NAME    0x0C // CXStr pointer
+#define EQ_OFFSET_GROUP_MEMBER_LEVEL                   0x10 // uint32_t
+#define EQ_OFFSET_GROUP_MEMBER_IS_OFFLINE              0x14 // uint8_t
+#define EQ_OFFSET_GROUP_MEMBER_IS_MAIN_TANK            0x1D // uint8_t
+#define EQ_OFFSET_GROUP_MEMBER_IS_MAIN_ASSIST          0x1E // uint8_t
+#define EQ_OFFSET_GROUP_MEMBER_IS_PULLER               0x1F // uint8_t
+#define EQ_OFFSET_GROUP_MEMBER_IS_MARK_NPC             0x20 // uint8_t
+#define EQ_OFFSET_GROUP_MEMBER_IS_MASTER_LOOTER        0x21 // uint8_t
+#define EQ_OFFSET_GROUP_MEMBER_ROLES_FLAGS             0x24 // uint32_t bitwise flags
+#define EQ_OFFSET_GROUP_MEMBER_SPAWN                   0x30 // uint32_t pointer
+
+#define EQ_GROUP_ROLE_FLAGS_MAIN_TANK        0x01
+#define EQ_GROUP_ROLE_FLAGS_MAIN_ASSIST      0x02
+#define EQ_GROUP_ROLE_FLAGS_PULLER           0x04
+#define EQ_GROUP_ROLE_FLAGS_MARK_NPC         0x08
+#define EQ_GROUP_ROLE_FLAGS_MASTER_LOOTER    0x10
+
+#define EQ_OFFSET_GroupAggro_GROUP_MEMBER_AGGRO    0x08 // uint32_t[5], F2, F3, F4, F5, F6
+#define EQ_OFFSET_GroupAggro_PLAYER_AGGRO          0x78 // uint32_t, F1
 
 #define EQ_OFFSET_EQSwitchManager_NUM_SWITCHES    0x00 // uint32_t
 #define EQ_OFFSET_EQSwitchManager_FIRST_SWITCH    0x04 // uint32_t pointer, class EQSwitch
@@ -158,7 +226,7 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_SPAWN_TYPE_NAME =
 #define EQ_SWITCH_TYPE_0                         0      // used as a static model in the zone, do not use
 #define EQ_SWITCH_TYPE_5                         5      // opens at an angle like a regular door
 #define EQ_SWITCH_TYPE_27                        27     // slides left to right
-#define EQ_SWITCH_TYPE_TOUCH_OR_CLICK_TO_ZONE    57     // pok books
+#define EQ_SWITCH_TYPE_TOUCH_OR_CLICK_TO_ZONE    57     // pok books, step on teleporters in bazaar
 #define EQ_SWITCH_TYPE_CLICK_TO_ZONE             58     // pok stones, pok to guild lobby, bazaar to pok
 #define EQ_SWITCH_TYPE_59                        59     // pok library elevator, goes up and down
 #define EQ_SWITCH_TYPE_77                        77     // slides up and down
@@ -187,6 +255,17 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_SPAWN_TYPE_NAME =
 #define EQ_OFFSET_EQSwitch_IS_USEABLE             0xD4 // uint8_t
 
 #define EQ_SIZE_EQSwitch_NAME    32 // 0x20
+
+#define EQ_OFFSET_PlayerPath_IS_ENABLED            0x00   // uint8_t
+#define EQ_OFFSET_PlayerPath_BEGIN_Y               0x6C   // float
+#define EQ_OFFSET_PlayerPath_BEGIN_X               0x70   // float
+#define EQ_OFFSET_PlayerPath_BEGIN_Z               0x74   // float
+#define EQ_OFFSET_PlayerPath_ARRAY_OBJECT_COUNT    0x14C  // uint32_t
+#define EQ_OFFSET_PlayerPath_ARRAY_LIST            0x154  // uint32_t pointer
+#define EQ_OFFSET_PlayerPath_ARRAY_LIST_COUNT      0x158  // uint32_t
+#define EQ_OFFSET_PlayerPath_END_Y                 0x160  // float
+#define EQ_OFFSET_PlayerPath_END_X                 0x164  // float
+#define EQ_OFFSET_PlayerPath_END_Z                 0x168  // float
 
 #define EQ_ENVIRONMENT_TYPE_WATER    5
 

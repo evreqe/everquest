@@ -22,8 +22,11 @@
 
 void EQAPP_Detours_Load();
 void EQAPP_Detours_Unload();
+void EQAPP_Detours_OnEnterZone();
+void EQAPP_Detours_OnLeaveZone();
 
 EQ_MACRO_FUNCTION_DefineDetour(CrashDetected);
+EQ_MACRO_FUNCTION_DefineDetour(CollisionCallbackForActors);
 EQ_MACRO_FUNCTION_DefineDetour(DrawNetStatus);
 EQ_MACRO_FUNCTION_DefineDetour(ExecuteCmd);
 
@@ -38,7 +41,10 @@ EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__dsp_chat);
 
 EQ_MACRO_FUNCTION_DefineDetour(CCamera__SetCameraLocation);
 
+EQ_MACRO_FUNCTION_DefineDetour(CBazaarSearchWnd__AddItemToList);
+
 char* __cdecl EQAPP_DETOURED_FUNCTION_CrashDetected();
+int __cdecl EQAPP_DETOURED_FUNCTION_CollisionCallbackForActors(uint32_t cactor);
 int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown);
 int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive, void* unknown, int zero);
 
@@ -53,11 +59,18 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CCamera__SetCameraLocation(void* this_ptr, void* not_used, EQ::Location& location, bool canSetLocation);
 
+int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* this_ptr, void* not_used, char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11);
+
 void EQAPP_Detours_Load()
 {
     if (EQ_ADDRESS_FUNCTION_CrashDetected != 0)
     {
         EQ_MACRO_FUNCTION_AddDetour(CrashDetected);
+    }
+
+    if (EQ_ADDRESS_FUNCTION_CollisionCallbackForActors != 0)
+    {
+        EQ_MACRO_FUNCTION_AddDetour(CollisionCallbackForActors);
     }
 
     if (EQ_ADDRESS_FUNCTION_DrawNetStatus != 0)
@@ -105,6 +118,14 @@ void EQAPP_Detours_Load()
             }
         }
     }
+
+    if (EQ_ADDRESS_POINTER_CBazaarSearchWnd != 0)
+    {
+        if (EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList != 0)
+        {
+            EQ_MACRO_FUNCTION_AddDetour(CBazaarSearchWnd__AddItemToList);
+        }
+    }
 }
 
 void EQAPP_Detours_Unload()
@@ -112,6 +133,11 @@ void EQAPP_Detours_Unload()
     if (EQ_ADDRESS_FUNCTION_CrashDetected != 0)
     {
         EQ_MACRO_FUNCTION_RemoveDetour(CrashDetected);
+    }
+
+    if (EQ_ADDRESS_FUNCTION_CollisionCallbackForActors != 0)
+    {
+        EQ_MACRO_FUNCTION_RemoveDetour(CollisionCallbackForActors);
     }
 
     if (EQ_ADDRESS_FUNCTION_DrawNetStatus != 0)
@@ -159,6 +185,34 @@ void EQAPP_Detours_Unload()
             }
         }
     }
+
+    if (EQ_ADDRESS_POINTER_CBazaarSearchWnd != 0)
+    {
+        if (EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList != 0)
+        {
+            EQ_MACRO_FUNCTION_RemoveDetour(CBazaarSearchWnd__AddItemToList);
+        }
+    }
+}
+
+void EQAPP_Detours_OnEnterZone()
+{
+    g_FreeCameraIsEnabled = false;
+
+    g_AutoGroupIsInvited = false;
+
+    g_EQAppIsInGame = true;
+
+    EQAPP_ActorCollision_Load();
+}
+
+void EQAPP_Detours_OnLeaveZone()
+{
+    g_FreeCameraIsEnabled = false;
+
+    g_AutoGroupIsInvited = false;
+
+    g_EQAppIsInGame = false;
 }
 
 char* __cdecl EQAPP_DETOURED_FUNCTION_CrashDetected()
@@ -173,6 +227,35 @@ char* __cdecl EQAPP_DETOURED_FUNCTION_CrashDetected()
     EQAPP_Log(result);
 
     return result;
+}
+
+int __cdecl EQAPP_DETOURED_FUNCTION_CollisionCallbackForActors(uint32_t cactor)
+{
+    if (g_EQAppShouldUnload == 1)
+    {
+        return EQAPP_REAL_FUNCTION_CollisionCallbackForActors(cactor);
+    }
+
+    if (g_ActorCollisionIsEnabled == true)
+    {
+        EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(cactor);
+
+        if (g_ActorCollisionAllIsEnabled == true)
+        {
+            return 0; // no collision
+        }
+
+        if (g_ActorCollisionPlayerIsEnabled == true)
+        {
+            bool result = EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors_Player(cactor);
+            if (result == true)
+            {
+                return 0; // no collision
+            }
+        }
+    }
+
+    return EQAPP_REAL_FUNCTION_CollisionCallbackForActors(cactor);
 }
 
 int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
@@ -219,7 +302,14 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
     {
         if (g_BoxChatIsConnected == true)
         {
-            EQAPP_BoxChat_Execute();
+            if (g_BazaarBotIsEnabled == false)
+            {
+                EQAPP_BoxChat_Execute();
+            }
+            else
+            {
+                g_BoxChatInterpretCommandList.clear();
+            }
         }
         else
         {
@@ -248,6 +338,11 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
     if (g_HUDIsEnabled == true)
     {
         EQAPP_HUD_Execute();
+    }
+
+    if (g_BazaarBotIsEnabled == true)
+    {
+        EQAPP_BazaarBot_Execute();
     }
 
     if (g_AlwaysAttackIsEnabled == true)
@@ -283,6 +378,11 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
     if (g_ChangeHeightIsEnabled == true)
     {
         EQAPP_ChangeHeight_Execute();
+    }
+
+    if (g_FollowPathIsEnabled == true)
+    {
+        EQAPP_FollowPath_Execute();
     }
 
     if (g_LuaIsEnabled == true)
@@ -324,6 +424,11 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
     }
 
     EQAPP_Console_Print();
+
+    if (g_FPSIsEnabled == true)
+    {
+        EQAPP_FPS_Execute();
+    }
 
 /*
     EQ_DrawLine3D(100.0f, 200.0f, 1.0f, 800.0f, 900.0f, 1.0f, 0xFFFF00FF);
@@ -484,27 +589,30 @@ int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive,
 
     ////std::cout << "ExecuteCmd(): " << commandID << " (Active: " << isActive << ") " << zero << std::endl;
 
-    for (auto& script : g_LuaEventScriptList)
+    if (g_LuaIsEnabled == true)
     {
-        sol::protected_function luaFunction = script->LuaState["OnExecuteCommand"];
-        if (luaFunction.valid() == true)
+        for (auto& script : g_LuaEventScriptList)
         {
-            sol::protected_function_result result = luaFunction(commandID, isActive);
-            if (result.valid() == true)
+            sol::protected_function luaFunction = script->LuaState["OnExecuteCommand"];
+            if (luaFunction.valid() == true)
             {
-                int resultValue = result;
-                if (resultValue == 1)
+                sol::protected_function_result result = luaFunction(commandID, isActive);
+                if (result.valid() == true)
                 {
-                    return 1;
+                    int resultValue = result;
+                    if (resultValue == 1)
+                    {
+                        return 1;
+                    }
                 }
-            }
-            else
-            {
-                std::cout << "Lua filename: " << script->Filename << std::endl;
+                else
+                {
+                    std::cout << "Lua filename: " << script->Filename << std::endl;
 
-                sol::error error = result;
+                    sol::error error = result;
 
-                std::cout << "Lua error: " << error.what() << std::endl;
+                    std::cout << "Lua error: " << error.what() << std::endl;
+                }
             }
         }
     }
@@ -512,6 +620,15 @@ int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive,
     if (g_FreeCameraIsEnabled == true)
     {
         bool result = EQAPP_FreeCamera_HandleEvent_ExecuteCmd(commandID, isActive, zero);
+        if (result == true)
+        {
+            return 1;
+        }
+    }
+
+    if (g_FollowPathIsEnabled == true)
+    {
+        bool result = EQAPP_FollowPath_HandleEvent_ExecuteCmd(commandID, isActive, zero);
         if (result == true)
         {
             return 1;
@@ -526,6 +643,11 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawWindows(void* this_ptr,
     if (g_EQAppShouldUnload == 1)
     {
         return EQAPP_REAL_FUNCTION_CXWndManager__DrawWindows(this_ptr);
+    }
+
+    if (EQAPP_FollowPath_IsActive() == true)
+    {
+        EQAPP_FollowPath_Draw();
     }
 
     if (g_ESPIsEnabled == true)
@@ -617,27 +739,30 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__InterpretCmd(void* this_ptr, 
         return EQAPP_REAL_FUNCTION_CEverQuest__InterpretCmd(this_ptr, player, text);
     }
 
-    for (auto& script : g_LuaEventScriptList)
+    if (g_LuaIsEnabled == true)
     {
-        sol::protected_function luaFunction = script->LuaState["OnInterpretCommand"];
-        if (luaFunction.valid() == true)
+        for (auto& script : g_LuaEventScriptList)
         {
-            sol::protected_function_result result = luaFunction(text);
-            if (result.valid() == true)
+            sol::protected_function luaFunction = script->LuaState["OnInterpretCommand"];
+            if (luaFunction.valid() == true)
             {
-                int resultValue = result;
-                if (resultValue == 1)
+                sol::protected_function_result result = luaFunction(text);
+                if (result.valid() == true)
                 {
-                    return 1;
+                    int resultValue = result;
+                    if (resultValue == 1)
+                    {
+                        return 1;
+                    }
                 }
-            }
-            else
-            {
-                std::cout << "Lua filename: " << script->Filename << std::endl;
+                else
+                {
+                    std::cout << "Lua filename: " << script->Filename << std::endl;
 
-                sol::error error = result;
+                    sol::error error = result;
 
-                std::cout << "Lua error: " << error.what() << std::endl;
+                    std::cout << "Lua error: " << error.what() << std::endl;
+                }
             }
         }
     }
@@ -698,18 +823,12 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void
 
     if (chatText == "LOADING, PLEASE WAIT...")
     {
-        g_FreeCameraIsEnabled = false;
-
-        g_EQAppIsInGame = false;
+        EQAPP_Detours_OnLeaveZone();
     }
 
     if (EQAPP_String_BeginsWith(chatText, "You have entered") == true)
     {
-        g_FreeCameraIsEnabled = false;
-
-        g_AutoGroupIsInvited = false;
-
-        g_EQAppIsInGame = true;
+        EQAPP_Detours_OnEnterZone();
 
         if (g_LuaIsEnabled == true)
         {
@@ -741,6 +860,19 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void
     if (g_AutoGroupIsEnabled == true)
     {
         EQAPP_AutoGroup_HandleEvent_CEverQuest__dsp_chat(chatText, textColor);
+    }
+
+    if (g_FollowPathIsEnabled == true)
+    {
+        EQAPP_FollowPath_HandleEvent_CEverQuest__dsp_chat(chatText, textColor);
+    }
+
+    if (g_FollowPathAutomaticIsEnabled == true)
+    {
+        if (chatText == "A mystical path appears before you.")
+        {
+            EQAPP_FollowPath_On();
+        }
     }
 
     if (g_LuaIsEnabled == true)
@@ -788,4 +920,34 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CCamera__SetCameraLocation(void* this_ptr
     }
 
     return EQAPP_REAL_FUNCTION_CCamera__SetCameraLocation(this_ptr, location, canSetLocation);
+}
+
+int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* this_ptr, void* not_used, char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11)
+{
+    if (g_EQAppShouldUnload == 1)
+    {
+        return EQAPP_REAL_FUNCTION_CBazaarSearchWnd__AddItemToList(this_ptr, itemName, itemPrice, traderName, a4, a5, a6, a7, a8, a9, a10, a11);
+    }
+
+    ////std::cout << "CBazaarSearchWnd::AddItemToList(): " << itemName << "^" << itemPrice << "^" << traderName << "^" << a4 << "^"  << a5 << "^" << a6 << "^" << a7 << "^" << a8 <<  "^" << a10 << std::endl;
+
+    if (g_BazaarFilterIsEnabled == true)
+    {
+        bool bShouldAddItemToList = EQAPP_BazaarFilter_HandleEvent_CBazaarSearchWnd__AddItemToList(itemName, itemPrice, traderName);
+        if (bShouldAddItemToList == false)
+        {
+            return 1;
+        }
+    }
+
+    if (g_BazaarBotIsEnabled == true)
+    {
+        bool bShouldAddItemToList = EQAPP_BazaarBot_HandleEvent_CBazaarSearchWnd__AddItemToList(itemName, itemPrice, traderName);
+        if (bShouldAddItemToList == false)
+        {
+            return 1;
+        }
+    }
+
+    return EQAPP_REAL_FUNCTION_CBazaarSearchWnd__AddItemToList(this_ptr, itemName, itemPrice, traderName, a4, a5, a6, a7, a8, a9, a10, a11);
 }

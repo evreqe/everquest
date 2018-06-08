@@ -57,14 +57,28 @@ void EQAPP_WindowTitle_Execute()
         return;
     }
 
-    std::string playerSpawnName = EQ_GetPlayerSpawnName();
-    if (playerSpawnName.size() == 0)
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
     {
         return;
     }
 
-    std::stringstream ss;
-    ss << "EQ: " << playerSpawnName;
+    std::string spawnName = EQ_GetSpawnName(playerSpawn);
+    if (spawnName.size() == 0)
+    {
+        return;
+    }
 
-    SetWindowTextA(hwnd, ss.str().c_str());
+    fmt::MemoryWriter ss;
+    ss << "EQ: " << spawnName;
+
+    auto spawnClass = EQ_GetSpawnClass(playerSpawn);
+
+    std::string spawnClassShortName = EQ_GetClassShortNameByKey(spawnClass);
+    if (spawnClassShortName.size() != 0)
+    {
+        ss << " (" << spawnClassShortName << ")";
+    }
+
+    SetWindowTextA(hwnd, ss.c_str());
 }

@@ -143,5 +143,26 @@
     <ClInclude Include="eqapp_addresses.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="eqapp_bazaarfilter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_bazaarbot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\eq\eq_cxwnd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_actorcollision.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_namedspawns.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_followpath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_fps.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

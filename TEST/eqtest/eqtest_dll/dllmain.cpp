@@ -73,10 +73,13 @@ namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not avai
 #include "eqapp_functions.h"
 
 #include "eqapp_addresses.h"
+#include "eqapp_actorcollision.h"
 #include "eqapp_alwaysattack.h"
 #include "eqapp_alwayshotbutton.h"
 #include "eqapp_autoalternateability.h"
 #include "eqapp_autogroup.h"
+#include "eqapp_bazaarbot.h"
+#include "eqapp_bazaarfilter.h"
 #include "eqapp_boxchat.h"
 #include "eqapp_changeheight.h"
 #include "eqapp_combatalternateability.h"
@@ -85,10 +88,13 @@ namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not avai
 #include "eqapp_detours.h"
 #include "eqapp_esp.h"
 #include "eqapp_followai.h"
+#include "eqapp_followpath.h"
 #include "eqapp_freecamera.h"
+#include "eqapp_fps.h"
 #include "eqapp_hud.h"
 #include "eqapp_interpretcommand.h"
 #include "eqapp_lua.h"
+#include "eqapp_namedspawns.h"
 #include "eqapp_sleep.h"
 #include "eqapp_spawncastspell.h"
 #include "eqapp_spelllist.h"
@@ -102,6 +108,7 @@ void EQAPP_Load()
 
     EQAPP_Lua_Load();
     EQAPP_SpellList_Load();
+    EQAPP_ActorCollision_Load();
 
     if (g_WindowTitleIsEnabled == true)
     {

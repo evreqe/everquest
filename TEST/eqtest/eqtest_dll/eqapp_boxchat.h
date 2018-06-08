@@ -2,9 +2,9 @@
 
 bool g_BoxChatIsEnabled = true;
 
-bool g_BoxChatIsConnected = false;
-
 bool g_BoxChatAutoConnectIsEnabled = true;
+
+bool g_BoxChatIsConnected = false;
 
 const char* g_BoxChatProcessFileName = "eqtestbcs.exe";
 
@@ -188,6 +188,11 @@ bool EQAPP_BoxChat_SendText(std::string text)
 
 bool EQAPP_BoxChat_SetChannel(std::string channelName)
 {
+    if (channelName.size() == 0)
+    {
+        g_BoxChatChannelName = "Default";
+    }
+
     std::stringstream ss;
     ss << "$ClientChannel " << channelName;
 

@@ -140,15 +140,15 @@ void EQAPP_ESP_DrawDoors()
             char doorName[EQ_SIZE_EQSwitch_NAME];
             std::memmove(doorName, (LPVOID)(door + EQ_OFFSET_EQSwitch_NAME), sizeof(doorName));
 
-            std::stringstream espText;
+            fmt::MemoryWriter espText;
             espText << "[Door] " << doorName << " (" << (int)doorDistance << "m)";
 
-            espText << "\nAddress: 0x" << std::hex << (uint32_t)door << std::dec;
+            espText << "\nAddress: 0x" << fmt::hex(door);
 
-            auto doorObjectType = EQ_ReadMemory<uint8_t>(door + EQ_OFFSET_EQSwitch_OBJECT_TYPE);
+            ////auto doorObjectType = EQ_ReadMemory<uint8_t>(door + EQ_OFFSET_EQSwitch_OBJECT_TYPE);
             auto doorType = EQ_ReadMemory<uint8_t>(door + EQ_OFFSET_EQSwitch_TYPE);
 
-            espText << "\nObject Type: " << (int)doorObjectType;
+            ////espText << "\nObject Type: " << (int)doorObjectType;
             espText << "\nType: " << (int)doorType;
 
             espText << "\nY: " << doorY;
@@ -161,13 +161,13 @@ void EQAPP_ESP_DrawDoors()
             espText << "\nHeading: " << doorHeading;
             ////espText << "\nAngle: " << doorAngle;
 
-            auto doorKeyID = EQ_ReadMemory<uint32_t>(door + EQ_OFFSET_EQSwitch_KEY_ID);
-            auto doorIsUseable = EQ_ReadMemory<uint8_t>(door + EQ_OFFSET_EQSwitch_IS_USEABLE);
+            ////auto doorKeyID = EQ_ReadMemory<uint32_t>(door + EQ_OFFSET_EQSwitch_KEY_ID);
+            ////auto doorIsUseable = EQ_ReadMemory<uint8_t>(door + EQ_OFFSET_EQSwitch_IS_USEABLE);
 
-            espText << "\nKey ID: " << doorKeyID;
-            espText << "\nIs Useable: " << (int)doorIsUseable;
+            ////espText << "\nKey ID: " << doorKeyID;
+            ////espText << "\nIs Useable: " << (int)doorIsUseable;
 
-            EQ_DrawTextEx(espText.str().c_str(), (int)screenX, (int)screenY, EQ_DRAW_TEXT_COLOR_WHITE);
+            EQ_DrawTextByColor(espText.c_str(), (int)screenX, (int)screenY, EQ_DRAW_TEXT_COLOR_WHITE);
         }
     }
 }
@@ -302,7 +302,8 @@ void EQAPP_ESP_Execute()
             if (spawnType == EQ_SPAWN_TYPE_NPC)
             {
                 // skip mounts
-                if (EQAPP_String_Contains(spawnName, "`s Mount") == true)
+                auto spawnMountRiderSpawn = EQ_GetSpawnMountRiderSpawn(spawn);
+                if (spawnMountRiderSpawn != NULL)
                 {
                     spawn = EQ_GetSpawnNext(spawn);
                     continue;
@@ -316,25 +317,25 @@ void EQAPP_ESP_Execute()
                 }
             }
 
-            std::stringstream espText;
+            fmt::MemoryWriter espText;
             espText << "[" << spawnLevel;
 
-            bool bShowSpawnClass = true;
+            bool bShowSpawnClassShortName = true;
 
             if (spawnType == EQ_SPAWN_TYPE_NPC)
             {
                 if (spawnClass == EQ_CLASS_WARRIOR || spawnClass == EQ_CLASS_BANKER || spawnClass == EQ_CLASS_MERCHANT)
                 {
-                    bShowSpawnClass = false;
+                    bShowSpawnClassShortName = false;
                 }
             }
 
-            if (bShowSpawnClass == true)
+            if (bShowSpawnClassShortName == true)
             {
-                auto spawnClassName = EQ_GetClassShortNameByKey(spawnClass);
-                if (spawnClassName.size() != 0)
+                auto spawnClassShortName = EQ_GetClassShortNameByKey(spawnClass);
+                if (spawnClassShortName.size() != 0)
                 {
-                    espText << " " << spawnClassName;
+                    espText << " " << spawnClassShortName;
                 }
             }
 
@@ -372,8 +373,9 @@ void EQAPP_ESP_Execute()
                         {
                             float spellCastTimeCurrentFloat = (float)(spawnCastSpell->SpellCastTimeCountdown / 1000.0f);
 
-                            espText.precision(1);
-                            espText << " " << std::fixed << spellCastTimeCurrentFloat;
+                            ////espText.precision(1);
+                            ////espText << " " << std::fixed << spellCastTimeCurrentFloat;
+                            espText << fmt::format("{:.2f}", spellCastTimeCurrentFloat);
                         }
 
                         break;
@@ -434,7 +436,7 @@ void EQAPP_ESP_Execute()
                 textColor = EQ_DRAW_TEXT_COLOR_GREEN;
             }
 
-            EQ_DrawTextEx(espText.str().c_str(), (int)screenX, (int)screenY, textColor);
+            EQ_DrawTextByColor(espText.c_str(), (int)screenX, (int)screenY, textColor);
         }
 
         spawn = EQ_GetSpawnNext(spawn);

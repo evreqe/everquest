@@ -39,6 +39,7 @@ void EQAPP_Lua_On();
 void EQAPP_Lua_Off();
 void EQAPP_Lua_OpenLibraries(sol::state* state);
 void EQAPP_Lua_ResetTimers();
+void EQAPP_Lua_LoadGlobalScripts(sol::state* state);
 void EQAPP_Lua_EventScriptList_Load();
 void EQAPP_Lua_EventScriptList_Print();
 void EQAPP_Lua_EventScriptList_ExecuteFunction(const char* functionName);
@@ -76,6 +77,8 @@ void EQAPP_Lua_Load()
     EQAPP_Lua_OpenLibraries(&g_LuaState);
     EQAPP_Lua_BindFunctionsAndVariables(&g_LuaState);
 
+    EQAPP_Lua_LoadGlobalScripts(&g_LuaState);
+
     EQAPP_Lua_EventScriptList_Load();
 }
 
@@ -111,6 +114,33 @@ void EQAPP_Lua_ResetTimers()
     g_LuaOneHourTimer = EQAPP_Timer_GetTimeNow();
 }
 
+void EQAPP_Lua_LoadGlobalScripts(sol::state* state)
+{
+    std::stringstream folderPath;
+    folderPath << g_EQAppName << "/scripts/";
+
+    for (auto& it : std__filesystem::directory_iterator(folderPath.str()))
+    {
+        if (it.path().extension().string() != ".lua")
+        {
+            continue;
+        }
+
+        std::string filename = it.path().filename().string();
+
+        if (EQAPP_String_BeginsWith(filename, "global_") == false)
+        {
+            continue;
+        }
+
+        bool result = EQAPP_Lua_ExecuteFile(state, filename.c_str());
+        if (result == false)
+        {
+            continue;
+        }
+    }
+}
+
 void EQAPP_Lua_EventScriptList_Load()
 {
     EQAPP_Lua_ResetTimers();
@@ -137,6 +167,8 @@ void EQAPP_Lua_EventScriptList_Load()
         sol::state state;
         EQAPP_Lua_OpenLibraries(&state);
         EQAPP_Lua_BindFunctionsAndVariables(&state);
+
+        EQAPP_Lua_LoadGlobalScripts(&state);
 
         bool result = EQAPP_Lua_ExecuteFile(&state, filename.c_str());
         if (result == false)
@@ -255,11 +287,14 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQAPP_CopyTextToClipboard", EQAPP_CopyTextToClipboard);
     state->set_function("EQAPP_PrintSpawnList", EQAPP_PrintSpawnList);
     state->set_function("EQAPP_PrintLocation", EQAPP_PrintLocation);
+    state->set_function("EQAPP_PrintMouseLocation", EQAPP_PrintMouseLocation);
 
     // EQ constants
     state->set("EQ_WINDOW_TITLE_DEFAULT", EQ_WINDOW_TITLE_DEFAULT);
 
     state->set("EQ_PI", EQ_PI);
+
+    state->set("EQ_ZONE_GRAVITY_DEFAULT", EQ_ZONE_GRAVITY_DEFAULT);
 
     state->set("EQ_HEADING_MIN", EQ_HEADING_MIN);
     state->set("EQ_HEADING_MAX", EQ_HEADING_MAX);
@@ -285,6 +320,10 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set("EQ_NUM_SPELL_GEMS", EQ_NUM_SPELL_GEMS);
     state->set("EQ_NUM_BAGS", EQ_NUM_BAGS);
     state->set("EQ_NUM_BAG_SLOTS", EQ_NUM_BAG_SLOTS);
+    state->set("EQ_NUM_GROUP_MEMBERS", EQ_NUM_GROUP_MEMBERS);
+
+    state->set("EQ_BAZAAR_SEARCH_MAX_RESULTS_PER_TRADER", EQ_BAZAAR_SEARCH_MAX_RESULTS_PER_TRADER);
+    state->set("EQ_BAZAAR_SEARCH_LIST_INDEX_NULL", EQ_BAZAAR_SEARCH_LIST_INDEX_NULL);
 
     state->set("EQ_SPELL_ID_NULL", EQ_SPELL_ID_NULL);
 
@@ -297,8 +336,15 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
 
     state->set("EQ_GAME_STATE_IN_GAME", EQ_GAME_STATE_IN_GAME);
 
+    state->set("EQ_FONT_INDEX_DEFAULT", EQ_FONT_INDEX_DEFAULT);
+
     state->set("EQ_FONT_STYLE_MIN", EQ_FONT_STYLE_MIN);
     state->set("EQ_FONT_STYLE_MAX", EQ_FONT_STYLE_MAX);
+
+    state->set("EQ_FONT_STYLE_DEFAULT", EQ_FONT_STYLE_DEFAULT);
+    state->set("EQ_FONT_STYLE_CHAT_WINDOW", EQ_FONT_STYLE_CHAT_WINDOW);
+    state->set("EQ_FONT_STYLE_FIXED_WIDTH", EQ_FONT_STYLE_FIXED_WIDTH);
+    state->set("EQ_FONT_STYLE_NAME_SPRITE", EQ_FONT_STYLE_NAME_SPRITE);
 
     state->set("EQ_SPAWN_TYPE_PLAYER", EQ_SPAWN_TYPE_PLAYER);
     state->set("EQ_SPAWN_TYPE_NPC", EQ_SPAWN_TYPE_NPC);
@@ -314,12 +360,21 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set("EQ_ACTOR_TYPE_WALL", EQ_ACTOR_TYPE_WALL);
     state->set("EQ_ACTOR_TYPE_PLACED_OBJECT", EQ_ACTOR_TYPE_PLACED_OBJECT);
 
+    state->set("EQ_GROUP_ROLE_FLAGS_MAIN_TANK", EQ_GROUP_ROLE_FLAGS_MAIN_TANK);
+    state->set("EQ_GROUP_ROLE_FLAGS_MAIN_ASSIST", EQ_GROUP_ROLE_FLAGS_MAIN_ASSIST);
+    state->set("EQ_GROUP_ROLE_FLAGS_PULLER", EQ_GROUP_ROLE_FLAGS_PULLER);
+    state->set("EQ_GROUP_ROLE_FLAGS_MARK_NPC", EQ_GROUP_ROLE_FLAGS_MARK_NPC);
+    state->set("EQ_GROUP_ROLE_FLAGS_MASTER_LOOTER", EQ_GROUP_ROLE_FLAGS_MASTER_LOOTER);
+
     state->set("EQ_SWITCH_KEY_ID_NULL", EQ_SWITCH_KEY_ID_NULL);
 
     state->set("EQ_SWITCH_STATE_CLOSED", EQ_SWITCH_STATE_CLOSED);
     state->set("EQ_SWITCH_STATE_OPEN", EQ_SWITCH_STATE_OPEN);
     state->set("EQ_SWITCH_STATE_OPENING", EQ_SWITCH_STATE_OPENING);
     state->set("EQ_SWITCH_STATE_CLOSING", EQ_SWITCH_STATE_CLOSING);
+
+    state->set("EQ_SWITCH_TYPE_TOUCH_OR_CLICK_TO_ZONE", EQ_SWITCH_TYPE_TOUCH_OR_CLICK_TO_ZONE);
+    state->set("EQ_SWITCH_TYPE_CLICK_TO_ZONE", EQ_SWITCH_TYPE_CLICK_TO_ZONE);
 
     state->set("EQ_ENVIRONMENT_TYPE_WATER", EQ_ENVIRONMENT_TYPE_WATER);
 
@@ -1649,11 +1704,16 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_SetAutoRun", EQ_SetAutoRun);
     state->set_function("EQ_SetMouseLook", EQ_SetMouseLook);
 
+    state->set_function("EQ_GetZoneID", EQ_GetZoneID);
+    state->set_function("EQ_GetZoneLongName", EQ_GetZoneLongName);
+    state->set_function("EQ_GetZoneShortName", EQ_GetZoneShortName);
+    state->set_function("EQ_GetZoneGravity", EQ_GetZoneGravity);
+    state->set_function("EQ_SetZoneGravity", EQ_SetZoneGravity);
+
     state->set_function("EQ_IsFogEnabled", EQ_IsFogEnabled);
     state->set_function("EQ_SetFog", EQ_SetFog);
     state->set_function("EQ_GetFogDistanceEnd", EQ_GetFogDistanceEnd);
     state->set_function("EQ_GetFarClipPlane", EQ_GetFarClipPlane);
-
     state->set_function("EQ_SetFogDistanceBegin", EQ_SetFogDistanceBegin);
     state->set_function("EQ_SetFogDistanceEnd", EQ_SetFogDistanceEnd);
     state->set_function("EQ_SetFarClipPlane", EQ_SetFarClipPlane);
@@ -1677,6 +1737,13 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_GetTargetSpawnNameNumbered", EQ_GetTargetSpawnNameNumbered);
     state->set_function("EQ_GetTargetSpawnName", EQ_GetTargetSpawnName);
     state->set_function("EQ_GetTargetSpawnLastName", EQ_GetTargetSpawnLastName);
+
+    state->set_function("EQ_GetGroupCount", EQ_GetGroupCount);
+    state->set_function("EQ_GetGroupMemberSpawn", EQ_GetGroupMemberSpawn);
+    state->set_function("EQ_GetGroupLeaderSpawn", EQ_GetGroupLeaderSpawn);
+
+    state->set_function("EQ_IsSpawnGroupMember", EQ_IsSpawnGroupMember);
+    state->set_function("EQ_IsSpawnGroupLeader", EQ_IsSpawnGroupLeader);
 
     state->set_function("EQ_GetSpawnDistance", EQ_GetSpawnDistance);
     state->set_function("EQ_GetSpawnDistance3D", EQ_GetSpawnDistance3D);
@@ -1785,7 +1852,8 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
 
     state->set_function("EQ_SetDrawTextFontStyle", EQ_SetDrawTextFontStyle);
     state->set_function("EQ_DrawText", EQ_DrawText);
-    state->set_function("EQ_DrawTextEx", EQ_DrawTextEx);
+    state->set_function("EQ_DrawTextByColor", EQ_DrawTextByColor);
+    state->set_function("EQ_DrawTextByStyle", EQ_DrawTextByStyle);
 
     state->set_function("EQ_DrawLine", EQ_DrawLine);
     state->set_function("EQ_DrawLine3D", EQ_DrawLine3D);
@@ -1799,10 +1867,12 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_SetCameraFieldOfView", EQ_SetCameraFieldOfView);
     state->set_function("EQ_SetCameraDrawDistance", EQ_SetCameraDrawDistance);
 
+    state->set_function("EQ_WorldLocationToScreenLocation", EQ_WorldLocationToScreenLocationAsTuple);
+
+    state->set_function("EQ_TakeScreenshot", EQ_TakeScreenshot);
+
     state->set_function("EQ_PlaySound", EQ_PlaySound);
     state->set_function("EQ_StopSound", EQ_StopSound);
-
-    state->set_function("EQ_WorldLocationToScreenLocation", EQ_WorldLocationToScreenLocationAsTuple);
 
     state->set_function("EQ_StopFollow", EQ_StopFollow);
     state->set_function("EQ_FollowTarget", EQ_FollowTarget);
@@ -1822,9 +1892,37 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_UseAbility", EQ_UseAbility);
     state->set_function("EQ_UseItem", EQ_UseItem);
 
-    state->set_function("EQ_UseDoo", EQ_UseDoor);
+    state->set_function("EQ_UseDoor", EQ_UseDoor);
     state->set_function("EQ_UseDoorByDistance", EQ_UseDoorByDistance);
+    state->set_function("EQ_UseDoorOnCollision", EQ_UseDoorOnCollision);
     state->set_function("EQ_SetStateForAllDoors", EQ_SetStateForAllDoors);
     state->set_function("EQ_OpenAllDoors", EQ_OpenAllDoors);
     state->set_function("EQ_CloseAllDoors", EQ_CloseAllDoors);
+
+    state->set_function("EQ_BazaarWindow_IsOpen", EQ_BazaarWindow_IsOpen);
+    state->set_function("EQ_BazaarWindow_ClickBeginTraderButton", EQ_BazaarWindow_ClickBeginTraderButton);
+    state->set_function("EQ_BazaarWindow_ClickEndTraderButton", EQ_BazaarWindow_ClickEndTraderButton);
+
+    state->set_function("EQ_BazaarConfirmationWindow_IsOpen", EQ_BazaarConfirmationWindow_IsOpen);
+    state->set_function("EQ_BazaarConfirmationWindow_ClickToParcelsButton", EQ_BazaarConfirmationWindow_ClickToParcelsButton);
+    state->set_function("EQ_BazaarConfirmationWindow_ClickCancelButton", EQ_BazaarConfirmationWindow_ClickCancelButton);
+
+    state->set_function("EQ_BazaarSearchWindow_IsOpen", EQ_BazaarSearchWindow_IsOpen);
+    state->set_function("EQ_BazaarSearchWindow_DoQuery", EQ_BazaarSearchWindow_DoQuery);
+    state->set_function("EQ_BazaarSearchWindow_GetListCount", EQ_BazaarSearchWindow_GetListCount);
+    state->set_function("EQ_BazaarSearchWindow_GetListIndexByItemName", EQ_BazaarSearchWindow_GetListIndexByItemName);
+    state->set_function("EQ_BazaarSearchWindow_BuyItem", EQ_BazaarSearchWindow_BuyItem);
+    state->set_function("EQ_BazaarSearchWindow_GetListIndex", EQ_BazaarSearchWindow_GetListIndex);
+    state->set_function("EQ_BazaarSearchWindow_GetItemID", EQ_BazaarSearchWindow_GetItemID);
+    state->set_function("EQ_BazaarSearchWindow_GetItemQuantity", EQ_BazaarSearchWindow_GetItemQuantity);
+    state->set_function("EQ_BazaarSearchWindow_GetItemPrice", EQ_BazaarSearchWindow_GetItemPrice);
+    state->set_function("EQ_BazaarSearchWindow_GetItemName", EQ_BazaarSearchWindow_GetItemName);
+    state->set_function("EQ_BazaarSearchWindow_GetTraderName", EQ_BazaarSearchWindow_GetTraderName);
+    state->set_function("EQ_BazaarSearchWindow_ClickFindItemsButton", EQ_BazaarSearchWindow_ClickFindItemsButton);
+    state->set_function("EQ_BazaarSearchWindow_ClickUpdateTradersButton", EQ_BazaarSearchWindow_ClickUpdateTradersButton);
+    state->set_function("EQ_BazaarSearchWindow_ClickResetButton", EQ_BazaarSearchWindow_ClickResetButton);
+
+    state->set_function("EQ_TaskSelectWindow_IsOpen", EQ_TaskSelectWindow_IsOpen);
+    state->set_function("EQ_TaskSelectWindow_ClickAcceptButton", EQ_TaskSelectWindow_ClickAcceptButton);
+    state->set_function("EQ_TaskSelectWindow_ClickDeclineButton", EQ_TaskSelectWindow_ClickDeclineButton);
 }

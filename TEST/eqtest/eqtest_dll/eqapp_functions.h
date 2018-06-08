@@ -27,6 +27,8 @@ bool EQAPP_IsInGame();
 void EQAPP_CopyTextToClipboard(const char* text);
 void EQAPP_PrintSpawnList();
 void EQAPP_PrintLocation();
+void EQAPP_PrintMouseLocation();
+void EQAPP_InventoryFind(const char* text);
 
 void EQAPP_Log(const char* text)
 {
@@ -328,8 +330,8 @@ std::vector<uint32_t> EQAPP_GetNPCSpawnIDListSortedByDistance()
         }
 
         // skip mounts
-        auto spawnName = EQ_GetSpawnName(spawn);
-        if (spawnName.find("`s Mount") != std::string::npos)
+        auto spawnMountRiderSpawn = EQ_GetSpawnMountRiderSpawn(spawn);
+        if (spawnMountRiderSpawn != NULL)
         {
             spawn = EQ_GetSpawnNext(spawn);
             continue;
@@ -459,4 +461,62 @@ void EQAPP_PrintLocation()
 
         std::cout << "Your target's location is " << targetSpawnY << ", " << targetSpawnX << ", " << targetSpawnZ << "." << std::endl;
     }
+}
+
+void EQAPP_PrintMouseLocation()
+{
+    std::cout << "Mouse X,Y: " << EQ_GetMouseX() << "," << EQ_GetMouseY() << std::endl;
+}
+
+void EQAPP_InventoryFind(const char* text)
+{
+    uint32_t resultsCount = 0;
+
+    for (auto& it : std__filesystem::directory_iterator(std__filesystem::current_path()))
+    {
+        if (it.path().extension().string() != ".txt")
+        {
+            continue;
+        }
+
+        std::string filename = it.path().filename().string();
+
+        if (EQAPP_String_EndsWith(filename, "-Inventory.txt") == false)
+        {
+            continue;
+        }
+
+        ////std::cout << filename << std::endl;
+
+        std::fstream file;
+        file.open(filename, std::fstream::in);
+        if (file.is_open() == false)
+        {
+            std::stringstream ss;
+            ss << "failed to open file: " << filename;
+
+            EQAPP_PrintDebugText(__FUNCTION__, ss.str().c_str());
+            continue;
+        }
+
+        std::string line;
+        while (std::getline(file, line))
+        {
+            if (line.size() == 0)
+            {
+                continue;
+            }
+
+            if (EQAPP_String_Contains(line, text) == true)
+            {
+                std::cout << filename << ": " << line << "\n";
+
+                resultsCount++;
+            }
+        }
+
+        file.close();
+    }
+
+    std::cout << resultsCount << " result(s) for '" << text << "'" << std::endl;
 }

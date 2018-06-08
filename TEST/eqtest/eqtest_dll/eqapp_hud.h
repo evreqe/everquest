@@ -7,6 +7,8 @@
 #include "eqapp_combatalternateability.h"
 #include "eqapp_combathotbutton.h"
 #include "eqapp_esp.h"
+#include "eqapp_followpath.h"
+#include "eqapp_fps.h"
 #include "eqapp_sleep.h"
 
 bool g_HUDIsEnabled = true;
@@ -15,7 +17,6 @@ bool g_HUDDebugTextIsEnabled = false;
 
 uint32_t g_HUDXDefault = 200;
 uint32_t g_HUDYDefault = 10;
-uint32_t g_HUDFontHeight = 12;
 
 uint32_t g_HUDX = g_HUDXDefault;
 uint32_t g_HUDY = g_HUDYDefault;
@@ -24,7 +25,6 @@ void EQAPP_HUD_Toggle();
 void EQAPP_HUD_On();
 void EQAPP_HUD_Off();
 void EQAPP_HUD_DebugText_Toggle();
-void EQAPP_HUD_DrawText(const char* text);
 void EQAPP_HUD_Execute();
 
 void EQAPP_HUD_Toggle()
@@ -55,28 +55,21 @@ void EQAPP_HUD_DebugText_Toggle()
     EQAPP_PrintBool("HUD Debug Text", g_HUDDebugTextIsEnabled);
 }
 
-void EQAPP_HUD_DrawText(const char* text)
-{
-    EQ_DrawText(text, g_HUDX, g_HUDY);
-
-    g_HUDY += g_HUDFontHeight;
-}
-
 void EQAPP_HUD_Execute()
 {
+    fmt::MemoryWriter ssHUDText;
+
     g_HUDX = g_HUDXDefault;
     g_HUDY = g_HUDYDefault;
-
-    EQAPP_HUD_DrawText("EQTEST");
 
     if (g_HUDDebugTextIsEnabled == true)
     {
         auto targetSpawn = EQ_GetTargetSpawn();
         if (targetSpawn != NULL)
         {
-            std::stringstream ss;
+            fmt::MemoryWriter ss;
 
-            ss << "DEBUG\n";
+            ss << "EQTEST DEBUG\n";
 
             ss << "Name: " << EQ_GetSpawnName(targetSpawn) << "\n";
             ss << "Last Name: " << EQ_GetSpawnLastName(targetSpawn) << "\n";
@@ -122,105 +115,139 @@ void EQAPP_HUD_Execute()
                 ss << "Follow Name: " << EQ_GetSpawnName(followSpawn) << "\n";
             }
 
-            EQAPP_HUD_DrawText(ss.str().c_str());
+            EQ_DrawText(ss.c_str(), g_HUDX, g_HUDY);
         }
 
         return;
     }
 
+    ssHUDText << "EQTEST\n";
+
     if (g_SleepIsEnabled == true)
     {
-        EQAPP_HUD_DrawText("- SLEEP!");
+        ssHUDText << "- SLEEP!\n";
+    }
+
+    if (g_FPSIsEnabled == true)
+    {
+        ssHUDText << "- FPS: " << g_FPSValue << "\n";
     }
 
     if (g_BoxChatIsEnabled == true)
     {
         if (g_BoxChatIsConnected == true)
         {
-            EQAPP_HUD_DrawText("- Box Chat: Connected");
+            ssHUDText << "- Box Chat: Connected (" << g_BoxChatChannelName << ")\n";
         }
     }
 
     if (g_FreeCameraIsEnabled == true)
     {
-        EQAPP_HUD_DrawText("- Free Camera");
+        ssHUDText << "- Free Camera\n";
+    }
+
+    if (g_FollowPathIsEnabled == true)
+    {
+        ssHUDText << "- Follow Path\n";
+    }
+
+    if (g_BazaarBotIsEnabled == true)
+    {
+        ssHUDText << "- Bazaar Bot\n";
+    }
+
+    if (g_BazaarFilterIsEnabled == true)
+    {
+        ssHUDText << "- Bazaar Filter\n";
     }
 
     if (g_AlwaysAttackIsEnabled == true)
     {
-        EQAPP_HUD_DrawText("- Always Attack");
+        ssHUDText << "- Always Attack\n";
     }
 
     if (g_AlwaysHotButtonIsEnabled == true)
     {
-        std::stringstream ss;
-        ss << "- Always HotButton: " << g_AlwaysHotButtonIndex + 1;
+        fmt::MemoryWriter ss;
+        ss << "- Always HotButton: " << g_AlwaysHotButtonIndex + 1 << "\n";
 
-        EQAPP_HUD_DrawText(ss.str().c_str());
+        ssHUDText << ss.c_str();
     }
 
     if (g_CombatHotButtonIsEnabled == true)
     {
-        std::stringstream ss;
-        ss << "- Combat HotButton: " << g_CombatHotButtonIndex + 1;
+        fmt::MemoryWriter ss;
+        ss << "- Combat HotButton: " << g_CombatHotButtonIndex + 1 << "\n";
 
-        EQAPP_HUD_DrawText(ss.str().c_str());
+        ssHUDText << ss.c_str();
     }
 
     if (g_AutoAlternateAbilityIsEnabled == true)
     {
-        EQAPP_HUD_DrawText("- Auto Alternate Ability");
+        ssHUDText << "- Auto Alternate Ability\n";
     }
 
     if (g_CombatAlternateAbilityIsEnabled == true)
     {
-        EQAPP_HUD_DrawText("- Combat Alternate Ability");
+        ssHUDText << "- Combat Alternate Ability\n";
     }
 
     if (g_ESPIsEnabled == true)
     {
-        EQAPP_HUD_DrawText("- ESP");
+        ssHUDText << "- ESP\n";
     }
 
     if (g_ESPHeightFilterIsEnabled == true)
     {
-        EQAPP_HUD_DrawText("- ESP Height Filter");
+        ssHUDText << "- ESP Height Filter\n";
     }
 
     if (g_ESPShowSpawnIDIsEnabled == true)
     {
-        EQAPP_HUD_DrawText("- ESP Show Spawn ID");
+        ssHUDText << "- ESP Show Spawn ID\n";
     }
 
     if (g_ESPShowSpawnRaceIsEnabled == true)
     {
-        EQAPP_HUD_DrawText("- ESP Show Spawn Race");
+        ssHUDText << "- ESP Show Spawn Race\n";
     }
 
     if (g_ESPShowSpawnClassIsEnabled == true)
     {
-        EQAPP_HUD_DrawText("- ESP Show Spawn Class");
+        ssHUDText << "- ESP Show Spawn Class\n";
+    }
+
+    if (g_ESPShowDoorsIsEnabled == true)
+    {
+        ssHUDText << "- ESP Show Doors\n";
+    }
+
+    if (g_FollowAIBehindIsEnabled == true)
+    {
+        ssHUDText << "- Follow AI Behind\n";
     }
 
     if (g_FollowAIUseZAxisIsEnabled == true)
     {
-        EQAPP_HUD_DrawText("- Follow AI Use Z-Axis");
+        ssHUDText << "- Follow AI Use Z-Axis\n";
     }
+
+    EQ_DrawText(ssHUDText.c_str(), g_HUDX, g_HUDY);
 
 /*
     if (g_ChangeHeightIsEnabled == true)
     {
-        EQAPP_HUD_DrawText("- Change Height");
+        ssHUDText << "- Change Height\n");
     }
 
     if (g_SpawnCastSpellIsEnabled == true)
     {
-        EQAPP_HUD_DrawText("- Spawn Cast Spell");
+        ssHUDText << "- Spawn Cast Spell\n");
     }
 
     if (g_SpawnCastSpellGroupChatIsEnabled == true)
     {
-        EQAPP_HUD_DrawText("- Spawn Cast Spell Group Chat");
+        ssHUDText << "- Spawn Cast Spell Group Chat\n");
     }
 */
 

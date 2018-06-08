@@ -160,6 +160,7 @@
     <ClInclude Include="..\eq\eq_alternateabilities.h" />
     <ClInclude Include="..\eq\eq_classes.h" />
     <ClInclude Include="..\eq\eq_constants.h" />
+    <ClInclude Include="..\eq\eq_cxwnd.h" />
     <ClInclude Include="..\eq\eq_executecmd.h" />
     <ClInclude Include="..\eq\eq_functions.h" />
     <ClInclude Include="..\eq\eq_keys.h" />
@@ -169,11 +170,14 @@
     <ClInclude Include="..\eq\eq_virtualkeycodes.h" />
     <ClInclude Include="..\eq\eq_zones.h" />
     <ClInclude Include="eqapp.h" />
+    <ClInclude Include="eqapp_actorcollision.h" />
     <ClInclude Include="eqapp_addresses.h" />
     <ClInclude Include="eqapp_alwaysattack.h" />
     <ClInclude Include="eqapp_alwayshotbutton.h" />
     <ClInclude Include="eqapp_autoalternateability.h" />
     <ClInclude Include="eqapp_autogroup.h" />
+    <ClInclude Include="eqapp_bazaarbot.h" />
+    <ClInclude Include="eqapp_bazaarfilter.h" />
     <ClInclude Include="eqapp_boxchat.h" />
     <ClInclude Include="eqapp_changeheight.h" />
     <ClInclude Include="eqapp_combatalternateability.h" />
@@ -182,6 +186,8 @@
     <ClInclude Include="eqapp_detours.h" />
     <ClInclude Include="eqapp_esp.h" />
     <ClInclude Include="eqapp_followai.h" />
+    <ClInclude Include="eqapp_followpath.h" />
+    <ClInclude Include="eqapp_fps.h" />
     <ClInclude Include="eqapp_freecamera.h" />
     <ClInclude Include="eqapp_functions.h" />
     <ClInclude Include="eqapp_hud.h" />
@@ -189,6 +195,7 @@
     <ClInclude Include="eqapp_interpretcommand.h" />
     <ClInclude Include="eqapp_loadoptions.h" />
     <ClInclude Include="eqapp_lua.h" />
+    <ClInclude Include="eqapp_namedspawns.h" />
     <ClInclude Include="eqapp_sleep.h" />
     <ClInclude Include="eqapp_spawncastspell.h" />
     <ClInclude Include="eqapp_spelllist.h" />

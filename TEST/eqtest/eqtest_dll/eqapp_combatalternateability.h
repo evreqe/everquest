@@ -85,6 +85,12 @@ void EQAPP_CombatAlternateAbility_Execute()
         return;
     }
 
+    auto playerSpawnLevel = EQ_GetSpawnLevel(playerSpawn);
+    if (playerSpawnLevel < 50)
+    {
+        return;
+    }
+
     auto playerSpawnStandingState = EQ_GetSpawnStandingState(playerSpawn);
     if (playerSpawnStandingState != EQ_STANDING_STATE_STANDING)
     {
@@ -108,12 +114,12 @@ void EQAPP_CombatAlternateAbility_Execute()
     auto playerSpawnHPPercent = EQ_GetSpawnHPPercent(playerSpawn);
     auto playerSpawnEndurancePercent = EQ_GetSpawnEndurancePercent(playerSpawn);
 
+    auto playerSpawnClass = EQ_GetSpawnClass(playerSpawn);
+
     std::vector<uint32_t> alternateAbilityList;
     alternateAbilityList.reserve(g_CombatAlternateAbilityList_reserve);
 
     alternateAbilityList.push_back(EQAlternateAbilities::Special::Banestrike);
-
-    auto playerSpawnClass = EQ_GetSpawnClass(playerSpawn);
 
     if (playerSpawnClass == EQ_CLASS_WARRIOR)
     {

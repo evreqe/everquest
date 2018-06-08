@@ -13,7 +13,7 @@ function OnOneSecond()
         if playerHPPercent > 0 then
 
             if playerHPPercent <= 50 then
-                EQ_InterpretCommand("/useitem Boreal Breastplate of Havok")
+                EQ_InterpretCommand("/useitem Castaway Breastplate of Havok")
             end
 
             if playerHPPercent <= 25 then

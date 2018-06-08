@@ -18,8 +18,9 @@ namespace EQApp
 
 bool g_SpawnCastSpellIsEnabled = true;
 
-bool g_SpawnCastSpellESPIsEnabled = true;
 bool g_SpawnCastSpellGroupChatIsEnabled = true;
+
+bool g_SpawnCastSpellESPIsEnabled = true;
 
 std::vector<EQApp::SpawnCastSpell_sharedptr> g_SpawnCastSpellList;
 
@@ -180,7 +181,7 @@ void EQAPP_SpawnCastSpell_DrawText()
         drawText << "\n";
     }
 
-    EQ_DrawTextEx(drawText.str().c_str(), g_SpawnCastSpellDrawTextX, g_SpawnCastSpellDrawTextY, EQ_DRAW_TEXT_COLOR_WHITE);
+    EQ_DrawTextByColor(drawText.str().c_str(), g_SpawnCastSpellDrawTextX, g_SpawnCastSpellDrawTextY, EQ_DRAW_TEXT_COLOR_WHITE);
 }
 
 void EQAPP_SpawnCastSpell_HandleEvent_CEverQuest__StartCasting(void* this_ptr, EQMessage::CEverQuest__StartCasting_ptr message)
