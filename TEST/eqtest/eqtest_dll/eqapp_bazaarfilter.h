@@ -86,7 +86,7 @@ void EQAPP_BazaarFilter_LoadEx(const char* filename)
             continue;
         }
 
-        if (EQAPP_String_BeginsWith(line, "#") == true)
+        if (line.at(0) == '#')
         {
             continue;
         }

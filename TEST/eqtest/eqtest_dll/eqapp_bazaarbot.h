@@ -102,9 +102,17 @@ void EQAPP_BazaarBot_BuyItems_Execute()
 
     uint32_t listIndex = 0;
 
+    auto listCount = EQ_BazaarSearchWindow_GetListCount();
+    if (listCount > 0)
+    {
+        listIndex = EQAPP_GetRandomNumber(0, listCount - 1);
+    }
+
     std::string itemName = EQ_BazaarSearchWindow_GetItemName(listIndex);
     if (itemName.size() != 0)
     {
+        std::cout << "[Bazaar Bot] Attempting to purchase " << itemName << "." << std::endl;
+
         for (auto& loreItemName : g_BazaarBotLoreItemsList)
         {
             if (itemName == loreItemName)
