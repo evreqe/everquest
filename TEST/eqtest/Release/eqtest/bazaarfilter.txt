@@ -1,72 +1,159 @@
+##### Mounts #####
+#@Bridle
+#@Saddle
+
+##### Bags #####
+Scuffed Journeyman's Pocketed Rucksack
+Caravan Satchel
+Chest of Empires
+Satchel of the Combine Hero
+Enameled Box
+Cleansing Steam Satchel
+
+##### Prizes #####
+Prize: Ping's Poignant Potion Pack
+Prize: Ping's Practical Potion Pack
+Prize: Ping's Prodigious Potion Pack
+Prize: Scale of Rodcet Nife
+Prize: Tear of Tranquility
+Prize: Chalandria's Fang
+
+##### Augments #####
+Tavon's Burnished Gemstone
+Tavon's Polished Gemstone
+#Stone of Tranquility
+#Oath of Marr
+Extra Planar Potential Shard
+#Sebilisian Harmony
+#Sebilisian Intensity
+#Sebilisian Proficiency
+#Sebilisian Celerity
+#Sebilisian Resilience
+#Sebilisian Brilliance
+#Sebilisian Prudence
+#Sebilisian Efficacy
+
+##### Spell Turn In #####
+#}Nebulous Dream Fragment
+#}Dreadmote
+#}Alaran Cantrip
+#}Briny Essence
+#}Essence of Life
+#}Writ of the Combine
+#}Clawed Tablet of the Ring of Scale
+
+##### Misc #####
 Amulet of the Drowned Mariner
 Amulet of Necropotence
+Inscrutable Talisman
 Ancient Cloak of Flames
-Bard's Golden Mask
+Shield of Striding
+Rocketeer Boots
+Draught of Adventure
+#Golden Ticket
+#Shrunken Goblin Skull Earring
+
+##### Conflagrant #####
+#{Conflagrant
+#{Wrapped Conflagrant
+#{Athletic Conflagrant
+#{Fleet Conflagrant
+#{Ingenious Conflagrant
+#{Quick Conflagrant
+#{Savvy Conflagrant
+#{Summoner's Conflagrant
+#{Vital Conflagrant
+#}'s Conflagrant
+#{Arcanist's Conflagrant
+#{Arch Convoker's Conflagrant
+#{Arch Lich's Conflagrant
+#{Archon's Conflagrant
+#{Coercer's Conflagrant
+#{Deceiver's Conflagrant
+#{Dread Suzerain's Conflagrant
+#{Feral Lord's Conflagrant
+#{Forest Stalker's Conflagrant
+#{Fury's Conflagrant
+#{Maestro's Conflagrant
+#{Overlord's Conflagrant
+#{Prophet's Conflagrant
+#{Storm Warden's Conflagrant
+#{Suzerain Protector's Conflagrant
+#{Transcendent's Conflagrant
+
+##### Armor Turn In #####
+#{Fear Touched
+#{Castaway
+#}of Latent Ether
+#{Glowing Athlai
+#{Glowing Othni
+#{Glowing Reis
+#{Glowing Sebilisian
+
+##### Merc Gear #####
+#{Assassin's Extravagant
+#{Defender's Extravagant
+{Soother's Extravagant
+#{Sorcerer's Extravagant
+
+##### COTF Rares #####
+{Centurio
+{Legatus
+{Magister
+Bruma
+Caedes
+Castus
+Cisum
+Emerald Aegis
+Ferio
+Mordeo
+Percutio
+Peremo
+Screaming Buckler
+Secare
+Sentio
+Terebro
+The Blue Tower
+Tritum
+
+##### EOK Rares #####
+{Bard's Golden
+{Knight's Golden
+{Mage's Golden
+{Minstrel's Golden
+{Rogue's Golden
+{Sage's Golden
+{Soldier's Golden
+{Golden Bard's
+{Golden Knight's
+{Golden Mage's
+{Golden Minstrel's
+{Golden Rogue's
+{Golden Sage's
+{Golden Soldier's
+{Bloodlaced
+{Sky
 Blade of Defense
 Blooddrop Earring
-@Bloodlaced
-#@Bridle
 Burnt Cloak
 Burnt Effigy of Tsaph Katta
 Collector's Hierloom Necklace
-Caravan Satchel
-#@Castaway
-@Centurio
-Chalandria's Fang
-@Clawed Tablet of the Ring of Scale
-Cleansing Steam Satchel
 Crush
-@Conflagrant
 Di'Zok Bow
-Draught of Adventure
 Dust Cloak
 Edge of the Di'Zok
-Enameled Box
-#@Fear Touched
 Fisherman's Dangle
-#@Glowing Sebilisian
-@Golden
-@Golden Knight
-@Golden Rogue
-@Golden Sage
-@Golden Mage
-@Golden Soldier
-@Golden Minstrel
-Golden Ticket
 Grey Cloak
 Guardian of Lost Hopes
 Guardian's Pauldron
 Iksar Bane
-Inscrutable Talisman
 Lifecleaver
-@Legatus
-@Magister
-@Knight's Golden
-@Mage's Golden
-@Minstrel's Golden
-@Rogue's Golden
-@Sage's Golden
-@Soldier's Golden
-#Oath of Marr
 Pale Cloak
 Pauldron of the Hero
 Petrified Egg
-Prize: Ping's Poignant Potion Pack
-Prize: Ping's Practical Potion Pack
-Prize: Ping's Prodigious Potion Pack
 Ring of the Gypsy
-Rocketeer Boots
 Shark's Tooth Club
 Shattered Blade
-Satchel of the Combine Hero
-#@Saddle
-Scale of Rodcet Nife
-Scuffed Journeyman's Pocketed Rucksack
-Shield of Striding
-@Sky
-@Soother's
-@Tavon's
-Tear of Tranquility
 Staff of the Shai'din
 Swift Pauldron
 Symbol of the Dragon's Scale
