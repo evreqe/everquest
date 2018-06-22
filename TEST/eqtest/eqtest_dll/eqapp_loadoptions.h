@@ -21,8 +21,10 @@
 #include "eqapp_namedspawns.h"
 #include "eqapp_sleep.h"
 #include "eqapp_spawncastspell.h"
+#include "eqapp_speed.h"
 #include "eqapp_spelllist.h"
 #include "eqapp_windowtitle.h"
+#include "eqapp_waypoint.h"
 
 template <class T>
 void EQAPP_LoadOption(T& option, const char* optionName, boost::property_tree::ptree& pt);
@@ -138,6 +140,9 @@ void EQAPP_LoadOptions()
     EQAPP_LoadOption<bool>(g_SpawnCastSpellESPIsEnabled, "bSpawnCastSpellESP", pt);
     EQAPP_LoadOption<uint32_t>(g_SpawnCastSpellDrawTextX, "iSpawnCastSpellDrawTextX", pt);
     EQAPP_LoadOption<uint32_t>(g_SpawnCastSpellDrawTextY, "iSpawnCastSpellDrawTextY", pt);
+
+    EQAPP_LoadOption<bool>(g_SpeedIsEnabled, "bSpeed", pt);
+    EQAPP_LoadOption<float>(g_SpeedMultiplier, "fSpeedMultiplier", pt);
 
     EQAPP_LoadOption<bool>(g_WindowTitleIsEnabled, "bWindowTitle", pt);
     EQAPP_LoadOption<EQApp::TimerInterval>(g_WindowTitleTimerInterval, "iWindowTitleTimerInterval", pt);

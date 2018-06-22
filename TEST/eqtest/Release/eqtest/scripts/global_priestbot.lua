@@ -1,6 +1,6 @@
 g_PriestBotIsEnabled = 0
 
-g_PriestBotTargetName = "Skaj"
+g_PriestBotTargetName = "Paldn"
 
 function PriestBot_BigHeal()
     EQ_InterpretCommand("//StopFollow")

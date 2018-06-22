@@ -10,6 +10,7 @@
 #include "eqapp_followpath.h"
 #include "eqapp_fps.h"
 #include "eqapp_sleep.h"
+#include "eqapp_speed.h"
 
 bool g_HUDIsEnabled = true;
 
@@ -149,6 +150,11 @@ void EQAPP_HUD_Execute()
     if (g_FollowPathIsEnabled == true)
     {
         ssHUDText << "- Follow Path\n";
+    }
+
+    if (g_SpeedIsEnabled == true)
+    {
+        ssHUDText << "- Speed: " << g_SpeedMultiplier << "\n";
     }
 
     if (g_BazaarBotIsEnabled == true)

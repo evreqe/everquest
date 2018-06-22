@@ -22,8 +22,10 @@
 #include "eqapp_namedspawns.h"
 #include "eqapp_sleep.h"
 #include "eqapp_spawncastspell.h"
+#include "eqapp_speed.h"
 #include "eqapp_spelllist.h"
 #include "eqapp_windowtitle.h"
+#include "eqapp_waypoint.h"
 
 bool g_InterpretCommandIsEnabled = true;
 
@@ -50,7 +52,7 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//ActorCollision",               &EQAPP_ActorCollision_Toggle},
     {"//ActorCollisionOn",             &EQAPP_ActorCollision_On},
     {"//ActorCollisionOff",            &EQAPP_ActorCollision_Off},
-    {"//ActorCollisionLoad",           &EQAPP_ActorCollision_Load},
+    {"//LoadActorCollision",           &EQAPP_ActorCollision_Load},
     {"//AC",                           &EQAPP_ActorCollision_Toggle},
     {"//ACOn",                         &EQAPP_ActorCollision_On},
     {"//ACOff",                        &EQAPP_ActorCollision_Off},
@@ -72,7 +74,7 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//AlwaysHotButtonOff",           &EQAPP_AlwaysHotButton_Off},
     {"//AHB",                          &EQAPP_AlwaysHotButton_Toggle},
     {"//AHBOn",                        &EQAPP_AlwaysHotButton_On},
-    {"//AHBff",                        &EQAPP_AlwaysHotButton_Off},
+    {"//AHBOff",                       &EQAPP_AlwaysHotButton_Off},
     {"//CombatHotButton",              &EQAPP_CombatHotButton_Toggle},
     {"//CombatHotButtonOn",            &EQAPP_CombatHotButton_On},
     {"//CombatHotButtonOff",           &EQAPP_CombatHotButton_Off},
@@ -98,7 +100,7 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//BBOn",                         &EQAPP_BazaarBot_On},
     {"//BBOff",                        &EQAPP_BazaarBot_Off},
     {"//LoadBazaarFilter",             &EQAPP_BazaarFilter_Load},
-    {"//LBF",                          &EQAPP_BazaarFilter_Load},
+    {"//BFLoad",                       &EQAPP_BazaarFilter_Load},
     {"//BazaarFilter",                 &EQAPP_BazaarFilter_Toggle},
     {"//BazaarFilterOn",               &EQAPP_BazaarFilter_On},
     {"//BazaarFilterOff",              &EQAPP_BazaarFilter_Off},
@@ -106,9 +108,9 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//BFOn",                         &EQAPP_BazaarFilter_On},
     {"//BFOff",                        &EQAPP_BazaarFilter_Off},
     {"//BazaarFilterBeep",             &EQAPP_BazaarFilter_Beep_Toggle},
-    {"//BFB",                          &EQAPP_BazaarFilter_Beep_Toggle},
+    {"//BFBeep",                       &EQAPP_BazaarFilter_Beep_Toggle},
     {"//BazaarFilterList",             &EQAPP_BazaarFilter_PrintItemNameList},
-    {"//BFL",                          &EQAPP_BazaarFilter_PrintItemNameList},
+    {"//BFList",                       &EQAPP_BazaarFilter_PrintItemNameList},
     {"//BoxChat",                      &EQAPP_BoxChat_Toggle},
     {"//BoxChatOn",                    &EQAPP_BoxChat_On},
     {"//BoxChatOff",                   &EQAPP_BoxChat_Off},
@@ -147,7 +149,7 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//CHOn",                         &EQAPP_ChangeHeight_On},
     {"//CHOff",                        &EQAPP_ChangeHeight_Off},
     {"//LoadSpellList",                &EQAPP_SpellList_Load},
-    {"//LSL",                          &EQAPP_SpellList_Load},
+    {"//SLLoad",                       &EQAPP_SpellList_Load},
     {"//SpawnCastSpell",               &EQAPP_SpawnCastSpell_Toggle},
     {"//SpawnCastSpellOn",             &EQAPP_SpawnCastSpell_On},
     {"//SpawnCastSpellOff",            &EQAPP_SpawnCastSpell_Off},
@@ -157,12 +159,14 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//SpawnCastSpellESP",            &EQAPP_SpawnCastSpell_ESP_Toggle},
     {"//SCSESP",                       &EQAPP_SpawnCastSpell_ESP_Toggle},
     {"//SpawnCastSpellGroupChat",      &EQAPP_SpawnCastSpell_GroupChat_Toggle},
-    {"//SCSGC",                        &EQAPP_SpawnCastSpell_GroupChat_Toggle},
+    {"//SCSGroupChat",                 &EQAPP_SpawnCastSpell_GroupChat_Toggle},
+    {"//Speed",                        &EQAPP_Speed_Toggle},
+    {"//SpeedOn",                      &EQAPP_Speed_On},
+    {"//SpeedOff",                     &EQAPP_Speed_Off},
     {"//HUD",                          &EQAPP_HUD_Toggle},
     {"//HUDOn",                        &EQAPP_HUD_On},
     {"//HUDOff",                       &EQAPP_HUD_Off},
     {"//HUDDebugText",                 &EQAPP_HUD_DebugText_Toggle},
-    {"//HUDDT",                        &EQAPP_HUD_DebugText_Toggle},
     {"//FollowAI",                     &EQAPP_FollowAI_Toggle},
     {"//FollowAIOn",                   &EQAPP_FollowAI_On},
     {"//FollowAIOff",                  &EQAPP_FollowAI_Off},
@@ -170,12 +174,10 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//FAIOn",                        &EQAPP_FollowAI_On},
     {"//FAIOff",                       &EQAPP_FollowAI_Off},
     {"//FollowAIUseZAxis",             &EQAPP_FollowAI_UseZAxis_Toggle},
-    {"//FAIUZA",                       &EQAPP_FollowAI_UseZAxis_Toggle},
-    {"//FollowZ",                      &EQAPP_FollowAI_UseZAxis_Toggle},
+    {"//FAIUseZAxis",                  &EQAPP_FollowAI_UseZAxis_Toggle},
     {"//FZ",                           &EQAPP_FollowAI_UseZAxis_Toggle},
     {"//FollowAIBehind",               &EQAPP_FollowAI_Behind_Toggle},
-    {"//FAIB",                         &EQAPP_FollowAI_Behind_Toggle},
-    {"//FollowB",                      &EQAPP_FollowAI_Behind_Toggle},
+    {"//FAIBehind",                    &EQAPP_FollowAI_Behind_Toggle},
     {"//FB",                           &EQAPP_FollowAI_Behind_Toggle},
     {"//FollowPath",                   &EQAPP_FollowPath_Toggle},
     {"//FollowPathOn",                 &EQAPP_FollowPath_On},
@@ -184,7 +186,7 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//FPOn",                         &EQAPP_FollowPath_On},
     {"//FPOff",                        &EQAPP_FollowPath_Off},
     {"//FollowPathAutomatic",          &EQAPP_FollowPath_Automatic_Toggle},
-    {"//FPA",                          &EQAPP_FollowPath_Automatic_Toggle},
+    {"//FPAutomatic",                  &EQAPP_FollowPath_Automatic_Toggle},
     {"//WindowTitle",                  &EQAPP_WindowTitle_Toggle},
     {"//WindowTitleOn",                &EQAPP_WindowTitle_On},
     {"//WindowTitleOff",               &EQAPP_WindowTitle_Off},
@@ -470,12 +472,14 @@ void EQAPP_InterpretCommand_ConvertPercentText(std::string& text)
         auto playerSpawn = EQ_GetPlayerSpawn();
         if (playerSpawn != NULL)
         {
-            auto spawnName = EQ_GetSpawnName(playerSpawn);
-            if (spawnName.size() != 0)
+            std::string str = EQ_GetSpawnName(playerSpawn);
+            if (str.size() != 0)
             {
-                EQAPP_String_ReplaceAll(text, "%PlayerName", spawnName);
+                EQAPP_String_ReplaceAll(text, "%PlayerName", str);
             }
         }
+
+        return;
     }
 
     if (text.find("%PlayerID") != std::string::npos)
@@ -485,12 +489,48 @@ void EQAPP_InterpretCommand_ConvertPercentText(std::string& text)
         {
             auto spawnID = EQ_GetSpawnID(playerSpawn);
 
-            std::string strID = std::to_string(spawnID);
-            if (strID.size() != 0)
+            std::string str = std::to_string(spawnID);
+            if (str.size() != 0)
             {
-                EQAPP_String_ReplaceAll(text, "%PlayerID", strID);
+                EQAPP_String_ReplaceAll(text, "%PlayerID", str);
             }
         }
+
+        return;
+    }
+
+    if (text.find("%PlayerClass") != std::string::npos)
+    {
+        auto playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn != NULL)
+        {
+            auto spawnClass = EQ_GetSpawnClass(playerSpawn);
+
+            std::string str = EQ_GetClassNameByKey(spawnClass);
+            if (str.size() != 0)
+            {
+                EQAPP_String_ReplaceAll(text, "%PlayerClass", str);
+            }
+        }
+
+        return;
+    }
+
+    if (text.find("%PlayerClassShortName") != std::string::npos)
+    {
+        auto playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn != NULL)
+        {
+            auto spawnClass = EQ_GetSpawnClass(playerSpawn);
+
+            std::string str = EQ_GetClassShortNameByKey(spawnClass);
+            if (str.size() != 0)
+            {
+                EQAPP_String_ReplaceAll(text, "%PlayerClassShortName", str);
+            }
+        }
+
+        return;
     }
 
     if (text.find("%TargetID") != std::string::npos)
@@ -500,12 +540,14 @@ void EQAPP_InterpretCommand_ConvertPercentText(std::string& text)
         {
             auto spawnID = EQ_GetSpawnID(targetSpawn);
 
-            std::string strID = std::to_string(spawnID);
-            if (strID.size() != 0)
+            std::string str = std::to_string(spawnID);
+            if (str.size() != 0)
             {
-                EQAPP_String_ReplaceAll(text, "%TargetID", strID);
+                EQAPP_String_ReplaceAll(text, "%TargetID", str);
             }
         }
+
+        return;
     }
 }
 
@@ -1384,16 +1426,13 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         std::string numberStr = EQAPP_String_GetAfter(commandText, " ");
         if (numberStr.size() != 0)
         {
-            if (EQAPP_String_IsDigits(numberStr) == true)
+            float height = std::stof(numberStr);
+            if (height > 0.0f)
             {
-                float height = std::stof(numberStr);
-                if (height > 0.0f)
+                auto targetSpawn = EQ_GetTargetSpawn();
+                if (targetSpawn != NULL)
                 {
-                    auto targetSpawn = EQ_GetTargetSpawn();
-                    if (targetSpawn != NULL)
-                    {
-                        EQ_SetSpawnHeight(targetSpawn, height);
-                    }
+                    EQ_SetSpawnHeight(targetSpawn, height);
                 }
             }
         }
@@ -3514,14 +3553,14 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                         continue;
                     }
 
-                    auto groupMemberSpawnName = EQ_GetSpawnName(groupMemberSpawn);
+                    std::string groupMemberSpawnName = EQ_GetSpawnName(groupMemberSpawn);
                     if (groupMemberSpawnName.size() == 0)
                     {
                         continue;
                     }
 
                     std::stringstream ss;
-                    ss << "//BoxChatTell " << groupMemberSpawnName << " " << commandTextAfterSpace;
+                    ss << "//BoxChatTell " << groupMemberSpawnName << " " << commandTextAfterSpace << "\n";
 
                     EQAPP_BoxChat_SendText(ss.str());
                 }
@@ -3909,6 +3948,23 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         auto zoneShortName = EQ_GetZoneShortName();
 
         std::cout << "Zone: " << zoneLongName << " (" << zoneShortName << ") [ID: " << zoneID << "]";
+
+        return true;
+    }
+
+    if (EQAPP_String_BeginsWith(commandText, "//SpeedMultiplier ") == true || EQAPP_String_BeginsWith(commandText, "//Speed ") == true)
+    {
+        std::string numberStr = EQAPP_String_GetAfter(commandText, " ");
+        if (numberStr.size() != 0)
+        {
+            float number = std::stof(numberStr);
+            if (number > 0.0f)
+            {
+                g_SpeedMultiplier = number;
+
+                std::cout << "Speed Multiplier: " << number << std::endl;
+            }
+        }
 
         return true;
     }

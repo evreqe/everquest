@@ -106,10 +106,42 @@ bool EQAPP_BazaarFilter_HandleEvent_CBazaarSearchWnd__AddItemToList(char* itemNa
         return bShouldAddItemToList;
     }
 
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return bShouldAddItemToList;
+    }
+
+    auto playerSpawnClass = EQ_GetSpawnClass(playerSpawn);
+
+    std::string playerSpawnClassShortName = EQ_GetClassShortNameByKey(playerSpawnClass);
+
     for (auto& filterItemName : g_BazaarFilterItemNameList)
     {
         std::string itemNameAdd = itemName;
         std::string itemNameFilter = filterItemName;
+
+        if (itemNameFilter.size() > 5)
+        {
+            if (EQAPP_String_BeginsWith(itemNameFilter, "^") == true)
+            {
+                if (playerSpawnClassShortName.size() != 0)
+                {
+                    std::string classText = fmt::format("^{}^", playerSpawnClassShortName);
+
+                    if (EQAPP_String_BeginsWith(itemNameFilter, classText) == true)
+                    {
+                        itemNameFilter.erase(0, 5);
+
+                        if (itemNameAdd == itemNameFilter)
+                        {
+                            bShouldAddItemToList = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
 
         EQApp::StringComparsionType comparsionType = EQApp::StringComparsionType::Equals;
 

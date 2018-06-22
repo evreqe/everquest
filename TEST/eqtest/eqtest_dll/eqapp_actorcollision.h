@@ -107,7 +107,7 @@ void EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor
         if (result == true)
         {
             fmt::MemoryWriter espText;
-            espText << "[CActor] " << actorDefinitionName;
+            espText << "[Actor] " << actorDefinitionName;
 
             espText << "\nType: " << actorType;
 

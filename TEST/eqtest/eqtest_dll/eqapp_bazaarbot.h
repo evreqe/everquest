@@ -169,6 +169,8 @@ void EQAPP_BazaarBot_HandleEvent_CEverQuest__dsp_chat(std::string text, int text
 
         if (EQAPP_String_Contains(text, "failed because you already possess that lore item.") == true)
         {
+            ////std::cout << "[Bazaar Bot] You are attemping to purchase a lore item you already possess." << std::endl;
+
             uint32_t listIndex = EQ_BazaarSearchWindow_GetListIndex();
             if (listIndex != EQ_BAZAAR_SEARCH_LIST_INDEX_NULL)
             {
@@ -179,6 +181,14 @@ void EQAPP_BazaarBot_HandleEvent_CEverQuest__dsp_chat(std::string text, int text
 
                     std::cout << "[Bazaar Bot] " << itemName << " added to the lore items list." << std::endl;
                 }
+                else
+                {
+                    std::cout << "[Bazaar Bot] itemName.size() == 0" << std::endl;
+                }
+            }
+            else
+            {
+                ////std::cout << "[Bazaar Bot] listIndex == EQ_BAZAAR_SEARCH_LIST_INDEX_NULL" << std::endl;
             }
 
             bResult = false;

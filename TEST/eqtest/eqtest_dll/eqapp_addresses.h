@@ -28,10 +28,7 @@ void EQAPP_InitializeAddressesAndPointers()
     EQAPP_FixAddress(EQ_ADDRESS_NetStatus);
 
     EQAPP_FixAddress(EQ_ADDRESS_LeftMouseHeldTime);
-
-    EQAPP_FixAddress(EQ_ADDRESS_POINTER_Group);
-    EQAPP_FixAddress(EQ_ADDRESS_GroupCount);
-    EQAPP_FixAddress(EQ_ADDRESS_GroupAggro);
+    EQAPP_FixAddress(EQ_ADDRESS_RightMouseHeldTime);
 
     EQAPP_FixAddress(EQ_ADDRESS_EQZoneInfo);
 
@@ -39,12 +36,6 @@ void EQAPP_InitializeAddressesAndPointers()
     EQAPP_FixAddress(EQ_ADDRESS_FogDistanceBegin);
     EQAPP_FixAddress(EQ_ADDRESS_FogDistanceEnd);
     EQAPP_FixAddress(EQ_ADDRESS_FarClipPlane);
-
-    EQAPP_FixAddress(EQ_ADDRESS_POINTER_StringTable);
-    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_StringTable__getString);
-
-    EQAPP_FixAddress(EQ_ADDRESS_POINTER_TargetIndicator);
-    EQAPP_FixAddress(EQ_ADDRESS_POINTER_PlayerPath);
 
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CrashDetected);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CollisionCallbackForActors);
@@ -54,6 +45,14 @@ void EQAPP_InitializeAddressesAndPointers()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_ExecuteCmd);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_GetExecuteCmdIDByName);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_GetExecuteCmdNameByID);
+
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_StringTable);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_StringTable__getString);
+
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_TargetIndicator);
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_PlayerPath);
+
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_PlayerCharacter);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_TargetSpawn);
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_PlayerSpawn);
@@ -85,6 +84,8 @@ void EQAPP_InitializeAddressesAndPointers()
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CDisplay);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CDisplay__CreatePlayerActor);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CDisplay__DeleteActor);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CRender);
 

@@ -2,11 +2,11 @@
 
 bool g_FPSIsEnabled = false;
 
-uint32_t g_FPSValue = 0;
-uint32_t g_FPSCounter = 0;
-
 EQApp::Timer g_FPSTimer = EQAPP_Timer_GetTimeNow();
 EQApp::TimerInterval g_FPSTimerInterval = 1;
+
+uint32_t g_FPSValue = 0;
+uint32_t g_FPSCounter = 0;
 
 void EQAPP_FPS_Toggle();
 void EQAPP_FPS_On();

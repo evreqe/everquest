@@ -1,8 +1,12 @@
 #pragma once
 
+#include "eqapp_fps.h"
+
 bool g_FreeCameraIsEnabled = false;
 
 float g_FreeCameraMultiplier = 1.0f;
+
+uint32_t g_FreeCameraFrameRate = 60;
 
 void EQAPP_FreeCamera_Toggle();
 void EQAPP_FreeCamera_On();
@@ -57,6 +61,25 @@ void EQAPP_FreeCamera_Execute()
     else
     {
         g_FreeCameraMultiplier = 1.0f;
+    }
+
+    if (g_FPSValue < g_FreeCameraFrameRate)
+    {
+        if (g_FPSValue > 0 && g_FreeCameraFrameRate > 0)
+        {
+            float percent = ((float)g_FPSValue / (float)g_FreeCameraFrameRate);
+
+            if (g_FreeCameraMultiplier > 0.0f && percent > 0.0f)
+            {
+                g_FreeCameraMultiplier = g_FreeCameraMultiplier / percent;
+            }
+
+            //std::stringstream ss;
+            //ss << "percent: " << percent << std::endl;
+            //ss << "g_FreeCameraMultiplier: " << g_FreeCameraMultiplier << std::endl;
+            //ss << "g_FPSAverageValue: " << g_FPSAverageValue << std::endl;
+            //EQ_DrawText(ss.str().c_str(), 100, 100);
+        }
     }
 
     if (EQAPP_IsVKKeyDown(VK_UP) == true)

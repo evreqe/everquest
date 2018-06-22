@@ -17,6 +17,7 @@ Prize: Ping's Prodigious Potion Pack
 Prize: Scale of Rodcet Nife
 Prize: Tear of Tranquility
 Prize: Chalandria's Fang
+Prize: Fiery Dragonhide Pack
 
 ##### Augments #####
 Tavon's Burnished Gemstone
@@ -40,10 +41,10 @@ Extra Planar Potential Shard
 #}Briny Essence
 #}Essence of Life
 #}Writ of the Combine
-#}Clawed Tablet of the Ring of Scale
+}Clawed Tablet of the Ring of Scale
 
 ##### Misc #####
-Amulet of the Drowned Mariner
+#Amulet of the Drowned Mariner
 Amulet of Necropotence
 Inscrutable Talisman
 Ancient Cloak of Flames
@@ -52,6 +53,9 @@ Rocketeer Boots
 Draught of Adventure
 #Golden Ticket
 #Shrunken Goblin Skull Earring
+#Bayle Mark
+#Ancient Arrows
+#Chitin Stud
 
 ##### Conflagrant #####
 #{Conflagrant

@@ -53,11 +53,16 @@ function OnFrame()
 
     local targetHP = EQ_GetSpawnHPCurrent(targetSpawn)
     if targetHP > 0 then
+
+        math.randomseed(os.time())
+
+        local fastHealHP = math.random(60, 80)
+
         if targetHP <= 25 then
             PriestBot_InstantHeal()
         elseif targetHP <= 50 then
             PriestBot_BigHeal()
-        elseif targetHP <= 75 then
+        elseif targetHP <= fastHealHP then
             PriestBot_FastHeal()
         end
     end

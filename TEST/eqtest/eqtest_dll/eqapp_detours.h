@@ -43,6 +43,8 @@ EQ_MACRO_FUNCTION_DefineDetour(CCamera__SetCameraLocation);
 
 EQ_MACRO_FUNCTION_DefineDetour(CBazaarSearchWnd__AddItemToList);
 
+EQ_MACRO_FUNCTION_DefineDetour(CDisplay__CreatePlayerActor);
+
 char* __cdecl EQAPP_DETOURED_FUNCTION_CrashDetected();
 int __cdecl EQAPP_DETOURED_FUNCTION_CollisionCallbackForActors(uint32_t cactor);
 int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown);
@@ -60,6 +62,8 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void
 int __fastcall EQAPP_DETOURED_FUNCTION_CCamera__SetCameraLocation(void* this_ptr, void* not_used, EQ::Location& location, bool canSetLocation);
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* this_ptr, void* not_used, char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11);
+
+int __fastcall EQAPP_DETOURED_FUNCTION_CDisplay__CreatePlayerActor(void* this_ptr, void* not_used, uint32_t spawn, int a2, int a3, int a4, int a5, int a6);
 
 void EQAPP_Detours_Load()
 {
@@ -85,7 +89,10 @@ void EQAPP_Detours_Load()
 
     if (EQ_ADDRESS_POINTER_CXWndManager != 0)
     {
-        EQ_MACRO_FUNCTION_AddDetour(CXWndManager__DrawWindows);
+        if (EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows != 0)
+        {
+            EQ_MACRO_FUNCTION_AddDetour(CXWndManager__DrawWindows);
+        }
     }
 
     if (EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI != 0)
@@ -100,9 +107,20 @@ void EQAPP_Detours_Load()
 
     if (EQ_ADDRESS_POINTER_CEverQuest != 0)
     {
-        EQ_MACRO_FUNCTION_AddDetour(CEverQuest__InterpretCmd);
-        EQ_MACRO_FUNCTION_AddDetour(CEverQuest__StartCasting);
-        EQ_MACRO_FUNCTION_AddDetour(CEverQuest__dsp_chat);
+        if (EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd != 0)
+        {
+            EQ_MACRO_FUNCTION_AddDetour(CEverQuest__InterpretCmd);
+        }
+
+        if (EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting != 0)
+        {
+            EQ_MACRO_FUNCTION_AddDetour(CEverQuest__StartCasting);
+        }
+
+        if (EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat != 0)
+        {
+            EQ_MACRO_FUNCTION_AddDetour(CEverQuest__dsp_chat);
+        }
     }
 
     EQ_ADDRESS_POINTER_CCamera = EQ_GetCamera();
@@ -124,6 +142,14 @@ void EQAPP_Detours_Load()
         if (EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList != 0)
         {
             EQ_MACRO_FUNCTION_AddDetour(CBazaarSearchWnd__AddItemToList);
+        }
+    }
+
+    if (EQ_ADDRESS_POINTER_CDisplay != 0)
+    {
+        if (EQ_ADDRESS_FUNCTION_CDisplay__CreatePlayerActor != 0)
+        {
+            EQ_MACRO_FUNCTION_AddDetour(CDisplay__CreatePlayerActor);
         }
     }
 }
@@ -152,7 +178,10 @@ void EQAPP_Detours_Unload()
 
     if (EQ_ADDRESS_POINTER_CXWndManager != 0)
     {
-        EQ_MACRO_FUNCTION_RemoveDetour(CXWndManager__DrawWindows);
+        if (EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows != 0)
+        {
+            EQ_MACRO_FUNCTION_RemoveDetour(CXWndManager__DrawWindows);
+        }
     }
 
     if (EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI != 0)
@@ -167,9 +196,20 @@ void EQAPP_Detours_Unload()
 
     if (EQ_ADDRESS_POINTER_CEverQuest != 0)
     {
-        EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__InterpretCmd);
-        EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__StartCasting);
-        EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__dsp_chat);
+        if (EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd != 0)
+        {
+            EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__InterpretCmd);
+        }
+
+        if (EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting != 0)
+        {
+            EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__StartCasting);
+        }
+
+        if (EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat != 0)
+        {
+            EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__dsp_chat);
+        }
     }
 
     EQ_ADDRESS_POINTER_CCamera = EQ_GetCamera();
@@ -191,6 +231,14 @@ void EQAPP_Detours_Unload()
         if (EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList != 0)
         {
             EQ_MACRO_FUNCTION_RemoveDetour(CBazaarSearchWnd__AddItemToList);
+        }
+    }
+
+    if (EQ_ADDRESS_POINTER_CDisplay != 0)
+    {
+        if (EQ_ADDRESS_FUNCTION_CDisplay__CreatePlayerActor != 0)
+        {
+            EQ_MACRO_FUNCTION_RemoveDetour(CDisplay__CreatePlayerActor);
         }
     }
 }
@@ -340,6 +388,11 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
         EQAPP_HUD_Execute();
     }
 
+    if (g_SpeedIsEnabled == true)
+    {
+        EQAPP_Speed_Execute();
+    }
+
     if (g_BazaarBotIsEnabled == true)
     {
         EQAPP_BazaarBot_Execute();
@@ -425,10 +478,7 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
 
     EQAPP_Console_Print();
 
-    if (g_FPSIsEnabled == true)
-    {
-        EQAPP_FPS_Execute();
-    }
+    EQAPP_FPS_Execute();
 
 /*
     EQ_DrawLine3D(100.0f, 200.0f, 1.0f, 800.0f, 900.0f, 1.0f, 0xFFFF00FF);
@@ -857,6 +907,11 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void
         }
     }
 
+    if (g_BazaarBotIsEnabled == true)
+    {
+        EQAPP_BazaarBot_HandleEvent_CEverQuest__dsp_chat(chatText, textColor);
+    }
+
     if (g_AutoGroupIsEnabled == true)
     {
         EQAPP_AutoGroup_HandleEvent_CEverQuest__dsp_chat(chatText, textColor);
@@ -950,4 +1005,16 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* thi
     }
 
     return EQAPP_REAL_FUNCTION_CBazaarSearchWnd__AddItemToList(this_ptr, itemName, itemPrice, traderName, a4, a5, a6, a7, a8, a9, a10, a11);
+}
+
+int __fastcall EQAPP_DETOURED_FUNCTION_CDisplay__CreatePlayerActor(void* this_ptr, void* not_used, uint32_t spawn, int a2, int a3, int a4, int a5, int a6)
+{
+    if (g_EQAppShouldUnload == 1)
+    {
+        return EQAPP_REAL_FUNCTION_CDisplay__CreatePlayerActor(this_ptr, spawn, a2, a3, a4, a5, a6);
+    }
+
+    // TODO: spawn alert
+
+    return EQAPP_REAL_FUNCTION_CDisplay__CreatePlayerActor(this_ptr, spawn, a2, a3, a4, a5, a6);
 }

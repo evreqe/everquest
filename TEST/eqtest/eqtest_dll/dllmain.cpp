@@ -9,6 +9,7 @@
 #include <locale>
 #include <map>
 #include <memory>
+#include <numeric>
 #include <random>
 #include <string>
 #include <sstream>
@@ -97,8 +98,10 @@ namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not avai
 #include "eqapp_namedspawns.h"
 #include "eqapp_sleep.h"
 #include "eqapp_spawncastspell.h"
+#include "eqapp_speed.h"
 #include "eqapp_spelllist.h"
 #include "eqapp_windowtitle.h"
+#include "eqapp_waypoint.h"
 
 #include "eqapp_loadoptions.h"
 
@@ -145,6 +148,9 @@ void EQAPP_Unload()
     {
         EQAPP_Lua_EventScriptList_ExecuteFunction("OnUnload");
     }
+
+    EQAPP_FreeCamera_Off();
+    EQAPP_Speed_Off();
 
     g_WindowTitleIsEnabled = false;
     EQAPP_WindowTitle_Reset();

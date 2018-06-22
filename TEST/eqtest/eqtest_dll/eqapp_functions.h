@@ -18,7 +18,7 @@ void EQAPP_PlaySound(const char* filename);
 void EQAPP_StopSound();
 void EQAPP_Beep();
 void EQAPP_BeepEx(UINT beepType);
-bool EQAPP_FileExists(const char* fileName);
+bool EQAPP_FileExists(const char* filename);
 void EQAPP_DeleteFileContents(const char* filename);
 std::string EQAPP_ReadFileToString(const char* filename);
 void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list, bool printLines = true);
@@ -222,9 +222,9 @@ void EQAPP_BeepEx(UINT beepType)
     MessageBeep(beepType);
 }
 
-bool EQAPP_FileExists(const char* fileName)
+bool EQAPP_FileExists(const char* filename)
 {
-    std::ifstream file(fileName);
+    std::ifstream file(filename);
     return file.good();
 }
 

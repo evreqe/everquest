@@ -161,10 +161,13 @@ void EQAPP_ESP_DrawDoors()
             espText << "\nHeading: " << doorHeading;
             ////espText << "\nAngle: " << doorAngle;
 
-            ////auto doorKeyID = EQ_ReadMemory<uint32_t>(door + EQ_OFFSET_EQSwitch_KEY_ID);
-            ////auto doorIsUseable = EQ_ReadMemory<uint8_t>(door + EQ_OFFSET_EQSwitch_IS_USEABLE);
+            auto doorKeyID = EQ_ReadMemory<uint32_t>(door + EQ_OFFSET_EQSwitch_KEY_ID);
+            if (doorKeyID != EQ_SWITCH_KEY_ID_NULL)
+            {
+                espText << "\nKey ID: " << fmt::hex(doorKeyID);
+            }
 
-            ////espText << "\nKey ID: " << doorKeyID;
+            ////auto doorIsUseable = EQ_ReadMemory<uint8_t>(door + EQ_OFFSET_EQSwitch_IS_USEABLE);
             ////espText << "\nIs Useable: " << (int)doorIsUseable;
 
             EQ_DrawTextByColor(espText.c_str(), (int)screenX, (int)screenY, EQ_DRAW_TEXT_COLOR_WHITE);

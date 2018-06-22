@@ -308,11 +308,15 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set("EQ_SPAWN_HEADING_SPEED_MIN", EQ_SPAWN_HEADING_SPEED_MIN);
     state->set("EQ_SPAWN_HEADING_SPEED_MAX", EQ_SPAWN_HEADING_SPEED_MAX);
 
+    state->set("EQ_SPAWN_ACCELERATION_FRICTION_DEFAULT", EQ_SPAWN_ACCELERATION_FRICTION_DEFAULT);
+
     state->set("EQ_MELEE_DISTANCE_MIN", EQ_MELEE_DISTANCE_MIN);
     state->set("EQ_MELEE_DISTANCE_MAX", EQ_MELEE_DISTANCE_MAX);
 
     state->set("EQ_FAR_CLIP_PLANE_MIN", EQ_FAR_CLIP_PLANE_MIN);
     state->set("EQ_FAR_CLIP_PLANE_MAX", EQ_FAR_CLIP_PLANE_MAX);
+
+    state->set("EQ_USE_DOOR_DISTANCE_DEFAULT", EQ_USE_DOOR_DISTANCE_DEFAULT);
 
     state->set("EQ_NUM_HOTBARS", EQ_NUM_HOTBARS);
     state->set("EQ_NUM_HOTBAR_BUTTONS", EQ_NUM_HOTBAR_BUTTONS);
@@ -1718,6 +1722,9 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_SetFogDistanceEnd", EQ_SetFogDistanceEnd);
     state->set_function("EQ_SetFarClipPlane", EQ_SetFarClipPlane);
     state->set_function("EQ_SetFarClipPlanePercent", EQ_SetFarClipPlanePercent);
+
+    state->set_function("EQ_GetPlayerCharacter", EQ_GetPlayerCharacter);
+    state->set_function("EQ_GetGroup", EQ_GetGroup);
 
     state->set_function("EQ_GetSpawnByID", EQ_GetSpawnByID);
     state->set_function("EQ_GetSpawnByName", EQ_GetSpawnByName);
