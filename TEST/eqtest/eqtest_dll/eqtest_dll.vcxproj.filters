@@ -170,5 +170,8 @@
     <ClInclude Include="eqapp_waypoint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\mq2\eqgame(Test).h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

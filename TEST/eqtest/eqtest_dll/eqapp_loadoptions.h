@@ -146,4 +146,6 @@ void EQAPP_LoadOptions()
 
     EQAPP_LoadOption<bool>(g_WindowTitleIsEnabled, "bWindowTitle", pt);
     EQAPP_LoadOption<EQApp::TimerInterval>(g_WindowTitleTimerInterval, "iWindowTitleTimerInterval", pt);
+
+    EQAPP_LoadOption<bool>(g_WaypointIsEnabled, "bWaypoint", pt);
 }

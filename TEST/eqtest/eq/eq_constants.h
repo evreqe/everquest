@@ -25,6 +25,8 @@ const float EQ_SPAWN_HEADING_SPEED_DEFAULT    = 0.0f;      // stop turning
 const float EQ_SPAWN_HEADING_SPEED_MIN        = -12.0f;    // turning right
 const float EQ_SPAWN_HEADING_SPEED_MAX        = 12.0f;     // turning left
 
+const float EQ_SPAWN_ACCELERATION_FRICTION_DEFAULT = 0.8000000119f;
+
 const float EQ_MELEE_DISTANCE_MIN    = 14.0f; // get_melee_range()
 const float EQ_MELEE_DISTANCE_MAX    = 75.0f; // get_melee_range()
 
@@ -57,6 +59,8 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 
 #define EQ_GAME_STATE_IN_GAME 5
 
+#define EQ_OFFSET_CRender_Direct3DDevicePointer   0xEC8 // uint32_t pointer    LPDIRECT3DDEVICE9
+
 #define EQ_OFFSET_EQPlayerManager_FIRST_SPAWN    0x08
 #define EQ_OFFSET_EQPlayerManager_LAST_SPAWN     0x0C
 
@@ -75,7 +79,12 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_FONT_STYLE_FIXED_WIDTH               9     // small text and all characters are the same size, courier new or fixed sys font face
 #define EQ_FONT_STYLE_NAME_SPRITE               10    // big text with drop shadow, used for text above players/npcs heads
 
-// EQPlayer
+// class EQCharacter
+// ******************** randomized after each patch ******************** //
+#define EQ_OFFSET_CHARACTER_GROUP    0x282C    // uint32_t pointer    /*0x282c*/ struct _GROUPINFO*   pGroupInfo;
+// ********************************************************************* //
+
+// class EQPlayer
 // double check offsets after patch!
 #define EQ_OFFSET_SPAWN_PREVIOUS                           0x04     // uint32_t pointer
 #define EQ_OFFSET_SPAWN_NEXT                               0x08     // uint32_t pointer
@@ -110,18 +119,18 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_OFFSET_SPAWN_MOUNT_RIDER_SPAWN                  0x158    // uint32_t    // spawn that is riding the mount
 #define EQ_OFFSET_SPAWN_IS_TARGETABLE                      0x160    // uint8_t
 // ******************** randomized after each patch ******************** //    #define PLAYERZONECLIENT
-#define EQ_OFFSET_SPAWN_ZONE_ID                    0x5F8    // uint32_t
-#define EQ_OFFSET_SPAWN_LEVEL                      0x571    // uint8_t
-#define EQ_OFFSET_SPAWN_RACE                       0xFA0    // uint32_t
-#define EQ_OFFSET_SPAWN_CLASS                      0xFA8    // uint32_t
-#define EQ_OFFSET_SPAWN_STANDING_STATE             0x2D8    // uint8_t
-#define EQ_OFFSET_SPAWN_HP_CURRENT                 0x3E0    // int64_t
-#define EQ_OFFSET_SPAWN_HP_MAX                     0x5D8    // int64_t
-#define EQ_OFFSET_SPAWN_MANA_CURRENT               0x2DC    // int32_t
-#define EQ_OFFSET_SPAWN_MANA_MAX                   0x5B0    // int32_t
-#define EQ_OFFSET_SPAWN_ENDURANCE_CURRENT          0x608    // uint32_t
-#define EQ_OFFSET_SPAWN_ENDURANCE_MAX              0x21C    // uint32_t
-#define EQ_OFFSET_SPAWN_FOLLOW_SPAWN               0xF30    // uint32_t pointer    // the spawn you are auto-following
+#define EQ_OFFSET_SPAWN_ZONE_ID                    0x360    // uint32_t
+#define EQ_OFFSET_SPAWN_LEVEL                      0x270    // uint8_t
+#define EQ_OFFSET_SPAWN_RACE                       0xF84    // uint32_t
+#define EQ_OFFSET_SPAWN_CLASS                      0xF8C    // uint32_t
+#define EQ_OFFSET_SPAWN_STANDING_STATE             0x5F0    // uint8_t
+#define EQ_OFFSET_SPAWN_HP_CURRENT                 0x2A0    // int64_t
+#define EQ_OFFSET_SPAWN_HP_MAX                     0x1D8    // int64_t
+#define EQ_OFFSET_SPAWN_MANA_CURRENT               0x1E8    // int32_t
+#define EQ_OFFSET_SPAWN_MANA_MAX                   0x1D4    // int32_t
+#define EQ_OFFSET_SPAWN_ENDURANCE_CURRENT          0x1B8    // uint32_t
+#define EQ_OFFSET_SPAWN_ENDURANCE_MAX              0x288    // uint32_t
+#define EQ_OFFSET_SPAWN_FOLLOW_SPAWN               0xF14    // uint32_t pointer    struct _SPAWNINFO*   WhoFollowing; // NULL if autofollow off
 // ********************************************************************* //
 
 #define EQ_SIZE_SPAWN_NAME         64 // 0x40
@@ -204,11 +213,11 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_SPAWN_TYPE_NAME =
 #define EQ_OFFSET_GROUP_MEMBER_ROLES_FLAGS             0x24 // uint32_t bitwise flags
 #define EQ_OFFSET_GROUP_MEMBER_SPAWN                   0x30 // uint32_t pointer
 
-#define EQ_GROUP_ROLE_FLAGS_MAIN_TANK        0x01
-#define EQ_GROUP_ROLE_FLAGS_MAIN_ASSIST      0x02
-#define EQ_GROUP_ROLE_FLAGS_PULLER           0x04
-#define EQ_GROUP_ROLE_FLAGS_MARK_NPC         0x08
-#define EQ_GROUP_ROLE_FLAGS_MASTER_LOOTER    0x10
+#define EQ_GROUP_MEMBER_ROLES_FLAGS_MAIN_TANK        0x01
+#define EQ_GROUP_MEMBER_ROLES_FLAGS_MAIN_ASSIST      0x02
+#define EQ_GROUP_MEMBER_ROLES_FLAGS_PULLER           0x04
+#define EQ_GROUP_MEMBER_ROLES_FLAGS_MARK_NPC         0x08
+#define EQ_GROUP_MEMBER_ROLES_FLAGS_MASTER_LOOTER    0x10
 
 #define EQ_OFFSET_GroupAggro_GROUP_MEMBER_AGGRO    0x08 // uint32_t[5], F2, F3, F4, F5, F6
 #define EQ_OFFSET_GroupAggro_PLAYER_AGGRO          0x78 // uint32_t, F1

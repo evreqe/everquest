@@ -119,7 +119,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;EQTEST_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Code\!libraries\detours;D:\Code\!libraries\luajit-2.0.5\src;D:\Code\!libraries\sol2-2.20.0;D:\Code\everquest\eqtest\eq;D:\Code\!libraries\boost_1_66_0;D:\Code\!libraries\fmt-4.1.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Code\!libraries\detours;D:\Code\!libraries\luajit-2.0.5\src;D:\Code\!libraries\sol2-2.20.3;D:\Code\!libraries\boost_1_66_0;D:\Code\!libraries\fmt-4.1.0;D:\Code\everquest\eqtest\mq2;D:\Code\everquest\eqtest\eq;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -169,6 +169,7 @@
     <ClInclude Include="..\eq\eq_messages.h" />
     <ClInclude Include="..\eq\eq_virtualkeycodes.h" />
     <ClInclude Include="..\eq\eq_zones.h" />
+    <ClInclude Include="..\mq2\eqgame(Test).h" />
     <ClInclude Include="eqapp.h" />
     <ClInclude Include="eqapp_actorcollision.h" />
     <ClInclude Include="eqapp_addresses.h" />

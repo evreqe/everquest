@@ -252,6 +252,8 @@ void EQAPP_Detours_OnEnterZone()
     g_EQAppIsInGame = true;
 
     EQAPP_ActorCollision_Load();
+
+    EQAPP_WaypointList_Load();
 }
 
 void EQAPP_Detours_OnLeaveZone()
@@ -693,6 +695,11 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawWindows(void* this_ptr,
     if (g_EQAppShouldUnload == 1)
     {
         return EQAPP_REAL_FUNCTION_CXWndManager__DrawWindows(this_ptr);
+    }
+
+    if (g_WaypointIsEnabled == true && g_WaypointDebugIsEnabled == true)
+    {
+        EQAPP_WaypointList_Draw();
     }
 
     if (EQAPP_FollowPath_IsActive() == true)

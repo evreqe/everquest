@@ -1717,11 +1717,8 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_IsFogEnabled", EQ_IsFogEnabled);
     state->set_function("EQ_SetFog", EQ_SetFog);
     state->set_function("EQ_GetFogDistanceEnd", EQ_GetFogDistanceEnd);
-    state->set_function("EQ_GetFarClipPlane", EQ_GetFarClipPlane);
     state->set_function("EQ_SetFogDistanceBegin", EQ_SetFogDistanceBegin);
     state->set_function("EQ_SetFogDistanceEnd", EQ_SetFogDistanceEnd);
-    state->set_function("EQ_SetFarClipPlane", EQ_SetFarClipPlane);
-    state->set_function("EQ_SetFarClipPlanePercent", EQ_SetFarClipPlanePercent);
 
     state->set_function("EQ_GetPlayerCharacter", EQ_GetPlayerCharacter);
     state->set_function("EQ_GetGroup", EQ_GetGroup);
@@ -1850,9 +1847,6 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
 
     state->set_function("EQ_InterpretCommand", EQ_InterpretCommand);
     state->set_function("EQ_ExecuteCommand", EQ_ExecuteCommand);
-    state->set_function("EQ_ExecuteCommandEx", EQ_ExecuteCommandEx);
-    state->set_function("EQ_GetExecuteCommandIDByName", EQ_GetExecuteCommandIDByName);
-    state->set_function("EQ_GetExecuteCommandNameByID", EQ_GetExecuteCommandNameByID);
 
     state->set_function("EQ_PrintTextToChat", EQ_PrintTextToChat);
     state->set_function("EQ_PrintTextToChatEx", EQ_PrintTextToChatEx);

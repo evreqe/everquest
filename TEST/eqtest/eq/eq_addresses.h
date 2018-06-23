@@ -5,15 +5,22 @@
 #include <string>
 #include <unordered_map>
 
-uint32_t EQ_ADDRESS_ClientVersionTime = 0xABF328; // WinMain()    "Starting EverQuest (Built %s %s)"    CrashDetected()    "Client Version: %s %s\n"
-#define EQ_STRING_ClientVersionTime "12:42:49"
+// MacroQuest2
+#include "eqgame(Test).h"
+
+#include "eq_constants.h"
+
+// the addresses for client version time and date must NOT be 0x0 !!!!
+
+uint32_t EQ_ADDRESS_ClientVersionTime = __ActualVersionTime_x; // WinMain()    "Starting EverQuest (Built %s %s)"    CrashDetected()    "Client Version: %s %s\n"
+#define EQ_STRING_ClientVersionTime __ExpectedVersionTime // "xx:xx:xx"
 #define EQ_SIZE_ClientVersionTime 9
 
-uint32_t EQ_ADDRESS_ClientVersionDate = 0xABF334; // WinMain()    "Starting EverQuest (Built %s %s)"    CrashDetected()    "Client Version: %s %s\n"
-#define EQ_STRING_ClientVersionDate "May 18 2018"
+uint32_t EQ_ADDRESS_ClientVersionDate = __ActualVersionDate_x; // WinMain()    "Starting EverQuest (Built %s %s)"    CrashDetected()    "Client Version: %s %s\n"
+#define EQ_STRING_ClientVersionDate __ExpectedVersionDate // "xxx xx xxxx"
 #define EQ_SIZE_ClientVersionDate 12
 
-uint32_t EQ_ADDRESS_WindowHWND = 0xF0EAEC; // HWND hWnd    in IDA press G, jump to address: hWnd
+uint32_t EQ_ADDRESS_WindowHWND = 0x0; // HWND hWnd    in IDA press G, jump to address: hWnd
 /*
     PostMessageA(hWnd, 0x4647u, 0x4247u, (LPARAM)v3);
 */
@@ -22,27 +29,25 @@ uint32_t EQ_ADDRESS_WindowHWND = 0xF0EAEC; // HWND hWnd    in IDA press G, jump 
     PostMessageA(hWnd, 0x4646u, 0x4246u, (LPARAM)v11);
 */
 
-uint32_t EQ_ADDRESS_AutoAttack    = 0xF0B563; // uint8_t    // /attack
-uint32_t EQ_ADDRESS_AutoFire      = 0xF0B564; // uint8_t    // /autofire
-uint32_t EQ_ADDRESS_AutoRun       = 0xE6C910; // uint32_t
-uint32_t EQ_ADDRESS_MouseLook     = 0xE6C8F2; // uint8_t    // holding down right-click to look around
-uint32_t EQ_ADDRESS_NetStatus     = 0xE6C8F5; // uint8_t    byte_F30435 = sub_9CFF30("Defaults", "NetStat", 0, 0); // 0xF30435
+uint32_t EQ_ADDRESS_AutoAttack    = 0x0; // uint8_t    // /attack
+uint32_t EQ_ADDRESS_AutoFire      = 0x0; // uint8_t    // /autofire
+uint32_t EQ_ADDRESS_AutoRun       = 0x0; // uint32_t
+uint32_t EQ_ADDRESS_MouseLook     = 0x0; // uint8_t    // holding down right-click to look around
+uint32_t EQ_ADDRESS_NetStatus     = 0x0; // uint8_t    byte_F30435 = sub_9CFF30("Defaults", "NetStat", 0, 0); // 0xF30435
 /*
 search for 1 and 0
 */
 
-uint32_t EQ_ADDRESS_LeftMouseHeldTime = 0xE6C998; // uint32_t
+uint32_t EQ_ADDRESS_LeftMouseHeldTime = 0x0; // uint32_t
+uint32_t EQ_ADDRESS_RightMouseHeldTime = 0x0; // uint32_t
 
-uint32_t EQ_ADDRESS_POINTER_Group = 0xE5F216; // uint32_t pointer
-uint32_t EQ_ADDRESS_GroupCount = 0xE5F21A; // uint32_t
-uint32_t EQ_ADDRESS_GroupAggro = 0x1023B1C; // int[30] array
+uint32_t EQ_ADDRESS_GroupAggro = 0x0; // struct
 
-uint32_t EQ_ADDRESS_EQZoneInfo = 0xE6CAE8; // struct
+uint32_t EQ_ADDRESS_EQZoneInfo = 0x0; // struct
 
-uint32_t EQ_ADDRESS_FogEnabled          = 0xE6CCBE; // uint16_t, first byte value 0x00=Off and 0xFF=On, second byte value flags or something    (==FogDistanceBegin-0x6E)
-uint32_t EQ_ADDRESS_FogDistanceBegin    = 0xE6CD2C; // float
-uint32_t EQ_ADDRESS_FogDistanceEnd      = 0xE6CD30; // float
-uint32_t EQ_ADDRESS_FarClipPlane        = 0xE6DD7C; // uint32_t, values 0-20
+uint32_t EQ_ADDRESS_FogEnabled          = 0x0; // uint16_t, first byte value 0x00=Off and 0xFF=On, second byte value flags or something    (==FogDistanceBegin-0x6E)
+uint32_t EQ_ADDRESS_FogDistanceBegin    = 0x0; // float
+uint32_t EQ_ADDRESS_FogDistanceEnd      = 0x0; // float
 /*
 search for "ClipPlane" and "FogScale"
 */
@@ -58,7 +63,7 @@ sub_52B3F0((float *)dword_E5D410, v294);
 sub_795A10((_DWORD **)dword_DA9368, dword_E6BD7C);
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CrashDetected = 0x694DB0; // "Crash (char = %s, zone = %s)\n"    "Local Player's World location at time of crash: %f, %f, %f.\n"    "Gamestate at crash = %d\n"    "Crash Details: %s\n"
+uint32_t EQ_ADDRESS_FUNCTION_CrashDetected = 0x0; // "Crash (char = %s, zone = %s)\n"    "Local Player's World location at time of crash: %f, %f, %f.\n"    "Gamestate at crash = %d\n"    "Crash Details: %s\n"
 /*
   sub_8A4150("Fatal error occurred in mainthread! (Release Client #630)\n");
   strcat(byte_FBC576, "Fatal error in mainthread! (Release Client #630)\n");
@@ -107,7 +112,7 @@ uint32_t EQ_ADDRESS_FUNCTION_CrashDetected = 0x694DB0; // "Crash (char = %s, zon
   }
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CollisionCallbackForActors = 0x50FE90;
+uint32_t EQ_ADDRESS_FUNCTION_CollisionCallbackForActors = 0x0;
 /*
 signed int __cdecl CollisionCallbackForActors(int a1) // a1 = CActor
 {
@@ -167,7 +172,7 @@ signed int __cdecl CollisionCallbackForActors(int a1) // a1 = CActor
 }
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CastRay = 0x58DF60; // called by CastRay2 function
+uint32_t EQ_ADDRESS_FUNCTION_CastRay = 0x0; // called by CastRay2 function
 /*
 int __cdecl CastRay(int a1, float a2, float a3, float a4)
 {
@@ -188,7 +193,7 @@ int __cdecl CastRay(int a1, float a2, float a3, float a4)
 }
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CastRay2 = 0x58DFB0; // CCollisionInfoLineSegmentVisibility::`vftable'
+uint32_t EQ_ADDRESS_FUNCTION_CastRay2 = 0x0; // CCollisionInfoLineSegmentVisibility::`vftable'
 /*
 .rdata:00B0116C ; const CCollisionInfoLineSegmentVisibility::`vftable'
 .rdata:00B0116C ??_7CCollisionInfoLineSegmentVisibility@@6B@ dd offset sub_8729A0 // search for xref
@@ -272,9 +277,9 @@ int __usercall CastRay2@<eax>(int a1@<esi>, int a2, int a3, float a4, float a5, 
 }
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_DrawNetStatus = 0x6167A0; // "%ldms"    "%0.2f%%"
+uint32_t EQ_ADDRESS_FUNCTION_DrawNetStatus = 0x0; // "%ldms"    "%0.2f%%"
 
-uint32_t EQ_ADDRESS_FUNCTION_ExecuteCmd = 0x5868F0; // "ExecuteCmd has received a CMD_EXITGAME.\n"    "/%s %s"    "%c%s %s "    "help.html"
+uint32_t EQ_ADDRESS_FUNCTION_ExecuteCmd = 0x0; // "ExecuteCmd has received a CMD_EXITGAME.\n"    "/%s %s"    "%c%s %s "    "help.html"
 /*
 ExecuteCmd()
 case 508:
@@ -289,39 +294,18 @@ sub_8A55C0(
     sub_523550(508, 0, 0, 0); // ExecuteCmd
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_GetExecuteCmdIDByName = 0x58B3F0; // "AUTORUN" xref    char[] array of about 520
-/*
-int __cdecl GetExecuteCmdIDByName(const char *a1)
-{
-  int v1; // esi
-  int v2; // eax
+uint32_t EQ_ADDRESS_POINTER_StringTable = 0x0; // pinstStringTable
 
-  v1 = 0;
-  while ( 1 )
-  {
-    v2 = strcmp(off_BE0088[v1], a1);
-    if ( v2 )
-      v2 = -(v2 < 0) | 1;
-    if ( !v2 )
-      break;
-    if ( (unsigned int)++v1 >= 520 )
-      return 0;
-  }
-  return v1;
-}
-*/
+uint32_t EQ_ADDRESS_FUNCTION_StringTable__getString = 0x0; // "%s (%d)"    "ERROR: String not found."
 
-uint32_t EQ_ADDRESS_FUNCTION_GetExecuteCmdNameByID = 0x58B3E0; // "AUTORUN" xref    char[] array of about 520
-/*
-char *__cdecl GetExecuteCmdNameByID(int a1)
-{
-  return off_BE0088[a1];
-}
-*/
+uint32_t EQ_ADDRESS_POINTER_TargetIndicator = 0x0; // "Initializing target indicator."
+uint32_t EQ_ADDRESS_POINTER_PlayerPath = 0x0; // "Initializing player path."
+
+// class EQCharacter
+uint32_t EQ_ADDRESS_POINTER_PlayerCharacter = 0x0;
 
 // class EQPlayer
-uint32_t EQ_ADDRESS_POINTER_TargetSpawn = 0xE5F1FC; // pinstTarget    ExecuteCmd() case CLEAR_TARGET
-uint32_t EQ_ADDRESS_POINTER_PlayerSpawn = 0xE5F1A8; // pinstLocalPlayer    "Local Player's World location at time of crash: %f, %f, %f.\n"
+uint32_t EQ_ADDRESS_POINTER_PlayerSpawn = 0x0; // pinstLocalPlayer    "Local Player's World location at time of crash: %f, %f, %f.\n"
 /*
 if ( dword_F21FE8 ) // PlayerSpawn
   {
@@ -332,17 +316,12 @@ if ( dword_F21FE8 ) // PlayerSpawn
   }
 */
 
-uint32_t EQ_ADDRESS_POINTER_StringTable = 0xE5F07C; // pinstStringTable
+uint32_t EQ_ADDRESS_POINTER_TargetSpawn = 0x0; // pinstTarget    ExecuteCmd() case CLEAR_TARGET
 
-uint32_t EQ_ADDRESS_FUNCTION_StringTable__getString = 0x8A1B90; // "%s (%d)"    "ERROR: String not found."
+// manager for class EQPlayer
+uint32_t EQ_ADDRESS_POINTER_EQPlayerManager = 0x0; // pinstSpawnManager
 
-uint32_t EQ_ADDRESS_POINTER_TargetIndicator = 0xF0E1B8; // "Initializing target indicator."
-uint32_t EQ_ADDRESS_POINTER_PlayerPath = 0xF0D400; // "Initializing player path."
-
-// class EQPlayer
-uint32_t EQ_ADDRESS_POINTER_EQPlayerManager = 0xF0D368; // pinstSpawnManager
-
-uint32_t EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID      = 0x63E350; // "Your inventory is full!"
+uint32_t EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID      = 0x0; // "Your inventory is full!"
 /*
 case 0xD:
       result = (_DWORD *)sub_5E2420((void *)dword_FB5090, *(_DWORD *)(a3 + 4)); // EQPlayerManager__GetSpawnByID and pinstSpawnManager
@@ -383,7 +362,7 @@ LABEL_53:
       return result;
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName = 0x63E370; // "Incorrect Usage. Type /xtarget for correct usage."
+uint32_t EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName = 0x0; // "Incorrect Usage. Type /xtarget for correct usage."
 /*
 if ( !sub_8A3560(&v32, 0) || (sub_89F500(&v32), v8 = sub_89E950(&v28) - 1, v8 < 0) )
       {
@@ -441,9 +420,9 @@ while ( *(_DWORD *)(result + 4) != v7 )
 }
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_EQPlayerManager__GetPlayerFromPartialName = 0x63E400;
+uint32_t EQ_ADDRESS_FUNCTION_EQPlayerManager__GetPlayerFromPartialName = 0x0;
 
-uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI = 0x6322F0; // search for xref to autorun
+uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI = 0x0; // search for xref to autorun
 /*
 EQPlayer__FollowPlayerAI()
     if ( v21 + 15.0 <= *(float *)(v1 + 564) ) // Follow Distance 1
@@ -467,7 +446,7 @@ EQPlayer__FollowPlayerAI()
     }
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight = 0x646030; // PlayerZoneClient__ChangeHeight    "%s is now able to kill anyone (or be killed) as if they were an NPC." and "FORMAT: /becomenpc"
+uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight = 0x0; // PlayerZoneClient__ChangeHeight    "%s is now able to kill anyone (or be killed) as if they were an NPC." and "FORMAT: /becomenpc"
 /*
 v25 = sub_569850(v18);
 sprintf(&v59, "Changing %s to race: %s.", dword_F26020 + 164, v25);
@@ -527,9 +506,9 @@ v10 = 0.0;
 */
 
 // this is CDisplay__UpdateItemSlot in Mac client
-uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__UpdateItemSlot = 0x637EA0; // "IT36" "IT159" "IT10758" "IT10742"
+uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__UpdateItemSlot = 0x0; // "IT36" "IT159" "IT10758" "IT10742"
 
-uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__IsTargetable = 0x96A300;
+uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__IsTargetable = 0x0;
 /*
 bool __thiscall EQPlayer__IsTargetable(int this)
 {
@@ -543,7 +522,7 @@ bool __thiscall EQPlayer__IsTargetable(int this)
 */
 
 // class CXWndManager
-uint32_t EQ_ADDRESS_POINTER_CXWndManager = 0x169B6C0; // pinstCXWndManager
+uint32_t EQ_ADDRESS_POINTER_CXWndManager = 0x0; // pinstCXWndManager
 /*
 CDisplay__WriteTextHD2():
   if ( pinstCXWndManager__dword_1699650 )
@@ -578,16 +557,16 @@ CDisplay__WriteTextHD2():
   return 1;
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows = 0x907BB0; // "DoAllDrawing() failed\n"    GetTickCount()
+uint32_t EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows = 0x0; // "DoAllDrawing() failed\n"    GetTickCount()
 
 // class CEverQuest
-uint32_t EQ_ADDRESS_POINTER_CEverQuest = 0xF0EC40; // pinstCEverQuest
+uint32_t EQ_ADDRESS_POINTER_CEverQuest = 0x0; // pinstCEverQuest
 /*
 CEverQuest__InterpretCmd()
 if ( *(_DWORD *)(dword_10C1418 + 1480) == 5 ) // gamestate == in-game
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__EnterZone = 0x5D4540; // "Initializing world."    "Zone initialized."
+uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__EnterZone = 0x0; // "Initializing world."    "Zone initialized."
 /*
     sub_8D8140("Resetting cameras.");
     (*(void (__stdcall **)(_DWORD))(*(_DWORD *)dword_E6BEA8 + 24))(11.0);
@@ -605,7 +584,7 @@ uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__EnterZone = 0x5D4540; // "Initializing 
     sub_8D8140("Zone initialized.");
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd = 0x5E7240; // "#%s %s"
+uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd = 0x0; // "#%s %s"
 /*
 CEverQuest__InterpretCmd()
 switch ( byte_F334A0 )
@@ -642,13 +621,13 @@ default:
 }
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat = 0x4E1410; // "You cannot purchase an item from yourself!"
+uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat = 0x0; // "You cannot purchase an item from yourself!"
 /*
 CEverQuest__InterpretCmd()
 sub_4764B0(v9, v8, 273, 1, 1, 0); // CEverQuest__dsp_chat
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting = 0x5CE590; // "%s <%s>"
+uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting = 0x0; // "%s <%s>"
 /*
   if ( v13 && v13 != 3 && v13 != 7 )
   {
@@ -665,16 +644,16 @@ uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting = 0x5CE590; // "%s <%s>"
   }
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__LMouseUp = 0x5C3CA0;
+uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__LMouseUp = 0x0;
 
-uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp = 0x5C4C30;
+uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp = 0x0;
 
-uint32_t EQ_ADDRESS_POINTER_CDisplay = 0xE5F410; // pinstCDisplay    "CDisplay::CreatePlayerActor - FATAL ERROR - mySpriteDef is NULL. "
+uint32_t EQ_ADDRESS_POINTER_CDisplay = 0x0; // pinstCDisplay    "CDisplay::CreatePlayerActor - FATAL ERROR - mySpriteDef is NULL. "
 /*
 CDisplay::CreatePlayerActor(*(float *)&a1, (int)dword_F20698, 0, 0, 1, 2, 1, 0);
 */
 
-uint32_t EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2 = 0x527960; // "%ldms"    "%0.2f%%"
+uint32_t EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2 = 0x0; // "%ldms"    "%0.2f%%"
 /*
 DrawNetStatus()
     sprintf(&Dest, "%0.2f%%", v8 * 100.0);
@@ -683,17 +662,21 @@ DrawNetStatus()
     CDisplay__WriteTextHD2(&Dest, (unsigned __int16)a1 + 64, (unsigned __int16)a2, (void *)12);
 */
 
-uint32_t EQ_ADDRESS_POINTER_EQSwitchManager = 0xE5C9C8;
+uint32_t EQ_ADDRESS_FUNCTION_CDisplay__CreatePlayerActor = 0x0;
 
-uint32_t EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch = 0x5BCB70;
+uint32_t EQ_ADDRESS_FUNCTION_CDisplay__DeleteActor = 0x0;
 
-uint32_t EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState = 0x5BD050;
+uint32_t EQ_ADDRESS_POINTER_EQSwitchManager = 0x0;
+
+uint32_t EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch = 0x0;
+
+uint32_t EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState = 0x0;
 
 uint32_t EQ_ADDRESS_POINTER_CCamera = 0x0; // calculated at runtime
 
 uint32_t EQ_ADDRESS_FUNCTION_CCamera__SetCameraLocation = 0x0; // calculated at runtime
 
-uint32_t EQ_ADDRESS_POINTER_CRender = 0x169C608; // __DrawHandler_x    "ResetDevice() failed!" CRender+0x64()    EQ_LoadingS__SetProgressBar() "%s..."    CDisplay__WriteTextHD2() follow draw text functions
+uint32_t EQ_ADDRESS_POINTER_CRender = 0x0; // __DrawHandler_x    "ResetDevice() failed!" CRender+0x64()    EQ_LoadingS__SetProgressBar() "%s..."    CDisplay__WriteTextHD2() follow draw text functions
 /*
 LPVOID __userpurge sub_53FEC0@<eax>(int a1@<ecx>, float *a2@<ebp>, int a3, int a4)
 {
@@ -1309,93 +1292,95 @@ void EQ_InitializeAddresses();
 
 void EQ_InitializeAddresses()
 {
-    EQ_ADDRESS_ClientVersionTime = 0xABF328;
-    EQ_ADDRESS_ClientVersionDate = 0xABF334;
+    EQ_ADDRESS_ClientVersionTime    = __ActualVersionTime_x;
+    EQ_ADDRESS_ClientVersionDate    = __ActualVersionDate_x;
 
-    EQ_ADDRESS_WindowHWND = 0xF0EAEC;
+    EQ_ADDRESS_WindowHWND = __HWnd_x;
 
-    EQ_ADDRESS_AutoAttack    = 0xF0B563;
-    EQ_ADDRESS_AutoFire      = 0xF0B564;
-    EQ_ADDRESS_AutoRun       = 0xE6C910;
-    EQ_ADDRESS_MouseLook     = 0xE6C8F2;
-    EQ_ADDRESS_NetStatus     = 0xE6C8F5;
+    EQ_ADDRESS_AutoAttack    = __Attack_x;
+    EQ_ADDRESS_AutoFire      = __Autofire_x;
+    EQ_ADDRESS_AutoRun       = __pulAutoRun_x;
+    EQ_ADDRESS_MouseLook     = __MouseLook_x;
+    EQ_ADDRESS_NetStatus     = __NetStatusToggle_x;
 
-    EQ_ADDRESS_LeftMouseHeldTime = 0xE6C998;
+    EQ_ADDRESS_LeftMouseHeldTime     = __LMouseHeldTime_x;
+    EQ_ADDRESS_RightMouseHeldTime    = __RMouseHeldTime_x;
 
-    EQ_ADDRESS_POINTER_Group = 0xE5F216;
-    EQ_ADDRESS_GroupCount = 0xE5F21A;
-    EQ_ADDRESS_GroupAggro = 0x1023B1C;
+    EQ_ADDRESS_GroupAggro = __GroupAggro_x;
 
-    EQ_ADDRESS_EQZoneInfo = 0xE6CAE8;
+    EQ_ADDRESS_EQZoneInfo = instEQZoneInfo_x;
 
-    EQ_ADDRESS_FogEnabled          = 0xE6CCBE;
-    EQ_ADDRESS_FogDistanceBegin    = 0xE6CD2C;
-    EQ_ADDRESS_FogDistanceEnd      = 0xE6CD30;
-    EQ_ADDRESS_FarClipPlane        = 0xE6DD7C;
+    EQ_ADDRESS_FogEnabled          = EQ_ADDRESS_EQZoneInfo + EQ_OFFSET_EQZoneInfo_FOG_ENABLED;
+    EQ_ADDRESS_FogDistanceBegin    = EQ_ADDRESS_EQZoneInfo + EQ_OFFSET_EQZoneInfo_FOG_DISTANCE_BEGIN;
+    EQ_ADDRESS_FogDistanceEnd      = EQ_ADDRESS_EQZoneInfo + EQ_OFFSET_EQZoneInfo_FOG_DISTANCE_END;
 
-    EQ_ADDRESS_FUNCTION_CrashDetected                 = 0x694DB0;
-    EQ_ADDRESS_FUNCTION_CollisionCallbackForActors    = 0x50FE90;
-    EQ_ADDRESS_FUNCTION_CastRay                       = 0x58DF60;
-    EQ_ADDRESS_FUNCTION_CastRay2                      = 0x58DFB0;
-    EQ_ADDRESS_FUNCTION_DrawNetStatus                 = 0x6167A0;
-    EQ_ADDRESS_FUNCTION_ExecuteCmd                    = 0x5868F0;
-    EQ_ADDRESS_FUNCTION_GetExecuteCmdIDByName         = 0x58B3F0;
-    EQ_ADDRESS_FUNCTION_GetExecuteCmdNameByID         = 0x58B3E0;
+    EQ_ADDRESS_FUNCTION_CrashDetected                 = CrashDetected_x;
+    EQ_ADDRESS_FUNCTION_CollisionCallbackForActors    = 0x50F340;
+    EQ_ADDRESS_FUNCTION_CastRay                       = __CastRay_x;
+    EQ_ADDRESS_FUNCTION_CastRay2                      = __CastRay2_x;
+    EQ_ADDRESS_FUNCTION_DrawNetStatus                 = DrawNetStatus_x;
+    EQ_ADDRESS_FUNCTION_ExecuteCmd                    = __ExecuteCmd_x;
 
-    EQ_ADDRESS_POINTER_TargetSpawn = 0xE5F1FC;
-    EQ_ADDRESS_POINTER_PlayerSpawn = 0xE5F1A8;
+    EQ_ADDRESS_POINTER_StringTable = pinstStringTable_x;
+    EQ_ADDRESS_FUNCTION_StringTable__getString    = StringTable__getString_x;
 
-    EQ_ADDRESS_POINTER_StringTable = 0xE5F07C;
-    EQ_ADDRESS_FUNCTION_StringTable__getString    = 0x8A1B90;
+    EQ_ADDRESS_POINTER_TargetIndicator = pinstTargetIndicator_x;
+    EQ_ADDRESS_POINTER_PlayerPath = pinstPlayerPath_x;
 
-    EQ_ADDRESS_POINTER_TargetIndicator = 0xF0E1B8;
-    EQ_ADDRESS_POINTER_PlayerPath = 0xF0D400;
+    EQ_ADDRESS_POINTER_PlayerCharacter = pinstCharData_x;
 
-    EQ_ADDRESS_POINTER_EQPlayerManager = 0xF0D368;
-    EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID                = 0x63E350;
-    EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName              = 0x63E370;
-    EQ_ADDRESS_FUNCTION_EQPlayerManager__GetPlayerFromPartialName    = 0x63E400;
+    EQ_ADDRESS_POINTER_PlayerSpawn = pinstLocalPlayer_x;
+    EQ_ADDRESS_POINTER_TargetSpawn = pinstTarget_x;
 
-    EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI    = 0x6322F0;
-    EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight      = 0x646030;
-    EQ_ADDRESS_FUNCTION_EQPlayer__UpdateItemSlot    = 0x637EA0;
-    EQ_ADDRESS_FUNCTION_EQPlayer__IsTargetable      = 0x96A300;
+    EQ_ADDRESS_POINTER_EQPlayerManager = pinstSpawnManager_x;
+    EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID                = EQPlayerManager__GetSpawnByID_x;
+    EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName              = EQPlayerManager__GetSpawnByName_x;
+    EQ_ADDRESS_FUNCTION_EQPlayerManager__GetPlayerFromPartialName    = EQPlayerManager__GetPlayerFromPartialName_x;
 
-    EQ_ADDRESS_POINTER_CXWndManager = 0x169B6C0;
-    EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows    = 0x907BB0;
+    EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI    = 0x630B00;
+    EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight      = PlayerZoneClient__ChangeHeight_x;
+    EQ_ADDRESS_FUNCTION_EQPlayer__UpdateItemSlot    = 0x6366B0;
+    EQ_ADDRESS_FUNCTION_EQPlayer__IsTargetable      = EQPlayer__IsTargetable_x;
 
-    EQ_ADDRESS_POINTER_CEverQuest = 0xF0EC40;
-    EQ_ADDRESS_FUNCTION_CEverQuest__EnterZone       = 0x5D4540;
-    EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd    = 0x5E7240;
-    EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat        = 0x4E1410;
-    EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting    = 0x5CE590;
-    EQ_ADDRESS_FUNCTION_CEverQuest__LMouseUp        = 0x5C3CA0;
-    EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp        = 0x5C4C30;
+    EQ_ADDRESS_POINTER_CXWndManager = pinstCXWndManager_x;
+    EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows    = CXWndManager__DrawWindows_x;
 
-    EQ_ADDRESS_POINTER_CDisplay = 0xE5F410;
-    EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2    = 0x527960;
+    EQ_ADDRESS_POINTER_CEverQuest = pinstCEverQuest_x;
+    EQ_ADDRESS_FUNCTION_CEverQuest__EnterZone       = CEverQuest__EnterZone_x;
+    EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd    = CEverQuest__InterpretCmd_x;
+    EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat        = CEverQuest__dsp_chat_x;
+    EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting    = 0x5CC930;
+    EQ_ADDRESS_FUNCTION_CEverQuest__LMouseUp        = CEverQuest__LMouseUp_x;
+    EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp        = CEverQuest__RMouseUp_x;
 
-    EQ_ADDRESS_POINTER_EQSwitchManager = 0xE5C9C8;
-    EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch      = 0x5BCB70;
-    EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState    = 0x5BD050;
+    EQ_ADDRESS_POINTER_CDisplay = pinstCDisplay_x;
+    EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2         = CDisplay__WriteTextHD2_x;
+    EQ_ADDRESS_FUNCTION_CDisplay__CreatePlayerActor    = 0x525960;
+    EQ_ADDRESS_FUNCTION_CDisplay__DeleteActor          = 0x529D55;
+
+    EQ_ADDRESS_POINTER_EQSwitchManager = pinstSwitchManager_x;
+
+    EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch      = EQSwitch__UseSwitch_x;
+    EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState    = 0x5BB4D0;
 
     EQ_ADDRESS_POINTER_CCamera = 0x0; // calculated at runtime
     EQ_ADDRESS_FUNCTION_CCamera__SetCameraLocation    = 0x0; // calculated at runtime
 
-    EQ_ADDRESS_POINTER_CRender = 0x169C608;
+    EQ_ADDRESS_POINTER_CRender = __DrawHandler_x;
 
-    EQ_ADDRESS_FUNCTION_CXWnd__BringToTop         = 0x904BE0;
-    EQ_ADDRESS_FUNCTION_CXWnd__IsActive           = 0x907B50;
-    EQ_ADDRESS_FUNCTION_CXWnd__IsReallyVisible    = 0x903B40;
+    EQ_ADDRESS_FUNCTION_CXWnd__BringToTop         = CXWnd__BringToTop_x;
+    EQ_ADDRESS_FUNCTION_CXWnd__IsActive           = CXWnd__IsActive_x;
+    EQ_ADDRESS_FUNCTION_CXWnd__IsReallyVisible    = CXWnd__IsReallyVisible_x;
 
-    EQ_ADDRESS_POINTER_CBazaarWnd = 0xDAAF58;
-    EQ_ADDRESS_POINTER_CBazaarConfirmationWnd = 0xDAABC4;
+    EQ_ADDRESS_POINTER_CBazaarWnd = pinstCBazaarWnd_x;
 
-    EQ_ADDRESS_POINTER_CBazaarSearchWnd = 0xDAAE5C;
-    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__HandleBazaarMsg    = 0x6CAF40;
-    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList      = 0x6C7DB0;
-    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery            = 0x6C8640;
-    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem            = 0x6C8B70;
+    EQ_ADDRESS_POINTER_CBazaarConfirmationWnd = pinstCBazaarConfirmationWnd_x;
 
-    EQ_ADDRESS_POINTER_CTaskSelectWnd = 0x1023E08;
+    EQ_ADDRESS_POINTER_CBazaarSearchWnd = pinstCBazaarSearchWnd_x;
+    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__HandleBazaarMsg    = CBazaarSearchWnd__HandleBazaarMsg_x;
+    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList      = 0x6C6890;
+    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery            = 0x6C7120;
+    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem            = 0x6C7650;
+
+    EQ_ADDRESS_POINTER_CTaskSelectWnd = pinstCTaskSelectWnd_x;
 }

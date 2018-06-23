@@ -62,10 +62,18 @@ class EQClass::CDisplay
 {
 public:
     static int __cdecl CDisplay::WriteTextHD2(const char* text, int x, int y, signed int color);
+    uint32_t CDisplay::CreatePlayerActor(uint32_t spawn, int a2, int a3, int a4, int a5, int a6);
+    void CDisplay::DeleteActor(uint32_t cactor);
 };
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQClass::CDisplay::WriteTextHD2(const char* text, int x, int y, signed int color), EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__WriteTextHD2)(void* this_ptr, const char* text, int x, int y, signed int color);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(uint32_t EQClass::CDisplay::CreatePlayerActor(uint32_t spawn, int a2, int a3, int a4, int a5, int a6), EQ_ADDRESS_FUNCTION_CDisplay__CreatePlayerActor);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__CreatePlayerActor)(void* this_ptr, uint32_t spawn, int a2, int a3, int a4, int a5, int a6);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CDisplay::DeleteActor(uint32_t cactor), EQ_ADDRESS_FUNCTION_CDisplay__DeleteActor);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__DeleteActor)(void* this_ptr, uint32_t cactor);
 
 EQClass::CDisplay** EQ_CLASS_POINTER_CDisplay_pptr;
 EQClass::CDisplay* EQ_CLASS_POINTER_CDisplay;

@@ -112,6 +112,7 @@ void EQAPP_Load()
     EQAPP_Lua_Load();
     EQAPP_SpellList_Load();
     EQAPP_ActorCollision_Load();
+    EQAPP_WaypointList_Load();
 
     if (g_WindowTitleIsEnabled == true)
     {

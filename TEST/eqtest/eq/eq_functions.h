@@ -32,12 +32,6 @@ typedef int (__cdecl* EQ_FUNCTION_TYPE_CastRay)(uint32_t spawn, float y, float x
 EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQ_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive, void* unknown, int zero), EQ_ADDRESS_FUNCTION_ExecuteCmd);
 typedef int (__cdecl* EQ_FUNCTION_TYPE_ExecuteCmd)(uint32_t commandID, int isActive, void* unknown, int zero);
 
-EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQ_FUNCTION_GetExecuteCmdIDByName(const char* commandName), EQ_ADDRESS_FUNCTION_GetExecuteCmdIDByName);
-typedef int (__cdecl* EQ_FUNCTION_TYPE_GetExecuteCmdIDByName)(const char* commandName);
-
-EQ_MACRO_FUNCTION_FunctionAtAddress(char* __cdecl EQ_FUNCTION_GetExecuteCmdNameByID(int commandID), EQ_ADDRESS_FUNCTION_GetExecuteCmdNameByID);
-typedef char* (__cdecl* EQ_FUNCTION_TYPE_GetExecuteCmdNameByID)(int commandID);
-
 /* function prototypes */
 
 void EQ_Log(const char* text);
@@ -106,11 +100,12 @@ bool EQ_IsFogEnabled();
 void EQ_SetFog(bool b);
 float EQ_GetFogDistanceBegin();
 float EQ_GetFogDistanceEnd();
-uint32_t EQ_GetFarClipPlane();
 void EQ_SetFogDistanceBegin(float distance);
 void EQ_SetFogDistanceEnd(float distance);
-void EQ_SetFarClipPlane(uint32_t value);
-void EQ_SetFarClipPlanePercent(uint32_t percent);
+
+uint32_t EQ_GetPlayerCharacter();
+
+uint32_t EQ_GetGroup();
 
 uint32_t EQ_GetSpawnByID(uint32_t spawnID);
 uint32_t EQ_GetSpawnByName(const char* spawnName);
@@ -238,9 +233,6 @@ void EQ_TurnPlayerAwayFromTarget();
 
 void EQ_InterpretCommand(const char* text);
 void EQ_ExecuteCommand(uint32_t commandID, int isActive);
-void EQ_ExecuteCommandEx(const char* commandName, int isActive);
-uint32_t EQ_GetExecuteCommandIDByName(const char* commandName);
-std::string EQ_GetExecuteCommandNameByID(uint32_t commandID);
 
 void EQ_PrintTextToChat(const char* text);
 void EQ_PrintTextToChatEx(const char* text, int color);
@@ -851,11 +843,6 @@ float EQ_GetFogDistanceEnd()
     return EQ_ReadMemory<float>(EQ_ADDRESS_FogDistanceEnd);
 }
 
-uint32_t EQ_GetFarClipPlane()
-{
-    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_FarClipPlane);
-}
-
 void EQ_SetFogDistanceBegin(float distance)
 {
     EQ_WriteMemory<float>(EQ_ADDRESS_FogDistanceBegin, distance);
@@ -866,44 +853,20 @@ void EQ_SetFogDistanceEnd(float distance)
     EQ_WriteMemory<float>(EQ_ADDRESS_FogDistanceEnd, distance);
 }
 
-void EQ_SetFarClipPlane(uint32_t value)
+uint32_t EQ_GetPlayerCharacter()
 {
-    if (value >= EQ_FAR_CLIP_PLANE_MIN && value <= EQ_FAR_CLIP_PLANE_MAX)
-    {
-        EQ_WriteMemory<uint32_t>(EQ_ADDRESS_FarClipPlane, value);
-    }
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_PlayerCharacter);
 }
 
-void EQ_SetFarClipPlanePercent(uint32_t percent)
+uint32_t EQ_GetGroup()
 {
-    uint32_t value = 100;
-
-    if (percent > 0)
+    auto playerCharacter =EQ_GetPlayerCharacter();
+    if (playerCharacter == NULL)
     {
-        if (percent > 100)
-        {
-            value = 100;
-        }
-        else
-        {
-            if (EQ_FAR_CLIP_PLANE_MAX > 0)
-            {
-                uint32_t percentPerValue = 100 / EQ_FAR_CLIP_PLANE_MAX;
-
-                value = percent / percentPerValue;
-            }
-            else
-            {
-                value = 0;
-            }
-        }
-    }
-    else
-    {
-        value = 0;
+        return NULL;
     }
 
-    EQ_WriteMemory<uint32_t>(EQ_ADDRESS_FarClipPlane, value);
+    return EQ_ReadMemory<uint32_t>(playerCharacter + EQ_OFFSET_CHARACTER_GROUP);
 }
 
 uint32_t EQ_GetSpawnByID(uint32_t spawnID)
@@ -1045,14 +1008,39 @@ std::string EQ_GetTargetSpawnLastName()
 
 uint32_t EQ_GetGroupCount()
 {
-    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_GroupCount);
+    auto group = EQ_GetGroup();
+    if (group == NULL)
+    {
+        return 0;
+    }
+
+    uint32_t groupCount = 0;
+
+    for (size_t i = 0; i < EQ_NUM_GROUP_MEMBERS; i++)
+    {
+        auto groupMember = EQ_ReadMemory<uint32_t>(group + EQ_OFFSET_Group_GROUP_MEMBERS + (i * 0x04));
+        if (groupMember == NULL)
+        {
+            continue;
+        }
+
+        auto groupMemberSpawn = EQ_ReadMemory<uint32_t>(groupMember + EQ_OFFSET_GROUP_MEMBER_SPAWN);
+        if (groupMemberSpawn == NULL)
+        {
+            continue;
+        }
+
+        groupCount++;
+    }
+
+    return groupCount;
 }
 
 std::vector<uint32_t> EQ_GetGroupMemberSpawnList()
 {
     std::vector<uint32_t> groupMemberSpawnList;
 
-    auto group = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_Group);
+    auto group = EQ_GetGroup();
     if (group == NULL)
     {
         return groupMemberSpawnList;
@@ -1085,7 +1073,7 @@ uint32_t EQ_GetGroupMemberSpawn(uint32_t index)
         return NULL;
     }
 
-    auto group = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_Group);
+    auto group =  EQ_GetGroup();
     if (group == NULL)
     {
         return NULL;
@@ -1102,7 +1090,7 @@ uint32_t EQ_GetGroupMemberSpawn(uint32_t index)
 
 uint32_t EQ_GetGroupLeaderSpawn()
 {
-    auto group = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_Group);
+    auto group = EQ_GetGroup();
     if (group == NULL)
     {
         return NULL;
@@ -1978,28 +1966,6 @@ void EQ_InterpretCommand(const char* text)
 void EQ_ExecuteCommand(uint32_t commandID, int isActive)
 {
     EQ_FUNCTION_ExecuteCmd(commandID, isActive, 0, 0);
-}
-
-void EQ_ExecuteCommandEx(const char* commandName, int isActive)
-{
-    uint32_t commandID = EQ_FUNCTION_GetExecuteCmdIDByName(commandName);
-
-    EQ_ExecuteCommand(commandID, isActive);
-}
-
-uint32_t EQ_GetExecuteCommandIDByName(const char* commandName)
-{
-    return EQ_FUNCTION_GetExecuteCmdIDByName(commandName);
-}
-
-std::string EQ_GetExecuteCommandNameByID(uint32_t commandID)
-{
-    if (commandID > EQ_EXECUTECMD_ID_MAX)
-    {
-        return "UNKNOWN";
-    }
-
-    return EQ_FUNCTION_GetExecuteCmdNameByID(commandID);
 }
 
 void EQ_PrintTextToChat(const char* text)
