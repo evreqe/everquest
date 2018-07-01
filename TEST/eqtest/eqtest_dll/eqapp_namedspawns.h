@@ -37,7 +37,7 @@ void EQAPP_NamedSpawns_Load()
     std::string zoneShortName = EQ_GetZoneShortName();
     if (zoneShortName.size() == 0)
     {
-        EQAPP_PrintDebugText(__FUNCTION__, "zoneShortName.size() == 0");
+        EQAPP_PrintDebugText(__FUNCTION__, "zone short name is null");
         return;
     }
 

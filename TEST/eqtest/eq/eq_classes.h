@@ -22,6 +22,7 @@ namespace EQClass
     class CBazaarConfirmationWnd;
     class CBazaarSearchWnd;
     class CTaskSelectWnd;
+    class CLargeDialogWnd;
 
     // EQGraphicsDX9.dll
     class CCamera;
@@ -238,6 +239,19 @@ EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CTaskSelectWnd::WndNotif
 
 EQClass::CTaskSelectWnd** EQ_CLASS_POINTER_CTaskSelectWnd_pptr;
 EQClass::CTaskSelectWnd* EQ_CLASS_POINTER_CTaskSelectWnd;
+
+/* CLargeDialogWnd */
+
+class EQClass::CLargeDialogWnd
+{
+public:
+    int CLargeDialogWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
+};
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CLargeDialogWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
+
+EQClass::CLargeDialogWnd** EQ_CLASS_POINTER_CLargeDialogWnd_pptr;
+EQClass::CLargeDialogWnd* EQ_CLASS_POINTER_CLargeDialogWnd;
 
 /* CCamera */
 

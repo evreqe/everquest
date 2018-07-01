@@ -299,6 +299,16 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set("EQ_HEADING_MIN", EQ_HEADING_MIN);
     state->set("EQ_HEADING_MAX", EQ_HEADING_MAX);
     state->set("EQ_HEADING_MAX_HALF", EQ_HEADING_MAX_HALF);
+    state->set("EQ_HEADING_MAX_QUARTER", EQ_HEADING_MAX_QUARTER);
+
+    state->set("EQ_HEADING_NORTH", EQ_HEADING_NORTH);
+    state->set("EQ_HEADING_NORTH_WEST", EQ_HEADING_NORTH_WEST);
+    state->set("EQ_HEADING_WEST", EQ_HEADING_WEST);
+    state->set("EQ_HEADING_SOUTH_WEST", EQ_HEADING_SOUTH_WEST);
+    state->set("EQ_HEADING_SOUTH", EQ_HEADING_SOUTH);
+    state->set("EQ_HEADING_SOUTH_EAST", EQ_HEADING_SOUTH_EAST);
+    state->set("EQ_HEADING_EAST", EQ_HEADING_EAST);
+    state->set("EQ_HEADING_NORTH_EAST", EQ_HEADING_NORTH_EAST);
 
     state->set("EQ_SPAWN_PITCH_DEFAULT", EQ_SPAWN_PITCH_DEFAULT);
     state->set("EQ_SPAWN_PITCH_MIN", EQ_SPAWN_PITCH_MIN);
@@ -353,6 +363,14 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set("EQ_SPAWN_TYPE_PLAYER", EQ_SPAWN_TYPE_PLAYER);
     state->set("EQ_SPAWN_TYPE_NPC", EQ_SPAWN_TYPE_NPC);
     state->set("EQ_SPAWN_TYPE_CORPSE", EQ_SPAWN_TYPE_CORPSE);
+
+    state->set("EQ_GRAVITY_TYPE_GROUND", EQ_GRAVITY_TYPE_GROUND);
+    state->set("EQ_GRAVITY_TYPE_FLYING", EQ_GRAVITY_TYPE_FLYING);
+    state->set("EQ_GRAVITY_TYPE_LEVITATING", EQ_GRAVITY_TYPE_LEVITATING);
+    state->set("EQ_GRAVITY_TYPE_SWIMMING", EQ_GRAVITY_TYPE_SWIMMING);
+    state->set("EQ_GRAVITY_TYPE_RIDING_VEHICLE", EQ_GRAVITY_TYPE_RIDING_VEHICLE);
+    state->set("EQ_GRAVITY_TYPE_SINKING_TO_GROUND", EQ_GRAVITY_TYPE_SINKING_TO_GROUND);
+    state->set("EQ_GRAVITY_TYPE_DEFAULT", EQ_GRAVITY_TYPE_DEFAULT);
 
     state->set("EQ_ACTOR_TYPE_UNDEFINED", EQ_ACTOR_TYPE_UNDEFINED);
     state->set("EQ_ACTOR_TYPE_CORPSE", EQ_ACTOR_TYPE_CORPSE);
@@ -1822,6 +1840,7 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_GetSpawnEnduranceMax", EQ_GetSpawnEnduranceMax);
     state->set_function("EQ_GetSpawnEndurancePercent", EQ_GetSpawnEndurancePercent);
     state->set_function("EQ_GetSpawnFollowSpawn", EQ_GetSpawnFollowSpawn);
+    state->set_function("EQ_GetSpawnGravityType", EQ_GetSpawnGravityType);
     state->set_function("EQ_GetSpawnDirection", EQ_GetSpawnDirection);
 
     state->set_function("EQ_SetSpawnAreaFriction", EQ_SetSpawnAreaFriction);
@@ -1830,6 +1849,16 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_SetSpawnPitch", EQ_SetSpawnPitch);
     state->set_function("EQ_SetSpawnHeight", EQ_SetSpawnHeight);
     state->set_function("EQ_SetSpawnFollowSpawn", EQ_SetSpawnFollowSpawn);
+    state->set_function("EQ_SetSpawnGravityType", EQ_SetSpawnGravityType);
+
+    state->set_function("EQ_SetPlayerSpawnHeadingNorth", EQ_SetPlayerSpawnHeadingNorth);
+    state->set_function("EQ_SetPlayerSpawnHeadingNorthWest", EQ_SetPlayerSpawnHeadingNorthWest);
+    state->set_function("EQ_SetPlayerSpawnHeadingWest", EQ_SetPlayerSpawnHeadingWest);
+    state->set_function("EQ_SetPlayerSpawnHeadingSouthWest", EQ_SetPlayerSpawnHeadingSouthWest);
+    state->set_function("EQ_SetPlayerSpawnHeadingSouth", EQ_SetPlayerSpawnHeadingSouth);
+    state->set_function("EQ_SetPlayerSpawnHeadingSouthEast", EQ_SetPlayerSpawnHeadingSouthEast);
+    state->set_function("EQ_SetPlayerSpawnHeadingEast", EQ_SetPlayerSpawnHeadingEast);
+    state->set_function("EQ_SetPlayerSpawnHeadingNorthEast", EQ_SetPlayerSpawnHeadingNorthEast);
 
     state->set_function("EQ_SetSpawnItemSlot", EQ_SetSpawnItemSlot);
     state->set_function("EQ_SetSpawnItemSlotPrimary", EQ_SetSpawnItemSlotPrimary);
@@ -1926,4 +1955,9 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_TaskSelectWindow_IsOpen", EQ_TaskSelectWindow_IsOpen);
     state->set_function("EQ_TaskSelectWindow_ClickAcceptButton", EQ_TaskSelectWindow_ClickAcceptButton);
     state->set_function("EQ_TaskSelectWindow_ClickDeclineButton", EQ_TaskSelectWindow_ClickDeclineButton);
+
+    state->set_function("EQ_LargeDialogWindow_IsOpen", EQ_LargeDialogWindow_IsOpen);
+    state->set_function("EQ_LargeDialogWindow_ClickOKButton", EQ_LargeDialogWindow_ClickOKButton);
+    state->set_function("EQ_LargeDialogWindow_ClickYesButton", EQ_LargeDialogWindow_ClickYesButton);
+    state->set_function("EQ_LargeDialogWindow_ClickNoButton", EQ_LargeDialogWindow_ClickNoButton);
 }

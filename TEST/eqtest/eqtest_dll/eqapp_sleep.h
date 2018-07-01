@@ -2,7 +2,8 @@
 
 bool g_SleepIsEnabled = false;
 
-uint32_t g_SleepInterval = 100; // delay in milliseconds
+uint32_t g_SleepIntervalForeground = 100; // delay in milliseconds
+uint32_t g_SleepIntervalBackground = 100; // delay in milliseconds
 
 void EQAPP_Sleep_Toggle();
 void EQAPP_Sleep_On();
@@ -33,5 +34,12 @@ void EQAPP_Sleep_Off()
 
 void EQAPP_Sleep_Execute()
 {
-    Sleep(g_SleepInterval);
+    if (EQAPP_IsForegroundWindowCurrentProcessID() == true)
+    {
+        Sleep(g_SleepIntervalForeground);
+    }
+    else
+    {
+        Sleep(g_SleepIntervalBackground);
+    }
 }

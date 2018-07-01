@@ -3,6 +3,8 @@
 #@Saddle
 
 ##### Bags #####
+Scuffed Travelers's Rucksack
+Scuffed Journeyman's Rucksack
 Scuffed Journeyman's Pocketed Rucksack
 Caravan Satchel
 Chest of Empires
@@ -11,17 +13,21 @@ Enameled Box
 Cleansing Steam Satchel
 
 ##### Prizes #####
-Prize: Ping's Poignant Potion Pack
-Prize: Ping's Practical Potion Pack
-Prize: Ping's Prodigious Potion Pack
+#Prize: Ping's Poignant Potion Pack
+#Prize: Ping's Practical Potion Pack
+#Prize: Ping's Prodigious Potion Pack
 Prize: Scale of Rodcet Nife
-Prize: Tear of Tranquility
+Prize: Kiss of Erollisi Marr
+#Prize: Tear of Tranquility
 Prize: Chalandria's Fang
-Prize: Fiery Dragonhide Pack
+#Prize: Fiery Dragonhide Pack
+@Mechamatic Blueprint
+#{Contract of the
+#}Contract
 
 ##### Augments #####
-Tavon's Burnished Gemstone
-Tavon's Polished Gemstone
+#Tavon's Burnished Gemstone
+#Tavon's Polished Gemstone
 #Stone of Tranquility
 #Oath of Marr
 Extra Planar Potential Shard
@@ -49,7 +55,7 @@ Amulet of Necropotence
 Inscrutable Talisman
 Ancient Cloak of Flames
 Shield of Striding
-Rocketeer Boots
+#Rocketeer Boots
 Draught of Adventure
 #Golden Ticket
 #Shrunken Goblin Skull Earring
@@ -59,7 +65,7 @@ Draught of Adventure
 
 ##### Conflagrant #####
 #{Conflagrant
-#{Wrapped Conflagrant
+{Wrapped Conflagrant
 #{Athletic Conflagrant
 #{Fleet Conflagrant
 #{Ingenious Conflagrant
@@ -68,22 +74,22 @@ Draught of Adventure
 #{Summoner's Conflagrant
 #{Vital Conflagrant
 #}'s Conflagrant
-#{Arcanist's Conflagrant
+{Arcanist's Conflagrant
 #{Arch Convoker's Conflagrant
 #{Arch Lich's Conflagrant
-#{Archon's Conflagrant
+{Archon's Conflagrant
 #{Coercer's Conflagrant
 #{Deceiver's Conflagrant
-#{Dread Suzerain's Conflagrant
+{Dread Suzerain's Conflagrant
 #{Feral Lord's Conflagrant
 #{Forest Stalker's Conflagrant
 #{Fury's Conflagrant
-#{Maestro's Conflagrant
+{Maestro's Conflagrant
 #{Overlord's Conflagrant
-#{Prophet's Conflagrant
+{Prophet's Conflagrant
 #{Storm Warden's Conflagrant
-#{Suzerain Protector's Conflagrant
-#{Transcendent's Conflagrant
+{Suzerain Protector's Conflagrant
+{Transcendent's Conflagrant
 
 ##### Armor Turn In #####
 #{Fear Touched

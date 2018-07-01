@@ -20,6 +20,7 @@ void EQAPP_ActorCollision_Debug_Toggle();
 void EQAPP_ActorCollision_All_Toggle();
 void EQAPP_ActorCollision_Player_Toggle();
 void EQAPP_ActorCollision_Load();
+void EQAPP_ActorCollision_PrintActorDefinitionList();
 void EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor);
 bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors_Player(uint32_t cactor);
 
@@ -101,6 +102,8 @@ void EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor
 
         auto actorType = EQ_ReadMemory<uint32_t>(cactor + EQ_OFFSET_CActor_ACTOR_TYPE);
 
+        auto actorCollisionScale = EQ_ReadMemory<float>(cactor + EQ_OFFSET_CActor_COLLISION_SCALE);
+
         float screenX = -1.0f;
         float screenY = -1.0f;
         bool result = EQ_WorldLocationToScreenLocation(actorY, actorX, actorZ, screenX, screenY);
@@ -109,11 +112,15 @@ void EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor
             fmt::MemoryWriter espText;
             espText << "[Actor] " << actorDefinitionName;
 
+            espText << "\nAddress: 0x" << fmt::hex(cactor);
+
             espText << "\nType: " << actorType;
 
             espText << "\nY: " << actorY;
             espText << "\nX: " << actorX;
             espText << "\nZ: " << actorZ;
+
+            espText << "\nC: " << actorCollisionScale;
 
             EQ_DrawTextByColor(espText.c_str(), (int)screenX, (int)screenY, EQ_DRAW_TEXT_COLOR_WHITE);
         }
@@ -124,6 +131,8 @@ void EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor
         if (strcmp(actorDefinitionName, actorDefinitionListName.c_str()) == 0)
         {
             EQ_WriteMemory<float>(cactor + EQ_OFFSET_CActor_COLLISION_SCALE, 0.0f); // no collision
+
+            break;
         }
     }
 }
@@ -162,4 +171,14 @@ bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors_Player(uint32_t
     }
 
     return false;
+}
+
+void EQAPP_ActorCollision_PrintActorDefinitionList()
+{
+    std::cout << "Actor Collision Actor Definition List:" << std::endl;
+
+    for (auto& actorDefinition : g_ActorCollisionActorDefinitionList)
+    {
+        std::cout << actorDefinition << std::endl;
+    }
 }

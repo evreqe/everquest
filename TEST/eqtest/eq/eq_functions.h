@@ -208,6 +208,7 @@ uint32_t EQ_GetSpawnEnduranceCurrent(uint32_t spawn);
 uint32_t EQ_GetSpawnEnduranceMax(uint32_t spawn);
 uint32_t EQ_GetSpawnEndurancePercent(uint32_t spawn);
 uint32_t EQ_GetSpawnFollowSpawn(uint32_t spawn);
+uint32_t EQ_GetSpawnGravityType(uint32_t spawn);
 uint32_t EQ_GetSpawnDirection(uint32_t spawn);
 
 void EQ_SetSpawnAreaFriction(uint32_t spawn, float friction);
@@ -216,6 +217,16 @@ void EQ_SetSpawnHeading(uint32_t spawn, float heading);
 void EQ_SetSpawnPitch(uint32_t spawn, float pitch);
 void EQ_SetSpawnHeight(uint32_t spawn, float height);
 void EQ_SetSpawnFollowSpawn(uint32_t spawn, uint32_t followSpawn);
+void EQ_SetSpawnGravityType(uint32_t spawn, uint32_t gravityType);
+
+void EQ_SetPlayerSpawnHeadingNorth();
+void EQ_SetPlayerSpawnHeadingNorthWest();
+void EQ_SetPlayerSpawnHeadingWest();
+void EQ_SetPlayerSpawnHeadingSouthWest();
+void EQ_SetPlayerSpawnHeadingSouth();
+void EQ_SetPlayerSpawnHeadingSouthEast();
+void EQ_SetPlayerSpawnHeadingEast();
+void EQ_SetPlayerSpawnHeadingNorthEast();
 
 bool EQ_SetSpawnItemSlot(uint32_t spawn, uint32_t updateItemSlot, const char* itemDefinition);
 bool EQ_SetSpawnItemSlotPrimary(uint32_t spawn, const char* itemDefinition);
@@ -323,6 +334,11 @@ bool EQ_BazaarSearchWindow_ClickResetButton();
 bool EQ_TaskSelectWindow_IsOpen();
 bool EQ_TaskSelectWindow_ClickAcceptButton();
 bool EQ_TaskSelectWindow_ClickDeclineButton();
+
+bool EQ_LargeDialogWindow_IsOpen();
+bool EQ_LargeDialogWindow_ClickOKButton();
+bool EQ_LargeDialogWindow_ClickYesButton();
+bool EQ_LargeDialogWindow_ClickNoButton();
 
 /* functions */
 
@@ -1744,6 +1760,11 @@ uint32_t EQ_GetSpawnFollowSpawn(uint32_t spawn)
     return EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_FOLLOW_SPAWN);
 }
 
+uint32_t EQ_GetSpawnGravityType(uint32_t spawn)
+{
+    return EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_GRAVITY_TYPE);
+}
+
 uint32_t EQ_GetSpawnDirection(uint32_t spawn)
 {
     float spawnHeading = EQ_GetSpawnHeading(spawn);
@@ -1844,6 +1865,99 @@ void EQ_SetSpawnHeight(uint32_t spawn, float height)
 void EQ_SetSpawnFollowSpawn(uint32_t spawn, uint32_t followSpawn)
 {
     EQ_WriteMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_FOLLOW_SPAWN, followSpawn);
+}
+
+void EQ_SetSpawnGravityType(uint32_t spawn, uint32_t gravityType)
+{
+    EQ_WriteMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_GRAVITY_TYPE, gravityType);
+}
+
+void EQ_SetPlayerSpawnHeadingNorth()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    EQ_SetSpawnHeading(playerSpawn, EQ_HEADING_NORTH);
+}
+
+void EQ_SetPlayerSpawnHeadingNorthWest()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    EQ_SetSpawnHeading(playerSpawn, EQ_HEADING_NORTH_WEST);
+}
+
+void EQ_SetPlayerSpawnHeadingWest()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    EQ_SetSpawnHeading(playerSpawn, EQ_HEADING_WEST);
+}
+
+void EQ_SetPlayerSpawnHeadingSouthWest()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    EQ_SetSpawnHeading(playerSpawn, EQ_HEADING_SOUTH_WEST);
+}
+
+void EQ_SetPlayerSpawnHeadingSouth()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    EQ_SetSpawnHeading(playerSpawn, EQ_HEADING_SOUTH);
+}
+
+void EQ_SetPlayerSpawnHeadingSouthEast()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    EQ_SetSpawnHeading(playerSpawn, EQ_HEADING_SOUTH_EAST);
+}
+
+void EQ_SetPlayerSpawnHeadingEast()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    EQ_SetSpawnHeading(playerSpawn, EQ_HEADING_EAST);
+}
+
+void EQ_SetPlayerSpawnHeadingNorthEast()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    EQ_SetSpawnHeading(playerSpawn, EQ_HEADING_NORTH_EAST);
 }
 
 bool EQ_SetSpawnItemSlot(uint32_t spawn, uint32_t updateItemSlot, const char* itemDefinition)
@@ -2751,21 +2865,6 @@ bool EQ_CXWnd_ClickButton(uint32_t cxwndAddressPointer, uint32_t cxwndButtonOffs
     return true;
 }
 
-bool EQ_TaskSelectWindow_IsOpen()
-{
-    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CTaskSelectWnd) == true);
-}
-
-bool EQ_TaskSelectWindow_ClickAcceptButton()
-{
-    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CTaskSelectWnd, EQ_OFFSET_CTaskSelectWnd_BUTTON_ACCEPT);
-}
-
-bool EQ_TaskSelectWindow_ClickDeclineButton()
-{
-    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CTaskSelectWnd, EQ_OFFSET_CTaskSelectWnd_BUTTON_DECLINE);
-}
-
 bool EQ_BazaarSearchWindow_IsOpen()
 {
     return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CBazaarSearchWnd) == true);
@@ -3126,4 +3225,39 @@ bool EQ_BazaarWindow_ClickBeginTraderButton()
 bool EQ_BazaarWindow_ClickEndTraderButton()
 {
     return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CBazaarWnd, EQ_OFFSET_CBazaarWnd_BUTTON_END_TRADER);
+}
+
+bool EQ_TaskSelectWindow_IsOpen()
+{
+    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CTaskSelectWnd) == true);
+}
+
+bool EQ_TaskSelectWindow_ClickAcceptButton()
+{
+    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CTaskSelectWnd, EQ_OFFSET_CTaskSelectWnd_BUTTON_ACCEPT);
+}
+
+bool EQ_TaskSelectWindow_ClickDeclineButton()
+{
+    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CTaskSelectWnd, EQ_OFFSET_CTaskSelectWnd_BUTTON_DECLINE);
+}
+
+bool EQ_LargeDialogWindow_IsOpen()
+{
+    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CLargeDialogWnd) == true);
+}
+
+bool EQ_LargeDialogWindow_ClickOKButton()
+{
+    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CLargeDialogWnd, EQ_OFFSET_CLargeDialogWnd_BUTTON_OK);
+}
+
+bool EQ_LargeDialogWindow_ClickYesButton()
+{
+    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CLargeDialogWnd, EQ_OFFSET_CLargeDialogWnd_BUTTON_YES);
+}
+
+bool EQ_LargeDialogWindow_ClickNoButton()
+{
+    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CLargeDialogWnd, EQ_OFFSET_CLargeDialogWnd_BUTTON_NO);
 }

@@ -1,5 +1,4 @@
 function OnFrame()
-
     local playerSpawn = EQ_GetPlayerSpawn()
     if playerSpawn == 0 then
         return
@@ -14,9 +13,6 @@ function OnFrame()
         playerZoneID == EQ_ZONE_ID_BAZAAR or
         playerZoneID == EQ_ZONE_ID_NEXUS
     then
-
         EQ_UseDoorOnCollision()
-
     end
-
 end

@@ -128,11 +128,6 @@ void EQAPP_AutoAlternateAbility_Execute()
         }
     }
 
-    for (auto& alternateAbility : alternateAbilityList)
-    {
-        EQ_UseAlternateAbility(alternateAbility);
-    }
-
     if (playerSpawnClass == EQ_CLASS_CLERIC)
     {
         if (playerSpawnHPPercent < 75)
@@ -209,6 +204,11 @@ void EQAPP_AutoAlternateAbility_Execute()
             alternateAbilityList.push_back(EQAlternateAbilities::Warrior::Warlords_Resurgence);
             alternateAbilityList.push_back(EQAlternateAbilities::Warrior::Warlords_Tenacity);
         }
+    }
+
+    for (auto& alternateAbility : alternateAbilityList)
+    {
+        EQ_UseAlternateAbility(alternateAbility);
     }
 }
 

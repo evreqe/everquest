@@ -2,11 +2,11 @@
 
 #include "eqapp_alwaysattack.h"
 #include "eqapp_alwayshotbutton.h"
-#include "eqapp_autoalternateability.h"
+////#include "eqapp_autoalternateability.h"
 #include "eqapp_autogroup.h"
 #include "eqapp_boxchat.h"
 #include "eqapp_changeheight.h"
-#include "eqapp_combatalternateability.h"
+////#include "eqapp_combatalternateability.h"
 #include "eqapp_combathotbutton.h"
 #include "eqapp_console.h"
 #include "eqapp_esp.h"
@@ -245,22 +245,24 @@ void EQAPP_Detours_Unload()
 
 void EQAPP_Detours_OnEnterZone()
 {
-    g_FreeCameraIsEnabled = false;
-
     g_AutoGroupIsInvited = false;
 
-    g_EQAppIsInGame = true;
+    EQAPP_FreeCamera_Off();
+    EQAPP_FollowPath_Off();
 
     EQAPP_ActorCollision_Load();
-
     EQAPP_WaypointList_Load();
+    EQAPP_NamedSpawns_Load();
+
+    g_EQAppIsInGame = true;
 }
 
 void EQAPP_Detours_OnLeaveZone()
 {
-    g_FreeCameraIsEnabled = false;
-
     g_AutoGroupIsInvited = false;
+
+    EQAPP_FreeCamera_Off();
+    EQAPP_FollowPath_Off();
 
     g_EQAppIsInGame = false;
 }
@@ -350,29 +352,29 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
 
     if (g_BoxChatIsEnabled == true)
     {
-        if (g_BoxChatIsConnected == true)
+        if (g_BazaarBotIsEnabled == true)
         {
-            if (g_BazaarBotIsEnabled == false)
+            EQAPP_BoxChat_DisconnectEx();
+        }
+        else
+        {
+            if (g_BoxChatIsConnected == true)
             {
                 EQAPP_BoxChat_Execute();
             }
             else
             {
-                g_BoxChatInterpretCommandList.clear();
-            }
-        }
-        else
-        {
-            if (g_BoxChatAutoConnectIsEnabled == true)
-            {
-                if (EQAPP_Timer_HasTimeElapsed(g_BoxChatAutoConnectTimer, g_BoxChatAutoConnectTimerInterval) == true)
+                if (g_BoxChatAutoConnectIsEnabled == true)
                 {
-                    if (EQAPP_BoxChat_IsServerRunning() == true)
+                    if (EQAPP_Timer_HasTimeElapsed(g_BoxChatAutoConnectTimer, g_BoxChatAutoConnectTimerInterval) == true)
                     {
-                        std::string playerSpawnName = EQ_GetPlayerSpawnName();
-                        if (playerSpawnName.size() != 0)
+                        if (EQAPP_BoxChat_IsServerRunning() == true)
                         {
-                            EQAPP_BoxChat_Connect(playerSpawnName);
+                            std::string playerSpawnName = EQ_GetPlayerSpawnName();
+                            if (playerSpawnName.size() != 0)
+                            {
+                                EQAPP_BoxChat_Connect(playerSpawnName);
+                            }
                         }
                     }
                 }
@@ -420,15 +422,15 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
         EQAPP_CombatHotButton_Execute();
     }
 
-    if (g_AutoAlternateAbilityIsEnabled == true)
-    {
-        EQAPP_AutoAlternateAbility_Execute();
-    }
+    ////if (g_AutoAlternateAbilityIsEnabled == true)
+    ////{
+        ////EQAPP_AutoAlternateAbility_Execute();
+    ////}
 
-    if (g_CombatAlternateAbilityIsEnabled == true)
-    {
-        EQAPP_CombatAlternateAbility_Execute();
-    }
+    ////if (g_CombatAlternateAbilityIsEnabled == true)
+    ////{
+        ////EQAPP_CombatAlternateAbility_Execute();
+    ////}
 
     if (g_ChangeHeightIsEnabled == true)
     {
@@ -438,6 +440,11 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
     if (g_FollowPathIsEnabled == true)
     {
         EQAPP_FollowPath_Execute();
+    }
+
+    if (g_WaypointIsEnabled == true && g_WaypointFollowPathIsEnabled == true)
+    {
+        EQAPP_Waypoint_FollowPath(g_WaypointFollowPathIndexList);
     }
 
     if (g_LuaIsEnabled == true)

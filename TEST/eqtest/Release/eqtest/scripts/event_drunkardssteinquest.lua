@@ -1,6 +1,5 @@
 -- Drunkard's Stein anniversary quest
 function OnChatText(chatText, chatTextColor)
-
     local targetSpawn = EQ_GetTargetSpawn()
     if targetSpawn == 0 then
         return
@@ -38,5 +37,4 @@ function OnChatText(chatText, chatTextColor)
     if string.find(chatText, "reminds me of my lovely Brasse.") then
        EQ_InterpretCommand("/say reminds me of my lovely Brasse.")
     end
-
 end

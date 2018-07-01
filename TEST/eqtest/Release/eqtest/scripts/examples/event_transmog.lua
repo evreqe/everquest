@@ -28,7 +28,7 @@ function OnUpdateItemSlot(updateItemSlot, itemDefinition)
 
         if updateItemSlot == EQ_UPDATE_ITEM_SLOT_SECONDARY then
             -- return 1, "IT10015" -- epic sec
-            return 1, "IT10736" -- epic 1.5
+            -- return 1, "IT10736" -- epic 1.5
         end
 
     end

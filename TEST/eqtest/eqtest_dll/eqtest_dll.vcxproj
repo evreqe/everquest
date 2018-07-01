@@ -175,13 +175,11 @@
     <ClInclude Include="eqapp_addresses.h" />
     <ClInclude Include="eqapp_alwaysattack.h" />
     <ClInclude Include="eqapp_alwayshotbutton.h" />
-    <ClInclude Include="eqapp_autoalternateability.h" />
     <ClInclude Include="eqapp_autogroup.h" />
     <ClInclude Include="eqapp_bazaarbot.h" />
     <ClInclude Include="eqapp_bazaarfilter.h" />
     <ClInclude Include="eqapp_boxchat.h" />
     <ClInclude Include="eqapp_changeheight.h" />
-    <ClInclude Include="eqapp_combatalternateability.h" />
     <ClInclude Include="eqapp_combathotbutton.h" />
     <ClInclude Include="eqapp_console.h" />
     <ClInclude Include="eqapp_detours.h" />

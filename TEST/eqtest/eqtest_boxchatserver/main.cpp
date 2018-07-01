@@ -269,7 +269,10 @@ int main(int argc , char *argv[])
 
                     for (auto& token : recvTokens)
                     {
-                        std::cout << "#" << clientName[i] << " (" << clientChannel[i] << "): " << token << std::endl;
+                        if (token != "$KeepAlive")
+                        {
+                            std::cout << "#" << clientName[i] << " (" << clientChannel[i] << "): " << token << std::endl;
+                        }
 
                         std::vector<std::string> textTokens = EQ_BCS_SplitString(token, ' ');
 

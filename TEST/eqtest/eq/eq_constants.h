@@ -13,9 +13,19 @@ const float EQ_PI = 3.14159265358979f;
 
 const float EQ_ZONE_GRAVITY_DEFAULT = 0.400000006f;
 
-const float EQ_HEADING_MIN         = 0.0f;
-const float EQ_HEADING_MAX         = 512.0f;
-const float EQ_HEADING_MAX_HALF    = 256.0f;
+const float EQ_HEADING_MIN            = 0.0f;
+const float EQ_HEADING_MAX            = 512.0f;
+const float EQ_HEADING_MAX_HALF       = 256.0f;
+const float EQ_HEADING_MAX_QUARTER    = 128.0f;
+
+const float EQ_HEADING_NORTH         = 0.0f;
+const float EQ_HEADING_NORTH_WEST    = 64.0f;
+const float EQ_HEADING_WEST          = 128.0f;
+const float EQ_HEADING_SOUTH_WEST    = 192.0f;
+const float EQ_HEADING_SOUTH         = 256.0f;
+const float EQ_HEADING_SOUTH_EAST    = 320.0f;
+const float EQ_HEADING_EAST          = 384.0f;
+const float EQ_HEADING_NORTH_EAST    = 448.0f;
 
 const float EQ_SPAWN_PITCH_DEFAULT    = 0.0f;       // center view or look forward
 const float EQ_SPAWN_PITCH_MIN        = -128.0f;    // look down
@@ -119,18 +129,19 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_OFFSET_SPAWN_MOUNT_RIDER_SPAWN                  0x158    // uint32_t    // spawn that is riding the mount
 #define EQ_OFFSET_SPAWN_IS_TARGETABLE                      0x160    // uint8_t
 // ******************** randomized after each patch ******************** //    #define PLAYERZONECLIENT
-#define EQ_OFFSET_SPAWN_ZONE_ID                    0x360    // uint32_t
-#define EQ_OFFSET_SPAWN_LEVEL                      0x270    // uint8_t
-#define EQ_OFFSET_SPAWN_RACE                       0xF84    // uint32_t
-#define EQ_OFFSET_SPAWN_CLASS                      0xF8C    // uint32_t
-#define EQ_OFFSET_SPAWN_STANDING_STATE             0x5F0    // uint8_t
-#define EQ_OFFSET_SPAWN_HP_CURRENT                 0x2A0    // int64_t
-#define EQ_OFFSET_SPAWN_HP_MAX                     0x1D8    // int64_t
-#define EQ_OFFSET_SPAWN_MANA_CURRENT               0x1E8    // int32_t
-#define EQ_OFFSET_SPAWN_MANA_MAX                   0x1D4    // int32_t
-#define EQ_OFFSET_SPAWN_ENDURANCE_CURRENT          0x1B8    // uint32_t
-#define EQ_OFFSET_SPAWN_ENDURANCE_MAX              0x288    // uint32_t
-#define EQ_OFFSET_SPAWN_FOLLOW_SPAWN               0xF14    // uint32_t pointer    struct _SPAWNINFO*   WhoFollowing; // NULL if autofollow off
+#define EQ_OFFSET_SPAWN_ZONE_ID                    0x360     // uint32_t
+#define EQ_OFFSET_SPAWN_LEVEL                      0x270     // uint8_t
+#define EQ_OFFSET_SPAWN_RACE                       0xF84     // uint32_t
+#define EQ_OFFSET_SPAWN_CLASS                      0xF8C     // uint32_t
+#define EQ_OFFSET_SPAWN_STANDING_STATE             0x5F0     // uint8_t
+#define EQ_OFFSET_SPAWN_HP_CURRENT                 0x2A0     // int64_t
+#define EQ_OFFSET_SPAWN_HP_MAX                     0x1D8     // int64_t
+#define EQ_OFFSET_SPAWN_MANA_CURRENT               0x1E8     // int32_t
+#define EQ_OFFSET_SPAWN_MANA_MAX                   0x1D4     // int32_t
+#define EQ_OFFSET_SPAWN_ENDURANCE_CURRENT          0x1B8     // uint32_t
+#define EQ_OFFSET_SPAWN_ENDURANCE_MAX              0x288     // uint32_t
+#define EQ_OFFSET_SPAWN_FOLLOW_SPAWN               0xF14     // uint32_t pointer    struct _SPAWNINFO*   WhoFollowing; // NULL if autofollow off
+#define EQ_OFFSET_SPAWN_GRAVITY_TYPE               0x1FC0    // uint32_t
 // ********************************************************************* //
 
 #define EQ_SIZE_SPAWN_NAME         64 // 0x40
@@ -148,6 +159,14 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_SPAWN_TYPE_NAME =
     {EQ_SPAWN_TYPE_CORPSE,      "Corpse"},
     {EQ_SPAWN_TYPE_UNKNOWN,     "Unknown"},
 };
+
+#define EQ_GRAVITY_TYPE_GROUND               0
+#define EQ_GRAVITY_TYPE_FLYING               1
+#define EQ_GRAVITY_TYPE_LEVITATING           2
+#define EQ_GRAVITY_TYPE_SWIMMING             3
+#define EQ_GRAVITY_TYPE_RIDING_VEHICLE       4 // boat, airship, etc
+#define EQ_GRAVITY_TYPE_SINKING_TO_GROUND    5 // levitation wore off
+#define EQ_GRAVITY_TYPE_DEFAULT              EQ_GRAVITY_TYPE_GROUND
 
 #define EQ_ACTOR_TYPE_UNDEFINED        0
 #define EQ_ACTOR_TYPE_PLAYER           1

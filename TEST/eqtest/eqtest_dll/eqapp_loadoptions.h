@@ -3,13 +3,13 @@
 #include "eqapp_actorcollision.h"
 #include "eqapp_alwaysattack.h"
 #include "eqapp_alwayshotbutton.h"
-#include "eqapp_autoalternateability.h"
+////#include "eqapp_autoalternateability.h"
 #include "eqapp_autogroup.h"
 #include "eqapp_bazaarbot.h"
 #include "eqapp_bazaarfilter.h"
 #include "eqapp_boxchat.h"
 #include "eqapp_changeheight.h"
-#include "eqapp_combatalternateability.h"
+////#include "eqapp_combatalternateability.h"
 #include "eqapp_combathotbutton.h"
 #include "eqapp_console.h"
 #include "eqapp_esp.h"
@@ -70,8 +70,8 @@ void EQAPP_LoadOptions()
     EQAPP_LoadOption<EQApp::TimerInterval>(g_AlwaysHotButtonTimerInterval, "iAlwaysHotButtonTimerInterval", pt);
     EQAPP_LoadOption<signed int>(g_AlwaysHotButtonIndex, "iAlwaysHotButtonIndex", pt);
 
-    EQAPP_LoadOption<bool>(g_AutoAlternateAbilityIsEnabled, "bAutoAlternateAbility", pt);
-    EQAPP_LoadOption<EQApp::TimerInterval>(g_AutoAlternateAbilityTimerInterval, "iAutoAlternateAbilityTimerInterval", pt);
+    ////EQAPP_LoadOption<bool>(g_AutoAlternateAbilityIsEnabled, "bAutoAlternateAbility", pt);
+    ////EQAPP_LoadOption<EQApp::TimerInterval>(g_AutoAlternateAbilityTimerInterval, "iAutoAlternateAbilityTimerInterval", pt);
 
     EQAPP_LoadOption<bool>(g_AutoGroupIsEnabled, "bAutoGroup", pt);
     EQAPP_LoadOption<EQApp::TimerInterval>(g_AutoGroupTimerInterval, "iAutoGroupTimerInterval", pt);
@@ -99,9 +99,9 @@ void EQAPP_LoadOptions()
     EQAPP_LoadOption<float>(g_FollowAIDistanceCorpse, "fFollowAIDistanceCorpse", pt);
     EQAPP_LoadOption<float>(g_FollowAIDistanceBehind, "fFollowAIDistanceBehind", pt);
 
-    EQAPP_LoadOption<bool>(g_CombatAlternateAbilityIsEnabled, "bCombatAlternateAbility", pt);
-    EQAPP_LoadOption<EQApp::TimerInterval>(g_CombatAlternateAbilityTimerInterval, "iCombatAlternateAbilityTimerInterval", pt);
-    EQAPP_LoadOption<float>(g_CombatAlternateAbilityDistance, "fCombatAlternateAbilityDistance", pt);
+    ////EQAPP_LoadOption<bool>(g_CombatAlternateAbilityIsEnabled, "bCombatAlternateAbility", pt);
+    ////EQAPP_LoadOption<EQApp::TimerInterval>(g_CombatAlternateAbilityTimerInterval, "iCombatAlternateAbilityTimerInterval", pt);
+    ////EQAPP_LoadOption<float>(g_CombatAlternateAbilityDistance, "fCombatAlternateAbilityDistance", pt);
 
     EQAPP_LoadOption<bool>(g_CombatHotButtonIsEnabled, "bCombatHotButton", pt);
     EQAPP_LoadOption<EQApp::TimerInterval>(g_CombatHotButtonTimerInterval, "iCombatHotButtonTimerInterval", pt);
@@ -133,7 +133,8 @@ void EQAPP_LoadOptions()
 
     EQAPP_LoadOption<bool>(g_NamedSpawnsIsEnabled, "bNamedSpawns", pt);
 
-    EQAPP_LoadOption<uint32_t>(g_SleepInterval, "iSleepInterval", pt);
+    EQAPP_LoadOption<uint32_t>(g_SleepIntervalForeground, "iSleepIntervalForeground", pt);
+    EQAPP_LoadOption<uint32_t>(g_SleepIntervalBackground, "iSleepIntervalBackground", pt);
 
     EQAPP_LoadOption<bool>(g_SpawnCastSpellIsEnabled, "bSpawnCastSpell", pt);
     EQAPP_LoadOption<bool>(g_SpawnCastSpellGroupChatIsEnabled, "bSpawnCastSpellGroupChat", pt);

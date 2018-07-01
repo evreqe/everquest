@@ -1288,6 +1288,8 @@ char __thiscall sub_779040(_DWORD *this, int a2) // CBazaarSearchWnd__BuyItem()
 
 uint32_t EQ_ADDRESS_POINTER_CTaskSelectWnd = 0x0; // "TaskSelectWnd"
 
+uint32_t EQ_ADDRESS_POINTER_CLargeDialogWnd = 0x0; // "LargeDialogWnd"
+
 void EQ_InitializeAddresses();
 
 void EQ_InitializeAddresses()
@@ -1383,4 +1385,6 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem            = 0x6C7650;
 
     EQ_ADDRESS_POINTER_CTaskSelectWnd = pinstCTaskSelectWnd_x;
+
+    EQ_ADDRESS_POINTER_CLargeDialogWnd = pinstCLargeDialogWnd_x;
 }

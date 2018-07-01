@@ -158,4 +158,10 @@ void EQAPP_InitializeAddressesAndPointers()
         EQ_CLASS_POINTER_CTaskSelectWnd_pptr = (EQClass::CTaskSelectWnd**)EQ_ADDRESS_POINTER_CTaskSelectWnd;
         EQ_CLASS_POINTER_CTaskSelectWnd = (*EQ_CLASS_POINTER_CTaskSelectWnd_pptr);
     }
+
+    if (EQ_ADDRESS_POINTER_CLargeDialogWnd != 0)
+    {
+        EQ_CLASS_POINTER_CLargeDialogWnd_pptr = (EQClass::CLargeDialogWnd**)EQ_ADDRESS_POINTER_CLargeDialogWnd;
+        EQ_CLASS_POINTER_CLargeDialogWnd = (*EQ_CLASS_POINTER_CLargeDialogWnd_pptr);
+    }
 }

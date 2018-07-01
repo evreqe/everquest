@@ -15,7 +15,6 @@ function OnEnterZone(zoneID)
 end
 
 function OnChatText(chatText, chatTextColor)
-
     if String_EndsWith(chatText, "'Welcome to my bank!'") then
         OutputFileInventory()
         return
@@ -32,5 +31,4 @@ function OnChatText(chatText, chatTextColor)
             return
         end
     end
-
 end

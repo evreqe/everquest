@@ -1,1 +1,0 @@
-EQ_InterpretCommand("//BCAA //CombatHotButton 4;//CombatHotButtonOn")

@@ -10,6 +10,7 @@ void EQAPP_ToggleDebugText();
 
 void EQAPP_EnableDebugPrivileges();
 DWORD EQAPP_GetModuleBaseAddress(DWORD processID, const wchar_t* moduleName);
+uint32_t EQAPP_GetNumClients();
 bool EQAPP_IsProcessRunning(const wchar_t* filename);
 bool EQAPP_IsForegroundWindowCurrentProcessID();
 bool EQAPP_IsVKKeyDown(int vkKey);
@@ -122,6 +123,36 @@ DWORD EQAPP_GetModuleBaseAddress(DWORD processID, const wchar_t* moduleName)
     return moduleBaseAddress;
 }
 
+uint32_t EQAPP_GetNumClients()
+{
+    uint32_t count = 0;
+
+    HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
+    if (snapshot == INVALID_HANDLE_VALUE)
+    {
+        return count;
+    }
+
+    PROCESSENTRY32 pe32;
+    pe32.dwSize = sizeof(PROCESSENTRY32);
+
+    if (Process32First(snapshot, &pe32))
+    {
+        do
+        {
+            if (lstrcmpi(pe32.szExeFile, L"eqgame.exe") == 0)
+            {
+                count++;
+            }
+
+        } while (Process32Next(snapshot, &pe32));
+    }
+
+    CloseHandle(snapshot);
+
+    return count;
+}
+
 bool EQAPP_IsProcessRunning(const wchar_t* filename)
 {
     bool result = false;
@@ -132,41 +163,23 @@ bool EQAPP_IsProcessRunning(const wchar_t* filename)
         return result;
     }
 
-    PROCESSENTRY32 pe32 = {0};
-    pe32.dwSize = sizeof(pe32);
+    PROCESSENTRY32 pe32;
+    pe32.dwSize = sizeof(PROCESSENTRY32);
 
     if (Process32First(snapshot, &pe32))
     {
-        for (;;)
+        do
         {
-            std::wstring filenameW = filename;
-
             if (lstrcmpi(pe32.szExeFile, filename) == 0)
             {
                 result = true;
                 break;
             }
 
-            if (!Process32Next(snapshot, &pe32))
-            {
-                if (GetLastError() != ERROR_NO_MORE_FILES)
-                {
-                    result = false;
-                }
-
-                break;
-            }
-            else
-            {
-                if (GetLastError() != ERROR_NO_MORE_FILES)
-                {
-                    result = false;
-                }
-            }
-        }
-
-        CloseHandle(snapshot);
+        } while (Process32Next(snapshot, &pe32));
     }
+
+    CloseHandle(snapshot);
 
     return result;
 }
