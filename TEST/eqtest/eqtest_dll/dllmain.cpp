@@ -77,13 +77,11 @@ namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not avai
 #include "eqapp_actorcollision.h"
 #include "eqapp_alwaysattack.h"
 #include "eqapp_alwayshotbutton.h"
-////#include "eqapp_autoalternateability.h"
 #include "eqapp_autogroup.h"
 #include "eqapp_bazaarbot.h"
 #include "eqapp_bazaarfilter.h"
 #include "eqapp_boxchat.h"
 #include "eqapp_changeheight.h"
-////#include "eqapp_combatalternateability.h"
 #include "eqapp_combathotbutton.h"
 #include "eqapp_console.h"
 #include "eqapp_detours.h"
@@ -107,11 +105,6 @@ namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not avai
 
 void EQAPP_Load()
 {
-    EQAPP_LoadOptions();
-
-    EQAPP_Lua_Load();
-    EQAPP_SpellList_Load();
-
     EQAPP_ActorCollision_Load();
     EQAPP_WaypointList_Load();
     EQAPP_NamedSpawns_Load();
@@ -193,7 +186,8 @@ DWORD WINAPI EQAPP_ThreadLoad(LPVOID param)
 {
     EQAPP_EnableDebugPrivileges();
 
-    EQAPP_InitializeAddressesAndPointers();
+    EQAPP_InitializeAddresses();
+    EQAPP_InitializeAddressPointers();
 
     g_EQAppHandleThreadConsole = CreateThread(NULL, 0, &EQAPP_ThreadConsole, NULL, 0, NULL);
 
@@ -202,6 +196,9 @@ DWORD WINAPI EQAPP_ThreadLoad(LPVOID param)
 
     g_EQAppHandleThreadLoop = CreateThread(NULL, 0, &EQAPP_ThreadLoop, NULL, 0, NULL);
 
+    EQAPP_LoadOptions();
+    EQAPP_Lua_Load();
+    EQAPP_SpellList_Load();
     EQAPP_Detours_Load();
 
     EQ_SetNetStatus(true);

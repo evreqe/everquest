@@ -648,6 +648,8 @@ uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__LMouseUp = 0x0;
 
 uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp = 0x0;
 
+uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__SetGameState = 0x0;
+
 uint32_t EQ_ADDRESS_POINTER_CDisplay = 0x0; // pinstCDisplay    "CDisplay::CreatePlayerActor - FATAL ERROR - mySpriteDef is NULL. "
 /*
 CDisplay::CreatePlayerActor(*(float *)&a1, (int)dword_F20698, 0, 0, 1, 2, 1, 0);
@@ -726,6 +728,14 @@ LPVOID __userpurge sub_53FEC0@<eax>(int a1@<ecx>, float *a2@<ebp>, int a3, int a
           v30);
 
 */
+
+uint32_t EQ_ADDRESS_FUNCTION_CXStr__CXStr = 0x0;
+uint32_t EQ_ADDRESS_FUNCTION_CXStr__CXStr1 = 0x0;
+uint32_t EQ_ADDRESS_FUNCTION_CXStr__CXStr3 = 0x0;
+uint32_t EQ_ADDRESS_FUNCTION_CXStr__dCXStr = 0x0;
+uint32_t EQ_ADDRESS_FUNCTION_CXStr__operator_equal = 0x0;
+uint32_t EQ_ADDRESS_FUNCTION_CXStr__operator_equal1 = 0x0;
+uint32_t EQ_ADDRESS_FUNCTION_CXStr__operator_plus_equal1 = 0x0;
 
 uint32_t EQ_ADDRESS_FUNCTION_CXWnd__BringToTop = 0x0;
 
@@ -1290,6 +1300,8 @@ uint32_t EQ_ADDRESS_POINTER_CTaskSelectWnd = 0x0; // "TaskSelectWnd"
 
 uint32_t EQ_ADDRESS_POINTER_CLargeDialogWnd = 0x0; // "LargeDialogWnd"
 
+uint32_t EQ_ADDRESS_FUNCTION_CLargeDialogWnd__Open = 0x0;
+
 void EQ_InitializeAddresses();
 
 void EQ_InitializeAddresses()
@@ -1354,6 +1366,7 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting    = 0x5CC930;
     EQ_ADDRESS_FUNCTION_CEverQuest__LMouseUp        = CEverQuest__LMouseUp_x;
     EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp        = CEverQuest__RMouseUp_x;
+    EQ_ADDRESS_FUNCTION_CEverQuest__SetGameState    = CEverQuest__SetGameState_x;
 
     EQ_ADDRESS_POINTER_CDisplay = pinstCDisplay_x;
     EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2         = CDisplay__WriteTextHD2_x;
@@ -1369,6 +1382,14 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_FUNCTION_CCamera__SetCameraLocation    = 0x0; // calculated at runtime
 
     EQ_ADDRESS_POINTER_CRender = __DrawHandler_x;
+
+    EQ_ADDRESS_FUNCTION_CXStr__CXStr                   = CXStr__CXStr_x;
+    EQ_ADDRESS_FUNCTION_CXStr__CXStr1                  = CXStr__CXStr1_x;
+    EQ_ADDRESS_FUNCTION_CXStr__CXStr3                  = CXStr__CXStr3_x;
+    EQ_ADDRESS_FUNCTION_CXStr__dCXStr                  = CXStr__dCXStr_x;
+    EQ_ADDRESS_FUNCTION_CXStr__operator_equal          = CXStr__operator_equal_x;
+    EQ_ADDRESS_FUNCTION_CXStr__operator_equal1         = CXStr__operator_equal1_x;
+    EQ_ADDRESS_FUNCTION_CXStr__operator_plus_equal1    = CXStr__operator_plus_equal1_x;
 
     EQ_ADDRESS_FUNCTION_CXWnd__BringToTop         = CXWnd__BringToTop_x;
     EQ_ADDRESS_FUNCTION_CXWnd__IsActive           = CXWnd__IsActive_x;
@@ -1387,4 +1408,6 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_POINTER_CTaskSelectWnd = pinstCTaskSelectWnd_x;
 
     EQ_ADDRESS_POINTER_CLargeDialogWnd = pinstCLargeDialogWnd_x;
+
+    EQ_ADDRESS_FUNCTION_CLargeDialogWnd__Open    = CLargeDialogWnd__Open_x;
 }

@@ -15,6 +15,8 @@ namespace EQClass
 
     class EQSwitch;
 
+    class CXStr;
+
     class CXWndManager;
     class CXWnd;
 
@@ -39,6 +41,7 @@ public:
     void CEverQuest::StartCasting(EQMessage::CEverQuest__StartCasting_ptr message);
     void CEverQuest::LMouseUp(int x, int y);
     void CEverQuest::RMouseUp(int x, int y);
+    void CEverQuest::SetGameState(int gameState);
 };
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::InterpretCmd(class EQPlayer* player, const char* text), EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd);
@@ -53,6 +56,9 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__StartCasting)(void* this_p
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::LMouseUp(int x, int y), EQ_ADDRESS_FUNCTION_CEverQuest__LMouseUp);
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::RMouseUp(int x, int y), EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::SetGameState(int gameState), EQ_ADDRESS_FUNCTION_CEverQuest__SetGameState);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__SetGameState)(void* this_ptr, int gameState);
 
 EQClass::CEverQuest** EQ_CLASS_POINTER_CEverQuest_pptr;
 EQClass::CEverQuest* EQ_CLASS_POINTER_CEverQuest;
@@ -132,6 +138,38 @@ EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQSwitch::UseSwitch(uint32_t s
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQSwitch::ChangeState(uint8_t state, int zero1, int zero2), EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState);
 
+/* CXStr */
+
+class EQClass::CXStr
+{
+public:
+    CXStr::CXStr(class CXStr const &);
+    CXStr::~CXStr(void);
+    CXStr::CXStr(char const *);
+    void CXStr::operator+=(char const *);
+    class CXStr& CXStr::operator=(char const *);
+    class CXStr& CXStr::operator=(class CXStr const&);
+
+    EQ::CXStr_ptr ptr;
+};
+
+// CXStr(CXStr) constructor
+EQ_MACRO_FUNCTION_FunctionAtAddress(EQClass::CXStr::CXStr(class CXStr const &), EQ_ADDRESS_FUNCTION_CXStr__CXStr);
+
+// CXStr(void) deconstructor
+EQ_MACRO_FUNCTION_FunctionAtAddress(EQClass::CXStr::~CXStr(void), EQ_ADDRESS_FUNCTION_CXStr__dCXStr);
+
+// CXStr(const char*) constructor
+EQ_MACRO_FUNCTION_FunctionAtAddress(EQClass::CXStr::CXStr(char const *), EQ_ADDRESS_FUNCTION_CXStr__CXStr3);
+
+// CXStr += const char*
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CXStr::operator+=(char const *), EQ_ADDRESS_FUNCTION_CXStr__operator_plus_equal1);
+
+// CXStr = const char*
+EQ_MACRO_FUNCTION_FunctionAtAddress(class EQClass::CXStr& EQClass::CXStr::operator=(char const *), EQ_ADDRESS_FUNCTION_CXStr__operator_equal1);
+
+// CXStr = CXStr
+EQ_MACRO_FUNCTION_FunctionAtAddress(class EQClass::CXStr& EQClass::CXStr::operator=(class CXStr const&), EQ_ADDRESS_FUNCTION_CXStr__operator_equal);
 
 /* CXWndManager */
 
@@ -170,7 +208,7 @@ EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CXWnd::Activate(), EQ_V
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CXWnd::Deactivate(), EQ_VFTABLE_INDEX_CXWnd__Deactivate);
 
-EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CXWnd::BringToTop(bool bRecurse), EQ_ADDRESS_FUNCTION_CXWnd__BringToTop);
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CXWnd::BringToTop(bool recurse), EQ_ADDRESS_FUNCTION_CXWnd__BringToTop);
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::CXWnd::IsActive(), EQ_ADDRESS_FUNCTION_CXWnd__IsActive);
 
@@ -246,9 +284,13 @@ class EQClass::CLargeDialogWnd
 {
 public:
     int CLargeDialogWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
+    void CLargeDialogWnd::Open(bool showYesNo, class EQClass::CXStr bodyText, unsigned long closeTimer, class EQClass::CXStr titleText, bool showVolumeControls, class EQClass::CXStr yesText, class EQClass::CXStr noText) noexcept;
 };
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CLargeDialogWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CLargeDialogWnd::Open(bool showYesNo, class EQClass::CXStr bodyText, unsigned long closeTimer, class EQClass::CXStr titleText, bool showVolumeControls, class EQClass::CXStr yesText, class EQClass::CXStr noText) noexcept, EQ_ADDRESS_FUNCTION_CLargeDialogWnd__Open);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CLargeDialogWnd__Open)(void* this_ptr, bool showYesNo, class EQClass::CXStr bodyText, unsigned long closeTimer, class EQClass::CXStr titleText, bool showVolumeControls, class EQClass::CXStr noText);
 
 EQClass::CLargeDialogWnd** EQ_CLASS_POINTER_CLargeDialogWnd_pptr;
 EQClass::CLargeDialogWnd* EQ_CLASS_POINTER_CLargeDialogWnd;
@@ -303,6 +345,9 @@ EQClass::CRender** EQ_CLASS_POINTER_CRender_pptr;
 EQClass::CRender* EQ_CLASS_POINTER_CRender;
 
 /**************************************************/
+
+// these classes are unknown and used in the game's CollisionCallbackForActors() function
+// we use them to disable collision with players in the eqapp_actorcollision.h header
 
 class CCollisionCallbackForActors1
 {

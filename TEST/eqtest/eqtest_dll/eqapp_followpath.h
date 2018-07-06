@@ -270,10 +270,10 @@ void EQAPP_FollowPath_Draw()
         bool result = EQ_WorldLocationToScreenLocation(path.Y, path.X, path.Z, screenX, screenY);
         if (result == true)
         {
-            fmt::MemoryWriter ss;
-            ss << "P" << path.Index << " (" << (int)path.Distance << "m)";
+            fmt::MemoryWriter mw;
+            mw << "P" << path.Index << " (" << (int)path.Distance << "m)";
 
-            EQ_DrawTextByColor(ss.c_str(), (int)screenX, (int)screenY, EQ_DRAW_TEXT_COLOR_PINK);
+            EQ_DrawTextByColor(mw.c_str(), (int)screenX, (int)screenY, EQ_DRAW_TEXT_COLOR_PINK);
         }
     }
 }

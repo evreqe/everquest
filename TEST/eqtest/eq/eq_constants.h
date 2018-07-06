@@ -76,6 +76,11 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 
 #define EQ_OFFSET_CXWndManager_FONTS_ARRAY    0x11C    // add 0x04 to get the actual array of CTextureFont objects
 
+#define EQ_CXSTR_TEXT_MAX_LENGTH    4096
+
+#define EQ_CXSTR_ENCODING_ASCII      0
+#define EQ_CXSTR_ENCODING_UNICODE    1
+
 #define EQ_OFFSET_CTextureFont_STYLE    0x04 // uint32_t, font size and style
 
 #define EQ_FONT_INDEX_DEFAULT    2    // the third font in the fonts array, used by the CDisplay::WriteTextHD2() function
@@ -167,6 +172,16 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_SPAWN_TYPE_NAME =
 #define EQ_GRAVITY_TYPE_RIDING_VEHICLE       4 // boat, airship, etc
 #define EQ_GRAVITY_TYPE_SINKING_TO_GROUND    5 // levitation wore off
 #define EQ_GRAVITY_TYPE_DEFAULT              EQ_GRAVITY_TYPE_GROUND
+
+std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_GRAVITY_TYPE_NAME =
+{
+    {EQ_GRAVITY_TYPE_GROUND,               "Ground"},
+    {EQ_GRAVITY_TYPE_FLYING,               "Flying"},
+    {EQ_GRAVITY_TYPE_LEVITATING,           "Levitating"},
+    {EQ_GRAVITY_TYPE_SWIMMING,             "Swimming"},
+    {EQ_GRAVITY_TYPE_RIDING_VEHICLE,       "Riding Vehicle"},
+    {EQ_GRAVITY_TYPE_SINKING_TO_GROUND,    "Sinking to Ground"},
+};
 
 #define EQ_ACTOR_TYPE_UNDEFINED        0
 #define EQ_ACTOR_TYPE_PLAYER           1
@@ -654,4 +669,14 @@ namespace EQ
         uint32_t X2; // Right     // lower right x
         uint32_t Y2; // Bottom    // lower right y
     } CXRect, *CXRect_ptr;
+
+    typedef struct _CXStr
+    {
+/* 0x00 */ uint32_t Font;
+/* 0x04 */ uint32_t MaxLength;
+/* 0x08 */ uint32_t Length;
+/* 0x0C */ uint32_t Encoding; // 0 = ASCII, 1 = Unicode
+/* 0x10 */ PCRITICAL_SECTION Lock;
+/* 0x14 */ char Text[1]; //EQ_CXSTR_TEXT_MAX_LENGTH
+    } CXStr, *CXStr_ptr;
 } // namespace EQ

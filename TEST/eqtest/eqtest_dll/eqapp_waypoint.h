@@ -427,7 +427,7 @@ void EQAPP_Waypoint_Push(uint32_t index, float distance)
 
     float playerSpawnHeading = EQ_GetSpawnHeading(playerSpawn);
 
-    float playerSpawnHeadingRounded = std::roundf(playerSpawnHeading / EQ_HEADING_MAX_QUARTER) * EQ_HEADING_MAX_QUARTER;
+    float playerSpawnHeadingRounded = EQ_RoundHeadingEx(playerSpawnHeading);
 
     EQ_ApplyVectorForward(waypoint->Y, waypoint->X, playerSpawnHeadingRounded, distance);
 }
@@ -803,27 +803,27 @@ void EQAPP_WaypointList_Save()
 
     for (auto& waypoint : g_WaypointList)
     {
-        fmt::MemoryWriter ss;
-        ss << waypoint.Index << "^" << waypoint.Name << "^" << waypoint.Y << "^" << waypoint.X << "^" << waypoint.Z << "^";
+        fmt::MemoryWriter mw;
+        mw << waypoint.Index << "^" << waypoint.Name << "^" << waypoint.Y << "^" << waypoint.X << "^" << waypoint.Z << "^";
 
         if (waypoint.ConnectIndexList.size() == 0)
         {
-            ss << "-1";
+            mw << "-1";
         }
         else
         {
             for (auto& connectIndex : waypoint.ConnectIndexList)
             {
-                ss << connectIndex;
+                mw << connectIndex;
 
                 if (connectIndex != waypoint.ConnectIndexList.back())
                 {
-                    ss << ",";
+                    mw << ",";
                 }
             }
         }
 
-        file << ss.c_str() << std::endl;
+        file << mw.c_str() << std::endl;
     }
 
     std::cout << "Waypoints saved to file: " << filePathStr << std::endl;
@@ -892,35 +892,35 @@ void EQAPP_WaypointList_Draw()
         bool result = EQ_WorldLocationToScreenLocation(waypoint.Y, waypoint.X, waypoint.Z, waypointScreenX, waypointScreenY);
         if (result == true)
         {
-            fmt::MemoryWriter espText;
-            espText << "[Waypoint] " << waypoint.Name;
+            fmt::MemoryWriter drawText;
+            drawText << "[Waypoint] " << waypoint.Name;
 
-            espText << "\nIndex: " << waypoint.Index;
+            drawText << "\nIndex: " << waypoint.Index;
 
-            espText << "\nY: " << waypoint.Y;
-            espText << "\nX: " << waypoint.X;
-            espText << "\nZ: " << waypoint.Z;
+            drawText << "\nY: " << waypoint.Y;
+            drawText << "\nX: " << waypoint.X;
+            drawText << "\nZ: " << waypoint.Z;
 
-            espText << "\nC: ";
+            drawText << "\nC: ";
 
             if (waypoint.ConnectIndexList.size() == 0)
             {
-                espText << "None";
+                drawText << "None";
             }
             else
             {
                 for (auto& connectIndex : waypoint.ConnectIndexList)
                 {
-                    espText << connectIndex;
+                    drawText << connectIndex;
 
                     if (connectIndex != waypoint.ConnectIndexList.back())
                     {
-                        espText << ",";
+                        drawText << ",";
                     }
                 }
             }
 
-            EQ_DrawTextByColor(espText.c_str(), (int)waypointScreenX, (int)waypointScreenY, EQ_DRAW_TEXT_COLOR_WHITE);
+            EQ_DrawTextByColor(drawText.c_str(), (int)waypointScreenX, (int)waypointScreenY, EQ_DRAW_TEXT_COLOR_WHITE);
         }
 
         for (auto& connectIndex : waypoint.ConnectIndexList)

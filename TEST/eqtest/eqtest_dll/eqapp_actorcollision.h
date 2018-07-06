@@ -109,20 +109,20 @@ void EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor
         bool result = EQ_WorldLocationToScreenLocation(actorY, actorX, actorZ, screenX, screenY);
         if (result == true)
         {
-            fmt::MemoryWriter espText;
-            espText << "[Actor] " << actorDefinitionName;
+            fmt::MemoryWriter drawText;
+            drawText << "[Actor] " << actorDefinitionName;
 
-            espText << "\nAddress: 0x" << fmt::hex(cactor);
+            drawText << "\nAddress: 0x" << fmt::hex(cactor);
 
-            espText << "\nType: " << actorType;
+            drawText << "\nType: " << actorType;
 
-            espText << "\nY: " << actorY;
-            espText << "\nX: " << actorX;
-            espText << "\nZ: " << actorZ;
+            drawText << "\nY: " << actorY;
+            drawText << "\nX: " << actorX;
+            drawText << "\nZ: " << actorZ;
 
-            espText << "\nC: " << actorCollisionScale;
+            drawText << "\nC: " << actorCollisionScale;
 
-            EQ_DrawTextByColor(espText.c_str(), (int)screenX, (int)screenY, EQ_DRAW_TEXT_COLOR_WHITE);
+            EQ_DrawTextByColor(drawText.c_str(), (int)screenX, (int)screenY, EQ_DRAW_TEXT_COLOR_WHITE);
         }
     }
 

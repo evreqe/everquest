@@ -140,37 +140,37 @@ void EQAPP_ESP_DrawDoors()
             char doorName[EQ_SIZE_EQSwitch_NAME];
             std::memmove(doorName, (LPVOID)(door + EQ_OFFSET_EQSwitch_NAME), sizeof(doorName));
 
-            fmt::MemoryWriter espText;
-            espText << "[Door] " << doorName << " (" << (int)doorDistance << "m)";
+            fmt::MemoryWriter drawText;
+            drawText << "[Door] " << doorName << " (" << (int)doorDistance << "m)";
 
-            espText << "\nAddress: 0x" << fmt::hex(door);
+            drawText << "\nAddress: 0x" << fmt::hex(door);
 
             ////auto doorObjectType = EQ_ReadMemory<uint8_t>(door + EQ_OFFSET_EQSwitch_OBJECT_TYPE);
             auto doorType = EQ_ReadMemory<uint8_t>(door + EQ_OFFSET_EQSwitch_TYPE);
 
-            ////espText << "\nObject Type: " << (int)doorObjectType;
-            espText << "\nType: " << (int)doorType;
+            ////drawText << "\nObject Type: " << (int)doorObjectType;
+            drawText << "\nType: " << (int)doorType;
 
-            espText << "\nY: " << doorY;
-            espText << "\nX: " << doorX;
-            espText << "\nZ: " << doorZ;
+            drawText << "\nY: " << doorY;
+            drawText << "\nX: " << doorX;
+            drawText << "\nZ: " << doorZ;
 
             auto doorHeading = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_HEADING);
             ////auto doorAngle = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_ANGLE);
 
-            espText << "\nHeading: " << doorHeading;
-            ////espText << "\nAngle: " << doorAngle;
+            drawText << "\nHeading: " << doorHeading;
+            ////drawText << "\nAngle: " << doorAngle;
 
             auto doorKeyID = EQ_ReadMemory<uint32_t>(door + EQ_OFFSET_EQSwitch_KEY_ID);
             if (doorKeyID != EQ_SWITCH_KEY_ID_NULL)
             {
-                espText << "\nKey ID: " << fmt::hex(doorKeyID);
+                drawText << "\nKey ID: " << fmt::hex(doorKeyID);
             }
 
             ////auto doorIsUseable = EQ_ReadMemory<uint8_t>(door + EQ_OFFSET_EQSwitch_IS_USEABLE);
-            ////espText << "\nIs Useable: " << (int)doorIsUseable;
+            ////drawText << "\nIs Useable: " << (int)doorIsUseable;
 
-            EQ_DrawTextByColor(espText.c_str(), (int)screenX, (int)screenY, EQ_DRAW_TEXT_COLOR_WHITE);
+            EQ_DrawTextByColor(drawText.c_str(), (int)screenX, (int)screenY, EQ_DRAW_TEXT_COLOR_WHITE);
         }
     }
 }
@@ -320,8 +320,8 @@ void EQAPP_ESP_Execute()
                 }
             }
 
-            fmt::MemoryWriter espText;
-            espText << "[" << spawnLevel;
+            fmt::MemoryWriter drawText;
+            drawText << "[" << spawnLevel;
 
             bool bShowSpawnClassShortName = true;
 
@@ -338,24 +338,24 @@ void EQAPP_ESP_Execute()
                 auto spawnClassShortName = EQ_GetClassShortNameByKey(spawnClass);
                 if (spawnClassShortName.size() != 0)
                 {
-                    espText << " " << spawnClassShortName;
+                    drawText << " " << spawnClassShortName;
                 }
             }
 
-            espText << "] " << spawnName;
+            drawText << "] " << spawnName;
 
             if (spawnType == EQ_SPAWN_TYPE_CORPSE)
             {
-                espText << "'s corpse";
+                drawText << "'s corpse";
             }
 
-            espText << " (" << (int)spawnDistance << "m)";
+            drawText << " (" << (int)spawnDistance << "m)";
 
             if (spawnType == EQ_SPAWN_TYPE_NPC)
             {
                 if (spawnLastName.size() != 0)
                 {
-                    espText << "\n(" << spawnLastName << ")";
+                    drawText << "\n(" << spawnLastName << ")";
                 }
             }
 
@@ -370,15 +370,15 @@ void EQAPP_ESP_Execute()
 
                     if (spawnCastSpell->Spawn == spawn)
                     {
-                        espText << "\n<" << spawnCastSpell->SpellName << ">";
+                        drawText << "\n<" << spawnCastSpell->SpellName << ">";
 
                         if (spawnCastSpell->SpellCastTimeCountdown > 0)
                         {
                             float spellCastTimeCurrentFloat = (float)(spawnCastSpell->SpellCastTimeCountdown / 1000.0f);
 
-                            ////espText.precision(1);
-                            ////espText << " " << std::fixed << spellCastTimeCurrentFloat;
-                            espText << fmt::format("{:.2f}", spellCastTimeCurrentFloat);
+                            ////drawText.precision(1);
+                            ////drawText << " " << std::fixed << spellCastTimeCurrentFloat;
+                            drawText << fmt::format("{:.2f}", spellCastTimeCurrentFloat);
                         }
 
                         break;
@@ -390,21 +390,21 @@ void EQAPP_ESP_Execute()
             {
                 auto spawnID = EQ_GetSpawnID(spawn);
 
-                espText << "\n(ID: " << spawnID << ")";
+                drawText << "\n(ID: " << spawnID << ")";
             }
 
             if (g_ESPShowSpawnRaceIsEnabled == true)
             {
                 auto spawnRace = EQ_GetSpawnRace(spawn);
 
-                espText << "\n(Race: " << spawnRace << ")";
+                drawText << "\n(Race: " << spawnRace << ")";
             }
 
             if (g_ESPShowSpawnClassIsEnabled == true)
             {
                 auto spawnClass = EQ_GetSpawnClass(spawn);
 
-                espText << "\n(Class: " << spawnClass << ")";
+                drawText << "\n(Class: " << spawnClass << ")";
             }
 
             int textColor = EQ_DRAW_TEXT_COLOR_WHITE;
@@ -439,7 +439,7 @@ void EQAPP_ESP_Execute()
                 textColor = EQ_DRAW_TEXT_COLOR_GREEN;
             }
 
-            EQ_DrawTextByColor(espText.c_str(), (int)screenX, (int)screenY, textColor);
+            EQ_DrawTextByColor(drawText.c_str(), (int)screenX, (int)screenY, textColor);
         }
 
         spawn = EQ_GetSpawnNext(spawn);

@@ -147,7 +147,7 @@ void EQAPP_SpawnCastSpell_DrawText()
         return;
     }
 
-    std::stringstream drawText;
+    fmt::MemoryWriter drawText;
 
     for (auto& spawnCastSpell : g_SpawnCastSpellList)
     {
@@ -168,14 +168,28 @@ void EQAPP_SpawnCastSpell_DrawText()
             continue;
         }
 
-        drawText << spawnName << " <" << spawnCastSpell->SpellName << ">";
+        drawText << spawnName; 
+
+        auto spawnClass = EQ_GetSpawnClass(spawn);
+
+        std::string spawnClassShortName = EQ_GetClassShortNameByKey(spawnClass);
+        if (spawnClassShortName.size() != 0)
+        {
+            drawText << " (" << spawnClassShortName << ")";
+        }
+
+        if (spawnCastSpell->SpellName.size() != 0)
+        {
+            drawText << " <" << spawnCastSpell->SpellName << ">";
+        }
 
         if (spawnCastSpell->SpellCastTimeCountdown > 0)
         {
             float spellCastTimeCurrentFloat = (float)(spawnCastSpell->SpellCastTimeCountdown / 1000.0f);
 
-            drawText.precision(1);
-            drawText << " " << std::fixed << spellCastTimeCurrentFloat;
+            //drawText.precision(1);
+            //drawText << " " << std::fixed << spellCastTimeCurrentFloat;
+            drawText << fmt::format("{:.2f}", spellCastTimeCurrentFloat);
         }
 
         drawText << "\n";

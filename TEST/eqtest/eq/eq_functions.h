@@ -43,6 +43,8 @@ float EQ_CalculateDistance3D(float y1, float x1, float z1, float y2, float x2, f
 bool EQ_IsWithinDistance(float y1, float x1, float y2, float x2, float distance);
 
 float EQ_GetBearing(float y1, float x1, float y2, float x2);
+void EQ_RoundHeading(float& heading);
+float EQ_RoundHeadingEx(float heading);
 void EQ_FixHeading(float& heading);
 float EQ_FixHeadingEx(float heading);
 void EQ_FixPitch(float& pitch);
@@ -152,8 +154,11 @@ bool EQ_IsSpawnOnScreen(uint32_t spawn);
 bool EQ_IsSpawnSwimming(uint32_t spawn);
 bool EQ_IsSpawnSwimmingUnderwater(uint32_t spawn);
 
-bool EQ_IsSpawnBehindSpawn(uint32_t  spawn1, uint32_t  spawn2);
-bool EQ_IsSpawnBehindSpawnEx(uint32_t  spawn1, uint32_t  spawn2, float angle);
+bool EQ_IsSpawnFlying(uint32_t spawn);
+bool EQ_IsSpawnLevitating(uint32_t spawn);
+
+bool EQ_IsSpawnBehindSpawn(uint32_t spawn1, uint32_t spawn2);
+bool EQ_IsSpawnBehindSpawnEx(uint32_t spawn1, uint32_t spawn2, float angle);
 bool EQ_IsPlayerBehindTarget();
 
 bool EQ_IsSpawnClassTank(uint32_t spawn);
@@ -246,7 +251,7 @@ void EQ_InterpretCommand(const char* text);
 void EQ_ExecuteCommand(uint32_t commandID, int isActive);
 
 void EQ_PrintTextToChat(const char* text);
-void EQ_PrintTextToChatEx(const char* text, int color);
+void EQ_PrintTextToChatByColor(const char* text, int color);
 
 void EQ_SetDrawTextFontStyle(uint32_t fontStyle);
 void EQ_DrawText(const char* text, int x, int y);
@@ -301,6 +306,9 @@ void EQ_SetStateForAllDoors(uint8_t state);
 void EQ_OpenAllDoors();
 void EQ_CloseAllDoors();
 
+void EQ_CXStr_Set(EQ::CXStr** cxstr, const char* text);
+void EQ_CXStr_Append(EQ::CXStr** cxstr, const char* text);
+
 bool EQ_CXWnd_BringToTop(uint32_t cxwndAddressPointer);
 bool EQ_CXWnd_IsActive(uint32_t cxwndAddressPointer);
 bool EQ_CXWnd_IsOpen(uint32_t cxwndAddressPointer);
@@ -339,6 +347,8 @@ bool EQ_LargeDialogWindow_IsOpen();
 bool EQ_LargeDialogWindow_ClickOKButton();
 bool EQ_LargeDialogWindow_ClickYesButton();
 bool EQ_LargeDialogWindow_ClickNoButton();
+void EQ_LargeDialogWindow_Open(const char* titleText, const char* bodyText);
+void EQ_LargeDialogWindow_OpenWithTimer(const char* titleText, const char* bodyText, unsigned long closeTimer);
 
 /* functions */
 
@@ -428,6 +438,25 @@ float EQ_GetBearing(float y1, float x1, float y2, float x2)
     {
         result = (90.0f - v11 + 270.0f) * 511.5f * 0.0027777778f;
     }
+
+    return result;
+}
+
+void EQ_RoundHeading(float& heading)
+{
+    if (heading == 0.0f)
+    {
+        return;
+    }
+
+    heading = std::roundf(heading / EQ_HEADING_MAX_QUARTER) * EQ_HEADING_MAX_QUARTER;
+}
+
+float EQ_RoundHeadingEx(float heading)
+{
+    float result = heading;
+
+    EQ_RoundHeading(heading);
 
     return result;
 }
@@ -1321,6 +1350,16 @@ bool EQ_IsSpawnSwimmingUnderwater(uint32_t spawn)
     return false;
 }
 
+bool EQ_IsSpawnFlying(uint32_t spawn)
+{
+    return EQ_GetSpawnGravityType(spawn) == EQ_GRAVITY_TYPE_FLYING;
+}
+
+bool EQ_IsSpawnLevitating(uint32_t spawn)
+{
+    return EQ_GetSpawnGravityType(spawn) == EQ_GRAVITY_TYPE_LEVITATING;
+}
+
 bool EQ_IsSpawnBehindSpawn(uint32_t spawn1, uint32_t spawn2)
 {
     // use 512 / 8 = 64 for tighter angle
@@ -1773,41 +1812,76 @@ uint32_t EQ_GetSpawnDirection(uint32_t spawn)
 
     uint32_t direction = EQ_DIRECTION_UNKNOWN;
 
-    if (spawnHeadingInt > 479)
+    if (spawnHeading == EQ_HEADING_NORTH)
     {
         direction = EQ_DIRECTION_NORTH;
     }
-    else if (spawnHeadingInt > 416)
+    else if (spawnHeading == EQ_HEADING_NORTH_EAST)
     {
         direction = EQ_DIRECTION_NORTH_EAST;
     }
-    else if (spawnHeadingInt > 352)
+    else if (spawnHeading == EQ_HEADING_EAST)
     {
         direction = EQ_DIRECTION_EAST;
     }
-    else if (spawnHeadingInt > 288)
+    else if (spawnHeading == EQ_HEADING_SOUTH_EAST)
     {
         direction = EQ_DIRECTION_SOUTH_EAST;
     }
-    else if (spawnHeadingInt > 224)
+    else if (spawnHeading == EQ_HEADING_SOUTH)
     {
         direction = EQ_DIRECTION_SOUTH;
     }
-    else if (spawnHeadingInt > 160)
+    else if (spawnHeading == EQ_HEADING_SOUTH_WEST)
     {
         direction = EQ_DIRECTION_SOUTH_WEST;
     }
-    else if (spawnHeadingInt > 96)
+    else if (spawnHeading == EQ_HEADING_WEST)
     {
         direction = EQ_DIRECTION_WEST;
     }
-    else if (spawnHeadingInt > 32)
+    else if (spawnHeading == EQ_HEADING_NORTH_WEST)
     {
         direction = EQ_DIRECTION_NORTH_WEST;
     }
     else
     {
-        direction = EQ_DIRECTION_NORTH;
+        if (spawnHeadingInt > 479)
+        {
+            direction = EQ_DIRECTION_NORTH;
+        }
+        else if (spawnHeadingInt > 416)
+        {
+            direction = EQ_DIRECTION_NORTH_EAST;
+        }
+        else if (spawnHeadingInt > 352)
+        {
+            direction = EQ_DIRECTION_EAST;
+        }
+        else if (spawnHeadingInt > 288)
+        {
+            direction = EQ_DIRECTION_SOUTH_EAST;
+        }
+        else if (spawnHeadingInt > 224)
+        {
+            direction = EQ_DIRECTION_SOUTH;
+        }
+        else if (spawnHeadingInt > 160)
+        {
+            direction = EQ_DIRECTION_SOUTH_WEST;
+        }
+        else if (spawnHeadingInt > 96)
+        {
+            direction = EQ_DIRECTION_WEST;
+        }
+        else if (spawnHeadingInt > 32)
+        {
+            direction = EQ_DIRECTION_NORTH_WEST;
+        }
+        else
+        {
+            direction = EQ_DIRECTION_NORTH;
+        }
     }
 
     return direction;
@@ -2087,7 +2161,7 @@ void EQ_PrintTextToChat(const char* text)
     EQ_CLASS_POINTER_CEverQuest->dsp_chat(text, EQ_CHAT_TEXT_COLOR_YELLOW, 1, 1, 0);
 }
 
-void EQ_PrintTextToChatEx(const char* text, int color)
+void EQ_PrintTextToChatByColor(const char* text, int color)
 {
     EQ_CLASS_POINTER_CEverQuest->dsp_chat(text, color, 1, 1, 0);
 }
@@ -2743,6 +2817,24 @@ void EQ_CloseAllDoors()
     EQ_SetStateForAllDoors(EQ_SWITCH_STATE_CLOSING);
 }
 
+void EQ_CXStr_Set(EQ::CXStr** cxstr, const char* text)
+{ 
+    EQClass::CXStr* temp = (EQClass::CXStr*)cxstr;
+
+    (*temp) = text;
+
+    cxstr = (EQ::CXStr**)temp;
+}
+
+void EQ_CXStr_Append(EQ::CXStr** cxstr, const char* text)
+{
+    EQClass::CXStr* temp = (EQClass::CXStr*)cxstr;
+
+    (*temp) += text;
+
+    cxstr = (EQ::CXStr**)temp;
+}
+
 bool EQ_CXWnd_BringToTop(uint32_t cxwndAddressPointer)
 {
     if (cxwndAddressPointer == 0)
@@ -3260,4 +3352,20 @@ bool EQ_LargeDialogWindow_ClickYesButton()
 bool EQ_LargeDialogWindow_ClickNoButton()
 {
     return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CLargeDialogWnd, EQ_OFFSET_CLargeDialogWnd_BUTTON_NO);
+}
+
+void EQ_LargeDialogWindow_Open(const char* titleText, const char* bodyText)
+{
+    EQ_LargeDialogWindow_OpenWithTimer(titleText, bodyText, 0);
+}
+
+void EQ_LargeDialogWindow_OpenWithTimer(const char* titleText, const char* bodyText, unsigned long closeTimer)
+{
+    if (EQ_LargeDialogWindow_IsOpen() == false)
+    {
+        EQClass::CXStr bodyText("body text");
+        EQClass::CXStr titleText("title text");
+
+        EQ_CLASS_POINTER_CLargeDialogWnd->Open(false, bodyText, closeTimer, titleText, false, NULL, NULL);
+    }
 }

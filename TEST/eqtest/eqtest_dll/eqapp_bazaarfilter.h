@@ -147,7 +147,13 @@ bool EQAPP_BazaarFilter_HandleEvent_CBazaarSearchWnd__AddItemToList(char* itemNa
 
         if (itemNameFilter.size() > 1)
         {
-            if (EQAPP_String_BeginsWith(itemNameFilter, "@") == true)
+            if (EQAPP_String_BeginsWith(itemNameFilter, "!") == true)
+            {
+                itemNameFilter.erase(0, 1);
+
+                comparsionType = EQApp::StringComparsionType::Ignore;
+            }
+            else if (EQAPP_String_BeginsWith(itemNameFilter, "@") == true)
             {
                 itemNameFilter.erase(0, 1);
 
@@ -172,6 +178,14 @@ bool EQAPP_BazaarFilter_HandleEvent_CBazaarSearchWnd__AddItemToList(char* itemNa
             if (itemNameAdd == itemNameFilter)
             {
                 bShouldAddItemToList = true;
+                break;
+            }
+        }
+        else if (comparsionType == EQApp::StringComparsionType::Ignore)
+        {
+            if (itemNameAdd == itemNameFilter)
+            {
+                bShouldAddItemToList = false;
                 break;
             }
         }

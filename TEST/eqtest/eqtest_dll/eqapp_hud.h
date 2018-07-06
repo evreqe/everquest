@@ -69,55 +69,56 @@ void EQAPP_HUD_DrawDebugText()
         return;
     }
 
-    fmt::MemoryWriter ss;
+    g_HUDText << "EQTEST DEBUG\n";
 
-    ss << "EQTEST DEBUG\n";
+    g_HUDText << "Name: " << EQ_GetSpawnName(targetSpawn) << "\n";
+    g_HUDText << "Last Name: " << EQ_GetSpawnLastName(targetSpawn) << "\n";
 
-    ss << "Name: " << EQ_GetSpawnName(targetSpawn) << "\n";
-    ss << "Last Name: " << EQ_GetSpawnLastName(targetSpawn) << "\n";
+    g_HUDText << "Name Numbered: " << EQ_GetSpawnNameNumbered(targetSpawn) << "\n";
 
-    ss << "Name Numbered: " << EQ_GetSpawnNameNumbered(targetSpawn) << "\n";
-
-    ss << "ID: " << EQ_GetSpawnID(targetSpawn) << "\n";
+    g_HUDText << "ID: " << EQ_GetSpawnID(targetSpawn) << "\n";
 
     auto spawnType = EQ_GetSpawnType(targetSpawn);
-    ss << "Type: " << EQ_GetSpawnTypeNameByKey(spawnType) << " (" << spawnType << ")\n";
+    g_HUDText << "Type: " << EQ_GetSpawnTypeNameByKey(spawnType) << " (" << spawnType << ")\n";
 
-    ss << "Y: " << EQ_GetSpawnY(targetSpawn) << "\n";
-    ss << "X: " << EQ_GetSpawnX(targetSpawn) << "\n";
-    ss << "Z: " << EQ_GetSpawnZ(targetSpawn) << "\n";
+    g_HUDText << "Y: " << EQ_GetSpawnY(targetSpawn) << "\n";
+    g_HUDText << "X: " << EQ_GetSpawnX(targetSpawn) << "\n";
+    g_HUDText << "Z: " << EQ_GetSpawnZ(targetSpawn) << "\n";
 
-    ss << "Heading: " << EQ_GetSpawnHeading(targetSpawn) << "\n";
+    g_HUDText << "Heading: " << EQ_GetSpawnHeading(targetSpawn) << "\n";
 
-    ss << "Movement Speed: " << EQ_GetSpawnMovementSpeed(targetSpawn) << "\n";
+    g_HUDText << "Movement Speed: " << EQ_GetSpawnMovementSpeed(targetSpawn) << "\n";
 
-    ss << "Height: " << EQ_GetSpawnHeight(targetSpawn) << "\n";
+    g_HUDText << "Height: " << EQ_GetSpawnHeight(targetSpawn) << "\n";
 
-    ss << "HP: " << EQ_GetSpawnHPCurrent(targetSpawn) << " / " << EQ_GetSpawnHPMax(targetSpawn) << " (" << EQ_GetSpawnHPPercent(targetSpawn) << "%)\n";
-    ss << "Mana: " << EQ_GetSpawnManaCurrent(targetSpawn) << " / " << EQ_GetSpawnManaMax(targetSpawn) << " (" << EQ_GetSpawnManaPercent(targetSpawn) << "%)\n";
-    ss << "Endurance: " << EQ_GetSpawnEnduranceCurrent(targetSpawn) << " / " << EQ_GetSpawnEnduranceMax(targetSpawn) << " (" << EQ_GetSpawnEndurancePercent(targetSpawn) << "%)\n";
+    g_HUDText << "HP: " << EQ_GetSpawnHPCurrent(targetSpawn) << " / " << EQ_GetSpawnHPMax(targetSpawn) << " (" << EQ_GetSpawnHPPercent(targetSpawn) << "%)\n";
+    g_HUDText << "Mana: " << EQ_GetSpawnManaCurrent(targetSpawn) << " / " << EQ_GetSpawnManaMax(targetSpawn) << " (" << EQ_GetSpawnManaPercent(targetSpawn) << "%)\n";
+    g_HUDText << "Endurance: " << EQ_GetSpawnEnduranceCurrent(targetSpawn) << " / " << EQ_GetSpawnEnduranceMax(targetSpawn) << " (" << EQ_GetSpawnEndurancePercent(targetSpawn) << "%)\n";
 
     auto spawnZoneID = EQ_GetSpawnZoneID(targetSpawn);
-    ss << "Zone Name: " << EQ_GetZoneNameByKey(spawnZoneID) << " (" << spawnZoneID << ")\n";
+    g_HUDText << "Zone Name: " << EQ_GetZoneNameByKey(spawnZoneID) << " (" << spawnZoneID << ")\n";
 
-    ss << "Level: " << EQ_GetSpawnLevel(targetSpawn) << "\n";
+    g_HUDText << "Level: " << EQ_GetSpawnLevel(targetSpawn) << "\n";
 
     auto spawnRace = EQ_GetSpawnRace(targetSpawn);
-    ss << "Race: " << EQ_GetRaceNameByKey(spawnRace) << " (" << spawnRace << ")\n";
+    g_HUDText << "Race: " << EQ_GetRaceNameByKey(spawnRace) << " (" << spawnRace << ")\n";
 
     auto spawnClass = EQ_GetSpawnClass(targetSpawn);
-    ss << "Class: " << EQ_GetClassNameByKey(spawnClass) << " (" << spawnClass << ")\n";
+    g_HUDText << "Class: " << EQ_GetClassNameByKey(spawnClass) << " (" << spawnClass << ")\n";
 
     auto spawnStandingState = EQ_GetSpawnStandingState(targetSpawn);
-    ss << "Standing State: " << EQ_GetStandingStateNameByKey(spawnStandingState) << " (" << spawnStandingState << ")\n";
+    g_HUDText << "Standing State: " << EQ_GetStandingStateNameByKey(spawnStandingState) << " (" << spawnStandingState << ")\n";
 
     auto followSpawn = EQ_GetSpawnFollowSpawn(targetSpawn);
     if (followSpawn != NULL)
     {
-        ss << "Follow Name: " << EQ_GetSpawnName(followSpawn) << "\n";
+        g_HUDText << "Follow Name: " << EQ_GetSpawnName(followSpawn) << "\n";
     }
 
-    EQ_DrawText(ss.c_str(), g_HUDX, g_HUDY);
+    auto spawnGravityType = EQ_GetSpawnGravityType(targetSpawn);
+    g_HUDText << "Gravity Type: " << spawnGravityType << "\n";
+
+    EQ_DrawText(g_HUDText.c_str(), g_HUDX, g_HUDY);
 }
 
 void EQAPP_HUD_AddText(const char* text)
@@ -204,16 +205,6 @@ void EQAPP_HUD_Execute()
         g_HUDText << "- Combat HotButton: " << g_CombatHotButtonIndex + 1 << "\n";
     }
 
-    ////if (g_AutoAlternateAbilityIsEnabled == true)
-    ////{
-        ////g_HUDText << "- Auto Alternate Ability\n";
-    ////}
-
-    ////if (g_CombatAlternateAbilityIsEnabled == true)
-    ////{
-        ////g_HUDText << "- Combat Alternate Ability\n";
-    ////}
-
     if (g_ESPIsEnabled == true)
     {
         g_HUDText << "- ESP\n";
@@ -254,22 +245,20 @@ void EQAPP_HUD_Execute()
         g_HUDText << "- Follow AI Use Z-Axis\n";
     }
 
-/*
     if (g_ChangeHeightIsEnabled == true)
     {
-        g_HUDText << "- Change Height\n");
+        g_HUDText << "- Change Height\n";
     }
 
     if (g_SpawnCastSpellIsEnabled == true)
     {
-        g_HUDText << "- Spawn Cast Spell\n");
+        g_HUDText << "- Spawn Cast Spell\n";
     }
 
     if (g_SpawnCastSpellGroupChatIsEnabled == true)
     {
-        g_HUDText << "- Spawn Cast Spell Group Chat\n");
+        g_HUDText << "- Spawn Cast Spell Group Chat\n";
     }
-*/
 
     for (auto& script : g_LuaEventScriptList)
     {

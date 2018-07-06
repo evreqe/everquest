@@ -43,6 +43,7 @@ namespace EQApp
     enum class StringComparsionType : uint8_t
     {
         Equals,
+        Ignore,
         Contains,
         BeginsWith,
         EndsWith

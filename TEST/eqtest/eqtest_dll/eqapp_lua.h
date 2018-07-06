@@ -350,6 +350,11 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
 
     state->set("EQ_GAME_STATE_IN_GAME", EQ_GAME_STATE_IN_GAME);
 
+    state->set("EQ_CXSTR_TEXT_MAX_LENGTH", EQ_CXSTR_TEXT_MAX_LENGTH);
+
+    state->set("EQ_CXSTR_ENCODING_ASCII", EQ_CXSTR_ENCODING_ASCII);
+    state->set("EQ_CXSTR_ENCODING_UNICODE", EQ_CXSTR_ENCODING_UNICODE);
+
     state->set("EQ_FONT_INDEX_DEFAULT", EQ_FONT_INDEX_DEFAULT);
 
     state->set("EQ_FONT_STYLE_MIN", EQ_FONT_STYLE_MIN);
@@ -1702,6 +1707,7 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_IsWithinDistance", EQ_IsWithinDistance);
 
     state->set_function("EQ_GetBearing", EQ_GetBearing);
+    state->set_function("EQ_RoundHeading", EQ_RoundHeadingEx);
     state->set_function("EQ_FixHeading", EQ_FixHeadingEx);
     state->set_function("EQ_FixPitch", EQ_FixPitchEx);
     state->set_function("EQ_GetRadians", EQ_GetRadians);
@@ -1783,6 +1789,9 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
 
     state->set_function("EQ_IsSpawnSwimming", EQ_IsSpawnSwimming);
     state->set_function("EQ_IsSpawnSwimmingUnderwater", EQ_IsSpawnSwimmingUnderwater);
+
+    state->set_function("EQ_IsSpawnFlying", EQ_IsSpawnFlying);
+    state->set_function("EQ_IsSpawnLevitating", EQ_IsSpawnLevitating);
 
     state->set_function("EQ_IsSpawnBehindSpawn", EQ_IsSpawnBehindSpawn);
     state->set_function("EQ_IsSpawnBehindSpawnEx", EQ_IsSpawnBehindSpawnEx);
@@ -1878,7 +1887,7 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_ExecuteCommand", EQ_ExecuteCommand);
 
     state->set_function("EQ_PrintTextToChat", EQ_PrintTextToChat);
-    state->set_function("EQ_PrintTextToChatEx", EQ_PrintTextToChatEx);
+    state->set_function("EQ_PrintTextToChatByColor", EQ_PrintTextToChatByColor);
 
     state->set_function("EQ_SetDrawTextFontStyle", EQ_SetDrawTextFontStyle);
     state->set_function("EQ_DrawText", EQ_DrawText);
@@ -1960,4 +1969,6 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_LargeDialogWindow_ClickOKButton", EQ_LargeDialogWindow_ClickOKButton);
     state->set_function("EQ_LargeDialogWindow_ClickYesButton", EQ_LargeDialogWindow_ClickYesButton);
     state->set_function("EQ_LargeDialogWindow_ClickNoButton", EQ_LargeDialogWindow_ClickNoButton);
+    state->set_function("EQ_LargeDialogWindow_Open", EQ_LargeDialogWindow_Open);
+    state->set_function("EQ_LargeDialogWindow_OpenWithTimer", EQ_LargeDialogWindow_OpenWithTimer);
 }
