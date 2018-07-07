@@ -300,6 +300,7 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set("EQ_HEADING_MAX", EQ_HEADING_MAX);
     state->set("EQ_HEADING_MAX_HALF", EQ_HEADING_MAX_HALF);
     state->set("EQ_HEADING_MAX_QUARTER", EQ_HEADING_MAX_QUARTER);
+    state->set("EQ_HEADING_MAX_EIGHTH", EQ_HEADING_MAX_EIGHTH);
 
     state->set("EQ_HEADING_NORTH", EQ_HEADING_NORTH);
     state->set("EQ_HEADING_NORTH_WEST", EQ_HEADING_NORTH_WEST);

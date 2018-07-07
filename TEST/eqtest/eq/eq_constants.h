@@ -17,6 +17,7 @@ const float EQ_HEADING_MIN            = 0.0f;
 const float EQ_HEADING_MAX            = 512.0f;
 const float EQ_HEADING_MAX_HALF       = 256.0f;
 const float EQ_HEADING_MAX_QUARTER    = 128.0f;
+const float EQ_HEADING_MAX_EIGHTH     = 64.0f;
 
 const float EQ_HEADING_NORTH         = 0.0f;
 const float EQ_HEADING_NORTH_WEST    = 64.0f;

@@ -456,7 +456,7 @@ float EQ_RoundHeadingEx(float heading)
 {
     float result = heading;
 
-    EQ_RoundHeading(heading);
+    EQ_RoundHeading(result);
 
     return result;
 }

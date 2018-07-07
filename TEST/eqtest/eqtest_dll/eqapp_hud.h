@@ -170,6 +170,11 @@ void EQAPP_HUD_Execute()
         g_HUDText << "- Free Camera\n";
     }
 
+    if (g_LuaIsEnabled == true)
+    {
+        g_HUDText << "- Lua\n";
+    }
+
     if (g_FollowPathIsEnabled == true)
     {
         g_HUDText << "- Follow Path\n";

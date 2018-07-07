@@ -293,6 +293,7 @@ void EQAPP_Detours_OnEnterZone()
 
     EQAPP_FreeCamera_Off();
     EQAPP_FollowPath_Off();
+    EQAPP_Waypoint_FollowPath_Off();
 
     EQAPP_ActorCollision_Load();
     EQAPP_WaypointList_Load();
@@ -307,6 +308,10 @@ void EQAPP_Detours_OnLeaveZone()
 
     EQAPP_FreeCamera_Off();
     EQAPP_FollowPath_Off();
+    EQAPP_Waypoint_FollowPath_Off();
+
+    g_WaypointGetPathIndexList.clear();
+    g_WaypointFollowPathIndexList.clear();
 
     g_EQAppIsInGame = false;
 }
@@ -762,6 +767,15 @@ int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive,
     if (g_FollowPathIsEnabled == true)
     {
         bool result = EQAPP_FollowPath_HandleEvent_ExecuteCmd(commandID, isActive, zero);
+        if (result == true)
+        {
+            return 1;
+        }
+    }
+
+    if (g_WaypointIsEnabled == true && g_WaypointFollowPathIsEnabled == true)
+    {
+        bool result = EQAPP_Waypoint_HandleEvent_ExecuteCmd(commandID, isActive, zero);
         if (result == true)
         {
             return 1;

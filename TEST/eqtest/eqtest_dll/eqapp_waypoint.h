@@ -2,6 +2,14 @@
 
 namespace EQApp
 {
+    enum WaypointFlags
+    {
+        kJump         = 1 << 0,
+        kUseDoor      = 1 << 1,
+        kReserved1    = 1 << 2,
+        kReserved2    = 1 << 3,
+    };
+
     typedef std::vector<uint32_t> WaypointIndexList;
 
     typedef struct _Waypoint
@@ -12,6 +20,7 @@ namespace EQApp
         float X;
         float Z;
         WaypointIndexList ConnectIndexList;
+        uint32_t Flags = 0;
 
         // A* Star pathfinding algorithm
         bool IsOpened;
@@ -29,6 +38,10 @@ bool g_WaypointDebugIsEnabled = false;
 
 bool g_WaypointFollowPathIsEnabled = false;
 
+float g_WaypointFollowPathDistance = 2.0f;
+
+float g_WaypointUseDoorDistance = 20.0f;
+
 std::vector<EQApp::Waypoint> g_WaypointList;
 
 EQApp::WaypointIndexList g_WaypointGetPathIndexList;
@@ -36,6 +49,9 @@ EQApp::WaypointIndexList g_WaypointGetPathIndexList;
 EQApp::WaypointIndexList g_WaypointFollowPathIndexList;
 
 void EQAPP_Waypoint_Debug_Toggle();
+void EQAPP_Waypoint_FollowPath_Toggle();
+void EQAPP_Waypoint_FollowPath_On();
+void EQAPP_Waypoint_FollowPath_Off();
 void EQAPP_Waypoint_Add(const char* name);
 void EQAPP_Waypoint_Remove(uint32_t index);
 void EQAPP_Waypoint_Connect(uint32_t fromIndex, uint32_t toIndex, bool bOneWayConnection);
@@ -54,6 +70,7 @@ void EQAPP_Waypoint_ComputeScores(EQApp::Waypoint_ptr waypoint, EQApp::Waypoint_
 EQApp::WaypointIndexList EQAPP_Waypoint_GetPath(uint32_t fromIndex, uint32_t toIndex);
 void EQAPP_Waypoint_PrintPath(EQApp::WaypointIndexList& indexList, uint32_t fromIndex);
 void EQAPP_Waypoint_FollowPath(EQApp::WaypointIndexList& indexList);
+bool EQAPP_Waypoint_HandleEvent_ExecuteCmd(uint32_t commandID, int isActive, int zero);
 void EQAPP_WaypointList_Clear();
 void EQAPP_WaypointList_Load();
 void EQAPP_WaypointList_Save();
@@ -74,6 +91,22 @@ void EQAPP_Waypoint_FollowPath_Toggle()
     if (g_WaypointFollowPathIsEnabled == false)
     {
         EQ_SetAutoRun(false);
+    }
+}
+
+void EQAPP_Waypoint_FollowPath_On()
+{
+    if (g_WaypointFollowPathIsEnabled == false)
+    {
+        EQAPP_Waypoint_FollowPath_Toggle();
+    }
+}
+
+void EQAPP_Waypoint_FollowPath_Off()
+{
+    if (g_WaypointFollowPathIsEnabled == true)
+    {
+        EQAPP_Waypoint_FollowPath_Toggle();
     }
 }
 
@@ -241,7 +274,7 @@ void EQAPP_Waypoint_Connect(uint32_t fromIndex, uint32_t toIndex, bool bOneWayCo
 
     fromWaypoint->ConnectIndexList.push_back(toIndex);
 
-    std::cout << "Waypoint connected: " << fromWaypoint->Name << "(Index: " << fromIndex << ") to "<< toWaypoint->Name << "(Index: " << toIndex << ")" << std::endl;
+    std::cout << "Waypoint connected: " << fromWaypoint->Name << " (Index: " << fromIndex << ") to "<< toWaypoint->Name << " (Index: " << toIndex << ")" << std::endl;
 
     if (bOneWayConnection == false)
     {
@@ -258,7 +291,7 @@ void EQAPP_Waypoint_Connect(uint32_t fromIndex, uint32_t toIndex, bool bOneWayCo
 
         toWaypoint->ConnectIndexList.push_back(fromIndex);
 
-        std::cout << "Waypoint connected: " << toWaypoint->Name << "(Index: " << toIndex << ") to " << fromWaypoint->Name << "(Index: " << fromIndex << ")" << std::endl;
+        std::cout << "Waypoint connected: " << toWaypoint->Name << " (Index: " << toIndex << ") to " << fromWaypoint->Name << " (Index: " << fromIndex << ")" << std::endl;
     }
 }
 
@@ -304,7 +337,7 @@ void EQAPP_Waypoint_Disconnect(uint32_t fromIndex, uint32_t toIndex, bool bOneWa
     {
         if (*connectIndex_it == toIndex)
         {
-            std::cout << "Waypoint disconnected: " << fromWaypoint->Name << "(Index: " << fromIndex << ") to "<< toWaypoint->Name << "(Index: " << toIndex << ")" << std::endl;
+            std::cout << "Waypoint disconnected: " << fromWaypoint->Name << " (Index: " << fromIndex << ") to "<< toWaypoint->Name << " (Index: " << toIndex << ")" << std::endl;
 
             connectIndex_it = fromWaypoint->ConnectIndexList.erase(connectIndex_it);
             connectIndex_it--;
@@ -318,7 +351,7 @@ void EQAPP_Waypoint_Disconnect(uint32_t fromIndex, uint32_t toIndex, bool bOneWa
         {
             if (*connectIndex_it == fromIndex)
             {
-                std::cout << "Waypoint disconnected: " << toWaypoint->Name << "(Index: " << toIndex << ") to " << fromWaypoint->Name << "(Index: " << fromIndex << ")" << std::endl;
+                std::cout << "Waypoint disconnected: " << toWaypoint->Name << " (Index: " << toIndex << ") to " << fromWaypoint->Name << " (Index: " << fromIndex << ")" << std::endl;
 
                 connectIndex_it = toWaypoint->ConnectIndexList.erase(connectIndex_it);
                 connectIndex_it--;
@@ -427,7 +460,12 @@ void EQAPP_Waypoint_Push(uint32_t index, float distance)
 
     float playerSpawnHeading = EQ_GetSpawnHeading(playerSpawn);
 
-    float playerSpawnHeadingRounded = EQ_RoundHeadingEx(playerSpawnHeading);
+    float playerSpawnHeadingRounded = playerSpawnHeading;
+
+    if (playerSpawnHeading > 0.0f)
+    {
+        playerSpawnHeadingRounded = std::roundf(playerSpawnHeading / EQ_HEADING_MAX_EIGHTH) * EQ_HEADING_MAX_EIGHTH;
+    }
 
     EQ_ApplyVectorForward(waypoint->Y, waypoint->X, playerSpawnHeadingRounded, distance);
 }
@@ -454,7 +492,12 @@ void EQAPP_Waypoint_Pull(uint32_t index, float distance)
 
     float playerSpawnHeading = EQ_GetSpawnHeading(playerSpawn);
 
-    float playerSpawnHeadingRounded = std::roundf(playerSpawnHeading / EQ_HEADING_MAX_QUARTER) * EQ_HEADING_MAX_QUARTER;
+    float playerSpawnHeadingRounded = playerSpawnHeading;
+
+    if (playerSpawnHeading > 0.0f)
+    {
+        playerSpawnHeadingRounded = std::roundf(playerSpawnHeading / EQ_HEADING_MAX_EIGHTH) * EQ_HEADING_MAX_EIGHTH;
+    }
 
     EQ_ApplyVectorBackward(waypoint->Y, waypoint->X, playerSpawnHeadingRounded, distance);
 }
@@ -736,8 +779,8 @@ void EQAPP_WaypointList_Load()
             continue;
         }
 
-        // index, name, y, x, z, connectIndexList
-        if (tokens.size() == 6)
+        // index, name, y, x, z, connectIndexList, flags
+        if (tokens.size() >= 6)
         {
             EQApp::Waypoint waypoint;
 
@@ -759,6 +802,11 @@ void EQAPP_WaypointList_Load()
                         waypoint.ConnectIndexList.push_back(connectIndex);
                     }
                 }
+            }
+
+            if (tokens.size() == 7)
+            {
+                waypoint.Flags = std::stoul(tokens.at(6));
             }
 
             g_WaypointList.push_back(waypoint);
@@ -821,6 +869,11 @@ void EQAPP_WaypointList_Save()
                     mw << ",";
                 }
             }
+        }
+
+        if (waypoint.Flags != 0)
+        {
+            mw << "^" << waypoint.Flags;
         }
 
         file << mw.c_str() << std::endl;
@@ -920,6 +973,21 @@ void EQAPP_WaypointList_Draw()
                 }
             }
 
+            if (waypoint.Flags != 0)
+            {
+                drawText << "\nF: ";
+
+                if (waypoint.Flags & EQApp::WaypointFlags::kJump)
+                {
+                    drawText << "Jump ";
+                }
+
+                if (waypoint.Flags & EQApp::WaypointFlags::kUseDoor)
+                {
+                    drawText << "UseDoor ";
+                }
+            }
+
             EQ_DrawTextByColor(drawText.c_str(), (int)waypointScreenX, (int)waypointScreenY, EQ_DRAW_TEXT_COLOR_WHITE);
         }
 
@@ -949,7 +1017,8 @@ void EQAPP_WaypointList_Draw()
                 continue;
             }
 
-            if (it == g_WaypointGetPathIndexList.end())
+            auto itLast = std::prev(g_WaypointGetPathIndexList.end());
+            if (it == itLast || it == g_WaypointGetPathIndexList.end())
             {
                 break;
             }
@@ -981,9 +1050,82 @@ void EQAPP_Waypoint_FollowPath(EQApp::WaypointIndexList& indexList)
 {
     if (indexList.size() == 0)
     {
+        EQAPP_Waypoint_FollowPath_Off();
         return;
     }
 
-    
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    EQ_UseDoorOnCollision();
+
+    auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
+    auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
+    auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
+
+    for (auto it = indexList.begin(); it != indexList.end(); it++)
+    {
+        auto waypoint = EQAPP_Waypoint_GetByIndex(*it);
+        if (waypoint != NULL)
+        {
+            float waypointDistance = EQ_CalculateDistance3D(playerSpawnY, playerSpawnX, playerSpawnZ, waypoint->Y, waypoint->X, waypoint->Z);
+
+            if (waypointDistance > g_WaypointFollowPathDistance)
+            {
+                EQ_TurnSpawnTowardsLocation(playerSpawn, waypoint->Y, waypoint->X);
+                EQ_SetAutoRun(true);
+                break;
+            }
+            else
+            {
+                if (waypoint->Flags & EQApp::WaypointFlags::kJump)
+                {
+                    EQ_ExecuteCommand(EQ_EXECUTECMD_JUMP, 1);
+                }
+
+                if (waypoint->Flags & EQApp::WaypointFlags::kUseDoor)
+                {
+                    EQ_UseDoorByDistance(g_WaypointUseDoorDistance);
+                }
+
+                auto itLast = std::prev(indexList.end());
+                if (it == itLast)
+                {
+                    EQAPP_Waypoint_FollowPath_Off();
+                    return;
+                }
+
+                it = indexList.erase(it);
+                it--;
+                continue;
+            }
+        }
+    }
 }
 
+bool EQAPP_Waypoint_HandleEvent_ExecuteCmd(uint32_t commandID, int isActive, int zero)
+{
+    if (isActive != 1 && zero != 0)
+    {
+        return false;
+    }
+
+    if
+    (
+        commandID == EQ_EXECUTECMD_SIT_STAND  ||
+        commandID == EQ_EXECUTECMD_FORWARD    ||
+        commandID == EQ_EXECUTECMD_BACK       ||
+        commandID == EQ_EXECUTECMD_LEFT       ||
+        commandID == EQ_EXECUTECMD_RIGHT      ||
+        commandID == EQ_EXECUTECMD_AUTORUN
+    )
+    {
+        EQAPP_Waypoint_FollowPath_Off();
+        return true;
+    }
+
+    return false;
+}
