@@ -97,6 +97,13 @@ function OnThreeSeconds()
     elseif playerSpawnClass == EQ_CLASS_BEASTLORD then
         if playerSpawnHPPercent < 50 then
             table.insert(alternateAbilityList, 128) -- Paragon of Spirit
+            table.insert(alternateAbilityList, 362) -- Roar of Thunder
+            table.insert(alternateAbilityList, 8302) -- Protection of the Warder
+        end
+
+        if playerSpawnHPPercent < 25 then
+            -- Archetype
+            table.insert(alternateAbilityList, 11073) -- Playing Possum
         end
     elseif playerSpawnClass == EQ_CLASS_BERSERKER then
         if playerSpawnHPPercent < 50 then
@@ -158,19 +165,24 @@ function OnThreeSeconds()
     elseif playerSpawnClass == EQ_CLASS_MAGICIAN then
         if playerSpawnHPPercent < 75 then
             -- Archetype
-            --table.insert(alternateAbilityList, x)   -- 
+            table.insert(alternateAbilityList, 636)   -- Arcane Whisper
+            table.insert(alternateAbilityList, 8341)  -- Drape of Shadows
 
             -- Class
-            table.insert(alternateAbilityList, 3516)   -- Companion of Necessity
+            table.insert(alternateAbilityList, 3516)  -- Companion of Necessity
             table.insert(alternateAbilityList, 787)   -- Heart of Stone
+            table.insert(alternateAbilityList, 1372)  -- Fundament: Third Spire of the Elements
+            table.insert(alternateAbilityList, 8342)  -- Host in the Shell
         end
     elseif playerSpawnClass == EQ_CLASS_RANGER then
         if playerSpawnHPPercent < 75 then
             -- Archetype
-            --table.insert(alternateAbilityList, x)   -- 
+            table.insert(alternateAbilityList, 2234)   -- Cover Tracks
 
             -- Class
             table.insert(alternateAbilityList, 778)   -- Protection of the Spirit Wolf
+            table.insert(alternateAbilityList, 876)   -- Outrider's Evasion
+            table.insert(alternateAbilityList, 1462)  -- Fundament: Third Spire of the Pathfinders
         end
     elseif playerSpawnClass == EQ_CLASS_SHADOWKNIGHT then
         if playerSpawnHPPercent < 50 then
@@ -178,16 +190,17 @@ function OnThreeSeconds()
             --table.insert(alternateAbilityList, x)   -- 
 
             -- Class
-            --table.insert(alternateAbilityList, x)   -- 
+            table.insert(alternateAbilityList, 1452)  -- Fundament: Third Spire of the Reavers
         end
     elseif playerSpawnClass == EQ_CLASS_SHAMAN then
         if playerSpawnHPPercent < 75 then
             -- Archetype
-            --table.insert(alternateAbilityList, x)   -- 
+            table.insert(alternateAbilityList, 9504)  -- Inconspicuous Totem
 
             -- Class
             table.insert(alternateAbilityList, 528)   -- Ancestral Guard
             table.insert(alternateAbilityList, 447)   -- Ancestral Aid
+            table.insert(alternateAbilityList, 321)   -- Call of the Ancients
         end
     elseif playerSpawnClass == EQ_CLASS_WARRIOR then
         if playerSpawnHPPercent < 50 then

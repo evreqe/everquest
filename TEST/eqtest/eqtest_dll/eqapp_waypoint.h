@@ -4,10 +4,10 @@ namespace EQApp
 {
     enum WaypointFlags
     {
-        kJump         = 1 << 0,
-        kUseDoor      = 1 << 1,
-        kReserved1    = 1 << 2,
-        kReserved2    = 1 << 3,
+        kJump           = 1 << 0,
+        kUseDoor        = 1 << 1,
+        kClickToZone    = 1 << 2,
+        kReserved1      = 1 << 3,
     };
 
     typedef std::vector<uint32_t> WaypointIndexList;
@@ -30,6 +30,8 @@ namespace EQApp
         uint32_t H = 0;
         struct _Waypoint* Parent;
     } Waypoint, *Waypoint_ptr;
+
+    typedef std::vector<EQApp::Waypoint> WaypointList;
 }
 
 bool g_WaypointIsEnabled = true;
@@ -42,7 +44,7 @@ float g_WaypointFollowPathDistance = 2.0f;
 
 float g_WaypointUseDoorDistance = 20.0f;
 
-std::vector<EQApp::Waypoint> g_WaypointList;
+EQApp::WaypointList g_WaypointList;
 
 EQApp::WaypointIndexList g_WaypointGetPathIndexList;
 
@@ -62,11 +64,14 @@ void EQAPP_Waypoint_AlignX(uint32_t fromIndex, uint32_t toIndex);
 void EQAPP_Waypoint_AlignZ(uint32_t fromIndex, uint32_t toIndex);
 void EQAPP_Waypoint_Push(uint32_t index, float distance);
 void EQAPP_Waypoint_Pull(uint32_t index, float distance);
-EQApp::Waypoint_ptr EQAPP_Waypoint_GetByIndex(uint32_t index);
-uint32_t EQAPP_Waypoint_GetIndexNearestToLocation(float y, float x, float z);
 uint32_t EQAPP_Waypoint_GetGScore(EQApp::Waypoint_ptr waypoint1, EQApp::Waypoint_ptr waypoint2);
 uint32_t EQAPP_Waypoint_GetHScore(EQApp::Waypoint_ptr waypoint1, EQApp::Waypoint_ptr waypoint2);
 void EQAPP_Waypoint_ComputeScores(EQApp::Waypoint_ptr waypoint, EQApp::Waypoint_ptr waypointEnd);
+EQApp::Waypoint_ptr EQAPP_Waypoint_GetByIndex(uint32_t index);
+uint32_t EQAPP_Waypoint_GetIndexNearestToLocation(float y, float x, float z);
+uint32_t EQAPP_Waypoint_GetIndexNearestInList(EQApp::WaypointIndexList& indexList);
+EQApp::WaypointIndexList EQAPP_Waypoint_GetIndexesInLineOfSight();
+void EQAPP_Waypoint_RemoveIndexesWithNoConnectionsFromList(EQApp::WaypointIndexList& indexList);
 EQApp::WaypointIndexList EQAPP_Waypoint_GetPath(uint32_t fromIndex, uint32_t toIndex);
 void EQAPP_Waypoint_PrintPath(EQApp::WaypointIndexList& indexList, uint32_t fromIndex);
 void EQAPP_Waypoint_FollowPath(EQApp::WaypointIndexList& indexList);
@@ -502,6 +507,28 @@ void EQAPP_Waypoint_Pull(uint32_t index, float distance)
     EQ_ApplyVectorBackward(waypoint->Y, waypoint->X, playerSpawnHeadingRounded, distance);
 }
 
+uint32_t EQAPP_Waypoint_GetGScore(EQApp::Waypoint_ptr waypoint1, EQApp::Waypoint_ptr waypoint2)
+{
+    return waypoint1->G + ((waypoint2->X == waypoint1->X || waypoint2->Y == waypoint1->Y) ? 10 : 14);
+}
+
+uint32_t EQAPP_Waypoint_GetHScore(EQApp::Waypoint_ptr waypoint1, EQApp::Waypoint_ptr waypoint2)
+{
+    // manhattan distance
+    ////return (uint32_t)(std::fabsf(waypoint1->x - waypoint2->x) + std::fabsf(waypoint1->y - waypoint2->y) * 10);
+
+    // euclidean distance
+    return (uint32_t)(std::sqrt(std::pow(waypoint2->X - waypoint1->X, 2) + std::pow(waypoint2->Y - waypoint1->Y, 2) + std::pow(waypoint2->Z - waypoint1->Z, 2)));
+}
+
+void EQAPP_Waypoint_ComputeScores(EQApp::Waypoint_ptr waypoint, EQApp::Waypoint_ptr waypointEnd)
+{
+    waypoint->G = EQAPP_Waypoint_GetGScore(waypoint, waypoint->Parent);
+    waypoint->H = EQAPP_Waypoint_GetHScore(waypoint, waypointEnd);
+
+    waypoint->F = waypoint->G + waypoint->H;
+}
+
 EQApp::Waypoint_ptr EQAPP_Waypoint_GetByIndex(uint32_t index)
 {
     for (auto& waypoint : g_WaypointList)
@@ -532,37 +559,142 @@ uint32_t EQAPP_Waypoint_GetIndexNearestToLocation(float y, float x, float z)
     return distanceList.begin()->second;
 }
 
-uint32_t EQAPP_Waypoint_GetGScore(EQApp::Waypoint_ptr waypoint1, EQApp::Waypoint_ptr waypoint2)
+uint32_t EQAPP_Waypoint_GetIndexNearestInList(EQApp::WaypointIndexList& indexList)
 {
-    return waypoint1->G + ((waypoint2->X == waypoint1->X || waypoint2->Y == waypoint1->Y) ? 10 : 14);
+    std::map<float, uint32_t> distanceList;
+
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return NULL;
+    }
+
+    auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
+    auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
+    auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
+
+    for (auto& index : indexList)
+    {
+        auto waypoint = EQAPP_Waypoint_GetByIndex(index);
+        if (waypoint == NULL)
+        {
+            continue;
+        }
+
+        float distance = EQ_CalculateDistance3D(playerSpawnY, playerSpawnX, playerSpawnZ, waypoint->Y, waypoint->X, waypoint->Z);
+
+        distanceList.insert(std::make_pair(distance, waypoint->Index));
+    }
+
+    return distanceList.begin()->second;
 }
 
-uint32_t EQAPP_Waypoint_GetHScore(EQApp::Waypoint_ptr waypoint1, EQApp::Waypoint_ptr waypoint2)
+EQApp::WaypointIndexList EQAPP_Waypoint_GetIndexesInLineOfSight()
 {
-    // manhattan distance
-    ////return (uint32_t)(std::fabsf(waypoint1->x - waypoint2->x) + std::fabsf(waypoint1->y - waypoint2->y) * 10);
+    EQApp::WaypointIndexList indexList;
 
-    // euclidean distance
-    return (uint32_t)(std::sqrt(std::pow(waypoint2->X - waypoint1->X, 2) + std::pow(waypoint2->Y - waypoint1->Y, 2) + std::pow(waypoint2->Z - waypoint1->Z, 2)));
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return indexList;
+    }
+
+    for (auto& waypoint : g_WaypointList)
+    {
+        if (EQ_CanSpawnCastRayToLocation(playerSpawn, waypoint.Y, waypoint.X, waypoint.Z) == true)
+        {
+            indexList.push_back(waypoint.Index);
+        }
+    }
+
+    return indexList;
 }
 
-void EQAPP_Waypoint_ComputeScores(EQApp::Waypoint_ptr waypoint, EQApp::Waypoint_ptr waypointEnd)
+void EQAPP_Waypoint_RemoveIndexesWithNoConnectionsFromList(EQApp::WaypointIndexList& indexList)
 {
-    waypoint->G = EQAPP_Waypoint_GetGScore(waypoint, waypoint->Parent);
-    waypoint->H = EQAPP_Waypoint_GetHScore(waypoint, waypointEnd);
+    for (auto it = indexList.begin(); it != indexList.end(); it++)
+    {
+        auto waypoint = EQAPP_Waypoint_GetByIndex(*it);
+        if (waypoint == NULL)
+        {
+            continue;
+        }
 
-    waypoint->F = waypoint->G + waypoint->H;
+        if (waypoint->ConnectIndexList.size() == 0)
+        {
+            it = indexList.erase(it);
+            it--;
+            continue;
+        }
+    }
+}
+
+uint32_t EQAPP_Waypoint_GetIndexForGoto(uint32_t toIndex)
+{
+    EQApp::WaypointIndexList indexList = EQAPP_Waypoint_GetIndexesInLineOfSight();
+    if (indexList.size() == 0)
+    {
+        return 0xFFFFFFFF;
+    }
+
+    EQAPP_Waypoint_RemoveIndexesWithNoConnectionsFromList(indexList);
+
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return 0xFFFFFFFF;
+    }
+
+    std::map<float, uint32_t> distanceList;
+
+    auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
+    auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
+    auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
+
+    for (auto& index : indexList)
+    {
+        auto waypoint = EQAPP_Waypoint_GetByIndex(index);
+        if (waypoint == NULL)
+        {
+            continue;
+        }
+
+        float distance = EQ_CalculateDistance3D(playerSpawnY, playerSpawnX, playerSpawnZ, waypoint->Y, waypoint->X, waypoint->Z);
+
+        distanceList.insert(std::make_pair(distance, waypoint->Index));
+    }
+
+    for (auto it = distanceList.begin(); it != distanceList.end(); it++)
+    {
+        auto waypoint = EQAPP_Waypoint_GetByIndex(it->second);
+        if (waypoint == NULL)
+        {
+            continue;
+        }
+
+        auto pathIndexList = EQAPP_Waypoint_GetPath(waypoint->Index, toIndex);
+        if (pathIndexList.size() == 0)
+        {
+            it = distanceList.erase(it);
+            it--;
+            continue;
+        }
+    }
+
+    return distanceList.begin()->second;
 }
 
 EQApp::WaypointIndexList EQAPP_Waypoint_GetPath(uint32_t fromIndex, uint32_t toIndex)
 {
     EQApp::WaypointIndexList indexList;
 
+/*
     if (fromIndex == toIndex)
     {
         EQAPP_PrintDebugText(__FUNCTION__, "from index and to index are the same");
         return indexList;
     }
+*/
 
     if (fromIndex > g_WaypointList.size())
     {
@@ -986,6 +1118,11 @@ void EQAPP_WaypointList_Draw()
                 {
                     drawText << "UseDoor ";
                 }
+
+                if (waypoint.Flags & EQApp::WaypointFlags::kClickToZone)
+                {
+                    drawText << "ClickToZone ";
+                }
             }
 
             EQ_DrawTextByColor(drawText.c_str(), (int)waypointScreenX, (int)waypointScreenY, EQ_DRAW_TEXT_COLOR_WHITE);
@@ -1048,6 +1185,8 @@ void EQAPP_WaypointList_Draw()
 
 void EQAPP_Waypoint_FollowPath(EQApp::WaypointIndexList& indexList)
 {
+    // TODO: look up, down, forward if swimming and waypoints are underwater (going to Veksar, etc)
+
     if (indexList.size() == 0)
     {
         EQAPP_Waypoint_FollowPath_Off();
@@ -1071,7 +1210,7 @@ void EQAPP_Waypoint_FollowPath(EQApp::WaypointIndexList& indexList)
         auto waypoint = EQAPP_Waypoint_GetByIndex(*it);
         if (waypoint != NULL)
         {
-            float waypointDistance = EQ_CalculateDistance3D(playerSpawnY, playerSpawnX, playerSpawnZ, waypoint->Y, waypoint->X, waypoint->Z);
+            float waypointDistance = EQ_CalculateDistance(playerSpawnY, playerSpawnX, waypoint->Y, waypoint->X);
 
             if (waypointDistance > g_WaypointFollowPathDistance)
             {
@@ -1084,16 +1223,30 @@ void EQAPP_Waypoint_FollowPath(EQApp::WaypointIndexList& indexList)
                 if (waypoint->Flags & EQApp::WaypointFlags::kJump)
                 {
                     EQ_ExecuteCommand(EQ_EXECUTECMD_JUMP, 1);
+
+                    std::cout << "Waypoint Follow Path: Jump" << std::endl;
                 }
 
                 if (waypoint->Flags & EQApp::WaypointFlags::kUseDoor)
                 {
                     EQ_UseDoorByDistance(g_WaypointUseDoorDistance);
+
+                    std::cout << "Waypoint Follow Path: UseDoor" << std::endl;
                 }
 
                 auto itLast = std::prev(indexList.end());
                 if (it == itLast)
                 {
+                    if (waypoint->Flags & EQApp::WaypointFlags::kClickToZone)
+                    {
+                        for (unsigned int i = 0; i < 10; i++)
+                        {
+                            EQ_UseDoorByDistance(g_WaypointUseDoorDistance);
+                        }
+
+                        std::cout << "Waypoint Follow Path: ClickToZone" << std::endl;
+                    }
+
                     EQAPP_Waypoint_FollowPath_Off();
                     return;
                 }

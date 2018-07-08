@@ -631,7 +631,6 @@ void EQAPP_InterpretCommand_InterpretArguments(const std::string& commandText, c
         std::stringstream ss;
         ss << prependText << token;
 
-        ////EQ_InterpretCommand(ss.str().c_str());
         g_InterpretCommandQueue.push_back(ss.str());
     }
 }
@@ -662,12 +661,11 @@ void EQAPP_InterpretCommand_InterpretArgumentsRandom(const std::string& commandT
         return;
     }
 
-    ////std::cout << "Random Number: " << number << std::endl;
+    ////std::cout << "random number: " << number << std::endl;
 
     std::stringstream ss;
     ss << prependText << number;
 
-    ////EQ_InterpretCommand(ss.str().c_str());
     g_InterpretCommandQueue.push_back(ss.str());
 }
 
@@ -1042,173 +1040,6 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
             EQ_TakeScreenshot(ss.str().c_str());
         }
-
-        return true;
-    }
-
-    if (commandText == "//Campfire")
-    {
-        EQ_UseItem("Fellowship Registration Insignia");
-
-        return true;
-    }
-
-    if (commandText == "//Stein")
-    {
-        EQ_UseItem("Drunkard's Stein");
-
-        return true;
-    }
-
-    if (commandText == "//Origin")
-    {
-        EQ_UseAlternateAbility(EQAlternateAbilities::General::Origin);
-
-        return true;
-    }
-
-    if (commandText == "//Gate")
-    {
-        EQ_UseAlternateAbility(EQAlternateAbilities::Shared::Gate);
-
-        return true;
-    }
-
-    if (commandText == "//MassGroupBuff" || commandText == "//MGB")
-    {
-        auto playerSpawn = EQ_GetPlayerSpawn();
-        if (playerSpawn != NULL)
-        {
-            auto spawnClass = EQ_GetSpawnClass(playerSpawn);
-
-            if (EQ_IsSpawnClassPriest(spawnClass) == true)
-            {
-                EQ_UseAlternateAbility(EQAlternateAbilities::Priest::Mass_Group_Buff);
-            }
-            else if (EQ_IsSpawnClassCaster(spawnClass) == true)
-            {
-                EQ_UseAlternateAbility(EQAlternateAbilities::Caster::Mass_Group_Buff);
-            }
-        }
-
-        return true;
-    }
-
-    if (commandText == "//TranquilBlessings" || commandText == "//MGB2")
-    {
-        EQ_UseAlternateAbility(EQAlternateAbilities::Shared::Tranquil_Blessings);
-
-        return true;
-    }
-
-    if (commandText == "//ThroneOfHeroes" || commandText == "//GuildLobby" || commandText == "//GL")
-    {
-        EQ_UseAlternateAbility(EQAlternateAbilities::Special::Throne_of_Heroes);
-
-        return true;
-    }
-
-    if (commandText == "//HarmonicDissonance" || commandText == "//TheaterOfBlood")
-    {
-        EQ_UseAlternateAbility(EQAlternateAbilities::Special::Harmonic_Dissonance);
-
-        return true;
-    }
-
-    if (commandText == "//BindAffinity")
-    {
-        EQ_UseAlternateAbility(EQAlternateAbilities::Shared::Bind_Affinity);
-
-        return true;
-    }
-
-    if (commandText == "//Identify")
-    {
-        EQ_UseAlternateAbility(EQAlternateAbilities::General::Identify);
-
-        return true;
-    }
-
-    if (commandText == "//LessonOfTheDevoted" || commandText == "//LOTD")
-    {
-        EQ_UseAlternateAbility(EQAlternateAbilities::Special::Lesson_of_the_Devoted);
-
-        return true;
-    }
-
-    if (commandText == "//ExpendientRecovery" || commandText == "//EXPR")
-    {
-        EQ_UseAlternateAbility(EQAlternateAbilities::Special::Expedient_Recovery);
-
-        return true;
-    }
-
-    if (commandText == "//ArmorOfExperience" || commandText == "//AOEXP")
-    {
-        EQ_UseAlternateAbility(EQAlternateAbilities::Special::Armor_of_Experience);
-
-        return true;
-    }
-
-    if (commandText == "//InfusionOfTheFaithful" || commandText == "//IOTF")
-    {
-        EQ_UseAlternateAbility(EQAlternateAbilities::Special::Infusion_of_the_Faithful);
-
-        return true;
-    }
-
-    if (commandText == "//IntensityOfTheResolute" || commandText == "//IOTR")
-    {
-        EQ_UseAlternateAbility(EQAlternateAbilities::Special::Intensity_of_the_Resolute);
-
-        return true;
-    }
-
-    if (commandText == "//Banestrike")
-    {
-        EQ_UseAlternateAbility(EQAlternateAbilities::Special::Banestrike);
-
-        return true;
-    }
-
-    if (commandText == "//SteadfastServant")
-    {
-        EQ_UseAlternateAbility(EQAlternateAbilities::Special::Steadfast_Servant);
-
-        return true;
-    }
-
-    if (commandText == "//ChaoticJester")
-    {
-        EQ_UseAlternateAbility(EQAlternateAbilities::Special::Chaotic_Jester);
-
-        return true;
-    }
-
-    if (commandText == "//SummonClockworkBanker" || commandText == "//SCB")
-    {
-        EQ_UseAlternateAbility(EQAlternateAbilities::Special::Summon_Clockwork_Banker);
-
-        return true;
-    }
-
-    if (commandText == "//SummonPermutationPeddler" || commandText == "//SPP")
-    {
-        EQ_UseAlternateAbility(EQAlternateAbilities::Special::Summon_Permutation_Peddler);
-
-        return true;
-    }
-
-    if (commandText == "//SummonPersonalTributeMaster" || commandText == "//SPTM")
-    {
-        EQ_UseAlternateAbility(EQAlternateAbilities::Special::Summon_Personal_Tribute_Master);
-
-        return true;
-    }
-
-    if (commandText == "//SummonResupplyAgent" || commandText == "//SRA")
-    {
-        EQ_UseAlternateAbility(EQAlternateAbilities::Special::Summon_Resupply_Agent);
 
         return true;
     }
@@ -4174,13 +4005,13 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                     uint32_t number1 = std::stoul(tokens.at(0));
                     uint32_t number2 = std::stoul(tokens.at(1));
 
-                    auto waypoint1 = EQAPP_Waypoint_GetByIndex(number1);
-                    if (waypoint1 != NULL)
+                    auto waypoint = EQAPP_Waypoint_GetByIndex(number1);
+                    if (waypoint != NULL)
                     {
                         auto playerSpawn = EQ_GetPlayerSpawn();
                         if (playerSpawn != NULL)
                         {
-                            if (EQ_CanSpawnCastRayToLocation(playerSpawn, waypoint1->Y, waypoint1->X, waypoint1->Z) == true)
+                            if (EQ_CanSpawnCastRayToLocation(playerSpawn, waypoint->Y, waypoint->X, waypoint->Z) == true)
                             {
                                 g_WaypointGetPathIndexList = EQAPP_Waypoint_GetPath(number1, number2);
 
@@ -4189,10 +4020,14 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                                 {
                                     EQAPP_Waypoint_FollowPath_On();
                                 }
+                                else
+                                {
+                                    std::cout << "No path can be found." << std::endl;
+                                }
                             }
                             else
                             {
-                                std::cout << "You cannot see the starting waypoint." << std::endl;
+                                std::cout << "You cannot see the starting waypoint. (Index: " << waypoint->Index << ")" << std::endl;;
                             }
                         }
                     }
@@ -4277,7 +4112,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                             {
                                 waypoint->Flags = 0;
 
-                                std::cout << "Waypoint index " << waypoint->Index << " flags removed.";
+                                std::cout << "Waypoint index " << waypoint->Index << " flags set to none.";
                             }
                             else if (str == "Jump")
                             {
@@ -4290,6 +4125,12 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                                 waypoint->Flags |= EQApp::WaypointFlags::kUseDoor;
 
                                 std::cout << "Waypoint index " << waypoint->Index << " flagged with UseDoor.";
+                            }
+                            else if (str == "ClickToZone")
+                            {
+                                waypoint->Flags |= EQApp::WaypointFlags::kClickToZone;
+
+                                std::cout << "Waypoint index " << waypoint->Index << " flagged with ClickToZone.";
                             }
                         }
                     }
@@ -4578,6 +4419,69 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                     if (waypoint != NULL)
                     {
                         waypoint->Z = waypoint->Z - number2;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    if (EQAPP_String_BeginsWith(commandText, "//WPG ") == true || EQAPP_String_BeginsWith(commandText, "//WPGoto ") == true)
+    {
+        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+        if (commandTextAfterSpace.size() != 0)
+        {
+            uint32_t toIndex = 0xFFFFFFFF;
+
+            if (EQAPP_String_IsDigits(commandTextAfterSpace) == true)
+            {
+                toIndex = std::stoul(commandTextAfterSpace);
+            }
+            else
+            {
+                for (auto& waypoint : g_WaypointList)
+                {
+                    if (waypoint.Name == commandTextAfterSpace)
+                    {
+                        toIndex = waypoint.Index;
+                        break;
+                    }
+                }
+            }
+
+            uint32_t fromIndex = EQAPP_Waypoint_GetIndexForGoto(toIndex);
+            if (fromIndex == 0xFFFFFFFF || toIndex == 0xFFFFFFFF)
+            {
+                std::cout << "No path from waypoint index " << fromIndex << " to " << toIndex << " can be found." << std::endl;
+            }
+
+            if (fromIndex != 0xFFFFFFFF && toIndex != 0xFFFFFFFF)
+            {
+                auto waypoint = EQAPP_Waypoint_GetByIndex(fromIndex);
+                if (waypoint != NULL)
+                {
+                    auto playerSpawn = EQ_GetPlayerSpawn();
+                    if (playerSpawn != NULL)
+                    {
+                        if (EQ_CanSpawnCastRayToLocation(playerSpawn, waypoint->Y, waypoint->X, waypoint->Z) == true)
+                        {
+                            g_WaypointGetPathIndexList = EQAPP_Waypoint_GetPath(fromIndex, toIndex);
+
+                            g_WaypointFollowPathIndexList = EQAPP_Waypoint_GetPath(fromIndex, toIndex);
+                            if (g_WaypointFollowPathIndexList.size() != 0)
+                            {
+                                EQAPP_Waypoint_FollowPath_On();
+                            }
+                            else
+                            {
+                                std::cout << "No path can be found." << std::endl;
+                            }
+                        }
+                        else
+                        {
+                            std::cout << "You cannot see the starting waypoint. (Index: " << waypoint->Index << ")" << std::endl;
+                        }
                     }
                 }
             }

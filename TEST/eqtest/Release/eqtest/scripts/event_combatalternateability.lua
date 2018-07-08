@@ -122,9 +122,12 @@ function OnThreeSeconds()
         end
     elseif playerSpawnClass == EQ_CLASS_BEASTLORD then
         if targetSpawnHPPercent > 50 and targetSpawnHPPercent < 90 then
-            table.insert(alternateAbilityList, 127) -- Frenzy of Spirit
             table.insert(alternateAbilityList, 362) -- Roar of Thunder
+            table.insert(alternateAbilityList, 981) -- Attack of the Warders
+            table.insert(alternateAbilityList, 127) -- Frenzy of Spirit
             table.insert(alternateAbilityList, 245) -- Bestial Alignment
+            table.insert(alternateAbilityList, 11080) -- Chameleon Strike
+            table.insert(alternateAbilityList, 1432) -- Fundament: Third Spire of the Savage
         end
     elseif playerSpawnClass == EQ_CLASS_BERSERKER then
         if targetSpawnHPPercent > 50 and targetSpawnHPPercent < 90 then
@@ -160,24 +163,37 @@ function OnThreeSeconds()
         end
     elseif playerSpawnClass == EQ_CLASS_MAGICIAN then
         if targetSpawnHPPercent > 50 and targetSpawnHPPercent < 90 then
+            table.insert(alternateAbilityList, 8800) -- Force of Elements
             table.insert(alternateAbilityList, 174) -- Servant of Ro
             table.insert(alternateAbilityList, 207) -- Host of the Elements
+            table.insert(alternateAbilityList, 1211) -- Focus of Arcanum
+            table.insert(alternateAbilityList, 1041) -- Malosinete
+            table.insert(alternateAbilityList, 785) -- Heart of Vapor
         end
     elseif playerSpawnClass == EQ_CLASS_RANGER then
         if targetSpawnHPPercent > 50 and targetSpawnHPPercent < 90 then
+            table.insert(alternateAbilityList, 874) -- Pack Hunt
             table.insert(alternateAbilityList, 462) -- Auspice of the Hunter
             table.insert(alternateAbilityList, 184) -- Guardian of the Forest
             table.insert(alternateAbilityList, 872) -- Outrider's Attack
+            table.insert(alternateAbilityList, 3804) -- Outrider's Accuracy
+            table.insert(alternateAbilityList, 2235) -- Imbued Ferocity
         end
     elseif playerSpawnClass == EQ_CLASS_SHADOWKNIGHT then
         if targetSpawnHPPercent > 50 and targetSpawnHPPercent < 90 then
-            --table.insert(alternateAbilityList, ) -- 
+            --table.insert(alternateAbilityList, 9403) -- Visage of Death
             --table.insert(alternateAbilityList,) -- 
         end
     elseif playerSpawnClass == EQ_CLASS_SHAMAN then
         if targetSpawnHPPercent > 50 and targetSpawnHPPercent < 90 then
+            table.insert(alternateAbilityList, 861) -- Languid Bite
+            table.insert(alternateAbilityList, 856) -- Tigir's Insect Swarm (AOE, 50% slow)
+            --table.insert(alternateAbilityList, 3729) -- Turgur's Swarm (Target, 75% slow)
             table.insert(alternateAbilityList, 177) -- Spirit Call
             table.insert(alternateAbilityList, 50) -- Rabid Bear
+            table.insert(alternateAbilityList, 148) -- Malosinete
+            table.insert(alternateAbilityList, 857) -- Dampen Resistance
+            table.insert(alternateAbilityList, 1492) -- Fundament: Third Spire of the Ancestors
         end
     elseif playerSpawnClass == EQ_CLASS_WARRIOR then
         if targetSpawnHPPercent > 10 then
