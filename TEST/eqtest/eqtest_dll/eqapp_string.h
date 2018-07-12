@@ -42,12 +42,31 @@ bool EQAPP_String_EndsWith(std::string& subject, const std::string& search)
 
 void EQAPP_String_ReplaceAll(std::string& subject, const std::string& search, const std::string& replace)
 {
+/*
     std::size_t position = 0;
     while ((position = subject.find(search, position)) != std::string::npos)
     {
          subject.replace(position, search.length(), replace);
          position += replace.length();
     }
+*/
+
+    std::string newString;
+    newString.reserve(subject.length());
+
+    std::string::size_type lastPosition = 0;
+    std::string::size_type findPosition;
+
+    while((findPosition = subject.find(search, lastPosition)) != std::string::npos)
+    {
+        newString.append(subject, lastPosition, findPosition - lastPosition);
+        newString += replace;
+        lastPosition = findPosition + search.length();
+    }
+
+    newString += subject.substr(lastPosition);
+
+    subject.swap(newString);
 }
 
 std::string EQAPP_String_GetBetween(std::string& subject, const std::string& begin, const std::string& end)

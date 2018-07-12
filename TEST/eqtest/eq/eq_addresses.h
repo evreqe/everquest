@@ -581,6 +581,8 @@ uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__EnterZone = 0x0; // "Initializing world
     sub_8D8140("Zone initialized.");
 */
 
+uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__DoPercentConvert = 0x0;
+
 uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd = 0x0; // "#%s %s"
 /*
 CEverQuest__InterpretCmd()
@@ -1359,13 +1361,14 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows    = CXWndManager__DrawWindows_x;
 
     EQ_ADDRESS_POINTER_CEverQuest = pinstCEverQuest_x;
-    EQ_ADDRESS_FUNCTION_CEverQuest__EnterZone       = CEverQuest__EnterZone_x;
-    EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd    = CEverQuest__InterpretCmd_x;
-    EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat        = CEverQuest__dsp_chat_x;
-    EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting    = 0x005CEF40;
-    EQ_ADDRESS_FUNCTION_CEverQuest__LMouseUp        = CEverQuest__LMouseUp_x;
-    EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp        = CEverQuest__RMouseUp_x;
-    EQ_ADDRESS_FUNCTION_CEverQuest__SetGameState    = CEverQuest__SetGameState_x;
+    EQ_ADDRESS_FUNCTION_CEverQuest__DoPercentConvert    = CEverQuest__DoPercentConvert_x;
+    EQ_ADDRESS_FUNCTION_CEverQuest__EnterZone           = CEverQuest__EnterZone_x;
+    EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd        = CEverQuest__InterpretCmd_x;
+    EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat            = CEverQuest__dsp_chat_x;
+    EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting        = 0x005CEF40;
+    EQ_ADDRESS_FUNCTION_CEverQuest__LMouseUp            = CEverQuest__LMouseUp_x;
+    EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp            = CEverQuest__RMouseUp_x;
+    EQ_ADDRESS_FUNCTION_CEverQuest__SetGameState        = CEverQuest__SetGameState_x;
 
     EQ_ADDRESS_POINTER_CDisplay = pinstCDisplay_x;
     EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2         = CDisplay__WriteTextHD2_x;

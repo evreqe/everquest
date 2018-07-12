@@ -83,6 +83,7 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CEverQuest);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CEverQuest__DoPercentConvert);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting);

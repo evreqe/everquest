@@ -216,7 +216,12 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//WPSave",                       &EQAPP_WaypointList_Save},
     {"//WPPrint",                      &EQAPP_WaypointList_Print},
     {"//WPClear",                      &EQAPP_WaypointList_Clear},
-    {"//WPDebug",                      &EQAPP_Waypoint_Debug_Toggle},
+    {"//WPEditor",                     &EQAPP_Waypoint_Editor_Toggle},
+    {"//WPEditorOn",                   &EQAPP_Waypoint_Editor_On},
+    {"//WPEditorOff",                  &EQAPP_Waypoint_Editor_Off},
+    {"//WPEdit",                       &EQAPP_Waypoint_Editor_Toggle},
+    {"//WPEditOn",                     &EQAPP_Waypoint_Editor_On},
+    {"//WPEditOff",                    &EQAPP_Waypoint_Editor_Off},
     ////
     ////{"//Null",                         &EQAPP_InterpretCommand_NULL},
     ////
@@ -464,7 +469,7 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
 };
 
 void EQAPP_InterpretCommand_Execute();
-void EQAPP_InterpretCommand_ConvertPercentText(std::string& text);
+void EQAPP_InterpretCommand_ConvertText(std::string& text);
 bool EQAPP_InterpretCommand_HandleEvent_CEverQuest__InterpretCmd(void* this_ptr, class EQPlayer* player, const char* commandText_);
 void EQAPP_InterpretCommand_InterpretArguments(const std::string& commandText, const std::string& prependText);
 void EQAPP_InterpretCommand_InterpretArgumentsRandom(const std::string& commandText, const std::string& prependText);
@@ -488,24 +493,9 @@ void EQAPP_InterpretCommand_Execute()
     g_InterpretCommandQueue.pop_front();
 }
 
-void EQAPP_InterpretCommand_ConvertPercentText(std::string& text)
+void EQAPP_InterpretCommand_ConvertText(std::string& text)
 {
-    if (text.find("%PlayerName") != std::string::npos)
-    {
-        auto playerSpawn = EQ_GetPlayerSpawn();
-        if (playerSpawn != NULL)
-        {
-            std::string str = EQ_GetSpawnName(playerSpawn);
-            if (str.size() != 0)
-            {
-                EQAPP_String_ReplaceAll(text, "%PlayerName", str);
-            }
-        }
-
-        return;
-    }
-
-    if (text.find("%PlayerID") != std::string::npos)
+    if (text.find("${Player.ID}") != std::string::npos)
     {
         auto playerSpawn = EQ_GetPlayerSpawn();
         if (playerSpawn != NULL)
@@ -515,14 +505,25 @@ void EQAPP_InterpretCommand_ConvertPercentText(std::string& text)
             std::string str = std::to_string(spawnID);
             if (str.size() != 0)
             {
-                EQAPP_String_ReplaceAll(text, "%PlayerID", str);
+                EQAPP_String_ReplaceAll(text, "${Player.ID}", str);
             }
         }
-
-        return;
     }
 
-    if (text.find("%PlayerClass") != std::string::npos)
+    if (text.find("${Player.Name}") != std::string::npos)
+    {
+        auto playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn != NULL)
+        {
+            std::string str = EQ_GetSpawnName(playerSpawn);
+            if (str.size() != 0)
+            {
+                EQAPP_String_ReplaceAll(text, "${Player.Name}", str);
+            }
+        }
+    }
+
+    if (text.find("${Player.Class}") != std::string::npos)
     {
         auto playerSpawn = EQ_GetPlayerSpawn();
         if (playerSpawn != NULL)
@@ -532,14 +533,12 @@ void EQAPP_InterpretCommand_ConvertPercentText(std::string& text)
             std::string str = EQ_GetClassNameByKey(spawnClass);
             if (str.size() != 0)
             {
-                EQAPP_String_ReplaceAll(text, "%PlayerClass", str);
+                EQAPP_String_ReplaceAll(text, "${Player.Class}", str);
             }
         }
-
-        return;
     }
 
-    if (text.find("%PlayerClassShortName") != std::string::npos)
+    if (text.find("${Player.ClassShortName}") != std::string::npos)
     {
         auto playerSpawn = EQ_GetPlayerSpawn();
         if (playerSpawn != NULL)
@@ -549,14 +548,12 @@ void EQAPP_InterpretCommand_ConvertPercentText(std::string& text)
             std::string str = EQ_GetClassShortNameByKey(spawnClass);
             if (str.size() != 0)
             {
-                EQAPP_String_ReplaceAll(text, "%PlayerClassShortName", str);
+                EQAPP_String_ReplaceAll(text, "${Player.ClassShortName}", str);
             }
         }
-
-        return;
     }
 
-    if (text.find("%TargetID") != std::string::npos)
+    if (text.find("${Target.ID}") != std::string::npos)
     {
         auto targetSpawn = EQ_GetTargetSpawn();
         if (targetSpawn != NULL)
@@ -566,11 +563,22 @@ void EQAPP_InterpretCommand_ConvertPercentText(std::string& text)
             std::string str = std::to_string(spawnID);
             if (str.size() != 0)
             {
-                EQAPP_String_ReplaceAll(text, "%TargetID", str);
+                EQAPP_String_ReplaceAll(text, "${Target.ID}", str);
             }
         }
+    }
 
-        return;
+    if (text.find("${Target.Name}") != std::string::npos)
+    {
+        auto targetpawn = EQ_GetTargetSpawn();
+        if (targetpawn != NULL)
+        {
+            std::string str = EQ_GetSpawnName(targetpawn);
+            if (str.size() != 0)
+            {
+                EQAPP_String_ReplaceAll(text, "${Target.Name}", str);
+            }
+        }
     }
 }
 
@@ -587,6 +595,8 @@ bool EQAPP_InterpretCommand_HandleEvent_CEverQuest__InterpretCmd(void* this_ptr,
         return true;
     }
 
+    EQAPP_InterpretCommand_ConvertText(commandText);
+
     // remove comments from command text
     std::string::size_type findComment1 = commandText.find(" #");
     if (findComment1 != std::string::npos)
@@ -601,8 +611,6 @@ bool EQAPP_InterpretCommand_HandleEvent_CEverQuest__InterpretCmd(void* this_ptr,
             commandText = commandText.substr(0, findComment2);
         }
     }
-
-    EQAPP_InterpretCommand_ConvertPercentText(commandText);
 
     std::string firstTwoCharacters = commandText.substr(0, 2);
     if (firstTwoCharacters == "//")
@@ -3428,7 +3436,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
             {
                 EQAPP_BoxChat_SendText(commandText);
 
-                std::cout << "Box Chat to '" << name << "': " << tokens.at(2) << std::endl;
+                std::cout << "Box Chat to '" << name << "': " << commandText << std::endl;
             }
         }
 
@@ -3451,7 +3459,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
             {
                 EQAPP_BoxChat_SendText(commandText);
 
-                std::cout << "Box Chat to Channel '" << name << "': " << tokens.at(2) << std::endl;
+                std::cout << "Box Chat to Channel '" << name << "': " << commandText << std::endl;
             }
         }
 
@@ -3469,30 +3477,39 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
         if (commandTextAfterSpace.size() != 0)
         {
-            auto groupMemberSpawnList = EQ_GetGroupMemberSpawnList();
-            if (groupMemberSpawnList.size() != 0)
+            auto playerSpawn = EQ_GetPlayerSpawn();
+            if (playerSpawn != NULL)
             {
-                for (auto& groupMemberSpawn : groupMemberSpawnList)
+                auto groupMemberSpawnList = EQ_GetGroupMemberSpawnList();
+                if (groupMemberSpawnList.size() != 0)
                 {
-                    if (groupMemberSpawn == NULL)
+                    for (auto& groupMemberSpawn : groupMemberSpawnList)
                     {
-                        continue;
+                        if (groupMemberSpawn == playerSpawn)
+                        {
+                            continue;
+                        }
+
+                        if (groupMemberSpawn == NULL)
+                        {
+                            continue;
+                        }
+
+                        std::string groupMemberSpawnName = EQ_GetSpawnName(groupMemberSpawn);
+                        if (groupMemberSpawnName.size() == 0)
+                        {
+                            continue;
+                        }
+
+                        std::stringstream ss;
+                        ss << "//BoxChatTell " << groupMemberSpawnName << " " << commandTextAfterSpace << "\n";
+
+                        EQAPP_BoxChat_SendText(ss.str());
                     }
-
-                    std::string groupMemberSpawnName = EQ_GetSpawnName(groupMemberSpawn);
-                    if (groupMemberSpawnName.size() == 0)
-                    {
-                        continue;
-                    }
-
-                    std::stringstream ss;
-                    ss << "//BoxChatTell " << groupMemberSpawnName << " " << commandTextAfterSpace << "\n";
-
-                    EQAPP_BoxChat_SendText(ss.str());
                 }
-            }
 
-            std::cout << "Box Chat to Group: " << commandTextAfterSpace << std::endl;
+                std::cout << "Box Chat to Group: " << commandTextAfterSpace << std::endl;
+            }
         }
 
         return true;
@@ -3895,211 +3912,570 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (commandText == "//WPA"  || commandText == "//WPAdd")
+    if (g_WaypointIsEnabled == true && g_WaypointEditorIsEnabled == true)
     {
-        EQAPP_Waypoint_Add("");
 
-        return true;
-    }
-
-    if (EQAPP_String_BeginsWith(commandText, "//WPA ") == true || EQAPP_String_BeginsWith(commandText, "//WPAdd ") == true)
-    {
-        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
-        if (commandTextAfterSpace.size() != 0)
+        if (commandText == "//WPA"  || commandText == "//WPAdd")
         {
-            EQAPP_Waypoint_Add(commandTextAfterSpace.c_str());
+            EQAPP_Waypoint_Add("");
+
+            return true;
         }
 
-        return true;
-    }
-
-    if (commandText == "//WPAC" || commandText == "//WPAddConnect")
-    {
-        EQAPP_Waypoint_Add("");
-
-        EQApp::Waypoint_ptr lastWaypoint = &g_WaypointList.back();
-        if (lastWaypoint != NULL)
+        if (EQAPP_String_BeginsWith(commandText, "//WPA ") == true || EQAPP_String_BeginsWith(commandText, "//WPAdd ") == true)
         {
-            auto lastIndex = lastWaypoint->Index;
-            if (lastIndex > 0)
+            std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+            if (commandTextAfterSpace.size() != 0)
             {
-                EQAPP_Waypoint_Connect(lastIndex, lastIndex - 1, false);
+                EQAPP_Waypoint_Add(commandTextAfterSpace.c_str());
             }
+
+            return true;
         }
 
-        return true;
-    }
-
-    if (EQAPP_String_BeginsWith(commandText, "//WPR ") == true || EQAPP_String_BeginsWith(commandText, "//WPRemove ") == true)
-    {
-        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
-        if (commandTextAfterSpace.size() != 0)
+        if (commandText == "//WPAC" || commandText == "//WPAddConnect")
         {
-            if (EQAPP_String_IsDigits(commandTextAfterSpace) == true)
+            EQAPP_Waypoint_Add("");
+
+            EQApp::Waypoint_ptr lastWaypoint = &g_WaypointList.back();
+            if (lastWaypoint != NULL)
             {
-                uint32_t number = std::stoul(commandTextAfterSpace);
-
-                EQAPP_Waypoint_Remove(number);
-            }
-        }
-
-        return true;
-    }
-
-    if (EQAPP_String_BeginsWith(commandText, "//WPC ") == true || EQAPP_String_BeginsWith(commandText, "//WPConnect ") == true)
-    {
-        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
-        if (commandTextAfterSpace.size() != 0)
-        {
-            std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
-            if (tokens.size() == 2)
-            {
-                if (EQAPP_String_IsDigits(tokens.at(0)) == true && EQAPP_String_IsDigits(tokens.at(1)) == true)
+                auto lastIndex = lastWaypoint->Index;
+                if (lastIndex > 0)
                 {
-                    uint32_t number1 = std::stoul(tokens.at(0));
-                    uint32_t number2 = std::stoul(tokens.at(1));
-
-                    EQAPP_Waypoint_Connect(number1, number2, false);
+                    EQAPP_Waypoint_Connect(lastIndex, lastIndex - 1, false);
                 }
             }
+
+            return true;
         }
 
-        return true;
-    }
-
-    if (EQAPP_String_BeginsWith(commandText, "//WPC1 ") == true || EQAPP_String_BeginsWith(commandText, "//WPConnect1 ") == true)
-    {
-        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
-        if (commandTextAfterSpace.size() != 0)
+        if (EQAPP_String_BeginsWith(commandText, "//WPR ") == true || EQAPP_String_BeginsWith(commandText, "//WPRemove ") == true)
         {
-            std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
-            if (tokens.size() == 2)
+            std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+            if (commandTextAfterSpace.size() != 0)
             {
-                if (EQAPP_String_IsDigits(tokens.at(0)) == true && EQAPP_String_IsDigits(tokens.at(1)) == true)
+                if (EQAPP_String_IsDigits(commandTextAfterSpace) == true)
                 {
-                    uint32_t number1 = std::stoul(tokens.at(0));
-                    uint32_t number2 = std::stoul(tokens.at(1));
+                    uint32_t number = std::stoul(commandTextAfterSpace);
 
-                    EQAPP_Waypoint_Connect(number1, number2, true);
+                    EQAPP_Waypoint_Remove(number);
                 }
             }
+
+            return true;
         }
 
-        return true;
-    }
-
-    if (EQAPP_String_BeginsWith(commandText, "//WPD ") == true || EQAPP_String_BeginsWith(commandText, "//WPDisconnect ") == true)
-    {
-        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
-        if (commandTextAfterSpace.size() != 0)
+        if (EQAPP_String_BeginsWith(commandText, "//WPC ") == true || EQAPP_String_BeginsWith(commandText, "//WPConnect ") == true)
         {
-            std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
-            if (tokens.size() == 2)
+            std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+            if (commandTextAfterSpace.size() != 0)
             {
-                if (EQAPP_String_IsDigits(tokens.at(0)) == true && EQAPP_String_IsDigits(tokens.at(1)) == true)
+                std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
+                if (tokens.size() == 2)
                 {
-                    uint32_t number1 = std::stoul(tokens.at(0));
-                    uint32_t number2 = std::stoul(tokens.at(1));
-
-                    EQAPP_Waypoint_Disconnect(number1, number2, false);
-                }
-            }
-        }
-
-        return true;
-    }
-
-    if (EQAPP_String_BeginsWith(commandText, "//WPD1 ") == true || EQAPP_String_BeginsWith(commandText, "//WPDisconnect1 ") == true)
-    {
-        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
-        if (commandTextAfterSpace.size() != 0)
-        {
-            std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
-            if (tokens.size() == 2)
-            {
-                if (EQAPP_String_IsDigits(tokens.at(0)) == true && EQAPP_String_IsDigits(tokens.at(1)) == true)
-                {
-                    uint32_t number1 = std::stoul(tokens.at(0));
-                    uint32_t number2 = std::stoul(tokens.at(1));
-
-                    EQAPP_Waypoint_Disconnect(number1, number2, true);
-                }
-            }
-        }
-
-        return true;
-    }
-
-    if (EQAPP_String_BeginsWith(commandText, "//WPGP ") == true || EQAPP_String_BeginsWith(commandText, "//WPGetPath ") == true)
-    {
-        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
-        if (commandTextAfterSpace.size() != 0)
-        {
-            std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
-            if (tokens.size() == 2)
-            {
-                if (EQAPP_String_IsDigits(tokens.at(0)) == true && EQAPP_String_IsDigits(tokens.at(1)) == true)
-                {
-                    uint32_t number1 = std::stoul(tokens.at(0));
-                    uint32_t number2 = std::stoul(tokens.at(1));
-
-                    g_WaypointGetPathIndexList = EQAPP_Waypoint_GetPath(number1, number2);
-                    if (g_WaypointGetPathIndexList.size() != 0)
+                    if (EQAPP_String_IsDigits(tokens.at(0)) == true && EQAPP_String_IsDigits(tokens.at(1)) == true)
                     {
-                        EQAPP_Waypoint_PrintPath(g_WaypointGetPathIndexList, number1);
+                        uint32_t number1 = std::stoul(tokens.at(0));
+                        uint32_t number2 = std::stoul(tokens.at(1));
+
+                        EQAPP_Waypoint_Connect(number1, number2, false);
                     }
                 }
             }
+
+            return true;
         }
 
-        return true;
-    }
-
-    if (EQAPP_String_BeginsWith(commandText, "//WPFP ") == true || EQAPP_String_BeginsWith(commandText, "//WPFollowPath ") == true)
-    {
-        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
-        if (commandTextAfterSpace.size() != 0)
+        if (EQAPP_String_BeginsWith(commandText, "//WPC1 ") == true || EQAPP_String_BeginsWith(commandText, "//WPConnect1 ") == true)
         {
-            std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
-            if (tokens.size() == 2)
+            std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+            if (commandTextAfterSpace.size() != 0)
             {
-                if (EQAPP_String_IsDigits(tokens.at(0)) == true && EQAPP_String_IsDigits(tokens.at(1)) == true)
+                std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
+                if (tokens.size() == 2)
                 {
-                    uint32_t number1 = std::stoul(tokens.at(0));
-                    uint32_t number2 = std::stoul(tokens.at(1));
-
-                    auto waypoint = EQAPP_Waypoint_GetByIndex(number1);
-                    if (waypoint != NULL)
+                    if (EQAPP_String_IsDigits(tokens.at(0)) == true && EQAPP_String_IsDigits(tokens.at(1)) == true)
                     {
-                        auto playerSpawn = EQ_GetPlayerSpawn();
-                        if (playerSpawn != NULL)
-                        {
-                            if (EQ_CanSpawnCastRayToLocation(playerSpawn, waypoint->Y, waypoint->X, waypoint->Z) == true)
-                            {
-                                g_WaypointGetPathIndexList = EQAPP_Waypoint_GetPath(number1, number2);
+                        uint32_t number1 = std::stoul(tokens.at(0));
+                        uint32_t number2 = std::stoul(tokens.at(1));
 
-                                g_WaypointFollowPathIndexList = EQAPP_Waypoint_GetPath(number1, number2);
-                                if (g_WaypointFollowPathIndexList.size() != 0)
+                        EQAPP_Waypoint_Connect(number1, number2, true);
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        if (EQAPP_String_BeginsWith(commandText, "//WPD ") == true || EQAPP_String_BeginsWith(commandText, "//WPDisconnect ") == true)
+        {
+            std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+            if (commandTextAfterSpace.size() != 0)
+            {
+                std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
+                if (tokens.size() == 2)
+                {
+                    if (EQAPP_String_IsDigits(tokens.at(0)) == true && EQAPP_String_IsDigits(tokens.at(1)) == true)
+                    {
+                        uint32_t number1 = std::stoul(tokens.at(0));
+                        uint32_t number2 = std::stoul(tokens.at(1));
+
+                        EQAPP_Waypoint_Disconnect(number1, number2, false);
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        if (EQAPP_String_BeginsWith(commandText, "//WPD1 ") == true || EQAPP_String_BeginsWith(commandText, "//WPDisconnect1 ") == true)
+        {
+            std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+            if (commandTextAfterSpace.size() != 0)
+            {
+                std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
+                if (tokens.size() == 2)
+                {
+                    if (EQAPP_String_IsDigits(tokens.at(0)) == true && EQAPP_String_IsDigits(tokens.at(1)) == true)
+                    {
+                        uint32_t number1 = std::stoul(tokens.at(0));
+                        uint32_t number2 = std::stoul(tokens.at(1));
+
+                        EQAPP_Waypoint_Disconnect(number1, number2, true);
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        if (EQAPP_String_BeginsWith(commandText, "//WPGP ") == true || EQAPP_String_BeginsWith(commandText, "//WPGetPath ") == true)
+        {
+            std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+            if (commandTextAfterSpace.size() != 0)
+            {
+                std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
+                if (tokens.size() == 2)
+                {
+                    if (EQAPP_String_IsDigits(tokens.at(0)) == true && EQAPP_String_IsDigits(tokens.at(1)) == true)
+                    {
+                        uint32_t number1 = std::stoul(tokens.at(0));
+                        uint32_t number2 = std::stoul(tokens.at(1));
+
+                        g_WaypointGetPathIndexList = EQAPP_Waypoint_GetPath(number1, number2);
+                        if (g_WaypointGetPathIndexList.size() != 0)
+                        {
+                            EQAPP_Waypoint_PrintPath(g_WaypointGetPathIndexList, number1);
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        if (EQAPP_String_BeginsWith(commandText, "//WPFP ") == true || EQAPP_String_BeginsWith(commandText, "//WPFollowPath ") == true)
+        {
+            std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+            if (commandTextAfterSpace.size() != 0)
+            {
+                std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
+                if (tokens.size() == 2)
+                {
+                    if (EQAPP_String_IsDigits(tokens.at(0)) == true && EQAPP_String_IsDigits(tokens.at(1)) == true)
+                    {
+                        uint32_t number1 = std::stoul(tokens.at(0));
+                        uint32_t number2 = std::stoul(tokens.at(1));
+
+                        auto waypoint = EQAPP_Waypoint_GetByIndex(number1);
+                        if (waypoint != NULL)
+                        {
+                            auto playerSpawn = EQ_GetPlayerSpawn();
+                            if (playerSpawn != NULL)
+                            {
+                                if (EQ_CanSpawnCastRayToLocation(playerSpawn, waypoint->Y, waypoint->X, waypoint->Z) == true)
                                 {
-                                    EQAPP_Waypoint_FollowPath_On();
+                                    g_WaypointGetPathIndexList = EQAPP_Waypoint_GetPath(number1, number2);
+
+                                    g_WaypointFollowPathIndexList = EQAPP_Waypoint_GetPath(number1, number2);
+                                    if (g_WaypointFollowPathIndexList.size() != 0)
+                                    {
+                                        EQAPP_Waypoint_FollowPath_On();
+                                    }
+                                    else
+                                    {
+                                        std::cout << "No path can be found." << std::endl;
+                                    }
                                 }
                                 else
                                 {
-                                    std::cout << "No path can be found." << std::endl;
+                                    std::cout << "You cannot see the starting waypoint. (Index: " << waypoint->Index << ")" << std::endl;;
                                 }
-                            }
-                            else
-                            {
-                                std::cout << "You cannot see the starting waypoint. (Index: " << waypoint->Index << ")" << std::endl;;
                             }
                         }
                     }
                 }
             }
+
+            return true;
         }
 
-        return true;
-    }
+        if (EQAPP_String_BeginsWith(commandText, "//WPF ") == true || EQAPP_String_BeginsWith(commandText, "//WPFlag ") == true)
+        {
+            std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+            if (commandTextAfterSpace.size() != 0)
+            {
+                std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
+
+                if (tokens.size() == 1)
+                {
+                    uint32_t number = std::stoul(tokens.at(0));
+
+                    std::string str = tokens.at(1);
+                    if (str.size() != 0)
+                    {
+                        auto waypoint = EQAPP_Waypoint_GetByIndex(number);
+                        if (waypoint != NULL)
+                        {
+                            waypoint->Flags = 0;
+
+                            std::cout << "Waypoint index " << waypoint->Index << " flags removed.";
+                        }
+                    }
+                }
+                else if (tokens.size() == 2)
+                {
+                    if (EQAPP_String_IsDigits(tokens.at(0)) == true)
+                    {
+                        uint32_t number = std::stoul(tokens.at(0));
+
+                        std::string str = tokens.at(1);
+                        if (str.size() != 0)
+                        {
+                            auto waypoint = EQAPP_Waypoint_GetByIndex(number);
+                            if (waypoint != NULL)
+                            {
+                                if (str == "None")
+                                {
+                                    waypoint->Flags = 0;
+
+                                    std::cout << "Waypoint index " << waypoint->Index << " flags set to none.";
+                                }
+                                else if (str == "Jump")
+                                {
+                                    waypoint->Flags |= EQApp::WaypointFlags::kJump;
+
+                                    std::cout << "Waypoint index " << waypoint->Index << " flagged with Jump.";
+                                }
+                                else if (str == "UseDoor")
+                                {
+                                    waypoint->Flags |= EQApp::WaypointFlags::kUseDoor;
+
+                                    std::cout << "Waypoint index " << waypoint->Index << " flagged with UseDoor.";
+                                }
+                                else if (str == "ClickToZone")
+                                {
+                                    waypoint->Flags |= EQApp::WaypointFlags::kClickToZone;
+
+                                    std::cout << "Waypoint index " << waypoint->Index << " flagged with ClickToZone.";
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        if (EQAPP_String_BeginsWith(commandText, "//WPAL ") == true || EQAPP_String_BeginsWith(commandText, "//WPAlign ") == true)
+        {
+            std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+            if (commandTextAfterSpace.size() != 0)
+            {
+                std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
+                if (tokens.size() == 2)
+                {
+                    if (EQAPP_String_IsDigits(tokens.at(0)) == true && EQAPP_String_IsDigits(tokens.at(1)) == true)
+                    {
+                        uint32_t number1 = std::stoul(tokens.at(0));
+                        uint32_t number2 = std::stoul(tokens.at(1));
+
+                        auto playerSpawn = EQ_GetPlayerSpawn();
+                        if (playerSpawn != NULL)
+                        {
+                            auto waypoint1 = EQAPP_Waypoint_GetByIndex(number1);
+                            auto waypoint2 = EQAPP_Waypoint_GetByIndex(number2);
+                            if (waypoint1 != NULL && waypoint2 != NULL)
+                            {
+                                auto diffX = std::fabsf(waypoint1->X - waypoint2->X);
+                                auto diffY = std::fabsf(waypoint1->Y - waypoint2->Y);
+
+                                if (diffY < diffX)
+                                {
+                                    EQAPP_Waypoint_AlignY(number1, number2);
+
+                                    std::cout << "Waypoint index " << number2 << " aligned with waypoint index " << number1 << " on the Y-Axis.";
+                                }
+                                else
+                                {
+                                    EQAPP_Waypoint_AlignX(number1, number2);
+
+                                    std::cout << "Waypoint index " << number2 << " aligned with waypoint index " << number1 << " on the X-Axis.";
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        if (EQAPP_String_BeginsWith(commandText, "//WPALY ") == true || EQAPP_String_BeginsWith(commandText, "//WPAlignY ") == true)
+        {
+            std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+            if (commandTextAfterSpace.size() != 0)
+            {
+                std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
+                if (tokens.size() == 2)
+                {
+                    if (EQAPP_String_IsDigits(tokens.at(0)) == true && EQAPP_String_IsDigits(tokens.at(1)) == true)
+                    {
+                        uint32_t number1 = std::stoul(tokens.at(0));
+                        uint32_t number2 = std::stoul(tokens.at(1));
+
+                        EQAPP_Waypoint_AlignY(number1, number2);
+
+                        std::cout << "Waypoint index " << number1 << " aligned with waypoint index " << number2 << " on the Y-Axis.";
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        if (EQAPP_String_BeginsWith(commandText, "//WPALX ") == true || EQAPP_String_BeginsWith(commandText, "//WPAlignX ") == true)
+        {
+            std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+            if (commandTextAfterSpace.size() != 0)
+            {
+                std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
+                if (tokens.size() == 2)
+                {
+                    if (EQAPP_String_IsDigits(tokens.at(0)) == true && EQAPP_String_IsDigits(tokens.at(1)) == true)
+                    {
+                        uint32_t number1 = std::stoul(tokens.at(0));
+                        uint32_t number2 = std::stoul(tokens.at(1));
+
+                        EQAPP_Waypoint_AlignX(number1, number2);
+
+                        std::cout << "Waypoint index " << number1 << " aligned with waypoint index " << number2 << " on the X-Axis.";
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        if (EQAPP_String_BeginsWith(commandText, "//WPALZ ") == true || EQAPP_String_BeginsWith(commandText, "//WPAlignZ ") == true)
+        {
+            std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+            if (commandTextAfterSpace.size() != 0)
+            {
+                std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
+                if (tokens.size() == 2)
+                {
+                    if (EQAPP_String_IsDigits(tokens.at(0)) == true && EQAPP_String_IsDigits(tokens.at(1)) == true)
+                    {
+                        uint32_t number1 = std::stoul(tokens.at(0));
+                        uint32_t number2 = std::stoul(tokens.at(1));
+
+                        EQAPP_Waypoint_AlignZ(number1, number2);
+
+                        std::cout << "Waypoint index " << number1 << " aligned with waypoint index " << number2 << " on the Z-Axis.";
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        if (EQAPP_String_BeginsWith(commandText, "//WPPush ") == true)
+        {
+            std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+            if (commandTextAfterSpace.size() != 0)
+            {
+                std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
+                if (tokens.size() == 2)
+                {
+                    if (EQAPP_String_IsDigits(tokens.at(0)) == true)
+                    {
+                        uint32_t number1 = std::stoul(tokens.at(0));
+                        float number2 = std::stof(tokens.at(1));
+
+                        EQAPP_Waypoint_Push(number1, number2);
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        if (EQAPP_String_BeginsWith(commandText, "//WPPull ") == true)
+        {
+            std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+            if (commandTextAfterSpace.size() != 0)
+            {
+                std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
+                if (tokens.size() == 2)
+                {
+                    if (EQAPP_String_IsDigits(tokens.at(0)) == true)
+                    {
+                        uint32_t number1 = std::stoul(tokens.at(0));
+                        float number2 = std::stof(tokens.at(1));
+
+                        EQAPP_Waypoint_Pull(number1, number2);
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        if (EQAPP_String_BeginsWith(commandText, "//WPMTP ") == true || EQAPP_String_BeginsWith(commandText, "//WPMoveToPlayer ") == true)
+        {
+            std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+            if (commandTextAfterSpace.size() != 0)
+            {
+                if (EQAPP_String_IsDigits(commandTextAfterSpace) == true)
+                {
+                    uint32_t number = std::stoul(commandTextAfterSpace);
+
+                    auto waypoint = EQAPP_Waypoint_GetByIndex(number);
+                    if (waypoint != NULL)
+                    {
+                        auto playerSpawn = EQ_GetPlayerSpawn();
+                        if (playerSpawn != NULL)
+                        {
+                            waypoint->Y = EQ_GetSpawnY(playerSpawn);
+                            waypoint->X = EQ_GetSpawnX(playerSpawn);
+                            waypoint->Z = EQ_GetSpawnZ(playerSpawn);
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        if (EQAPP_String_BeginsWith(commandText, "//WPMTT ") == true || EQAPP_String_BeginsWith(commandText, "//WPMoveToTarget ") == true)
+        {
+            std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+            if (commandTextAfterSpace.size() != 0)
+            {
+                if (EQAPP_String_IsDigits(commandTextAfterSpace) == true)
+                {
+                    uint32_t number = std::stoul(commandTextAfterSpace);
+
+                    auto waypoint = EQAPP_Waypoint_GetByIndex(number);
+                    if (waypoint != NULL)
+                    {
+                        auto targetSpawn = EQ_GetTargetSpawn();
+                        if (targetSpawn != NULL)
+                        {
+                            waypoint->Y = EQ_GetSpawnY(targetSpawn);
+                            waypoint->X = EQ_GetSpawnX(targetSpawn);
+                            waypoint->Z = EQ_GetSpawnZ(targetSpawn);
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        if (EQAPP_String_BeginsWith(commandText, "//WPMT ") == true || EQAPP_String_BeginsWith(commandText, "//WPMoveTo ") == true)
+        {
+            std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+            if (commandTextAfterSpace.size() != 0)
+            {
+                std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
+                if (tokens.size() == 4)
+                {
+                    if (EQAPP_String_IsDigits(tokens.at(0)) == true)
+                    {
+                        uint32_t number1 = std::stoul(tokens.at(0));
+                        float number2 = std::stof(tokens.at(1));
+                        float number3 = std::stof(tokens.at(2));
+                        float number4 = std::stof(tokens.at(3));
+
+                        auto waypoint = EQAPP_Waypoint_GetByIndex(number1);
+                        if (waypoint != NULL)
+                        {
+                            waypoint->Y = number2;
+                            waypoint->X = number3;
+                            waypoint->Z = number4;
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        if (EQAPP_String_BeginsWith(commandText, "//WPMU ") == true || EQAPP_String_BeginsWith(commandText, "//WPMoveUp ") == true)
+        {
+            std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+            if (commandTextAfterSpace.size() != 0)
+            {
+                std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
+                if (tokens.size() == 2)
+                {
+                    if (EQAPP_String_IsDigits(tokens.at(0)) == true)
+                    {
+                        uint32_t number1 = std::stoul(tokens.at(0));
+                        float number2 = std::stof(tokens.at(1));
+
+                        auto waypoint = EQAPP_Waypoint_GetByIndex(number1);
+                        if (waypoint != NULL)
+                        {
+                            waypoint->Z = waypoint->Z + number2;
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        if (EQAPP_String_BeginsWith(commandText, "//WPMD ") == true || EQAPP_String_BeginsWith(commandText, "//WPMoveDown ") == true)
+        {
+            std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+            if (commandTextAfterSpace.size() != 0)
+            {
+                std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
+                if (tokens.size() == 2)
+                {
+                    if (EQAPP_String_IsDigits(tokens.at(0)) == true)
+                    {
+                        uint32_t number1 = std::stoul(tokens.at(0));
+                        float number2 = std::stof(tokens.at(1));
+
+                        auto waypoint = EQAPP_Waypoint_GetByIndex(number1);
+                        if (waypoint != NULL)
+                        {
+                            waypoint->Z = waypoint->Z - number2;
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+
+    } // if (g_WaypointIsEnabled == true && g_WaypointEditorIsEnabled == true)
 
     if (commandText == "//WPFP" || commandText == "//WPFollowPath")
     {
@@ -4136,366 +4512,12 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (EQAPP_String_BeginsWith(commandText, "//WPF ") == true || EQAPP_String_BeginsWith(commandText, "//WPFlag ") == true)
-    {
-        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
-        if (commandTextAfterSpace.size() != 0)
-        {
-            std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
-
-            if (tokens.size() == 1)
-            {
-                uint32_t number = std::stoul(tokens.at(0));
-
-                std::string str = tokens.at(1);
-                if (str.size() != 0)
-                {
-                    auto waypoint = EQAPP_Waypoint_GetByIndex(number);
-                    if (waypoint != NULL)
-                    {
-                        waypoint->Flags = 0;
-
-                        std::cout << "Waypoint index " << waypoint->Index << " flags removed.";
-                    }
-                }
-            }
-            else if (tokens.size() == 2)
-            {
-                if (EQAPP_String_IsDigits(tokens.at(0)) == true)
-                {
-                    uint32_t number = std::stoul(tokens.at(0));
-
-                    std::string str = tokens.at(1);
-                    if (str.size() != 0)
-                    {
-                        auto waypoint = EQAPP_Waypoint_GetByIndex(number);
-                        if (waypoint != NULL)
-                        {
-                            if (str == "None")
-                            {
-                                waypoint->Flags = 0;
-
-                                std::cout << "Waypoint index " << waypoint->Index << " flags set to none.";
-                            }
-                            else if (str == "Jump")
-                            {
-                                waypoint->Flags |= EQApp::WaypointFlags::kJump;
-
-                                std::cout << "Waypoint index " << waypoint->Index << " flagged with Jump.";
-                            }
-                            else if (str == "UseDoor")
-                            {
-                                waypoint->Flags |= EQApp::WaypointFlags::kUseDoor;
-
-                                std::cout << "Waypoint index " << waypoint->Index << " flagged with UseDoor.";
-                            }
-                            else if (str == "ClickToZone")
-                            {
-                                waypoint->Flags |= EQApp::WaypointFlags::kClickToZone;
-
-                                std::cout << "Waypoint index " << waypoint->Index << " flagged with ClickToZone.";
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return true;
-    }
-
-    if (EQAPP_String_BeginsWith(commandText, "//WPAL ") == true || EQAPP_String_BeginsWith(commandText, "//WPAlign ") == true)
-    {
-        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
-        if (commandTextAfterSpace.size() != 0)
-        {
-            std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
-            if (tokens.size() == 2)
-            {
-                if (EQAPP_String_IsDigits(tokens.at(0)) == true && EQAPP_String_IsDigits(tokens.at(1)) == true)
-                {
-                    uint32_t number1 = std::stoul(tokens.at(0));
-                    uint32_t number2 = std::stoul(tokens.at(1));
-
-                    auto playerSpawn = EQ_GetPlayerSpawn();
-                    if (playerSpawn != NULL)
-                    {
-                        auto waypoint1 = EQAPP_Waypoint_GetByIndex(number1);
-                        auto waypoint2 = EQAPP_Waypoint_GetByIndex(number2);
-                        if (waypoint1 != NULL && waypoint2 != NULL)
-                        {
-                            auto diffX = std::fabsf(waypoint1->X - waypoint2->X);
-                            auto diffY = std::fabsf(waypoint1->Y - waypoint2->Y);
-
-                            if (diffY < diffX)
-                            {
-                                EQAPP_Waypoint_AlignY(number1, number2);
-
-                                std::cout << "Waypoint index " << number2 << " aligned with waypoint index " << number1 << " on the Y-Axis.";
-                            }
-                            else
-                            {
-                                EQAPP_Waypoint_AlignX(number1, number2);
-
-                                std::cout << "Waypoint index " << number2 << " aligned with waypoint index " << number1 << " on the X-Axis.";
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return true;
-    }
-
-    if (EQAPP_String_BeginsWith(commandText, "//WPALY ") == true || EQAPP_String_BeginsWith(commandText, "//WPAlignY ") == true)
-    {
-        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
-        if (commandTextAfterSpace.size() != 0)
-        {
-            std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
-            if (tokens.size() == 2)
-            {
-                if (EQAPP_String_IsDigits(tokens.at(0)) == true && EQAPP_String_IsDigits(tokens.at(1)) == true)
-                {
-                    uint32_t number1 = std::stoul(tokens.at(0));
-                    uint32_t number2 = std::stoul(tokens.at(1));
-
-                    EQAPP_Waypoint_AlignY(number1, number2);
-
-                    std::cout << "Waypoint index " << number1 << " aligned with waypoint index " << number2 << " on the Y-Axis.";
-                }
-            }
-        }
-
-        return true;
-    }
-
-    if (EQAPP_String_BeginsWith(commandText, "//WPALX ") == true || EQAPP_String_BeginsWith(commandText, "//WPAlignX ") == true)
-    {
-        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
-        if (commandTextAfterSpace.size() != 0)
-        {
-            std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
-            if (tokens.size() == 2)
-            {
-                if (EQAPP_String_IsDigits(tokens.at(0)) == true && EQAPP_String_IsDigits(tokens.at(1)) == true)
-                {
-                    uint32_t number1 = std::stoul(tokens.at(0));
-                    uint32_t number2 = std::stoul(tokens.at(1));
-
-                    EQAPP_Waypoint_AlignX(number1, number2);
-
-                    std::cout << "Waypoint index " << number1 << " aligned with waypoint index " << number2 << " on the X-Axis.";
-                }
-            }
-        }
-
-        return true;
-    }
-
-    if (EQAPP_String_BeginsWith(commandText, "//WPALZ ") == true || EQAPP_String_BeginsWith(commandText, "//WPAlignZ ") == true)
-    {
-        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
-        if (commandTextAfterSpace.size() != 0)
-        {
-            std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
-            if (tokens.size() == 2)
-            {
-                if (EQAPP_String_IsDigits(tokens.at(0)) == true && EQAPP_String_IsDigits(tokens.at(1)) == true)
-                {
-                    uint32_t number1 = std::stoul(tokens.at(0));
-                    uint32_t number2 = std::stoul(tokens.at(1));
-
-                    EQAPP_Waypoint_AlignZ(number1, number2);
-
-                    std::cout << "Waypoint index " << number1 << " aligned with waypoint index " << number2 << " on the Z-Axis.";
-                }
-            }
-        }
-
-        return true;
-    }
-
-    if (EQAPP_String_BeginsWith(commandText, "//WPPush ") == true)
-    {
-        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
-        if (commandTextAfterSpace.size() != 0)
-        {
-            std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
-            if (tokens.size() == 2)
-            {
-                if (EQAPP_String_IsDigits(tokens.at(0)) == true)
-                {
-                    uint32_t number1 = std::stoul(tokens.at(0));
-                    float number2 = std::stof(tokens.at(1));
-
-                    EQAPP_Waypoint_Push(number1, number2);
-                }
-            }
-        }
-
-        return true;
-    }
-
-    if (EQAPP_String_BeginsWith(commandText, "//WPPull ") == true)
-    {
-        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
-        if (commandTextAfterSpace.size() != 0)
-        {
-            std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
-            if (tokens.size() == 2)
-            {
-                if (EQAPP_String_IsDigits(tokens.at(0)) == true)
-                {
-                    uint32_t number1 = std::stoul(tokens.at(0));
-                    float number2 = std::stof(tokens.at(1));
-
-                    EQAPP_Waypoint_Pull(number1, number2);
-                }
-            }
-        }
-
-        return true;
-    }
-
-    if (EQAPP_String_BeginsWith(commandText, "//WPMTP ") == true || EQAPP_String_BeginsWith(commandText, "//WPMoveToPlayer ") == true)
-    {
-        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
-        if (commandTextAfterSpace.size() != 0)
-        {
-            if (EQAPP_String_IsDigits(commandTextAfterSpace) == true)
-            {
-                uint32_t number = std::stoul(commandTextAfterSpace);
-
-                auto waypoint = EQAPP_Waypoint_GetByIndex(number);
-                if (waypoint != NULL)
-                {
-                    auto playerSpawn = EQ_GetPlayerSpawn();
-                    if (playerSpawn != NULL)
-                    {
-                        waypoint->Y = EQ_GetSpawnY(playerSpawn);
-                        waypoint->X = EQ_GetSpawnX(playerSpawn);
-                        waypoint->Z = EQ_GetSpawnZ(playerSpawn);
-                    }
-                }
-            }
-        }
-
-        return true;
-    }
-
-    if (EQAPP_String_BeginsWith(commandText, "//WPMTT ") == true || EQAPP_String_BeginsWith(commandText, "//WPMoveToTarget ") == true)
-    {
-        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
-        if (commandTextAfterSpace.size() != 0)
-        {
-            if (EQAPP_String_IsDigits(commandTextAfterSpace) == true)
-            {
-                uint32_t number = std::stoul(commandTextAfterSpace);
-
-                auto waypoint = EQAPP_Waypoint_GetByIndex(number);
-                if (waypoint != NULL)
-                {
-                    auto targetSpawn = EQ_GetTargetSpawn();
-                    if (targetSpawn != NULL)
-                    {
-                        waypoint->Y = EQ_GetSpawnY(targetSpawn);
-                        waypoint->X = EQ_GetSpawnX(targetSpawn);
-                        waypoint->Z = EQ_GetSpawnZ(targetSpawn);
-                    }
-                }
-            }
-        }
-
-        return true;
-    }
-
-    if (EQAPP_String_BeginsWith(commandText, "//WPMT ") == true || EQAPP_String_BeginsWith(commandText, "//WPMoveTo ") == true)
-    {
-        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
-        if (commandTextAfterSpace.size() != 0)
-        {
-            std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
-            if (tokens.size() == 4)
-            {
-                if (EQAPP_String_IsDigits(tokens.at(0)) == true)
-                {
-                    uint32_t number1 = std::stoul(tokens.at(0));
-                    float number2 = std::stof(tokens.at(1));
-                    float number3 = std::stof(tokens.at(2));
-                    float number4 = std::stof(tokens.at(3));
-
-                    auto waypoint = EQAPP_Waypoint_GetByIndex(number1);
-                    if (waypoint != NULL)
-                    {
-                        waypoint->Y = number2;
-                        waypoint->X = number3;
-                        waypoint->Z = number4;
-                    }
-                }
-            }
-        }
-
-        return true;
-    }
-
-    if (EQAPP_String_BeginsWith(commandText, "//WPMU ") == true || EQAPP_String_BeginsWith(commandText, "//WPMoveUp ") == true)
-    {
-        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
-        if (commandTextAfterSpace.size() != 0)
-        {
-            std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
-            if (tokens.size() == 2)
-            {
-                if (EQAPP_String_IsDigits(tokens.at(0)) == true)
-                {
-                    uint32_t number1 = std::stoul(tokens.at(0));
-                    float number2 = std::stof(tokens.at(1));
-
-                    auto waypoint = EQAPP_Waypoint_GetByIndex(number1);
-                    if (waypoint != NULL)
-                    {
-                        waypoint->Z = waypoint->Z + number2;
-                    }
-                }
-            }
-        }
-
-        return true;
-    }
-
-    if (EQAPP_String_BeginsWith(commandText, "//WPMD ") == true || EQAPP_String_BeginsWith(commandText, "//WPMoveDown ") == true)
-    {
-        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
-        if (commandTextAfterSpace.size() != 0)
-        {
-            std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
-            if (tokens.size() == 2)
-            {
-                if (EQAPP_String_IsDigits(tokens.at(0)) == true)
-                {
-                    uint32_t number1 = std::stoul(tokens.at(0));
-                    float number2 = std::stof(tokens.at(1));
-
-                    auto waypoint = EQAPP_Waypoint_GetByIndex(number1);
-                    if (waypoint != NULL)
-                    {
-                        waypoint->Z = waypoint->Z - number2;
-                    }
-                }
-            }
-        }
-
-        return true;
-    }
-
     if (EQAPP_String_BeginsWith(commandText, "//WPG ") == true || EQAPP_String_BeginsWith(commandText, "//WPGoto ") == true)
     {
         std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
         if (commandTextAfterSpace.size() != 0)
         {
-            uint32_t toIndex = 0xFFFFFFFF;
+            uint32_t toIndex = EQApp::WaypointIndexNull;
 
             if (EQAPP_String_IsDigits(commandTextAfterSpace) == true)
             {
@@ -4514,12 +4536,12 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
             }
 
             uint32_t fromIndex = EQAPP_Waypoint_GetIndexForGoto(toIndex);
-            if (fromIndex == 0xFFFFFFFF || toIndex == 0xFFFFFFFF)
+            if (fromIndex == EQApp::WaypointIndexNull || toIndex == EQApp::WaypointIndexNull)
             {
                 std::cout << "No path from waypoint index " << fromIndex << " to " << toIndex << " can be found." << std::endl;
             }
 
-            if (fromIndex != 0xFFFFFFFF && toIndex != 0xFFFFFFFF)
+            if (fromIndex != EQApp::WaypointIndexNull && toIndex != EQApp::WaypointIndexNull)
             {
                 auto waypoint = EQAPP_Waypoint_GetByIndex(fromIndex);
                 if (waypoint != NULL)

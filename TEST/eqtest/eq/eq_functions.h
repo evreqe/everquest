@@ -999,13 +999,7 @@ uint32_t EQ_GetCI2()
 
 uint32_t EQ_GetCharInfo2()
 {
-    auto playerCharacter = EQ_GetPlayerCharacter();
-    if (playerCharacter == NULL)
-    {
-        return NULL;
-    }
-
-    auto CI2 = EQ_ReadMemory<uint32_t>(playerCharacter + EQ_OFFSET_CHARACTER_CI2);
+    auto CI2 = EQ_GetCI2();
     if (CI2 == NULL)
     {
         return NULL;
@@ -1032,8 +1026,6 @@ uint32_t EQ_GetMemorizedSpellID(uint32_t spellGemIndex)
 
 uint32_t EQ_GetSpellGemIndexBySpellID(uint32_t spellID)
 {
-    uint32_t spellGemIndex = EQ_SPELL_GEM_INDEX_NULL;
-
     if (spellID != EQ_SPELL_ID_NULL)
     {
         for (unsigned int i = 0; i < EQ_NUM_SPELL_GEMS; i++)
@@ -1041,26 +1033,23 @@ uint32_t EQ_GetSpellGemIndexBySpellID(uint32_t spellID)
             auto memorizedSpellID = EQ_GetMemorizedSpellID(i);
             if (memorizedSpellID == spellID)
             {
-                spellGemIndex = i + 1;
-                break;
+                return i + 1;
             }
         }
     }
 
-    return spellGemIndex;
+    return EQ_SPELL_GEM_INDEX_NULL;
 }
 
 uint32_t EQ_GetSpellGemIndexBySpellName(const char* spellName)
 {
-    uint32_t spellGemIndex = EQ_SPELL_GEM_INDEX_NULL;
-
     auto spellID = EQ_GetSpellIDByName(spellName);
     if (spellID != EQ_SPELL_ID_NULL)
     {
-        spellGemIndex = EQ_GetSpellGemIndexBySpellID(spellID);
+        return EQ_GetSpellGemIndexBySpellID(spellID);
     }
 
-    return spellGemIndex;
+    return EQ_SPELL_GEM_INDEX_NULL;
 }
 
 uint32_t EQ_GetSpawnByID(uint32_t spawnID)

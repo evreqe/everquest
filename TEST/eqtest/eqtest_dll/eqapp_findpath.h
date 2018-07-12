@@ -36,8 +36,8 @@ EQApp::PathList EQAPP_FindPath_GetPathList();
 void EQAPP_FindPath_FollowPath(EQApp::PathList& pathList);
 bool EQAPP_FindPath_IsActive();
 void EQAPP_FindPath_Draw();
-void EQAPP_FindPath_HandleEvent_CEverQuest__dsp_chat(std::string text, int textColor);
-bool EQAPP_FindPath_HandleEvent_ExecuteCmd(uint32_t commandID, int isActive, int zero);
+void EQAPP_FindPath_FollowPath_HandleEvent_CEverQuest__dsp_chat(std::string text, int textColor);
+bool EQAPP_FindPath_FollowPath_HandleEvent_ExecuteCmd(uint32_t commandID, int isActive, int zero);
 
 void EQAPP_FindPath_Toggle()
 {
@@ -302,21 +302,22 @@ void EQAPP_FindPath_Draw()
     }
 }
 
-void EQAPP_FindPath_HandleEvent_CEverQuest__dsp_chat(std::string text, int textColor)
+void EQAPP_FindPath_FollowPath_HandleEvent_CEverQuest__dsp_chat(std::string text, int textColor)
 {
-    if (text == "A mystical path appears before you.")
-    {
-        EQAPP_FindPath_FollowPath_On();
-    }
-    else if (text == "The mystical path fades away." || text == "Mysterious forces prevent you from finding your destination easily.")
+    //if (text == "A mystical path appears before you.")
+    //{
+        //EQAPP_FindPath_FollowPath_On();
+    //}
+
+    if (text == "The mystical path fades away." || text == "Mysterious forces prevent you from finding your destination easily.")
     {
         EQAPP_FindPath_FollowPath_Off();
     }
 }
 
-bool EQAPP_FindPath_HandleEvent_ExecuteCmd(uint32_t commandID, int isActive, int zero)
+bool EQAPP_FindPath_FollowPath_HandleEvent_ExecuteCmd(uint32_t commandID, int isActive, int zero)
 {
-    if (isActive != 1 && zero != 0)
+    if (isActive != 1)
     {
         return false;
     }

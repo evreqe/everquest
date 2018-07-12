@@ -255,7 +255,7 @@ void EQAPP_FreeCamera_Execute()
 
 bool EQAPP_FreeCamera_HandleEvent_ExecuteCmd(uint32_t commandID, int isActive, int zero)
 {
-    if (isActive != 1 && zero != 0)
+    if (isActive != 1)
     {
         return false;
     }

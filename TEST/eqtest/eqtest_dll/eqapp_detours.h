@@ -36,10 +36,13 @@ EQ_MACRO_FUNCTION_DefineDetour(CXWndManager__DrawWindows);
 EQ_MACRO_FUNCTION_DefineDetour(EQPlayer__FollowPlayerAI);
 EQ_MACRO_FUNCTION_DefineDetour(EQPlayer__UpdateItemSlot);
 
+EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__DoPercentConvert);
 EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__InterpretCmd);
 EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__StartCasting);
 EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__dsp_chat);
 EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__SetGameState);
+EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__LMouseUp);
+EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__RMouseUp);
 
 EQ_MACRO_FUNCTION_DefineDetour(CCamera__SetCameraLocation);
 
@@ -57,10 +60,13 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawWindows(void* this_ptr,
 int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__FollowPlayerAI(void* this_ptr, void* not_used);
 int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__UpdateItemSlot(void* this_ptr, void* not_used, uint8_t updateItemSlot, const char* itemDefinition, bool b1, bool serverSide, bool b3);
 
+int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__DoPercentConvert(void* this_ptr, void* not_used, char* text, bool isOutgoing);
 int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__InterpretCmd(void* this_ptr, void* not_used, class EQPlayer* player, const char* text);
 int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__StartCasting(void* this_ptr, void* not_used, EQMessage::CEverQuest__StartCasting_ptr message);
 int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void* not_used, const char* text, int textColor, bool one_1, bool one_2, bool zero_1);
 int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__SetGameState(void* this_ptr, void* not_used, int gameState);
+int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__LMouseUp(void* this_ptr, void* not_used, int x, int y);
+int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__RMouseUp(void* this_ptr, void* not_used, int x, int y);
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CCamera__SetCameraLocation(void* this_ptr, void* not_used, EQ::Location& location, bool canSetLocation);
 
@@ -164,6 +170,11 @@ void EQAPP_Detours_Load()
 
     if (EQ_ADDRESS_POINTER_CEverQuest != 0)
     {
+        if (EQ_ADDRESS_FUNCTION_CEverQuest__DoPercentConvert != 0)
+        {
+            EQ_MACRO_FUNCTION_AddDetour(CEverQuest__DoPercentConvert);
+        }
+
         if (EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd != 0)
         {
             EQ_MACRO_FUNCTION_AddDetour(CEverQuest__InterpretCmd);
@@ -182,6 +193,16 @@ void EQAPP_Detours_Load()
         if (EQ_ADDRESS_FUNCTION_CEverQuest__SetGameState != 0)
         {
             EQ_MACRO_FUNCTION_AddDetour(CEverQuest__SetGameState);
+        }
+
+        if (EQ_ADDRESS_FUNCTION_CEverQuest__LMouseUp != 0)
+        {
+            EQ_MACRO_FUNCTION_AddDetour(CEverQuest__LMouseUp);
+        }
+
+        if (EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp != 0)
+        {
+            EQ_MACRO_FUNCTION_AddDetour(CEverQuest__RMouseUp);
         }
     }
 
@@ -246,6 +267,11 @@ void EQAPP_Detours_Unload()
 
     if (EQ_ADDRESS_POINTER_CEverQuest != 0)
     {
+        if (EQ_ADDRESS_FUNCTION_CEverQuest__DoPercentConvert != 0)
+        {
+            EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__DoPercentConvert);
+        }
+
         if (EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd != 0)
         {
             EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__InterpretCmd);
@@ -264,6 +290,16 @@ void EQAPP_Detours_Unload()
         if (EQ_ADDRESS_FUNCTION_CEverQuest__SetGameState != 0)
         {
             EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__SetGameState);
+        }
+
+        if (EQ_ADDRESS_FUNCTION_CEverQuest__LMouseUp != 0)
+        {
+            EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__LMouseUp);
+        }
+
+        if (EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp != 0)
+        {
+            EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__RMouseUp);
         }
     }
 
@@ -765,7 +801,7 @@ int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive,
 
     if (g_FindPathIsEnabled == true && g_FindPathFollowPathIsEnabled)
     {
-        bool result = EQAPP_FindPath_HandleEvent_ExecuteCmd(commandID, isActive, zero);
+        bool result = EQAPP_FindPath_FollowPath_HandleEvent_ExecuteCmd(commandID, isActive, zero);
         if (result == true)
         {
             return 1;
@@ -774,7 +810,16 @@ int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive,
 
     if (g_WaypointIsEnabled == true && g_WaypointFollowPathIsEnabled == true)
     {
-        bool result = EQAPP_Waypoint_HandleEvent_ExecuteCmd(commandID, isActive, zero);
+        bool result = EQAPP_Waypoint_FollowPath_HandleEvent_ExecuteCmd(commandID, isActive, zero);
+        if (result == true)
+        {
+            return 1;
+        }
+    }
+
+    if (g_WaypointIsEnabled == true && g_WaypointEditorIsEnabled == true)
+    {
+        bool result = EQAPP_WaypointEditor_HandleEvent_ExecuteCmd(commandID, isActive, zero);
         if (result == true)
         {
             return 1;
@@ -809,9 +854,10 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawWindows(void* this_ptr,
         }
     }
 
-    if (g_WaypointIsEnabled == true && g_WaypointDebugIsEnabled == true)
+    if (g_WaypointIsEnabled == true && g_WaypointEditorIsEnabled == true)
     {
         EQAPP_WaypointList_Draw();
+        EQAPP_WaypointEditor_DrawText();
     }
 
     if (g_ESPIsEnabled == true)
@@ -917,6 +963,25 @@ int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__UpdateItemSlot(void* this_ptr, 
     }
 
     return EQAPP_REAL_FUNCTION_EQPlayer__UpdateItemSlot(this_ptr, updateItemSlot, itemDefinition, b1, serverSide, b3);
+}
+
+int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__DoPercentConvert(void* this_ptr, void* not_used, char* text, bool isOutgoing)
+{
+    if (g_EQAppShouldUnload == 1)
+    {
+        return EQAPP_REAL_FUNCTION_CEverQuest__DoPercentConvert(this_ptr, text, isOutgoing);
+    }
+
+    std::string str;
+    str.reserve(strlen(text));
+
+    str = text;
+    
+    EQAPP_InterpretCommand_ConvertText(str);
+    
+    strcpy(text, str.c_str());
+
+    return EQAPP_REAL_FUNCTION_CEverQuest__DoPercentConvert(this_ptr, text, isOutgoing);
 }
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__InterpretCmd(void* this_ptr, void* not_used, class EQPlayer* player, const char* text)
@@ -1074,9 +1139,9 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void
         EQAPP_AutoGroup_HandleEvent_CEverQuest__dsp_chat(chatText, textColor);
     }
 
-    if (g_FindPathIsEnabled == true)
+    if (g_FindPathIsEnabled == true && g_FindPathFollowPathIsEnabled == true)
     {
-        EQAPP_FindPath_HandleEvent_CEverQuest__dsp_chat(chatText, textColor);
+        EQAPP_FindPath_FollowPath_HandleEvent_CEverQuest__dsp_chat(chatText, textColor);
     }
 
     if (g_LuaIsEnabled == true)
@@ -1128,6 +1193,36 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__SetGameState(void* this_ptr, 
     EQAPP_Detours_AddDetourForCamera();
 
     return EQAPP_REAL_FUNCTION_CEverQuest__SetGameState(this_ptr, gameState);
+}
+
+int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__LMouseUp(void* this_ptr, void* not_used, int x, int y)
+{
+    if (g_EQAppShouldUnload == 1)
+    {
+        return EQAPP_REAL_FUNCTION_CEverQuest__LMouseUp(this_ptr, x, y);
+    }
+
+    if (g_WaypointIsEnabled == true && g_WaypointEditorIsEnabled == true)
+    {
+        bool result = EQAPP_WaypointEditor_HandleEvent_CEverQuest__LMouseUp(x, y);
+    }
+
+    return EQAPP_REAL_FUNCTION_CEverQuest__LMouseUp(this_ptr, x, y);
+}
+
+int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__RMouseUp(void* this_ptr, void* not_used, int x, int y)
+{
+    if (g_EQAppShouldUnload == 1)
+    {
+        return EQAPP_REAL_FUNCTION_CEverQuest__RMouseUp(this_ptr, x, y);
+    }
+
+    if (g_WaypointIsEnabled == true && g_WaypointEditorIsEnabled == true)
+    {
+        bool result = EQAPP_WaypointEditor_HandleEvent_CEverQuest__RMouseUp(x, y);
+    }
+
+    return EQAPP_REAL_FUNCTION_CEverQuest__RMouseUp(this_ptr, x, y);
 }
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CCamera__SetCameraLocation(void* this_ptr, void* not_used, EQ::Location& location, bool canSetLocation)
