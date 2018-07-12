@@ -105,9 +105,17 @@ float EQ_GetFogDistanceEnd();
 void EQ_SetFogDistanceBegin(float distance);
 void EQ_SetFogDistanceEnd(float distance);
 
-uint32_t EQ_GetPlayerCharacter();
+uint32_t EQ_GetSpellManager();
+uint32_t EQ_GetSpellIDByName(const char* spellName);
+std::string EQ_GetSpellNameByID(uint32_t spellID);
 
+uint32_t EQ_GetPlayerCharacter();
 uint32_t EQ_GetGroup();
+uint32_t EQ_GetCI2();
+uint32_t EQ_GetCharInfo2();
+uint32_t EQ_GetMemorizedSpellID(uint32_t spellGemIndex);
+uint32_t EQ_GetSpellGemIndexBySpellID(uint32_t spellID);
+uint32_t EQ_GetSpellGemIndexBySpellName(const char* spellName);
 
 uint32_t EQ_GetSpawnByID(uint32_t spawnID);
 uint32_t EQ_GetSpawnByName(const char* spawnName);
@@ -659,7 +667,7 @@ bool EQ_IsInGame()
 
 bool EQ_IsSpellIDValid(uint32_t spellID)
 {
-    return (spellID - 1) <= EQ_NUM_SPELLS;
+    return spellID <= (EQ_NUM_SPELLS - 1);
 }
 
 bool EQ_HasTimeElapsed(uint32_t& timer, uint32_t& timerInterval)
@@ -898,6 +906,70 @@ void EQ_SetFogDistanceEnd(float distance)
     EQ_WriteMemory<float>(EQ_ADDRESS_FogDistanceEnd, distance);
 }
 
+uint32_t EQ_GetSpellManager()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_SpellManager);
+}
+
+uint32_t EQ_GetSpellIDByName(const char* spellName)
+{
+    auto spellManager = EQ_GetSpellManager();
+    if (spellManager == NULL)
+    {
+        return EQ_SPELL_ID_NULL;
+    }
+
+    for (unsigned int i = 0; i < EQ_NUM_SPELLS; i++)
+    {
+        auto spell = EQ_ReadMemory<uint32_t>(spellManager + EQ_OFFSET_SpellManager_SPELLS + (i * 0x04));
+        if (spell == NULL)
+        {
+            continue;
+        }
+
+        char spellManagerSpellName[EQ_SIZE_SPELL_NAME];
+        std::memmove(spellManagerSpellName, (LPVOID)(spell + EQ_OFFSET_SPELL_NAME), sizeof(spellManagerSpellName));
+
+        if (strcmp(spellName, spellManagerSpellName) == 0)
+        {
+            auto spellManagerSpellID = EQ_ReadMemory<uint32_t>(spell + EQ_OFFSET_SPELL_ID);
+
+            return spellManagerSpellID;
+        }
+    }
+
+    return EQ_SPELL_ID_NULL;
+}
+
+std::string EQ_GetSpellNameByID(uint32_t spellID)
+{
+    auto spellManager = EQ_GetSpellManager();
+    if (spellManager == NULL)
+    {
+        return std::string();
+    }
+
+    for (unsigned int i = 0; i < EQ_NUM_SPELLS; i++)
+    {
+        auto spell = EQ_ReadMemory<uint32_t>(spellManager + EQ_OFFSET_SpellManager_SPELLS + (i * 0x04));
+        if (spell == NULL)
+        {
+            continue;
+        }
+
+        auto spellManagerSpellID = EQ_ReadMemory<uint32_t>(spell + EQ_OFFSET_SPELL_ID);
+        if (spellID == spellManagerSpellID)
+        {
+            char spellManagerSpellName[EQ_SIZE_SPELL_NAME];
+            std::memmove(spellManagerSpellName, (LPVOID)(spell + EQ_OFFSET_SPELL_NAME), sizeof(spellManagerSpellName));
+
+            return spellManagerSpellName;
+        }
+    }
+
+    return std::string();
+}
+
 uint32_t EQ_GetPlayerCharacter()
 {
     return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_PlayerCharacter);
@@ -905,13 +977,90 @@ uint32_t EQ_GetPlayerCharacter()
 
 uint32_t EQ_GetGroup()
 {
-    auto playerCharacter =EQ_GetPlayerCharacter();
+    auto playerCharacter = EQ_GetPlayerCharacter();
     if (playerCharacter == NULL)
     {
         return NULL;
     }
 
     return EQ_ReadMemory<uint32_t>(playerCharacter + EQ_OFFSET_CHARACTER_GROUP);
+}
+
+uint32_t EQ_GetCI2()
+{
+    auto playerCharacter = EQ_GetPlayerCharacter();
+    if (playerCharacter == NULL)
+    {
+        return NULL;
+    }
+
+    return EQ_ReadMemory<uint32_t>(playerCharacter + EQ_OFFSET_CHARACTER_CI2);
+}
+
+uint32_t EQ_GetCharInfo2()
+{
+    auto playerCharacter = EQ_GetPlayerCharacter();
+    if (playerCharacter == NULL)
+    {
+        return NULL;
+    }
+
+    auto CI2 = EQ_ReadMemory<uint32_t>(playerCharacter + EQ_OFFSET_CHARACTER_CI2);
+    if (CI2 == NULL)
+    {
+        return NULL;
+    }
+
+    return EQ_ReadMemory<uint32_t>(CI2 + EQ_OFFSET_CI2_CHARINFO2);
+}
+
+uint32_t EQ_GetMemorizedSpellID(uint32_t spellGemIndex)
+{
+    if (spellGemIndex > EQ_NUM_SPELL_GEMS)
+    {
+        return EQ_SPELL_ID_NULL;
+    }
+
+    auto charInfo2 = EQ_GetCharInfo2();
+    if (charInfo2 == NULL)
+    {
+        return EQ_SPELL_ID_NULL;
+    }
+
+    return EQ_ReadMemory<uint32_t>(charInfo2 + EQ_OFFSET_CHARINFO2_MEMORIZED_SPELLS + (spellGemIndex * 0x04));
+}
+
+uint32_t EQ_GetSpellGemIndexBySpellID(uint32_t spellID)
+{
+    uint32_t spellGemIndex = EQ_SPELL_GEM_INDEX_NULL;
+
+    if (spellID != EQ_SPELL_ID_NULL)
+    {
+        for (unsigned int i = 0; i < EQ_NUM_SPELL_GEMS; i++)
+        {
+            auto memorizedSpellID = EQ_GetMemorizedSpellID(i);
+            if (memorizedSpellID == spellID)
+            {
+                spellGemIndex = i + 1;
+                break;
+            }
+        }
+    }
+
+    return spellGemIndex;
+}
+
+uint32_t EQ_GetSpellGemIndexBySpellName(const char* spellName)
+{
+    uint32_t spellGemIndex = EQ_SPELL_GEM_INDEX_NULL;
+
+    auto spellID = EQ_GetSpellIDByName(spellName);
+    if (spellID != EQ_SPELL_ID_NULL)
+    {
+        spellGemIndex = EQ_GetSpellGemIndexBySpellID(spellID);
+    }
+
+    return spellGemIndex;
 }
 
 uint32_t EQ_GetSpawnByID(uint32_t spawnID)

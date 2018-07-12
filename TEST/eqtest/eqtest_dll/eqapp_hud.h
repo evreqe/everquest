@@ -2,16 +2,15 @@
 
 #include "eqapp_alwaysattack.h"
 #include "eqapp_alwayshotbutton.h"
-////#include "eqapp_autoalternateability.h"
 #include "eqapp_boxchat.h"
-////#include "eqapp_combatalternateability.h"
 #include "eqapp_combathotbutton.h"
 #include "eqapp_esp.h"
-#include "eqapp_followpath.h"
+#include "eqapp_findpath.h"
 #include "eqapp_fps.h"
 #include "eqapp_lua.h"
 #include "eqapp_sleep.h"
 #include "eqapp_speed.h"
+#include "eqapp_waypoint.h"
 
 bool g_HUDIsEnabled = true;
 
@@ -175,9 +174,14 @@ void EQAPP_HUD_Execute()
         g_HUDText << "- Lua\n";
     }
 
-    if (g_FollowPathIsEnabled == true)
+    if (g_FindPathFollowPathIsEnabled == true)
     {
-        g_HUDText << "- Follow Path\n";
+        g_HUDText << "- Find Path Follow Path\n";
+    }
+
+    if (g_WaypointFollowPathIsEnabled == true)
+    {
+        g_HUDText << "- Waypoint Follow Path\n";
     }
 
     if (g_SpeedIsEnabled == true)

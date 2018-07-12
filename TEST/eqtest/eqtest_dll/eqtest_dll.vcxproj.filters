@@ -98,9 +98,6 @@
     <ClInclude Include="eqapp_ini.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="eqapp_spelllist.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\eq\eq_constants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -152,9 +149,6 @@
     <ClInclude Include="eqapp_namedspawns.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="eqapp_followpath.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="eqapp_fps.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -164,7 +158,19 @@
     <ClInclude Include="eqapp_waypoint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\mq2\eqgame(Test).h">
+    <ClInclude Include="..\mq2\mq2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mq2\MQ2Main\eqgame(Test).h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mq2\MQ2Main\EQUIStructs(Test).h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mq2\MQ2Main\EQData(Test).h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_findpath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

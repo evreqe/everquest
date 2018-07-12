@@ -96,9 +96,9 @@ function OnThreeSeconds()
         end
     elseif playerSpawnClass == EQ_CLASS_BEASTLORD then
         if playerSpawnHPPercent < 50 then
-            table.insert(alternateAbilityList, 128) -- Paragon of Spirit
-            table.insert(alternateAbilityList, 362) -- Roar of Thunder
-            table.insert(alternateAbilityList, 8302) -- Protection of the Warder
+            table.insert(alternateAbilityList, 128)   -- Paragon of Spirit
+            table.insert(alternateAbilityList, 362)   -- Roar of Thunder
+            table.insert(alternateAbilityList, 8302)  -- Protection of the Warder
         end
 
         if playerSpawnHPPercent < 25 then

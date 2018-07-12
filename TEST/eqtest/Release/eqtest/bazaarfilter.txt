@@ -13,9 +13,9 @@ Enameled Box
 Cleansing Steam Satchel
 
 ##### Prizes #####
-#Prize: Ping's Poignant Potion Pack
-#Prize: Ping's Practical Potion Pack
-#Prize: Ping's Prodigious Potion Pack
+Prize: Ping's Poignant Potion Pack
+Prize: Ping's Practical Potion Pack
+Prize: Ping's Prodigious Potion Pack
 Prize: Scale of Rodcet Nife
 Prize: Kiss of Erollisi Marr
 #Prize: Tear of Tranquility
@@ -40,6 +40,9 @@ Extra Planar Potential Shard
 #Sebilisian Prudence
 #Sebilisian Efficacy
 
+##### Power Sources #####
+#Xorbb's Caged Hatred
+
 ##### Spell Turn In #####
 #}Nebulous Dream Fragment
 #}Dreadmote
@@ -47,7 +50,7 @@ Extra Planar Potential Shard
 #}Briny Essence
 #}Essence of Life
 #}Writ of the Combine
-}Clawed Tablet of the Ring of Scale
+#}Clawed Tablet of the Ring of Scale
 
 ##### Misc #####
 #Amulet of the Drowned Mariner

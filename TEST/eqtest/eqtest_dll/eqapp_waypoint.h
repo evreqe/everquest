@@ -93,7 +93,11 @@ void EQAPP_Waypoint_FollowPath_Toggle()
     EQ_ToggleBool(g_WaypointFollowPathIsEnabled);
     EQAPP_PrintBool("Waypoint Follow Path", g_WaypointFollowPathIsEnabled);
 
-    if (g_WaypointFollowPathIsEnabled == false)
+    if (g_WaypointFollowPathIsEnabled == true)
+    {
+        EQ_StopFollow();
+    }
+    else
     {
         EQ_SetAutoRun(false);
     }

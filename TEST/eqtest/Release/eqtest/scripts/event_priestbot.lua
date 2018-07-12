@@ -29,6 +29,12 @@ end
 function PriestBot_InstantHeal()
     EQ_InterpretCommand("//StopFollow")
     EQ_InterpretCommand("//Target " .. g_PriestBotTargetName)
+    EQ_InterpretCommand("//Cast 4")
+end
+
+function PriestBot_SaveHeal()
+    EQ_InterpretCommand("//StopFollow")
+    EQ_InterpretCommand("//Target " .. g_PriestBotTargetName)
     EQ_InterpretCommand("//Cast 7")
 end
 
@@ -82,15 +88,21 @@ function OnFrame()
 
         math.randomseed(os.time() + playerHP)
 
-        local fastHealHP = math.random(60, 80)
+        local fastHealHP = math.random(80, 90)
 
         if targetHP <= 25 then
+            PriestBot_SaveHeal()
+            PriestBot_InstantHeal()
+        elseif targetHP <= 35 then
+            PriestBot_SaveHeal()
             PriestBot_InstantHeal()
         elseif targetHP <= 50 then
-            PriestBot_BigHeal()
+            PriestBot_InstantHeal()
+            PriestBot_FastHeal()
         elseif targetHP <= fastHealHP then
             EQ_InterpretCommand("/tell " .. g_PriestBotTargetName .. " I am fast healing you because you are at " .. fastHealHP .. "% health.")
             PriestBot_FastHeal()
+            PriestBot_BigHeal()
         end
     end
 end

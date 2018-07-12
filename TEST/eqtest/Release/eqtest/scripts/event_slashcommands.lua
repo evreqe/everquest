@@ -19,6 +19,11 @@ function OnInterpretCommand(commandText)
         return 1
     end
 
+    if commandText == "//Brell"  or commandText == "//Brells" then
+        EQ_InterpretCommand("/useitem Mark of Brell")
+        return 1
+    end
+
     if commandText == "//Campfire" then
         EQ_InterpretCommand("/useitem Fellowship Registration Insignia")
         return 1
@@ -91,11 +96,6 @@ function OnInterpretCommand(commandText)
 
     if commandText == "//IntensityOfTheResolute" or commandText == "//IOTR" then
         EQ_InterpretCommand("/alt activate 487")
-        return 1
-    end
-
-    if commandText == "//Banestrike" then
-        EQ_InterpretCommand("/alt activate 15073")
         return 1
     end
 

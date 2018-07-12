@@ -1,7 +1,5 @@
 #pragma once
 
-#include "eqapp_spelllist.h"
-
 namespace EQApp
 {
     typedef struct _SpawnCastSpell
@@ -189,7 +187,7 @@ void EQAPP_SpawnCastSpell_DrawText()
 
             //drawText.precision(1);
             //drawText << " " << std::fixed << spellCastTimeCurrentFloat;
-            drawText << fmt::format("{:.2f}", spellCastTimeCurrentFloat);
+            drawText << fmt::format(" {:.2f}", spellCastTimeCurrentFloat);
         }
 
         drawText << "\n";
@@ -218,7 +216,7 @@ void EQAPP_SpawnCastSpell_HandleEvent_CEverQuest__StartCasting(void* this_ptr, E
         return;
     }
 
-    std::string spellName = EQAPP_SpellList_GetNameByID(spellID);
+    std::string spellName = EQ_GetSpellNameByID(spellID);
     if (spellName.size() == 0)
     {
         return;

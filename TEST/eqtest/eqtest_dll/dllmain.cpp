@@ -26,9 +26,7 @@ namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not avai
 #include <cmath>
 #include <ctime>
 
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
+#define _WINSOCKAPI_ // prevent windows.h from including winsock.h, we use winsock2.h instead
 
 #include <windows.h>
 #include <mmsystem.h>
@@ -67,6 +65,10 @@ namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not avai
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
 
+// MacroQuest2
+#include "mq2.h"
+
+// EverQuest
 #include "eq.h"
 #include "eq_functions.h"
 
@@ -87,7 +89,7 @@ namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not avai
 #include "eqapp_detours.h"
 #include "eqapp_esp.h"
 #include "eqapp_followai.h"
-#include "eqapp_followpath.h"
+#include "eqapp_findpath.h"
 #include "eqapp_freecamera.h"
 #include "eqapp_fps.h"
 #include "eqapp_hud.h"
@@ -97,7 +99,6 @@ namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not avai
 #include "eqapp_sleep.h"
 #include "eqapp_spawncastspell.h"
 #include "eqapp_speed.h"
-#include "eqapp_spelllist.h"
 #include "eqapp_windowtitle.h"
 #include "eqapp_waypoint.h"
 
@@ -198,7 +199,6 @@ DWORD WINAPI EQAPP_ThreadLoad(LPVOID param)
 
     EQAPP_LoadOptions();
     EQAPP_Lua_Load();
-    EQAPP_SpellList_Load();
     EQAPP_Detours_Load();
 
     EQ_SetNetStatus(true);

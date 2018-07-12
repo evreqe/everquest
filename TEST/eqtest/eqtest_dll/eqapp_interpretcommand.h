@@ -3,18 +3,16 @@
 #include "eqapp_actorcollision.h"
 #include "eqapp_alwaysattack.h"
 #include "eqapp_alwayshotbutton.h"
-////#include "eqapp_autoalternateability.h"
 #include "eqapp_autogroup.h"
 #include "eqapp_bazaarbot.h"
 #include "eqapp_bazaarfilter.h"
 #include "eqapp_boxchat.h"
 #include "eqapp_changeheight.h"
-////#include "eqapp_combatalternateability.h"
 #include "eqapp_combathotbutton.h"
 #include "eqapp_console.h"
 #include "eqapp_esp.h"
 #include "eqapp_followai.h"
-#include "eqapp_followpath.h"
+#include "eqapp_findpath.h"
 #include "eqapp_fps.h"
 #include "eqapp_hud.h"
 #include "eqapp_loadoptions.h"
@@ -23,7 +21,6 @@
 #include "eqapp_sleep.h"
 #include "eqapp_spawncastspell.h"
 #include "eqapp_speed.h"
-#include "eqapp_spelllist.h"
 #include "eqapp_windowtitle.h"
 #include "eqapp_waypoint.h"
 
@@ -149,8 +146,6 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//CH",                           &EQAPP_ChangeHeight_Toggle},
     {"//CHOn",                         &EQAPP_ChangeHeight_On},
     {"//CHOff",                        &EQAPP_ChangeHeight_Off},
-    {"//LoadSpellList",                &EQAPP_SpellList_Load},
-    {"//SLLoad",                       &EQAPP_SpellList_Load},
     {"//SpawnCastSpell",               &EQAPP_SpawnCastSpell_Toggle},
     {"//SpawnCastSpellOn",             &EQAPP_SpawnCastSpell_On},
     {"//SpawnCastSpellOff",            &EQAPP_SpawnCastSpell_Off},
@@ -180,14 +175,21 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//FollowAIBehind",               &EQAPP_FollowAI_Behind_Toggle},
     {"//FAIBehind",                    &EQAPP_FollowAI_Behind_Toggle},
     {"//FB",                           &EQAPP_FollowAI_Behind_Toggle},
-    {"//FollowPath",                   &EQAPP_FollowPath_Toggle},
-    {"//FollowPathOn",                 &EQAPP_FollowPath_On},
-    {"//FollowPathOff",                &EQAPP_FollowPath_Off},
-    {"//FP",                           &EQAPP_FollowPath_Toggle},
-    {"//FPOn",                         &EQAPP_FollowPath_On},
-    {"//FPOff",                        &EQAPP_FollowPath_Off},
-    {"//FollowPathAutomatic",          &EQAPP_FollowPath_Automatic_Toggle},
-    {"//FPAutomatic",                  &EQAPP_FollowPath_Automatic_Toggle},
+    {"//FindPath",                     &EQAPP_FindPath_Toggle},
+    {"//FindPathOn",                   &EQAPP_FindPath_On},
+    {"//FindPathOff",                  &EQAPP_FindPath_Off},
+    {"//FP",                           &EQAPP_FindPath_Toggle},
+    {"//FPOn",                         &EQAPP_FindPath_On},
+    {"//FPOff",                        &EQAPP_FindPath_Off},
+    {"//FollowPath",                   &EQAPP_FindPath_FollowPath_Toggle},
+    {"//FollowPathOn",                 &EQAPP_FindPath_FollowPath_On},
+    {"//FollowPathOff",                &EQAPP_FindPath_FollowPath_Off},
+    {"//FindPathFollowPath",           &EQAPP_FindPath_FollowPath_Toggle},
+    {"//FindPathFollowPathOn",         &EQAPP_FindPath_FollowPath_On},
+    {"//FindPathFollowPathOff",        &EQAPP_FindPath_FollowPath_Off},
+    {"//FPFP",                         &EQAPP_FindPath_FollowPath_Toggle},
+    {"//FPFPOn",                       &EQAPP_FindPath_FollowPath_On},
+    {"//FPFPOff",                      &EQAPP_FindPath_FollowPath_Off},
     {"//WindowTitle",                  &EQAPP_WindowTitle_Toggle},
     {"//WindowTitleOn",                &EQAPP_WindowTitle_On},
     {"//WindowTitleOff",               &EQAPP_WindowTitle_Off},
@@ -3196,12 +3198,12 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
     if (EQAPP_String_BeginsWith(commandText, "//Cast ") == true)
     {
-        std::string numberStr = EQAPP_String_GetAfter(commandText, " ");
-        if (numberStr.size() != 0)
+        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+        if (commandTextAfterSpace.size() != 0)
         {
-            if (EQAPP_String_IsDigits(numberStr) == true)
+            if (EQAPP_String_IsDigits(commandTextAfterSpace) == true)
             {
-                uint32_t number = std::stoul(numberStr);
+                uint32_t number = std::stoul(commandTextAfterSpace);
 
                 if (number > 0 && number < (EQ_NUM_SPELL_GEMS + 1))
                 {
@@ -3215,6 +3217,13 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                     }
                 }
             }
+            else
+            {
+                std::stringstream ss;
+                ss << "//Casting " << commandTextAfterSpace;
+
+                EQ_InterpretCommand(ss.str().c_str());
+            }
         }
 
         return true;
@@ -3223,6 +3232,60 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
     if (EQAPP_String_BeginsWith(commandText, "//CastRandom ") == true)
     {
         EQAPP_InterpretCommand_InterpretArgumentsRandom(commandText, "/cast ");
+
+        return true;
+    }
+
+    if (EQAPP_String_BeginsWith(commandText, "//Casting ") == true)
+    {
+        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+        if (commandTextAfterSpace.size() != 0)
+        {
+            if (EQAPP_String_IsDigits(commandTextAfterSpace) == false)
+            {
+                uint32_t spellGemIndex = EQ_SPELL_GEM_INDEX_NULL;
+
+                std::string spellName      = commandTextAfterSpace;
+                std::string spellNameRank2 = commandTextAfterSpace + " Rk. II";
+                std::string spellNameRank3 = commandTextAfterSpace + " Rk. III";
+
+                spellGemIndex = EQ_GetSpellGemIndexBySpellName(spellNameRank3.c_str());
+                if (spellGemIndex == EQ_SPELL_GEM_INDEX_NULL)
+                {
+                    spellGemIndex = EQ_GetSpellGemIndexBySpellName(spellNameRank2.c_str());
+                    if (spellGemIndex == EQ_SPELL_GEM_INDEX_NULL)
+                    {
+                        spellGemIndex = EQ_GetSpellGemIndexBySpellName(spellName.c_str());
+                    }
+                }
+
+                if (spellGemIndex != EQ_SPELL_GEM_INDEX_NULL)
+                {
+                    std::stringstream ss;
+                    ss << "//Cast " << spellGemIndex;
+
+                    EQ_InterpretCommand(ss.str().c_str());
+                }
+                else
+                {
+                    std::cout << "Cannot find spell to cast: " << commandTextAfterSpace << std::endl;
+                }
+            }
+            else
+            {
+                std::stringstream ss;
+                ss << "//Cast " << commandTextAfterSpace;
+
+                EQ_InterpretCommand(ss.str().c_str());
+            }
+        }
+
+        return true;
+    }
+
+    if (EQAPP_String_BeginsWith(commandText, "//CastingRandom ") == true)
+    {
+        EQAPP_InterpretCommand_InterpretArgumentsRandom(commandText, "//Casting ");
 
         return true;
     }

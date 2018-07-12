@@ -30,6 +30,7 @@ void EQAPP_PrintSpawnList();
 void EQAPP_PrintLocation();
 void EQAPP_PrintMouseLocation();
 void EQAPP_InventoryFind(const char* text);
+void EQAPP_SetWindowTitle(const char* text);
 
 void EQAPP_Log(const char* text)
 {
@@ -532,4 +533,15 @@ void EQAPP_InventoryFind(const char* text)
     }
 
     std::cout << resultsCount << " result(s) for '" << text << "'" << std::endl;
+}
+
+void EQAPP_SetWindowTitle(const char* text)
+{
+    HWND hwnd = EQ_GetWindow();
+    if (hwnd == NULL)
+    {
+        return;
+    }
+
+    SetWindowTextA(hwnd, text);
 }

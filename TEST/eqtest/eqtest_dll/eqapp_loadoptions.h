@@ -3,18 +3,16 @@
 #include "eqapp_actorcollision.h"
 #include "eqapp_alwaysattack.h"
 #include "eqapp_alwayshotbutton.h"
-////#include "eqapp_autoalternateability.h"
 #include "eqapp_autogroup.h"
 #include "eqapp_bazaarbot.h"
 #include "eqapp_bazaarfilter.h"
 #include "eqapp_boxchat.h"
 #include "eqapp_changeheight.h"
-////#include "eqapp_combatalternateability.h"
 #include "eqapp_combathotbutton.h"
 #include "eqapp_console.h"
 #include "eqapp_esp.h"
 #include "eqapp_followai.h"
-#include "eqapp_followpath.h"
+#include "eqapp_findpath.h"
 #include "eqapp_fps.h"
 #include "eqapp_hud.h"
 #include "eqapp_lua.h"
@@ -22,7 +20,6 @@
 #include "eqapp_sleep.h"
 #include "eqapp_spawncastspell.h"
 #include "eqapp_speed.h"
-#include "eqapp_spelllist.h"
 #include "eqapp_windowtitle.h"
 #include "eqapp_waypoint.h"
 
@@ -119,9 +116,8 @@ void EQAPP_LoadOptions()
     EQAPP_LoadOption<float>(g_ESPHeightFilterDistanceLow, "fESPHeightFilterDistanceLow", pt);
     EQAPP_LoadOption<float>(g_ESPHeightFilterDistanceHigh, "fESPHeightFilterDistanceHigh", pt);
 
-    EQAPP_LoadOption<bool>(g_FollowPathAutomaticIsEnabled, "bFollowPathAutomatic", pt);
-    EQAPP_LoadOption<float>(g_FollowPathDistance, "fFollowPathDistance", pt);
-    EQAPP_LoadOption<float>(g_FollowPathEndDistance, "fFollowPathEndDistance", pt);
+    EQAPP_LoadOption<bool>(g_FindPathIsEnabled, "bFindPath", pt);
+    EQAPP_LoadOption<float>(g_FindPathFollowPathDistance, "fFindPathFollowPathDistance", pt);
 
     EQAPP_LoadOption<bool>(g_FPSIsEnabled, "bFPS", pt);
 

@@ -288,6 +288,8 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQAPP_PrintSpawnList", EQAPP_PrintSpawnList);
     state->set_function("EQAPP_PrintLocation", EQAPP_PrintLocation);
     state->set_function("EQAPP_PrintMouseLocation", EQAPP_PrintMouseLocation);
+    state->set_function("EQAPP_InventoryFind", EQAPP_InventoryFind);
+    state->set_function("EQAPP_SetWindowTitle", EQAPP_SetWindowTitle);
 
     // EQ constants
     state->set("EQ_WINDOW_TITLE_DEFAULT", EQ_WINDOW_TITLE_DEFAULT);

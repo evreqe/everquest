@@ -9,6 +9,8 @@ std::string g_SpellListFileName = "spells_us.txt";
 void EQAPP_SpellList_Load();
 void EQAPP_SpellList_LoadEx(const char* filename);
 std::string EQAPP_SpellList_GetNameByID(uint32_t spellID);
+uint32_t EQAPP_SpellList_GetIDByName(const char* spellName);
+uint32_t EQAPP_SpellList_GetSpellGemIndexBySpellName(const char* spellName);
 
 void EQAPP_SpellList_Load()
 {
@@ -70,4 +72,38 @@ std::string EQAPP_SpellList_GetNameByID(uint32_t spellID)
     }
 
     return std::string();
+}
+
+uint32_t EQAPP_SpellList_GetIDByName(const char* spellName)
+{
+    for (auto it = g_SpellList.begin(); it != g_SpellList.end(); ++it)
+    {
+        if (it->second == spellName)
+        {
+            return it->first;
+        }
+    }
+
+    return EQ_SPELL_ID_NULL;
+}
+
+uint32_t EQAPP_SpellList_GetSpellGemIndexBySpellName(const char* spellName)
+{
+    uint32_t spellGemIndex = EQ_SPELL_GEM_INDEX_NULL;
+
+    auto spellID = EQAPP_SpellList_GetIDByName(spellName);
+    if (spellID != EQ_SPELL_ID_NULL)
+    {
+        for (unsigned int i = 0; i < EQ_NUM_SPELL_GEMS; i++)
+        {
+            auto memorizedSpellID = EQ_GetMemorizedSpellID(i);
+            if (memorizedSpellID == spellID)
+            {
+                spellGemIndex = i + 1;
+                break;
+            }
+        }
+    }
+
+    return spellGemIndex;
 }

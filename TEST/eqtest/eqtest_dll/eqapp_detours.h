@@ -15,7 +15,6 @@
 #include "eqapp_lua.h"
 #include "eqapp_sleep.h"
 #include "eqapp_spawncastspell.h"
-#include "eqapp_spelllist.h"
 #include "eqapp_windowtitle.h"
 
 bool g_DetoursIsCameraDetoured = false;
@@ -292,7 +291,7 @@ void EQAPP_Detours_OnEnterZone()
     g_AutoGroupIsInvited = false;
 
     EQAPP_FreeCamera_Off();
-    EQAPP_FollowPath_Off();
+    EQAPP_FindPath_FollowPath_Off();
     EQAPP_Waypoint_FollowPath_Off();
 
     EQAPP_ActorCollision_Load();
@@ -307,7 +306,7 @@ void EQAPP_Detours_OnLeaveZone()
     g_AutoGroupIsInvited = false;
 
     EQAPP_FreeCamera_Off();
-    EQAPP_FollowPath_Off();
+    EQAPP_FindPath_FollowPath_Off();
     EQAPP_Waypoint_FollowPath_Off();
 
     g_WaypointGetPathIndexList.clear();
@@ -506,9 +505,9 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
         EQAPP_ChangeHeight_Execute();
     }
 
-    if (g_FollowPathIsEnabled == true)
+    if (g_FindPathIsEnabled == true && g_FindPathFollowPathIsEnabled == true)
     {
-        EQAPP_FollowPath_Execute();
+        EQAPP_FindPath_FollowPath(g_FindPathFollowPathList);
     }
 
     if (g_WaypointIsEnabled == true && g_WaypointFollowPathIsEnabled == true)
@@ -764,9 +763,9 @@ int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive,
         }
     }
 
-    if (g_FollowPathIsEnabled == true)
+    if (g_FindPathIsEnabled == true && g_FindPathFollowPathIsEnabled)
     {
-        bool result = EQAPP_FollowPath_HandleEvent_ExecuteCmd(commandID, isActive, zero);
+        bool result = EQAPP_FindPath_HandleEvent_ExecuteCmd(commandID, isActive, zero);
         if (result == true)
         {
             return 1;
@@ -802,14 +801,17 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawWindows(void* this_ptr,
         return EQAPP_REAL_FUNCTION_CXWndManager__DrawWindows(this_ptr);
     }
 
+    if (g_FindPathIsEnabled == true)
+    {
+        if (EQAPP_FindPath_IsActive() == true)
+        {
+            EQAPP_FindPath_Draw();
+        }
+    }
+
     if (g_WaypointIsEnabled == true && g_WaypointDebugIsEnabled == true)
     {
         EQAPP_WaypointList_Draw();
-    }
-
-    if (EQAPP_FollowPath_IsActive() == true)
-    {
-        EQAPP_FollowPath_Draw();
     }
 
     if (g_ESPIsEnabled == true)
@@ -1072,17 +1074,9 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void
         EQAPP_AutoGroup_HandleEvent_CEverQuest__dsp_chat(chatText, textColor);
     }
 
-    if (g_FollowPathIsEnabled == true)
+    if (g_FindPathIsEnabled == true)
     {
-        EQAPP_FollowPath_HandleEvent_CEverQuest__dsp_chat(chatText, textColor);
-    }
-
-    if (g_FollowPathAutomaticIsEnabled == true)
-    {
-        if (chatText == "A mystical path appears before you.")
-        {
-            EQAPP_FollowPath_On();
-        }
+        EQAPP_FindPath_HandleEvent_CEverQuest__dsp_chat(chatText, textColor);
     }
 
     if (g_LuaIsEnabled == true)

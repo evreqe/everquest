@@ -40,13 +40,7 @@ void EQAPP_WindowTitle_Off()
 
 void EQAPP_WindowTitle_Reset()
 {
-    HWND hwnd = EQ_GetWindow();
-    if (hwnd == NULL)
-    {
-        return;
-    }
-
-    SetWindowTextA(hwnd, EQ_WINDOW_TITLE_DEFAULT);
+    EQAPP_SetWindowTitle(EQ_WINDOW_TITLE_DEFAULT);
 }
 
 void EQAPP_WindowTitle_Execute()

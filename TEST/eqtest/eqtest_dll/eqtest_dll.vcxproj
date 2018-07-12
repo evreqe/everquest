@@ -169,7 +169,10 @@
     <ClInclude Include="..\eq\eq_messages.h" />
     <ClInclude Include="..\eq\eq_virtualkeycodes.h" />
     <ClInclude Include="..\eq\eq_zones.h" />
-    <ClInclude Include="..\mq2\eqgame(Test).h" />
+    <ClInclude Include="..\mq2\mq2.h" />
+    <ClInclude Include="..\mq2\MQ2Main\EQData(Test).h" />
+    <ClInclude Include="..\mq2\MQ2Main\eqgame(Test).h" />
+    <ClInclude Include="..\mq2\MQ2Main\EQUIStructs(Test).h" />
     <ClInclude Include="eqapp.h" />
     <ClInclude Include="eqapp_actorcollision.h" />
     <ClInclude Include="eqapp_addresses.h" />
@@ -185,7 +188,7 @@
     <ClInclude Include="eqapp_detours.h" />
     <ClInclude Include="eqapp_esp.h" />
     <ClInclude Include="eqapp_followai.h" />
-    <ClInclude Include="eqapp_followpath.h" />
+    <ClInclude Include="eqapp_findpath.h" />
     <ClInclude Include="eqapp_fps.h" />
     <ClInclude Include="eqapp_freecamera.h" />
     <ClInclude Include="eqapp_functions.h" />
@@ -198,7 +201,6 @@
     <ClInclude Include="eqapp_sleep.h" />
     <ClInclude Include="eqapp_spawncastspell.h" />
     <ClInclude Include="eqapp_speed.h" />
-    <ClInclude Include="eqapp_spelllist.h" />
     <ClInclude Include="eqapp_string.h" />
     <ClInclude Include="eqapp_timer.h" />
     <ClInclude Include="eqapp_waypoint.h" />

@@ -102,8 +102,6 @@ function OnThreeSeconds()
 
     alternateAbilityList = {}
 
-    table.insert(alternateAbilityList, 15073) -- Banestrike
-
     if playerSpawnClass == EQ_CLASS_BARD then
         if targetSpawnHPPercent > 50 and targetSpawnHPPercent < 90 then
             if playerSpawnEndurancePercent > 75 then

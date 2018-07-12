@@ -378,7 +378,7 @@ void EQAPP_ESP_Execute()
 
                             ////drawText.precision(1);
                             ////drawText << " " << std::fixed << spellCastTimeCurrentFloat;
-                            drawText << fmt::format("{:.2f}", spellCastTimeCurrentFloat);
+                            drawText << fmt::format(" {:.2f}", spellCastTimeCurrentFloat);
                         }
 
                         break;
@@ -409,34 +409,38 @@ void EQAPP_ESP_Execute()
 
             int textColor = EQ_DRAW_TEXT_COLOR_WHITE;
 
-            if (spawnType == EQ_SPAWN_TYPE_PLAYER)
-            {
-                textColor = EQ_DRAW_TEXT_COLOR_RED;
-            }
-            else if (spawnType == EQ_SPAWN_TYPE_NPC)
-            {
-                if (bOutOfRange == true)
-                {
-                    textColor = EQ_DRAW_TEXT_COLOR_GRAY;
-                }
-                else
-                {
-                    textColor = EQ_DRAW_TEXT_COLOR_TEAL;
-                }
-            }
-            else if (spawnType == EQ_SPAWN_TYPE_CORPSE)
-            {
-                textColor = EQ_DRAW_TEXT_COLOR_YELLOW;
-            }
-
             if (spawn == targetSpawn)
             {
                 textColor = EQ_DRAW_TEXT_COLOR_PINK;
             }
-
-            if (bIgnoreDistance == true)
+            else
             {
-                textColor = EQ_DRAW_TEXT_COLOR_GREEN;
+                if (bIgnoreDistance == true)
+                {
+                    textColor = EQ_DRAW_TEXT_COLOR_GREEN;
+                }
+                else
+                {
+                    if (spawnType == EQ_SPAWN_TYPE_PLAYER)
+                    {
+                        textColor = EQ_DRAW_TEXT_COLOR_RED;
+                    }
+                    else if (spawnType == EQ_SPAWN_TYPE_NPC)
+                    {
+                        if (bOutOfRange == true)
+                        {
+                            textColor = EQ_DRAW_TEXT_COLOR_GRAY;
+                        }
+                        else
+                        {
+                            textColor = EQ_DRAW_TEXT_COLOR_TEAL;
+                        }
+                    }
+                    else if (spawnType == EQ_SPAWN_TYPE_CORPSE)
+                    {
+                        textColor = EQ_DRAW_TEXT_COLOR_YELLOW;
+                    }
+                }
             }
 
             EQ_DrawTextByColor(drawText.c_str(), (int)screenX, (int)screenY, textColor);

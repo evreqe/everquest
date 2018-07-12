@@ -77,6 +77,8 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState);
 
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_SpellManager);
+
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CXWndManager);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows);
 

@@ -5,6 +5,12 @@
 #include <string>
 #include <unordered_map>
 
+// MacroQuest2
+#ifndef __MQ2_H__
+#define __MQ2_H__
+#include "MQ2Main/eqgame(Test).h"
+#endif // __MQ2_H__
+
 const char* EQ_WINDOW_TITLE_DEFAULT = "EverQuest";
 
 const uint32_t EQ_BASE_ADDRESS_VALUE = 0x400000;
@@ -48,16 +54,20 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 
 #define EQ_NUM_HOTBARS           11    // 10 + 1, potion belt was removed and replaced with another hotbar
 #define EQ_NUM_HOTBAR_BUTTONS    12
-#define EQ_NUM_SPELLS            59999
+#define EQ_NUM_SPELLS            60000
 #define EQ_NUM_SPELL_GEMS        18
 #define EQ_NUM_BAGS              10    // number of bags you can hold in your inventory
 #define EQ_NUM_BAG_SLOTS         40    // number of slots a bag can have
 #define EQ_NUM_GROUP_MEMBERS     6
+#define EQ_NUM_LONG_BUFFS        42
+#define EQ_NUM_SHORT_BUFFS       55
 
 #define EQ_BAZAAR_SEARCH_MAX_RESULTS_PER_TRADER 200
 #define EQ_BAZAAR_SEARCH_LIST_INDEX_NULL 0xFFFFFFFF
 
 #define EQ_SPELL_ID_NULL 0xFFFFFFFF
+
+#define EQ_SPELL_GEM_INDEX_NULL 0xFF
 
 #define EQ_FOG_OFF    0x00 // uint8_t
 #define EQ_FOG_ON     0xFF // uint8_t
@@ -95,13 +105,33 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_FONT_STYLE_FIXED_WIDTH               9     // small text and all characters are the same size, courier new or fixed sys font face
 #define EQ_FONT_STYLE_NAME_SPRITE               10    // big text with drop shadow, used for text above players/npcs heads
 
+// class SpellManager
+#define EQ_OFFSET_SpellManager_SPELLS    offsetof(EQData::_SPELLMGR, Spells)    // uint32_t pointer SPELL[EQ_NUM_SPELLS]
+
+#define EQ_SIZE_SPELL_NAME    0x40
+
+// struct SPELL
+#define EQ_OFFSET_SPELL_ID      offsetof(EQData::_SPELL, ID)      // uint32_t
+#define EQ_OFFSET_SPELL_NAME    offsetof(EQData::_SPELL, Name)    // char[EQ_SIZE_SPELL_NAME]
+
 // class EQCharacter
-// ******************** randomized after each patch ******************** //
-#define EQ_OFFSET_CHARACTER_GROUP    0x282C    // uint32_t pointer    /*0x282c*/ struct _GROUPINFO*   pGroupInfo;
-// ********************************************************************* //
+#define EQ_OFFSET_CHARACTER_GROUP    offsetof(EQData::_CHARINFO, pGroupInfo)    // uint32_t pointer
+#define EQ_OFFSET_CHARACTER_CI2      offsetof(EQData::_CHARINFO, pCI2)          // uint32_t pointer
+
+// struct CI2_INFO
+#define EQ_OFFSET_CI2_CHARINFO2    offsetof(EQData::_CI2_INFO, pCharInfo2)    // uint32_t pointer
+
+// struct CHARINFO2
+#define EQ_OFFSET_CHARINFO2_BUFFS               offsetof(EQData::_CHARINFO2, Buff)               // struct BUFF[EQ_NUM_LONG_BUFFS]
+#define EQ_OFFSET_CHARINFO2_SHORT_BUFFS         offsetof(EQData::_CHARINFO2, ShortBuff)          // struct BUFF[EQ_NUM_SHORT_BUFFS]
+#define EQ_OFFSET_CHARINFO2_MEMORIZED_SPELLS    offsetof(EQData::_CHARINFO2, MemorizedSpells)    // uint32_t[EQ_NUM_SPELL_GEMS]
+
+// struct SPELLBUFF
+#define EQ_OFFSET_BUFF_TYPE        offsetof(EQData::_SPELLBUFF, Type)       // uint8_t
+#define EQ_OFFSET_BUFF_LEVEL       offsetof(EQData::_SPELLBUFF, Level)      // uint8_t
+#define EQ_OFFSET_BUFF_SPELL_ID    offsetof(EQData::_SPELLBUFF, SpellID)    // uint32_t
 
 // class EQPlayer
-// double check offsets after patch!
 #define EQ_OFFSET_SPAWN_PREVIOUS                           0x04     // uint32_t pointer
 #define EQ_OFFSET_SPAWN_NEXT                               0x08     // uint32_t pointer
 #define EQ_OFFSET_SPAWN_JUMP_STRENGTH                      0x10     // float       // how high up you will jump, not forward
@@ -135,19 +165,34 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_OFFSET_SPAWN_MOUNT_RIDER_SPAWN                  0x158    // uint32_t    // spawn that is riding the mount
 #define EQ_OFFSET_SPAWN_IS_TARGETABLE                      0x160    // uint8_t
 // ******************** randomized after each patch ******************** //    #define PLAYERZONECLIENT
-#define EQ_OFFSET_SPAWN_ZONE_ID                    0x360     // uint32_t
-#define EQ_OFFSET_SPAWN_LEVEL                      0x270     // uint8_t
-#define EQ_OFFSET_SPAWN_RACE                       0xF84     // uint32_t
-#define EQ_OFFSET_SPAWN_CLASS                      0xF8C     // uint32_t
-#define EQ_OFFSET_SPAWN_STANDING_STATE             0x5F0     // uint8_t
-#define EQ_OFFSET_SPAWN_HP_CURRENT                 0x2A0     // int64_t
-#define EQ_OFFSET_SPAWN_HP_MAX                     0x1D8     // int64_t
-#define EQ_OFFSET_SPAWN_MANA_CURRENT               0x1E8     // int32_t
-#define EQ_OFFSET_SPAWN_MANA_MAX                   0x1D4     // int32_t
-#define EQ_OFFSET_SPAWN_ENDURANCE_CURRENT          0x1B8     // uint32_t
-#define EQ_OFFSET_SPAWN_ENDURANCE_MAX              0x288     // uint32_t
-#define EQ_OFFSET_SPAWN_FOLLOW_SPAWN               0xF14     // uint32_t pointer    struct _SPAWNINFO*   WhoFollowing; // NULL if autofollow off
-#define EQ_OFFSET_SPAWN_GRAVITY_TYPE               0x1FC0    // uint32_t
+#define EQ_OFFSET_SPAWN_ZONE_ID                    offsetof(EQData::_SPAWNINFO, Zone)                // uint32_t
+#define EQ_OFFSET_SPAWN_GUILD_ID                   offsetof(EQData::_SPAWNINFO, GuildID)             // uint64_t
+#define EQ_OFFSET_SPAWN_LEVEL                      offsetof(EQData::_SPAWNINFO, Level)               // uint8_t
+#define EQ_OFFSET_SPAWN_RACE                       0xF94                                             // uint32_t
+#define EQ_OFFSET_SPAWN_CLASS                      0xF9C                                             // uint32_t
+#define EQ_OFFSET_SPAWN_STANDING_STATE             offsetof(EQData::_SPAWNINFO, StandState)          // uint8_t
+#define EQ_OFFSET_SPAWN_HP_CURRENT                 offsetof(EQData::_SPAWNINFO, HPCurrent)           // int64_t
+#define EQ_OFFSET_SPAWN_HP_MAX                     offsetof(EQData::_SPAWNINFO, HPMax)               // int64_t
+#define EQ_OFFSET_SPAWN_MANA_CURRENT               offsetof(EQData::_SPAWNINFO, ManaCurrent)         // int32_t
+#define EQ_OFFSET_SPAWN_MANA_MAX                   offsetof(EQData::_SPAWNINFO, ManaMax)             // int32_t
+#define EQ_OFFSET_SPAWN_ENDURANCE_CURRENT          offsetof(EQData::_SPAWNINFO, EnduranceCurrent)    // uint32_t
+#define EQ_OFFSET_SPAWN_ENDURANCE_MAX              offsetof(EQData::_SPAWNINFO, EnduranceMax)        // uint32_t
+#define EQ_OFFSET_SPAWN_FOLLOW_SPAWN               offsetof(EQData::_SPAWNINFO, WhoFollowing)        // uint32_t pointer    struct _SPAWNINFO*   WhoFollowing; // NULL if autofollow off
+#define EQ_OFFSET_SPAWN_GRAVITY_TYPE               0x1FD4                                            // uint32_t
+#define EQ_OFFSET_SPAWN_PET_SPAWN_ID               offsetof(EQData::_SPAWNINFO, PetID)               // uint32_t
+#define EQ_OFFSET_SPAWN_PET_OWNER_SPAWN_ID         offsetof(EQData::_SPAWNINFO, MasterID)            // uint32_t
+#define EQ_OFFSET_SPAWN_ANONYMOUS_STATE            offsetof(EQData::_SPAWNINFO, Anon)                // uint32_t   // anonymous or roleplay
+#define EQ_OFFSET_SPAWN_HIDE_STATE                 offsetof(EQData::_SPAWNINFO, HideMode)            // uint32_t
+#define EQ_OFFSET_SPAWN_IS_MERCENARY               offsetof(EQData::_SPAWNINFO, Mercenary)           // uint8_t
+#define EQ_OFFSET_SPAWN_IS_BUYER                   offsetof(EQData::_SPAWNINFO, Buyer)               // uint32_t
+#define EQ_OFFSET_SPAWN_IS_TRADER                  offsetof(EQData::_SPAWNINFO, Trader)              // uint32_t
+#define EQ_OFFSET_SPAWN_IS_FEIGN_DEATH             offsetof(EQData::_SPAWNINFO, FD)                  // uint8_t
+#define EQ_OFFSET_SPAWN_IS_SNEAKING                offsetof(EQData::_SPAWNINFO, Sneak)               // uint8_t
+#define EQ_OFFSET_SPAWN_IS_BLIND                   offsetof(EQData::_SPAWNINFO, Blind)               // uint8_t
+#define EQ_OFFSET_SPAWN_IS_LFG                     offsetof(EQData::_SPAWNINFO, LFG)                 // uint8_t    // looking for group
+#define EQ_OFFSET_SPAWN_IS_AFK                     offsetof(EQData::_SPAWNINFO, AFK)                 // uint32_t   // away from keyboard
+#define EQ_OFFSET_SPAWN_IS_LINKDEAD                offsetof(EQData::_SPAWNINFO, Linkdead)            // uint8_t
+#define EQ_OFFSET_SPAWN_IS_OFFLINE_MODE            offsetof(EQData::_SPAWNINFO, bOfflineMode)        // uint8_t
 // ********************************************************************* //
 
 #define EQ_SIZE_SPAWN_NAME         64 // 0x40
