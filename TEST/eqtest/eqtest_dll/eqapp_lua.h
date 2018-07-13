@@ -1918,6 +1918,7 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
 
     state->set_function("EQ_StopFollow", EQ_StopFollow);
     state->set_function("EQ_FollowTarget", EQ_FollowTarget);
+    state->set_function("EQ_ClearTarget", EQ_ClearTarget);
 
     state->set_function("EQ_GetSpawnTypeNameByKey", EQ_GetSpawnTypeNameByKey);
     state->set_function("EQ_GetStandingStateNameByKey", EQ_GetStandingStateNameByKey);

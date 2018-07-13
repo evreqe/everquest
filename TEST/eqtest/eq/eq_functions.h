@@ -289,9 +289,10 @@ void EQ_StopSound();
 
 void EQ_StopFollow();
 void EQ_FollowTarget();
+void EQ_ClearTarget();
 
 std::string EQ_StringMap_GetValueByKey(std::unordered_map<uint32_t, std::string>& stringMap, uint32_t key);
-uint32_t EQ_StringMap_GetKeyByValue(std::unordered_map<uint32_t, std::string>& stringMap, std::string value);
+uint32_t EQ_StringMap_GetKeyByValue(std::unordered_map<uint32_t, std::string>& stringMap, const std::string& value);
 std::string EQ_GetSpawnTypeNameByKey(uint32_t key);
 std::string EQ_GetStandingStateNameByKey(uint32_t key);
 std::string EQ_GetDirectionNameByKey(uint32_t key);
@@ -2651,6 +2652,11 @@ void EQ_FollowTarget()
     EQ_SetSpawnFollowSpawn(playerSpawn, targetSpawn);
 }
 
+void EQ_ClearTarget()
+{
+    EQ_SetTargetSpawn(NULL);
+}
+
 std::string EQ_StringMap_GetValueByKey(std::unordered_map<uint32_t, std::string>& stringMap, uint32_t key)
 {
     auto it = stringMap.find(key);
@@ -2662,7 +2668,7 @@ std::string EQ_StringMap_GetValueByKey(std::unordered_map<uint32_t, std::string>
     return std::string();
 }
 
-uint32_t EQ_StringMap_GetKeyByValue(std::unordered_map<uint32_t, std::string>& stringMap, std::string value)
+uint32_t EQ_StringMap_GetKeyByValue(std::unordered_map<uint32_t, std::string>& stringMap, const std::string& value)
 {
     for (auto it = stringMap.begin(); it != stringMap.end(); ++it)
     {

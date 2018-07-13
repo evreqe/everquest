@@ -33,7 +33,7 @@ void EQAPP_FindPath_FollowPath_Toggle();
 void EQAPP_FindPath_FollowPath_On();
 void EQAPP_FindPath_FollowPath_Off();
 EQApp::PathList EQAPP_FindPath_GetPathList();
-void EQAPP_FindPath_FollowPath(EQApp::PathList& pathList);
+void EQAPP_FindPath_FollowPathList(EQApp::PathList& pathList);
 bool EQAPP_FindPath_IsActive();
 void EQAPP_FindPath_Draw();
 void EQAPP_FindPath_FollowPath_HandleEvent_CEverQuest__dsp_chat(std::string text, int textColor);
@@ -194,7 +194,7 @@ EQApp::PathList EQAPP_FindPath_GetPathList()
     return paths;
 }
 
-void EQAPP_FindPath_FollowPath(EQApp::PathList& pathList)
+void EQAPP_FindPath_FollowPathList(EQApp::PathList& pathList)
 {
     if (pathList.size() == 0)
     {
@@ -276,13 +276,13 @@ void EQAPP_FindPath_Draw()
         return;
     }
 
-    auto pathList = EQAPP_FindPath_GetPathList();
-    if (pathList.size() == 0)
+    auto pathList = &g_FindPathFollowPathList;
+    if (pathList->size() == 0)
     {
         return;
     }
 
-    for (auto& path : pathList)
+    for (auto& path : *pathList)
     {
         if (path.Distance > g_FindPathDrawDistance)
         {

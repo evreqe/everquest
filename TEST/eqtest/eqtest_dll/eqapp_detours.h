@@ -543,12 +543,12 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
 
     if (g_FindPathIsEnabled == true && g_FindPathFollowPathIsEnabled == true)
     {
-        EQAPP_FindPath_FollowPath(g_FindPathFollowPathList);
+        EQAPP_FindPath_FollowPathList(g_FindPathFollowPathList);
     }
 
     if (g_WaypointIsEnabled == true && g_WaypointFollowPathIsEnabled == true)
     {
-        EQAPP_Waypoint_FollowPath(g_WaypointFollowPathIndexList);
+        EQAPP_Waypoint_FollowPathList(g_WaypointFollowPathIndexList);
     }
 
     if (g_LuaIsEnabled == true)
@@ -979,7 +979,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__DoPercentConvert(void* this_p
     
     EQAPP_InterpretCommand_ConvertText(str);
     
-    strcpy(text, str.c_str());
+    strcpy_s(text, str.size(), str.c_str());
 
     return EQAPP_REAL_FUNCTION_CEverQuest__DoPercentConvert(this_ptr, text, isOutgoing);
 }
@@ -1205,6 +1205,11 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__LMouseUp(void* this_ptr, void
     if (g_WaypointIsEnabled == true && g_WaypointEditorIsEnabled == true)
     {
         bool result = EQAPP_WaypointEditor_HandleEvent_CEverQuest__LMouseUp(x, y);
+        if (result == true)
+        {
+            EQ_ClearTarget();
+            return 1;
+        }
     }
 
     return EQAPP_REAL_FUNCTION_CEverQuest__LMouseUp(this_ptr, x, y);
@@ -1220,6 +1225,11 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__RMouseUp(void* this_ptr, void
     if (g_WaypointIsEnabled == true && g_WaypointEditorIsEnabled == true)
     {
         bool result = EQAPP_WaypointEditor_HandleEvent_CEverQuest__RMouseUp(x, y);
+        if (result == true)
+        {
+            EQ_ClearTarget();
+            ////return 1; // we do not return here because the game will get stuck with mouse look turned on
+        }
     }
 
     return EQAPP_REAL_FUNCTION_CEverQuest__RMouseUp(this_ptr, x, y);
