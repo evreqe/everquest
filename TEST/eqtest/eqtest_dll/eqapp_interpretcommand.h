@@ -216,6 +216,8 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//WPLoad",                       &EQAPP_WaypointList_Load},
     {"//WPSave",                       &EQAPP_WaypointList_Save},
     {"//WPPrint",                      &EQAPP_WaypointList_Print},
+    {"//WPPrintNames",                 &EQAPP_WaypointList_PrintNames},
+    {"//WPNames",                      &EQAPP_WaypointList_PrintNames},
     {"//WPClear",                      &EQAPP_WaypointList_Clear},
     {"//WPEditor",                     &EQAPP_Waypoint_Editor_Toggle},
     {"//WPEditorOn",                   &EQAPP_Waypoint_Editor_On},
@@ -3903,6 +3905,28 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
             return true;
         }
 
+        // //WPAddBetween <from index>,<to index>
+        if (EQAPP_String_BeginsWith(commandText, "//WPAB ") == true || EQAPP_String_BeginsWith(commandText, "//WPAddBetween ") == true)
+        {
+            std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+            if (commandTextAfterSpace.size() != 0)
+            {
+                std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
+                if (tokens.size() == 2)
+                {
+                    if (EQAPP_String_IsDigits(tokens.at(0)) == true && EQAPP_String_IsDigits(tokens.at(1)) == true)
+                    {
+                        uint32_t fromIndex = std::stoul(tokens.at(0));
+                        uint32_t toIndex = std::stoul(tokens.at(1));
+
+                        EQAPP_Waypoint_AddAtPlayerBetween(fromIndex, toIndex);
+                    }
+                }
+            }
+
+            return true;
+        }
+
         if (commandText == "//WPAT" || commandText == "//WPAddTarget")
         {
             EQAPP_Waypoint_AddAtTarget("");
@@ -3951,6 +3975,28 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         if (commandText == "//WPABTC" || commandText == "//WPAddBehindTargetConnect")
         {
             EQAPP_Waypoint_AddBehindTargetAndConnectLastTwoIndexes();
+
+            return true;
+        }
+
+        // //WPAddTargetBetween <from index>,<to index>
+        if (EQAPP_String_BeginsWith(commandText, "//WPATB ") == true || EQAPP_String_BeginsWith(commandText, "//WPAddTargetBetween ") == true)
+        {
+            std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+            if (commandTextAfterSpace.size() != 0)
+            {
+                std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
+                if (tokens.size() == 2)
+                {
+                    if (EQAPP_String_IsDigits(tokens.at(0)) == true && EQAPP_String_IsDigits(tokens.at(1)) == true)
+                    {
+                        uint32_t fromIndex = std::stoul(tokens.at(0));
+                        uint32_t toIndex = std::stoul(tokens.at(1));
+
+                        EQAPP_Waypoint_AddAtTargetBetween(fromIndex, toIndex);
+                    }
+                }
+            }
 
             return true;
         }
@@ -4521,25 +4567,16 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
         if (commandTextAfterSpace.size() != 0)
         {
-            uint32_t toIndex = EQApp::WaypointIndexNull;
-
             if (EQAPP_String_IsDigits(commandTextAfterSpace) == true)
             {
-                toIndex = std::stoul(commandTextAfterSpace);
+                uint32_t toIndex = std::stoul(commandTextAfterSpace);
+
+                EQAPP_Waypoint_Goto(toIndex);
             }
             else
             {
-                for (auto& waypoint : g_WaypointList)
-                {
-                    if (waypoint.Name == commandTextAfterSpace)
-                    {
-                        toIndex = waypoint.Index;
-                        break;
-                    }
-                }
+                EQAPP_Waypoint_GotoByName(commandTextAfterSpace.c_str());
             }
-
-            EQAPP_Waypoint_Goto(toIndex);
         }
 
         return true;

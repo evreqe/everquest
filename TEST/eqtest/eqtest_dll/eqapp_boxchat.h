@@ -177,6 +177,11 @@ void EQAPP_BoxChat_DisconnectEx()
 
 bool EQAPP_BoxChat_SendText(std::string text)
 {
+    if (text[text.size()] != '\n')
+    {
+        text.append("\n");
+    }
+
     if (send(g_BoxChatSocket, text.c_str(), text.size(), 0) == SOCKET_ERROR)
     {
         std::cout << "Box Chat failed to send text: " << text << std::endl;
