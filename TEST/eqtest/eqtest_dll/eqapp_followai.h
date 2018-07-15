@@ -181,7 +181,7 @@ void EQAPP_FollowAI_Execute()
 
     EQ_SetAutoRun(true);
 
-    bool isSpawnFlyingLevitatingOrSwimming =
+    bool isPlayerFlyingLevitatingOrSwimming =
     (
         EQ_GetSpawnGravityType(playerSpawn) == EQ_GRAVITY_TYPE_FLYING ||
         EQ_GetSpawnGravityType(playerSpawn) == EQ_GRAVITY_TYPE_LEVITATING ||
@@ -189,7 +189,7 @@ void EQAPP_FollowAI_Execute()
     );
 
     // follow while swimming or levitating
-    if (g_FollowAIUseZAxisIsEnabled == true || EQ_IsSpawnSwimming(playerSpawn) == true || isSpawnFlyingLevitatingOrSwimming == true)
+    if (g_FollowAIUseZAxisIsEnabled == true || EQ_IsSpawnSwimming(playerSpawn) == true || isPlayerFlyingLevitatingOrSwimming == true)
     {
         if ((followSpawnZ - 1.0f) > playerSpawnZ)
         {

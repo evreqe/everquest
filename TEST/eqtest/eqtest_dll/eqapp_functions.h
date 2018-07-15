@@ -11,18 +11,18 @@ void EQAPP_ToggleDebugText();
 void EQAPP_EnableDebugPrivileges();
 DWORD EQAPP_GetModuleBaseAddress(DWORD processID, const wchar_t* moduleName);
 uint32_t EQAPP_GetNumClients();
-bool EQAPP_IsProcessRunning(const wchar_t* filename);
+bool EQAPP_IsProcessRunning(const wchar_t* fileName);
 bool EQAPP_IsForegroundWindowCurrentProcessID();
 bool EQAPP_IsVKKeyDown(int vkKey);
 uint32_t EQAPP_GetRandomNumber(uint32_t low, uint32_t high);
-void EQAPP_PlaySound(const char* filename);
+void EQAPP_PlaySound(const char* fileName);
 void EQAPP_StopSound();
 void EQAPP_Beep();
 void EQAPP_BeepEx(UINT beepType);
-bool EQAPP_FileExists(const char* filename);
-void EQAPP_DeleteFileContents(const char* filename);
-std::string EQAPP_ReadFileToString(const char* filename);
-void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list, bool printLines = true);
+bool EQAPP_FileExists(const char* fileName);
+void EQAPP_DeleteFileContents(const char* fileName);
+std::string EQAPP_ReadFileToString(const char* fileName);
+void EQAPP_ReadFileToList(const char* fileName, std::vector<std::string>& list, bool printLines = true);
 std::vector<uint32_t> EQAPP_GetNPCSpawnIDListSortedByDistance();
 bool EQAPP_IsInGame();
 void EQAPP_CopyTextToClipboard(const char* text);
@@ -154,7 +154,7 @@ uint32_t EQAPP_GetNumClients()
     return count;
 }
 
-bool EQAPP_IsProcessRunning(const wchar_t* filename)
+bool EQAPP_IsProcessRunning(const wchar_t* fileName)
 {
     bool result = false;
 
@@ -171,7 +171,7 @@ bool EQAPP_IsProcessRunning(const wchar_t* filename)
     {
         do
         {
-            if (lstrcmpi(pe32.szExeFile, filename) == 0)
+            if (lstrcmpi(pe32.szExeFile, fileName) == 0)
             {
                 result = true;
                 break;
@@ -213,10 +213,10 @@ uint32_t EQAPP_GetRandomNumber(uint32_t low, uint32_t high)
     return uid(g_EQAppRandomEngine, uidpt);
 }
 
-void EQAPP_PlaySound(const char* filename)
+void EQAPP_PlaySound(const char* fileName)
 {
     std::stringstream filePath;
-    filePath << g_EQAppName << "/sounds/" << filename;
+    filePath << g_EQAppName << "/sounds/" << fileName;
 
     PlaySoundA(filePath.str().c_str(), NULL, SND_FILENAME | SND_NODEFAULT | SND_ASYNC);
 }
@@ -236,23 +236,23 @@ void EQAPP_BeepEx(UINT beepType)
     MessageBeep(beepType);
 }
 
-bool EQAPP_FileExists(const char* filename)
+bool EQAPP_FileExists(const char* fileName)
 {
-    std::ifstream file(filename);
+    std::ifstream file(fileName);
     return file.good();
 }
 
-void EQAPP_DeleteFileContents(const char* filename)
+void EQAPP_DeleteFileContents(const char* fileName)
 {
     std::fstream file;
-    file.open(filename, std::fstream::out | std::fstream::trunc);
+    file.open(fileName, std::fstream::out | std::fstream::trunc);
     file.close();
 }
 
-std::string EQAPP_ReadFileToString(const char* filename)
+std::string EQAPP_ReadFileToString(const char* fileName)
 {
     std::stringstream filePath;
-    filePath << g_EQAppName << "/" << filename;
+    filePath << g_EQAppName << "/" << fileName;
 
     std::string filePathStr = filePath.str();
 
@@ -275,10 +275,10 @@ std::string EQAPP_ReadFileToString(const char* filename)
     return buffer.str();
 }
 
-void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list, bool printLines)
+void EQAPP_ReadFileToList(const char* fileName, std::vector<std::string>& list, bool printLines)
 {
     std::stringstream filePath;
-    filePath << g_EQAppName << "/" << filename;
+    filePath << g_EQAppName << "/" << fileName;
 
     std::string filePathStr = filePath.str();
 
@@ -308,7 +308,7 @@ void EQAPP_ReadFileToList(const char* filename, std::vector<std::string>& list, 
 
         if (printLines == true)
         {
-            std::cout << filename << ": " << line << std::endl;
+            std::cout << fileName << ": " << line << std::endl;
         }
 
         list.push_back(line);
@@ -493,21 +493,21 @@ void EQAPP_InventoryFind(const char* text)
             continue;
         }
 
-        std::string filename = it.path().filename().string();
+        std::string fileName = it.path().filename().string();
 
-        if (EQAPP_String_EndsWith(filename, "-Inventory.txt") == false)
+        if (EQAPP_String_EndsWith(fileName, "-Inventory.txt") == false)
         {
             continue;
         }
 
-        ////std::cout << filename << std::endl;
+        ////std::cout << fileName << std::endl;
 
         std::fstream file;
-        file.open(filename, std::fstream::in);
+        file.open(fileName, std::fstream::in);
         if (file.is_open() == false)
         {
             std::stringstream ss;
-            ss << "failed to open file: " << filename;
+            ss << "failed to open file: " << fileName;
 
             EQAPP_PrintDebugText(__FUNCTION__, ss.str().c_str());
             continue;
@@ -523,7 +523,7 @@ void EQAPP_InventoryFind(const char* text)
 
             if (EQAPP_String_Contains(line, text) == true)
             {
-                std::cout << filename << ": " << line << "\n";
+                std::cout << fileName << ": " << line << "\n";
 
                 resultsCount++;
             }

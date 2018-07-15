@@ -780,7 +780,7 @@ int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive,
                 }
                 else
                 {
-                    std::cout << "Lua filename: " << script->Filename << std::endl;
+                    std::cout << "Lua file name: " << script->FileName << std::endl;
 
                     sol::error error = result;
 
@@ -950,7 +950,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__UpdateItemSlot(void* this_ptr, 
                         }
                         else
                         {
-                            std::cout << "Lua filename: " << script->Filename << std::endl;
+                            std::cout << "Lua file name: " << script->FileName << std::endl;
 
                             sol::error error = result;
 
@@ -979,7 +979,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__DoPercentConvert(void* this_p
     
     EQAPP_InterpretCommand_ConvertText(str);
     
-    strcpy_s(text, str.size(), str.c_str());
+    strcpy_s(text, str.length() + 1, str.c_str());
 
     return EQAPP_REAL_FUNCTION_CEverQuest__DoPercentConvert(this_ptr, text, isOutgoing);
 }
@@ -1019,7 +1019,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__InterpretCmd(void* this_ptr, 
                 }
                 else
                 {
-                    std::cout << "Lua filename: " << script->Filename << std::endl;
+                    std::cout << "Lua file name: " << script->FileName << std::endl;
 
                     sol::error error = result;
 
@@ -1117,7 +1117,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void
                         sol::protected_function_result result = luaFunction(playerSpawnZoneID);
                         if (result.valid() == false)
                         {
-                            std::cout << "Lua filename: " << script->Filename << std::endl;
+                            std::cout << "Lua file name: " << script->FileName << std::endl;
 
                             sol::error error = result;
 
@@ -1162,7 +1162,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void
                 }
                 else
                 {
-                    std::cout << "Lua filename: " << script->Filename << std::endl;
+                    std::cout << "Lua file name: " << script->FileName << std::endl;
 
                     sol::error error = result;
 

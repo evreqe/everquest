@@ -17,7 +17,7 @@ void EQAPP_BazaarFilter_On();
 void EQAPP_BazaarFilter_Off();
 void EQAPP_BazaarFilter_Beep_Toggle();
 void EQAPP_BazaarFilter_Load();
-void EQAPP_BazaarFilter_LoadEx(const char* filename);
+void EQAPP_BazaarFilter_LoadEx(const char* fileName);
 bool EQAPP_BazaarFilter_HandleEvent_CBazaarSearchWnd__AddItemToList(char* itemName, uint32_t itemPrice, char* traderName);
 void EQAPP_BazaarFilter_PrintItemNameList();
 
@@ -62,14 +62,14 @@ void EQAPP_BazaarFilter_Load()
     EQAPP_BazaarFilter_LoadEx(fileName.str().c_str());
 }
 
-void EQAPP_BazaarFilter_LoadEx(const char* filename)
+void EQAPP_BazaarFilter_LoadEx(const char* fileName)
 {
     std::fstream file;
-    file.open(filename, std::fstream::in);
+    file.open(fileName, std::fstream::in);
     if (file.is_open() == false)
     {
         std::stringstream ss;
-        ss << "failed to open file: " << filename;
+        ss << "failed to open file: " << fileName;
 
         EQAPP_PrintDebugText(__FUNCTION__, ss.str().c_str());
         return;

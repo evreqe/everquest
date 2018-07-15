@@ -330,7 +330,7 @@ public:
     bool CRender::DrawLine(EQ::Point& pointBegin, EQ::Point& pointEnd, uint32_t colorARGB);
     bool CRender::DrawWrappedText(uint32_t fontStyle, const char* text, EQ::CXRect& cxrect1, EQ::CXRect& cxrect2, uint32_t colorARGB, uint16_t flags, int startX);
     bool CRender::DrawColoredRectangle(EQ::Rectangle& rectangle, uint32_t colorARGB);
-    void CRender::TakeScreenshot(const char* filename);
+    void CRender::TakeScreenshot(const char* fileName);
 };
 
 #define EQ_VFTABLE_INDEX_CRender__ResetDevice             0x64    // "ResetDevice() failed!"
@@ -345,7 +345,7 @@ EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawWrappedTex
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawColoredRectangle(EQ::Rectangle& rectangle, uint32_t colorARGB), EQ_VFTABLE_INDEX_CRender__DrawColoredRectangle);
 
-EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CRender::TakeScreenshot(const char* filename), EQ_VFTABLE_INDEX_CRender__TakeScreenshot);
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CRender::TakeScreenshot(const char* fileName), EQ_VFTABLE_INDEX_CRender__TakeScreenshot);
 
 EQClass::CRender** EQ_CLASS_POINTER_CRender_pptr;
 EQClass::CRender* EQ_CLASS_POINTER_CRender;

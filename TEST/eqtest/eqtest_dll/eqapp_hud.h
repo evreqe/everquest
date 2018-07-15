@@ -289,7 +289,7 @@ void EQAPP_HUD_Execute()
             }
             else
             {
-                std::cout << "Lua filename: " << script->Filename << std::endl;
+                std::cout << "Lua file name: " << script->FileName << std::endl;
 
                 sol::error error = result;
 

@@ -117,6 +117,10 @@ uint32_t EQ_GetMemorizedSpellID(uint32_t spellGemIndex);
 uint32_t EQ_GetSpellGemIndexBySpellID(uint32_t spellID);
 uint32_t EQ_GetSpellGemIndexBySpellName(const char* spellName);
 
+void EQ_CastSpellByGemIndex(uint32_t spellGemIndex);
+void EQ_CastSpellByName(const char* spellName);
+void EQ_CastSpellByID(uint32_t spellID);
+
 uint32_t EQ_GetSpawnByID(uint32_t spawnID);
 uint32_t EQ_GetSpawnByName(const char* spawnName);
 
@@ -127,6 +131,8 @@ uint32_t EQ_GetPlayerSpawn();
 uint32_t EQ_GetTargetSpawn();
 
 void EQ_SetTargetSpawn(uint32_t spawn);
+void EQ_SetTargetSpawnByName(const char* spawnName);
+void EQ_SetTargetSpawnByID(uint32_t spawnID);
 
 std::string EQ_GetPlayerSpawnNameNumbered();
 std::string EQ_GetPlayerSpawnName();
@@ -276,19 +282,21 @@ float EQ_GetCameraDrawDistance();
 
 void EQ_SetCameraPitch(float pitch);
 void EQ_SetCameraFieldOfView(float fieldOfView);
-void EQ_SetCameraDrawDistance(float drawDistance);
+void EQ_SetCameraDrawDistance(float distance);
 
 bool EQ_WorldLocationToScreenLocation(float worldY, float worldX, float worldZ, float& screenX, float& screenY);
 bool EQ_WorldLocationToScreenLocationEx(float worldY, float worldX, float worldZ, float& screenX, float& screenY);
 std::tuple<float, float, bool> EQ_WorldLocationToScreenLocationAsTuple(float worldY, float worldX, float worldZ);
 
-void EQ_TakeScreenshot(const char* filename);
+void EQ_TakeScreenshot(const char* fileName);
 
-void EQ_PlaySound(const char* filename);
+void EQ_PlaySound(const char* fileName);
 void EQ_StopSound();
 
 void EQ_StopFollow();
 void EQ_FollowTarget();
+void EQ_FollowSpawnByName(const char* spawnName);
+void EQ_FollowSpawnByID(uint32_t spawnID);
 void EQ_ClearTarget();
 
 std::string EQ_StringMap_GetValueByKey(std::unordered_map<uint32_t, std::string>& stringMap, uint32_t key);
@@ -1053,6 +1061,68 @@ uint32_t EQ_GetSpellGemIndexBySpellName(const char* spellName)
     return EQ_SPELL_GEM_INDEX_NULL;
 }
 
+void EQ_CastSpellByGemIndex(uint32_t spellGemIndex)
+{
+    if (spellGemIndex == EQ_SPELL_GEM_INDEX_NULL)
+    {
+        return;
+    }
+
+    if (spellGemIndex > 0 && spellGemIndex < (EQ_NUM_SPELL_GEMS + 1))
+    {
+        std::stringstream ss;
+        ss << "/cast " << spellGemIndex;
+
+        // cast the spell multiple times in case of fizzles
+        for (unsigned int i = 0; i < 4; i++)
+        {
+            EQ_InterpretCommand(ss.str().c_str());
+        }
+    }
+}
+
+void EQ_CastSpellByID(uint32_t spellID)
+{
+    uint32_t spellGemIndex = EQ_GetSpellGemIndexBySpellID(spellID);
+
+    if (spellGemIndex != EQ_SPELL_GEM_INDEX_NULL)
+    {
+        EQ_CastSpellByGemIndex(spellGemIndex);
+    }
+    else
+    {
+        std::cout << "Cannot find spell ID to cast: " << spellID << std::endl;
+    }
+}
+
+void EQ_CastSpellByName(const char* spellName)
+{
+    uint32_t spellGemIndex = EQ_SPELL_GEM_INDEX_NULL;
+
+    std::string spellNameRank1 = spellName;
+    std::string spellNameRank2 = spellNameRank1 + " Rk. II";
+    std::string spellNameRank3 = spellNameRank1 + " Rk. III";
+
+    spellGemIndex = EQ_GetSpellGemIndexBySpellName(spellNameRank3.c_str());
+    if (spellGemIndex == EQ_SPELL_GEM_INDEX_NULL)
+    {
+        spellGemIndex = EQ_GetSpellGemIndexBySpellName(spellNameRank2.c_str());
+        if (spellGemIndex == EQ_SPELL_GEM_INDEX_NULL)
+        {
+            spellGemIndex = EQ_GetSpellGemIndexBySpellName(spellNameRank1.c_str());
+        }
+    }
+
+    if (spellGemIndex != EQ_SPELL_GEM_INDEX_NULL)
+    {
+        EQ_CastSpellByGemIndex(spellGemIndex);
+    }
+    else
+    {
+        std::cout << "Cannot find spell to cast: " << spellName << std::endl;
+    }
+}
+
 uint32_t EQ_GetSpawnByID(uint32_t spawnID)
 {
     uint32_t* player = EQ_CLASS_POINTER_EQPlayerManager->GetSpawnByID(spawnID);
@@ -1122,6 +1192,28 @@ uint32_t EQ_GetTargetSpawn()
 void EQ_SetTargetSpawn(uint32_t spawn)
 {
     EQ_WriteMemory<uint32_t>(EQ_ADDRESS_POINTER_TargetSpawn, spawn);
+}
+
+void EQ_SetTargetSpawnByID(uint32_t spawnID)
+{
+    auto spawn = EQ_GetSpawnByID(spawnID);
+    if (spawn == NULL)
+    {
+        return;
+    }
+
+    EQ_SetTargetSpawn(spawn);
+}
+
+void EQ_SetTargetSpawnByName(const char* spawnName)
+{
+    auto spawn = EQ_GetSpawnByName(spawnName);
+    if (spawn == NULL)
+    {
+        return;
+    }
+
+    EQ_SetTargetSpawn(spawn);
 }
 
 std::string EQ_GetPlayerSpawnNameNumbered()
@@ -2503,7 +2595,7 @@ void EQ_SetCameraFieldOfView(float fieldOfView)
     EQ_WriteMemory<float>(camera + EQ_OFFSET_CCamera_FIELD_OF_VIEW, fieldOfView);
 }
 
-void EQ_SetCameraDrawDistance(float drawDistance)
+void EQ_SetCameraDrawDistance(float distance)
 {
     auto camera = EQ_GetCamera();
     if (camera == NULL)
@@ -2511,7 +2603,7 @@ void EQ_SetCameraDrawDistance(float drawDistance)
         return;
     }
 
-    EQ_WriteMemory<float>(camera + EQ_OFFSET_CCamera_DRAW_DISTANCE, drawDistance);
+    EQ_WriteMemory<float>(camera + EQ_OFFSET_CCamera_DRAW_DISTANCE, distance);
 }
 
 bool EQ_WorldLocationToScreenLocation(float worldY, float worldX, float worldZ, float& screenX, float& screenY)
@@ -2605,10 +2697,10 @@ std::tuple<float, float, bool> EQ_WorldLocationToScreenLocationAsTuple(float wor
     return std::make_tuple(screenX, screenY, result);
 }
 
-void EQ_PlaySound(const char* filename)
+void EQ_PlaySound(const char* fileName)
 {
     std::stringstream filePath;
-    filePath << "sounds/" << filename;
+    filePath << "sounds/" << fileName;
 
     PlaySoundA(filePath.str().c_str(), NULL, SND_FILENAME | SND_NODEFAULT | SND_ASYNC);
 }
@@ -2618,9 +2710,9 @@ void EQ_StopSound()
     PlaySoundA(NULL, NULL, NULL);
 }
 
-void EQ_TakeScreenshot(const char* filename)
+void EQ_TakeScreenshot(const char* fileName)
 {
-    EQ_CLASS_POINTER_CRender->TakeScreenshot(filename);
+    EQ_CLASS_POINTER_CRender->TakeScreenshot(fileName);
 }
 
 void EQ_StopFollow()
@@ -2650,6 +2742,42 @@ void EQ_FollowTarget()
     }
 
     EQ_SetSpawnFollowSpawn(playerSpawn, targetSpawn);
+}
+
+void EQ_FollowSpawnByID(uint32_t spawnID)
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    auto spawn = EQ_GetSpawnByID(spawnID);
+    if (spawn == NULL)
+    {
+        return;
+    }
+
+    EQ_SetTargetSpawn(spawn);
+    EQ_SetSpawnFollowSpawn(playerSpawn, spawn);
+}
+
+void EQ_FollowSpawnByName(const char* spawnName)
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    auto spawn = EQ_GetSpawnByName(spawnName);
+    if (spawn == NULL)
+    {
+        return;
+    }
+
+    EQ_SetTargetSpawn(spawn);
+    EQ_SetSpawnFollowSpawn(playerSpawn, spawn);
 }
 
 void EQ_ClearTarget()

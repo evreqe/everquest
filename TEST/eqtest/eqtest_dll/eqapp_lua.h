@@ -4,7 +4,7 @@ namespace EQApp
 {
     typedef struct _LuaEventScript
     {
-        std::string Filename;
+        std::string FileName;
         sol::state LuaState;
     } LuaEventScript, *LuaEventScript_ptr;
 
@@ -45,7 +45,7 @@ void EQAPP_Lua_EventScriptList_Print();
 void EQAPP_Lua_EventScriptList_ExecuteFunction(const char* functionName);
 void EQAPP_Lua_ScriptFolder_Print();
 bool EQAPP_Lua_ExecuteCode(sol::state* state, const char* text);
-bool EQAPP_Lua_ExecuteFile(sol::state* state, const char* filename);
+bool EQAPP_Lua_ExecuteFile(sol::state* state, const char* fileName);
 void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state);
 
 void EQAPP_Lua_Toggle()
@@ -126,14 +126,14 @@ void EQAPP_Lua_LoadGlobalScripts(sol::state* state)
             continue;
         }
 
-        std::string filename = it.path().filename().string();
+        std::string fileName = it.path().filename().string();
 
-        if (EQAPP_String_BeginsWith(filename, "global_") == false)
+        if (EQAPP_String_BeginsWith(fileName, "global_") == false)
         {
             continue;
         }
 
-        bool result = EQAPP_Lua_ExecuteFile(state, filename.c_str());
+        bool result = EQAPP_Lua_ExecuteFile(state, fileName.c_str());
         if (result == false)
         {
             continue;
@@ -157,9 +157,9 @@ void EQAPP_Lua_EventScriptList_Load()
             continue;
         }
 
-        std::string filename = it.path().filename().string();
+        std::string fileName = it.path().filename().string();
 
-        if (EQAPP_String_BeginsWith(filename, "event_") == false)
+        if (EQAPP_String_BeginsWith(fileName, "event_") == false)
         {
             continue;
         }
@@ -170,14 +170,14 @@ void EQAPP_Lua_EventScriptList_Load()
 
         EQAPP_Lua_LoadGlobalScripts(&state);
 
-        bool result = EQAPP_Lua_ExecuteFile(&state, filename.c_str());
+        bool result = EQAPP_Lua_ExecuteFile(&state, fileName.c_str());
         if (result == false)
         {
             continue;
         }
 
         auto script = std::make_shared<EQApp::LuaEventScript>();
-        script->Filename = filename;
+        script->FileName = fileName;
         script->LuaState = std::move(state);
 
         g_LuaEventScriptList.push_back(std::move(script));
@@ -188,7 +188,7 @@ void EQAPP_Lua_EventScriptList_Print()
 {
     for (auto& script : g_LuaEventScriptList)
     {
-        std::cout << script->Filename << std::endl;
+        std::cout << script->FileName << std::endl;
     }
 }
 
@@ -202,7 +202,7 @@ void EQAPP_Lua_EventScriptList_ExecuteFunction(const char* functionName)
             sol::protected_function_result result = luaFunction();
             if (result.valid() == false)
             {
-                std::cout << "Lua filename: " << script->Filename << std::endl;
+                std::cout << "Lua file name: " << script->FileName << std::endl;
 
                 sol::error error = result;
 
@@ -246,10 +246,10 @@ bool EQAPP_Lua_ExecuteCode(sol::state* state, const char* text)
     return result.valid();
 }
 
-bool EQAPP_Lua_ExecuteFile(sol::state* state, const char* filename)
+bool EQAPP_Lua_ExecuteFile(sol::state* state, const char* fileName)
 {
     std::stringstream ss;
-    ss << "scripts/" << filename;
+    ss << "scripts/" << fileName;
 
     std::string fileContents = EQAPP_ReadFileToString(ss.str().c_str());
     if (fileContents.size() == 0)
@@ -260,11 +260,11 @@ bool EQAPP_Lua_ExecuteFile(sol::state* state, const char* filename)
     bool result = EQAPP_Lua_ExecuteCode(state, fileContents.c_str());
     if (result == true)
     {
-        ////std::cout << "Script executed: " << filename << std::endl;
+        ////std::cout << "Script executed: " << fileName << std::endl;
     }
     else
     {
-        std::cout << "Script failed to execute: " << filename << std::endl;
+        std::cout << "Script failed to execute: " << fileName << std::endl;
     }
 
     return result;
@@ -1722,6 +1722,12 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_IsSpellIDValid", EQ_IsSpellIDValid);
     state->set_function("EQ_IsZoneIDSafe", EQ_IsZoneIDSafe);
     state->set_function("EQ_GetTimer", EQ_GetTimer);
+    state->set_function("EQ_GetCamera", EQ_GetCamera);
+
+    state->set_function("EQ_GetMouseX", EQ_GetMouseX);
+    state->set_function("EQ_GetMouseY", EQ_GetMouseY);
+    state->set_function("EQ_MouseLeftClickWorld", EQ_MouseLeftClickWorld);
+    state->set_function("EQ_MouseRightClickWorld", EQ_MouseRightClickWorld);
 
     state->set_function("EQ_IsNetStatusEnabled", EQ_IsNetStatusEnabled);
     state->set_function("EQ_IsAutoAttackEnabled", EQ_IsAutoAttackEnabled);
@@ -1747,8 +1753,21 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_SetFogDistanceBegin", EQ_SetFogDistanceBegin);
     state->set_function("EQ_SetFogDistanceEnd", EQ_SetFogDistanceEnd);
 
+    state->set_function("EQ_GetSpellManager", EQ_GetSpellManager);
+    state->set_function("EQ_GetSpellIDByName", EQ_GetSpellIDByName);
+    state->set_function("EQ_GetSpellNameByID", EQ_GetSpellNameByID);
+
     state->set_function("EQ_GetPlayerCharacter", EQ_GetPlayerCharacter);
     state->set_function("EQ_GetGroup", EQ_GetGroup);
+    state->set_function("EQ_GetCI2", EQ_GetCI2);
+    state->set_function("EQ_GetCharInfo2", EQ_GetCharInfo2);
+    state->set_function("EQ_GetMemorizedSpellID", EQ_GetMemorizedSpellID);
+    state->set_function("EQ_GetSpellGemIndexBySpellID", EQ_GetSpellGemIndexBySpellID);
+    state->set_function("EQ_GetSpellGemIndexBySpellName", EQ_GetSpellGemIndexBySpellName);
+
+    state->set_function("EQ_CastSpellByGemIndex", EQ_CastSpellByGemIndex);
+    state->set_function("EQ_CastSpellByID", EQ_CastSpellByID);
+    state->set_function("EQ_CastSpellByName", EQ_CastSpellByName);
 
     state->set_function("EQ_GetSpawnByID", EQ_GetSpawnByID);
     state->set_function("EQ_GetSpawnByName", EQ_GetSpawnByName);
@@ -1760,6 +1779,8 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_GetTargetSpawn", EQ_GetTargetSpawn);
 
     state->set_function("EQ_SetTargetSpawn", EQ_SetTargetSpawn);
+    state->set_function("EQ_SetTargetSpawnByID", EQ_SetTargetSpawnByID);
+    state->set_function("EQ_SetTargetSpawnByName", EQ_SetTargetSpawnByName);
 
     state->set_function("EQ_GetPlayerSpawnNameNumbered", EQ_GetPlayerSpawnNameNumbered);
     state->set_function("EQ_GetPlayerSpawnName", EQ_GetPlayerSpawnName);
@@ -1784,6 +1805,7 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_IsSpawnWithinDistanceOfSpawn", EQ_IsSpawnWithinDistanceOfSpawn);
 
     state->set_function("EQ_CanSpawnCastRayToLocation", EQ_CanSpawnCastRayToLocation);
+    state->set_function("EQ_CanSpawnCastRayToSpawn", EQ_CanSpawnCastRayToSpawn);
 
     state->set_function("EQ_IsSpawnTargetable", EQ_IsSpawnTargetable);
 
@@ -1918,6 +1940,8 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
 
     state->set_function("EQ_StopFollow", EQ_StopFollow);
     state->set_function("EQ_FollowTarget", EQ_FollowTarget);
+    state->set_function("EQ_FollowSpawnByID", EQ_FollowSpawnByID);
+    state->set_function("EQ_FollowSpawnByName", EQ_FollowSpawnByName);
     state->set_function("EQ_ClearTarget", EQ_ClearTarget);
 
     state->set_function("EQ_GetSpawnTypeNameByKey", EQ_GetSpawnTypeNameByKey);

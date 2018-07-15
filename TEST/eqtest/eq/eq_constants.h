@@ -168,8 +168,8 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_OFFSET_SPAWN_ZONE_ID                    offsetof(EQData::_SPAWNINFO, Zone)                // uint32_t
 #define EQ_OFFSET_SPAWN_GUILD_ID                   offsetof(EQData::_SPAWNINFO, GuildID)             // uint64_t
 #define EQ_OFFSET_SPAWN_LEVEL                      offsetof(EQData::_SPAWNINFO, Level)               // uint8_t
-#define EQ_OFFSET_SPAWN_RACE                       0xF94                                             // uint32_t
-#define EQ_OFFSET_SPAWN_CLASS                      0xF9C                                             // uint32_t
+#define EQ_OFFSET_SPAWN_RACE                       0xF90                                             // uint32_t
+#define EQ_OFFSET_SPAWN_CLASS                      0xF98                                             // uint32_t
 #define EQ_OFFSET_SPAWN_STANDING_STATE             offsetof(EQData::_SPAWNINFO, StandState)          // uint8_t
 #define EQ_OFFSET_SPAWN_HP_CURRENT                 offsetof(EQData::_SPAWNINFO, HPCurrent)           // int64_t
 #define EQ_OFFSET_SPAWN_HP_MAX                     offsetof(EQData::_SPAWNINFO, HPMax)               // int64_t
