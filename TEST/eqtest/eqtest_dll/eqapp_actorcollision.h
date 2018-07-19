@@ -92,13 +92,13 @@ void EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor
     char actorDefinitionName[EQ_SIZE_ACTOR_DEFINITION_NAME];
     std::memmove(actorDefinitionName, (LPVOID)(actorDefinitionAddress), sizeof(actorDefinitionName));
 
+    auto actorY = EQ_ReadMemory<float>(cactor + EQ_OFFSET_CActor_Y);
+    auto actorX = EQ_ReadMemory<float>(cactor + EQ_OFFSET_CActor_X);
+    auto actorZ = EQ_ReadMemory<float>(cactor + EQ_OFFSET_CActor_Z);
+
     if (g_ActorCollisionDebugIsEnabled == true)
     {
         ////std::cout << "Actor Collision Debug: " << actorDefinitionName << std::endl;
-
-        auto actorY = EQ_ReadMemory<float>(cactor + EQ_OFFSET_CActor_Y);
-        auto actorX = EQ_ReadMemory<float>(cactor + EQ_OFFSET_CActor_X);
-        auto actorZ = EQ_ReadMemory<float>(cactor + EQ_OFFSET_CActor_Z);
 
         auto actorType = EQ_ReadMemory<uint32_t>(cactor + EQ_OFFSET_CActor_ACTOR_TYPE);
 
@@ -128,6 +128,25 @@ void EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor
 
     for (auto& actorDefinitionListName : g_ActorCollisionActorDefinitionList)
     {
+        if (EQAPP_String_BeginsWith(actorDefinitionListName, "*") == true)
+        {
+            std::string deleteName = actorDefinitionListName;
+
+            deleteName.erase(0, 1);
+
+            if (strcmp(actorDefinitionName, deleteName.c_str()) == 0)
+            {
+                // move it below the world
+                EQ_WriteMemory<float>(cactor + EQ_OFFSET_CActor_Z, -20000.0f);
+                EQ_WriteMemory<float>(cactor + EQ_OFFSET_CActor_COLLISION_Z, -20000.0f);
+                EQ_WriteMemory<float>(cactor + EQ_OFFSET_CActor_MODEL_Z, -20000.0f);
+
+                EQ_WriteMemory<float>(cactor + EQ_OFFSET_CActor_COLLISION_SCALE, 0.0f); // no collision
+
+                break;
+            }
+        }
+
         if (strcmp(actorDefinitionName, actorDefinitionListName.c_str()) == 0)
         {
             EQ_WriteMemory<float>(cactor + EQ_OFFSET_CActor_COLLISION_SCALE, 0.0f); // no collision

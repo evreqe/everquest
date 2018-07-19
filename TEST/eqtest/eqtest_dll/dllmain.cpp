@@ -173,7 +173,6 @@ DWORD WINAPI EQAPP_ThreadLoop(LPVOID param)
     }
 
     EQAPP_BoxChat_Unload();
-
     EQAPP_Detours_Unload();
 
     TerminateThread(EQAPP_ThreadLoad, 0);

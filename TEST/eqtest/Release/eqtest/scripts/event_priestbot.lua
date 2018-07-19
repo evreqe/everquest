@@ -100,7 +100,7 @@ function OnFrame()
             PriestBot_InstantHeal()
             PriestBot_FastHeal()
         elseif targetHP <= fastHealHP then
-            EQ_InterpretCommand("/tell " .. g_PriestBotTargetName .. " I am fast healing you because you are at " .. fastHealHP .. "% health.")
+            --EQ_InterpretCommand("/tell " .. g_PriestBotTargetName .. " I am fast healing you because you are at " .. fastHealHP .. "% health.")
             PriestBot_FastHeal()
             PriestBot_BigHeal()
         end

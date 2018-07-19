@@ -23,6 +23,7 @@ void EQAPP_Detours_AddDetourForCamera();
 void EQAPP_Detours_RemoveDetourForCamera();
 void EQAPP_Detours_Load();
 void EQAPP_Detours_Unload();
+void EQAPP_Detours_OnEnterOrLeaveZone();
 void EQAPP_Detours_OnEnterZone();
 void EQAPP_Detours_OnLeaveZone();
 
@@ -30,6 +31,7 @@ EQ_MACRO_FUNCTION_DefineDetour(CrashDetected);
 EQ_MACRO_FUNCTION_DefineDetour(CollisionCallbackForActors);
 EQ_MACRO_FUNCTION_DefineDetour(DrawNetStatus);
 EQ_MACRO_FUNCTION_DefineDetour(ExecuteCmd);
+EQ_MACRO_FUNCTION_DefineDetour(WindowProc);
 
 EQ_MACRO_FUNCTION_DefineDetour(CXWndManager__DrawWindows);
 
@@ -54,6 +56,7 @@ char* __cdecl EQAPP_DETOURED_FUNCTION_CrashDetected();
 int __cdecl EQAPP_DETOURED_FUNCTION_CollisionCallbackForActors(uint32_t cactor);
 int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown);
 int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive, void* unknown, int zero);
+LRESULT __stdcall EQAPP_DETOURED_FUNCTION_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawWindows(void* this_ptr, void* not_used);
 
@@ -148,6 +151,11 @@ void EQAPP_Detours_Load()
     if (EQ_ADDRESS_FUNCTION_ExecuteCmd != 0)
     {
         EQ_MACRO_FUNCTION_AddDetour(ExecuteCmd);
+    }
+
+    if (EQ_ADDRESS_FUNCTION_WindowProc != 0)
+    {
+        EQ_MACRO_FUNCTION_AddDetour(WindowProc);
     }
 
     if (EQ_ADDRESS_POINTER_CXWndManager != 0)
@@ -247,6 +255,11 @@ void EQAPP_Detours_Unload()
         EQ_MACRO_FUNCTION_RemoveDetour(ExecuteCmd);
     }
 
+    if (EQ_ADDRESS_FUNCTION_WindowProc != 0)
+    {
+        EQ_MACRO_FUNCTION_RemoveDetour(WindowProc);
+    }
+
     if (EQ_ADDRESS_POINTER_CXWndManager != 0)
     {
         if (EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows != 0)
@@ -322,13 +335,22 @@ void EQAPP_Detours_Unload()
     EQAPP_Detours_RemoveDetourForCamera();
 }
 
-void EQAPP_Detours_OnEnterZone()
+void EQAPP_Detours_OnEnterOrLeaveZone()
 {
     g_AutoGroupIsInvited = false;
 
-    EQAPP_FreeCamera_Off();
-    EQAPP_FindPath_FollowPath_Off();
+    EQAPP_Waypoint_Editor_Off();
     EQAPP_Waypoint_FollowPath_Off();
+
+    g_FindPathFollowPathList.clear();
+    EQAPP_FindPath_FollowPath_Off();
+
+    EQAPP_FreeCamera_Off();
+}
+
+void EQAPP_Detours_OnEnterZone()
+{
+    EQAPP_Detours_OnEnterOrLeaveZone();
 
     EQAPP_ActorCollision_Load();
     EQAPP_WaypointList_Load();
@@ -339,14 +361,7 @@ void EQAPP_Detours_OnEnterZone()
 
 void EQAPP_Detours_OnLeaveZone()
 {
-    g_AutoGroupIsInvited = false;
-
-    EQAPP_FreeCamera_Off();
-    EQAPP_FindPath_FollowPath_Off();
-    EQAPP_Waypoint_FollowPath_Off();
-
-    g_WaypointGetPathIndexList.clear();
-    g_WaypointFollowPathIndexList.clear();
+    EQAPP_Detours_OnEnterOrLeaveZone();
 
     g_EQAppIsInGame = false;
 }
@@ -827,6 +842,18 @@ int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive,
     }
 
     return EQAPP_REAL_FUNCTION_ExecuteCmd(commandID, isActive, unknown, zero);
+}
+
+LRESULT __stdcall EQAPP_DETOURED_FUNCTION_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    if (g_EQAppShouldUnload == 1)
+    {
+        return EQAPP_REAL_FUNCTION_WindowProc(hwnd, uMsg, wParam, lParam);
+    }
+
+    LRESULT result = EQAPP_REAL_FUNCTION_WindowProc(hwnd, uMsg, wParam, lParam);
+
+    return result;
 }
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawWindows(void* this_ptr, void* not_used)

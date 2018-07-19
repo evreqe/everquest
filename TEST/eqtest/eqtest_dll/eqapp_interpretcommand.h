@@ -215,8 +215,7 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//ClearWaypoints",               &EQAPP_WaypointList_Clear},
     {"//WPLoad",                       &EQAPP_WaypointList_Load},
     {"//WPSave",                       &EQAPP_WaypointList_Save},
-    {"//WPPrint",                      &EQAPP_WaypointList_Print},
-    {"//WPPrintNames",                 &EQAPP_WaypointList_PrintNames},
+    {"//WPList",                       &EQAPP_WaypointList_Print},
     {"//WPNames",                      &EQAPP_WaypointList_PrintNames},
     {"//WPClear",                      &EQAPP_WaypointList_Clear},
     {"//WPEditor",                     &EQAPP_Waypoint_Editor_Toggle},
@@ -3900,7 +3899,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
         if (commandText == "//WPAC" || commandText == "//WPAddConnect")
         {
-            EQAPP_Waypoint_AddAtPlayerAndConnectLastTwoIndexes();
+            EQAPP_Waypoint_AddAtPlayerAndConnectToLastAddedIndex();
 
             return true;
         }
@@ -3948,7 +3947,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
         if (commandText == "//WPATC" || commandText == "//WPAddTargetConnect")
         {
-            EQAPP_Waypoint_AddAtTargetAndConnectLastTwoIndexes();
+            EQAPP_Waypoint_AddAtTargetAndConnectToLastAddedIndex();
 
             return true;
         }
@@ -3974,7 +3973,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
         if (commandText == "//WPABTC" || commandText == "//WPAddBehindTargetConnect")
         {
-            EQAPP_Waypoint_AddBehindTargetAndConnectLastTwoIndexes();
+            EQAPP_Waypoint_AddBehindTargetAndConnectToLastAddedIndex();
 
             return true;
         }

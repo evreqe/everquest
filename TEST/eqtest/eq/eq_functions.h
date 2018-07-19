@@ -32,6 +32,9 @@ typedef int (__cdecl* EQ_FUNCTION_TYPE_CastRay)(uint32_t spawn, float y, float x
 EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQ_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive, void* unknown, int zero), EQ_ADDRESS_FUNCTION_ExecuteCmd);
 typedef int (__cdecl* EQ_FUNCTION_TYPE_ExecuteCmd)(uint32_t commandID, int isActive, void* unknown, int zero);
 
+EQ_MACRO_FUNCTION_FunctionAtAddress(LRESULT __stdcall EQ_FUNCTION_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam), EQ_ADDRESS_FUNCTION_WindowProc);
+typedef LRESULT (__stdcall* EQ_FUNCTION_TYPE_WindowProc)(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
 /* function prototypes */
 
 void EQ_Log(const char* text);

@@ -27,6 +27,8 @@ void EQAPP_InitializeAddresses()
 
     EQAPP_FixAddress(EQ_ADDRESS_WindowHWND);
 
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_WindowProc);
+
     EQAPP_FixAddress(EQ_ADDRESS_AutoAttack);
     EQAPP_FixAddress(EQ_ADDRESS_AutoFire);
     EQAPP_FixAddress(EQ_ADDRESS_AutoRun);

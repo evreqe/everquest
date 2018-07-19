@@ -250,6 +250,9 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_GRAVITY_TYPE_NAME =
 #define EQ_OFFSET_CActor_COLLISION_Z                0x11C // float
 #define EQ_OFFSET_CActor_COLLISION_SCALE            0x120 // float, 0.0f to 1.0f, set to 0.0f for no collision
 #define EQ_OFFSET_CActor_ACTOR_DEFINITION_OBJECT    0x178 // uint32_t pointer
+#define EQ_OFFSET_CActor_MODEL_Y                    0x1C0 // float
+#define EQ_OFFSET_CActor_MODEL_X                    0x1C4 // float
+#define EQ_OFFSET_CActor_MODEL_Z                    0x1C8 // float
 
 #define EQ_OFFSET_ACTOR_DEFINITION_OBJECT_ACTOR_DEFINITION_ADDRESS    0x08 // pointer to char[64] x_ACTORDEF
 

@@ -26,6 +26,8 @@ uint32_t EQ_ADDRESS_WindowHWND = 0x0; // HWND hWnd    in IDA press G, jump to ad
     PostMessageA(hWnd, 0x4646u, 0x4246u, (LPARAM)v11);
 */
 
+uint32_t EQ_ADDRESS_FUNCTION_WindowProc = 0x0; // can return DefWindowProcA
+
 uint32_t EQ_ADDRESS_AutoAttack    = 0x0; // uint8_t    // /attack
 uint32_t EQ_ADDRESS_AutoFire      = 0x0; // uint8_t    // /autofire
 uint32_t EQ_ADDRESS_AutoRun       = 0x0; // uint32_t
@@ -1303,6 +1305,10 @@ uint32_t EQ_ADDRESS_POINTER_CLargeDialogWnd = 0x0; // "LargeDialogWnd"
 
 uint32_t EQ_ADDRESS_FUNCTION_CLargeDialogWnd__Open = 0x0;
 
+uint32_t EQ_ADDRESS_FUNCTION_IDirect3DDevice9__Reset = 0x0; // calculated at run-time
+uint32_t EQ_ADDRESS_FUNCTION_IDirect3DDevice9__BeginScene = 0x0; // calculated at run-time
+uint32_t EQ_ADDRESS_FUNCTION_IDirect3DDevice9__EndScene = 0x0; // calculated at run-time
+
 void EQ_InitializeAddresses();
 
 void EQ_InitializeAddresses()
@@ -1311,6 +1317,8 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_ClientVersionDate    = __ActualVersionDate_x;
 
     EQ_ADDRESS_WindowHWND = __HWnd_x;
+
+    EQ_ADDRESS_FUNCTION_WindowProc = 0x00696E70;
 
     EQ_ADDRESS_AutoAttack    = __Attack_x;
     EQ_ADDRESS_AutoFire      = __Autofire_x;
@@ -1382,8 +1390,8 @@ void EQ_InitializeAddresses()
 
     EQ_ADDRESS_POINTER_SpellManager = pinstSpellManager_x;
 
-    EQ_ADDRESS_POINTER_CCamera = 0x0; // calculated at runtime
-    EQ_ADDRESS_FUNCTION_CCamera__SetCameraLocation    = 0x0; // calculated at runtime
+    //EQ_ADDRESS_POINTER_CCamera = 0x0; // calculated at runtime
+    //EQ_ADDRESS_FUNCTION_CCamera__SetCameraLocation    = 0x0; // calculated at runtime
 
     EQ_ADDRESS_POINTER_CRender = __DrawHandler_x;
 
@@ -1413,4 +1421,8 @@ void EQ_InitializeAddresses()
 
     EQ_ADDRESS_POINTER_CLargeDialogWnd = pinstCLargeDialogWnd_x;
     EQ_ADDRESS_FUNCTION_CLargeDialogWnd__Open    = CLargeDialogWnd__Open_x;
+
+    //EQ_ADDRESS_FUNCTION_IDirect3DDevice9__Reset = 0x0; // calculated at run-time
+    //EQ_ADDRESS_FUNCTION_IDirect3DDevice9__BeginScene = 0x0; // calculated at run-time
+    //EQ_ADDRESS_FUNCTION_IDirect3DDevice9__EndScene = 0x0; // calculated at run-time
 }

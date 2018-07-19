@@ -156,7 +156,7 @@ function OnThreeSeconds()
             table.insert(alternateAbilityList, 3728) -- Storm Strike
         end
     elseif playerSpawnClass == EQ_CLASS_ENCHANTER then
-        if targetSpawnHPPercent > 25 then
+        if targetSpawnHPPercent > 45 then
             table.insert(alternateAbilityList, 753) -- Dreary Deeds
         end
     elseif playerSpawnClass == EQ_CLASS_MAGICIAN then
@@ -183,10 +183,12 @@ function OnThreeSeconds()
             --table.insert(alternateAbilityList,) -- 
         end
     elseif playerSpawnClass == EQ_CLASS_SHAMAN then
+        if targetSpawnHPPercent > 45 then
+            --table.insert(alternateAbilityList, 856) -- Tigir's Insect Swarm (AOE, 50% slow)
+            table.insert(alternateAbilityList, 3729) -- Turgur's Swarm (Target, 75% slow)
+        end
         if targetSpawnHPPercent > 50 and targetSpawnHPPercent < 90 then
             table.insert(alternateAbilityList, 861) -- Languid Bite
-            table.insert(alternateAbilityList, 856) -- Tigir's Insect Swarm (AOE, 50% slow)
-            --table.insert(alternateAbilityList, 3729) -- Turgur's Swarm (Target, 75% slow)
             table.insert(alternateAbilityList, 177) -- Spirit Call
             table.insert(alternateAbilityList, 50) -- Rabid Bear
             table.insert(alternateAbilityList, 148) -- Malosinete

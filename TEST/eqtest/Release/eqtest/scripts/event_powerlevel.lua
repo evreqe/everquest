@@ -18,8 +18,10 @@ function OnOneSecond()
 
         local targetHP = EQ_GetSpawnHPCurrent(targetSpawn)
         if targetHP <= 45 then
-            EQ_InterpretCommand("//BCT Erigg //Stand;//TargetID %TargetID;//Follow;//AutoAttackOn;//HotButton8")
-            EQ_InterpretCommand("//BCT Mezrr //Stand;//TargetID %TargetID;//Follow;//AutoAttackOn;//HotButton8")
+            EQ_InterpretCommand("//BCT Gobn //Stand;//TargetID ${Target.ID};//Follow;//AutoAttackOn")
+            EQ_InterpretCommand("//BCT Mezrr //Stand;//TargetID ${Target.ID};//Follow;//AutoAttackOn")
+            EQ_InterpretCommand("//BCT Erigg //Stand;//TargetID ${Target.ID};//Follow;//AutoAttackOn")
+            EQ_InterpretCommand("//BCT Berserkobn //Stand;//TargetID ${Target.ID};//Follow;//AutoAttackOn")
         end
     end
 end
