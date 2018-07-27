@@ -157,7 +157,6 @@
   <ItemGroup>
     <ClInclude Include="..\eq\eq.h" />
     <ClInclude Include="..\eq\eq_addresses.h" />
-    <ClInclude Include="..\eq\eq_alternateabilities.h" />
     <ClInclude Include="..\eq\eq_classes.h" />
     <ClInclude Include="..\eq\eq_constants.h" />
     <ClInclude Include="..\eq\eq_cxwnd.h" />

@@ -37,6 +37,8 @@ uint32_t EQ_ADDRESS_NetStatus     = 0x0; // uint8_t    byte_F30435 = sub_9CFF30(
 search for 1 and 0
 */
 
+uint32_t EQ_ADDRESS_CameraType = 0x0; // uint32_t
+
 uint32_t EQ_ADDRESS_LeftMouseHeldTime = 0x0; // uint32_t
 uint32_t EQ_ADDRESS_RightMouseHeldTime = 0x0; // uint32_t
 
@@ -520,6 +522,10 @@ bool __thiscall EQPlayer__IsTargetable(int this)
 }
 */
 
+uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteState = 0x0;
+
+uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteTint = 0x0;
+
 // class CXWndManager
 uint32_t EQ_ADDRESS_POINTER_CXWndManager = 0x0; // pinstCXWndManager
 /*
@@ -674,6 +680,8 @@ uint32_t EQ_ADDRESS_POINTER_EQSwitchManager = 0x0;
 uint32_t EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch = 0x0;
 
 uint32_t EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState = 0x0;
+
+uint32_t EQ_ADDRESS_POINTER_AuraManager = 0x0;
 
 uint32_t EQ_ADDRESS_POINTER_SpellManager = 0x0;
 
@@ -1305,9 +1313,13 @@ uint32_t EQ_ADDRESS_POINTER_CLargeDialogWnd = 0x0; // "LargeDialogWnd"
 
 uint32_t EQ_ADDRESS_FUNCTION_CLargeDialogWnd__Open = 0x0;
 
-uint32_t EQ_ADDRESS_FUNCTION_IDirect3DDevice9__Reset = 0x0; // calculated at run-time
-uint32_t EQ_ADDRESS_FUNCTION_IDirect3DDevice9__BeginScene = 0x0; // calculated at run-time
-uint32_t EQ_ADDRESS_FUNCTION_IDirect3DDevice9__EndScene = 0x0; // calculated at run-time
+uint32_t EQ_ADDRESS_POINTER_CPlayerWnd = 0x0; // "PlayerWnd"
+uint32_t EQ_ADDRESS_POINTER_CTargetWnd = 0x0; // "TargetWnd"
+
+uint32_t EQ_ADDRESS_POINTER_CPetInfoWindow = 0x0; // "PetInfoWindow"
+
+uint32_t EQ_ADDRESS_POINTER_CBuffWnd_Long = 0x0;
+uint32_t EQ_ADDRESS_POINTER_CBuffWnd_Short = 0x0;
 
 void EQ_InitializeAddresses();
 
@@ -1318,13 +1330,15 @@ void EQ_InitializeAddresses()
 
     EQ_ADDRESS_WindowHWND = __HWnd_x;
 
-    EQ_ADDRESS_FUNCTION_WindowProc = 0x00696E70;
+    EQ_ADDRESS_FUNCTION_WindowProc = 0x00695DA0;
 
     EQ_ADDRESS_AutoAttack    = __Attack_x;
     EQ_ADDRESS_AutoFire      = __Autofire_x;
     EQ_ADDRESS_AutoRun       = __pulAutoRun_x;
     EQ_ADDRESS_MouseLook     = __MouseLook_x;
     EQ_ADDRESS_NetStatus     = __NetStatusToggle_x;
+
+    EQ_ADDRESS_CameraType = CDisplay__cameraType_x;
 
     EQ_ADDRESS_LeftMouseHeldTime     = __LMouseHeldTime_x;
     EQ_ADDRESS_RightMouseHeldTime    = __RMouseHeldTime_x;
@@ -1338,7 +1352,7 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_FogDistanceEnd      = EQ_ADDRESS_EQZoneInfo + EQ_OFFSET_EQZoneInfo_FOG_DISTANCE_END;
 
     EQ_ADDRESS_FUNCTION_CrashDetected                 = CrashDetected_x;
-    EQ_ADDRESS_FUNCTION_CollisionCallbackForActors    = 0x005102E0;
+    EQ_ADDRESS_FUNCTION_CollisionCallbackForActors    = 0x00510070;
     EQ_ADDRESS_FUNCTION_CastRay                       = __CastRay_x;
     EQ_ADDRESS_FUNCTION_CastRay2                      = __CastRay2_x;
     EQ_ADDRESS_FUNCTION_DrawNetStatus                 = DrawNetStatus_x;
@@ -1360,10 +1374,12 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName              = EQPlayerManager__GetSpawnByName_x;
     EQ_ADDRESS_FUNCTION_EQPlayerManager__GetPlayerFromPartialName    = EQPlayerManager__GetPlayerFromPartialName_x;
 
-    EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI    = 0x006333B0;
-    EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight      = PlayerZoneClient__ChangeHeight_x;
-    EQ_ADDRESS_FUNCTION_EQPlayer__UpdateItemSlot    = 0x00638F90;
-    EQ_ADDRESS_FUNCTION_EQPlayer__IsTargetable      = EQPlayer__IsTargetable_x;
+    EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI        = 0x00631FA0;
+    EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight          = PlayerZoneClient__ChangeHeight_x;
+    EQ_ADDRESS_FUNCTION_EQPlayer__UpdateItemSlot        = 0x00637B40;
+    EQ_ADDRESS_FUNCTION_EQPlayer__IsTargetable          = EQPlayer__IsTargetable_x;
+    EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteState    = EQPlayer__SetNameSpriteState_x;
+    EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteTint     = EQPlayer__SetNameSpriteTint_x;
 
     EQ_ADDRESS_POINTER_CXWndManager = pinstCXWndManager_x;
     EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows    = CXWndManager__DrawWindows_x;
@@ -1373,20 +1389,22 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_FUNCTION_CEverQuest__EnterZone           = CEverQuest__EnterZone_x;
     EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd        = CEverQuest__InterpretCmd_x;
     EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat            = CEverQuest__dsp_chat_x;
-    EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting        = 0x005CF110;
+    EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting        = 0x005CDE50;
     EQ_ADDRESS_FUNCTION_CEverQuest__LMouseUp            = CEverQuest__LMouseUp_x;
     EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp            = CEverQuest__RMouseUp_x;
     EQ_ADDRESS_FUNCTION_CEverQuest__SetGameState        = CEverQuest__SetGameState_x;
 
     EQ_ADDRESS_POINTER_CDisplay = pinstCDisplay_x;
     EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2         = CDisplay__WriteTextHD2_x;
-    EQ_ADDRESS_FUNCTION_CDisplay__CreatePlayerActor    = 0x005269F0;
-    EQ_ADDRESS_FUNCTION_CDisplay__DeleteActor          = 0x0052ADE0;
+    EQ_ADDRESS_FUNCTION_CDisplay__CreatePlayerActor    = 0x00526570;
+    EQ_ADDRESS_FUNCTION_CDisplay__DeleteActor          = 0x0052A960;
 
     EQ_ADDRESS_POINTER_EQSwitchManager = pinstSwitchManager_x;
 
     EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch      = EQSwitch__UseSwitch_x;
-    EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState    = 0x005BDBC0;
+    EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState    = 0x005BC9B0;
+
+    EQ_ADDRESS_POINTER_AuraManager = pinstAuraMgr_x;
 
     EQ_ADDRESS_POINTER_SpellManager = pinstSpellManager_x;
 
@@ -1413,16 +1431,20 @@ void EQ_InitializeAddresses()
 
     EQ_ADDRESS_POINTER_CBazaarSearchWnd = pinstCBazaarSearchWnd_x;
     EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__HandleBazaarMsg    = CBazaarSearchWnd__HandleBazaarMsg_x;
-    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList      = 0x006C94E0;
-    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery            = 0x006C9D70;
-    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem            = 0x006CA2A0;
+    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList      = 0x006C8090;
+    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery            = 0x006C8920;
+    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem            = 0x006C8E50;
 
     EQ_ADDRESS_POINTER_CTaskSelectWnd = pinstCTaskSelectWnd_x;
 
     EQ_ADDRESS_POINTER_CLargeDialogWnd = pinstCLargeDialogWnd_x;
     EQ_ADDRESS_FUNCTION_CLargeDialogWnd__Open    = CLargeDialogWnd__Open_x;
 
-    //EQ_ADDRESS_FUNCTION_IDirect3DDevice9__Reset = 0x0; // calculated at run-time
-    //EQ_ADDRESS_FUNCTION_IDirect3DDevice9__BeginScene = 0x0; // calculated at run-time
-    //EQ_ADDRESS_FUNCTION_IDirect3DDevice9__EndScene = 0x0; // calculated at run-time
+    EQ_ADDRESS_POINTER_CPlayerWnd = pinstCPlayerWnd_x;
+    EQ_ADDRESS_POINTER_CTargetWnd = pinstCTargetWnd_x;
+
+    EQ_ADDRESS_POINTER_CPetInfoWindow = pinstCPetInfoWnd_x;
+
+    EQ_ADDRESS_POINTER_CBuffWnd_Long = pinstCBuffWindowNORMAL_x;
+    EQ_ADDRESS_POINTER_CBuffWnd_Short = pinstCBuffWindowSHORT_x;
 }

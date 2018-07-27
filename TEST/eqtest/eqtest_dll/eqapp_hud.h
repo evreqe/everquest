@@ -78,7 +78,7 @@ void EQAPP_HUD_DrawDebugText()
     g_HUDText << "ID: " << EQ_GetSpawnID(targetSpawn) << "\n";
 
     auto spawnType = EQ_GetSpawnType(targetSpawn);
-    g_HUDText << "Type: " << EQ_GetSpawnTypeNameByKey(spawnType) << " (" << spawnType << ")\n";
+    g_HUDText << "Type: " << EQ_GetSpawnTypeAsString(spawnType) << " (" << spawnType << ")\n";
 
     g_HUDText << "Y: " << EQ_GetSpawnY(targetSpawn) << "\n";
     g_HUDText << "X: " << EQ_GetSpawnX(targetSpawn) << "\n";
@@ -95,18 +95,18 @@ void EQAPP_HUD_DrawDebugText()
     g_HUDText << "Endurance: " << EQ_GetSpawnEnduranceCurrent(targetSpawn) << " / " << EQ_GetSpawnEnduranceMax(targetSpawn) << " (" << EQ_GetSpawnEndurancePercent(targetSpawn) << "%)\n";
 
     auto spawnZoneID = EQ_GetSpawnZoneID(targetSpawn);
-    g_HUDText << "Zone Name: " << EQ_GetZoneNameByKey(spawnZoneID) << " (" << spawnZoneID << ")\n";
+    g_HUDText << "Zone Name: " << EQ_GetZoneNameByID(spawnZoneID) << " (" << spawnZoneID << ")\n";
 
     g_HUDText << "Level: " << EQ_GetSpawnLevel(targetSpawn) << "\n";
 
     auto spawnRace = EQ_GetSpawnRace(targetSpawn);
-    g_HUDText << "Race: " << EQ_GetRaceNameByKey(spawnRace) << " (" << spawnRace << ")\n";
+    g_HUDText << "Race: " << EQ_GetRaceNameByID(spawnRace) << " (" << spawnRace << ")\n";
 
     auto spawnClass = EQ_GetSpawnClass(targetSpawn);
-    g_HUDText << "Class: " << EQ_GetClassNameByKey(spawnClass) << " (" << spawnClass << ")\n";
+    g_HUDText << "Class: " << EQ_GetClassNameByID(spawnClass) << " (" << spawnClass << ")\n";
 
     auto spawnStandingState = EQ_GetSpawnStandingState(targetSpawn);
-    g_HUDText << "Standing State: " << EQ_GetStandingStateNameByKey(spawnStandingState) << " (" << spawnStandingState << ")\n";
+    g_HUDText << "Standing State: " << EQ_GetStandingStateAsString(spawnStandingState) << " (" << spawnStandingState << ")\n";
 
     auto followSpawn = EQ_GetSpawnFollowSpawn(targetSpawn);
     if (followSpawn != NULL)

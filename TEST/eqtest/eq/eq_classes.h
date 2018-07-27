@@ -1,9 +1,5 @@
 #pragma once
 
-// Direct3D
-#include <d3d9.h>
-#pragma comment (lib, "d3d9.lib")
-
 #include "eq.h"
 #include "eq_constants.h"
 #include "eq_macros.h"
@@ -33,6 +29,10 @@ namespace EQClass
     // EQGraphicsDX9.dll
     class CCamera;
     class CRender;
+
+    class CVector3; // needed by CastRay2
+
+    class CActorEx;
 } // namespace EQClass
 
 /* CEverQuest */
@@ -80,7 +80,7 @@ class EQClass::CDisplay
 public:
     static int __cdecl CDisplay::WriteTextHD2(const char* text, int x, int y, signed int color);
     uint32_t CDisplay::CreatePlayerActor(uint32_t spawn, int a2, int a3, int a4, int a5, int a6);
-    void CDisplay::DeleteActor(uint32_t* cactor_ptr);
+    void CDisplay::DeleteActor(uint32_t cactor);
 };
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQClass::CDisplay::WriteTextHD2(const char* text, int x, int y, signed int color), EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2);
@@ -89,8 +89,8 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__WriteTextHD2)(void* this_ptr
 EQ_MACRO_FUNCTION_FunctionAtAddress(uint32_t EQClass::CDisplay::CreatePlayerActor(uint32_t spawn, int a2, int a3, int a4, int a5, int a6), EQ_ADDRESS_FUNCTION_CDisplay__CreatePlayerActor);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__CreatePlayerActor)(void* this_ptr, uint32_t spawn, int a2, int a3, int a4, int a5, int a6);
 
-EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CDisplay::DeleteActor(uint32_t* cactor_ptr), EQ_ADDRESS_FUNCTION_CDisplay__DeleteActor);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__DeleteActor)(void* this_ptr, uint32_t* cactor_ptr);
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CDisplay::DeleteActor(uint32_t cactor), EQ_ADDRESS_FUNCTION_CDisplay__DeleteActor);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__DeleteActor)(void* this_ptr, uint32_t cactor);
 
 EQClass::CDisplay** EQ_CLASS_POINTER_CDisplay_pptr;
 EQClass::CDisplay* EQ_CLASS_POINTER_CDisplay;
@@ -122,6 +122,8 @@ public:
     void EQPlayer::ChangeHeight(float height, float a2, float a3, int a4);
     bool EQPlayer::UpdateItemSlot(uint8_t updateItemSlot, const char* itemDefinition, bool b1, bool serverSide, bool b3);
     bool EQPlayer::IsTargetable();
+    int EQPlayer::SetNameSpriteState(bool isNameVisible);
+    bool EQPlayer::SetNameSpriteTint();
 };
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQPlayer::FollowPlayerAI(), EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI);
@@ -134,6 +136,13 @@ EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::EQPlayer::UpdateItemSlot(uint8
 typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__UpdateItemSlot)(void* this_ptr, uint8_t updateItemSlot, const char* itemDefinition, bool b1, bool serverSide, bool b3);
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::EQPlayer::IsTargetable(), EQ_ADDRESS_FUNCTION_EQPlayer__IsTargetable);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::EQPlayer::SetNameSpriteState(bool isNameVisible), EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteState);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__SetNameSpriteState)(void* this_ptr, bool isNameVisible);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::EQPlayer::SetNameSpriteTint(), EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteTint);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__SetNameSpriteTint)(void* this_ptr);
+
 
 /* EQSwitch */
 
@@ -331,7 +340,7 @@ EQClass::CCamera* EQ_CLASS_POINTER_CCamera;
 class EQClass::CRender
 {
 public:
-    bool CRender::DrawLine(EQ::Point& pointBegin, EQ::Point& pointEnd, uint32_t colorARGB);
+    bool CRender::DrawLine(EQ::Vector3f& vectorBegin, EQ::Vector3f& vectorEnd, uint32_t colorARGB);
     bool CRender::DrawWrappedText(uint32_t fontStyle, const char* text, EQ::CXRect& cxrect1, EQ::CXRect& cxrect2, uint32_t colorARGB, uint16_t flags, int startX);
     bool CRender::DrawColoredRectangle(EQ::Rectangle& rectangle, uint32_t colorARGB);
     void CRender::TakeScreenshot(const char* fileName);
@@ -343,7 +352,7 @@ public:
 #define EQ_VFTABLE_INDEX_CRender__DrawColoredRectangle    0xA0
 #define EQ_VFTABLE_INDEX_CRender__TakeScreenshot          0xC4
 
-EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawLine(EQ::Point& pointBegin, EQ::Point& pointEnd, uint32_t colorARGB), EQ_VFTABLE_INDEX_CRender__DrawLine);
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawLine(EQ::Vector3f& vectorBegin, EQ::Vector3f& vectorEnd, uint32_t colorARGB), EQ_VFTABLE_INDEX_CRender__DrawLine);
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawWrappedText(uint32_t fontStyle, const char* text, EQ::CXRect& cxrect1, EQ::CXRect& cxrect2, uint32_t colorARGB, uint16_t flags, int startX), EQ_VFTABLE_INDEX_CRender__DrawWrappedText);
 
@@ -353,6 +362,120 @@ EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CRender::TakeScreenshot
 
 EQClass::CRender** EQ_CLASS_POINTER_CRender_pptr;
 EQClass::CRender* EQ_CLASS_POINTER_CRender;
+
+/**************************************************/
+
+class EQClass::CVector3
+{
+public:
+
+float X;
+float Y;
+float Z;
+
+float CVector3::NormalizeAndReturnLength(void);
+void CVector3::Normalize(void);
+
+void CVector3::Set(float x, float y, float z)
+{
+    X = x;
+    Y = y;
+    Z = z;
+}
+
+inline CVector3& operator-=(const CVector3& vec)
+{
+    X -= vec.X;
+    Y -= vec.Y;
+    Z -= vec.Z;
+
+    return *this;
+}
+
+inline CVector3& operator+=(const CVector3& vec)
+{
+    X += vec.X;
+    Y += vec.Y;
+    Z += vec.Z;
+
+    return *this;
+}
+
+inline void Scale(float value)
+{
+    X *= value;
+    Y *= value;
+    Z *= value;
+}
+
+inline CVector3 operator*(float value) const
+{
+    CVector3 vector(*this);
+    vector.Scale(value);
+    return vector;
+}
+
+void SetMax()
+{
+    X = Y = Z = 3.402823466e+38F;
+}
+
+float GetLengthSquared() const
+{
+    return ((X * X) + (Y * Y) + (Z * Z));
+}
+
+float GetLength() const
+{ 
+    return std::sqrtf(GetLengthSquared());
+}
+
+CVector3 operator-() const
+{
+    CVector3 vector;
+    vector.Set(-X, -Y, -Z);
+    return vector;
+}
+
+CVector3 operator-(const CVector3& vector) const
+{
+    CVector3 result;
+    result.Set(X - vector.X, Y - vector.Y, Z - vector.Z);
+    return result;
+}
+
+CVector3 operator+(const CVector3& vector) const
+{
+    CVector3 result;
+    result.Set(vector.X + X, vector.Y + Y, vector.Z + Z);
+    return result;
+}
+
+float GetDistanceSquared(const CVector3& vector) const
+{
+    CVector3 result = *this - vector;
+    return result.GetLengthSquared();
+}
+
+};
+
+/**************************************************/
+
+class EQClass::CActorEx
+{
+public:
+    bool CActorEx::CanSetName(uint32_t zero);
+    void CActorEx::SetNameColor(uint32_t& colorARGB);
+    void CActorEx::ChangeBoneStringSprite(int, int, char* text);
+};
+
+#define EQ_VFTABLE_INDEX_CActorEx__CanSetName                0x1A8
+#define EQ_VFTABLE_INDEX_CActorEx__SetNameColor              0x194
+#define EQ_VFTABLE_INDEX_CActorEx__ChangeBoneStringSprite    0x190
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CActorEx::CanSetName(uint32_t zero), EQ_VFTABLE_INDEX_CActorEx__CanSetName);
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CActorEx::SetNameColor(uint32_t& colorARGB), EQ_VFTABLE_INDEX_CActorEx__SetNameColor);
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CActorEx::ChangeBoneStringSprite(int, int, char* text), EQ_VFTABLE_INDEX_CActorEx__ChangeBoneStringSprite);
 
 /**************************************************/
 

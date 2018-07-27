@@ -25,10 +25,8 @@ function OnChatText(chatText, chatTextColor)
         return
     end
 
-    if String_BeginsWith(chatText, "It will take you about ") then
-        if String_EndsWith(chatText, " seconds to prepare your camp.") then
-            OutputFileInventory()
-            return
-        end
+    if chatText == "It will take you about 30 seconds to prepare your camp." then
+        OutputFileInventory()
+        return
     end
 end

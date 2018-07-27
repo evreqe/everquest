@@ -31,7 +31,7 @@
 
 // ******************** randomized after each patch ******************** //
 
-#define EQ_OFFSET_CXWnd_PADDING 0x00 // usually 0x00, 0x04, or 0x08
+#define EQ_OFFSET_CXWnd_PADDING -0x08
 
 #define EQ_OFFSET_CBazaarWnd_BUTTON_BEGIN_TRADER    0x250+EQ_OFFSET_CXWnd_PADDING // uint32_t pointer    "Begin Trader" button    "BZW_Start_Button"
 #define EQ_OFFSET_CBazaarWnd_BUTTON_END_TRADER      0x254+EQ_OFFSET_CXWnd_PADDING // uint32_t pointer    "End Trader" button      "BZW_End_Button"
@@ -74,3 +74,21 @@
 #define EQ_OFFSET_CLargeDialogWnd_BUTTON_NO     0x244+EQ_OFFSET_CXWnd_PADDING // uint32_t pointer    "No" button     "LDW_NoButton"
 
 // ********************************************************************* //
+
+#define EQ_OFFSET_CPlayerWnd_COMBAT_STATE    offsetof(EQUIStructs::_CPLAYERWND, CombatState) // uint32_t
+
+#define EQ_CPlayerWnd_COMBAT_STATE_IN_COMBAT    0 // "A_PWCSInCombat"
+#define EQ_CPlayerWnd_COMBAT_STATE_DEBUFF       1 // "A_PWCSDebuff"
+#define EQ_CPlayerWnd_COMBAT_STATE_TIMER        2 // "A_PWCSTimer"
+#define EQ_CPlayerWnd_COMBAT_STATE_STANDING     3 // "A_PWCSStanding"
+#define EQ_CPlayerWnd_COMBAT_STATE_REGEN        4 // "A_PWCSRegen"
+
+#define EQ_OFFSET_CTargetWnd_BUFF_SPELL_IDS    offsetof(EQUIStructs::_CTARGETWND, BuffSpellID) // uint32_t[EQ_NUM_BUFF_SLOTS]
+#define EQ_OFFSET_CTargetWnd_BUFF_TIMERS       offsetof(EQUIStructs::_CTARGETWND, BuffTimer)   // uint32_t[EQ_NUM_BUFF_SLOTS]
+
+#define EQ_OFFSET_CPetInfoWindow_BUFF_SPELL_IDS    offsetof(EQUIStructs::_EQPETINFOWINDOW, Buff)           // uint32_t[EQ_NUM_BUFF_SLOTS]
+#define EQ_OFFSET_CPetInfoWindow_BUFF_TIMERS       offsetof(EQUIStructs::_EQPETINFOWINDOW, PetBuffTimer)   // uint32_t[EQ_NUM_BUFF_SLOTS]
+
+#define EQ_OFFSET_CBuffWnd_BUFF_BUTTONS      offsetof(EQUIStructs::_EQBUFFWINDOW, pBuff)       // uint32_t pointer[EQ_NUM_BUFF_SLOTS]
+#define EQ_OFFSET_CBuffWnd_BUFF_SPELL_IDS    offsetof(EQUIStructs::_EQBUFFWINDOW, BuffId)      // uint32_t[EQ_NUM_BUFF_SLOTS]
+#define EQ_OFFSET_CBuffWnd_BUFF_TIMERS       offsetof(EQUIStructs::_EQBUFFWINDOW, BuffTimer)   // uint32_t[EQ_NUM_BUFF_SLOTS]

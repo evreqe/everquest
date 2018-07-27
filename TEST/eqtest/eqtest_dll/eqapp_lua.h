@@ -1944,15 +1944,15 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_FollowSpawnByName", EQ_FollowSpawnByName);
     state->set_function("EQ_ClearTarget", EQ_ClearTarget);
 
-    state->set_function("EQ_GetSpawnTypeNameByKey", EQ_GetSpawnTypeNameByKey);
-    state->set_function("EQ_GetStandingStateNameByKey", EQ_GetStandingStateNameByKey);
-    state->set_function("EQ_GetDirectionNameByKey", EQ_GetDirectionNameByKey);
-    state->set_function("EQ_GetZoneNameByKey", EQ_GetZoneNameByKey);
-    state->set_function("EQ_GetZoneShortNameByKey", EQ_GetZoneShortNameByKey);
-    state->set_function("EQ_GetRaceNameByKey", EQ_GetRaceNameByKey);
-    state->set_function("EQ_GetRaceShortNameByKey", EQ_GetRaceShortNameByKey);
-    state->set_function("EQ_GetClassNameByKey", EQ_GetClassNameByKey);
-    state->set_function("EQ_GetClassShortNameByKey", EQ_GetClassShortNameByKey);
+    state->set_function("EQ_GetSpawnTypeAsString", EQ_GetSpawnTypeAsString);
+    state->set_function("EQ_GetStandingStateAsString", EQ_GetStandingStateAsString);
+    state->set_function("EQ_GetDirectionAsString", EQ_GetDirectionAsString);
+    state->set_function("EQ_GetZoneNameByID", EQ_GetZoneNameByID);
+    state->set_function("EQ_GetZoneShortNameByID", EQ_GetZoneShortNameByID);
+    state->set_function("EQ_GetRaceNameByID", EQ_GetRaceNameByID);
+    state->set_function("EQ_GetRaceShortNameByID", EQ_GetRaceShortNameByID);
+    state->set_function("EQ_GetClassNameByID", EQ_GetClassNameByID);
+    state->set_function("EQ_GetClassShortNameByID", EQ_GetClassShortNameByID);
 
     state->set_function("EQ_UseAlternateAbility", EQ_UseAlternateAbility);
     state->set_function("EQ_UseDiscipline", EQ_UseDiscipline);

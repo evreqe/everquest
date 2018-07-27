@@ -50,9 +50,8 @@ void EQAPP_FollowAI_UseZAxis_Toggle()
     EQ_ToggleBool(g_FollowAIUseZAxisIsEnabled);
     EQAPP_PrintBool("Follow AI Use Z-Axis", g_FollowAIUseZAxisIsEnabled);
 
-    // look forward
-    EQ_ExecuteCommand(EQ_EXECUTECMD_FIRST_PERSON_CAMERA, 1);
-    EQ_ExecuteCommand(EQ_EXECUTECMD_CENTERVIEW, 1);
+    EQ_SetCameraType(EQ_CAMERA_TYPE_FIRST_PERSON);
+    EQ_CenterView();
 }
 
 void EQAPP_FollowAI_Behind_Toggle()
@@ -187,6 +186,8 @@ void EQAPP_FollowAI_Execute()
         EQ_GetSpawnGravityType(playerSpawn) == EQ_GRAVITY_TYPE_LEVITATING ||
         EQ_GetSpawnGravityType(playerSpawn) == EQ_GRAVITY_TYPE_SWIMMING
     );
+
+    isPlayerFlyingLevitatingOrSwimming = false; // TODO: fix gravity type
 
     // follow while swimming or levitating
     if (g_FollowAIUseZAxisIsEnabled == true || EQ_IsSpawnSwimming(playerSpawn) == true || isPlayerFlyingLevitatingOrSwimming == true)

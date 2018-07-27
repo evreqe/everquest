@@ -573,7 +573,7 @@
 #define EQ_ZONE_ID_INTERIORWALLTEST 767 // Wall Wall Wall
 #define EQ_ZONE_ID_GNOMEMTN 787 // Gnome Memorial Mountain
 
-std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_ZONE_NAME =
+std::unordered_map<uint32_t, std::string> EQ_ZONE_ID_LongName_Strings =
 {
     {EQ_ZONE_ID_QEYNOS, "South Qeynos"},
     {EQ_ZONE_ID_QEYNOS2, "North Qeynos"},
@@ -1144,7 +1144,7 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_ZONE_NAME =
     {EQ_ZONE_ID_GNOMEMTN, "Gnome Memorial Mountain"},
 };
 
-std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_ZONE_SHORT_NAME =
+std::unordered_map<uint32_t, std::string> EQ_ZONE_ID_ShortName_Strings =
 {
     {EQ_ZONE_ID_QEYNOS, "qeynos"},
     {EQ_ZONE_ID_QEYNOS2, "qeynos2"},

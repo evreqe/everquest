@@ -19,8 +19,8 @@ void EQAPP_FreeCamera_Toggle()
     EQ_ToggleBool(g_FreeCameraIsEnabled);
     EQAPP_PrintBool("Free Camera", g_FreeCameraIsEnabled);
 
-    EQ_ExecuteCommand(EQ_EXECUTECMD_FIRST_PERSON_CAMERA, 1);
-    EQ_ExecuteCommand(EQ_EXECUTECMD_CENTERVIEW, 1);
+    EQ_SetCameraType(EQ_CAMERA_TYPE_FIRST_PERSON);
+    EQ_CenterView();
 }
 
 void EQAPP_FreeCamera_On()
@@ -52,7 +52,7 @@ void EQAPP_FreeCamera_Execute()
         return;
     }
 
-    EQ_ExecuteCommand(EQ_EXECUTECMD_FIRST_PERSON_CAMERA, 1);
+    EQ_SetCameraType(EQ_CAMERA_TYPE_FIRST_PERSON);
 
     if (EQAPP_IsVKKeyDown(VK_CONTROL) == true)
     {

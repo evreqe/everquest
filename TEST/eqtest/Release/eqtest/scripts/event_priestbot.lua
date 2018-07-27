@@ -90,10 +90,7 @@ function OnFrame()
 
         local fastHealHP = math.random(80, 90)
 
-        if targetHP <= 25 then
-            PriestBot_SaveHeal()
-            PriestBot_InstantHeal()
-        elseif targetHP <= 35 then
+        if targetHP <= 35 then
             PriestBot_SaveHeal()
             PriestBot_InstantHeal()
         elseif targetHP <= 50 then

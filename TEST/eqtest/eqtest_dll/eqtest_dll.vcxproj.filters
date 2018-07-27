@@ -83,9 +83,6 @@
     <ClInclude Include="eqapp_hud.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\eq\eq_alternateabilities.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="eqapp_timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>

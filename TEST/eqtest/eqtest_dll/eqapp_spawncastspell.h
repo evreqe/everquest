@@ -170,7 +170,7 @@ void EQAPP_SpawnCastSpell_DrawText()
 
         auto spawnClass = EQ_GetSpawnClass(spawn);
 
-        std::string spawnClassShortName = EQ_GetClassShortNameByKey(spawnClass);
+        std::string spawnClassShortName = EQ_GetClassShortNameByID(spawnClass);
         if (spawnClassShortName.size() != 0)
         {
             drawText << " (" << spawnClassShortName << ")";

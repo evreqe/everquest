@@ -114,7 +114,7 @@ bool EQAPP_BazaarFilter_HandleEvent_CBazaarSearchWnd__AddItemToList(char* itemNa
 
     auto playerSpawnClass = EQ_GetSpawnClass(playerSpawn);
 
-    std::string playerSpawnClassShortName = EQ_GetClassShortNameByKey(playerSpawnClass);
+    std::string playerSpawnClassShortName = EQ_GetClassShortNameByID(playerSpawnClass);
 
     for (auto& filterItemName : g_BazaarFilterItemNameList)
     {

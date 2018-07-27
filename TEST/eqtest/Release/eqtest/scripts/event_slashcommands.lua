@@ -14,6 +14,26 @@ function OnInterpretCommand(commandText)
         return 1
     end
 
+    if commandText == "//Guise" then
+        EQ_InterpretCommand("/useitem Guise of the Deceiver")
+        return 1
+    end
+
+    if commandText == "//Drum" or commandText == "//Mount" then
+        EQ_InterpretCommand("/useitem Glowing Black Drum")
+        return 1
+    end
+
+    if commandText == "//Skeleton" then
+        EQ_InterpretCommand("/useitem Amulet of Necropotence")
+        return 1
+    end
+
+    if commandText == "//Rocket" then
+        EQ_InterpretCommand("/useitem Rocketeer Boots")
+        return 1
+    end
+
     if commandText == "//Stein" or commandText == "//POK" then
         EQ_InterpretCommand("/useitem Drunkard's Stein")
         return 1
@@ -21,6 +41,11 @@ function OnInterpretCommand(commandText)
 
     if commandText == "//Brell"  or commandText == "//Brells" then
         EQ_InterpretCommand("/useitem Mark of Brell")
+        return 1
+    end
+
+    if commandText == "//Crescent" then
+        EQ_InterpretCommand("/useitem Sceptre of Draconic Calling")
         return 1
     end
 

@@ -21,7 +21,7 @@ void EQAPP_ActorCollision_All_Toggle();
 void EQAPP_ActorCollision_Player_Toggle();
 void EQAPP_ActorCollision_Load();
 void EQAPP_ActorCollision_PrintActorDefinitionList();
-void EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor);
+bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor);
 bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors_Player(uint32_t cactor);
 
 void EQAPP_ActorCollision_Toggle()
@@ -84,7 +84,7 @@ void EQAPP_ActorCollision_Load()
     EQAPP_ReadFileToList(folderFileName.str().c_str(), g_ActorCollisionActorDefinitionList, false);
 }
 
-void EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor)
+bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor)
 {
     auto actorDefinitionObject = EQ_ReadMemory<uint32_t>(cactor + EQ_OFFSET_CActor_ACTOR_DEFINITION_OBJECT);
     auto actorDefinitionAddress = EQ_ReadMemory<uint32_t>(actorDefinitionObject + EQ_OFFSET_ACTOR_DEFINITION_OBJECT_ACTOR_DEFINITION_ADDRESS);
@@ -143,7 +143,7 @@ void EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor
 
                 EQ_WriteMemory<float>(cactor + EQ_OFFSET_CActor_COLLISION_SCALE, 0.0f); // no collision
 
-                break;
+                return true;
             }
         }
 
@@ -154,6 +154,8 @@ void EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor
             break;
         }
     }
+
+    return false;
 }
 
 bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors_Player(uint32_t cactor)

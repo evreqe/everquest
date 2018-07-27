@@ -59,8 +59,11 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_NUM_BAGS              10    // number of bags you can hold in your inventory
 #define EQ_NUM_BAG_SLOTS         40    // number of slots a bag can have
 #define EQ_NUM_GROUP_MEMBERS     6
-#define EQ_NUM_LONG_BUFFS        42
-#define EQ_NUM_SHORT_BUFFS       55
+#define EQ_NUM_LONG_BUFFS        NUM_LONG_BUFFS
+#define EQ_NUM_SHORT_BUFFS       NUM_SHORT_BUFFS
+#define EQ_NUM_BUFF_SLOTS        NUM_BUFF_SLOTS
+#define EQ_NUM_AURAS             2
+#define EQ_NUM_XTARGETS          20
 
 #define EQ_BAZAAR_SEARCH_MAX_RESULTS_PER_TRADER 200
 #define EQ_BAZAAR_SEARCH_LIST_INDEX_NULL 0xFFFFFFFF
@@ -105,6 +108,28 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_FONT_STYLE_FIXED_WIDTH               9     // small text and all characters are the same size, courier new or fixed sys font face
 #define EQ_FONT_STYLE_NAME_SPRITE               10    // big text with drop shadow, used for text above players/npcs heads
 
+// class AuraManager
+#define EQ_OFFSET_AuraManager_NUM_AURAS    offsetof(EQData::_AURAMGR, NumAuras) // uint32_t
+#define EQ_OFFSET_AuraManager_AURAS        offsetof(EQData::_AURAMGR, pAuraInfo) // uint32_t pointer
+#define EQ_OFFSET_AURAS_Aura               offsetof(EQData::_AURAS, Aura) // struct AURA[EQ_NUM_AURAS]
+
+#define EQ_SIZE_AURA_NAME    0x40
+
+// struct AURA
+#define EQ_OFFSET_AURA_NAME    0x00 // char[EQ_SIZE_AURA_NAME]
+
+// class XTarget Manager
+#define EQ_OFFSET_XTargetManager_XTARGETS_ARRAY    0x04
+#define EQ_OFFSET_XTargetManager_XTARGETS          0x08
+
+#define EQ_SIZE_XTARGET_NAME    0x40
+
+// struct XTARGET
+#define EQ_OFFSET_XTARGET_TYPE        offsetof(_XTARGETSLOT, xTargetType)          // uint32_t
+#define EQ_OFFSET_XTARGET_STATUS      offsetof(_XTARGETSLOT, XTargetSlotStatus)    // uint32_t
+#define EQ_OFFSET_XTARGET_SPAWN_ID    offsetof(_XTARGETSLOT, SpawnID)              // uint32_t
+#define EQ_OFFSET_XTARGET_NAME        offsetof(_XTARGETSLOT, Name)                 // char[EQ_SIZE_XTARGET_NAME]
+
 // class SpellManager
 #define EQ_OFFSET_SpellManager_SPELLS    offsetof(EQData::_SPELLMGR, Spells)    // uint32_t pointer SPELL[EQ_NUM_SPELLS]
 
@@ -115,8 +140,9 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_OFFSET_SPELL_NAME    offsetof(EQData::_SPELL, Name)    // char[EQ_SIZE_SPELL_NAME]
 
 // class EQCharacter
-#define EQ_OFFSET_CHARACTER_GROUP    offsetof(EQData::_CHARINFO, pGroupInfo)    // uint32_t pointer
-#define EQ_OFFSET_CHARACTER_CI2      offsetof(EQData::_CHARINFO, pCI2)          // uint32_t pointer
+#define EQ_OFFSET_CHARACTER_XTargetManager     offsetof(EQData::_CHARINFO, pXTargetMgr)    // uint32_t pointer
+#define EQ_OFFSET_CHARACTER_GROUP              offsetof(EQData::_CHARINFO, pGroupInfo)     // uint32_t pointer
+#define EQ_OFFSET_CHARACTER_CI2                offsetof(EQData::_CHARINFO, pCI2)           // uint32_t pointer
 
 // struct CI2_INFO
 #define EQ_OFFSET_CI2_CHARINFO2    offsetof(EQData::_CI2_INFO, pCharInfo2)    // uint32_t pointer
@@ -168,8 +194,10 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_OFFSET_SPAWN_ZONE_ID                    offsetof(EQData::_SPAWNINFO, Zone)                // uint32_t
 #define EQ_OFFSET_SPAWN_GUILD_ID                   offsetof(EQData::_SPAWNINFO, GuildID)             // uint64_t
 #define EQ_OFFSET_SPAWN_LEVEL                      offsetof(EQData::_SPAWNINFO, Level)               // uint8_t
-#define EQ_OFFSET_SPAWN_RACE                       0xF90                                             // uint32_t
-#define EQ_OFFSET_SPAWN_CLASS                      0xF98                                             // uint32_t
+#define EQ_OFFSET_SPAWN_ACTOR_CLIENT               offsetof(EQData::_SPAWNINFO, mActorClient)        // uint32_t
+////#define EQ_OFFSET_SPAWN_RACE                       0xF7C                                             // uint32_t    // use ActorClient to get
+////#define EQ_OFFSET_SPAWN_CLASS                      0xF84                                             // uint32_t    // use ActorClient to get
+////#define EQ_OFFSET_SPAWN_GENDER                     0xF98                                             // uint32_t    // use ActorClient to get
 #define EQ_OFFSET_SPAWN_STANDING_STATE             offsetof(EQData::_SPAWNINFO, StandState)          // uint8_t
 #define EQ_OFFSET_SPAWN_HP_CURRENT                 offsetof(EQData::_SPAWNINFO, HPCurrent)           // int64_t
 #define EQ_OFFSET_SPAWN_HP_MAX                     offsetof(EQData::_SPAWNINFO, HPMax)               // int64_t
@@ -203,7 +231,7 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_SPAWN_TYPE_CORPSE    2
 #define EQ_SPAWN_TYPE_UNKNOWN   254 // custom value for our use
 
-std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_SPAWN_TYPE_NAME =
+std::unordered_map<uint32_t, std::string> EQ_SPAWN_TYPE_Strings =
 {
     {EQ_SPAWN_TYPE_PLAYER,      "Player"},
     {EQ_SPAWN_TYPE_NPC,         "NPC"},
@@ -219,7 +247,7 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_SPAWN_TYPE_NAME =
 #define EQ_GRAVITY_TYPE_SINKING_TO_GROUND    5 // levitation wore off
 #define EQ_GRAVITY_TYPE_DEFAULT              EQ_GRAVITY_TYPE_GROUND
 
-std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_GRAVITY_TYPE_NAME =
+std::unordered_map<uint32_t, std::string> EQ_GRAVITY_TYPE_Strings =
 {
     {EQ_GRAVITY_TYPE_GROUND,               "Ground"},
     {EQ_GRAVITY_TYPE_FLYING,               "Flying"},
@@ -273,6 +301,39 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_GRAVITY_TYPE_NAME =
 #define EQ_SIZE_EQZoneInfo_PLAYER_NAME        0x40    // char[64]
 #define EQ_SIZE_EQZoneInfo_ZONE_LONG_NAME     0x80    // char[128]
 #define EQ_SIZE_EQZoneInfo_ZONE_SHORT_NAME    0x20    // char[32]
+
+#define EQ_XTARGET_TYPE_EMPTY_TARGET            0
+#define EQ_XTARGET_TYPE_AUTO_HATER              1
+#define EQ_XTARGET_TYPE_SPECIFIC_PC             2
+#define EQ_XTARGET_TYPE_SPECIFIC_NPC            3
+#define EQ_XTARGET_TYPE_TARGETS_TARGET          4
+#define EQ_XTARGET_TYPE_GROUP_TANK              5
+#define EQ_XTARGET_TYPE_GROUP_TANKS_TARGET      6
+#define EQ_XTARGET_TYPE_GROUP_ASSIST            7
+#define EQ_XTARGET_TYPE_GROUP_ASSIST_TARGET     8
+#define EQ_XTARGET_TYPE_PULLER                  9
+#define EQ_XTARGET_TYPE_PULLERS_TARGET          10
+#define EQ_XTARGET_TYPE_GROUP_MARK_TARGET_1     11
+#define EQ_XTARGET_TYPE_GROUP_MARK_TARGET_2     12
+#define EQ_XTARGET_TYPE_GROUP_MARK_TARGET_3     13
+#define EQ_XTARGET_TYPE_RAID_ASSIST_1           14
+#define EQ_XTARGET_TYPE_RAID_ASSIST_2           15
+#define EQ_XTARGET_TYPE_RAID_ASSIST_3           16
+#define EQ_XTARGET_TYPE_RAID_ASSIST_1_TARGET    17
+#define EQ_XTARGET_TYPE_RAID_ASSIST_2_TARGET    18
+#define EQ_XTARGET_TYPE_RAID_ASSIST_3_TARGET    19
+#define EQ_XTARGET_TYPE_RAID_MARK_TARGET_1      20
+#define EQ_XTARGET_TYPE_RAID_MARK_TARGET_2      21
+#define EQ_XTARGET_TYPE_RAID_MARK_TARGET_3      22
+#define EQ_XTARGET_TYPE_MY_PET                  23
+#define EQ_XTARGET_TYPE_MY_PETS_TARGET          24
+#define EQ_XTARGET_TYPE_MY_MERCENARY            25
+#define EQ_XTARGET_TYPE_MY_MERCENARYS_TARGET    26
+
+#define EQ_XTARGET_STATUS_EMPTY             0
+#define EQ_XTARGET_STATUS_CURRENT_ZONE      1
+#define EQ_XTARGET_STATUS_DIFFERENT_ZONE    2
+#define EQ_XTARGET_STATUS_UNKNOWN           4
 
 #define EQ_OFFSET_Group_GROUP_MEMBERS          0x04    // uint32_t[6]
 #define EQ_OFFSET_Group_GROUP_MEMBER_1         0x04
@@ -379,7 +440,7 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_GRAVITY_TYPE_NAME =
 #define EQ_STANDING_STATE_FEIGN_DEATH 115 // pretending to be dead
 #define EQ_STANDING_STATE_DEAD        120
 
-std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_STANDING_STATE_NAME =
+std::unordered_map<uint32_t, std::string> EQ_STANDING_STATE_Strings =
 {
     {EQ_STANDING_STATE_STANDING,       "Standing"},
     {EQ_STANDING_STATE_FROZEN,         "Frozen"},
@@ -389,6 +450,15 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_STANDING_STATE_NAME =
     {EQ_STANDING_STATE_FEIGN_DEATH,    "Feign Death"},
     {EQ_STANDING_STATE_DEAD,           "Dead"},
 };
+
+#define EQ_CAMERA_TYPE_FIRST_PERSON    0
+#define EQ_CAMERA_TYPE_OVERHEAD        1
+#define EQ_CAMERA_TYPE_CHASE           2
+#define EQ_CAMERA_TYPE_USER1           3
+#define EQ_CAMERA_TYPE_USER2           4
+#define EQ_CAMERA_TYPE_TETHER          5
+#define EQ_CAMERA_TYPE_SCROLL          6 // mouse wheel scroll out
+#define EQ_CAMERA_TYPE_FRONT           7
 
 #define EQ_OFFSET_CDisplay_CAMERA    0x118 // uint32_t pointer (CCamera)
 #define EQ_OFFSET_CDisplay_TIMER     0x154 // uint32_t
@@ -492,7 +562,7 @@ const float EQ_CAMERA_PITCH_MAX        = 119.5f;     // look up
 #define EQ_DIRECTION_EAST          7
 #define EQ_DIRECTION_UNKNOWN       254
 
-std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_DIRECTION_NAME =
+std::unordered_map<uint32_t, std::string> EQ_DIRECTION_Strings =
 {
     {EQ_DIRECTION_NORTH,         "North"},
     {EQ_DIRECTION_NORTH_WEST,    "Northwest"},
@@ -525,7 +595,7 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_DIRECTION_NAME =
 #define EQ_RACE_DRAKKIN          522
 #define EQ_RACE_CAMPFIRE         567 // fellowship campfires, etc
 
-std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_RACE_NAME =
+std::unordered_map<uint32_t, std::string> EQ_RACE_LongName_Strings =
 {
     {EQ_RACE_UNKNOWN,      "Unknown"},
     {EQ_RACE_HUMAN,        "Human"},
@@ -546,7 +616,7 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_RACE_NAME =
     {EQ_RACE_DRAKKIN,      "Drakkin"},
 };
 
-std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_RACE_SHORT_NAME =
+std::unordered_map<uint32_t, std::string> EQ_RACE_ShortName_Strings =
 {
     {EQ_RACE_UNKNOWN,      "UNK"},
     {EQ_RACE_HUMAN,        "HUM"},
@@ -612,7 +682,7 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_RACE_SHORT_NAME =
 #define EQ_CLASS_LOYALTY_MERCHANT            73
 #define EQ_CLASS_TRIBUTE_MASTER              74
 
-std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_CLASS_NAME =
+std::unordered_map<uint32_t, std::string> EQ_CLASS_LongName_Strings =
 {
     {EQ_CLASS_UNKNOWN,         "Unknown"},
     {EQ_CLASS_WARRIOR,         "Warrior"},
@@ -645,7 +715,7 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_CLASS_NAME =
     {EQ_CLASS_TRIBUTE_MASTER,              "Tribute Master"},
 };
 
-std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_CLASS_SHORT_NAME =
+std::unordered_map<uint32_t, std::string> EQ_CLASS_ShortName_Strings =
 {
     {EQ_CLASS_UNKNOWN,         "UNK"},
     {EQ_CLASS_WARRIOR,         "WAR"},
@@ -665,25 +735,31 @@ std::unordered_map<uint32_t, std::string> EQ_STRING_MAP_CLASS_SHORT_NAME =
     {EQ_CLASS_BEASTLORD,       "BST"},
     {EQ_CLASS_BERSERKER,       "BER"},
     {EQ_CLASS_MERCENARY,       "MERC"},
-    ////{EQ_CLASS_BANKER,          "BANKER"},
-    ////{EQ_CLASS_MERCHANT,        "MERCHANT"},
+    ////{EQ_CLASS_BANKER,          "BNKR"},
+    ////{EQ_CLASS_MERCHANT,        "MCHT"},
 };
 
 namespace EQ
 {
+    typedef struct _Vector2f
+    {
+        float X;
+        float Y;
+    } Vector2f, *Vector2f_ptr;
+
+    typedef struct _Vector3f
+    {
+        float X;
+        float Y;
+        float Z;
+    } Vector3f, *Vector3f_ptr;
+
     typedef struct _Location
     {
         float Y;
         float X;
         float Z;
     } Location, *Location_ptr;
-
-    typedef struct _Point
-    {
-        float X;
-        float Y;
-        float Z;
-    } Point, *Point_ptr;
 
     typedef struct _Line
     {

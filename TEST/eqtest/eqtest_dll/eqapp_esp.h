@@ -212,6 +212,8 @@ void EQAPP_ESP_Execute()
         auto spawnRace = EQ_GetSpawnRace(spawn);
         auto spawnClass = EQ_GetSpawnClass(spawn);
 
+        auto spawnStandingState = EQ_GetSpawnStandingState(spawn);
+
         bool bIgnoreDistance = false;
         bool bOutOfRange = false;
 
@@ -335,7 +337,7 @@ void EQAPP_ESP_Execute()
 
             if (bShowSpawnClassShortName == true)
             {
-                auto spawnClassShortName = EQ_GetClassShortNameByKey(spawnClass);
+                auto spawnClassShortName = EQ_GetClassShortNameByID(spawnClass);
                 if (spawnClassShortName.size() != 0)
                 {
                     drawText << " " << spawnClassShortName;
@@ -351,7 +353,14 @@ void EQAPP_ESP_Execute()
 
             drawText << " (" << (int)spawnDistance << "m)";
 
-            if (spawnType == EQ_SPAWN_TYPE_NPC)
+            if (spawnType == EQ_SPAWN_TYPE_PLAYER)
+            {
+                if (spawnStandingState == EQ_STANDING_STATE_FEIGN_DEATH)
+                {
+                    drawText << "\n*Feign Death*";
+                }
+            }
+            else if (spawnType == EQ_SPAWN_TYPE_NPC)
             {
                 if (spawnLastName.size() != 0)
                 {

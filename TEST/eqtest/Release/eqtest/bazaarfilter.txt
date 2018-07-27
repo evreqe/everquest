@@ -96,7 +96,7 @@ Conflagrant Savviness
 #{Feral Lord's Conflagrant
 #{Forest Stalker's Conflagrant
 #{Fury's Conflagrant
-{Maestro's Conflagrant
+#{Maestro's Conflagrant
 #{Overlord's Conflagrant
 {Prophet's Conflagrant
 #{Storm Warden's Conflagrant
@@ -110,7 +110,7 @@ Conflagrant Savviness
 #{Glowing Athlai
 #{Glowing Othni
 #{Glowing Reis
-{Glowing Sebilisian
+#{Glowing Sebilisian
 
 ##### Merc Gear #####
 #{Assassin's Extravagant

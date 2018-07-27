@@ -35,6 +35,8 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_MouseLook);
     EQAPP_FixAddress(EQ_ADDRESS_NetStatus);
 
+    EQAPP_FixAddress(EQ_ADDRESS_CameraType);
+
     EQAPP_FixAddress(EQ_ADDRESS_LeftMouseHeldTime);
     EQAPP_FixAddress(EQ_ADDRESS_RightMouseHeldTime);
 
@@ -73,11 +75,15 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__UpdateItemSlot);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__IsTargetable);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteState);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteTint);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_EQSwitchManager);
 
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState);
+
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_AuraManager);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_SpellManager);
 
@@ -125,6 +131,14 @@ void EQAPP_InitializeAddresses()
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CLargeDialogWnd);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CLargeDialogWnd__Open);
+
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CPlayerWnd);
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CTargetWnd);
+
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CPetInfoWindow);
+
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CBuffWnd_Long);
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CBuffWnd_Short);
 }
 
 bool EQAPP_IsAddressPointerValid(uint32_t addressPointer)

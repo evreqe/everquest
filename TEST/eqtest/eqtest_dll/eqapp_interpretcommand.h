@@ -538,7 +538,7 @@ void EQAPP_InterpretCommand_ConvertText(std::string& text)
         {
             auto spawnClass = EQ_GetSpawnClass(playerSpawn);
 
-            std::string str = EQ_GetClassNameByKey(spawnClass);
+            std::string str = EQ_GetClassNameByID(spawnClass);
             if (str.size() != 0)
             {
                 EQAPP_String_ReplaceAll(text, "${Player.Class}", str);
@@ -553,7 +553,7 @@ void EQAPP_InterpretCommand_ConvertText(std::string& text)
         {
             auto spawnClass = EQ_GetSpawnClass(playerSpawn);
 
-            std::string str = EQ_GetClassShortNameByKey(spawnClass);
+            std::string str = EQ_GetClassShortNameByID(spawnClass);
             if (str.size() != 0)
             {
                 EQAPP_String_ReplaceAll(text, "${Player.ClassShortName}", str);
@@ -599,6 +599,11 @@ bool EQAPP_InterpretCommand_HandleEvent_CEverQuest__InterpretCmd(void* this_ptr,
 
     std::string commandText = commandText_;
     if (commandText.size() == 0)
+    {
+        return true;
+    }
+
+    if (commandText.at(0) == '\\')
     {
         return true;
     }
@@ -732,6 +737,51 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
     if (commandText == "//Test")
     {
         std::cout << "Testing123" << std::endl;
+
+        if (EQ_TargetWindow_FindBuffSpellName("Blessing of Aegolism") == true)
+        {
+            std::cout << "Target has Blessing of Aegolism buff." << std::endl;
+        }
+
+        if (EQ_TargetWindow_FindBuffSpellName("Focus of the Seventh") == true)
+        {
+            std::cout << "Target has Focus of the Seventh buff." << std::endl;
+        }
+
+        if (EQ_TargetWindow_FindBuffSpellName("Focus of the Nine") == true)
+        {
+            std::cout << "Target has Focus of the Nine buff." << std::endl;
+        }
+
+        if (EQ_BuffWindows_FindBuffSpellName("Yaulp II") == true)
+        {
+            std::cout << "You have a Yaulp II buff." << std::endl;
+        }
+
+        if (EQ_BuffWindows_RemoveBuffSpellName("Yaulp II") == true)
+        {
+            std::cout << "You removed your Yaulp II buff." << std::endl;
+        }
+
+        if (EQ_AuraManager_FindAuraName("Bloodlust Aura") == true)
+        {
+            std::cout << "You have a Bloodlust Aura." << std::endl;
+        }
+
+        if (EQ_AuraManager_FindAuraName("something Aura") == true)
+        {
+            std::cout << "You have a something Aura." << std::endl;
+        }
+
+        auto xtarget1 = EQ_GetXTargetSpawn(0);
+        if (xtarget1 != NULL)
+        {
+            std::string xname = EQ_GetSpawnName(xtarget1);
+            if (xname.size() != 0)
+            {
+                std::cout << "xname: " << xname << std::endl;
+            }
+        }
 
         return true;
     }
@@ -1662,44 +1712,92 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
+    if (commandText == "//LookAtTarget")
+    {
+        if (g_FreeCameraIsEnabled == true)
+        {
+            EQ_LookCameraAtTarget();
+        }
+        else
+        {
+            EQ_LookPlayerAtTarget();
+        }
+
+        return true;
+    }
+
+    if (commandText == "//LookAtTargetFromAbove")
+    {
+        auto targetSpawn = EQ_GetTargetSpawn();
+        if (targetSpawn != NULL)
+        {
+            auto targetY = EQ_GetSpawnY(targetSpawn);
+            auto targetX = EQ_GetSpawnX(targetSpawn);
+
+            auto targetZ = EQ_GetSpawnFloorZ(targetSpawn) + (EQ_GetSpawnHeightZ(targetSpawn) * 4.0f) + 1.0f;
+
+            EQAPP_FreeCamera_On();
+
+            EQ_SetCameraLocation(targetY, targetX, targetZ);
+
+            EQ_LookCameraAtTarget();
+        }
+
+        return true;
+    }
+
     if (commandText == "//FirstPersonCamera")
     {
-        EQ_ExecuteCommand(EQ_EXECUTECMD_FIRST_PERSON_CAMERA, 1);
+        EQ_SetCameraType(EQ_CAMERA_TYPE_FIRST_PERSON);
 
         return true;
     }
 
     if (commandText == "//OverheadCamera")
     {
-        EQ_ExecuteCommand(EQ_EXECUTECMD_OVERHEAD_CAMERA, 1);
+        EQ_SetCameraType(EQ_CAMERA_TYPE_OVERHEAD);
 
         return true;
     }
 
     if (commandText == "//ChaseCamera")
     {
-        EQ_ExecuteCommand(EQ_EXECUTECMD_CHASE_CAMERA, 1);
+        EQ_SetCameraType(EQ_CAMERA_TYPE_CHASE);
 
         return true;
     }
 
     if (commandText == "//User1Camera" || commandText == "//ThirdPersonCamera1")
     {
-        EQ_ExecuteCommand(EQ_EXECUTECMD_USER1_CAMERA, 1);
+        EQ_SetCameraType(EQ_CAMERA_TYPE_USER1);
 
         return true;
     }
 
     if (commandText == "//User2Camera" || commandText == "//ThirdPersonCamera2" || commandText == "//ThirdPersonCamera")
     {
-        EQ_ExecuteCommand(EQ_EXECUTECMD_USER2_CAMERA, 1);
+        EQ_SetCameraType(EQ_CAMERA_TYPE_USER2);
 
         return true;
     }
 
     if (commandText == "//TetherCamera")
     {
-        EQ_ExecuteCommand(EQ_EXECUTECMD_TETHER_CAMERA, 1);
+        EQ_SetCameraType(EQ_CAMERA_TYPE_TETHER);
+
+        return true;
+    }
+
+    if (commandText == "//ScrollCamera")
+    {
+        EQ_SetCameraType(EQ_CAMERA_TYPE_SCROLL);
+
+        return true;
+    }
+
+    if (commandText == "//FrontCamera")
+    {
+        EQ_SetCameraType(EQ_CAMERA_TYPE_FRONT);
 
         return true;
     }
@@ -3084,7 +3182,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
             {
                 uint32_t race = EQ_RACE_UNKNOWN;
 
-                race = EQ_StringMap_GetKeyByValue(EQ_STRING_MAP_RACE_NAME, raceIDOrName);
+                race = EQ_StringMap_GetKeyByValue(EQ_RACE_LongName_Strings, raceIDOrName);
                 if (race != 0xFFFFFFFF)
                 {
                     g_ESPFindSpawnRace = race;
@@ -3093,7 +3191,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                 }
                 else
                 {
-                    race = EQ_StringMap_GetKeyByValue(EQ_STRING_MAP_RACE_SHORT_NAME, raceIDOrName);
+                    race = EQ_StringMap_GetKeyByValue(EQ_RACE_ShortName_Strings, raceIDOrName);
                     if (race != 0xFFFFFFFF)
                     {
                         g_ESPFindSpawnRace = race;
@@ -3152,7 +3250,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
             {
                 uint32_t class_ = std::stoul(classIDOrName);
 
-                std::string className = EQ_GetClassNameByKey(class_);
+                std::string className = EQ_GetClassNameByID(class_);
                 if (className.size() != 0)
                 {
                     g_ESPFindSpawnClass = class_;
@@ -3164,7 +3262,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
             {
                 uint32_t class_ = EQ_CLASS_UNKNOWN;
 
-                class_ = EQ_StringMap_GetKeyByValue(EQ_STRING_MAP_CLASS_NAME, classIDOrName);
+                class_ = EQ_StringMap_GetKeyByValue(EQ_CLASS_LongName_Strings, classIDOrName);
                 if (class_ != 0xFFFFFFFF)
                 {
                     g_ESPFindSpawnClass = class_;
@@ -3173,7 +3271,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                 }
                 else
                 {
-                    class_ = EQ_StringMap_GetKeyByValue(EQ_STRING_MAP_CLASS_SHORT_NAME, classIDOrName);
+                    class_ = EQ_StringMap_GetKeyByValue(EQ_CLASS_ShortName_Strings, classIDOrName);
                     if (class_ != 0xFFFFFFFF)
                     {
                         g_ESPFindSpawnClass = class_;
@@ -4261,7 +4359,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                         uint32_t fromIndex = std::stoul(tokens.at(0));
                         uint32_t toIndex = std::stoul(tokens.at(1));
 
-                        //
+                        EQAPP_Waypoint_Align(fromIndex, toIndex);
                     }
                 }
             }
@@ -4581,6 +4679,52 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
+    // //WPGetSlope <from index>,<to index>
+    if (EQAPP_String_BeginsWith(commandText, "//WPGetSlope ") == true)
+    {
+        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+        if (commandTextAfterSpace.size() != 0)
+        {
+            std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
+            if (tokens.size() == 2)
+            {
+                if (EQAPP_String_IsDigits(tokens.at(0)) == true && EQAPP_String_IsDigits(tokens.at(1)) == true)
+                {
+                    uint32_t fromIndex = std::stoul(tokens.at(0));
+                    uint32_t toIndex = std::stoul(tokens.at(1));
+
+                    auto fromWaypoint = EQAPP_Waypoint_GetByIndex(fromIndex);
+                    auto toWaypoint = EQAPP_Waypoint_GetByIndex(toIndex);
+                    if (fromWaypoint != NULL && toIndex != NULL)
+                    {
+                        float slope = EQ_GetLineSlope(fromWaypoint->Y, fromWaypoint->X, toWaypoint->Y, toWaypoint->X);
+
+                        std::cout << "Slope: " << slope << std::endl;
+
+                        if (std::isinf(slope) == true)
+                        {
+                            std::cout << "Slope is vertical (North <-> South)" << std::endl;
+                        }
+                        else if (slope == 0 || slope == -0)
+                        {
+                            std::cout << "Slope is horizontal (West <-> East)" << std::endl;
+                        }
+                        else if (slope < 0 || slope == -1)
+                        {
+                            std::cout << "Slope is diagonal (South West <-> North East)" << std::endl;
+                        }
+                        else if (slope > 0|| slope == 1)
+                        {
+                            std::cout << "Slope is diagonal (North West <-> South East)" << std::endl;
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
     if (commandText == "//Left")
     {
         auto playerSpawn = EQ_GetPlayerSpawn();
@@ -4702,6 +4846,21 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
+    if (commandText == "//ShowWindow")
+    {
+        ShowWindow(EQ_GetWindow(), SW_SHOW);
+
+        return true;
+    }
+
+    if (commandText == "//HideWindow")
+    {
+        ShowWindow(EQ_GetWindow(), SW_HIDE);
+
+        return true;
+    }
+
+/*
     if (commandText == "//FlyOn" || commandText == "//Fly")
     {
         auto playerSpawn = EQ_GetPlayerSpawn();
@@ -4723,6 +4882,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
         return true;
     }
+*/
 
     return false;
 }
