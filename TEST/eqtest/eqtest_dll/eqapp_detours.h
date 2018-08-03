@@ -13,6 +13,7 @@
 #include "eqapp_hud.h"
 #include "eqapp_interpretcommand.h"
 #include "eqapp_lua.h"
+#include "eqapp_namecolor.h"
 #include "eqapp_sleep.h"
 #include "eqapp_spawncastspell.h"
 #include "eqapp_windowtitle.h"
@@ -52,6 +53,7 @@ EQ_MACRO_FUNCTION_DefineDetour(CCamera__SetCameraLocation);
 EQ_MACRO_FUNCTION_DefineDetour(CBazaarSearchWnd__AddItemToList);
 
 EQ_MACRO_FUNCTION_DefineDetour(CDisplay__CreatePlayerActor);
+EQ_MACRO_FUNCTION_DefineDetour(CDisplay__DeleteActor);
 
 char* __cdecl EQAPP_DETOURED_FUNCTION_CrashDetected();
 int __cdecl EQAPP_DETOURED_FUNCTION_CollisionCallbackForActors(uint32_t cactor);
@@ -78,6 +80,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CCamera__SetCameraLocation(void* this_ptr
 int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* this_ptr, void* not_used, char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11);
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CDisplay__CreatePlayerActor(void* this_ptr, void* not_used, uint32_t spawn, int a2, int a3, int a4, int a5, int a6);
+int __fastcall EQAPP_DETOURED_FUNCTION_CDisplay__DeleteActor(void* this_ptr, void* not_used, uint32_t cactor);
 
 void EQAPP_Detours_AddDetourForCamera()
 {
@@ -235,6 +238,11 @@ void EQAPP_Detours_Load()
         {
             EQ_MACRO_FUNCTION_AddDetour(CDisplay__CreatePlayerActor);
         }
+
+        if (EQ_ADDRESS_FUNCTION_CDisplay__DeleteActor != 0)
+        {
+            EQ_MACRO_FUNCTION_AddDetour(CDisplay__DeleteActor);
+        }
     }
 
     EQAPP_Detours_AddDetourForCamera();
@@ -344,6 +352,14 @@ void EQAPP_Detours_Unload()
         }
     }
 
+    if (EQ_ADDRESS_POINTER_CDisplay != 0)
+    {
+        if (EQ_ADDRESS_FUNCTION_CDisplay__DeleteActor != 0)
+        {
+            EQ_MACRO_FUNCTION_RemoveDetour(CDisplay__DeleteActor);
+        }
+    }
+
     EQAPP_Detours_RemoveDetourForCamera();
 }
 
@@ -424,7 +440,7 @@ int __cdecl EQAPP_DETOURED_FUNCTION_CollisionCallbackForActors(uint32_t cactor)
         bool result = EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(cactor);
         if (result == true)
         {
-            return 0; // actor was deleted
+            return 0; // no collision
         }
 
         if (g_ActorCollisionAllIsEnabled == true)
@@ -560,6 +576,11 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
     if (g_ChangeHeightIsEnabled == true)
     {
         EQAPP_ChangeHeight_Execute();
+    }
+
+    if (g_NameColorIsEnabled == true)
+    {
+        EQAPP_NameColor_Execute();
     }
 
     if (g_FindPathIsEnabled == true && g_FindPathFollowPathIsEnabled == true)
@@ -1005,14 +1026,16 @@ int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__SetNameSpriteTint(void* this_pt
         return EQAPP_REAL_FUNCTION_EQPlayer__SetNameSpriteTint(this_ptr);
     }
 
+    if (EQ_IsInGame() == false)
+    {
+        return EQAPP_REAL_FUNCTION_EQPlayer__SetNameSpriteTint(this_ptr);
+    }
+
     int result = EQAPP_REAL_FUNCTION_EQPlayer__SetNameSpriteTint(this_ptr);
 
-    auto playerSpawn = EQ_GetPlayerSpawn();
-    if ((uint32_t)this_ptr == playerSpawn)
+    if (g_NameColorIsEnabled == true)
     {
-        uint32_t nameColor = 0xFFFF8000;
-
-        EQ_SetSpawnNameColor(playerSpawn, nameColor);
+        EQAPP_NameColor_HandleEvent_EQPlayer__SetNameSpriteTint(this_ptr);
     }
 
     return result;
@@ -1377,4 +1400,28 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CDisplay__CreatePlayerActor(void* this_pt
     // TODO: spawn alert
 
     return EQAPP_REAL_FUNCTION_CDisplay__CreatePlayerActor(this_ptr, spawn, a2, a3, a4, a5, a6);
+}
+
+int __fastcall EQAPP_DETOURED_FUNCTION_CDisplay__DeleteActor(void* this_ptr, void* not_used, uint32_t cactor)
+{
+    if (g_EQAppShouldUnload == 1)
+    {
+        return EQAPP_REAL_FUNCTION_CDisplay__DeleteActor(this_ptr, cactor);
+    }
+
+    if (EQ_IsInGame() == false)
+    {
+        return EQAPP_REAL_FUNCTION_CDisplay__DeleteActor(this_ptr, cactor);
+    }
+
+    if (g_EQAppIsInGame == false)
+    {
+        return EQAPP_REAL_FUNCTION_CDisplay__DeleteActor(this_ptr, cactor);
+    }
+
+    ////std::cout << "CDisplay::DeleteActor(): 0x" << std::hex << cactor << std::dec << std::endl;
+
+    // TODO: spawn alert
+
+    return EQAPP_REAL_FUNCTION_CDisplay__DeleteActor(this_ptr, cactor);
 }

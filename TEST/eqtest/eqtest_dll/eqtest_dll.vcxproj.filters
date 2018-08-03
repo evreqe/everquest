@@ -170,5 +170,11 @@
     <ClInclude Include="eqapp_findpath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="eq_namecolor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_namecolor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

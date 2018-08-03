@@ -507,3 +507,4 @@ public:
 };
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(uint32_t CCollisionCallbackForActors3::Call_0x44(), 0x44);
+

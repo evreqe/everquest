@@ -52,25 +52,34 @@ const uint32_t EQ_FAR_CLIP_PLANE_MAX = 20;
 
 const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 
-#define EQ_NUM_HOTBARS           11    // 10 + 1, potion belt was removed and replaced with another hotbar
-#define EQ_NUM_HOTBAR_BUTTONS    12
-#define EQ_NUM_SPELLS            60000
-#define EQ_NUM_SPELL_GEMS        18
-#define EQ_NUM_BAGS              10    // number of bags you can hold in your inventory
-#define EQ_NUM_BAG_SLOTS         40    // number of slots a bag can have
-#define EQ_NUM_GROUP_MEMBERS     6
-#define EQ_NUM_LONG_BUFFS        NUM_LONG_BUFFS
-#define EQ_NUM_SHORT_BUFFS       NUM_SHORT_BUFFS
-#define EQ_NUM_BUFF_SLOTS        NUM_BUFF_SLOTS
-#define EQ_NUM_AURAS             2
-#define EQ_NUM_XTARGETS          20
+#define EQ_NUM_HOTBARS                 11    // 10 + 1, potion belt was removed and replaced with another hotbar
+#define EQ_NUM_HOTBAR_BUTTONS          12
+#define EQ_NUM_SPELLS                  60000
+#define EQ_NUM_SPELL_GEMS              18
+#define EQ_NUM_SPELL_GEMS_IN_WINDOW    14    // CCastSpellWnd    CSPW_Spell%d
+#define EQ_NUM_BAGS                    10    // number of bags you can hold in your inventory
+#define EQ_NUM_BAG_SLOTS               40    // number of slots a bag can have
+#define EQ_NUM_GROUP_MEMBERS           6
+#define EQ_NUM_LONG_BUFFS              NUM_LONG_BUFFS
+#define EQ_NUM_SHORT_BUFFS             NUM_SHORT_BUFFS
+#define EQ_NUM_BUFF_SLOTS              NUM_BUFF_SLOTS
+#define EQ_NUM_AURAS                   2
+#define EQ_NUM_XTARGETS                20
 
 #define EQ_BAZAAR_SEARCH_MAX_RESULTS_PER_TRADER 200
-#define EQ_BAZAAR_SEARCH_LIST_INDEX_NULL 0xFFFFFFFF
+#define EQ_BAZAAR_SEARCH_LIST_INDEX_NULL 0xFFFFFFFF // uint32_t
 
-#define EQ_SPELL_ID_NULL 0xFFFFFFFF
+#define EQ_SPELL_ID_NULL 0xFFFFFFFF // uint32_t
 
 #define EQ_SPELL_GEM_INDEX_NULL 0xFF
+
+#define EQ_SPELL_GEM_ICON_NULL 0xFFFFFFFF // uint32_t
+
+// CSpellGemWnd
+#define EQ_SPELL_GEM_STATE_READY_TO_CAST    0
+#define EQ_SPELL_GEM_STATE_CASTING          1
+#define EQ_SPELL_GEM_STATE_ABORTED          2
+#define EQ_SPELL_GEM_STATE_NULL             0xFFFFFFFF // uint32_t
 
 #define EQ_FOG_OFF    0x00 // uint8_t
 #define EQ_FOG_ON     0xFF // uint8_t
@@ -81,7 +90,8 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 
 #define EQ_OFFSET_CEverQuest_GAME_STATE    0x5C8 // uint32_t, 1480 decimal    "Gamestate at crash = %d\n"
 
-#define EQ_GAME_STATE_IN_GAME 5
+#define EQ_GAME_STATE_IN_GAME    5
+#define EQ_GAME_STATE_NULL       0xFFFFFFFF // uint32_t
 
 #define EQ_OFFSET_CRender_Direct3DDevicePointer   0xEC8 // uint32_t pointer    LPDIRECT3DDEVICE9
 
@@ -109,14 +119,15 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_FONT_STYLE_NAME_SPRITE               10    // big text with drop shadow, used for text above players/npcs heads
 
 // class AuraManager
-#define EQ_OFFSET_AuraManager_NUM_AURAS    offsetof(EQData::_AURAMGR, NumAuras) // uint32_t
-#define EQ_OFFSET_AuraManager_AURAS        offsetof(EQData::_AURAMGR, pAuraInfo) // uint32_t pointer
-#define EQ_OFFSET_AURAS_Aura               offsetof(EQData::_AURAS, Aura) // struct AURA[EQ_NUM_AURAS]
+#define EQ_OFFSET_AuraManager_NUM_AURAS    offsetof(EQData::_AURAMGR, NumAuras)     // uint32_t
+#define EQ_OFFSET_AuraManager_AURAS        offsetof(EQData::_AURAMGR, pAuraInfo)    // uint32_t pointer
+#define EQ_OFFSET_AURAS_Aura               offsetof(EQData::_AURAS, Aura)           // struct AURA[EQ_NUM_AURAS]
 
 #define EQ_SIZE_AURA_NAME    0x40
 
 // struct AURA
-#define EQ_OFFSET_AURA_NAME    0x00 // char[EQ_SIZE_AURA_NAME]
+#define EQ_OFFSET_AURA_NAME        offsetof(EQData::_AURAINFO, Name)       // char[EQ_SIZE_AURA_NAME]
+#define EQ_OFFSET_AURA_SPAWN_ID    offsetof(EQData::_AURAINFO, SpawnID)    // uint32_t
 
 // class XTarget Manager
 #define EQ_OFFSET_XTargetManager_XTARGETS_ARRAY    0x04
@@ -231,6 +242,8 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_SPAWN_TYPE_CORPSE    2
 #define EQ_SPAWN_TYPE_UNKNOWN   254 // custom value for our use
 
+#define EQ_SPAWN_ID_NULL    0xFFFFFFFF // uint32_t
+
 std::unordered_map<uint32_t, std::string> EQ_SPAWN_TYPE_Strings =
 {
     {EQ_SPAWN_TYPE_PLAYER,      "Player"},
@@ -238,6 +251,9 @@ std::unordered_map<uint32_t, std::string> EQ_SPAWN_TYPE_Strings =
     {EQ_SPAWN_TYPE_CORPSE,      "Corpse"},
     {EQ_SPAWN_TYPE_UNKNOWN,     "Unknown"},
 };
+
+#define EQ_GENDER_MALE      0
+#define EQ_GENDER_FEMALE    1
 
 #define EQ_GRAVITY_TYPE_GROUND               0
 #define EQ_GRAVITY_TYPE_FLYING               1
@@ -255,6 +271,22 @@ std::unordered_map<uint32_t, std::string> EQ_GRAVITY_TYPE_Strings =
     {EQ_GRAVITY_TYPE_SWIMMING,             "Swimming"},
     {EQ_GRAVITY_TYPE_RIDING_VEHICLE,       "Riding Vehicle"},
     {EQ_GRAVITY_TYPE_SINKING_TO_GROUND,    "Sinking to Ground"},
+};
+
+#define EQ_COMBAT_STATE_IN_COMBAT    0 // "A_PWCSInCombat"    "You are in combat and cannot rest currently."
+#define EQ_COMBAT_STATE_DEBUFF       1 // "A_PWCSDebuff"      "You are weakened and cannot rest currently."
+#define EQ_COMBAT_STATE_TIMER        2 // "A_PWCSTimer"       "You are recovering from combat and cannot rest currently."
+#define EQ_COMBAT_STATE_STANDING     3 // "A_PWCSStanding"    "You are not in combat and may rest at any time."
+#define EQ_COMBAT_STATE_REGEN        4 // "A_PWCSRegen"       "You are resting and recovering health, mana and endurance at an increased rate."
+#define EQ_COMBAT_STATE_NULL         0xFFFFFFFF // uint32_t
+
+std::unordered_map<uint32_t, std::string> EQ_COMBAT_STATE_Strings =
+{
+    {EQ_COMBAT_STATE_IN_COMBAT,    "You are in combat and cannot rest currently."},
+    {EQ_COMBAT_STATE_DEBUFF,       "You are weakened and cannot rest currently."},
+    {EQ_COMBAT_STATE_TIMER,        "You are recovering from combat and cannot rest currently."},
+    {EQ_COMBAT_STATE_STANDING,     "You are not in combat and may rest at any time."},
+    {EQ_COMBAT_STATE_REGEN,        "You are resting and recovering health, mana and endurance at an increased rate."},
 };
 
 #define EQ_ACTOR_TYPE_UNDEFINED        0
@@ -329,11 +361,13 @@ std::unordered_map<uint32_t, std::string> EQ_GRAVITY_TYPE_Strings =
 #define EQ_XTARGET_TYPE_MY_PETS_TARGET          24
 #define EQ_XTARGET_TYPE_MY_MERCENARY            25
 #define EQ_XTARGET_TYPE_MY_MERCENARYS_TARGET    26
+#define EQ_XTARGET_TYPE_NULL                    0xFFFFFFFF // uint32_t
 
 #define EQ_XTARGET_STATUS_EMPTY             0
 #define EQ_XTARGET_STATUS_CURRENT_ZONE      1
 #define EQ_XTARGET_STATUS_DIFFERENT_ZONE    2
 #define EQ_XTARGET_STATUS_UNKNOWN           4
+#define EQ_XTARGET_STATUS_NULL              0xFFFFFFFF // uint32_t
 
 #define EQ_OFFSET_Group_GROUP_MEMBERS          0x04    // uint32_t[6]
 #define EQ_OFFSET_Group_GROUP_MEMBER_1         0x04
@@ -369,7 +403,7 @@ std::unordered_map<uint32_t, std::string> EQ_GRAVITY_TYPE_Strings =
 #define EQ_OFFSET_EQSwitchManager_NUM_SWITCHES    0x00 // uint32_t
 #define EQ_OFFSET_EQSwitchManager_FIRST_SWITCH    0x04 // uint32_t pointer, class EQSwitch
 
-#define EQ_SWITCH_KEY_ID_NULL    0xFFFFFFFF
+#define EQ_SWITCH_KEY_ID_NULL    0xFFFFFFFF // uint32_t
 
 #define EQ_SWITCH_STATE_CLOSED     0
 #define EQ_SWITCH_STATE_OPEN       1
@@ -560,7 +594,7 @@ const float EQ_CAMERA_PITCH_MAX        = 119.5f;     // look up
 #define EQ_DIRECTION_SOUTH_EAST    5
 #define EQ_DIRECTION_WEST          6
 #define EQ_DIRECTION_EAST          7
-#define EQ_DIRECTION_UNKNOWN       254
+#define EQ_DIRECTION_NULL          0xFFFFFFFF // uint32_t
 
 std::unordered_map<uint32_t, std::string> EQ_DIRECTION_Strings =
 {
@@ -572,7 +606,7 @@ std::unordered_map<uint32_t, std::string> EQ_DIRECTION_Strings =
     {EQ_DIRECTION_SOUTH_EAST,    "Southeast"},
     {EQ_DIRECTION_WEST,          "West"},
     {EQ_DIRECTION_EAST,          "East"},
-    {EQ_DIRECTION_UNKNOWN,       "Unknown"},
+    {EQ_DIRECTION_NULL,          "Unknown"},
 };
 
 #define EQ_RACE_UNKNOWN          0

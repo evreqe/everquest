@@ -16,6 +16,7 @@
 #include "eqapp_fps.h"
 #include "eqapp_hud.h"
 #include "eqapp_lua.h"
+#include "eqapp_namecolor.h"
 #include "eqapp_namedspawns.h"
 #include "eqapp_sleep.h"
 #include "eqapp_spawncastspell.h"

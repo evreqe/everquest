@@ -11,6 +11,7 @@
 #include <memory>
 #include <numeric>
 #include <random>
+#include <set>
 #include <string>
 #include <sstream>
 #include <unordered_map>
@@ -95,6 +96,7 @@ namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not avai
 #include "eqapp_hud.h"
 #include "eqapp_interpretcommand.h"
 #include "eqapp_lua.h"
+#include "eqapp_namecolor.h"
 #include "eqapp_namedspawns.h"
 #include "eqapp_sleep.h"
 #include "eqapp_spawncastspell.h"

@@ -16,6 +16,7 @@
 #include "eqapp_fps.h"
 #include "eqapp_hud.h"
 #include "eqapp_lua.h"
+#include "eqapp_namecolor.h"
 #include "eqapp_namedspawns.h"
 #include "eqapp_sleep.h"
 #include "eqapp_spawncastspell.h"
@@ -56,6 +57,7 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//ACOff",                        &EQAPP_ActorCollision_Off},
     {"//ACLoad",                       &EQAPP_ActorCollision_Load},
     {"//ACList",                       &EQAPP_ActorCollision_PrintActorDefinitionList},
+    {"//ACDebugList",                  &EQAPP_ActorCollision_PrintActorDefinitionDebugList},
     {"//ActorCollisionDebug",          &EQAPP_ActorCollision_Debug_Toggle},
     {"//ACDebug",                      &EQAPP_ActorCollision_Debug_Toggle},
     {"//ActorCollisionAll",            &EQAPP_ActorCollision_All_Toggle},
@@ -230,6 +232,18 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//WPEditHF",                     &EQAPP_Waypoint_Editor_HeightFilter_Toggle},
     {"//WPEditHFOn",                   &EQAPP_Waypoint_Editor_HeightFilter_On},
     {"//WPEditHFOff",                  &EQAPP_Waypoint_Editor_HeightFilter_Off},
+    {"//NameColor",                    &EQAPP_NameColor_Toggle},
+    {"//NameColorOn",                  &EQAPP_NameColor_On},
+    {"//NameColorOff",                 &EQAPP_NameColor_Off},
+    {"//NC",                           &EQAPP_NameColor_Toggle},
+    {"//NCOn",                         &EQAPP_NameColor_On},
+    {"//NCOff",                        &EQAPP_NameColor_Off},
+    {"//NamedSpawns",                  &EQAPP_NamedSpawns_Toggle},
+    {"//NamedSpawnsOn",                &EQAPP_NamedSpawns_On},
+    {"//NamedSpawnsOff",               &EQAPP_NamedSpawns_Off},
+    {"//NS",                           &EQAPP_NamedSpawns_Toggle},
+    {"//NSOn",                         &EQAPP_NamedSpawns_On},
+    {"//NSOff",                        &EQAPP_NamedSpawns_Off},
     ////
     ////{"//Null",                         &EQAPP_InterpretCommand_NULL},
     ////
@@ -432,10 +446,12 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//BCSC",                         &EQAPP_InterpretCommand_NULL},
     {"//BoxChatTell",                  &EQAPP_InterpretCommand_NULL},
     {"//BCT",                          &EQAPP_InterpretCommand_NULL},
-    {"//BoxChatTellChannel",           &EQAPP_InterpretCommand_NULL},
+    {"//BoxChatToChannel",             &EQAPP_InterpretCommand_NULL},
     {"//BCTC",                         &EQAPP_InterpretCommand_NULL},
-    {"//BoxChatTellGroup",             &EQAPP_InterpretCommand_NULL},
-    {"//BCTG",                         &EQAPP_InterpretCommand_NULL},
+    {"//BoxChatGroup",                 &EQAPP_InterpretCommand_NULL},
+    {"//BCG",                          &EQAPP_InterpretCommand_NULL},
+    {"//BoxChatGroupAll",              &EQAPP_InterpretCommand_NULL},
+    {"//BCGA",                         &EQAPP_InterpretCommand_NULL},
     {"//BoxChatOthers",                &EQAPP_InterpretCommand_NULL},
     {"//BCA",                          &EQAPP_InterpretCommand_NULL},
     {"//BoxChatAll",                   &EQAPP_InterpretCommand_NULL},
@@ -738,6 +754,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
     {
         std::cout << "Testing123" << std::endl;
 
+        /*
         if (EQ_TargetWindow_FindBuffSpellName("Blessing of Aegolism") == true)
         {
             std::cout << "Target has Blessing of Aegolism buff." << std::endl;
@@ -782,6 +799,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                 std::cout << "xname: " << xname << std::endl;
             }
         }
+        */
 
         return true;
     }
@@ -3301,18 +3319,18 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
     if (EQAPP_String_BeginsWith(commandText, "//Cast ") == true || EQAPP_String_BeginsWith(commandText, "//Casting ") == true)
     {
-        std::string spellGemIndexOrSpellName = EQAPP_String_GetAfter(commandText, " ");
-        if (spellGemIndexOrSpellName.size() != 0)
+        std::string spellGemNumberOrSpellName = EQAPP_String_GetAfter(commandText, " ");
+        if (spellGemNumberOrSpellName.size() != 0)
         {
-            if (EQAPP_String_IsDigits(spellGemIndexOrSpellName) == true)
+            if (EQAPP_String_IsDigits(spellGemNumberOrSpellName) == true)
             {
-                uint32_t spellGemIndex = std::stoul(spellGemIndexOrSpellName);
+                uint32_t spellGemNumber = std::stoul(spellGemNumberOrSpellName);
 
-                EQ_CastSpellByGemIndex(spellGemIndex);
+                EQ_CastSpellByGemIndex(spellGemNumber - 1);
             }
             else
             {
-                EQ_CastSpellByName(spellGemIndexOrSpellName.c_str());
+                EQ_CastSpellByName(spellGemNumberOrSpellName.c_str());
             }
         }
 
@@ -3494,7 +3512,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (EQAPP_String_BeginsWith(commandText, "//BoxChatTellChannel ") == true || EQAPP_String_BeginsWith(commandText, "//BCTC ") == true)
+    if (EQAPP_String_BeginsWith(commandText, "//BoxChatToChannel ") == true || EQAPP_String_BeginsWith(commandText, "//BCTC ") == true)
     {
         if (g_BoxChatIsConnected == false)
         {
@@ -3517,7 +3535,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (EQAPP_String_BeginsWith(commandText, "//BoxChatTellGroup ") == true || EQAPP_String_BeginsWith(commandText, "//BCTG ") == true)
+    if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_String_BeginsWith(commandText, "//BCG ") == true)
     {
         if (g_BoxChatIsConnected == false)
         {
@@ -3555,6 +3573,56 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                 }
 
                 std::cout << "Box Chat to Group: " << commandTextAfterSpace << std::endl;
+            }
+        }
+
+        return true;
+    }
+
+    if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroupAll ") == true || EQAPP_String_BeginsWith(commandText, "//BCGA ") == true)
+    {
+        if (g_BoxChatIsConnected == false)
+        {
+            std::cout << "Error: You must first connect to the Box Chat server!" << std::endl;
+            return true;
+        }
+
+        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+        if (commandTextAfterSpace.size() != 0)
+        {
+            auto playerSpawn = EQ_GetPlayerSpawn();
+            if (playerSpawn != NULL)
+            {
+                auto playerSpawnName = EQ_GetSpawnName(playerSpawn);
+                if (playerSpawnName.size() != 0)
+                {
+                    g_BoxChatInterpretCommandList.push_back(commandTextAfterSpace);
+                }
+
+                auto groupMemberSpawnList = EQ_GetGroupMemberSpawnList();
+                if (groupMemberSpawnList.size() != 0)
+                {
+                    for (auto& groupMemberSpawn : groupMemberSpawnList)
+                    {
+                        if (groupMemberSpawn == NULL)
+                        {
+                            continue;
+                        }
+
+                        std::string groupMemberSpawnName = EQ_GetSpawnName(groupMemberSpawn);
+                        if (groupMemberSpawnName.size() == 0)
+                        {
+                            continue;
+                        }
+
+                        std::stringstream ss;
+                        ss << "//BoxChatTell " << groupMemberSpawnName << " " << commandTextAfterSpace << "\n";
+
+                        EQAPP_BoxChat_SendText(ss.str());
+                    }
+                }
+
+                std::cout << "Box Chat to Group All: " << commandTextAfterSpace << std::endl;
             }
         }
 
@@ -3857,14 +3925,9 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
         if (commandTextAfterSpace.size() != 0)
         {
-            auto playerSpawn = EQ_GetPlayerSpawn();
-            if (playerSpawn != NULL)
+            if (EQ_IsPlayerMoving() == true)
             {
-                auto spawnMovementSpeed = EQ_GetSpawnMovementSpeed(playerSpawn);
-                if (spawnMovementSpeed != 0.0f)
-                {
-                    EQ_InterpretCommand(commandTextAfterSpace.c_str());
-                }
+                EQ_InterpretCommand(commandTextAfterSpace.c_str());
             }
         }
 
@@ -3876,14 +3939,37 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
         if (commandTextAfterSpace.size() != 0)
         {
-            auto playerSpawn = EQ_GetPlayerSpawn();
-            if (playerSpawn != NULL)
+            if (EQ_IsPlayerMoving() == false)
             {
-                auto spawnMovementSpeed = EQ_GetSpawnMovementSpeed(playerSpawn);
-                if (spawnMovementSpeed == 0.0f)
-                {
-                    EQ_InterpretCommand(commandTextAfterSpace.c_str());
-                }
+                EQ_InterpretCommand(commandTextAfterSpace.c_str());
+            }
+        }
+
+        return true;
+    }
+
+    if (EQAPP_String_BeginsWith(commandText, "//IfCasting ") == true)
+    {
+        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+        if (commandTextAfterSpace.size() != 0)
+        {
+            if (EQ_CastingWindow_IsOpen() == true)
+            {
+                EQ_InterpretCommand(commandTextAfterSpace.c_str());
+            }
+        }
+
+        return true;
+    }
+
+    if (EQAPP_String_BeginsWith(commandText, "//IfNotCasting ") == true)
+    {
+        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+        if (commandTextAfterSpace.size() != 0)
+        {
+            if (EQ_CastingWindow_IsOpen() == false)
+            {
+                EQ_InterpretCommand(commandTextAfterSpace.c_str());
             }
         }
 
@@ -4725,18 +4811,18 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (commandText == "//Left")
+    if (commandText == "//TurnLeft")
     {
         auto playerSpawn = EQ_GetPlayerSpawn();
         if (playerSpawn != NULL)
         {
             auto playerHeading = EQ_GetSpawnHeading(playerSpawn);
 
-            EQ_RoundHeading(playerHeading);
+            playerHeading = EQ_RoundHeading(playerHeading);
 
             playerHeading = playerHeading + EQ_HEADING_MAX_QUARTER;
 
-            EQ_FixHeading(playerHeading);
+            playerHeading = EQ_FixHeading(playerHeading);
 
             EQ_SetSpawnHeading(playerSpawn, playerHeading);
         }
@@ -4744,18 +4830,18 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (commandText == "//Right")
+    if (commandText == "//TurnRight")
     {
         auto playerSpawn = EQ_GetPlayerSpawn();
         if (playerSpawn != NULL)
         {
             auto playerHeading = EQ_GetSpawnHeading(playerSpawn);
 
-            EQ_RoundHeading(playerHeading);
+            playerHeading = EQ_RoundHeading(playerHeading);
 
             playerHeading = playerHeading - EQ_HEADING_MAX_QUARTER;
 
-            EQ_FixHeading(playerHeading);
+            playerHeading = EQ_FixHeading(playerHeading);
 
             EQ_SetSpawnHeading(playerSpawn, playerHeading);
         }
@@ -4770,11 +4856,11 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         {
             auto playerHeading = EQ_GetSpawnHeading(playerSpawn);
 
-            EQ_RoundHeading(playerHeading);
+            playerHeading = EQ_RoundHeading(playerHeading);
 
             playerHeading = playerHeading + EQ_HEADING_MAX_HALF;
 
-            EQ_FixHeading(playerHeading);
+            playerHeading = EQ_FixHeading(playerHeading);
 
             EQ_SetSpawnHeading(playerSpawn, playerHeading);
         }
@@ -4782,7 +4868,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (commandText == "//North")
+    if (commandText == "//FaceNorth")
     {
 
         EQ_SetPlayerSpawnHeadingNorth();
@@ -4790,7 +4876,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (commandText == "//NorthWest")
+    if (commandText == "//FaceNorthWest")
     {
 
         EQ_SetPlayerSpawnHeadingNorthWest();
@@ -4798,7 +4884,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (commandText == "//West")
+    if (commandText == "//FaceWest")
     {
 
         EQ_SetPlayerSpawnHeadingWest();
@@ -4806,7 +4892,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (commandText == "//SouthWest")
+    if (commandText == "//FaceSouthWest")
     {
 
         EQ_SetPlayerSpawnHeadingSouthWest();
@@ -4814,7 +4900,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (commandText == "//South")
+    if (commandText == "//FaceSouth")
     {
 
         EQ_SetPlayerSpawnHeadingSouth();
@@ -4822,7 +4908,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (commandText == "//SouthEast")
+    if (commandText == "//FaceSouthEast")
     {
 
         EQ_SetPlayerSpawnHeadingSouthEast();
@@ -4830,7 +4916,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (commandText == "//East")
+    if (commandText == "//FaceEast")
     {
 
         EQ_SetPlayerSpawnHeadingEast();
@@ -4838,7 +4924,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (commandText == "//NorthEast")
+    if (commandText == "//FaceNorthEast")
     {
 
         EQ_SetPlayerSpawnHeadingNorthEast();
@@ -4883,6 +4969,26 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 */
+
+    if (EQAPP_String_BeginsWith(commandText, "//RemoveBuff ") == true)
+    {
+        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+        if (commandTextAfterSpace.size() != 0)
+        {
+            if (EQAPP_String_IsDigits(commandTextAfterSpace) == true)
+            {
+                uint32_t spellID = std::stoul(commandTextAfterSpace);
+
+                EQ_BuffWindows_RemoveBuffSpellID(spellID);
+            }
+            else
+            {
+                EQ_BuffWindows_RemoveBuffSpellName(commandTextAfterSpace.c_str());
+            }
+        }
+
+        return true;
+    }
 
     return false;
 }

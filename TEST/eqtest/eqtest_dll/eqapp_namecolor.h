@@ -1,0 +1,82 @@
+#pragma once
+
+bool g_NameColorIsEnabled = true;
+
+EQApp::Timer g_NameColorTimer = EQAPP_Timer_GetTimeNow();
+EQApp::TimerInterval g_NameColorTimerInterval = 10;
+
+bool g_NameColorTimerHasElapsed = false;
+
+uint32_t g_NameColorFlickerColorARGB = 0xFFFFFFFF; // white
+
+uint32_t g_NameColorPlayerColorARGB = 0xFFFF8000; // orange
+
+void EQAPP_NameColor_Toggle();
+void EQAPP_NameColor_On();
+void EQAPP_NameColor_Off();
+void EQAPP_NameColor_Execute();
+void EQAPP_NameColor_HandleEvent_EQPlayer__SetNameSpriteTint(void* this_ptr);
+
+void EQAPP_NameColor_Toggle()
+{
+    EQ_ToggleBool(g_NameColorIsEnabled);
+    EQAPP_PrintBool("Name Color", g_NameColorIsEnabled);
+}
+
+void EQAPP_NameColor_On()
+{
+    if (g_NameColorIsEnabled == false)
+    {
+        EQAPP_NameColor_Toggle();
+    }
+}
+
+void EQAPP_NameColor_Off()
+{
+    if (g_NameColorIsEnabled == true)
+    {
+        EQAPP_NameColor_Toggle();
+    }
+}
+
+void EQAPP_NameColor_Execute()
+{
+    g_NameColorTimerHasElapsed = false;
+
+    if (EQAPP_Timer_HasTimeElapsedInMilliseconds(g_NameColorTimer, g_NameColorTimerInterval) == true)
+    {
+        g_NameColorTimerHasElapsed = true;
+    }
+}
+
+void EQAPP_NameColor_HandleEvent_EQPlayer__SetNameSpriteTint(void* this_ptr)
+{
+    bool spawnIsTarget = false;
+
+    auto targetSpawn = EQ_GetTargetSpawn();
+    if ((uint32_t)this_ptr == targetSpawn)
+    {
+        spawnIsTarget = true;
+    }
+
+    bool spawnNameColorWasSet = false;
+
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if ((uint32_t)this_ptr == playerSpawn)
+    {
+        EQ_SetSpawnNameColor(playerSpawn, g_NameColorPlayerColorARGB);
+
+        spawnNameColorWasSet = true;
+    }
+
+    if (spawnIsTarget == true && spawnNameColorWasSet == true)
+    {
+        if (g_NameColorTimerHasElapsed == true)
+        {
+            EQ_SetSpawnNameColor(playerSpawn, g_NameColorFlickerColorARGB); // white
+
+            g_NameColorTimerHasElapsed = false;
+        }
+    }
+}
+

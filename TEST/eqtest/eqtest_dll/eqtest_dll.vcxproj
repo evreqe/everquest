@@ -196,6 +196,7 @@
     <ClInclude Include="eqapp_interpretcommand.h" />
     <ClInclude Include="eqapp_loadoptions.h" />
     <ClInclude Include="eqapp_lua.h" />
+    <ClInclude Include="eqapp_namecolor.h" />
     <ClInclude Include="eqapp_namedspawns.h" />
     <ClInclude Include="eqapp_sleep.h" />
     <ClInclude Include="eqapp_spawncastspell.h" />
@@ -204,6 +205,7 @@
     <ClInclude Include="eqapp_timer.h" />
     <ClInclude Include="eqapp_waypoint.h" />
     <ClInclude Include="eqapp_windowtitle.h" />
+    <ClInclude Include="eq_namecolor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

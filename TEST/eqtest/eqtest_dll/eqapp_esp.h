@@ -368,6 +368,20 @@ void EQAPP_ESP_Execute()
                 }
             }
 
+/*
+            auto spawnActorClient = EQ_GetSpawnActorClient(spawn);
+            if (spawnActorClient != NULL)
+            {
+                drawText << "\nActorClient: 0x" << fmt::hex(spawnActorClient);
+
+                uint32_t* spawnCActor = (uint32_t*)((EQData::ActorClient*)spawnActorClient)->pcactorex;
+
+                unsigned int value = (unsigned int)spawnCActor;
+
+                drawText << "\nCActor: 0x" << fmt::hex(value);
+            }
+*/
+
             if (g_SpawnCastSpellIsEnabled == true && g_SpawnCastSpellESPIsEnabled == true)
             {
                 for (auto& spawnCastSpell : g_SpawnCastSpellList)

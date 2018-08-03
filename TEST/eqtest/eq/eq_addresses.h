@@ -1321,6 +1321,10 @@ uint32_t EQ_ADDRESS_POINTER_CPetInfoWindow = 0x0; // "PetInfoWindow"
 uint32_t EQ_ADDRESS_POINTER_CBuffWnd_Long = 0x0;
 uint32_t EQ_ADDRESS_POINTER_CBuffWnd_Short = 0x0;
 
+uint32_t EQ_ADDRESS_POINTER_CCastSpellWnd = 0x0;
+
+uint32_t EQ_ADDRESS_POINTER_CCastingWnd = 0x0;
+
 void EQ_InitializeAddresses();
 
 void EQ_InitializeAddresses()
@@ -1447,4 +1451,8 @@ void EQ_InitializeAddresses()
 
     EQ_ADDRESS_POINTER_CBuffWnd_Long = pinstCBuffWindowNORMAL_x;
     EQ_ADDRESS_POINTER_CBuffWnd_Short = pinstCBuffWindowSHORT_x;
+
+    EQ_ADDRESS_POINTER_CCastSpellWnd = pinstCCastSpellWnd_x;
+
+    EQ_ADDRESS_POINTER_CCastingWnd = pinstCCastingWnd_x;
 }

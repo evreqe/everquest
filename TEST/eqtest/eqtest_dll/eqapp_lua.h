@@ -294,6 +294,8 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     // EQ constants
     state->set("EQ_WINDOW_TITLE_DEFAULT", EQ_WINDOW_TITLE_DEFAULT);
 
+    state->set("EQ_BASE_ADDRESS_VALUE", EQ_BASE_ADDRESS_VALUE);
+
     state->set("EQ_PI", EQ_PI);
 
     state->set("EQ_ZONE_GRAVITY_DEFAULT", EQ_ZONE_GRAVITY_DEFAULT);
@@ -338,11 +340,25 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set("EQ_NUM_BAGS", EQ_NUM_BAGS);
     state->set("EQ_NUM_BAG_SLOTS", EQ_NUM_BAG_SLOTS);
     state->set("EQ_NUM_GROUP_MEMBERS", EQ_NUM_GROUP_MEMBERS);
+    state->set("EQ_NUM_LONG_BUFFS", EQ_NUM_LONG_BUFFS);
+    state->set("EQ_NUM_SHORT_BUFFS", EQ_NUM_SHORT_BUFFS);
+    state->set("EQ_NUM_BUFF_SLOTS", EQ_NUM_BUFF_SLOTS);
+    state->set("EQ_NUM_AURAS", EQ_NUM_AURAS);
+    state->set("EQ_NUM_XTARGETS", EQ_NUM_XTARGETS);
 
     state->set("EQ_BAZAAR_SEARCH_MAX_RESULTS_PER_TRADER", EQ_BAZAAR_SEARCH_MAX_RESULTS_PER_TRADER);
     state->set("EQ_BAZAAR_SEARCH_LIST_INDEX_NULL", EQ_BAZAAR_SEARCH_LIST_INDEX_NULL);
 
     state->set("EQ_SPELL_ID_NULL", EQ_SPELL_ID_NULL);
+
+    state->set("EQ_SPELL_GEM_INDEX_NULL", EQ_SPELL_GEM_INDEX_NULL);
+
+    state->set("EQ_SPELL_GEM_ICON_NULL", EQ_SPELL_GEM_ICON_NULL);
+
+    state->set("EQ_SPELL_GEM_STATE_READY_TO_CAST", EQ_SPELL_GEM_STATE_READY_TO_CAST);
+    state->set("EQ_SPELL_GEM_STATE_CASTING", EQ_SPELL_GEM_STATE_CASTING);
+    state->set("EQ_SPELL_GEM_STATE_ABORTED", EQ_SPELL_GEM_STATE_ABORTED);
+    state->set("EQ_SPELL_GEM_STATE_NULL", EQ_SPELL_GEM_STATE_NULL);
 
     state->set("EQ_FOG_OFF", EQ_FOG_OFF);
     state->set("EQ_FOG_ON", EQ_FOG_ON);
@@ -352,6 +368,7 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set("EQ_UPDATE_ITEM_SLOT_SECONDARY", EQ_UPDATE_ITEM_SLOT_SECONDARY);
 
     state->set("EQ_GAME_STATE_IN_GAME", EQ_GAME_STATE_IN_GAME);
+    state->set("EQ_GAME_STATE_NULL", EQ_GAME_STATE_NULL);
 
     state->set("EQ_CXSTR_TEXT_MAX_LENGTH", EQ_CXSTR_TEXT_MAX_LENGTH);
 
@@ -371,6 +388,12 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set("EQ_SPAWN_TYPE_PLAYER", EQ_SPAWN_TYPE_PLAYER);
     state->set("EQ_SPAWN_TYPE_NPC", EQ_SPAWN_TYPE_NPC);
     state->set("EQ_SPAWN_TYPE_CORPSE", EQ_SPAWN_TYPE_CORPSE);
+    state->set("EQ_SPAWN_TYPE_UNKNOWN", EQ_SPAWN_TYPE_UNKNOWN);
+
+    state->set("EQ_SPAWN_ID_NULL", EQ_SPAWN_ID_NULL);
+
+    state->set("EQ_GENDER_MALE", EQ_GENDER_MALE);
+    state->set("EQ_GENDER_FEMALE", EQ_GENDER_FEMALE);
 
     state->set("EQ_GRAVITY_TYPE_GROUND", EQ_GRAVITY_TYPE_GROUND);
     state->set("EQ_GRAVITY_TYPE_FLYING", EQ_GRAVITY_TYPE_FLYING);
@@ -389,6 +412,41 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set("EQ_ACTOR_TYPE_TREE", EQ_ACTOR_TYPE_TREE);
     state->set("EQ_ACTOR_TYPE_WALL", EQ_ACTOR_TYPE_WALL);
     state->set("EQ_ACTOR_TYPE_PLACED_OBJECT", EQ_ACTOR_TYPE_PLACED_OBJECT);
+
+    state->set("EQ_XTARGET_TYPE_EMPTY_TARGET", EQ_XTARGET_TYPE_EMPTY_TARGET);
+    state->set("EQ_XTARGET_TYPE_AUTO_HATER", EQ_XTARGET_TYPE_AUTO_HATER);
+    state->set("EQ_XTARGET_TYPE_SPECIFIC_PC", EQ_XTARGET_TYPE_SPECIFIC_PC);
+    state->set("EQ_XTARGET_TYPE_SPECIFIC_NPC", EQ_XTARGET_TYPE_SPECIFIC_NPC);
+    state->set("EQ_XTARGET_TYPE_TARGETS_TARGET", EQ_XTARGET_TYPE_TARGETS_TARGET);
+    state->set("EQ_XTARGET_TYPE_GROUP_TANK", EQ_XTARGET_TYPE_GROUP_TANK);
+    state->set("EQ_XTARGET_TYPE_GROUP_TANKS_TARGET", EQ_XTARGET_TYPE_GROUP_TANKS_TARGET);
+    state->set("EQ_XTARGET_TYPE_GROUP_ASSIST", EQ_XTARGET_TYPE_GROUP_ASSIST);
+    state->set("EQ_XTARGET_TYPE_GROUP_ASSIST_TARGET", EQ_XTARGET_TYPE_GROUP_ASSIST_TARGET);
+    state->set("EQ_XTARGET_TYPE_PULLER", EQ_XTARGET_TYPE_PULLER);
+    state->set("EQ_XTARGET_TYPE_PULLERS_TARGET", EQ_XTARGET_TYPE_PULLERS_TARGET);
+    state->set("EQ_XTARGET_TYPE_GROUP_MARK_TARGET_1", EQ_XTARGET_TYPE_GROUP_MARK_TARGET_1);
+    state->set("EQ_XTARGET_TYPE_GROUP_MARK_TARGET_2", EQ_XTARGET_TYPE_GROUP_MARK_TARGET_2);
+    state->set("EQ_XTARGET_TYPE_GROUP_MARK_TARGET_3", EQ_XTARGET_TYPE_GROUP_MARK_TARGET_3);
+    state->set("EQ_XTARGET_TYPE_RAID_ASSIST_1", EQ_XTARGET_TYPE_RAID_ASSIST_1);
+    state->set("EQ_XTARGET_TYPE_RAID_ASSIST_2", EQ_XTARGET_TYPE_RAID_ASSIST_2);
+    state->set("EQ_XTARGET_TYPE_RAID_ASSIST_3", EQ_XTARGET_TYPE_RAID_ASSIST_3);
+    state->set("EQ_XTARGET_TYPE_RAID_ASSIST_1_TARGET", EQ_XTARGET_TYPE_RAID_ASSIST_1_TARGET);
+    state->set("EQ_XTARGET_TYPE_RAID_ASSIST_2_TARGET", EQ_XTARGET_TYPE_RAID_ASSIST_2_TARGET);
+    state->set("EQ_XTARGET_TYPE_RAID_ASSIST_3_TARGET", EQ_XTARGET_TYPE_RAID_ASSIST_3_TARGET);
+    state->set("EQ_XTARGET_TYPE_RAID_MARK_TARGET_1", EQ_XTARGET_TYPE_RAID_MARK_TARGET_1);
+    state->set("EQ_XTARGET_TYPE_RAID_MARK_TARGET_2", EQ_XTARGET_TYPE_RAID_MARK_TARGET_2);
+    state->set("EQ_XTARGET_TYPE_RAID_MARK_TARGET_3", EQ_XTARGET_TYPE_RAID_MARK_TARGET_3);
+    state->set("EQ_XTARGET_TYPE_MY_PET", EQ_XTARGET_TYPE_MY_PET);
+    state->set("EQ_XTARGET_TYPE_MY_PETS_TARGET", EQ_XTARGET_TYPE_MY_PETS_TARGET);
+    state->set("EQ_XTARGET_TYPE_MY_MERCENARY", EQ_XTARGET_TYPE_MY_MERCENARY);
+    state->set("EQ_XTARGET_TYPE_MY_MERCENARYS_TARGET", EQ_XTARGET_TYPE_MY_MERCENARYS_TARGET);
+    state->set("EQ_XTARGET_TYPE_NULL", EQ_XTARGET_TYPE_NULL);
+
+    state->set("EQ_XTARGET_STATUS_EMPTY", EQ_XTARGET_STATUS_EMPTY);
+    state->set("EQ_XTARGET_STATUS_CURRENT_ZONE", EQ_XTARGET_STATUS_CURRENT_ZONE);
+    state->set("EQ_XTARGET_STATUS_DIFFERENT_ZONE", EQ_XTARGET_STATUS_DIFFERENT_ZONE);
+    state->set("EQ_XTARGET_STATUS_UNKNOWN", EQ_XTARGET_STATUS_UNKNOWN);
+    state->set("EQ_XTARGET_STATUS_NULL", EQ_XTARGET_STATUS_NULL);
 
     state->set("EQ_GROUP_MEMBER_ROLES_FLAGS_MAIN_TANK", EQ_GROUP_MEMBER_ROLES_FLAGS_MAIN_TANK);
     state->set("EQ_GROUP_MEMBER_ROLES_FLAGS_MAIN_ASSIST", EQ_GROUP_MEMBER_ROLES_FLAGS_MAIN_ASSIST);
@@ -425,6 +483,15 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set("EQ_STANDING_STATE_DUCKING", EQ_STANDING_STATE_DUCKING);
     state->set("EQ_STANDING_STATE_FEIGN_DEATH", EQ_STANDING_STATE_FEIGN_DEATH);
     state->set("EQ_STANDING_STATE_DEAD", EQ_STANDING_STATE_DEAD);
+
+    state->set("EQ_CAMERA_TYPE_FIRST_PERSON", EQ_CAMERA_TYPE_FIRST_PERSON);
+    state->set("EQ_CAMERA_TYPE_OVERHEAD", EQ_CAMERA_TYPE_OVERHEAD);
+    state->set("EQ_CAMERA_TYPE_CHASE", EQ_CAMERA_TYPE_CHASE);
+    state->set("EQ_CAMERA_TYPE_USER1", EQ_CAMERA_TYPE_USER1);
+    state->set("EQ_CAMERA_TYPE_USER2", EQ_CAMERA_TYPE_USER2);
+    state->set("EQ_CAMERA_TYPE_TETHER", EQ_CAMERA_TYPE_TETHER);
+    state->set("EQ_CAMERA_TYPE_SCROLL", EQ_CAMERA_TYPE_SCROLL);
+    state->set("EQ_CAMERA_TYPE_FRONT", EQ_CAMERA_TYPE_FRONT);
 
     state->set("EQ_CAMERA_FIELD_OF_VIEW_DEFAULT", EQ_CAMERA_FIELD_OF_VIEW_DEFAULT);
     state->set("EQ_CAMERA_FIELD_OF_VIEW_DRUID_MASK", EQ_CAMERA_FIELD_OF_VIEW_DRUID_MASK);
@@ -503,7 +570,7 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set("EQ_DIRECTION_SOUTH_EAST", EQ_DIRECTION_SOUTH_EAST);
     state->set("EQ_DIRECTION_WEST", EQ_DIRECTION_WEST);
     state->set("EQ_DIRECTION_EAST", EQ_DIRECTION_EAST);
-    state->set("EQ_DIRECTION_UNKNOWN", EQ_DIRECTION_UNKNOWN);
+    state->set("EQ_DIRECTION_NULL", EQ_DIRECTION_NULL);
 
     state->set("EQ_RACE_UNKNOWN", EQ_RACE_UNKNOWN);
     state->set("EQ_RACE_HUMAN", EQ_RACE_HUMAN);
@@ -569,6 +636,13 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set("EQ_CLASS_REAL_ESTATE_MERCHANT", EQ_CLASS_REAL_ESTATE_MERCHANT);
     state->set("EQ_CLASS_LOYALTY_MERCHANT", EQ_CLASS_LOYALTY_MERCHANT);
     state->set("EQ_CLASS_TRIBUTE_MASTER", EQ_CLASS_TRIBUTE_MASTER);
+
+    state->set("EQ_CPlayerWnd_COMBAT_STATE_IN_COMBAT", EQ_COMBAT_STATE_IN_COMBAT);
+    state->set("EQ_CPlayerWnd_COMBAT_STATE_DEBUFF", EQ_COMBAT_STATE_DEBUFF);
+    state->set("EQ_CPlayerWnd_COMBAT_STATE_TIMER", EQ_COMBAT_STATE_TIMER);
+    state->set("EQ_CPlayerWnd_COMBAT_STATE_STANDING", EQ_COMBAT_STATE_STANDING);
+    state->set("EQ_CPlayerWnd_COMBAT_STATE_REGEN", EQ_COMBAT_STATE_REGEN);
+    state->set("EQ_CPlayerWnd_COMBAT_STATE_NULL", EQ_COMBAT_STATE_NULL);
 
     state->set("EQ_VK_ALT", EQ_VK_ALT);
     state->set("EQ_VK_LEFT_ALT", EQ_VK_LEFT_ALT);
@@ -1710,17 +1784,33 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_IsWithinDistance", EQ_IsWithinDistance);
 
     state->set_function("EQ_GetBearing", EQ_GetBearing);
-    state->set_function("EQ_RoundHeading", EQ_RoundHeadingEx);
-    state->set_function("EQ_FixHeading", EQ_FixHeadingEx);
-    state->set_function("EQ_FixPitch", EQ_FixPitchEx);
+    state->set_function("EQ_RoundHeading", EQ_RoundHeading);
+    state->set_function("EQ_FixHeading", EQ_FixHeading);
+    state->set_function("EQ_FixPitch", EQ_FixPitch);
     state->set_function("EQ_GetRadians", EQ_GetRadians);
+    state->set_function("EQ_GetDegrees", EQ_GetDegrees);
+
+    state->set_function("EQ_ApplyForwardMovement", EQ_ApplyForwardMovementAsTuple);
+    state->set_function("EQ_ApplyBackwardMovement", EQ_ApplyBackwardMovementAsTuple);
+    state->set_function("EQ_ApplyLeftwardMovement", EQ_ApplyLeftwardMovementAsTuple);
+    state->set_function("EQ_ApplyRightwardMovement", EQ_ApplyRightwardMovementAsTuple);
 
     state->set_function("EQ_IsPointInsideRectangle", EQ_IsPointInsideRectangle);
+
+    state->set_function("EQ_ColorARGB_Darken", EQ_ColorARGB_Darken);
+
+    state->set_function("EQ_GetLineSlope", EQ_GetLineSlope);
 
     state->set_function("EQ_GetGameState", EQ_GetGameState);
     state->set_function("EQ_IsInGame", EQ_IsInGame);
     state->set_function("EQ_IsSpellIDValid", EQ_IsSpellIDValid);
+    state->set_function("EQ_IsSpellIDMemorized", EQ_IsSpellIDMemorized);
+    state->set_function("EQ_IsSpellNameMemorized", EQ_IsSpellNameMemorized);
+    state->set_function("EQ_IsSpellGemIndexReadyToCast", EQ_IsSpellGemIndexReadyToCast);
+    state->set_function("EQ_IsSpellIDReadyToCast", EQ_IsSpellIDReadyToCast);
+    state->set_function("EQ_IsSpellNameReadyToCast", EQ_IsSpellNameReadyToCast);
     state->set_function("EQ_IsZoneIDSafe", EQ_IsZoneIDSafe);
+    state->set_function("EQ_GetWindow", EQ_GetWindow);
     state->set_function("EQ_GetTimer", EQ_GetTimer);
     state->set_function("EQ_GetCamera", EQ_GetCamera);
 
@@ -1749,15 +1839,26 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
 
     state->set_function("EQ_IsFogEnabled", EQ_IsFogEnabled);
     state->set_function("EQ_SetFog", EQ_SetFog);
+    state->set_function("EQ_GetFogDistanceBegin", EQ_GetFogDistanceBegin);
     state->set_function("EQ_GetFogDistanceEnd", EQ_GetFogDistanceEnd);
     state->set_function("EQ_SetFogDistanceBegin", EQ_SetFogDistanceBegin);
     state->set_function("EQ_SetFogDistanceEnd", EQ_SetFogDistanceEnd);
+
+    state->set_function("EQ_GetAuraManager", EQ_GetAuraManager);
+    state->set_function("EQ_GetNumAurasActive", EQ_GetNumAurasActive);
+    state->set_function("EQ_IsAuraNameActive", EQ_IsAuraNameActive);
+    state->set_function("EQ_PrintAuraNames", EQ_PrintAuraNames);
 
     state->set_function("EQ_GetSpellManager", EQ_GetSpellManager);
     state->set_function("EQ_GetSpellIDByName", EQ_GetSpellIDByName);
     state->set_function("EQ_GetSpellNameByID", EQ_GetSpellNameByID);
 
     state->set_function("EQ_GetPlayerCharacter", EQ_GetPlayerCharacter);
+    state->set_function("EQ_GetXTargetManager", EQ_GetXTargetManager);
+    state->set_function("EQ_GetXTargetType", EQ_GetXTargetType);
+    state->set_function("EQ_GetXTargetStatus", EQ_GetXTargetStatus);
+    state->set_function("EQ_GetXTargetSpawn", EQ_GetXTargetSpawn);
+    state->set_function("EQ_GetXTargetName", EQ_GetXTargetName);
     state->set_function("EQ_GetGroup", EQ_GetGroup);
     state->set_function("EQ_GetCI2", EQ_GetCI2);
     state->set_function("EQ_GetCharInfo2", EQ_GetCharInfo2);
@@ -1804,6 +1905,7 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_IsSpawnWithinDistanceOfLocation", EQ_IsSpawnWithinDistanceOfLocation);
     state->set_function("EQ_IsSpawnWithinDistanceOfSpawn", EQ_IsSpawnWithinDistanceOfSpawn);
 
+    state->set_function("EQ_CastRay", EQ_CastRay);
     state->set_function("EQ_CanSpawnCastRayToLocation", EQ_CanSpawnCastRayToLocation);
     state->set_function("EQ_CanSpawnCastRayToSpawn", EQ_CanSpawnCastRayToSpawn);
 
@@ -1818,9 +1920,14 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_IsSpawnFlying", EQ_IsSpawnFlying);
     state->set_function("EQ_IsSpawnLevitating", EQ_IsSpawnLevitating);
 
+    state->set_function("EQ_IsSpawnMoving", EQ_IsSpawnMoving);
+    state->set_function("EQ_IsPlayerMoving", EQ_IsPlayerMoving);
+    state->set_function("EQ_IsTargetMoving", EQ_IsTargetMoving);
+
     state->set_function("EQ_IsSpawnBehindSpawn", EQ_IsSpawnBehindSpawn);
     state->set_function("EQ_IsSpawnBehindSpawnEx", EQ_IsSpawnBehindSpawnEx);
     state->set_function("EQ_IsPlayerBehindTarget", EQ_IsPlayerBehindTarget);
+    state->set_function("EQ_IsTargetBehindPlayer", EQ_IsTargetBehindPlayer);
 
     state->set_function("EQ_IsSpawnClassTank", EQ_IsSpawnClassTank);
     state->set_function("EQ_IsSpawnClassPriest", EQ_IsSpawnClassPriest);
@@ -1861,8 +1968,10 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_GetSpawnMountRiderSpawn", EQ_GetSpawnMountRiderSpawn);
     state->set_function("EQ_GetSpawnZoneID", EQ_GetSpawnZoneID);
     state->set_function("EQ_GetSpawnLevel", EQ_GetSpawnLevel);
+    state->set_function("EQ_GetSpawnActorClient", EQ_GetSpawnActorClient);
     state->set_function("EQ_GetSpawnRace", EQ_GetSpawnRace);
     state->set_function("EQ_GetSpawnClass", EQ_GetSpawnClass);
+    state->set_function("EQ_GetSpawnGender", EQ_GetSpawnGender);
     state->set_function("EQ_GetSpawnStandingState", EQ_GetSpawnStandingState);
     state->set_function("EQ_GetSpawnHPCurrent", EQ_GetSpawnHPCurrent);
     state->set_function("EQ_GetSpawnHPMax", EQ_GetSpawnHPMax);
@@ -1876,6 +1985,9 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_GetSpawnFollowSpawn", EQ_GetSpawnFollowSpawn);
     state->set_function("EQ_GetSpawnGravityType", EQ_GetSpawnGravityType);
     state->set_function("EQ_GetSpawnDirection", EQ_GetSpawnDirection);
+    state->set_function("EQ_GetSpawnPetSpawnID", EQ_GetSpawnPetSpawnID);
+
+    state->set_function("EQ_SetSpawnNameColor", EQ_SetSpawnNameColor);
 
     state->set_function("EQ_SetSpawnAreaFriction", EQ_SetSpawnAreaFriction);
     state->set_function("EQ_SetSpawnAccelerationFriction", EQ_SetSpawnAccelerationFriction);
@@ -1899,6 +2011,7 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_SetSpawnItemSlotSecondary", EQ_SetSpawnItemSlotSecondary);
     state->set_function("EQ_SetSpawnItemSlotHead", EQ_SetSpawnItemSlotHead);
 
+    state->set_function("EQ_TurnCameraTowardsLocation", EQ_TurnCameraTowardsLocation);
     state->set_function("EQ_TurnSpawnTowardsLocation", EQ_TurnSpawnTowardsLocation);
     state->set_function("EQ_TurnSpawnAwayFromLocation", EQ_TurnSpawnAwayFromLocation);
     state->set_function("EQ_TurnSpawnTowardsSpawn", EQ_TurnSpawnTowardsSpawn);
@@ -1907,6 +2020,11 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_TurnPlayerAwayFromSpawn", EQ_TurnPlayerAwayFromSpawn);
     state->set_function("EQ_TurnPlayerTowardsTarget", EQ_TurnPlayerTowardsTarget);
     state->set_function("EQ_TurnPlayerAwayFromTarget", EQ_TurnPlayerAwayFromTarget);
+
+    state->set_function("EQ_LookCameraAtLocation", EQ_LookCameraAtLocation);
+    state->set_function("EQ_LookCameraAtTarget", EQ_LookCameraAtTarget);
+    state->set_function("EQ_LookPlayerAtLocation", EQ_LookPlayerAtLocation);
+    state->set_function("EQ_LookPlayerAtTarget", EQ_LookPlayerAtTarget);
 
     state->set_function("EQ_InterpretCommand", EQ_InterpretCommand);
     state->set_function("EQ_ExecuteCommand", EQ_ExecuteCommand);
@@ -1923,10 +2041,13 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_DrawLine3D", EQ_DrawLine3D);
     state->set_function("EQ_DrawRectangle", EQ_DrawRectangle);
 
+    state->set_function("EQ_GetCameraType", EQ_GetCameraType);
     state->set_function("EQ_GetCameraPitch", EQ_GetCameraPitch);
     state->set_function("EQ_GetCameraFieldOfView", EQ_GetCameraFieldOfView);
     state->set_function("EQ_GetCameraDrawDistance", EQ_GetCameraDrawDistance);
 
+    state->set_function("EQ_SetCameraType", EQ_SetCameraType);
+    state->set_function("EQ_SetCameraLocation", EQ_SetCameraLocation);
     state->set_function("EQ_SetCameraPitch", EQ_SetCameraPitch);
     state->set_function("EQ_SetCameraFieldOfView", EQ_SetCameraFieldOfView);
     state->set_function("EQ_SetCameraDrawDistance", EQ_SetCameraDrawDistance);
@@ -1938,11 +2059,15 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_PlaySound", EQ_PlaySound);
     state->set_function("EQ_StopSound", EQ_StopSound);
 
+    state->set_function("EQ_CenterView", EQ_CenterView);
+    state->set_function("EQ_LookUp", EQ_LookUp);
+    state->set_function("EQ_LookDown", EQ_LookDown);
     state->set_function("EQ_StopFollow", EQ_StopFollow);
     state->set_function("EQ_FollowTarget", EQ_FollowTarget);
     state->set_function("EQ_FollowSpawnByID", EQ_FollowSpawnByID);
     state->set_function("EQ_FollowSpawnByName", EQ_FollowSpawnByName);
     state->set_function("EQ_ClearTarget", EQ_ClearTarget);
+    state->set_function("EQ_TargetPet", EQ_TargetPet);
 
     state->set_function("EQ_GetSpawnTypeAsString", EQ_GetSpawnTypeAsString);
     state->set_function("EQ_GetStandingStateAsString", EQ_GetStandingStateAsString);
@@ -1974,6 +2099,7 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_BazaarConfirmationWindow_ClickToParcelsButton", EQ_BazaarConfirmationWindow_ClickToParcelsButton);
     state->set_function("EQ_BazaarConfirmationWindow_ClickCancelButton", EQ_BazaarConfirmationWindow_ClickCancelButton);
 
+    state->set_function("EQ_GetBazaarSearchWindow", EQ_GetBazaarSearchWindow);
     state->set_function("EQ_BazaarSearchWindow_IsOpen", EQ_BazaarSearchWindow_IsOpen);
     state->set_function("EQ_BazaarSearchWindow_DoQuery", EQ_BazaarSearchWindow_DoQuery);
     state->set_function("EQ_BazaarSearchWindow_GetListCount", EQ_BazaarSearchWindow_GetListCount);
@@ -1999,4 +2125,37 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_LargeDialogWindow_ClickNoButton", EQ_LargeDialogWindow_ClickNoButton);
     state->set_function("EQ_LargeDialogWindow_Open", EQ_LargeDialogWindow_Open);
     state->set_function("EQ_LargeDialogWindow_OpenWithTimer", EQ_LargeDialogWindow_OpenWithTimer);
+
+    state->set_function("EQ_GetPlayerWindow", EQ_GetPlayerWindow);
+    state->set_function("EQ_PlayerWindow_IsOpen", EQ_PlayerWindow_IsOpen);
+    state->set_function("EQ_PlayerWindow_GetCombatState", EQ_PlayerWindow_GetCombatState);
+
+    state->set_function("EQ_GetTargetWindow", EQ_GetTargetWindow);
+    state->set_function("EQ_TargetWindow_IsOpen", EQ_TargetWindow_IsOpen);
+    state->set_function("EQ_TargetWindow_FindBuffSpellID", EQ_TargetWindow_FindBuffSpellID);
+    state->set_function("EQ_TargetWindow_FindBuffSpellName", EQ_TargetWindow_FindBuffSpellName);
+
+    state->set_function("EQ_GetPetInfoWindow", EQ_GetPetInfoWindow);
+    state->set_function("EQ_PetInfoWindow_IsOpen", EQ_PetInfoWindow_IsOpen);
+    state->set_function("EQ_PetInfoWindow_GetSpawnID", EQ_PetInfoWindow_GetSpawnID);
+    state->set_function("EQ_PetInfoWindow_FindBuffSpellID", EQ_PetInfoWindow_FindBuffSpellID);
+    state->set_function("EQ_PetInfoWindow_FindBuffSpellName", EQ_PetInfoWindow_FindBuffSpellName);
+
+    state->set_function("EQ_GetLongBuffWindow", EQ_GetLongBuffWindow);
+    state->set_function("EQ_LongBuffWindow_IsOpen", EQ_LongBuffWindow_IsOpen);
+    state->set_function("EQ_GetShortBuffWindow", EQ_GetShortBuffWindow);
+    state->set_function("EQ_ShortBuffWindow_IsOpen", EQ_ShortBuffWindow_IsOpen);
+    state->set_function("EQ_BuffWindows_FindBuffSpellID", EQ_BuffWindows_FindBuffSpellID);
+    state->set_function("EQ_BuffWindows_FindBuffSpellName", EQ_BuffWindows_FindBuffSpellName);
+    state->set_function("EQ_BuffWindows_RemoveBuffSpellID", EQ_BuffWindows_RemoveBuffSpellID);
+    state->set_function("EQ_BuffWindows_RemoveBuffSpellName", EQ_BuffWindows_RemoveBuffSpellName);
+
+    state->set_function("EQ_GetCastSpellWindow", EQ_GetCastSpellWindow);
+    state->set_function("EQ_CastSpellWindow_IsOpen", EQ_CastSpellWindow_IsOpen);
+    state->set_function("EQ_CastSpellWindow_GetSpellGemStateByIndex", EQ_CastSpellWindow_GetSpellGemStateByIndex);
+    state->set_function("EQ_CastSpellWindow_GetSpellGemStateBySpellID", EQ_CastSpellWindow_GetSpellGemStateBySpellID);
+    state->set_function("EQ_CastSpellWindow_GetSpellGemStateBySpellName", EQ_CastSpellWindow_GetSpellGemStateBySpellName);
+
+    state->set_function("EQ_GetCastingWindow", EQ_GetCastingWindow);
+    state->set_function("EQ_CastingWindow_IsOpen", EQ_CastingWindow_IsOpen);
 }

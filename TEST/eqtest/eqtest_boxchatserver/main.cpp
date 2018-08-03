@@ -333,7 +333,7 @@ int main(int argc , char *argv[])
                                 bBroadcast = true;
                             }
 
-                            if (textTokens.at(0) == "//BCTC" || textTokens.at(0) == "//BoxChatTellChannel")
+                            if (textTokens.at(0) == "//BCTC" || textTokens.at(0) == "//BoxChatToChannel")
                             {
                                 bBCT  = false;
                                 bBCTC = true;

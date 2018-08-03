@@ -100,7 +100,7 @@ void EQAPP_FreeCamera_Execute()
 
         cameraHeading = cameraHeading + 128.0f;
 
-        EQ_FixHeading(cameraHeading);
+        cameraHeading = EQ_FixHeading(cameraHeading);
 
         float cameraHeadingRadians = EQ_GetRadians(cameraHeading);
 
@@ -143,7 +143,7 @@ void EQAPP_FreeCamera_Execute()
 
         cameraHeading = cameraHeading - 128.0f;
 
-        EQ_FixHeading(cameraHeading);
+        cameraHeading = EQ_FixHeading(cameraHeading);
 
         float cameraHeadingRadians = EQ_GetRadians(cameraHeading);
 
@@ -184,7 +184,7 @@ void EQAPP_FreeCamera_Execute()
             bIsLookingStraightUpOrDown = false;
         }
 
-        EQ_FixHeading(cameraHeading);
+        cameraHeading = EQ_FixHeading(cameraHeading);
 
         float cameraHeadingRadians = EQ_GetRadians(cameraHeading);
 
@@ -227,7 +227,7 @@ void EQAPP_FreeCamera_Execute()
 
         cameraHeading = cameraHeading + 256.0f;
 
-        EQ_FixHeading(cameraHeading);
+        cameraHeading = EQ_FixHeading(cameraHeading);
 
         float cameraHeadingRadians = EQ_GetRadians(cameraHeading);
 

@@ -76,19 +76,24 @@
 // ********************************************************************* //
 
 #define EQ_OFFSET_CPlayerWnd_COMBAT_STATE    offsetof(EQUIStructs::_CPLAYERWND, CombatState) // uint32_t
-
-#define EQ_CPlayerWnd_COMBAT_STATE_IN_COMBAT    0 // "A_PWCSInCombat"
-#define EQ_CPlayerWnd_COMBAT_STATE_DEBUFF       1 // "A_PWCSDebuff"
-#define EQ_CPlayerWnd_COMBAT_STATE_TIMER        2 // "A_PWCSTimer"
-#define EQ_CPlayerWnd_COMBAT_STATE_STANDING     3 // "A_PWCSStanding"
-#define EQ_CPlayerWnd_COMBAT_STATE_REGEN        4 // "A_PWCSRegen"
+// "A_PWCSInCombat"    "You are in combat and cannot rest currently."
+// "A_PWCSDebuff"      "You are weakened and cannot rest currently."
+// "A_PWCSTimer"       "You are recovering from combat and cannot rest currently."
+// "A_PWCSStanding"    "You are not in combat and may rest at any time."
+// "A_PWCSRegen"       "You are resting and recovering health, mana and endurance at an increased rate."
 
 #define EQ_OFFSET_CTargetWnd_BUFF_SPELL_IDS    offsetof(EQUIStructs::_CTARGETWND, BuffSpellID) // uint32_t[EQ_NUM_BUFF_SLOTS]
 #define EQ_OFFSET_CTargetWnd_BUFF_TIMERS       offsetof(EQUIStructs::_CTARGETWND, BuffTimer)   // uint32_t[EQ_NUM_BUFF_SLOTS]
 
+#define EQ_OFFSET_CPetInfoWindow_SPAWN_ID          offsetof(EQUIStructs::_EQPETINFOWINDOW, PetSpawnID)     // uint32_t
 #define EQ_OFFSET_CPetInfoWindow_BUFF_SPELL_IDS    offsetof(EQUIStructs::_EQPETINFOWINDOW, Buff)           // uint32_t[EQ_NUM_BUFF_SLOTS]
 #define EQ_OFFSET_CPetInfoWindow_BUFF_TIMERS       offsetof(EQUIStructs::_EQPETINFOWINDOW, PetBuffTimer)   // uint32_t[EQ_NUM_BUFF_SLOTS]
 
 #define EQ_OFFSET_CBuffWnd_BUFF_BUTTONS      offsetof(EQUIStructs::_EQBUFFWINDOW, pBuff)       // uint32_t pointer[EQ_NUM_BUFF_SLOTS]
 #define EQ_OFFSET_CBuffWnd_BUFF_SPELL_IDS    offsetof(EQUIStructs::_EQBUFFWINDOW, BuffId)      // uint32_t[EQ_NUM_BUFF_SLOTS]
 #define EQ_OFFSET_CBuffWnd_BUFF_TIMERS       offsetof(EQUIStructs::_EQBUFFWINDOW, BuffTimer)   // uint32_t[EQ_NUM_BUFF_SLOTS]
+
+#define EQ_OFFSET_CCastSpellWnd_SPELL_GEMS    offsetof(EQUIStructs::_EQCASTSPELLWINDOW, SpellSlots) // uint32_t pointer[EQ_NUM_SPELL_GEMS_IN_WINDOW]
+
+#define EQ_OFFSET_CSpellGemWnd_ICON     offsetof(EQUIStructs::_EQCASTSPELLGEM, spellicon)     // uint32_t
+#define EQ_OFFSET_CSpellGemWnd_STATE    offsetof(EQUIStructs::_EQCASTSPELLGEM, spellstate)    // uint32_t

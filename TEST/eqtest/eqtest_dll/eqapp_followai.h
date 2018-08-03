@@ -111,7 +111,7 @@ void EQAPP_FollowAI_Execute()
 
     if (bFollowBehind == true)
     {
-        EQ_ApplyVectorBackward(behindSpawnY, behindSpawnX, behindSpawnHeading, g_FollowAIDistanceBehind);
+        EQ_ApplyBackwardMovement(behindSpawnY, behindSpawnX, behindSpawnHeading, g_FollowAIDistanceBehind);
 
         bool bFollowSpawnCastRay = EQ_CanSpawnCastRayToLocation(playerSpawn, followSpawnY, followSpawnX, followSpawnZ);
 

@@ -49,39 +49,42 @@ float EQ_CalculateDistance3D(float y1, float x1, float z1, float y2, float x2, f
 bool EQ_IsWithinDistance(float y1, float x1, float y2, float x2, float distance);
 
 float EQ_GetBearing(float y1, float x1, float y2, float x2);
-void EQ_RoundHeading(float& heading);
-float EQ_RoundHeadingEx(float heading);
-void EQ_FixHeading(float& heading);
-float EQ_FixHeadingEx(float heading);
-void EQ_FixPitch(float& pitch);
-float EQ_FixPitchEx(float pitch);
+float EQ_RoundHeading(float heading);
+float EQ_FixHeading(float heading);
+float EQ_FixPitch(float pitch);
 float EQ_GetRadians(float degrees);
 float EQ_GetDegrees(float radians);
 
-void EQ_ApplyVectorForward(float& y, float& x, float heading, float distance);
-void EQ_ApplyVectorBackward(float& y, float& x, float heading, float distance);
-void EQ_ApplyVectorLeftward(float& y, float& x, float heading, float distance);
-void EQ_ApplyVectorRightward(float& y, float& x, float heading, float distance);
+void EQ_ApplyForwardMovement(float& y, float& x, float heading, float distance);
+void EQ_ApplyBackwardMovement(float& y, float& x, float heading, float distance);
+void EQ_ApplyLeftwardMovement(float& y, float& x, float heading, float distance);
+void EQ_ApplyRightwardMovement(float& y, float& x, float heading, float distance);
 
-std::tuple<float, float> EQ_ApplyVectorForwardAsTuple(float y, float x, float heading, float distance);
-std::tuple<float, float> EQ_ApplyVectorBackwardAsTuple(float y, float x, float heading, float distance);
-std::tuple<float, float> EQ_ApplyVectorLeftwardAsTuple(float y, float x, float heading, float distance);
-std::tuple<float, float> EQ_ApplyVectorRightwardAsTuple(float y, float x, float heading, float distance);
+std::tuple<float, float> EQ_ApplyForwardMovementAsTuple(float y, float x, float heading, float distance);
+std::tuple<float, float> EQ_ApplyBackwardMovementAsTuple(float y, float x, float heading, float distance);
+std::tuple<float, float> EQ_ApplyLeftwardMovementAsTuple(float y, float x, float heading, float distance);
+std::tuple<float, float> EQ_ApplyRightwardMovementAsTuple(float y, float x, float heading, float distance);
 
 bool EQ_IsPointInsideRectangle(int pointX, int pointY, int rectangleX, int rectangleY, int rectangleWidth, int rectangleHeight);
 uint32_t EQ_ColorARGB_Darken(uint32_t colorARGB, float percent);
 
-EQ::Vector2f EQ_GetLine2DMidpoint(float y1, float x1, float y2, float x2);
-EQ::Vector3f EQ_GetLine3DMidpoint3D(float y1, float x1, float z1, float y2, float x2, float z2);
+EQ::Vector2f EQ_Vector2f_GetMidpoint(float y1, float x1, float y2, float x2);
+EQ::Vector3f EQ_Vector3f_GetMidpoint(float y1, float x1, float z1, float y2, float x2, float z2);
 float EQ_GetLineSlope(float y1, float x1, float y2, float x2);
 
-float EQ_GetVector3DLength(float y, float x, float z);
-float EQ_GetVector3DDotProduct(float y1, float x1, float z1, float y2, float x2, float z2);
-EQ::Vector3f EQ_GetVector3DCrossProduct(float y1, float x1, float z1, float y2, float x2, float z2);
+float EQ_Vector3f_GetLengthSquared(float y, float x, float z);
+float EQ_Vector3f_GetLength(float y, float x, float z);
+float EQ_Vector3f_GetDotProduct(float y1, float x1, float z1, float y2, float x2, float z2);
+EQ::Vector3f EQ_Vector3f_GetCrossProduct(float y1, float x1, float z1, float y2, float x2, float z2);
 
 uint32_t EQ_GetGameState();
 bool EQ_IsInGame();
 bool EQ_IsSpellIDValid(uint32_t spellID);
+bool EQ_IsSpellIDMemorized(uint32_t spellID);
+bool EQ_IsSpellNameMemorized(const char* spellName);
+bool EQ_IsSpellGemIndexReadyToCast(uint32_t spellGemIndex);
+bool EQ_IsSpellIDReadyToCast(uint32_t spellID);
+bool EQ_IsSpellNameReadyToCast(const char* spellName);
 bool EQ_HasTimeElapsed(uint32_t& timer, uint32_t& timerInterval);
 bool EQ_IsZoneIDSafe(uint32_t zoneID);
 HWND EQ_GetWindow();
@@ -121,8 +124,9 @@ void EQ_SetFogDistanceBegin(float distance);
 void EQ_SetFogDistanceEnd(float distance);
 
 uint32_t EQ_GetAuraManager();
-uint32_t EQ_AuraManager_GetNumAuras();
-bool EQ_AuraManager_FindAuraName(const char* name);
+uint32_t EQ_GetNumAurasActive();
+bool EQ_IsAuraNameActive(const char* name);
+void EQ_PrintAuraNames();
 
 uint32_t EQ_GetSpellManager();
 uint32_t EQ_GetSpellIDByName(const char* spellName);
@@ -141,9 +145,9 @@ uint32_t EQ_GetMemorizedSpellID(uint32_t spellGemIndex);
 uint32_t EQ_GetSpellGemIndexBySpellID(uint32_t spellID);
 uint32_t EQ_GetSpellGemIndexBySpellName(const char* spellName);
 
-void EQ_CastSpellByGemIndex(uint32_t spellGemIndex);
-void EQ_CastSpellByName(const char* spellName);
-void EQ_CastSpellByID(uint32_t spellID);
+bool EQ_CastSpellByGemIndex(uint32_t spellGemIndex);
+bool EQ_CastSpellByName(const char* spellName);
+bool EQ_CastSpellByID(uint32_t spellID);
 
 uint32_t EQ_GetSpawnByID(uint32_t spawnID);
 uint32_t EQ_GetSpawnByName(const char* spawnName);
@@ -196,9 +200,14 @@ bool EQ_IsSpawnSwimmingUnderwater(uint32_t spawn);
 bool EQ_IsSpawnFlying(uint32_t spawn);
 bool EQ_IsSpawnLevitating(uint32_t spawn);
 
+bool EQ_IsSpawnMoving(uint32_t spawn);
+bool EQ_IsPlayerMoving();
+bool EQ_IsTargetMoving();
+
 bool EQ_IsSpawnBehindSpawn(uint32_t spawn1, uint32_t spawn2);
 bool EQ_IsSpawnBehindSpawnEx(uint32_t spawn1, uint32_t spawn2, float angle);
 bool EQ_IsPlayerBehindTarget();
+bool EQ_IsTargetBehindPlayer();
 
 bool EQ_IsSpawnClassTank(uint32_t spawn);
 bool EQ_IsSpawnClassPriest(uint32_t spawn);
@@ -256,6 +265,7 @@ uint32_t EQ_GetSpawnEndurancePercent(uint32_t spawn);
 uint32_t EQ_GetSpawnFollowSpawn(uint32_t spawn);
 uint32_t EQ_GetSpawnGravityType(uint32_t spawn);
 uint32_t EQ_GetSpawnDirection(uint32_t spawn);
+uint32_t EQ_GetSpawnPetSpawnID(uint32_t spawn);
 
 void EQ_SetSpawnNameColor(uint32_t spawn, uint32_t colorARGB);
 
@@ -339,6 +349,7 @@ void EQ_FollowTarget();
 void EQ_FollowSpawnByName(const char* spawnName);
 void EQ_FollowSpawnByID(uint32_t spawnID);
 void EQ_ClearTarget();
+void EQ_TargetPet();
 
 std::string EQ_StringMap_GetValueByKey(std::unordered_map<uint32_t, std::string>& stringMap, uint32_t key);
 uint32_t EQ_StringMap_GetKeyByValue(std::unordered_map<uint32_t, std::string>& stringMap, const std::string& value);
@@ -411,21 +422,37 @@ void EQ_LargeDialogWindow_Open(const char* titleText, const char* bodyText);
 void EQ_LargeDialogWindow_OpenWithTimer(const char* titleText, const char* bodyText, unsigned long closeTimer);
 
 uint32_t EQ_GetPlayerWindow();
+bool EQ_PlayerWindow_IsOpen();
 uint32_t EQ_PlayerWindow_GetCombatState();
 
 uint32_t EQ_GetTargetWindow();
+bool EQ_TargetWindow_IsOpen();
 bool EQ_TargetWindow_FindBuffSpellID(uint32_t spellID);
 bool EQ_TargetWindow_FindBuffSpellName(const char* spellName);
 
 uint32_t EQ_GetPetInfoWindow();
+bool EQ_PetInfoWindow_IsOpen();
+uint32_t EQ_PetInfoWindow_GetSpawnID();
 bool EQ_PetInfoWindow_FindBuffSpellID(uint32_t spellID);
 bool EQ_PetInfoWindow_FindBuffSpellName(const char* spellName);
 
 uint32_t EQ_GetLongBuffWindow();
+bool EQ_LongBuffWindow_IsOpen();
 uint32_t EQ_GetShortBuffWindow();
+bool EQ_ShortBuffWindow_IsOpen();
 bool EQ_BuffWindows_FindBuffSpellID(uint32_t spellID);
 bool EQ_BuffWindows_FindBuffSpellName(const char* spellName);
+bool EQ_BuffWindows_RemoveBuffSpellID(uint32_t spellID);
 bool EQ_BuffWindows_RemoveBuffSpellName(const char* spellName);
+
+uint32_t EQ_GetCastSpellWindow();
+bool EQ_CastSpellWindow_IsOpen();
+uint32_t EQ_CastSpellWindow_GetSpellGemStateByIndex(uint32_t index);
+uint32_t EQ_CastSpellWindow_GetSpellGemStateBySpellID(uint32_t spellID);
+uint32_t EQ_CastSpellWindow_GetSpellGemStateBySpellName(const char* spellName);
+
+uint32_t EQ_GetCastingWindow();
+bool EQ_CastingWindow_IsOpen();
 
 /* functions */
 
@@ -519,26 +546,19 @@ float EQ_GetBearing(float y1, float x1, float y2, float x2)
     return result;
 }
 
-void EQ_RoundHeading(float& heading)
+float EQ_RoundHeading(float heading)
 {
     if (heading == 0.0f)
     {
-        return;
+        return heading;
     }
 
     heading = std::roundf(heading / EQ_HEADING_MAX_QUARTER) * EQ_HEADING_MAX_QUARTER;
+
+    return heading;
 }
 
-float EQ_RoundHeadingEx(float heading)
-{
-    float result = heading;
-
-    EQ_RoundHeading(result);
-
-    return result;
-}
-
-void EQ_FixHeading(float& heading)
+float EQ_FixHeading(float heading)
 {
     if (heading < 0.0f)
     {
@@ -548,18 +568,11 @@ void EQ_FixHeading(float& heading)
     {
         heading = heading - EQ_HEADING_MAX;
     }
+
+    return heading;
 }
 
-float EQ_FixHeadingEx(float heading)
-{
-    float result = heading;
-
-    EQ_FixHeading(result);
-
-    return result;
-}
-
-void EQ_FixPitch(float& pitch)
+float EQ_FixPitch(float pitch)
 {
     if (pitch < EQ_SPAWN_PITCH_MIN)
     {
@@ -569,15 +582,8 @@ void EQ_FixPitch(float& pitch)
     {
         pitch = EQ_SPAWN_PITCH_MAX;
     }
-}
 
-float EQ_FixPitchEx(float pitch)
-{
-    float result = pitch;
-
-    EQ_FixPitch(result);
-
-    return result;
+    return pitch;
 }
 
 float EQ_GetRadians(float degrees)
@@ -600,11 +606,11 @@ float EQ_GetDegrees(float radians)
     return (radians * EQ_HEADING_MAX_HALF) / EQ_PI;
 }
 
-void EQ_ApplyVectorForward(float& y, float& x, float heading, float distance)
+void EQ_ApplyForwardMovement(float& y, float& x, float heading, float distance)
 {
     heading = heading + 128.0f;
 
-    EQ_FixHeading(heading);
+    heading = EQ_FixHeading(heading);
 
     float headingRadians = EQ_GetRadians(heading);
 
@@ -615,11 +621,11 @@ void EQ_ApplyVectorForward(float& y, float& x, float heading, float distance)
     x -= addX * distance;
 }
 
-void EQ_ApplyVectorBackward(float& y, float& x, float heading, float distance)
+void EQ_ApplyBackwardMovement(float& y, float& x, float heading, float distance)
 {
     heading = heading - 128.0f;
 
-    EQ_FixHeading(heading);
+    heading = EQ_FixHeading(heading);
 
     float headingRadians = EQ_GetRadians(heading);
 
@@ -630,11 +636,11 @@ void EQ_ApplyVectorBackward(float& y, float& x, float heading, float distance)
     x -= addX * distance;
 }
 
-void EQ_ApplyVectorLeftward(float& y, float& x, float heading, float distance)
+void EQ_ApplyLeftwardMovement(float& y, float& x, float heading, float distance)
 {
     //heading = heading + 0.0f;
 
-    EQ_FixHeading(heading);
+    heading = EQ_FixHeading(heading);
 
     float headingRadians = EQ_GetRadians(heading);
 
@@ -645,11 +651,11 @@ void EQ_ApplyVectorLeftward(float& y, float& x, float heading, float distance)
     x += addX * distance;
 }
 
-void EQ_ApplyVectorRightward(float& y, float& x, float heading, float distance)
+void EQ_ApplyRightwardMovement(float& y, float& x, float heading, float distance)
 {
     heading = heading + 256.0f;
 
-    EQ_FixHeading(heading);
+    heading = EQ_FixHeading(heading);
 
     float headingRadians = EQ_GetRadians(heading);
 
@@ -661,45 +667,45 @@ void EQ_ApplyVectorRightward(float& y, float& x, float heading, float distance)
 }
 
 // returns <newY, newX>
-std::tuple<float, float> EQ_ApplyVectorForwardAsTuple(float y, float x, float heading, float distance)
+std::tuple<float, float> EQ_ApplyForwardMovementAsTuple(float y, float x, float heading, float distance)
 {
     float resultY = y;
     float resultX = x;
 
-    EQ_ApplyVectorForward(resultY, resultX, heading, distance);
+    EQ_ApplyForwardMovement(resultY, resultX, heading, distance);
 
     return std::make_tuple(resultY, resultX);
 }
 
 // returns <newY, newX>
-std::tuple<float, float> EQ_ApplyVectorBackwardAsTuple(float y, float x, float heading, float distance)
+std::tuple<float, float> EQ_ApplyBackwardMovementAsTuple(float y, float x, float heading, float distance)
 {
     float resultY = y;
     float resultX = x;
 
-    EQ_ApplyVectorBackward(resultY, resultX, heading, distance);
+    EQ_ApplyBackwardMovement(resultY, resultX, heading, distance);
 
     return std::make_tuple(resultY, resultX);
 }
 
 // returns <newY, newX>
-std::tuple<float, float> EQ_ApplyVectorLeftwardAsTuple(float y, float x, float heading, float distance)
+std::tuple<float, float> EQ_ApplyLeftwardMovementAsTuple(float y, float x, float heading, float distance)
 {
     float resultY = y;
     float resultX = x;
 
-    EQ_ApplyVectorLeftward(resultY, resultX, heading, distance);
+    EQ_ApplyLeftwardMovement(resultY, resultX, heading, distance);
 
     return std::make_tuple(resultY, resultX);
 }
 
 // returns <newY, newX>
-std::tuple<float, float> EQ_ApplyVectorRightwardAsTuple(float y, float x, float heading, float distance)
+std::tuple<float, float> EQ_ApplyRightwardMovementAsTuple(float y, float x, float heading, float distance)
 {
     float resultY = y;
     float resultX = x;
 
-    EQ_ApplyVectorRightward(resultY, resultX, heading, distance);
+    EQ_ApplyRightwardMovement(resultY, resultX, heading, distance);
 
     return std::make_tuple(resultY, resultX);
 }
@@ -716,6 +722,13 @@ bool EQ_IsPointInsideRectangle(int pointX, int pointY, int rectangleX, int recta
 
 uint32_t EQ_ColorARGB_Darken(uint32_t colorARGB, float percent)
 {
+    if (percent == 0.0f)
+    {
+        return colorARGB;
+    }
+
+    percent = percent / 100.0f; // value between 0.0 and 1.0
+
     uint32_t alpha = (colorARGB >> 24) & 0xFF;
     uint32_t red   = (colorARGB >> 16) & 0xFF;
     uint32_t green = (colorARGB >> 8)  & 0xFF;
@@ -728,7 +741,7 @@ uint32_t EQ_ColorARGB_Darken(uint32_t colorARGB, float percent)
     return ((alpha << 24) + (red << 16) + (green << 8) + blue);
 }
 
-EQ::Vector2f EQ_GetLine2DMidpoint(float y1, float x1, float y2, float x2)
+EQ::Vector2f EQ_Vector2f_GetMidpoint(float y1, float x1, float y2, float x2)
 {
     EQ::Vector2f vector;
     vector.Y = (y1 + y2) * 0.5f;
@@ -737,7 +750,7 @@ EQ::Vector2f EQ_GetLine2DMidpoint(float y1, float x1, float y2, float x2)
     return vector;
 }
 
-EQ::Vector3f EQ_GetLine3DMidpoint3D(float y1, float x1, float z1, float y2, float x2, float z2)
+EQ::Vector3f EQ_Vector3f_GetMidpoint(float y1, float x1, float z1, float y2, float x2, float z2)
 {
     EQ::Vector3f vector;
     vector.X = (x1 + x2) * 0.5f;
@@ -752,17 +765,22 @@ float EQ_GetLineSlope(float y1, float x1, float y2, float x2)
     return (y2 - y1) / (x2 - x1);
 }
 
-float EQ_GetVector3DLength(float y, float x, float z)
+float EQ_Vector3f_GetLengthSquared(float y, float x, float z)
 {
-    return std::sqrtf((x * x) + (y * y) + (z * z));
+    return (x * x) + (y * y) + (z * z);
 }
 
-float EQ_GetVector3DDotProduct(float y1, float x1, float z1, float y2, float x2, float z2)
+float EQ_Vector3f_GetLength(float y, float x, float z)
+{
+    return std::sqrtf(EQ_Vector3f_GetLengthSquared(y, x, z));
+}
+
+float EQ_Vector3f_GetDotProduct(float y1, float x1, float z1, float y2, float x2, float z2)
 {
     return (x1 * x2) + (y1 * y2) + (z1 * z2);
 }
 
-EQ::Vector3f EQ_GetVector3DCrossProduct(float y1, float x1, float z1, float y2, float x2, float z2)
+EQ::Vector3f EQ_Vector3f_GetCrossProduct(float y1, float x1, float z1, float y2, float x2, float z2)
 {
     EQ::Vector3f vector;
     vector.X = (y1 * z2) - (y2 * z1);
@@ -777,7 +795,7 @@ uint32_t EQ_GetGameState()
     uint32_t everquest = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CEverQuest);
     if (everquest == NULL)
     {
-        return 0xFFFFFFFF;
+        return EQ_GAME_STATE_NULL;
     }
 
     return EQ_ReadMemory<uint32_t>(everquest + EQ_OFFSET_CEverQuest_GAME_STATE);
@@ -791,6 +809,57 @@ bool EQ_IsInGame()
 bool EQ_IsSpellIDValid(uint32_t spellID)
 {
     return spellID <= (EQ_NUM_SPELLS - 1);
+}
+
+bool EQ_IsSpellIDMemorized(uint32_t spellID)
+{
+    auto spellGemIndex = EQ_GetSpellGemIndexBySpellID(spellID);
+
+    return (spellGemIndex != EQ_SPELL_GEM_INDEX_NULL);
+}
+
+bool EQ_IsSpellNameMemorized(const char* spellName)
+{
+    auto spellID = EQ_GetSpellIDByName(spellName);
+    if (spellID == EQ_SPELL_ID_NULL)
+    {
+        return false;
+    }
+
+    return EQ_IsSpellIDMemorized(spellID);
+}
+
+bool EQ_IsSpellGemIndexReadyToCast(uint32_t spellGemIndex)
+{
+    auto spellGemState = EQ_CastSpellWindow_GetSpellGemStateByIndex(spellGemIndex);
+    if (spellGemState == EQ_SPELL_GEM_STATE_NULL)
+    {
+        return false;
+    }
+
+    return (spellGemState == EQ_SPELL_GEM_STATE_READY_TO_CAST);
+}
+
+bool EQ_IsSpellIDReadyToCast(uint32_t spellID)
+{
+    auto spellGemIndex = EQ_GetSpellGemIndexBySpellID(spellID);
+    if (spellGemIndex == EQ_SPELL_GEM_INDEX_NULL)
+    {
+        return false;
+    }
+
+    return EQ_IsSpellGemIndexReadyToCast(spellGemIndex);
+}
+
+bool EQ_IsSpellNameReadyToCast(const char* spellName)
+{
+    auto spellGemState = EQ_CastSpellWindow_GetSpellGemStateBySpellName(spellName);
+    if (spellGemState == EQ_SPELL_GEM_STATE_NULL)
+    {
+        return false;
+    }
+
+    return (spellGemState == EQ_SPELL_GEM_STATE_READY_TO_CAST);
 }
 
 bool EQ_HasTimeElapsed(uint32_t& timer, uint32_t& timerInterval)
@@ -1034,7 +1103,7 @@ uint32_t EQ_GetAuraManager()
     return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_AuraManager);
 }
 
-uint32_t EQ_AuraManager_GetNumAuras()
+uint32_t EQ_GetNumAurasActive()
 {
     auto auraManager = EQ_GetAuraManager();
     if (auraManager == NULL)
@@ -1045,7 +1114,7 @@ uint32_t EQ_AuraManager_GetNumAuras()
     return EQ_ReadMemory<uint32_t>(auraManager + EQ_OFFSET_AuraManager_NUM_AURAS);
 }
 
-bool EQ_AuraManager_FindAuraName(const char* name)
+bool EQ_IsAuraNameActive(const char* name)
 {
     auto auraManager = EQ_GetAuraManager();
     if (auraManager == NULL)
@@ -1053,8 +1122,8 @@ bool EQ_AuraManager_FindAuraName(const char* name)
         return false;
     }
 
-    auto numAuras = EQ_AuraManager_GetNumAuras();
-    if (numAuras == 0)
+    auto numAurasActive = EQ_GetNumAurasActive();
+    if (numAurasActive == 0)
     {
         return false;
     }
@@ -1065,16 +1134,18 @@ bool EQ_AuraManager_FindAuraName(const char* name)
         return false;
     }
 
-    for (unsigned int i = 0; i < numAuras; i++)
+    auto aura = EQ_ReadMemory<uint32_t>(auras + EQ_OFFSET_AURAS_Aura);
+    if (aura == NULL)
     {
-        auto aura = EQ_ReadMemory<uint32_t>(auras + EQ_OFFSET_AURAS_Aura + (i * 0x04));
-        if (aura == NULL)
-        {
-            continue;
-        }
+        return false;
+    }
+
+    for (unsigned int i = 0; i < EQ_NUM_AURAS; i++)
+    {
+        auto auraOffset = i * sizeof(EQData::_AURAINFO);
 
         char auraName[EQ_SIZE_AURA_NAME];
-        std::memmove(auraName, (LPVOID)(aura + EQ_OFFSET_AURA_NAME), sizeof(auraName));
+        std::memmove(auraName, (LPVOID)(aura + auraOffset + EQ_OFFSET_AURA_NAME), sizeof(auraName));
 
         if (strcmp(auraName, name) == 0)
         {
@@ -1083,6 +1154,45 @@ bool EQ_AuraManager_FindAuraName(const char* name)
     }
 
     return false;
+}
+
+void EQ_PrintAuraNames()
+{
+    auto auraManager = EQ_GetAuraManager();
+    if (auraManager == NULL)
+    {
+        return;
+    }
+
+    auto numAurasActive = EQ_GetNumAurasActive();
+    if (numAurasActive == 0)
+    {
+        return;
+    }
+
+    auto auras = EQ_ReadMemory<uint32_t>(auraManager + EQ_OFFSET_AuraManager_AURAS);
+    if (auras == NULL)
+    {
+        return;
+    }
+
+    auto aura = EQ_ReadMemory<uint32_t>(auras + EQ_OFFSET_AURAS_Aura);
+    if (aura == NULL)
+    {
+        return;
+    }
+
+    std::cout << "Aura Names: " << std::endl;
+
+    for (unsigned int i = 0; i < EQ_NUM_AURAS; i++)
+    {
+        auto auraOffset = i * sizeof(EQData::_AURAINFO);
+
+        char auraName[EQ_SIZE_AURA_NAME];
+        std::memmove(auraName, (LPVOID)(aura + auraOffset + EQ_OFFSET_AURA_NAME), sizeof(auraName));
+
+        std::cout << auraName << std::endl;
+    }
 }
 
 uint32_t EQ_GetSpellManager()
@@ -1109,7 +1219,7 @@ uint32_t EQ_GetSpellIDByName(const char* spellName)
         char spellManagerSpellName[EQ_SIZE_SPELL_NAME];
         std::memmove(spellManagerSpellName, (LPVOID)(spell + EQ_OFFSET_SPELL_NAME), sizeof(spellManagerSpellName));
 
-        if (strcmp(spellName, spellManagerSpellName) == 0)
+        if (strcmp(spellManagerSpellName, spellName) == 0)
         {
             auto spellManagerSpellID = EQ_ReadMemory<uint32_t>(spell + EQ_OFFSET_SPELL_ID);
 
@@ -1167,16 +1277,21 @@ uint32_t EQ_GetXTargetManager()
 
 uint32_t EQ_GetXTargetType(uint32_t index)
 {
+    if (index > (EQ_NUM_XTARGETS - 1))
+    {
+        return EQ_XTARGET_TYPE_NULL;
+    }
+
     auto xTargetManager = EQ_GetXTargetManager();
     if (xTargetManager == NULL)
     {
-        return NULL;
+        return EQ_XTARGET_TYPE_NULL;
     }
 
     auto xTargets = EQ_ReadMemory<uint32_t>(xTargetManager + EQ_OFFSET_XTargetManager_XTARGETS);
     if (xTargets == NULL)
     {
-        return NULL;
+        return EQ_XTARGET_TYPE_NULL;
     }
 
     auto xTargetType = EQ_ReadMemory<uint32_t>(xTargets + (index * sizeof(_XTARGETSLOT)) + EQ_OFFSET_XTARGET_TYPE);
@@ -1186,16 +1301,21 @@ uint32_t EQ_GetXTargetType(uint32_t index)
 
 uint32_t EQ_GetXTargetStatus(uint32_t index)
 {
+    if (index > (EQ_NUM_XTARGETS - 1))
+    {
+        return EQ_XTARGET_STATUS_NULL;
+    }
+
     auto xTargetManager = EQ_GetXTargetManager();
     if (xTargetManager == NULL)
     {
-        return NULL;
+        return EQ_XTARGET_STATUS_NULL;
     }
 
     auto xTargets = EQ_ReadMemory<uint32_t>(xTargetManager + EQ_OFFSET_XTargetManager_XTARGETS);
     if (xTargets == NULL)
     {
-        return NULL;
+        return EQ_XTARGET_STATUS_NULL;
     }
 
     auto xTargetStatus = EQ_ReadMemory<uint32_t>(xTargets + (index * sizeof(_XTARGETSLOT)) + EQ_OFFSET_XTARGET_STATUS);
@@ -1205,6 +1325,11 @@ uint32_t EQ_GetXTargetStatus(uint32_t index)
 
 uint32_t EQ_GetXTargetSpawn(uint32_t index)
 {
+    if (index > (EQ_NUM_XTARGETS - 1))
+    {
+        return NULL;
+    }
+
     auto xTargetManager = EQ_GetXTargetManager();
     if (xTargetManager == NULL)
     {
@@ -1226,16 +1351,21 @@ uint32_t EQ_GetXTargetSpawn(uint32_t index)
 
 std::string EQ_GetXTargetName(uint32_t index)
 {
+    if (index > (EQ_NUM_XTARGETS - 1))
+    {
+        return std::string();
+    }
+
     auto xTargetManager = EQ_GetXTargetManager();
     if (xTargetManager == NULL)
     {
-        return NULL;
+        return std::string();
     }
 
     auto xTargets = EQ_ReadMemory<uint32_t>(xTargetManager + EQ_OFFSET_XTargetManager_XTARGETS);
     if (xTargets == NULL)
     {
-        return NULL;
+        return std::string();
     }
 
     char xTargetName[EQ_SIZE_XTARGET_NAME];
@@ -1279,7 +1409,7 @@ uint32_t EQ_GetCharInfo2()
 
 uint32_t EQ_GetMemorizedSpellID(uint32_t spellGemIndex)
 {
-    if (spellGemIndex > EQ_NUM_SPELL_GEMS)
+    if (spellGemIndex > (EQ_NUM_SPELL_GEMS - 1))
     {
         return EQ_SPELL_ID_NULL;
     }
@@ -1302,7 +1432,7 @@ uint32_t EQ_GetSpellGemIndexBySpellID(uint32_t spellID)
             auto memorizedSpellID = EQ_GetMemorizedSpellID(i);
             if (memorizedSpellID == spellID)
             {
-                return i + 1;
+                return i;
             }
         }
     }
@@ -1313,55 +1443,67 @@ uint32_t EQ_GetSpellGemIndexBySpellID(uint32_t spellID)
 uint32_t EQ_GetSpellGemIndexBySpellName(const char* spellName)
 {
     auto spellID = EQ_GetSpellIDByName(spellName);
-    if (spellID != EQ_SPELL_ID_NULL)
+    if (spellID == EQ_SPELL_ID_NULL)
     {
-        return EQ_GetSpellGemIndexBySpellID(spellID);
+        EQ_SPELL_GEM_INDEX_NULL;
+        
     }
 
-    return EQ_SPELL_GEM_INDEX_NULL;
+    return EQ_GetSpellGemIndexBySpellID(spellID);
 }
 
-void EQ_CastSpellByGemIndex(uint32_t spellGemIndex)
+bool EQ_CastSpellByGemIndex(uint32_t spellGemIndex)
 {
+    if (spellGemIndex > (EQ_NUM_SPELL_GEMS - 1))
+    {
+        return false;
+    }
+
+    if (EQ_IsSpellGemIndexReadyToCast(spellGemIndex) == false)
+    {
+        return false;
+    }
+
+    std::stringstream ss;
+    ss << "/cast " << spellGemIndex + 1;
+
+    // cast the spell multiple times in case of fizzles
+    for (unsigned int i = 0; i < 4; i++)
+    {
+        EQ_InterpretCommand(ss.str().c_str());
+    }
+
+    return true;
+}
+
+bool EQ_CastSpellByID(uint32_t spellID)
+{
+    if (EQ_IsSpellIDReadyToCast(spellID) == false)
+    {
+        return false;
+    }
+
+    auto spellGemIndex = EQ_GetSpellGemIndexBySpellID(spellID);
     if (spellGemIndex == EQ_SPELL_GEM_INDEX_NULL)
     {
-        return;
+        return false;
     }
 
-    if (spellGemIndex > 0 && spellGemIndex < (EQ_NUM_SPELL_GEMS + 1))
-    {
-        std::stringstream ss;
-        ss << "/cast " << spellGemIndex;
-
-        // cast the spell multiple times in case of fizzles
-        for (unsigned int i = 0; i < 4; i++)
-        {
-            EQ_InterpretCommand(ss.str().c_str());
-        }
-    }
+    return EQ_CastSpellByGemIndex(spellGemIndex);
 }
 
-void EQ_CastSpellByID(uint32_t spellID)
+bool EQ_CastSpellByName(const char* spellName)
 {
-    uint32_t spellGemIndex = EQ_GetSpellGemIndexBySpellID(spellID);
-
-    if (spellGemIndex != EQ_SPELL_GEM_INDEX_NULL)
+    if (EQ_IsSpellNameReadyToCast(spellName) == false)
     {
-        EQ_CastSpellByGemIndex(spellGemIndex);
+        return false;
     }
-    else
-    {
-        std::cout << "Cannot find spell ID to cast: " << spellID << std::endl;
-    }
-}
 
-void EQ_CastSpellByName(const char* spellName)
-{
     uint32_t spellGemIndex = EQ_SPELL_GEM_INDEX_NULL;
 
-    std::string spellNameRank1 = spellName;
-    std::string spellNameRank2 = spellNameRank1 + " Rk. II";
-    std::string spellNameRank3 = spellNameRank1 + " Rk. III";
+    std::string spellNameStr = spellName;
+    std::string spellNameRank2 = spellNameStr + " Rk. II";
+    std::string spellNameRank3 = spellNameStr + " Rk. III";
 
     spellGemIndex = EQ_GetSpellGemIndexBySpellName(spellNameRank3.c_str());
     if (spellGemIndex == EQ_SPELL_GEM_INDEX_NULL)
@@ -1369,18 +1511,16 @@ void EQ_CastSpellByName(const char* spellName)
         spellGemIndex = EQ_GetSpellGemIndexBySpellName(spellNameRank2.c_str());
         if (spellGemIndex == EQ_SPELL_GEM_INDEX_NULL)
         {
-            spellGemIndex = EQ_GetSpellGemIndexBySpellName(spellNameRank1.c_str());
+            spellGemIndex = EQ_GetSpellGemIndexBySpellName(spellNameStr.c_str());
         }
     }
 
-    if (spellGemIndex != EQ_SPELL_GEM_INDEX_NULL)
+    if (spellGemIndex == EQ_SPELL_GEM_INDEX_NULL)
     {
-        EQ_CastSpellByGemIndex(spellGemIndex);
+        return false;
     }
-    else
-    {
-        std::cout << "Cannot find spell to cast: " << spellName << std::endl;
-    }
+
+    return EQ_CastSpellByGemIndex(spellGemIndex);
 }
 
 uint32_t EQ_GetSpawnByID(uint32_t spawnID)
@@ -1861,6 +2001,35 @@ bool EQ_IsSpawnLevitating(uint32_t spawn)
     return EQ_GetSpawnGravityType(spawn) == EQ_GRAVITY_TYPE_LEVITATING;
 }
 
+bool EQ_IsSpawnMoving(uint32_t spawn)
+{
+    auto spawnMovementSpeed = EQ_GetSpawnMovementSpeed(spawn);
+
+    return (spawnMovementSpeed != 0.0f);
+}
+
+bool EQ_IsPlayerMoving()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return false;
+    }
+
+    return EQ_IsSpawnMoving(playerSpawn);
+}
+
+bool EQ_IsTargetMoving()
+{
+    auto targetSpawn = EQ_GetTargetSpawn();
+    if (targetSpawn == NULL)
+    {
+        return false;
+    }
+
+    return EQ_IsSpawnMoving(targetSpawn);
+}
+
 bool EQ_IsSpawnBehindSpawn(uint32_t spawn1, uint32_t spawn2)
 {
     // use 512 / 8 = 64 for tighter angle
@@ -1891,6 +2060,28 @@ bool EQ_IsSpawnBehindSpawnEx(uint32_t spawn1, uint32_t spawn2, float angle)
 
 bool EQ_IsPlayerBehindTarget()
 {
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return false;
+    }
+
+    auto targetSpawn = EQ_GetTargetSpawn();
+    if (targetSpawn == NULL)
+    {
+        return false;
+    }
+
+    if (EQ_IsSpawnBehindSpawnEx(playerSpawn, targetSpawn, 64.0f) == true)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool EQ_IsTargetBehindPlayer()
+{
     auto targetSpawn = EQ_GetTargetSpawn();
     if (targetSpawn == NULL)
     {
@@ -1903,7 +2094,7 @@ bool EQ_IsPlayerBehindTarget()
         return false;
     }
 
-    if (EQ_IsSpawnBehindSpawnEx(playerSpawn, targetSpawn, 64.0f) == true)
+    if (EQ_IsSpawnBehindSpawnEx(targetSpawn, playerSpawn, 64.0f) == true)
     {
         return true;
     }
@@ -2333,7 +2524,7 @@ uint32_t EQ_GetSpawnDirection(uint32_t spawn)
 
     uint32_t spawnHeadingInt = (uint32_t)spawnHeading;
 
-    uint32_t direction = EQ_DIRECTION_UNKNOWN;
+    uint32_t direction = EQ_DIRECTION_NULL;
 
     if (spawnHeading == EQ_HEADING_NORTH)
     {
@@ -2410,6 +2601,11 @@ uint32_t EQ_GetSpawnDirection(uint32_t spawn)
     return direction;
 }
 
+uint32_t EQ_GetSpawnPetSpawnID(uint32_t spawn)
+{
+    return EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_PET_SPAWN_ID);
+}
+
 void EQ_SetSpawnNameColor(uint32_t spawn, uint32_t colorARGB)
 {
     if (spawn == NULL)
@@ -2423,18 +2619,18 @@ void EQ_SetSpawnNameColor(uint32_t spawn, uint32_t colorARGB)
         return;
     }
 
-    auto spawnActorEx = ((EQData::ActorClient*)spawnActorClient)->pcactorex;
-    if (spawnActorEx == NULL)
+    auto spawnCActorEx = ((EQData::ActorClient*)spawnActorClient)->pcactorex;
+    if (spawnCActorEx == NULL)
     {
         return;
     }
             
-    if (((EQClass::CActorEx*)spawnActorEx)->CanSetName(0) == false)
+    if (((EQClass::CActorEx*)spawnCActorEx)->CanSetName(0) == false)
     {
         return;
     }
 
-    ((EQClass::CActorEx*)spawnActorEx)->SetNameColor(colorARGB);
+    ((EQClass::CActorEx*)spawnCActorEx)->SetNameColor(colorARGB);
 }
 
 void EQ_SetSpawnAreaFriction(uint32_t spawn, float friction)
@@ -3321,6 +3517,19 @@ void EQ_ClearTarget()
     EQ_SetTargetSpawn(NULL);
 }
 
+void EQ_TargetPet()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    auto petSpawnID = EQ_GetSpawnPetSpawnID(playerSpawn);
+
+    EQ_SetTargetSpawnByID(petSpawnID);
+}
+
 std::string EQ_StringMap_GetValueByKey(std::unordered_map<uint32_t, std::string>& stringMap, uint32_t key)
 {
     auto it = stringMap.find(key);
@@ -4176,10 +4385,10 @@ void EQ_LargeDialogWindow_OpenWithTimer(const char* titleText, const char* bodyT
 {
     if (EQ_LargeDialogWindow_IsOpen() == false)
     {
-        EQClass::CXStr bodyText("body text");
-        EQClass::CXStr titleText("title text");
+        EQClass::CXStr bodyTextCXStr(bodyText);
+        EQClass::CXStr titleTextCXStr(titleText);
 
-        EQ_CLASS_POINTER_CLargeDialogWnd->Open(false, bodyText, closeTimer, titleText, false, NULL, NULL);
+        EQ_CLASS_POINTER_CLargeDialogWnd->Open(false, bodyTextCXStr, closeTimer, titleTextCXStr, false, NULL, NULL);
     }
 }
 
@@ -4188,12 +4397,17 @@ uint32_t EQ_GetPlayerWindow()
     return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CPlayerWnd);
 }
 
+bool EQ_PlayerWindow_IsOpen()
+{
+    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CPlayerWnd) == true);
+}
+
 uint32_t EQ_PlayerWindow_GetCombatState()
 {
     auto playerWindow = EQ_GetPlayerWindow();
     if (playerWindow == NULL)
     {
-        return 0xFFFFFFFF;
+        return EQ_COMBAT_STATE_NULL;
     }
 
     return EQ_ReadMemory<uint32_t>(playerWindow + EQ_OFFSET_CPlayerWnd_COMBAT_STATE);
@@ -4202,6 +4416,11 @@ uint32_t EQ_PlayerWindow_GetCombatState()
 uint32_t EQ_GetTargetWindow()
 {
     return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CTargetWnd);
+}
+
+bool EQ_TargetWindow_IsOpen()
+{
+    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CTargetWnd) == true);
 }
 
 bool EQ_TargetWindow_FindBuffSpellID(uint32_t spellID)
@@ -4231,18 +4450,40 @@ bool EQ_TargetWindow_FindBuffSpellID(uint32_t spellID)
 
 bool EQ_TargetWindow_FindBuffSpellName(const char* spellName)
 {
-    auto spellID = EQ_GetSpellIDByName(spellName);
-    if (spellID == EQ_SPELL_ID_NULL)
-    {
-        return false;
-    }
+    std::string spellNameStr = spellName;
+    std::string spellNameRank2 = spellNameStr + " Rk. II";
+    std::string spellNameRank3 = spellNameStr + " Rk. III";
 
-    return (EQ_TargetWindow_FindBuffSpellID(spellID) == true);
+    auto spellID      = EQ_GetSpellIDByName(spellName);
+    auto spellIDRank2 = EQ_GetSpellIDByName(spellNameRank2.c_str());
+    auto spellIDRank3 = EQ_GetSpellIDByName(spellNameRank3.c_str());
+
+    bool result =      EQ_TargetWindow_FindBuffSpellID(spellID);
+    bool resultRank2 = EQ_TargetWindow_FindBuffSpellID(spellIDRank2);
+    bool resultRank3 = EQ_TargetWindow_FindBuffSpellID(spellIDRank3);
+
+    return (result == true || resultRank2 == true || resultRank3 == true);
 }
 
 uint32_t EQ_GetPetInfoWindow()
 {
     return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CPetInfoWindow);
+}
+
+bool EQ_PetInfoWindow_IsOpen()
+{
+    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CPetInfoWindow) == true);
+}
+
+uint32_t EQ_PetInfoWindow_GetSpawnID()
+{
+    auto petInfoWindow = EQ_GetPetInfoWindow();
+    if (petInfoWindow == NULL)
+    {
+        return EQ_SPAWN_ID_NULL;
+    }
+
+    return EQ_ReadMemory<uint32_t>(petInfoWindow + EQ_OFFSET_CPetInfoWindow_SPAWN_ID);
 }
 
 bool EQ_PetInfoWindow_FindBuffSpellID(uint32_t spellID)
@@ -4272,13 +4513,19 @@ bool EQ_PetInfoWindow_FindBuffSpellID(uint32_t spellID)
 
 bool EQ_PetInfoWindow_FindBuffSpellName(const char* spellName)
 {
-    auto spellID = EQ_GetSpellIDByName(spellName);
-    if (spellID == EQ_SPELL_ID_NULL)
-    {
-        return false;
-    }
+    std::string spellNameStr = spellName;
+    std::string spellNameRank2 = spellNameStr + " Rk. II";
+    std::string spellNameRank3 = spellNameStr + " Rk. III";
 
-    return (EQ_PetInfoWindow_FindBuffSpellID(spellID) == true);
+    auto spellID      = EQ_GetSpellIDByName(spellName);
+    auto spellIDRank2 = EQ_GetSpellIDByName(spellNameRank2.c_str());
+    auto spellIDRank3 = EQ_GetSpellIDByName(spellNameRank3.c_str());
+
+    bool result =      EQ_PetInfoWindow_FindBuffSpellID(spellID);
+    bool resultRank2 = EQ_PetInfoWindow_FindBuffSpellID(spellIDRank2);
+    bool resultRank3 = EQ_PetInfoWindow_FindBuffSpellID(spellIDRank3);
+
+    return (result == true || resultRank2 == true || resultRank3 == true);
 }
 
 uint32_t EQ_GetLongBuffWindow()
@@ -4286,9 +4533,19 @@ uint32_t EQ_GetLongBuffWindow()
     return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBuffWnd_Long);
 }
 
+bool EQ_LongBuffWindow_IsOpen()
+{
+    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CBuffWnd_Long) == true);
+}
+
 uint32_t EQ_GetShortBuffWindow()
 {
     return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBuffWnd_Short);
+}
+
+bool EQ_ShortBuffWindow_IsOpen()
+{
+    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CBuffWnd_Short) == true);
 }
 
 bool EQ_BuffWindows_FindBuffSpellID(uint32_t spellID)
@@ -4338,23 +4595,23 @@ bool EQ_BuffWindows_FindBuffSpellID(uint32_t spellID)
 
 bool EQ_BuffWindows_FindBuffSpellName(const char* spellName)
 {
-    auto spellID = EQ_GetSpellIDByName(spellName);
-    if (spellID == EQ_SPELL_ID_NULL)
-    {
-        return false;
-    }
+    std::string spellNameStr = spellName;
+    std::string spellNameRank2 = spellNameStr + " Rk. II";
+    std::string spellNameRank3 = spellNameStr + " Rk. III";
 
-    return (EQ_BuffWindows_FindBuffSpellID(spellID) == true);
+    auto spellID      = EQ_GetSpellIDByName(spellName);
+    auto spellIDRank2 = EQ_GetSpellIDByName(spellNameRank2.c_str());
+    auto spellIDRank3 = EQ_GetSpellIDByName(spellNameRank3.c_str());
+
+    bool result =      EQ_BuffWindows_FindBuffSpellID(spellID);
+    bool resultRank2 = EQ_BuffWindows_FindBuffSpellID(spellIDRank2);
+    bool resultRank3 = EQ_BuffWindows_FindBuffSpellID(spellIDRank3);
+
+    return (result == true || resultRank2 == true || resultRank3 == true);
 }
 
-bool EQ_BuffWindows_RemoveBuffSpellName(const char* spellName)
+bool EQ_BuffWindows_RemoveBuffSpellID(uint32_t spellID)
 {
-    auto spellID = EQ_GetSpellIDByName(spellName);
-    if (spellID == EQ_SPELL_ID_NULL)
-    {
-        return false;
-    }
-
     auto longBuffWindow = EQ_GetLongBuffWindow();
     if (longBuffWindow == NULL)
     {
@@ -4404,4 +4661,84 @@ bool EQ_BuffWindows_RemoveBuffSpellName(const char* spellName)
     }
 
     return false;
+}
+
+bool EQ_BuffWindows_RemoveBuffSpellName(const char* spellName)
+{
+    std::string spellNameStr = spellName;
+    std::string spellNameRank2 = spellNameStr + " Rk. II";
+    std::string spellNameRank3 = spellNameStr + " Rk. III";
+
+    auto spellID      = EQ_GetSpellIDByName(spellName);
+    auto spellIDRank2 = EQ_GetSpellIDByName(spellNameRank2.c_str());
+    auto spellIDRank3 = EQ_GetSpellIDByName(spellNameRank3.c_str());
+
+    bool result =      EQ_BuffWindows_RemoveBuffSpellID(spellID);
+    bool resultRank2 = EQ_BuffWindows_RemoveBuffSpellID(spellIDRank2);
+    bool resultRank3 = EQ_BuffWindows_RemoveBuffSpellID(spellIDRank3);
+
+    return (result == true || resultRank2 == true || resultRank3 == true);
+}
+
+uint32_t EQ_GetCastSpellWindow()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CCastSpellWnd);
+}
+
+bool EQ_CastSpellWindow_IsOpen()
+{
+    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CCastSpellWnd) == true);
+}
+
+uint32_t EQ_CastSpellWindow_GetSpellGemStateByIndex(uint32_t index)
+{
+    auto castSpellWindow = EQ_GetCastSpellWindow();
+    if (castSpellWindow == NULL)
+    {
+        return EQ_SPELL_GEM_STATE_NULL;
+    }
+
+    auto spellGemWindow = EQ_ReadMemory<uint32_t>(castSpellWindow + EQ_OFFSET_CCastSpellWnd_SPELL_GEMS + (index * 0x04));
+    if (spellGemWindow == NULL)
+    {
+        return EQ_SPELL_GEM_STATE_NULL;
+    }
+
+    auto spellGemState = EQ_ReadMemory<uint32_t>(spellGemWindow + EQ_OFFSET_CSpellGemWnd_STATE);
+
+    return spellGemState;
+}
+
+uint32_t EQ_CastSpellWindow_GetSpellGemStateBySpellID(uint32_t spellID)
+{
+    auto spellGemIndex = EQ_GetSpellGemIndexBySpellID(spellID);
+    if (spellGemIndex == EQ_SPELL_GEM_INDEX_NULL)
+    {
+        return EQ_SPELL_GEM_STATE_NULL;
+    }
+
+    auto spellGemState = EQ_CastSpellWindow_GetSpellGemStateByIndex(spellGemIndex);
+
+    return spellGemState;
+}
+
+uint32_t EQ_CastSpellWindow_GetSpellGemStateBySpellName(const char* spellName)
+{
+    auto spellID = EQ_GetSpellIDByName(spellName);
+    if (spellID == EQ_SPELL_ID_NULL)
+    {
+        return EQ_SPELL_GEM_STATE_NULL;
+    }
+
+    return EQ_CastSpellWindow_GetSpellGemStateBySpellID(spellID);
+}
+
+uint32_t EQ_GetCastingWindow()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CCastingWnd);
+}
+
+bool EQ_CastingWindow_IsOpen()
+{
+    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CCastingWnd) == true);
 }

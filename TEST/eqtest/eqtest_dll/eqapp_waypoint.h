@@ -393,6 +393,11 @@ uint32_t EQAPP_Waypoint_Add(float y, float x, float z, const char* name)
 
     uint32_t index = 0;
 
+    if (g_WaypointList.size() != 0)
+    {
+        index = g_WaypointList.at(0).Index;
+    }
+
     for (auto waypoint_it = g_WaypointList.begin(); waypoint_it != g_WaypointList.end(); waypoint_it++)
     {
         if ((*waypoint_it).Index == index)
@@ -499,7 +504,7 @@ uint32_t EQAPP_Waypoint_AddAtTarget(const char* waypointName)
 
     float heading = EQ_GetSpawnHeading(targetSpawn);
 
-    EQ_ApplyVectorForward(targetY, targetX, heading, g_WaypointAddAtTargetDistance);
+    EQ_ApplyForwardMovement(targetY, targetX, heading, g_WaypointAddAtTargetDistance);
 
     auto index = EQAPP_Waypoint_Add(targetY, targetX, targetZ, waypointName);
 
@@ -545,7 +550,7 @@ uint32_t EQAPP_Waypoint_AddBehindTarget(const char* waypointName)
 
     float heading = EQ_GetSpawnHeading(targetSpawn);
 
-    EQ_ApplyVectorBackward(targetY, targetX, heading, g_WaypointAddAtTargetDistance);
+    EQ_ApplyBackwardMovement(targetY, targetX, heading, g_WaypointAddAtTargetDistance);
 
     auto index = EQAPP_Waypoint_Add(targetY, targetX, targetZ, waypointName);
 
@@ -1084,7 +1089,7 @@ void EQAPP_Waypoint_PushAwayFromPlayer(uint32_t index, float distance, bool roun
         }
     }
 
-    EQ_ApplyVectorForward(waypoint->Y, waypoint->X, playerHeading, distance);
+    EQ_ApplyForwardMovement(waypoint->Y, waypoint->X, playerHeading, distance);
 
     std::cout << "Waypoint index " << index << " pushed " << distance << " distance.";
 }
@@ -1123,7 +1128,7 @@ void EQAPP_Waypoint_PullTowardsPlayer(uint32_t index, float distance, bool round
         }
     }
 
-    EQ_ApplyVectorBackward(waypoint->Y, waypoint->X, playerHeading, distance);
+    EQ_ApplyBackwardMovement(waypoint->Y, waypoint->X, playerHeading, distance);
 
     std::cout << "Waypoint index " << index << " pulled " << distance << " distance.";
 }

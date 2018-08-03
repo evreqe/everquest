@@ -139,6 +139,10 @@ void EQAPP_InitializeAddresses()
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CBuffWnd_Long);
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CBuffWnd_Short);
+
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CCastSpellWnd);
+
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CCastingWnd);
 }
 
 bool EQAPP_IsAddressPointerValid(uint32_t addressPointer)

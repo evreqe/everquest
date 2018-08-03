@@ -13,6 +13,8 @@ bool g_ActorCollisionPlayerIsEnabled = true;
 std::vector<std::string> g_ActorCollisionActorDefinitionList;
 uint32_t g_ActorCollisionActorDefinitionList_reserve = 1024;
 
+std::set<std::string> g_ActorCollisionActorDefinitionDebugList;
+
 void EQAPP_ActorCollision_Toggle();
 void EQAPP_ActorCollision_On();
 void EQAPP_ActorCollision_Off();
@@ -21,6 +23,7 @@ void EQAPP_ActorCollision_All_Toggle();
 void EQAPP_ActorCollision_Player_Toggle();
 void EQAPP_ActorCollision_Load();
 void EQAPP_ActorCollision_PrintActorDefinitionList();
+void EQAPP_ActorCollision_PrintActorDefinitionDebugList();
 bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor);
 bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors_Player(uint32_t cactor);
 
@@ -50,6 +53,8 @@ void EQAPP_ActorCollision_Debug_Toggle()
 {
     EQ_ToggleBool(g_ActorCollisionDebugIsEnabled);
     EQAPP_PrintBool("Actor Collision Debug", g_ActorCollisionDebugIsEnabled);
+
+    g_ActorCollisionActorDefinitionDebugList.clear();
 }
 
 void EQAPP_ActorCollision_All_Toggle()
@@ -84,8 +89,30 @@ void EQAPP_ActorCollision_Load()
     EQAPP_ReadFileToList(folderFileName.str().c_str(), g_ActorCollisionActorDefinitionList, false);
 }
 
+void EQAPP_ActorCollision_PrintActorDefinitionList()
+{
+    std::cout << "Actor Collision Actor Definition List:" << std::endl;
+
+    for (auto& actorDefinition : g_ActorCollisionActorDefinitionList)
+    {
+        std::cout << actorDefinition << std::endl;
+    }
+}
+
+void EQAPP_ActorCollision_PrintActorDefinitionDebugList()
+{
+    std::cout << "Actor Collision Actor Definition Debug List:" << std::endl;
+
+    for (auto& actorDefinition : g_ActorCollisionActorDefinitionDebugList)
+    {
+        std::cout << actorDefinition << std::endl;
+    }
+}
+
 bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor)
 {
+    // cactor is EQData::ActorClient()->pcactorex and EQClass::CActorEx
+
     auto actorDefinitionObject = EQ_ReadMemory<uint32_t>(cactor + EQ_OFFSET_CActor_ACTOR_DEFINITION_OBJECT);
     auto actorDefinitionAddress = EQ_ReadMemory<uint32_t>(actorDefinitionObject + EQ_OFFSET_ACTOR_DEFINITION_OBJECT_ACTOR_DEFINITION_ADDRESS);
 
@@ -96,13 +123,13 @@ bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor
     auto actorX = EQ_ReadMemory<float>(cactor + EQ_OFFSET_CActor_X);
     auto actorZ = EQ_ReadMemory<float>(cactor + EQ_OFFSET_CActor_Z);
 
+    auto actorType = EQ_ReadMemory<uint32_t>(cactor + EQ_OFFSET_CActor_ACTOR_TYPE);
+
+    auto actorCollisionScale = EQ_ReadMemory<float>(cactor + EQ_OFFSET_CActor_COLLISION_SCALE);
+
     if (g_ActorCollisionDebugIsEnabled == true)
     {
-        ////std::cout << "Actor Collision Debug: " << actorDefinitionName << std::endl;
-
-        auto actorType = EQ_ReadMemory<uint32_t>(cactor + EQ_OFFSET_CActor_ACTOR_TYPE);
-
-        auto actorCollisionScale = EQ_ReadMemory<float>(cactor + EQ_OFFSET_CActor_COLLISION_SCALE);
+        g_ActorCollisionActorDefinitionDebugList.insert(actorDefinitionName);
 
         float screenX = -1.0f;
         float screenY = -1.0f;
@@ -128,13 +155,62 @@ bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor
 
     for (auto& actorDefinitionListName : g_ActorCollisionActorDefinitionList)
     {
+        if (EQAPP_String_BeginsWith(actorDefinitionListName, "!") == true)
+        {
+            std::string trimmedName = actorDefinitionListName;
+
+            trimmedName.erase(0, 1);
+
+            if (strcmp(actorDefinitionName, trimmedName.c_str()) == 0)
+            {
+                EQ_WriteMemory<float>(cactor + EQ_OFFSET_CActor_COLLISION_SCALE, 1.0f); // collision
+
+                return false; // collision
+            }
+        }
+
+        if (EQAPP_String_BeginsWith(actorDefinitionListName, "@") == true)
+        {
+            std::string trimmedName = actorDefinitionListName;
+
+            trimmedName.erase(0, 1);
+
+            if (strcmp(actorDefinitionName, trimmedName.c_str()) == 0)
+            {
+                return true; // walk through or climb up and over
+            }
+        }
+
         if (EQAPP_String_BeginsWith(actorDefinitionListName, "*") == true)
         {
-            std::string deleteName = actorDefinitionListName;
+            std::string trimmedName = actorDefinitionListName;
 
-            deleteName.erase(0, 1);
+            trimmedName.erase(0, 1);
 
-            if (strcmp(actorDefinitionName, deleteName.c_str()) == 0)
+            if (strcmp(actorDefinitionName, trimmedName.c_str()) == 0)
+            {
+                if (EQ_IsAutoRunEnabled() == true)
+                {
+                    EQ_WriteMemory<float>(cactor + EQ_OFFSET_CActor_COLLISION_SCALE, 0.0f); // no collision
+
+                    return true;
+                }
+                else
+                {
+                    EQ_WriteMemory<float>(cactor + EQ_OFFSET_CActor_COLLISION_SCALE, 1.0f); // collision
+
+                    return false;
+                }
+            }
+        }
+
+        if (EQAPP_String_BeginsWith(actorDefinitionListName, "^") == true)
+        {
+            std::string trimmedName = actorDefinitionListName;
+
+            trimmedName.erase(0, 1);
+
+            if (strcmp(actorDefinitionName, trimmedName.c_str()) == 0)
             {
                 // move it below the world
                 EQ_WriteMemory<float>(cactor + EQ_OFFSET_CActor_Z, -20000.0f);
@@ -151,7 +227,7 @@ bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor
         {
             EQ_WriteMemory<float>(cactor + EQ_OFFSET_CActor_COLLISION_SCALE, 0.0f); // no collision
 
-            break;
+            return true;
         }
     }
 
@@ -194,12 +270,3 @@ bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors_Player(uint32_t
     return false;
 }
 
-void EQAPP_ActorCollision_PrintActorDefinitionList()
-{
-    std::cout << "Actor Collision Actor Definition List:" << std::endl;
-
-    for (auto& actorDefinition : g_ActorCollisionActorDefinitionList)
-    {
-        std::cout << actorDefinition << std::endl;
-    }
-}
