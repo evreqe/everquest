@@ -343,6 +343,9 @@ public:
     bool CRender::DrawLine(EQ::Vector3f& vectorBegin, EQ::Vector3f& vectorEnd, uint32_t colorARGB);
     bool CRender::DrawWrappedText(uint32_t fontStyle, const char* text, EQ::CXRect& cxrect1, EQ::CXRect& cxrect2, uint32_t colorARGB, uint16_t flags, int startX);
     bool CRender::DrawColoredRectangle(EQ::Rectangle& rectangle, uint32_t colorARGB);
+    void CRender::ClearRenderToBlack();
+    void CRender::RenderPartialScene();
+    void CRender::UpdateDisplay();
     void CRender::TakeScreenshot(const char* fileName);
 };
 
@@ -350,6 +353,9 @@ public:
 #define EQ_VFTABLE_INDEX_CRender__DrawLine                0x88
 #define EQ_VFTABLE_INDEX_CRender__DrawWrappedText         0x94
 #define EQ_VFTABLE_INDEX_CRender__DrawColoredRectangle    0xA0
+#define EQ_VFTABLE_INDEX_CRender__ClearRenderToBlack      0xA8
+#define EQ_VFTABLE_INDEX_CRender__RenderPartialScene      0xAC
+#define EQ_VFTABLE_INDEX_CRender__UpdateDisplay           0xB4
 #define EQ_VFTABLE_INDEX_CRender__TakeScreenshot          0xC4
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawLine(EQ::Vector3f& vectorBegin, EQ::Vector3f& vectorEnd, uint32_t colorARGB), EQ_VFTABLE_INDEX_CRender__DrawLine);
@@ -357,6 +363,15 @@ EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawLine(EQ::V
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawWrappedText(uint32_t fontStyle, const char* text, EQ::CXRect& cxrect1, EQ::CXRect& cxrect2, uint32_t colorARGB, uint16_t flags, int startX), EQ_VFTABLE_INDEX_CRender__DrawWrappedText);
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawColoredRectangle(EQ::Rectangle& rectangle, uint32_t colorARGB), EQ_VFTABLE_INDEX_CRender__DrawColoredRectangle);
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CRender::ClearRenderToBlack(), EQ_VFTABLE_INDEX_CRender__ClearRenderToBlack);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CRender__ClearRenderToBlack)(void* this_ptr);
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CRender::RenderPartialScene(), EQ_VFTABLE_INDEX_CRender__RenderPartialScene);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CRender__RenderPartialScene)(void* this_ptr);
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CRender::UpdateDisplay(), EQ_VFTABLE_INDEX_CRender__UpdateDisplay);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CRender__UpdateDisplay)(void* this_ptr);
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CRender::TakeScreenshot(const char* fileName), EQ_VFTABLE_INDEX_CRender__TakeScreenshot);
 

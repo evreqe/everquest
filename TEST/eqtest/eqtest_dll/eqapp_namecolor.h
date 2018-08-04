@@ -5,7 +5,7 @@ bool g_NameColorIsEnabled = true;
 EQApp::Timer g_NameColorTimer = EQAPP_Timer_GetTimeNow();
 EQApp::TimerInterval g_NameColorTimerInterval = 10;
 
-bool g_NameColorTimerHasElapsed = false;
+bool g_NameColorFlicker = false;
 
 uint32_t g_NameColorFlickerColorARGB = 0xFFFFFFFF; // white
 
@@ -41,11 +41,9 @@ void EQAPP_NameColor_Off()
 
 void EQAPP_NameColor_Execute()
 {
-    g_NameColorTimerHasElapsed = false;
-
     if (EQAPP_Timer_HasTimeElapsedInMilliseconds(g_NameColorTimer, g_NameColorTimerInterval) == true)
     {
-        g_NameColorTimerHasElapsed = true;
+        EQ_ToggleBool(g_NameColorFlicker);
     }
 }
 
@@ -71,11 +69,9 @@ void EQAPP_NameColor_HandleEvent_EQPlayer__SetNameSpriteTint(void* this_ptr)
 
     if (spawnIsTarget == true && spawnNameColorWasSet == true)
     {
-        if (g_NameColorTimerHasElapsed == true)
+        if (g_NameColorFlicker == true)
         {
             EQ_SetSpawnNameColor(playerSpawn, g_NameColorFlickerColorARGB); // white
-
-            g_NameColorTimerHasElapsed = false;
         }
     }
 }

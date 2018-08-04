@@ -90,6 +90,7 @@ bool EQ_IsZoneIDSafe(uint32_t zoneID);
 HWND EQ_GetWindow();
 uint32_t EQ_GetTimer();
 uint32_t EQ_GetCamera();
+uint32_t EQ_GetRender();
 
 POINT EQ_GetMousePosition();
 std::tuple<int, int> EQ_GetMousePositionAsTuple();
@@ -899,6 +900,13 @@ HWND EQ_GetWindow()
     return EQ_ReadMemory<HWND>(EQ_ADDRESS_WindowHWND);
 }
 
+bool EQ_IsWindowInBackground()
+{
+    HWND window = EQ_GetWindow();
+
+    return window != GetForegroundWindow();
+}
+
 uint32_t EQ_GetTimer()
 {
     uint32_t display = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CDisplay);
@@ -919,6 +927,11 @@ uint32_t EQ_GetCamera()
     }
 
     return EQ_ReadMemory<uint32_t>(display + EQ_OFFSET_CDisplay_CAMERA);
+}
+
+uint32_t EQ_GetRender()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CRender);
 }
 
 POINT EQ_GetMousePosition()

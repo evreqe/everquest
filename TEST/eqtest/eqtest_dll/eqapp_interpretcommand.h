@@ -18,6 +18,7 @@
 #include "eqapp_lua.h"
 #include "eqapp_namecolor.h"
 #include "eqapp_namedspawns.h"
+#include "eqapp_nodraw.h"
 #include "eqapp_sleep.h"
 #include "eqapp_spawncastspell.h"
 #include "eqapp_speed.h"
@@ -244,6 +245,12 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//NS",                           &EQAPP_NamedSpawns_Toggle},
     {"//NSOn",                         &EQAPP_NamedSpawns_On},
     {"//NSOff",                        &EQAPP_NamedSpawns_Off},
+    {"//NoDraw",                       &EQAPP_NoDraw_Toggle},
+    {"//NoDrawOn",                     &EQAPP_NoDraw_On},
+    {"//NoDrawOff",                    &EQAPP_NoDraw_Off},
+    {"//ND",                           &EQAPP_NoDraw_Toggle},
+    {"//NDOn",                         &EQAPP_NoDraw_On},
+    {"//NDOff",                        &EQAPP_NoDraw_Off},
     ////
     ////{"//Null",                         &EQAPP_InterpretCommand_NULL},
     ////

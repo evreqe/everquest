@@ -198,6 +198,7 @@
     <ClInclude Include="eqapp_lua.h" />
     <ClInclude Include="eqapp_namecolor.h" />
     <ClInclude Include="eqapp_namedspawns.h" />
+    <ClInclude Include="eqapp_nodraw.h" />
     <ClInclude Include="eqapp_sleep.h" />
     <ClInclude Include="eqapp_spawncastspell.h" />
     <ClInclude Include="eqapp_speed.h" />

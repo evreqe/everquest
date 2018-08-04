@@ -18,6 +18,7 @@
 #include "eqapp_lua.h"
 #include "eqapp_namecolor.h"
 #include "eqapp_namedspawns.h"
+#include "eqapp_nodraw.h"
 #include "eqapp_sleep.h"
 #include "eqapp_spawncastspell.h"
 #include "eqapp_speed.h"
@@ -129,6 +130,8 @@ void EQAPP_LoadOptions()
     EQAPP_LoadOption<bool>(g_LuaIsEnabled, "bLua", pt);
 
     EQAPP_LoadOption<bool>(g_NamedSpawnsIsEnabled, "bNamedSpawns", pt);
+
+    EQAPP_LoadOption<bool>(g_NoDrawIsEnabled, "bNoDraw", pt);
 
     EQAPP_LoadOption<uint32_t>(g_SleepIntervalForeground, "iSleepIntervalForeground", pt);
     EQAPP_LoadOption<uint32_t>(g_SleepIntervalBackground, "iSleepIntervalBackground", pt);

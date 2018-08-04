@@ -523,6 +523,9 @@ const float EQ_CAMERA_PITCH_DEFAULT    = -8.5f;      // center view or look forw
 const float EQ_CAMERA_PITCH_MIN        = -136.5f;    // look down
 const float EQ_CAMERA_PITCH_MAX        = 119.5f;     // look up
 
+// class CRender
+#define EQ_OFFSET_CRender_VFTABLE    0x00 // uint32_t pointer
+
 #define EQ_CHAT_TEXT_COLOR_WHITE_0           0
 #define EQ_CHAT_TEXT_COLOR_DEFAULT           1
 #define EQ_CHAT_TEXT_COLOR_DARK_GREEN        2

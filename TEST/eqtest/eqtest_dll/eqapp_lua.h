@@ -1811,8 +1811,10 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_IsSpellNameReadyToCast", EQ_IsSpellNameReadyToCast);
     state->set_function("EQ_IsZoneIDSafe", EQ_IsZoneIDSafe);
     state->set_function("EQ_GetWindow", EQ_GetWindow);
+    state->set_function("EQ_IsWindowInBackground", EQ_IsWindowInBackground);
     state->set_function("EQ_GetTimer", EQ_GetTimer);
     state->set_function("EQ_GetCamera", EQ_GetCamera);
+    state->set_function("EQ_GetRender", EQ_GetRender);
 
     state->set_function("EQ_GetMouseX", EQ_GetMouseX);
     state->set_function("EQ_GetMouseY", EQ_GetMouseY);

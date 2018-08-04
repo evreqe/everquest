@@ -740,6 +740,12 @@ LPVOID __userpurge sub_53FEC0@<eax>(int a1@<ecx>, float *a2@<ebp>, int a3, int a
 
 */
 
+uint32_t EQ_ADDRESS_FUNCTION_CRender__ClearRenderToBlack = 0x0; // calculated at runtime
+
+uint32_t EQ_ADDRESS_FUNCTION_CRender__RenderPartialScene = 0x0; // calculated at runtime
+
+uint32_t EQ_ADDRESS_FUNCTION_CRender__UpdateDisplay = 0x0; // calculated at runtime
+
 uint32_t EQ_ADDRESS_FUNCTION_CXStr__CXStr = 0x0;
 uint32_t EQ_ADDRESS_FUNCTION_CXStr__CXStr1 = 0x0;
 uint32_t EQ_ADDRESS_FUNCTION_CXStr__CXStr3 = 0x0;
@@ -1416,6 +1422,9 @@ void EQ_InitializeAddresses()
     //EQ_ADDRESS_FUNCTION_CCamera__SetCameraLocation    = 0x0; // calculated at runtime
 
     EQ_ADDRESS_POINTER_CRender = __DrawHandler_x;
+    EQ_ADDRESS_FUNCTION_CRender__ClearRenderToBlack    = 0x0; // calculated at runtime
+    EQ_ADDRESS_FUNCTION_CRender__RenderPartialScene    = 0x0; // calculated at runtime
+    EQ_ADDRESS_FUNCTION_CRender__UpdateDisplay         = 0x0; // calculated at runtime
 
     EQ_ADDRESS_FUNCTION_CXStr__CXStr                   = CXStr__CXStr_x;
     EQ_ADDRESS_FUNCTION_CXStr__CXStr1                  = CXStr__CXStr1_x;
