@@ -3,7 +3,7 @@
 bool g_NameColorIsEnabled = true;
 
 EQApp::Timer g_NameColorTimer = EQAPP_Timer_GetTimeNow();
-EQApp::TimerInterval g_NameColorTimerInterval = 10;
+EQApp::TimerInterval g_NameColorTimerInterval = 50;
 
 bool g_NameColorFlicker = false;
 
@@ -71,7 +71,7 @@ void EQAPP_NameColor_HandleEvent_EQPlayer__SetNameSpriteTint(void* this_ptr)
     {
         if (g_NameColorFlicker == true)
         {
-            EQ_SetSpawnNameColor(playerSpawn, g_NameColorFlickerColorARGB); // white
+            EQ_SetSpawnNameColor(playerSpawn, g_NameColorFlickerColorARGB);
         }
     }
 }

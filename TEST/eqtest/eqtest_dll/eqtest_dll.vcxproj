@@ -119,13 +119,13 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;EQTEST_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Code\!libraries\detours;D:\Code\!libraries\luajit-2.0.5\src;D:\Code\!libraries\sol2-2.20.3;D:\Code\!libraries\boost_1_66_0;D:\Code\!libraries\fmt-4.1.0;D:\Code\everquest\eqtest\mq2;D:\Code\everquest\eqtest\eq;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Code\!libraries\directx9sdk\Include;D:\Code\!libraries\detours;D:\Code\!libraries\luajit-2.0.5\src;D:\Code\!libraries\sol2-2.20.3;D:\Code\!libraries\boost_1_66_0;D:\Code\!libraries\fmt-4.1.0;D:\Code\!libraries\imgui-1.62;D:\Code\everquest\eqtest\mq2;D:\Code\everquest\eqtest\eq;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>D:\Code\!libraries\detours;D:\Code\!libraries\luajit-2.0.5\src</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Code\!libraries\directx9sdk\Lib\x86;D:\Code\!libraries\detours;D:\Code\!libraries\luajit-2.0.5\src</AdditionalLibraryDirectories>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <AdditionalOptions>/OUT:"D:\Code\everquest\eqtest\Release\eqtest.dll" %(AdditionalOptions)</AdditionalOptions>
     </Link>
@@ -153,6 +153,11 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\!libraries\fmt-4.1.0\fmt\format.cc" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="imgui.cpp" />
+    <ClCompile Include="imgui_demo.cpp" />
+    <ClCompile Include="imgui_draw.cpp" />
+    <ClCompile Include="imgui_impl_dx9.cpp" />
+    <ClCompile Include="imgui_impl_win32.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\eq\eq.h" />
@@ -207,6 +212,13 @@
     <ClInclude Include="eqapp_waypoint.h" />
     <ClInclude Include="eqapp_windowtitle.h" />
     <ClInclude Include="eq_namecolor.h" />
+    <ClInclude Include="imgui.h" />
+    <ClInclude Include="imgui_impl_dx9.h" />
+    <ClInclude Include="imgui_impl_win32.h" />
+    <ClInclude Include="imgui_internal.h" />
+    <ClInclude Include="stb_rect_pack.h" />
+    <ClInclude Include="stb_textedit.h" />
+    <ClInclude Include="stb_truetype.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -160,8 +160,11 @@ int main(int argc , char *argv[])
                 return 1;
             }
 
+            char strIPAddress[INET_ADDRSTRLEN];
+            inet_ntop(AF_INET, &(serverAddress.sin_addr), strIPAddress, INET_ADDRSTRLEN);
+
             std::cout << "Client connected. Socket: " << acceptSocket
-                      << ", IP: " << inet_ntoa(serverAddress.sin_addr)
+                      << ", IP: " << strIPAddress
                       << ", Port: " << ntohs(serverAddress.sin_port)
                       << std::endl;
 

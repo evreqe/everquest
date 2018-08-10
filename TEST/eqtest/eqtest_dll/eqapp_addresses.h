@@ -29,11 +29,24 @@ void EQAPP_InitializeAddresses()
 
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_WindowProc);
 
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_ProcessMouseEvent);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_ProcessKeyboardEvent);
+
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_FlushDxMouse);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_FlushDxKeyboard);
+
     EQAPP_FixAddress(EQ_ADDRESS_AutoAttack);
     EQAPP_FixAddress(EQ_ADDRESS_AutoFire);
     EQAPP_FixAddress(EQ_ADDRESS_AutoRun);
     EQAPP_FixAddress(EQ_ADDRESS_MouseLook);
     EQAPP_FixAddress(EQ_ADDRESS_NetStatus);
+
+    EQAPP_FixAddress(EQ_ADDRESS_Mouse);
+
+    EQAPP_FixAddress(EQ_ADDRESS_DirectInputKeyboard);
+    EQAPP_FixAddress(EQ_ADDRESS_DirectInputMouse);
+    EQAPP_FixAddress(EQ_ADDRESS_DirectInputMouseCopy);
+    EQAPP_FixAddress(EQ_ADDRESS_DirectInputMouseCheck);
 
     EQAPP_FixAddress(EQ_ADDRESS_CameraType);
 
@@ -97,6 +110,7 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CEverQuest__LMouseUp);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CEverQuest__HandleMouseWheel);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CEverQuest__SetGameState);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CDisplay);

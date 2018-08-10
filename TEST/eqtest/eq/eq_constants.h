@@ -89,6 +89,11 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_UPDATE_ITEM_SLOT_SECONDARY    8
 
 #define EQ_OFFSET_CEverQuest_GAME_STATE    0x5C8 // uint32_t, 1480 decimal    "Gamestate at crash = %d\n"
+#define EQ_OFFSET_CEverQuest_MOUSE_WHEEL_SCROLL_CAMERA_DISTANCE    0x5EC // float
+
+#define EQ_MOUSE_WHEEL_DELTA_DEFAULT    0       // not scrolling
+#define EQ_MOUSE_WHEEL_DELTA_MIN        -120    // scrolling down
+#define EQ_MOUSE_WHEEL_DELTA_MAX        120     // scrolling up
 
 #define EQ_GAME_STATE_IN_GAME    5
 #define EQ_GAME_STATE_NULL       0xFFFFFFFF // uint32_t
@@ -841,4 +846,23 @@ namespace EQ
 /* 0x10 */ PCRITICAL_SECTION Lock;
 /* 0x14 */ char Text[1]; //EQ_CXSTR_TEXT_MAX_LENGTH
     } CXStr, *CXStr_ptr;
+
+    typedef struct _MouseState
+    {
+        uint32_t X;
+        uint32_t Y;
+        uint32_t Scroll;
+        uint32_t RelativeX;
+        uint32_t RelativeY;
+        uint32_t InWindow;
+    } MouseState, *MouseState_ptr;
+
+    typedef struct _MouseInfo2
+    {
+        uint32_t X;
+        uint32_t Y;
+        uint32_t SpeedX;
+        uint32_t SpeedY;
+        uint32_t Scroll;
+    } MouseInfo2, *MouseInfo2_ptr;
 } // namespace EQ

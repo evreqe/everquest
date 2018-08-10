@@ -46,6 +46,7 @@ public:
     void CEverQuest::StartCasting(EQMessage::CEverQuest__StartCasting_ptr message);
     void CEverQuest::LMouseUp(int x, int y);
     void CEverQuest::RMouseUp(int x, int y);
+    void CEverQuest::HandleMouseWheel(signed int delta);
     void CEverQuest::SetGameState(int gameState);
 };
 
@@ -67,6 +68,9 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__LMouseUp)(void* this_ptr, 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::RMouseUp(int x, int y), EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__RMouseUp)(void* this_ptr, int x, int y);
 
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::HandleMouseWheel(signed int delta), EQ_ADDRESS_FUNCTION_CEverQuest__HandleMouseWheel);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__HandleMouseWheel)(void* this_ptr, signed int delta);
+
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::SetGameState(int gameState), EQ_ADDRESS_FUNCTION_CEverQuest__SetGameState);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__SetGameState)(void* this_ptr, int gameState);
 
@@ -79,14 +83,14 @@ class EQClass::CDisplay
 {
 public:
     static int __cdecl CDisplay::WriteTextHD2(const char* text, int x, int y, signed int color);
-    uint32_t CDisplay::CreatePlayerActor(uint32_t spawn, int a2, int a3, int a4, int a5, int a6);
+    bool CDisplay::CreatePlayerActor(uint32_t spawn, int a2, int a3, int a4, int a5, int a6);
     void CDisplay::DeleteActor(uint32_t cactor);
 };
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQClass::CDisplay::WriteTextHD2(const char* text, int x, int y, signed int color), EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__WriteTextHD2)(void* this_ptr, const char* text, int x, int y, signed int color);
 
-EQ_MACRO_FUNCTION_FunctionAtAddress(uint32_t EQClass::CDisplay::CreatePlayerActor(uint32_t spawn, int a2, int a3, int a4, int a5, int a6), EQ_ADDRESS_FUNCTION_CDisplay__CreatePlayerActor);
+EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::CDisplay::CreatePlayerActor(uint32_t spawn, int a2, int a3, int a4, int a5, int a6), EQ_ADDRESS_FUNCTION_CDisplay__CreatePlayerActor);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__CreatePlayerActor)(void* this_ptr, uint32_t spawn, int a2, int a3, int a4, int a5, int a6);
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CDisplay::DeleteActor(uint32_t cactor), EQ_ADDRESS_FUNCTION_CDisplay__DeleteActor);
@@ -340,6 +344,7 @@ EQClass::CCamera* EQ_CLASS_POINTER_CCamera;
 class EQClass::CRender
 {
 public:
+    bool CRender::ResetDevice(bool unknown);
     bool CRender::DrawLine(EQ::Vector3f& vectorBegin, EQ::Vector3f& vectorEnd, uint32_t colorARGB);
     bool CRender::DrawWrappedText(uint32_t fontStyle, const char* text, EQ::CXRect& cxrect1, EQ::CXRect& cxrect2, uint32_t colorARGB, uint16_t flags, int startX);
     bool CRender::DrawColoredRectangle(EQ::Rectangle& rectangle, uint32_t colorARGB);
@@ -349,14 +354,19 @@ public:
     void CRender::TakeScreenshot(const char* fileName);
 };
 
+#define EQ_VFTABLE_INDEX_CRender__InitDevice              0x5C
 #define EQ_VFTABLE_INDEX_CRender__ResetDevice             0x64    // "ResetDevice() failed!"
 #define EQ_VFTABLE_INDEX_CRender__DrawLine                0x88
 #define EQ_VFTABLE_INDEX_CRender__DrawWrappedText         0x94
-#define EQ_VFTABLE_INDEX_CRender__DrawColoredRectangle    0xA0
+#define EQ_VFTABLE_INDEX_CRender__DrawColoredRectangle    0xA0    // "*ScreenShot.jpg"
 #define EQ_VFTABLE_INDEX_CRender__ClearRenderToBlack      0xA8
 #define EQ_VFTABLE_INDEX_CRender__RenderPartialScene      0xAC
+#define EQ_VFTABLE_INDEX_CRender__RenderUNKNOWN           0xB0    // draws something, called after ClearRenderToBlack() while blind
 #define EQ_VFTABLE_INDEX_CRender__UpdateDisplay           0xB4
 #define EQ_VFTABLE_INDEX_CRender__TakeScreenshot          0xC4
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::ResetDevice(bool unknown), EQ_VFTABLE_INDEX_CRender__ResetDevice);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CRender__ResetDevice)(void* this_ptr, bool unknown);
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawLine(EQ::Vector3f& vectorBegin, EQ::Vector3f& vectorEnd, uint32_t colorARGB), EQ_VFTABLE_INDEX_CRender__DrawLine);
 

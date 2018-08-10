@@ -6,7 +6,7 @@ namespace EQApp
     {
         uint32_t Spawn;
         std::string SpellName;
-        uint16_t SpellCastTime; // time it takes to cast the spell in milliseconds
+        uint32_t SpellCastTime; // time it takes to cast the spell in milliseconds
         uint32_t SpellCastTimeCountdown; // spell cast time in milliseconds that decreases until it reaches a value of 0
         uint32_t StartCastingTime = 0; // time you started to cast the spell in the global timer
     } SpawnCastSpell, *SpawnCastSpell_ptr;
@@ -80,7 +80,7 @@ void EQAPP_SpawnCastSpell_Execute()
         return;
     }
 
-    uint32_t currentTime = EQ_GetTimer();
+    auto currentTime = EQ_GetTimer();
 
     bool bCountdownTimerHasPassed = false;
     if (EQ_HasTimeElapsed(g_SpawnCastSpellCountdownTimer, g_SpawnCastSpellCountdownTimerInterval) == true)
@@ -96,7 +96,7 @@ void EQAPP_SpawnCastSpell_Execute()
             continue;
         }
 
-        uint32_t spawn = spawnCastSpell->Spawn;
+        auto spawn = spawnCastSpell->Spawn;
         if (spawn == NULL)
         {
             spawnCastSpellListIterator = g_SpawnCastSpellList.erase(spawnCastSpellListIterator);
@@ -123,7 +123,7 @@ void EQAPP_SpawnCastSpell_Execute()
             }
         }
 
-        uint32_t spellCastTime = spawnCastSpell->SpellCastTime;
+        auto spellCastTime = spawnCastSpell->SpellCastTime;
         if (spellCastTime < g_SpawnCastSpellMinimumCastTime)
         {
             spellCastTime = g_SpawnCastSpellMinimumCastTime;
@@ -154,7 +154,7 @@ void EQAPP_SpawnCastSpell_DrawText()
             continue;
         }
 
-        uint32_t spawn = spawnCastSpell->Spawn;
+        auto spawn = spawnCastSpell->Spawn;
         if (spawn == NULL)
         {
             continue;
@@ -232,7 +232,7 @@ void EQAPP_SpawnCastSpell_HandleEvent_CEverQuest__StartCasting(void* this_ptr, E
                 auto spawnClass = EQ_GetSpawnClass(playerSpawn);
                 if (spawnClass != EQ_CLASS_BARD)
                 {
-                    auto spawnName = EQ_GetPlayerSpawnName();
+                    std::string spawnName = EQ_GetPlayerSpawnName();
                     if (spawnName.size() != 0)
                     {
                         std::stringstream ss;

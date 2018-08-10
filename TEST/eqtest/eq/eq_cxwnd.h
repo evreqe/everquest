@@ -31,7 +31,7 @@
 
 // ******************** randomized after each patch ******************** //
 
-#define EQ_OFFSET_CXWnd_PADDING -0x08
+#define EQ_OFFSET_CXWnd_PADDING -0x18
 
 #define EQ_OFFSET_CBazaarWnd_BUTTON_BEGIN_TRADER    0x250+EQ_OFFSET_CXWnd_PADDING // uint32_t pointer    "Begin Trader" button    "BZW_Start_Button"
 #define EQ_OFFSET_CBazaarWnd_BUTTON_END_TRADER      0x254+EQ_OFFSET_CXWnd_PADDING // uint32_t pointer    "End Trader" button      "BZW_End_Button"

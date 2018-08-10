@@ -23,6 +23,8 @@ std::mt19937 g_EQAppRandomEngine((uint32_t)std::chrono::high_resolution_clock::n
 
 bool g_EQAppDebugTextIsEnabled = false;
 
+bool g_EQAppIsGUIReady = false;
+
 HMODULE g_EQAppModule;
 
 HANDLE g_EQAppHandleThreadLoad;

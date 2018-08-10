@@ -1,69 +1,119 @@
 function BuffMe(spellName)
     local playerSpawn = EQ_GetPlayerSpawn()
     if playerSpawn == 0 then
-        return 0
+        return
     end
 
     if EQ_IsSpellNameMemorized(spellName) == false then
-        return 0
+        return
     end
 
     if EQ_IsSpellNameReadyToCast(spellName) == false then
-        return 0
+        return
     end
 
     if EQ_BuffWindows_FindBuffSpellName(spellName) == false then
         EQ_StopFollow()
         EQ_SetTargetSpawn(playerSpawn)
         EQ_CastSpellByName(spellName)
-        return 1
+    end
+end
+
+function BuffMeEx(spellName, buffName)
+    local playerSpawn = EQ_GetPlayerSpawn()
+    if playerSpawn == 0 then
+        return
+    end
+
+    if EQ_IsSpellNameMemorized(spellName) == false then
+        return
+    end
+
+    if EQ_IsSpellNameReadyToCast(spellName) == false then
+        return
+    end
+
+    if EQ_BuffWindows_FindBuffSpellName(buffName) == false then
+        EQ_StopFollow()
+        EQ_SetTargetSpawn(playerSpawn)
+        EQ_CastSpellByName(spellName)
     end
 end
 
 function BuffPet(spellName)
     local playerSpawn = EQ_GetPlayerSpawn()
     if playerSpawn == 0 then
-        return 0
+        return
     end
 
     if EQ_PetInfoWindow_IsOpen() == false then
-        return 0
+        return
     end
 
     if EQ_IsSpellNameMemorized(spellName) == false then
-        return 0
+        return
     end
 
     if EQ_IsSpellNameReadyToCast(spellName) == false then
-        return 0
+        return
     end
 
     if EQ_PetInfoWindow_FindBuffSpellName(spellName) == false then
         EQ_StopFollow()
         EQ_TargetPet()
         EQ_CastSpellByName(spellName)
-        return 1
     end
 end
 
 function AuraMe(spellName)
     local playerSpawn = EQ_GetPlayerSpawn()
     if playerSpawn == 0 then
-        return 0
+        return
     end
 
     if EQ_IsSpellNameMemorized(spellName) == false then
-        return 0
+        return
     end
 
     if EQ_IsSpellNameReadyToCast(spellName) == false then
-        return 0
+        return
     end
 
     if EQ_IsAuraNameActive(spellName) == false then
         EQ_StopFollow()
         EQ_CastSpellByName(spellName)
-        return 1
+    end
+end
+
+function AuraMeEx(spellName, auraName)
+    local playerSpawn = EQ_GetPlayerSpawn()
+    if playerSpawn == 0 then
+        return
+    end
+
+    if EQ_IsSpellNameMemorized(spellName) == false then
+        return
+    end
+
+    if EQ_IsSpellNameReadyToCast(spellName) == false then
+        return
+    end
+
+    if EQ_IsAuraNameActive(auraName) == false then
+        EQ_StopFollow()
+        EQ_CastSpellByName(spellName)
+    end
+end
+
+function AuraMeDiscipline(spellName)
+    local playerSpawn = EQ_GetPlayerSpawn()
+    if playerSpawn == 0 then
+        return
+    end
+
+    if EQ_IsAuraNameActive(spellName) == false then
+        EQ_StopFollow()
+        EQ_InterpretCommand("/discipline " .. spellName)
     end
 end
 
@@ -94,6 +144,10 @@ function OnOneSecond()
 
     local playerSpawnClass = EQ_GetSpawnClass(playerSpawn)
 
+    if playerSpawnClass == EQ_CLASS_BARD then
+        AuraMe("Aura of Sionachie Rk. II")
+    end
+
     if playerSpawnClass == EQ_CLASS_BEASTLORD then
         if
             EQ_BuffWindows_FindBuffSpellName("Pact of the Wurine Form") == false or
@@ -112,37 +166,59 @@ function OnOneSecond()
         if BuffMe("Shared Brutal Ferocity Rk. II") == 1 then return end
     end
 
+    if playerSpawnClass == EQ_CLASS_BERSERKER then
+        AuraMeDiscipline("Bloodlust Aura")
+    end
+
     if playerSpawnClass == EQ_CLASS_CLERIC then
+        AuraMeEx("Aura of the Reverent", "Reverent Aura")
+        AuraMe("Circle of Divinity")
+
         if playerSpawnName == "Elricc" then
-            if AuraMe("Circle of Divinity") == 1 then return end
-            if AuraMe("Aura of the Pious") == 1 then return end
-            if BuffMe("Armor of the Zealous Rk. II") == 1 then return end
-            if BuffMe("Vow of Veneration Rk. II") == 1 then return end
+            AuraMe("Aura of the Pious")
+            BuffMe("Armor of the Zealous Rk. II")
+            BuffMe("Vow of Veneration Rk. II")
         end
     end
 
+    if playerSpawnClass == EQ_CLASS_DRUID then
+        AuraMe("Aura of Life")
+        BuffMe("Mask of the Copsetender Rk. II")
+        BuffMe("Pack Spirit")
+    end
+
+    if playerSpawnClass == EQ_CLASS_ENCHANTER then
+        AuraMe("Enticer's Aura Rk. II")
+        AuraMe("Runic Torrent Aura Rk. II")
+        BuffMeEx("Enticer's Unity Rk. II", "Enticer's Rune Rk. II")
+    end
+
     if playerSpawnClass == EQ_CLASS_MAGICIAN then
-        if BuffMe("Splendrous Guardian Rk. II") == 1 then return end
-        if BuffPet("Burnout X Rk. II") == 1 then return end
+        BuffMe("Splendrous Guardian Rk. II")
+        BuffPet("Burnout X Rk. II")
     end
 
     if playerSpawnClass == EQ_CLASS_RANGER then
-        if BuffMe("Protection of the Copse Rk. II") == 1 then return end
-        if BuffMe("Eyes of the Raptor Rk. II") == 1 then return end
-        if BuffMe("Veil of Alaris Rk. II") == 1 then return end
-        if BuffMe("Galvanized by the Hunt Rk. II") == 1 then return end
-        if BuffMe("Jolting Impact Rk. II") == 1 then return end
+        BuffMe("Protection of the Copse Rk. II")
+        BuffMe("Eyes of the Raptor Rk. II")
+        BuffMe("Veil of Alaris Rk. II")
+        BuffMe("Galvanized by the Hunt Rk. II")
+        BuffMe("Jolting Impact Rk. II")
     end
 
     if playerSpawnClass == EQ_CLASS_SHADOWKNIGHT then
-        if BuffMe("Drape of the Sepulcher Rk. II") == 1 then return end
-        if BuffMe("Shroud of the Shadeborne Rk. II") == 1 then return end
-        if BuffMe("Sholothian Horror Rk. II") == 1 then return end
+        BuffMe("Drape of the Sepulcher Rk. II")
+        BuffMe("Shroud of the Shadeborne Rk. II")
+        BuffMe("Sholothian Horror Rk. II")
     end
 
     if playerSpawnClass == EQ_CLASS_SHAMAN then
-        if BuffMe("Pack of Hilnaah Rk. II") == 1 then return end
-        if BuffMe("Spirit of Bih`Li") == 1 then return end
-        -- if BuffMe("Champion") == 1 then return end
+        BuffMe("Pack of Hilnaah Rk. II")
+        BuffMe("Spirit of Bih`Li")
+        -- BuffMe("Champion")
+    end
+
+    if playerSpawnClass == EQ_CLASS_WARRIOR then
+        AuraMeDiscipline("Myrmidon's Aura")
     end
 end

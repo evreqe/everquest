@@ -38,6 +38,18 @@ typedef int (__cdecl* EQ_FUNCTION_TYPE_ExecuteCmd)(uint32_t commandID, int isAct
 EQ_MACRO_FUNCTION_FunctionAtAddress(LRESULT __stdcall EQ_FUNCTION_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam), EQ_ADDRESS_FUNCTION_WindowProc);
 typedef LRESULT (__stdcall* EQ_FUNCTION_TYPE_WindowProc)(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQ_FUNCTION_ProcessMouseEvent(), EQ_ADDRESS_FUNCTION_ProcessMouseEvent);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_ProcessMouseEvent)();
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQ_FUNCTION_ProcessKeyboardEvent(), EQ_ADDRESS_FUNCTION_ProcessKeyboardEvent);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_ProcessKeyboardEvent)();
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQ_FUNCTION_FlushDxMouse(), EQ_ADDRESS_FUNCTION_FlushDxMouse);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_FlushDxMouse)();
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQ_FUNCTION_FlushDxKeyboard(), EQ_ADDRESS_FUNCTION_FlushDxKeyboard);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_FlushDxKeyboard)();
+
 /* function prototypes */
 
 void EQ_Log(const char* text);
@@ -1153,7 +1165,7 @@ bool EQ_IsAuraNameActive(const char* name)
         return false;
     }
 
-    for (unsigned int i = 0; i < EQ_NUM_AURAS; i++)
+    for (unsigned int i = 0; i < numAurasActive; i++)
     {
         auto auraOffset = i * sizeof(EQData::_AURAINFO);
 
@@ -1197,7 +1209,7 @@ void EQ_PrintAuraNames()
 
     std::cout << "Aura Names: " << std::endl;
 
-    for (unsigned int i = 0; i < EQ_NUM_AURAS; i++)
+    for (unsigned int i = 0; i < numAurasActive; i++)
     {
         auto auraOffset = i * sizeof(EQData::_AURAINFO);
 
@@ -1472,11 +1484,6 @@ bool EQ_CastSpellByGemIndex(uint32_t spellGemIndex)
         return false;
     }
 
-    if (EQ_IsSpellGemIndexReadyToCast(spellGemIndex) == false)
-    {
-        return false;
-    }
-
     std::stringstream ss;
     ss << "/cast " << spellGemIndex + 1;
 
@@ -1491,11 +1498,6 @@ bool EQ_CastSpellByGemIndex(uint32_t spellGemIndex)
 
 bool EQ_CastSpellByID(uint32_t spellID)
 {
-    if (EQ_IsSpellIDReadyToCast(spellID) == false)
-    {
-        return false;
-    }
-
     auto spellGemIndex = EQ_GetSpellGemIndexBySpellID(spellID);
     if (spellGemIndex == EQ_SPELL_GEM_INDEX_NULL)
     {
@@ -1507,33 +1509,34 @@ bool EQ_CastSpellByID(uint32_t spellID)
 
 bool EQ_CastSpellByName(const char* spellName)
 {
-    if (EQ_IsSpellNameReadyToCast(spellName) == false)
-    {
-        return false;
-    }
-
-    uint32_t spellGemIndex = EQ_SPELL_GEM_INDEX_NULL;
-
     std::string spellNameStr = spellName;
     std::string spellNameRank2 = spellNameStr + " Rk. II";
     std::string spellNameRank3 = spellNameStr + " Rk. III";
 
-    spellGemIndex = EQ_GetSpellGemIndexBySpellName(spellNameRank3.c_str());
-    if (spellGemIndex == EQ_SPELL_GEM_INDEX_NULL)
+    uint32_t spellGemIndex      = EQ_GetSpellGemIndexBySpellName(spellNameStr.c_str());
+    uint32_t spellGemIndexRank2 = EQ_GetSpellGemIndexBySpellName(spellNameRank2.c_str());
+    uint32_t spellGemIndexRank3 = EQ_GetSpellGemIndexBySpellName(spellNameRank3.c_str());
+
+    if (spellGemIndexRank3 != EQ_SPELL_GEM_INDEX_NULL)
     {
-        spellGemIndex = EQ_GetSpellGemIndexBySpellName(spellNameRank2.c_str());
-        if (spellGemIndex == EQ_SPELL_GEM_INDEX_NULL)
+        return EQ_CastSpellByGemIndex(spellGemIndex);
+    }
+    else
+    {
+        if (spellGemIndexRank2 != EQ_SPELL_GEM_INDEX_NULL)
         {
-            spellGemIndex = EQ_GetSpellGemIndexBySpellName(spellNameStr.c_str());
+            return EQ_CastSpellByGemIndex(spellGemIndexRank2);
+        }
+        else
+        {
+            if (spellGemIndex != EQ_SPELL_GEM_INDEX_NULL)
+            {
+                return EQ_CastSpellByGemIndex(spellGemIndex);
+            }
         }
     }
 
-    if (spellGemIndex == EQ_SPELL_GEM_INDEX_NULL)
-    {
-        return false;
-    }
-
-    return EQ_CastSpellByGemIndex(spellGemIndex);
+    return false;
 }
 
 uint32_t EQ_GetSpawnByID(uint32_t spawnID)

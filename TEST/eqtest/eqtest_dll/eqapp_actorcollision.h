@@ -119,6 +119,8 @@ bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor
     char actorDefinitionName[EQ_SIZE_ACTOR_DEFINITION_NAME];
     std::memmove(actorDefinitionName, (LPVOID)(actorDefinitionAddress), sizeof(actorDefinitionName));
 
+    ////auto actorApplicationData = EQ_ReadMemory<uint32_t>(cactor + EQ_OFFSET_CActor_APPLICATION_DATA);
+
     auto actorY = EQ_ReadMemory<float>(cactor + EQ_OFFSET_CActor_Y);
     auto actorX = EQ_ReadMemory<float>(cactor + EQ_OFFSET_CActor_X);
     auto actorZ = EQ_ReadMemory<float>(cactor + EQ_OFFSET_CActor_Z);
@@ -140,6 +142,8 @@ bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor
             drawText << "[Actor] " << actorDefinitionName;
 
             drawText << "\nAddress: 0x" << fmt::hex(cactor);
+
+            ////drawText << "\nAD: 0x" << fmt::hex(actorApplicationData);
 
             drawText << "\nType: " << actorType;
 

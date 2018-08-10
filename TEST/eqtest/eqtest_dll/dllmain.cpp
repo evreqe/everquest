@@ -44,6 +44,19 @@ namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not avai
 #include <psapi.h>
 #pragma comment(lib, "psapi.lib")
 
+// DirectX 9
+#include <d3d9.h>
+#pragma comment(lib, "d3d9.lib")
+
+#define DIRECTINPUT_VERSION 0x0800
+#include <dinput.h>
+
+// imgui
+// https://github.com/ocornut/imgui
+#include "imgui.h"
+#include "imgui_impl_dx9.h"
+#include "imgui_impl_win32.h"
+
 // Microsoft Detours 1.5
 #include "detours.h"
 #pragma comment(lib, "detours.lib")
@@ -73,6 +86,7 @@ namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not avai
 #include "eq.h"
 #include "eq_functions.h"
 
+// EQApp
 #include "eqapp.h"
 #include "eqapp_functions.h"
 
@@ -109,6 +123,48 @@ namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not avai
 
 void EQAPP_Load()
 {
+    HWND window = EQ_GetWindow();
+    auto render = EQ_GetRender();
+
+    if (window != NULL && render != NULL)
+    {
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+        //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
+
+        bool result = ImGui_ImplWin32_Init(window);
+        if (result == true)
+        {
+            auto devicePointer = EQ_ReadMemory<LPDIRECT3DDEVICE9>(render + EQ_OFFSET_CRender_Direct3DDevicePointer);
+            if (devicePointer != NULL)
+            {
+                bool result = ImGui_ImplDX9_Init(devicePointer);
+                if (result == true)
+                {
+                    g_EQAppIsGUIReady = true;
+
+                    std::cout << "GUI is ready!" << std::endl;
+                }
+            }
+            else
+            {
+                g_EQAppIsGUIReady = false;
+            }
+        }
+        else
+        {
+            g_EQAppIsGUIReady = false;
+        }
+    }
+
+    if (g_EQAppIsGUIReady == true)
+    {
+        ImGui::StyleColorsDark();
+        //ImGui::StyleColorsClassic();
+    }
+
     EQAPP_ActorCollision_Load();
     EQAPP_WaypointList_Load();
     EQAPP_NamedSpawns_Load();
@@ -144,6 +200,8 @@ void EQAPP_Load()
 
 void EQAPP_Unload()
 {
+    g_NoDrawIsEnabled = false;
+
     if (g_LuaIsEnabled == true)
     {
         EQAPP_Lua_EventScriptList_ExecuteFunction("OnUnload");
@@ -175,8 +233,14 @@ DWORD WINAPI EQAPP_ThreadLoop(LPVOID param)
         Sleep(100);
     }
 
+    g_EQAppIsGUIReady = false;
+
     EQAPP_BoxChat_Unload();
     EQAPP_Detours_Unload();
+
+    ImGui_ImplDX9_Shutdown();
+    ImGui_ImplWin32_Shutdown();
+    ImGui::DestroyContext();
 
     TerminateThread(EQAPP_ThreadLoad, 0);
     TerminateThread(EQAPP_ThreadConsole, 0);

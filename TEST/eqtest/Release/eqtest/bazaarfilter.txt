@@ -69,15 +69,15 @@ Draught of Adventure
 
 ##### Conflagrant #####
 #{Conflagrant
-Conflagrant Celerity
-Conflagrant Harmony
-Conflagrant Ingenuity
-Conflagrant Intensity
-Conflagrant Proficiency
-Conflagrant Resilience
-Conflagrant Savviness
-{Wrapped Conflagrant
-{Conflagrant Gem of
+#Conflagrant Celerity
+#Conflagrant Harmony
+#Conflagrant Ingenuity
+#Conflagrant Intensity
+#Conflagrant Proficiency
+#Conflagrant Resilience
+#Conflagrant Savviness
+#{Wrapped Conflagrant
+#{Conflagrant Gem of
 #{Athletic Conflagrant
 #{Fleet Conflagrant
 #{Ingenious Conflagrant
@@ -105,12 +105,12 @@ Conflagrant Savviness
 
 ##### Armor Turn In #####
 #{Fear Touched
-{Castaway
+#{Castaway
 #}of Latent Ether
 #{Glowing Athlai
 #{Glowing Othni
 #{Glowing Reis
-{Glowing Sebilisian
+#{Glowing Sebilisian
 
 ##### Merc Gear #####
 #{Assassin's Extravagant
