@@ -73,6 +73,11 @@
 #define EQ_OFFSET_CLargeDialogWnd_BUTTON_YES    0x240+EQ_OFFSET_CXWnd_PADDING // uint32_t pointer    "Yes" button    "LDW_YesButton"
 #define EQ_OFFSET_CLargeDialogWnd_BUTTON_NO     0x244+EQ_OFFSET_CXWnd_PADDING // uint32_t pointer    "No" button     "LDW_NoButton"
 
+#define EQ_OFFSET_CConfirmationDialog_BUTTON_YES        0x23C+EQ_OFFSET_CXWnd_PADDING // uint32_t pointer    "Yes" button       "Yes_Button"
+#define EQ_OFFSET_CConfirmationDialog_BUTTON_NO         0x240+EQ_OFFSET_CXWnd_PADDING // uint32_t pointer    "No" button        "No_Button"
+#define EQ_OFFSET_CConfirmationDialog_BUTTON_CANCEL     0x244+EQ_OFFSET_CXWnd_PADDING // uint32_t pointer    "Cancel" button    "Cancel_Button"
+#define EQ_OFFSET_CConfirmationDialog_BUTTON_OK         0x248+EQ_OFFSET_CXWnd_PADDING // uint32_t pointer    "OK" button        "OK_Button"
+
 // ********************************************************************* //
 
 #define EQ_OFFSET_CPlayerWnd_COMBAT_STATE    offsetof(EQUIStructs::_CPLAYERWND, CombatState) // uint32_t

@@ -146,6 +146,8 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CLargeDialogWnd);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CLargeDialogWnd__Open);
 
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CConfirmationDialog);
+
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CPlayerWnd);
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CTargetWnd);
 
@@ -189,6 +191,7 @@ bool EQAPP_InitializeAddressPointers()
         EQ_ADDRESS_POINTER_CBazaarSearchWnd,
         EQ_ADDRESS_POINTER_CTaskSelectWnd,
         EQ_ADDRESS_POINTER_CLargeDialogWnd,
+        EQ_ADDRESS_POINTER_CConfirmationDialog,
     };
 
     for (auto& addressPointer : addressPointerList)
@@ -228,6 +231,9 @@ bool EQAPP_InitializeAddressPointers()
 
     EQ_CLASS_POINTER_CLargeDialogWnd_pptr = (EQClass::CLargeDialogWnd**)EQ_ADDRESS_POINTER_CLargeDialogWnd;
     EQ_CLASS_POINTER_CLargeDialogWnd = (*EQ_CLASS_POINTER_CLargeDialogWnd_pptr);
+
+    EQ_CLASS_POINTER_CConfirmationDialog_pptr = (EQClass::CConfirmationDialog**)EQ_ADDRESS_POINTER_CConfirmationDialog;
+    EQ_CLASS_POINTER_CConfirmationDialog = (*EQ_CLASS_POINTER_CConfirmationDialog_pptr);
 
     return true;
 }

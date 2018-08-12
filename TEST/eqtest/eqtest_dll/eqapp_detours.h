@@ -1,7 +1,5 @@
 #pragma once
 
-#include "imgui_impl_win32.h"
-
 #include "eqapp_alwaysattack.h"
 #include "eqapp_alwayshotbutton.h"
 #include "eqapp_autogroup.h"
@@ -19,6 +17,8 @@
 #include "eqapp_sleep.h"
 #include "eqapp_spawncastspell.h"
 #include "eqapp_windowtitle.h"
+
+#include "eqapp_gui.h"
 
 bool g_DetoursIsCameraDetoured = false;
 bool g_DetoursIsRenderDetoured = false;
@@ -912,7 +912,6 @@ int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive,
     return EQAPP_REAL_FUNCTION_ExecuteCmd(commandID, isActive, unknown, zero);
 }
 
-extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 LRESULT __stdcall EQAPP_DETOURED_FUNCTION_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     if (g_EQAppShouldUnload == 1)
@@ -930,20 +929,16 @@ LRESULT __stdcall EQAPP_DETOURED_FUNCTION_WindowProc(HWND hwnd, UINT uMsg, WPARA
         EQAPP_REAL_FUNCTION_WindowProc(hwnd, uMsg, wParam, lParam);
     }
 
-    if (g_EQAppIsGUIReady == true)
+    if (g_GUIIsEnabled == true)
     {
-        if (EQ_IsWindowInBackground() == false && EQ_IsMouseLookEnabled() == false)
+        signed int result = EQAPP_GUI_HandleEvent_WindowProc(hwnd, uMsg, wParam, lParam);
+        if (result == 1)
         {
-            ImGuiIO& io = ImGui::GetIO();
-            if (io.WantCaptureMouse == true || io.WantCaptureKeyboard == true)
-            {
-                if (ImGui_ImplWin32_WndProcHandler(hwnd, uMsg, wParam, lParam))
-                {
-                    return true;
-                }
-
-                return DefWindowProcA(hwnd, uMsg, wParam, lParam);
-            }
+            return true;
+        }
+        else if (result == -1)
+        {
+            return DefWindowProcA(hwnd, uMsg, wParam, lParam);
         }
     }
 
@@ -967,25 +962,12 @@ int __cdecl EQAPP_DETOURED_FUNCTION_ProcessMouseEvent()
         return EQAPP_REAL_FUNCTION_ProcessMouseEvent();
     }
 
-    if (g_EQAppIsGUIReady == true)
+    if (g_GUIIsEnabled == true)
     {
-        if (EQ_IsWindowInBackground() == false && EQ_IsMouseLookEnabled() == false)
+        bool result = EQAPP_GUI_HandleEvent_ProcessMouseEvent();
+        if (result == true)
         {
-            ImGuiIO& io = ImGui::GetIO();
-            if (io.WantCaptureMouse == true)
-            {
-                EQ_FUNCTION_FlushDxMouse();
-
-                EQ::MouseState_ptr mouseState = (EQ::MouseState_ptr)EQ_ADDRESS_DirectInputMouseCopy;
-                mouseState->InWindow = 0;
-
-                return 0;
-            }
-            else
-            {
-                memset(io.MouseDown, 0, sizeof(io.MouseDown));
-                io.MouseWheel = 0;
-            }
+            return 0;
         }
     }
 
@@ -1009,16 +991,12 @@ int __cdecl EQAPP_DETOURED_FUNCTION_ProcessKeyboardEvent()
         return EQAPP_REAL_FUNCTION_ProcessKeyboardEvent();
     }
 
-    if (g_EQAppIsGUIReady == true)
+    if (g_GUIIsEnabled == true)
     {
-        if (EQ_IsWindowInBackground() == false && EQ_IsMouseLookEnabled() == false)
+        bool result =  EQAPP_GUI_HandleEvent_ProcessKeyboardEvent();
+        if (result == true)
         {
-            ImGuiIO& io = ImGui::GetIO();
-            if (io.WantCaptureKeyboard == true)
-            {
-                EQ_FUNCTION_FlushDxKeyboard();
-                return 0;
-            }
+            return 0;
         }
     }
 
@@ -1498,21 +1476,18 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__HandleMouseWheel(void* this_p
 
     ////std::cout << "mouse wheel delta: " << delta << std::endl;
 
-    // clamp value within sane values due to bug with gui
+    // clamp delta value within valid range due to bug with GUI
     if (delta > EQ_MOUSE_WHEEL_DELTA_MAX || delta < EQ_MOUSE_WHEEL_DELTA_MIN)
     {
         delta = EQ_MOUSE_WHEEL_DELTA_DEFAULT;
     }
 
-    if (g_EQAppIsGUIReady == true)
+    if (g_GUIIsEnabled == true)
     {
-        if (EQ_IsWindowInBackground() == false && EQ_IsMouseLookEnabled() == false)
+        bool result = EQAPP_GUI_HandleEvent_CEverQuest__HandleMouseWheel(delta);
+        if (result == true)
         {
-            ImGuiIO& io = ImGui::GetIO();
-            if (io.WantCaptureMouse == true)
-            {
-                return 0;
-            }
+            return 0;
         }
     }
 
@@ -1552,16 +1527,16 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CRender__ResetDevice(void* this_ptr, void
         return EQAPP_REAL_FUNCTION_CRender__ResetDevice(this_ptr, unknown);
     }
 
-    if (g_EQAppIsGUIReady == true)
+    if (g_GUIIsEnabled == true)
     {
-        ImGui_ImplDX9_InvalidateDeviceObjects();
+        EQAPP_GUI_HandleEvent_CRender__ResetDevice_Before();
     }
 
     int result = EQAPP_REAL_FUNCTION_CRender__ResetDevice(this_ptr, unknown);
 
-    if (g_EQAppIsGUIReady == true)
+    if (g_GUIIsEnabled == true)
     {
-        ImGui_ImplDX9_CreateDeviceObjects();
+        EQAPP_GUI_HandleEvent_CRender__ResetDevice_After();
     }
 
     return result;
@@ -1647,19 +1622,9 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CRender__UpdateDisplay(void* this_ptr, vo
         }
     }
 
-    if (g_EQAppIsGUIReady == true)
+    if (g_GUIIsEnabled == true)
     {
-        ImGui_ImplDX9_NewFrame();
-        ImGui_ImplWin32_NewFrame();
-        ImGui::NewFrame();
-
-        bool show_demo_window = true;
-        ImGui::ShowDemoWindow(&show_demo_window);
-
-        ImGui::EndFrame();
-
-        ImGui::Render();
-        ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+        EQAPP_GUI_HandleEvent_CRender__UpdateDisplay();
     }
 
     return EQAPP_REAL_FUNCTION_CRender__UpdateDisplay(this_ptr);

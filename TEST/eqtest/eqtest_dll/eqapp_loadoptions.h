@@ -25,6 +25,8 @@
 #include "eqapp_windowtitle.h"
 #include "eqapp_waypoint.h"
 
+#include "eqapp_gui.h"
+
 template <class T>
 void EQAPP_LoadOption(T& option, const char* optionName, boost::property_tree::ptree& pt);
 void EQAPP_LoadOptions();
@@ -122,6 +124,8 @@ void EQAPP_LoadOptions()
     EQAPP_LoadOption<float>(g_FindPathFollowPathDistance, "fFindPathFollowPathDistance", pt);
 
     EQAPP_LoadOption<bool>(g_FPSIsEnabled, "bFPS", pt);
+
+    EQAPP_LoadOption<bool>(g_GUIIsEnabled, "bGUI", pt);
 
     EQAPP_LoadOption<bool>(g_HUDIsEnabled, "bHUD", pt);
     EQAPP_LoadOption<uint32_t>(g_HUDXDefault, "iHUDX", pt);

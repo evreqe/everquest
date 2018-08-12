@@ -119,51 +119,13 @@ namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not avai
 #include "eqapp_windowtitle.h"
 #include "eqapp_waypoint.h"
 
+#include "eqapp_gui.h"
+
 #include "eqapp_loadoptions.h"
 
 void EQAPP_Load()
 {
-    HWND window = EQ_GetWindow();
-    auto render = EQ_GetRender();
-
-    if (window != NULL && render != NULL)
-    {
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-        ImGuiIO& io = ImGui::GetIO(); (void)io;
-
-        //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
-
-        bool result = ImGui_ImplWin32_Init(window);
-        if (result == true)
-        {
-            auto devicePointer = EQ_ReadMemory<LPDIRECT3DDEVICE9>(render + EQ_OFFSET_CRender_Direct3DDevicePointer);
-            if (devicePointer != NULL)
-            {
-                bool result = ImGui_ImplDX9_Init(devicePointer);
-                if (result == true)
-                {
-                    g_EQAppIsGUIReady = true;
-
-                    std::cout << "GUI is ready!" << std::endl;
-                }
-            }
-            else
-            {
-                g_EQAppIsGUIReady = false;
-            }
-        }
-        else
-        {
-            g_EQAppIsGUIReady = false;
-        }
-    }
-
-    if (g_EQAppIsGUIReady == true)
-    {
-        ImGui::StyleColorsDark();
-        //ImGui::StyleColorsClassic();
-    }
+    g_GUIIsLoaded = EQAPP_GUI_Load();
 
     EQAPP_ActorCollision_Load();
     EQAPP_WaypointList_Load();
@@ -233,14 +195,10 @@ DWORD WINAPI EQAPP_ThreadLoop(LPVOID param)
         Sleep(100);
     }
 
-    g_EQAppIsGUIReady = false;
+    EQAPP_GUI_Unload();
 
     EQAPP_BoxChat_Unload();
     EQAPP_Detours_Unload();
-
-    ImGui_ImplDX9_Shutdown();
-    ImGui_ImplWin32_Shutdown();
-    ImGui::DestroyContext();
 
     TerminateThread(EQAPP_ThreadLoad, 0);
     TerminateThread(EQAPP_ThreadConsole, 0);

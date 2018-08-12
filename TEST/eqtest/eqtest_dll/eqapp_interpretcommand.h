@@ -25,6 +25,8 @@
 #include "eqapp_windowtitle.h"
 #include "eqapp_waypoint.h"
 
+#include "eqapp_gui.h"
+
 #include "eqapp_loadoptions.h"
 
 bool g_InterpretCommandIsEnabled = true;
@@ -83,12 +85,6 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//CHB",                          &EQAPP_CombatHotButton_Toggle},
     {"//CHBOn",                        &EQAPP_CombatHotButton_On},
     {"//CHBOff",                       &EQAPP_CombatHotButton_Off},
-    ////{"//AutoAlternateAbility",         &EQAPP_AutoAlternateAbility_Toggle},
-    ////{"//AutoAlternateAbilityOn",       &EQAPP_AutoAlternateAbility_On},
-    ////{"//AutoAlternateAbilityOff",      &EQAPP_AutoAlternateAbility_Off},
-    ////{"//AAA",                          &EQAPP_AutoAlternateAbility_Toggle},
-    ////{"//AAAOn",                        &EQAPP_AutoAlternateAbility_On},
-    ////{"//AAAOff",                       &EQAPP_AutoAlternateAbility_Off},
     {"//AutoGroup",                    &EQAPP_AutoGroup_Toggle},
     {"//AutoGroupOn",                  &EQAPP_AutoGroup_On},
     {"//AutoGroupOff",                 &EQAPP_AutoGroup_Off},
@@ -121,12 +117,6 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//BCOff",                        &EQAPP_BoxChat_Off},
     {"//BoxChatAutoConnect",           &EQAPP_BoxChat_AutoConnect_Toggle},
     {"//BCAC",                         &EQAPP_BoxChat_AutoConnect_Toggle},
-    ////{"//CombatAlternateAbility",       &EQAPP_CombatAlternateAbility_Toggle},
-    ////{"//CombatAlternateAbilityOn",     &EQAPP_CombatAlternateAbility_On},
-    ////{"//CombatAlternateAbilityOff",    &EQAPP_CombatAlternateAbility_Off},
-    ////{"//CAA",                          &EQAPP_CombatAlternateAbility_Toggle},
-    ////{"//CAAOn",                        &EQAPP_CombatAlternateAbility_On},
-    ////{"//CAAOff",                       &EQAPP_CombatAlternateAbility_Off},
     {"//ConsolePrint",                 &EQAPP_Console_Print_Toggle},
     {"//ESP",                          &EQAPP_ESP_Toggle},
     {"//ESPOn",                        &EQAPP_ESP_On},
@@ -144,6 +134,9 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//FPS",                          &EQAPP_FPS_Toggle},
     {"//FPSOn",                        &EQAPP_FPS_On},
     {"//FPSOff",                       &EQAPP_FPS_Off},
+    {"//GUI",                          &EQAPP_GUI_Toggle},
+    {"//GUIOn",                        &EQAPP_GUI_On},
+    {"//GUIOff",                       &EQAPP_GUI_Off},
     {"//ChangeHeight",                 &EQAPP_ChangeHeight_Toggle},
     {"//ChangeHeightOn",               &EQAPP_ChangeHeight_On},
     {"//ChangeHeightOff",              &EQAPP_ChangeHeight_Off},
@@ -160,6 +153,7 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//SCSESP",                       &EQAPP_SpawnCastSpell_ESP_Toggle},
     {"//SpawnCastSpellGroupChat",      &EQAPP_SpawnCastSpell_GroupChat_Toggle},
     {"//SCSGroupChat",                 &EQAPP_SpawnCastSpell_GroupChat_Toggle},
+    {"//SCSGC",                        &EQAPP_SpawnCastSpell_GroupChat_Toggle},
     {"//Speed",                        &EQAPP_Speed_Toggle},
     {"//SpeedOn",                      &EQAPP_Speed_On},
     {"//SpeedOff",                     &EQAPP_Speed_Off},
@@ -212,10 +206,6 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//FCOff",                        &EQAPP_FreeCamera_Off},
     {"//OpenAllDoors",                 &EQ_OpenAllDoors},
     {"//CloseAllDoors",                &EQ_CloseAllDoors},
-    {"//LoadWaypoints",                &EQAPP_WaypointList_Load},
-    {"//SaveWaypoints",                &EQAPP_WaypointList_Save},
-    {"//PrintWaypoints",               &EQAPP_WaypointList_Print},
-    {"//ClearWaypoints",               &EQAPP_WaypointList_Clear},
     {"//WPLoad",                       &EQAPP_WaypointList_Load},
     {"//WPSave",                       &EQAPP_WaypointList_Save},
     {"//WPList",                       &EQAPP_WaypointList_Print},
@@ -285,6 +275,10 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//LDWOK",                        &EQAPP_InterpretCommand_NULL},
     {"//LDWYes",                       &EQAPP_InterpretCommand_NULL},
     {"//LDWNo",                        &EQAPP_InterpretCommand_NULL},
+    {"//CDYes",                        &EQAPP_InterpretCommand_NULL},
+    {"//CDNo",                         &EQAPP_InterpretCommand_NULL},
+    {"//CDCancel",                     &EQAPP_InterpretCommand_NULL},
+    {"//CDOK",                         &EQAPP_InterpretCommand_NULL},
     {"//Screencap",                    &EQAPP_InterpretCommand_NULL},
     {"//Screenshot",                   &EQAPP_InterpretCommand_NULL},
     {"//TakeScreenshot",               &EQAPP_InterpretCommand_NULL},
@@ -503,6 +497,7 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//NorthEast",                    &EQAPP_InterpretCommand_NULL},
 };
 
+void EQAPP_InterpretCommand_PrintList();
 void EQAPP_InterpretCommand_Execute();
 void EQAPP_InterpretCommand_ConvertText(std::string& text);
 bool EQAPP_InterpretCommand_HandleEvent_CEverQuest__InterpretCmd(void* this_ptr, class EQPlayer* player, const char* commandText_);
@@ -510,6 +505,16 @@ void EQAPP_InterpretCommand_InterpretArguments(const std::string& commandText, c
 void EQAPP_InterpretCommand_InterpretArgumentsRandom(const std::string& commandText, const std::string& prependText);
 void EQAPP_InterpretCommand_Execute(std::string commandText);
 bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText);
+
+void EQAPP_InterpretCommand_PrintList()
+{
+    std::cout << "Command List: " << std::endl;
+
+    for (auto& cmd : g_InterpretCommandList)
+    {
+        std::cout << cmd.first << std::endl;
+    }
+}
 
 void EQAPP_InterpretCommand_Execute()
 {
@@ -751,12 +756,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 {
     if (commandText == "//Help" || commandText == "//Commands")
     {
-        std::cout << "Command List: " << std::endl;
-
-        for (auto& cmd : g_InterpretCommandList)
-        {
-            std::cout << cmd.first << std::endl;
-        }
+        EQAPP_InterpretCommand_PrintList();
 
         return true;
     }
@@ -1128,6 +1128,46 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         if (EQ_LargeDialogWindow_IsOpen() == true)
         {
             EQ_LargeDialogWindow_ClickNoButton();
+        }
+
+        return true;
+    }
+
+    if (commandText == "//CDYes")
+    {
+        if (EQ_ConfirmationDialog_IsOpen() == true)
+        {
+            EQ_ConfirmationDialog_ClickYesButton();
+        }
+
+        return true;
+    }
+
+    if (commandText == "//CDNo")
+    {
+        if (EQ_ConfirmationDialog_IsOpen() == true)
+        {
+            EQ_ConfirmationDialog_ClickNoButton();
+        }
+
+        return true;
+    }
+
+    if (commandText == "//CDCancel")
+    {
+        if (EQ_ConfirmationDialog_IsOpen() == true)
+        {
+            EQ_ConfirmationDialog_ClickCancelButton();
+        }
+
+        return true;
+    }
+
+    if (commandText == "//CDOK")
+    {
+        if (EQ_ConfirmationDialog_IsOpen() == true)
+        {
+            EQ_ConfirmationDialog_ClickOKButton();
         }
 
         return true;
@@ -3788,11 +3828,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
     {
         std::cout << "Loading scripts..." << std::endl;
 
-        EQAPP_Lua_LoadGlobalScripts(&g_LuaState);
-
-        EQAPP_Lua_EventScriptList_Load();
-
-        EQAPP_Lua_ScriptFolder_Print();
+        EQAPP_Lua_LoadAndPrintAllScripts();
 
         return true;
     }

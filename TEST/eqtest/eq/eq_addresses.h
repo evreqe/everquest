@@ -1336,13 +1336,15 @@ uint32_t EQ_ADDRESS_POINTER_CLargeDialogWnd = 0x0; // "LargeDialogWnd"
 
 uint32_t EQ_ADDRESS_FUNCTION_CLargeDialogWnd__Open = 0x0;
 
+uint32_t EQ_ADDRESS_POINTER_CConfirmationDialog = 0x0; // "ConfirmationDialogBox"
+
 uint32_t EQ_ADDRESS_POINTER_CPlayerWnd = 0x0; // "PlayerWnd"
 uint32_t EQ_ADDRESS_POINTER_CTargetWnd = 0x0; // "TargetWnd"
 
 uint32_t EQ_ADDRESS_POINTER_CPetInfoWindow = 0x0; // "PetInfoWindow"
 
-uint32_t EQ_ADDRESS_POINTER_CBuffWnd_Long = 0x0;
-uint32_t EQ_ADDRESS_POINTER_CBuffWnd_Short = 0x0;
+uint32_t EQ_ADDRESS_POINTER_CBuffWnd_Long = 0x0; // "BuffWindow"
+uint32_t EQ_ADDRESS_POINTER_CBuffWnd_Short = 0x0; // "ShortDurationBuffWindow"
 
 uint32_t EQ_ADDRESS_POINTER_CCastSpellWnd = 0x0; // "CastSpellWnd"
 
@@ -1484,6 +1486,8 @@ void EQ_InitializeAddresses()
 
     EQ_ADDRESS_POINTER_CLargeDialogWnd = pinstCLargeDialogWnd_x;
     EQ_ADDRESS_FUNCTION_CLargeDialogWnd__Open    = CLargeDialogWnd__Open_x;
+
+    EQ_ADDRESS_POINTER_CConfirmationDialog = pinstCConfirmationDialog_x;
 
     EQ_ADDRESS_POINTER_CPlayerWnd = pinstCPlayerWnd_x;
     EQ_ADDRESS_POINTER_CTargetWnd = pinstCTargetWnd_x;

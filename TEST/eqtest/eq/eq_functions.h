@@ -434,6 +434,12 @@ bool EQ_LargeDialogWindow_ClickNoButton();
 void EQ_LargeDialogWindow_Open(const char* titleText, const char* bodyText);
 void EQ_LargeDialogWindow_OpenWithTimer(const char* titleText, const char* bodyText, unsigned long closeTimer);
 
+bool EQ_ConfirmationDialog_IsOpen();
+bool EQ_ConfirmationDialog_ClickYesButton();
+bool EQ_ConfirmationDialog_ClickNoButton();
+bool EQ_ConfirmationDialog_ClickCancelButton();
+bool EQ_ConfirmationDialog_ClickOKButton();
+
 uint32_t EQ_GetPlayerWindow();
 bool EQ_PlayerWindow_IsOpen();
 uint32_t EQ_PlayerWindow_GetCombatState();
@@ -914,9 +920,19 @@ HWND EQ_GetWindow()
 
 bool EQ_IsWindowInBackground()
 {
-    HWND window = EQ_GetWindow();
+    HWND eqWindow = EQ_GetWindow();
+    if (eqWindow == NULL)
+    {
+        return true;
+    }
 
-    return window != GetForegroundWindow();
+    HWND foregroundWindow = GetForegroundWindow();
+    if (foregroundWindow == NULL)
+    {
+        return true;
+    }
+
+    return eqWindow != foregroundWindow;
 }
 
 uint32_t EQ_GetTimer()
@@ -4390,6 +4406,31 @@ bool EQ_LargeDialogWindow_ClickYesButton()
 bool EQ_LargeDialogWindow_ClickNoButton()
 {
     return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CLargeDialogWnd, EQ_OFFSET_CLargeDialogWnd_BUTTON_NO);
+}
+
+bool EQ_ConfirmationDialog_IsOpen()
+{
+    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CConfirmationDialog) == true);
+}
+
+bool EQ_ConfirmationDialog_ClickYesButton()
+{
+    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CConfirmationDialog, EQ_OFFSET_CConfirmationDialog_BUTTON_YES);
+}
+
+bool EQ_ConfirmationDialog_ClickNoButton()
+{
+    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CConfirmationDialog, EQ_OFFSET_CConfirmationDialog_BUTTON_NO);
+}
+
+bool EQ_ConfirmationDialog_ClickCancelButton()
+{
+    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CConfirmationDialog, EQ_OFFSET_CConfirmationDialog_BUTTON_CANCEL);
+}
+
+bool EQ_ConfirmationDialog_ClickOKButton()
+{
+    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CConfirmationDialog, EQ_OFFSET_CConfirmationDialog_BUTTON_OK);
 }
 
 void EQ_LargeDialogWindow_Open(const char* titleText, const char* bodyText)

@@ -196,6 +196,7 @@
     <ClInclude Include="eqapp_fps.h" />
     <ClInclude Include="eqapp_freecamera.h" />
     <ClInclude Include="eqapp_functions.h" />
+    <ClInclude Include="eqapp_gui.h" />
     <ClInclude Include="eqapp_hud.h" />
     <ClInclude Include="eqapp_ini.h" />
     <ClInclude Include="eqapp_interpretcommand.h" />

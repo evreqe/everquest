@@ -4,6 +4,8 @@
 
 #include <chrono>
 #include <random>
+#include <unordered_map>
+#include <vector>
 
 #include "eqapp_string.h"
 #include "eqapp_timer.h"
@@ -19,11 +21,12 @@ int g_EQAppKillSwitchKey = VK_F12;
 
 bool g_EQAppIsInGame = false;
 
-std::mt19937 g_EQAppRandomEngine((uint32_t)std::chrono::high_resolution_clock::now().time_since_epoch().count());
+std::random_device g_EQAppRandomDevice;
+std::mt19937 g_EQAppRandomEngine(g_EQAppRandomDevice());
 
 bool g_EQAppDebugTextIsEnabled = false;
 
-bool g_EQAppIsGUIReady = false;
+std::map<std::string, HWND> g_EQAppClientWindowList;
 
 HMODULE g_EQAppModule;
 

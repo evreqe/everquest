@@ -31,6 +31,8 @@ void EQAPP_PrintLocation();
 void EQAPP_PrintMouseLocation();
 void EQAPP_InventoryFind(const char* text);
 void EQAPP_SetWindowTitle(const char* text);
+BOOL CALLBACK EQAPP_UpdateClientWindowList_EnumWindowsProc(HWND hwnd, LPARAM lParam);
+bool EQAPP_UpdateClientWindowList();
 
 void EQAPP_Log(const char* text)
 {
@@ -209,6 +211,15 @@ uint32_t EQAPP_GetRandomNumber(uint32_t low, uint32_t high)
 {
     std::uniform_int_distribution<uint32_t> uid;
     std::uniform_int_distribution<uint32_t>::param_type uidpt(low, high);
+
+    return uid(g_EQAppRandomEngine, uidpt);
+}
+
+template <class T>
+T EQAPP_GetRandomNumberAny(T low, T high)
+{
+    std::uniform_int_distribution<T> uid;
+    std::uniform_int_distribution<T>::param_type uidpt(low, high);
 
     return uid(g_EQAppRandomEngine, uidpt);
 }
@@ -544,4 +555,31 @@ void EQAPP_SetWindowTitle(const char* text)
     }
 
     SetWindowTextA(hwnd, text);
+}
+
+BOOL CALLBACK EQAPP_UpdateClientWindowList_EnumWindowsProc(HWND hwnd, LPARAM lParam)
+{
+    int windowTitleLength = GetWindowTextLengthA(hwnd) + 1;
+
+    std::string windowTitle(windowTitleLength, L'\0');
+    GetWindowTextA(hwnd, &windowTitle[0], windowTitleLength);
+
+    if (windowTitle.size() != 0)
+    {
+        if (EQAPP_String_BeginsWith(windowTitle, "EQ: ") == true)
+        {
+            g_EQAppClientWindowList.insert( {windowTitle, hwnd} );
+        }
+    }
+
+    return TRUE;
+}
+
+bool EQAPP_UpdateClientWindowList()
+{
+    g_EQAppClientWindowList.clear();
+
+    EnumWindows(EQAPP_UpdateClientWindowList_EnumWindowsProc, NULL);
+
+    return (g_EQAppClientWindowList.size() != 0);
 }

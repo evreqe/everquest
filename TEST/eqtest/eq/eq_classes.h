@@ -25,6 +25,7 @@ namespace EQClass
     class CBazaarSearchWnd;
     class CTaskSelectWnd;
     class CLargeDialogWnd;
+    class CConfirmationDialog;
 
     // EQGraphicsDX9.dll
     class CCamera;
@@ -317,6 +318,19 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CLargeDialogWnd__Open)(void* this_ptr,
 
 EQClass::CLargeDialogWnd** EQ_CLASS_POINTER_CLargeDialogWnd_pptr;
 EQClass::CLargeDialogWnd* EQ_CLASS_POINTER_CLargeDialogWnd;
+
+/* CConfirmationDialog */
+
+class EQClass::CConfirmationDialog
+{
+public:
+    int CConfirmationDialog::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
+};
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CConfirmationDialog::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
+
+EQClass::CConfirmationDialog** EQ_CLASS_POINTER_CConfirmationDialog_pptr;
+EQClass::CConfirmationDialog* EQ_CLASS_POINTER_CConfirmationDialog;
 
 /* CCamera */
 

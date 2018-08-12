@@ -39,6 +39,7 @@ void EQAPP_Lua_On();
 void EQAPP_Lua_Off();
 void EQAPP_Lua_OpenLibraries(sol::state* state);
 void EQAPP_Lua_ResetTimers();
+void EQAPP_Lua_LoadAndPrintAllScripts();
 void EQAPP_Lua_LoadGlobalScripts(sol::state* state);
 void EQAPP_Lua_EventScriptList_Load();
 void EQAPP_Lua_EventScriptList_Print();
@@ -112,6 +113,15 @@ void EQAPP_Lua_ResetTimers()
     g_LuaOneMinuteTimer = EQAPP_Timer_GetTimeNow();
 
     g_LuaOneHourTimer = EQAPP_Timer_GetTimeNow();
+}
+
+void EQAPP_Lua_LoadAndPrintAllScripts()
+{
+    EQAPP_Lua_LoadGlobalScripts(&g_LuaState);
+
+    EQAPP_Lua_EventScriptList_Load();
+
+    EQAPP_Lua_ScriptFolder_Print();
 }
 
 void EQAPP_Lua_LoadGlobalScripts(sol::state* state)
@@ -2127,6 +2137,11 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_LargeDialogWindow_ClickNoButton", EQ_LargeDialogWindow_ClickNoButton);
     state->set_function("EQ_LargeDialogWindow_Open", EQ_LargeDialogWindow_Open);
     state->set_function("EQ_LargeDialogWindow_OpenWithTimer", EQ_LargeDialogWindow_OpenWithTimer);
+
+    state->set_function("EQ_ConfirmationDialog_IsOpen", EQ_ConfirmationDialog_IsOpen);
+    state->set_function("EQ_ConfirmationDialog_ClickOKButton", EQ_ConfirmationDialog_ClickOKButton);
+    state->set_function("EQ_ConfirmationDialog_ClickYesButton", EQ_ConfirmationDialog_ClickYesButton);
+    state->set_function("EQ_ConfirmationDialog_ClickNoButton", EQ_ConfirmationDialog_ClickNoButton);
 
     state->set_function("EQ_GetPlayerWindow", EQ_GetPlayerWindow);
     state->set_function("EQ_PlayerWindow_IsOpen", EQ_PlayerWindow_IsOpen);
