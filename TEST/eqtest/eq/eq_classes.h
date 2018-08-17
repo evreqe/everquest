@@ -200,8 +200,12 @@ EQ_MACRO_FUNCTION_FunctionAtAddress(class EQClass::CXStr& EQClass::CXStr::operat
 class EQClass::CXWndManager
 {
 public:
+    int CXWndManager::DrawCursor();
     int CXWndManager::DrawWindows();
 };
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::CXWndManager::DrawCursor(), EQ_ADDRESS_FUNCTION_CXWndManager__DrawCursor);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CXWndManager__DrawCursor)(void* this_ptr);
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::CXWndManager::DrawWindows(), EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CXWndManager__DrawWindows)(void* this_ptr);

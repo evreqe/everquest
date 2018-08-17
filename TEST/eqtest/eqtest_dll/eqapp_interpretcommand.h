@@ -828,6 +828,16 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
+    if (commandText == "//ClientsMenu")
+    {
+        if (g_GUIIsEnabled == true && g_GUIIsLoaded == true)
+        {
+            g_GUIMainWindowPopupMenuClientsIsOpen = true;
+
+            return true;
+        }
+    }
+
     if (commandText == "//InGame")
     {
         g_EQAppIsInGame = true;

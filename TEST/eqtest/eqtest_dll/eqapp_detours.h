@@ -41,6 +41,7 @@ EQ_MACRO_FUNCTION_DefineDetour(WindowProc);
 EQ_MACRO_FUNCTION_DefineDetour(ProcessMouseEvent);
 EQ_MACRO_FUNCTION_DefineDetour(ProcessKeyboardEvent);
 
+EQ_MACRO_FUNCTION_DefineDetour(CXWndManager__DrawCursor);
 EQ_MACRO_FUNCTION_DefineDetour(CXWndManager__DrawWindows);
 
 EQ_MACRO_FUNCTION_DefineDetour(EQPlayer__FollowPlayerAI);
@@ -76,6 +77,7 @@ LRESULT __stdcall EQAPP_DETOURED_FUNCTION_WindowProc(HWND hwnd, UINT uMsg, WPARA
 int __cdecl EQAPP_DETOURED_FUNCTION_ProcessMouseEvent();
 int __cdecl EQAPP_DETOURED_FUNCTION_ProcessKeyboardEvent();
 
+int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawCursor(void* this_ptr, void* not_used);
 int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawWindows(void* this_ptr, void* not_used);
 
 int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__FollowPlayerAI(void* this_ptr, void* not_used);
@@ -290,6 +292,13 @@ void EQAPP_Detours_Load()
 
     if (EQ_ADDRESS_POINTER_CXWndManager != 0)
     {
+        if (EQ_ADDRESS_FUNCTION_CXWndManager__DrawCursor != 0)
+        {
+            EQ_MACRO_FUNCTION_AddDetour(CXWndManager__DrawCursor);
+
+            EQAPP_Log("AddDetour: CXWndManager__DrawCursor");
+        }
+
         if (EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows != 0)
         {
             EQ_MACRO_FUNCTION_AddDetour(CXWndManager__DrawWindows);
@@ -457,6 +466,11 @@ void EQAPP_Detours_Unload()
 
     if (EQ_ADDRESS_POINTER_CXWndManager != 0)
     {
+        if (EQ_ADDRESS_FUNCTION_CXWndManager__DrawCursor != 0)
+        {
+            EQ_MACRO_FUNCTION_RemoveDetour(CXWndManager__DrawCursor);
+        }
+
         if (EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows != 0)
         {
             EQ_MACRO_FUNCTION_RemoveDetour(CXWndManager__DrawWindows);
@@ -1001,6 +1015,35 @@ int __cdecl EQAPP_DETOURED_FUNCTION_ProcessKeyboardEvent()
     }
 
     return EQAPP_REAL_FUNCTION_ProcessKeyboardEvent();
+}
+
+int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawCursor(void* this_ptr, void* not_used)
+{
+    if (g_EQAppShouldUnload == 1)
+    {
+        return EQAPP_REAL_FUNCTION_CXWndManager__DrawCursor(this_ptr);
+    }
+
+    if (EQ_IsInGame() == false)
+    {
+        return EQAPP_REAL_FUNCTION_CXWndManager__DrawCursor(this_ptr);
+    }
+
+    if (g_EQAppIsInGame == false)
+    {
+        return EQAPP_REAL_FUNCTION_CXWndManager__DrawCursor(this_ptr);
+    }
+
+    if (g_GUIIsEnabled == true)
+    {
+        bool result =  EQAPP_GUI_HandleEvent_CXWndManager__DrawCursor();
+        if (result == true)
+        {
+            return 0;
+        }
+    }
+
+    return EQAPP_REAL_FUNCTION_CXWndManager__DrawCursor(this_ptr);
 }
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawWindows(void* this_ptr, void* not_used)

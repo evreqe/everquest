@@ -162,6 +162,8 @@ bool EQ_CastSpellByGemIndex(uint32_t spellGemIndex);
 bool EQ_CastSpellByName(const char* spellName);
 bool EQ_CastSpellByID(uint32_t spellID);
 
+uint32_t EQ_GetNumNearbySpawns(uint32_t spawnType, float distance, float distanceZ);
+
 uint32_t EQ_GetSpawnByID(uint32_t spawnID);
 uint32_t EQ_GetSpawnByName(const char* spawnName);
 
@@ -1553,6 +1555,62 @@ bool EQ_CastSpellByName(const char* spellName)
     }
 
     return false;
+}
+
+uint32_t EQ_GetNumNearbySpawns(uint32_t spawnType, float distance, float distanceZ)
+{
+    uint32_t count = 0;
+
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return count;
+    }
+
+    auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
+    auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
+    auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
+
+    auto spawn = EQ_GetFirstSpawn();
+    while (spawn != NULL)
+    {
+        if (spawn == playerSpawn)
+        {
+            spawn = EQ_GetSpawnNext(spawn);
+            continue;
+        }
+
+        auto spawnY = EQ_GetSpawnY(spawn);
+        auto spawnX = EQ_GetSpawnX(spawn);
+        auto spawnZ = EQ_GetSpawnZ(spawn);
+
+        auto spawnType_ = EQ_GetSpawnType(spawn);
+        if (spawnType_ != spawnType)
+        {
+            spawn = EQ_GetSpawnNext(spawn);
+            continue;
+        }
+
+        float spawnDistance = EQ_CalculateDistance(playerSpawnY, playerSpawnX, spawnY, spawnX);
+        if (spawnDistance > distance)
+        {
+            spawn = EQ_GetSpawnNext(spawn);
+            continue;
+        }
+
+        float spawnDistanceZ = std::fabsf(playerSpawnZ - spawnZ);
+        if (spawnDistanceZ > distanceZ)
+        {
+            spawn = EQ_GetSpawnNext(spawn);
+            continue;
+        }
+
+        count++;
+
+        spawn = EQ_GetSpawnNext(spawn);
+    }
+
+    return count;
 }
 
 uint32_t EQ_GetSpawnByID(uint32_t spawnID)

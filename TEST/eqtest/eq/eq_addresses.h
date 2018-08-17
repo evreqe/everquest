@@ -577,6 +577,8 @@ CDisplay__WriteTextHD2():
 
 uint32_t EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows = 0x0; // "DoAllDrawing() failed\n"    GetTickCount()
 
+uint32_t EQ_ADDRESS_FUNCTION_CXWndManager__DrawCursor = 0x0;
+
 // class CEverQuest
 uint32_t EQ_ADDRESS_POINTER_CEverQuest = 0x0; // pinstCEverQuest
 /*
@@ -1424,6 +1426,7 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteTint     = EQPlayer__SetNameSpriteTint_x;
 
     EQ_ADDRESS_POINTER_CXWndManager = pinstCXWndManager_x;
+    EQ_ADDRESS_FUNCTION_CXWndManager__DrawCursor    = CXWndManager__DrawCursor_x;
     EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows    = CXWndManager__DrawWindows_x;
 
     EQ_ADDRESS_POINTER_CEverQuest = pinstCEverQuest_x;

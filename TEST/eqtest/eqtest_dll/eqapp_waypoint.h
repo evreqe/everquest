@@ -186,6 +186,13 @@ uint32_t EQAPP_WaypointEditor_GetClickedIndex(int x, int y);
 bool EQAPP_WaypointEditor_HandleEvent_CEverQuest__LMouseUp(int x, int y);
 bool EQAPP_WaypointEditor_HandleEvent_CEverQuest__RMouseUp(int x, int y);
 bool EQAPP_WaypointEditor_HandleEvent_ExecuteCmd(uint32_t commandID, int isActive, int zero);
+void EQAPP_WaypointEditor_Command_Reset();
+void EQAPP_WaypointEditor_Command_Connect();
+void EQAPP_WaypointEditor_Command_Disconnect();
+void EQAPP_WaypointEditor_Command_AddAtPlayer();
+void EQAPP_WaypointEditor_Command_AddAtTarget();
+void EQAPP_WaypointEditor_Command_Remove();
+void EQAPP_WaypointEditor_Command_Align();
 
 void EQAPP_Waypoint_Editor_Reset()
 {
@@ -360,6 +367,12 @@ void EQAPP_Waypoint_SetName(uint32_t index, const char* name)
         return;
     }
 
+    if (strstr(name, "^") != NULL)
+    {
+        EQAPP_PrintDebugText(__FUNCTION__, "waypoint name contains the character '^'");
+        return;
+    }
+
     waypoint->Name = name;
 
     std::cout << "Waypoint index " << waypoint->Index << " name set to: " << name;
@@ -409,7 +422,7 @@ uint32_t EQAPP_Waypoint_Add(float y, float x, float z, const char* name)
 
     std::stringstream waypointName;
 
-    if (strlen(name) == 0)
+    if (strlen(name) == 0 || strstr(name, "^") != NULL)
     {
         waypointName << "Waypoint" << index;
     }
@@ -2580,6 +2593,74 @@ bool EQAPP_WaypointEditor_HandleEvent_CEverQuest__RMouseUp(int x, int y)
     return false;
 }
 
+void EQAPP_WaypointEditor_Command_Reset()
+{
+    g_WaypointEditorFromIndex = EQApp::WaypointIndexNull;
+    g_WaypointEditorToIndex = EQApp::WaypointIndexNull;
+}
+
+void EQAPP_WaypointEditor_Command_Connect()
+{
+    if (g_WaypointEditorFromIndex == EQApp::WaypointIndexNull || g_WaypointEditorToIndex == EQApp::WaypointIndexNull)
+    {
+        return;
+    }
+
+    EQAPP_Waypoint_Connect(g_WaypointEditorFromIndex, g_WaypointEditorToIndex, false);
+
+    EQAPP_WaypointEditor_Command_Reset();
+}
+
+void EQAPP_WaypointEditor_Command_Disconnect()
+{
+    if (g_WaypointEditorFromIndex == EQApp::WaypointIndexNull || g_WaypointEditorToIndex == EQApp::WaypointIndexNull)
+    {
+        return;
+    }
+
+    EQAPP_Waypoint_Disconnect(g_WaypointEditorFromIndex, g_WaypointEditorToIndex, false);
+
+    EQAPP_WaypointEditor_Command_Reset();
+}
+
+void EQAPP_WaypointEditor_Command_AddAtPlayer()
+{
+    EQAPP_Waypoint_AddAtPlayer("");
+
+    EQAPP_WaypointEditor_Command_Reset();
+}
+
+void EQAPP_WaypointEditor_Command_AddAtTarget()
+{
+    EQAPP_Waypoint_AddAtTarget("");
+
+    EQAPP_WaypointEditor_Command_Reset();
+}
+
+void EQAPP_WaypointEditor_Command_Remove()
+{
+    if (g_WaypointEditorFromIndex == EQApp::WaypointIndexNull)
+    {
+        return;
+    }
+
+    EQAPP_Waypoint_Remove(g_WaypointEditorFromIndex);
+
+    EQAPP_WaypointEditor_Command_Reset();
+}
+
+void EQAPP_WaypointEditor_Command_Align()
+{
+    if (g_WaypointEditorFromIndex == EQApp::WaypointIndexNull || g_WaypointEditorToIndex == EQApp::WaypointIndexNull)
+    {
+        return;
+    }
+
+    EQAPP_Waypoint_Align(g_WaypointEditorFromIndex, g_WaypointEditorToIndex);
+
+    EQAPP_WaypointEditor_Command_Reset();
+}
+
 bool EQAPP_WaypointEditor_HandleEvent_ExecuteCmd(uint32_t commandID, int isActive, int zero)
 {
     if (isActive != 1)
@@ -2589,77 +2670,46 @@ bool EQAPP_WaypointEditor_HandleEvent_ExecuteCmd(uint32_t commandID, int isActiv
 
     if (commandID == EQ_EXECUTECMD_CLEAR_TARGET || commandID == EQ_EXECUTECMD_CLOSE_TOP_WINDOW)
     {
-        g_WaypointEditorFromIndex = EQApp::WaypointIndexNull;
-        g_WaypointEditorToIndex = EQApp::WaypointIndexNull;
+        EQAPP_WaypointEditor_Command_Reset();
 
         return false;
     }
 
     if (commandID == EQ_EXECUTECMD_JUMP)
     {
-        if (g_WaypointEditorFromIndex != EQApp::WaypointIndexNull && g_WaypointEditorToIndex != EQApp::WaypointIndexNull)
-        {
-            EQAPP_Waypoint_Connect(g_WaypointEditorFromIndex, g_WaypointEditorToIndex, false);
+        EQAPP_WaypointEditor_Command_Connect();
 
-            g_WaypointEditorFromIndex = EQApp::WaypointIndexNull;
-            g_WaypointEditorToIndex = EQApp::WaypointIndexNull;
-
-            return true;
-        }
+        return true;
     }
     else if (commandID == EQ_EXECUTECMD_DUCK)
     {
-        if (g_WaypointEditorFromIndex != EQApp::WaypointIndexNull && g_WaypointEditorToIndex != EQApp::WaypointIndexNull)
-        {
-            EQAPP_Waypoint_Disconnect(g_WaypointEditorFromIndex, g_WaypointEditorToIndex, false);
+        EQAPP_WaypointEditor_Command_Disconnect();
 
-            g_WaypointEditorFromIndex = EQApp::WaypointIndexNull;
-            g_WaypointEditorToIndex = EQApp::WaypointIndexNull;
-
-            return true;
-        }
+        return true;
     }
     else if (commandID == EQ_EXECUTECMD_CONSIDER)
     {
-        EQAPP_Waypoint_AddAtPlayer("");
-
-        g_WaypointEditorFromIndex = EQApp::WaypointIndexNull;
-        g_WaypointEditorToIndex = EQApp::WaypointIndexNull;
+        EQAPP_WaypointEditor_Command_AddAtPlayer();
 
         return true;
     }
     else if (commandID == EQ_EXECUTECMD_TELL)
     {
-        EQAPP_Waypoint_AddAtTarget("");
-
-        g_WaypointEditorFromIndex = EQApp::WaypointIndexNull;
-        g_WaypointEditorToIndex = EQApp::WaypointIndexNull;
+        EQAPP_WaypointEditor_Command_AddAtTarget();
 
         return true;
     }
     else if (commandID == EQ_EXECUTECMD_REPLY)
     {
-        if (g_WaypointEditorFromIndex != EQApp::WaypointIndexNull)
-        {
-            EQAPP_Waypoint_Remove(g_WaypointEditorFromIndex);
+        EQAPP_WaypointEditor_Command_Remove();
 
-            g_WaypointEditorFromIndex = EQApp::WaypointIndexNull;
-            g_WaypointEditorToIndex = EQApp::WaypointIndexNull;
-
-            return true;
-        }
+        return true;
     }
     else if (commandID == EQ_EXECUTECMD_AUTOPRIM)
     {
-        if (g_WaypointEditorFromIndex != EQApp::WaypointIndexNull && g_WaypointEditorToIndex != EQApp::WaypointIndexNull)
-        {
-            EQAPP_Waypoint_Align(g_WaypointEditorFromIndex, g_WaypointEditorToIndex);
+        EQAPP_WaypointEditor_Command_Align();
 
-            g_WaypointEditorFromIndex = EQApp::WaypointIndexNull;
-            g_WaypointEditorToIndex = EQApp::WaypointIndexNull;
-
-            return true;
-        }
+        return true;
     }
 
     return false;

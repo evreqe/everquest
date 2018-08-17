@@ -101,6 +101,7 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_SpellManager);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CXWndManager);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CXWndManager__DrawCursor);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CEverQuest);

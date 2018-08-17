@@ -1,5 +1,8 @@
 #pragma once
 
+extern void EQAPP_FindPath_FollowPath_Off();
+extern void EQAPP_Waypoint_FollowPath_Off();
+
 bool g_FollowAIIsEnabled = true;
 
 bool g_FollowAIUseZAxisIsEnabled = false;
@@ -73,6 +76,9 @@ void EQAPP_FollowAI_Execute()
     {
         return;
     }
+
+    EQAPP_FindPath_FollowPath_Off();
+    EQAPP_Waypoint_FollowPath_Off();
 
     bool bFollowBehind = false;
     bool bFollowBehindCanCastRay = false;

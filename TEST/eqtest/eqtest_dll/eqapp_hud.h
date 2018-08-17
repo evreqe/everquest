@@ -24,6 +24,11 @@ uint32_t g_HUDYDefault = 10;
 uint32_t g_HUDX = g_HUDXDefault;
 uint32_t g_HUDY = g_HUDYDefault;
 
+bool g_HUDNearbyPlayersIsEnabled = true;
+
+float g_HUDNearbyPlayersDistance = 30.0f;
+float g_HUDNearbyPlayersDistanceZ = 20.0f;
+
 void EQAPP_HUD_Toggle();
 void EQAPP_HUD_On();
 void EQAPP_HUD_Off();
@@ -154,6 +159,15 @@ void EQAPP_HUD_Execute()
     if (numClients > 1)
     {
         g_HUDText << "- Clients: " << numClients << "\n";
+    }
+
+    if (g_HUDNearbyPlayersIsEnabled == true)
+    {
+        auto numNearbyPlayers = EQ_GetNumNearbySpawns(EQ_SPAWN_TYPE_PLAYER, g_HUDNearbyPlayersDistance, g_HUDNearbyPlayersDistanceZ);
+        if (numNearbyPlayers > 0)
+        {
+            g_HUDText << "- Nearby Players: " << numNearbyPlayers << "\n";
+        }
     }
 
     if (g_BoxChatIsEnabled == true)
