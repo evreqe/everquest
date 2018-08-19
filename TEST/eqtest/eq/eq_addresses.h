@@ -688,6 +688,8 @@ DrawNetStatus()
     CDisplay__WriteTextHD2(&Dest, (unsigned __int16)a1 + 64, (unsigned __int16)a2, (void *)12);
 */
 
+uint32_t EQ_ADDRESS_FUNCTION_CDisplay__CreateActor = 0x0;
+
 uint32_t EQ_ADDRESS_FUNCTION_CDisplay__CreatePlayerActor = 0x0;
 
 uint32_t EQ_ADDRESS_FUNCTION_CDisplay__DeleteActor = 0x0;
@@ -1361,13 +1363,13 @@ void EQ_InitializeAddresses()
 
     EQ_ADDRESS_WindowHWND = __HWnd_x;
 
-    EQ_ADDRESS_FUNCTION_WindowProc = 0x00696EE0;
+    EQ_ADDRESS_FUNCTION_WindowProc = 0x696BA0;
 
-    EQ_ADDRESS_FUNCTION_ProcessMouseEvent = 0x005EB150;
-    EQ_ADDRESS_FUNCTION_ProcessKeyboardEvent = 0x00695F40;
+    EQ_ADDRESS_FUNCTION_ProcessMouseEvent = 0x5EB370;
+    EQ_ADDRESS_FUNCTION_ProcessKeyboardEvent = 0x695C00;
 
-    EQ_ADDRESS_FUNCTION_FlushDxMouse = 0x00693E50;
-    EQ_ADDRESS_FUNCTION_FlushDxKeyboard = 0x00694250;
+    EQ_ADDRESS_FUNCTION_FlushDxMouse = 0x693B10;
+    EQ_ADDRESS_FUNCTION_FlushDxKeyboard = 0x693F10;
 
     EQ_ADDRESS_AutoAttack    = __Attack_x;
     EQ_ADDRESS_AutoFire      = __Autofire_x;
@@ -1396,7 +1398,7 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_FogDistanceEnd      = EQ_ADDRESS_EQZoneInfo + EQ_OFFSET_EQZoneInfo_FOG_DISTANCE_END;
 
     EQ_ADDRESS_FUNCTION_CrashDetected                 = CrashDetected_x;
-    EQ_ADDRESS_FUNCTION_CollisionCallbackForActors    = 0x0050FD10;
+    EQ_ADDRESS_FUNCTION_CollisionCallbackForActors    = 0x50FFB0;
     EQ_ADDRESS_FUNCTION_CastRay                       = __CastRay_x;
     EQ_ADDRESS_FUNCTION_CastRay2                      = __CastRay2_x;
     EQ_ADDRESS_FUNCTION_DrawNetStatus                 = DrawNetStatus_x;
@@ -1418,9 +1420,9 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName              = EQPlayerManager__GetSpawnByName_x;
     EQ_ADDRESS_FUNCTION_EQPlayerManager__GetPlayerFromPartialName    = EQPlayerManager__GetPlayerFromPartialName_x;
 
-    EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI        = 0x00633230;
+    EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI        = 0x6332F0;
     EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight          = PlayerZoneClient__ChangeHeight_x;
-    EQ_ADDRESS_FUNCTION_EQPlayer__UpdateItemSlot        = 0x00638E10;
+    EQ_ADDRESS_FUNCTION_EQPlayer__UpdateItemSlot        = 0x638EA0;
     EQ_ADDRESS_FUNCTION_EQPlayer__IsTargetable          = EQPlayer__IsTargetable_x;
     EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteState    = EQPlayer__SetNameSpriteState_x;
     EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteTint     = EQPlayer__SetNameSpriteTint_x;
@@ -1434,21 +1436,22 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_FUNCTION_CEverQuest__EnterZone           = CEverQuest__EnterZone_x;
     EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd        = CEverQuest__InterpretCmd_x;
     EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat            = CEverQuest__dsp_chat_x;
-    EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting        = 0x005CEE80;
+    EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting        = 0x5CF0A0; // %s <%s>
     EQ_ADDRESS_FUNCTION_CEverQuest__LMouseUp            = CEverQuest__LMouseUp_x;
     EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp            = CEverQuest__RMouseUp_x;
-    EQ_ADDRESS_FUNCTION_CEverQuest__HandleMouseWheel    = 0x005C5C00;
+    EQ_ADDRESS_FUNCTION_CEverQuest__HandleMouseWheel    = 0x5C5E20;
     EQ_ADDRESS_FUNCTION_CEverQuest__SetGameState        = CEverQuest__SetGameState_x;
 
     EQ_ADDRESS_POINTER_CDisplay = pinstCDisplay_x;
     EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2         = CDisplay__WriteTextHD2_x;
-    EQ_ADDRESS_FUNCTION_CDisplay__CreatePlayerActor    = 0x005262B0;
-    EQ_ADDRESS_FUNCTION_CDisplay__DeleteActor          = 0x0052A6C0;
+    EQ_ADDRESS_FUNCTION_CDisplay__CreateActor          = 0x52AA10;
+    EQ_ADDRESS_FUNCTION_CDisplay__CreatePlayerActor    = 0x526570;
+    EQ_ADDRESS_FUNCTION_CDisplay__DeleteActor          = 0x52A980;
 
     EQ_ADDRESS_POINTER_EQSwitchManager = pinstSwitchManager_x;
 
     EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch      = EQSwitch__UseSwitch_x;
-    EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState    = 0x005BD960;
+    EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState    = 0x5BDBA0;
 
     EQ_ADDRESS_POINTER_AuraManager = pinstAuraMgr_x;
 
@@ -1481,9 +1484,9 @@ void EQ_InitializeAddresses()
 
     EQ_ADDRESS_POINTER_CBazaarSearchWnd = pinstCBazaarSearchWnd_x;
     EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__HandleBazaarMsg    = CBazaarSearchWnd__HandleBazaarMsg_x;
-    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList      = 0x006C9380;
-    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery            = 0x006C9C20;
-    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem            = 0x006CA150;
+    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList      = 0x6C90E0;
+    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery            = 0x6C9970;
+    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem            = 0x6C9EA0;
 
     EQ_ADDRESS_POINTER_CTaskSelectWnd = pinstCTaskSelectWnd_x;
 

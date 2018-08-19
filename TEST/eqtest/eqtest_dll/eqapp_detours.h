@@ -66,6 +66,7 @@ EQ_MACRO_FUNCTION_DefineDetour(CRender__UpdateDisplay);
 
 EQ_MACRO_FUNCTION_DefineDetour(CBazaarSearchWnd__AddItemToList);
 
+EQ_MACRO_FUNCTION_DefineDetour(CDisplay__CreateActor);
 EQ_MACRO_FUNCTION_DefineDetour(CDisplay__CreatePlayerActor);
 EQ_MACRO_FUNCTION_DefineDetour(CDisplay__DeleteActor);
 
@@ -102,6 +103,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CRender__UpdateDisplay(void* this_ptr, vo
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* this_ptr, void* not_used, char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11);
 
+int __fastcall EQAPP_DETOURED_FUNCTION_CDisplay__CreateActor(void* this_ptr, void* not_used, char* actorDefinition, float y, float x, float z, float a5, float a6, float a7, float a8, float a9, float a10, int a11);
 int __fastcall EQAPP_DETOURED_FUNCTION_CDisplay__CreatePlayerActor(void* this_ptr, void* not_used, uint32_t spawn, int a2, int a3, int a4, int a5, int a6);
 int __fastcall EQAPP_DETOURED_FUNCTION_CDisplay__DeleteActor(void* this_ptr, void* not_used, uint32_t cactor);
 
@@ -399,6 +401,13 @@ void EQAPP_Detours_Load()
 
     if (EQ_ADDRESS_POINTER_CDisplay != 0)
     {
+        if (EQ_ADDRESS_FUNCTION_CDisplay__CreateActor != 0)
+        {
+            EQ_MACRO_FUNCTION_AddDetour(CDisplay__CreateActor);
+
+            EQAPP_Log("AddDetour: CDisplay__CreateActor");
+        }
+
         if (EQ_ADDRESS_FUNCTION_CDisplay__CreatePlayerActor != 0)
         {
             EQ_MACRO_FUNCTION_AddDetour(CDisplay__CreatePlayerActor);
@@ -545,14 +554,16 @@ void EQAPP_Detours_Unload()
 
     if (EQ_ADDRESS_POINTER_CDisplay != 0)
     {
+        if (EQ_ADDRESS_FUNCTION_CDisplay__CreateActor != 0)
+        {
+            EQ_MACRO_FUNCTION_RemoveDetour(CDisplay__CreateActor);
+        }
+
         if (EQ_ADDRESS_FUNCTION_CDisplay__CreatePlayerActor != 0)
         {
             EQ_MACRO_FUNCTION_RemoveDetour(CDisplay__CreatePlayerActor);
         }
-    }
 
-    if (EQ_ADDRESS_POINTER_CDisplay != 0)
-    {
         if (EQ_ADDRESS_FUNCTION_CDisplay__DeleteActor != 0)
         {
             EQ_MACRO_FUNCTION_RemoveDetour(CDisplay__DeleteActor);
@@ -1711,6 +1722,33 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* thi
     }
 
     return EQAPP_REAL_FUNCTION_CBazaarSearchWnd__AddItemToList(this_ptr, itemName, itemPrice, traderName, a4, a5, a6, a7, a8, a9, a10, a11);
+}
+
+int __fastcall EQAPP_DETOURED_FUNCTION_CDisplay__CreateActor(void* this_ptr, void* not_used, char* actorDefinition, float y, float x, float z, float a5, float a6, float a7, float a8, float a9, float a10, int a11)
+{
+    if (g_EQAppShouldUnload == 1)
+    {
+        return EQAPP_REAL_FUNCTION_CDisplay__CreateActor(this_ptr, actorDefinition, y, x, z, a5, a6, a7, a8, a9, a10, a11);
+    }
+
+    if (EQ_IsInGame() == false)
+    {
+        return EQAPP_REAL_FUNCTION_CDisplay__CreateActor(this_ptr, actorDefinition, y, x, z, a5, a6, a7, a8, a9, a10, a11);
+    }
+
+    if (g_EQAppIsInGame == false)
+    {
+        return EQAPP_REAL_FUNCTION_CDisplay__CreateActor(this_ptr, actorDefinition, y, x, z, a5, a6, a7, a8, a9, a10, a11);
+    }
+
+/*
+    if (actorDefinition != NULL && strlen(actorDefinition) > 0)
+    {
+        std::cout << "CDisplay::CreateActor(): " << actorDefinition << std::endl;
+    }
+*/
+
+    return EQAPP_REAL_FUNCTION_CDisplay__CreateActor(this_ptr, actorDefinition, y, x, z, a5, a6, a7, a8, a9, a10, a11);
 }
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CDisplay__CreatePlayerActor(void* this_ptr, void* not_used, uint32_t spawn, int a2, int a3, int a4, int a5, int a6)

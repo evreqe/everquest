@@ -116,6 +116,7 @@ void EQAPP_InitializeAddresses()
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CDisplay);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CDisplay__CreateActor);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CDisplay__CreatePlayerActor);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CDisplay__DeleteActor);
 
