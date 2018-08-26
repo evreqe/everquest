@@ -308,6 +308,8 @@ sub_8A55C0(
     sub_523550(508, 0, 0, 0); // ExecuteCmd
 */
 
+uint32_t EQ_ADDRESS_FUNCTION_DoSpellEffect = 0x0;
+
 uint32_t EQ_ADDRESS_POINTER_StringTable = 0x0; // pinstStringTable
 
 uint32_t EQ_ADDRESS_FUNCTION_StringTable__getString = 0x0; // "%s (%d)"    "ERROR: String not found."
@@ -1354,6 +1356,8 @@ uint32_t EQ_ADDRESS_POINTER_CCastSpellWnd = 0x0; // "CastSpellWnd"
 
 uint32_t EQ_ADDRESS_POINTER_CCastingWnd = 0x0; // "CastingWnd"
 
+uint32_t EQ_ADDRESS_POINTER_CMapViewWnd = 0x0; // "MapViewWnd"
+
 void EQ_InitializeAddresses();
 
 void EQ_InitializeAddresses()
@@ -1403,6 +1407,7 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_FUNCTION_CastRay2                      = __CastRay2_x;
     EQ_ADDRESS_FUNCTION_DrawNetStatus                 = DrawNetStatus_x;
     EQ_ADDRESS_FUNCTION_ExecuteCmd                    = __ExecuteCmd_x;
+    EQ_ADDRESS_FUNCTION_DoSpellEffect                 = 0x5EAC50;
 
     EQ_ADDRESS_POINTER_StringTable = pinstStringTable_x;
     EQ_ADDRESS_FUNCTION_StringTable__getString    = StringTable__getString_x;
@@ -1506,4 +1511,6 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_POINTER_CCastSpellWnd = pinstCCastSpellWnd_x;
 
     EQ_ADDRESS_POINTER_CCastingWnd = pinstCCastingWnd_x;
+
+    EQ_ADDRESS_POINTER_CMapViewWnd = pinstCMapViewWnd_x;
 }

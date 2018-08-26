@@ -1,5 +1,7 @@
 #pragma once
 
+extern bool g_GUIMapWindowIsEnabled;
+
 bool g_GUIMainWindowIsEnabled = false;
 
 bool g_GUIMainWindowPopupMenuClientsIsOpen = false;
@@ -123,7 +125,7 @@ static void EQAPP_GUI_MainWindow_MenuOptions()
 
 static void EQAPP_GUI_MainWindow_MenuWindows()
 {
-    if (ImGui::MenuItem("Map##MainWindowMenuItemWindowsMap", NULL, false)) {}
+    if (ImGui::MenuItem("Map##MainWindowMenuItemWindowsMap", NULL, false)) EQ_ToggleBool(g_GUIMapWindowIsEnabled);
     if (ImGui::MenuItem("Spawn List##MainWindowMenuItemWindowsSpawnList", NULL, false)) {}
 }
 

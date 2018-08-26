@@ -88,7 +88,7 @@ void EQAPP_NamedSpawns_HandleEvent_CDisplay__CreatePlayerActor(void* this_ptr, u
     {
         if (EQAPP_String_Contains(spawnName, namedSpawnName) == true)
         {
-            std::cout << spawnName << " has spawned." << std::endl;
+            std::cout << "Named Spawns: " << spawnName << " has spawned." << std::endl;
 
             break;
         }
@@ -130,7 +130,7 @@ void EQAPP_NamedSpawns_HandleEvent_CDisplay__DeleteActor(void* this_ptr, uint32_
     {
         if (EQAPP_String_Contains(spawnName, namedSpawnName) == true)
         {
-            std::cout << spawnName << " has despawned." << std::endl;
+            std::cout << "Named Spawns: " << spawnName << " has despawned." << std::endl;
 
             break;
         }

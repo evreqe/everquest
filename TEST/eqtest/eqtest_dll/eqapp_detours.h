@@ -836,11 +836,6 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
         EQAPP_HUD_Execute();
     }
 
-    if (g_InterpretCommandIsEnabled == true)
-    {
-        EQAPP_InterpretCommand_Execute();
-    }
-
     EQAPP_Console_Print();
 
     EQAPP_FPS_Execute();
@@ -1222,14 +1217,20 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__DoPercentConvert(void* this_p
         return EQAPP_REAL_FUNCTION_CEverQuest__DoPercentConvert(this_ptr, text, isOutgoing);
     }
 
-    std::string str;
-    str.reserve(strlen(text));
+    if (text != NULL && strlen(text) > 0)
+    {
+        std::string str;
+        str.reserve(strlen(text));
 
-    str = text;
+        str = text;
     
-    EQAPP_InterpretCommand_ConvertText(str);
+        EQAPP_InterpretCommand_ConvertText(str);
     
-    strcpy_s(text, str.length() + 1, str.c_str());
+        if (str.size() != 0)
+        {
+            return EQAPP_REAL_FUNCTION_CEverQuest__DoPercentConvert(this_ptr, (char*)str.c_str(), isOutgoing);
+        }
+    }
 
     return EQAPP_REAL_FUNCTION_CEverQuest__DoPercentConvert(this_ptr, text, isOutgoing);
 }

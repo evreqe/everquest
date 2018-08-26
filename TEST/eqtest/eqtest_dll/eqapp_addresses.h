@@ -67,6 +67,7 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CastRay2);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_DrawNetStatus);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_ExecuteCmd);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_DoSpellEffect);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_StringTable);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_StringTable__getString);
@@ -161,6 +162,8 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CCastSpellWnd);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CCastingWnd);
+
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CMapViewWnd);
 }
 
 bool EQAPP_IsAddressPointerValid(uint32_t addressPointer)

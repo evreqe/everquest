@@ -5,7 +5,7 @@ bool g_AlwaysAttackIsEnabled = false;
 EQApp::Timer g_AlwaysAttackTimer = EQAPP_Timer_GetTimeNow();
 EQApp::TimerInterval g_AlwaysAttackTimerInterval = 1;
 
-float g_AlwaysAttackDistance = 25.0f;
+float g_AlwaysAttackDistance = 30.0f;
 
 void EQAPP_AlwaysAttack_Toggle();
 void EQAPP_AlwaysAttack_On();
@@ -63,14 +63,7 @@ void EQAPP_AlwaysAttack_Execute()
     float targetSpawnDistance = EQ_GetSpawnDistance(targetSpawn);
     if (targetSpawnDistance > g_AlwaysAttackDistance)
     {
-        EQ_SetAutoAttack(false);
-        return;
-    }
-
-    auto targetSpawnLastName = EQ_GetSpawnLastName(targetSpawn);
-    if (targetSpawnLastName.size() != 0)
-    {
-        EQ_SetAutoAttack(false);
+        ////EQ_SetAutoAttack(false);
         return;
     }
 

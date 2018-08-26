@@ -7,6 +7,7 @@ extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam
 extern void EQAPP_InterpretCommand_PrintList();
 
 #include "eqapp_gui_mainwindow.h"
+#include "eqapp_gui_mapwindow.h"
 
 bool g_GUIIsEnabled = true;
 
@@ -98,6 +99,8 @@ bool EQAPP_GUI_Load()
 
     ImGui::StyleColorsDark();
     ////ImGui::StyleColorsClassic();
+
+    //// EQAPP_GUI_MapWindow_LoadTextures();
 
     return true;
 }
@@ -283,6 +286,11 @@ void EQAPP_GUI_HandleEvent_CRender__UpdateDisplay()
     ////ImGui::ShowDemoWindow(&show_demo_window);
 
     EQAPP_GUI_MainWindow();
+
+    if (g_GUIMapWindowIsEnabled == true)
+    {
+        EQAPP_GUI_MapWindow();
+    }
 
     ImGui::EndFrame();
 

@@ -259,6 +259,7 @@ std::unordered_map<uint32_t, std::string> EQ_SPAWN_TYPE_Strings =
 
 #define EQ_GENDER_MALE      0
 #define EQ_GENDER_FEMALE    1
+#define EQ_GENDER_UNKNOWN   2
 
 #define EQ_GRAVITY_TYPE_GROUND               0
 #define EQ_GRAVITY_TYPE_FLYING               1
@@ -865,4 +866,45 @@ namespace EQ
         uint32_t SpeedY;
         uint32_t Scroll;
     } MouseInfo2, *MouseInfo2_ptr;
+
+    typedef struct _ColorARGB
+    {
+        union
+        {
+            struct
+            {
+                uint8_t B;
+                uint8_t G;
+                uint8_t R;
+                uint8_t A;
+            };
+            uint32_t ARGB;
+        };
+    } ColorARGB, *ColorARGB_ptr;
+
+    typedef struct _MapLabel
+    {
+/* 0x00 */ uint32_t Unknown;
+/* 0x04 */ struct _MapLabel* Next;
+/* 0x08 */ struct _MapLabel* Previous;
+/* 0x0C */ Vector3f Location;
+/* 0x18 */ ColorARGB Color;
+/* 0x1C */ uint32_t Size; // 1-3
+/* 0x20 */ char* Text;
+/* 0x24 */ uint32_t Layer; // 0-3
+/* 0x28 */ uint32_t Width;
+/* 0x2C */ uint32_t Height;
+/* 0x30 */ uint32_t X;
+/* 0x34 */ uint32_t Y;
+    } MapLabel, *MapLabel_ptr;
+
+    typedef struct _MapLine
+    {
+        struct _MapLine* Next;
+        struct _MapLine* Previous;
+        Vector3f Begin;
+        Vector3f End;
+        ColorARGB Color;
+        uint32_t Layer; // 0-3
+    } MapLine, *MapLine_ptr;
 } // namespace EQ

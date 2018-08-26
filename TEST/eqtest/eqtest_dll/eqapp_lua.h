@@ -404,6 +404,7 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
 
     state->set("EQ_GENDER_MALE", EQ_GENDER_MALE);
     state->set("EQ_GENDER_FEMALE", EQ_GENDER_FEMALE);
+    state->set("EQ_GENDER_UNKNOWN", EQ_GENDER_UNKNOWN);
 
     state->set("EQ_GRAVITY_TYPE_GROUND", EQ_GRAVITY_TYPE_GROUND);
     state->set("EQ_GRAVITY_TYPE_FLYING", EQ_GRAVITY_TYPE_FLYING);
@@ -2175,4 +2176,9 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
 
     state->set_function("EQ_GetCastingWindow", EQ_GetCastingWindow);
     state->set_function("EQ_CastingWindow_IsOpen", EQ_CastingWindow_IsOpen);
+
+    state->set_function("EQ_GetMapWindow", EQ_GetMapWindow);
+    state->set_function("EQ_MapWindow_IsOpen", EQ_MapWindow_IsOpen);
+    state->set_function("EQ_MapWindow_GetLines", EQ_MapWindow_GetLines);
+    state->set_function("EQ_MapWindow_GetLabels", EQ_MapWindow_GetLabels);
 }

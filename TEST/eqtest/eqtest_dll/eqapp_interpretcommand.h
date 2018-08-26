@@ -31,11 +31,6 @@
 
 bool g_InterpretCommandIsEnabled = true;
 
-std::list<std::string> g_InterpretCommandQueue;
-
-EQApp::Timer g_InterpretCommandQueueTimer = EQAPP_Timer_GetTimeNow();
-EQApp::TimerInterval g_InterpretCommandQueueTimerInterval = 1;
-
 void EQAPP_InterpretCommand_NULL();
 
 void EQAPP_InterpretCommand_NULL()
@@ -498,13 +493,12 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
 };
 
 void EQAPP_InterpretCommand_PrintList();
-void EQAPP_InterpretCommand_Execute();
 void EQAPP_InterpretCommand_ConvertText(std::string& text);
 bool EQAPP_InterpretCommand_HandleEvent_CEverQuest__InterpretCmd(void* this_ptr, class EQPlayer* player, const char* commandText_);
 void EQAPP_InterpretCommand_InterpretArguments(const std::string& commandText, const std::string& prependText);
 void EQAPP_InterpretCommand_InterpretArgumentsRandom(const std::string& commandText, const std::string& prependText);
-void EQAPP_InterpretCommand_Execute(std::string commandText);
 bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText);
+void EQAPP_InterpretCommand_Execute(const std::string& commandText);
 
 void EQAPP_InterpretCommand_PrintList()
 {
@@ -514,23 +508,6 @@ void EQAPP_InterpretCommand_PrintList()
     {
         std::cout << cmd.first << std::endl;
     }
-}
-
-void EQAPP_InterpretCommand_Execute()
-{
-    if (g_InterpretCommandQueue.size() == 0)
-    {
-        return;
-    }
-
-    if (EQAPP_Timer_HasTimeElapsed(g_InterpretCommandQueueTimer, g_InterpretCommandQueueTimerInterval) == false)
-    {
-        return;
-    }
-
-    EQ_InterpretCommand(g_InterpretCommandQueue.front().c_str());
-
-    g_InterpretCommandQueue.pop_front();
 }
 
 void EQAPP_InterpretCommand_ConvertText(std::string& text)
@@ -686,7 +663,7 @@ void EQAPP_InterpretCommand_InterpretArguments(const std::string& commandText, c
         std::stringstream ss;
         ss << prependText << token;
 
-        g_InterpretCommandQueue.push_back(ss.str());
+        EQ_InterpretCommand(ss.str().c_str());
     }
 }
 
@@ -721,10 +698,10 @@ void EQAPP_InterpretCommand_InterpretArgumentsRandom(const std::string& commandT
     std::stringstream ss;
     ss << prependText << number;
 
-    g_InterpretCommandQueue.push_back(ss.str());
+    EQ_InterpretCommand(ss.str().c_str());
 }
 
-void EQAPP_InterpretCommand_Execute(std::string commandText)
+void EQAPP_InterpretCommand_Execute(const std::string& commandText)
 {
     if (commandText.size() == 0)
     {
@@ -848,19 +825,6 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
     if (commandText == "//NotInGame")
     {
         g_EQAppIsInGame = false;
-
-        return true;
-    }
-
-    if (EQAPP_String_BeginsWith(commandText, "//QueueCommand ") == true)
-    {
-        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
-        if (commandTextAfterSpace.size() != 0)
-        {
-            g_InterpretCommandQueue.push_back(commandTextAfterSpace);
-
-            g_InterpretCommandQueueTimer = EQAPP_Timer_GetTimeNow();
-        }
 
         return true;
     }

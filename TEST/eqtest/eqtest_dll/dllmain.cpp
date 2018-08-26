@@ -47,6 +47,8 @@ namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not avai
 // DirectX 9
 #include <d3d9.h>
 #pragma comment(lib, "d3d9.lib")
+#include <d3dx9.h>
+#pragma comment(lib, "d3dx9.lib")
 
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>

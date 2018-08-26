@@ -35,6 +35,9 @@ typedef int (__cdecl* EQ_FUNCTION_TYPE_CastRay2)(const EQClass::CVector3& source
 EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQ_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive, void* unknown, int zero), EQ_ADDRESS_FUNCTION_ExecuteCmd);
 typedef int (__cdecl* EQ_FUNCTION_TYPE_ExecuteCmd)(uint32_t commandID, int isActive, void* unknown, int zero);
 
+EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQ_FUNCTION_DoSpellEffect(int type, int unknown, uint32_t spell, uint32_t spawn1, uint32_t spawn2, EQ::Location_ptr location, uint32_t missile, uint32_t duration), EQ_ADDRESS_FUNCTION_DoSpellEffect);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_DoSpellEffect)(int type, int unknown, uint32_t spell, uint32_t spawn1, uint32_t spawn2, EQ::Location_ptr location, uint32_t missile, uint32_t duration);
+
 EQ_MACRO_FUNCTION_FunctionAtAddress(LRESULT __stdcall EQ_FUNCTION_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam), EQ_ADDRESS_FUNCTION_WindowProc);
 typedef LRESULT (__stdcall* EQ_FUNCTION_TYPE_WindowProc)(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -142,6 +145,7 @@ bool EQ_IsAuraNameActive(const char* name);
 void EQ_PrintAuraNames();
 
 uint32_t EQ_GetSpellManager();
+uint32_t EQ_GetSpellByID(uint32_t spellID);
 uint32_t EQ_GetSpellIDByName(const char* spellName);
 std::string EQ_GetSpellNameByID(uint32_t spellID);
 
@@ -474,6 +478,11 @@ uint32_t EQ_CastSpellWindow_GetSpellGemStateBySpellName(const char* spellName);
 
 uint32_t EQ_GetCastingWindow();
 bool EQ_CastingWindow_IsOpen();
+
+uint32_t EQ_GetMapWindow();
+bool EQ_MapWindow_IsOpen();
+uint32_t EQ_MapWindow_GetLines();
+uint32_t EQ_MapWindow_GetLabels();
 
 /* functions */
 
@@ -1241,6 +1250,32 @@ void EQ_PrintAuraNames()
 uint32_t EQ_GetSpellManager()
 {
     return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_SpellManager);
+}
+
+uint32_t EQ_GetSpellByID(uint32_t spellID)
+{
+    auto spellManager = EQ_GetSpellManager();
+    if (spellManager == NULL)
+    {
+        return EQ_SPELL_ID_NULL;
+    }
+
+    for (unsigned int i = 0; i < EQ_NUM_SPELLS; i++)
+    {
+        auto spell = EQ_ReadMemory<uint32_t>(spellManager + EQ_OFFSET_SpellManager_SPELLS + (i * 0x04));
+        if (spell == NULL)
+        {
+            continue;
+        }
+
+        auto spellManagerSpellID = EQ_ReadMemory<uint32_t>(spell + EQ_OFFSET_SPELL_ID);
+        if (spellID == spellManagerSpellID)
+        {
+            return spell;
+        }
+    }
+
+    return EQ_SPELL_ID_NULL;
 }
 
 uint32_t EQ_GetSpellIDByName(const char* spellName)
@@ -2493,6 +2528,10 @@ uint32_t EQ_GetSpawnRace(uint32_t spawn)
     ////return EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_RACE);
 
     auto actorClient = EQ_GetSpawnActorClient(spawn);
+    if (actorClient == NULL)
+    {
+        return EQ_RACE_UNKNOWN;
+    }
 
     return ((EQData::ActorClient*)actorClient)->Race;
 }
@@ -2502,6 +2541,10 @@ uint32_t EQ_GetSpawnClass(uint32_t spawn)
     ////return EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_CLASS);
 
     auto actorClient = EQ_GetSpawnActorClient(spawn);
+    if (actorClient == NULL)
+    {
+        return EQ_CLASS_UNKNOWN;
+    }
 
     return ((EQData::ActorClient*)actorClient)->Class;
 }
@@ -2511,6 +2554,10 @@ uint32_t EQ_GetSpawnGender(uint32_t spawn)
     ////return EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_GENDER);
 
     auto actorClient = EQ_GetSpawnActorClient(spawn);
+    if (actorClient == NULL)
+    {
+        return EQ_GENDER_UNKNOWN;
+    }
 
     return ((EQData::ActorClient*)actorClient)->Gender;
 }
@@ -4856,4 +4903,36 @@ uint32_t EQ_GetCastingWindow()
 bool EQ_CastingWindow_IsOpen()
 {
     return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CCastingWnd) == true);
+}
+
+uint32_t EQ_GetMapWindow()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CMapViewWnd);
+}
+
+bool EQ_MapWindow_IsOpen()
+{
+    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CMapViewWnd) == true);
+}
+
+uint32_t EQ_MapWindow_GetLines()
+{
+    auto mapWindow = EQ_GetMapWindow();
+    if (mapWindow == NULL)
+    {
+        return NULL;
+    }
+
+    return EQ_ReadMemory<uint32_t>(mapWindow + EQ_OFFSET_CMapViewWnd_LINES);
+}
+
+uint32_t EQ_MapWindow_GetLabels()
+{
+    auto mapWindow = EQ_GetMapWindow();
+    if (mapWindow == NULL)
+    {
+        return NULL;
+    }
+
+    return EQ_ReadMemory<uint32_t>(mapWindow + EQ_OFFSET_CMapViewWnd_LABELS);
 }

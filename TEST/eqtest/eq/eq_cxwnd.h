@@ -33,6 +33,7 @@
 
 #define EQ_OFFSET_CXWnd_PADDING -0x8
 
+// sizeof(EQUIStructs::_CSIDLWND) + 0x18 == 0x250+EQ_OFFSET_CXWnd_PADDING
 #define EQ_OFFSET_CBazaarWnd_BUTTON_BEGIN_TRADER    0x250+EQ_OFFSET_CXWnd_PADDING // uint32_t pointer    "Begin Trader" button    "BZW_Start_Button"
 #define EQ_OFFSET_CBazaarWnd_BUTTON_END_TRADER      0x254+EQ_OFFSET_CXWnd_PADDING // uint32_t pointer    "End Trader" button      "BZW_End_Button"
 
@@ -102,3 +103,6 @@
 
 #define EQ_OFFSET_CSpellGemWnd_ICON     offsetof(EQUIStructs::_EQCASTSPELLGEM, spellicon)     // uint32_t
 #define EQ_OFFSET_CSpellGemWnd_STATE    offsetof(EQUIStructs::_EQCASTSPELLGEM, spellstate)    // uint32_t
+
+#define EQ_OFFSET_CMapViewWnd_LINES     offsetof(EQUIStructs::_EQMAPWINDOW, pLines)     // uint32_t pointer
+#define EQ_OFFSET_CMapViewWnd_LABELS    offsetof(EQUIStructs::_EQMAPWINDOW, pLabels)    // uint32_t pointer

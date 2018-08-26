@@ -215,7 +215,14 @@ void EQAPP_HUD_Execute()
 
     if (g_AlwaysAttackIsEnabled == true)
     {
-        g_HUDText << "- Always Attack\n";
+        g_HUDText << "- Always Attack";
+
+        if (EQ_IsAutoAttackEnabled() == true)
+        {
+            g_HUDText << " (Auto-Attacking)";
+        }
+
+        g_HUDText << "\n";
     }
 
     if (g_AlwaysHotButtonIsEnabled == true)
