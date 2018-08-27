@@ -13,6 +13,8 @@ bool g_GUIIsEnabled = true;
 
 bool g_GUIIsLoaded = false;
 
+bool g_GUIDemoWindowIsEnabled = false;
+
 ImFont* g_GUIFont = NULL;
 
 std::string g_GUIFontName = "default.ttf";
@@ -282,8 +284,10 @@ void EQAPP_GUI_HandleEvent_CRender__UpdateDisplay()
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
-    ////bool show_demo_window = true;
-    ////ImGui::ShowDemoWindow(&show_demo_window);
+    if (g_GUIDemoWindowIsEnabled == true)
+    {
+        ImGui::ShowDemoWindow(&g_GUIDemoWindowIsEnabled);
+    }
 
     EQAPP_GUI_MainWindow();
 

@@ -306,16 +306,13 @@ void EQAPP_ESP_Execute()
         {
             if (spawnType == EQ_SPAWN_TYPE_NPC)
             {
-                // skip mounts
-                auto spawnMountRiderSpawn = EQ_GetSpawnMountRiderSpawn(spawn);
-                if (spawnMountRiderSpawn != NULL)
+                if (EQ_IsSpawnMount(spawn) == true)
                 {
                     spawn = EQ_GetSpawnNext(spawn);
                     continue;
                 }
 
-                // skip auras
-                if (spawnRace == EQ_RACE_INVISIBLE_MAN && spawnClass == EQ_CLASS_OBJECT)
+                if (EQ_IsSpawnAura(spawn) == true)
                 {
                     spawn = EQ_GetSpawnNext(spawn);
                     continue;

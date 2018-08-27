@@ -1,5 +1,7 @@
 #pragma once
 
+extern bool g_GUIDemoWindowIsEnabled;
+
 extern bool g_GUIMapWindowIsEnabled;
 
 bool g_GUIMainWindowIsEnabled = false;
@@ -107,6 +109,10 @@ static void EQAPP_GUI_MainWindow_MenuFile()
 {
     if (ImGui::MenuItem("Load Scripts##MainWindowMenuItemFileLoadScripts")) EQAPP_Lua_LoadAndPrintAllScripts();
     if (ImGui::MenuItem("Load Waypoints##MainWindowMenuItemFileLoadWaypoints")) EQAPP_WaypointList_Load();
+
+    ImGui::Separator();
+
+    if (ImGui::MenuItem("Show Demo Window##MainWindowMenuItemOptionsShowDemoWindow", NULL, &g_GUIDemoWindowIsEnabled)) {}
 
     ImGui::Separator();
 

@@ -194,6 +194,12 @@ std::vector<uint32_t> EQ_GetGroupMemberSpawnList();
 uint32_t EQ_GetGroupMemberSpawn(uint32_t index);
 uint32_t EQ_GetGroupLeaderSpawn();
 
+bool EQ_IsSpawnBuyer(uint32_t spawn);
+bool EQ_IsSpawnTrader(uint32_t spawn);
+bool EQ_IsSpawnMercenary(uint32_t spawn);
+bool EQ_IsSpawnPet(uint32_t spawn);
+bool EQ_IsSpawnMount(uint32_t spawn);
+bool EQ_IsSpawnAura(uint32_t spawn);
 bool EQ_IsSpawnGroupMember(uint32_t spawn);
 bool EQ_IsSpawnGroupLeader(uint32_t spawn);
 
@@ -1904,6 +1910,43 @@ uint32_t EQ_GetGroupLeaderSpawn()
     }
 
     return EQ_ReadMemory<uint32_t>(groupLeader + EQ_OFFSET_GROUP_MEMBER_SPAWN);
+}
+
+bool EQ_IsSpawnBuyer(uint32_t spawn)
+{
+    return EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_IS_BUYER);
+}
+
+bool EQ_IsSpawnTrader(uint32_t spawn)
+{
+    return EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_IS_TRADER);
+}
+
+bool EQ_IsSpawnMercenary(uint32_t spawn)
+{
+    return EQ_ReadMemory<uint8_t>(spawn + EQ_OFFSET_SPAWN_IS_MERCENARY);
+}
+
+bool EQ_IsSpawnPet(uint32_t spawn)
+{
+    auto spawnPetOwnerSpawnID = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_PET_OWNER_SPAWN_ID);
+
+    return spawnPetOwnerSpawnID != 0;
+}
+
+bool EQ_IsSpawnMount(uint32_t spawn)
+{
+    auto spawnMountRiderSpawn = EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_MOUNT_RIDER_SPAWN);
+
+    return spawnMountRiderSpawn != NULL;
+}
+
+bool EQ_IsSpawnAura(uint32_t spawn)
+{
+    auto spawnRace = EQ_GetSpawnRace(spawn);
+    auto spawnClass = EQ_GetSpawnClass(spawn);
+
+    return spawnRace == EQ_RACE_INVISIBLE_MAN && spawnClass == EQ_CLASS_OBJECT;
 }
 
 bool EQ_IsSpawnGroupMember(uint32_t spawn)

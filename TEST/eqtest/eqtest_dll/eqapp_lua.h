@@ -1908,6 +1908,12 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_GetGroupMemberSpawn", EQ_GetGroupMemberSpawn);
     state->set_function("EQ_GetGroupLeaderSpawn", EQ_GetGroupLeaderSpawn);
 
+    state->set_function("EQ_IsSpawnBuyer", EQ_IsSpawnBuyer);
+    state->set_function("EQ_IsSpawnTrader", EQ_IsSpawnTrader);
+    state->set_function("EQ_IsSpawnMercenary", EQ_IsSpawnMercenary);
+    state->set_function("EQ_IsSpawnPet", EQ_IsSpawnPet);
+    state->set_function("EQ_IsSpawnMount", EQ_IsSpawnMount);
+    state->set_function("EQ_IsSpawnAura", EQ_IsSpawnAura);
     state->set_function("EQ_IsSpawnGroupMember", EQ_IsSpawnGroupMember);
     state->set_function("EQ_IsSpawnGroupLeader", EQ_IsSpawnGroupLeader);
 

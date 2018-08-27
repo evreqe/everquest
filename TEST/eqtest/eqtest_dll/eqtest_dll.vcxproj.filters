@@ -224,5 +224,8 @@
     <ClInclude Include="eqapp_gui_mapwindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="imconfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
