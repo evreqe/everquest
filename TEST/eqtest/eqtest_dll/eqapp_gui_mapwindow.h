@@ -57,13 +57,23 @@ float g_GUIMapWindowMapTextHeightOffset = 5.0f;
 float g_GUIMapWindowMapLabelCircleSize = 4.0f;
 float g_GUIMapWindowMapSpawnCircleSize = 4.0f;
 
+float g_GUIMapWindowMapArrowSize = 20.0f;
+
 LPDIRECT3DTEXTURE9 g_GUIMapWindowMapBackgroundTexture = NULL;
 
 static void EQAPP_GUI_MapWindow();
 static void EQAPP_GUI_MapWindow_LoadTextures();
 static void EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPosition(float x, float y, float& screenX, float& screenY);
+static bool EQAPP_GUI_MapWindow_Map_IsPointInsideMap(int x, int y);
+static void EQAPP_GUI_MapWindow_Map_ZoomOut();
+static void EQAPP_GUI_MapWindow_Map_ZoomIn();
 static void EQAPP_GUI_MapWindow_Map_MouseWheelZoomOut();
 static void EQAPP_GUI_MapWindow_Map_MouseWheelZoomIn();
+static void EQAPP_GUI_MapWindow_Map_SetZoom(float zoom);
+static void EQAPP_GUI_MapWindow_Map_ResetZoom();
+static void EQAPP_GUI_MapWindow_Map_Scroll(signed int speedX, signed int speedY);
+static void EQAPP_GUI_MapWindow_Map_Center();
+static void EQAPP_GUI_MapWindow_Map_DrawSpawnArrow(uint32_t spawn, ImColor& color);
 static void EQAPP_GUI_MapWindow_Map_Draw();
 static void EQAPP_GUI_MapWindow_Map_PrintDebugInformation();
 
@@ -98,6 +108,13 @@ static void EQAPP_GUI_MapWindow()
 
         if (ImGui::BeginMenu("Options##MapWindowMenuOptions"))
         {
+            if (ImGui::MenuItem("Base Layer##MapWindowMenuItemOptionsLayer0", NULL, &g_GUIMapWindowMapLayer0IsEnabled)) {}
+            if (ImGui::MenuItem("Layer 1##MapWindowMenuItemOptionsLayer1", NULL, &g_GUIMapWindowMapLayer1IsEnabled)) {}
+            if (ImGui::MenuItem("Layer 2##MapWindowMenuItemOptionsLayer2", NULL, &g_GUIMapWindowMapLayer2IsEnabled)) {}
+            if (ImGui::MenuItem("Layer 3##MapWindowMenuItemOptionsLayer3", NULL, &g_GUIMapWindowMapLayer3IsEnabled)) {}
+
+            ImGui::Separator();
+
             if (ImGui::MenuItem("Lines##MapWindowMenuItemOptionsLines", NULL, &g_GUIMapWindowMapLinesIsEnabled)) {}
             if (ImGui::MenuItem("Labels##MapWindowMenuItemOptionsLabels", NULL, &g_GUIMapWindowMapLabelsIsEnabled)) {}
             if (ImGui::MenuItem("Spawns##MapWindowMenuItemOptionsSpawns", NULL, &g_GUIMapWindowMapSpawnsIsEnabled)) {}
@@ -107,13 +124,6 @@ static void EQAPP_GUI_MapWindow()
             if (ImGui::MenuItem("Height Filter for Lines##MapWindowMenuItemOptionsHeightFilterForLines", NULL, &g_GUIMapWindowMapHeightFilterLinesIsEnabled)) {}
             if (ImGui::MenuItem("Height Filter for Labels##MapWindowMenuItemOptionsHeightFilterForLabels", NULL, &g_GUIMapWindowMapHeightFilterLabelsIsEnabled)) {}
             if (ImGui::MenuItem("Height Filter for Spawns##MapWindowMenuItemOptionsHeightFilterForSpawns", NULL, &g_GUIMapWindowMapHeightFilterSpawnsIsEnabled)) {}
-
-            ImGui::Separator();
-
-            if (ImGui::MenuItem("Base Layer##MapWindowMenuItemOptionsLayer0", NULL, &g_GUIMapWindowMapLayer0IsEnabled)) {}
-            if (ImGui::MenuItem("Layer 1##MapWindowMenuItemOptionsLayer1", NULL, &g_GUIMapWindowMapLayer1IsEnabled)) {}
-            if (ImGui::MenuItem("Layer 2##MapWindowMenuItemOptionsLayer2", NULL, &g_GUIMapWindowMapLayer2IsEnabled)) {}
-            if (ImGui::MenuItem("Layer 3##MapWindowMenuItemOptionsLayer3", NULL, &g_GUIMapWindowMapLayer3IsEnabled)) {}
 
             ImGui::EndMenu();
         }
@@ -165,6 +175,31 @@ static void EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPosition(float x
     screenY = (((y * g_GUIMapWindowMapZoom) + g_GUIMapWindowMapOriginY) + ((playerSpawnY + g_GUIMapWindowMapOffsetY) * g_GUIMapWindowMapZoom));
 }
 
+static bool EQAPP_GUI_MapWindow_Map_IsPointInsideMap(int x, int y)
+{
+    return EQ_IsPointInsideRectangle(x, y, (int)g_GUIMapWindowMapX, (int)g_GUIMapWindowMapY, (int)g_GUIMapWindowMapWidth, (int)g_GUIMapWindowMapHeight) == true;
+}
+
+static void EQAPP_GUI_MapWindow_Map_ZoomOut()
+{
+    g_GUIMapWindowMapZoom -= g_GUIMapWindowMapZoom * g_GUIMapWindowMapZoomMultiplier;
+
+    if (g_GUIMapWindowMapZoom <= g_GUIMapWindowMapZoomMaximum)
+    {
+        g_GUIMapWindowMapZoom = g_GUIMapWindowMapZoomMaximum;
+    }
+}
+
+static void EQAPP_GUI_MapWindow_Map_ZoomIn()
+{
+    g_GUIMapWindowMapZoom += g_GUIMapWindowMapZoom * g_GUIMapWindowMapZoomMultiplier;
+
+    if (g_GUIMapWindowMapZoom >= g_GUIMapWindowMapZoomMinimum)
+    {
+        g_GUIMapWindowMapZoom = g_GUIMapWindowMapZoomMinimum;
+    }
+}
+
 static void EQAPP_GUI_MapWindow_Map_MouseWheelZoomOut()
 {
     g_GUIMapWindowMapZoom -= g_GUIMapWindowMapZoom * g_GUIMapWindowMapMouseWheelZoomMultiplier;
@@ -185,14 +220,128 @@ static void EQAPP_GUI_MapWindow_Map_MouseWheelZoomIn()
     }
 }
 
+static void EQAPP_GUI_MapWindow_Map_SetZoom(float zoom)
+{
+    g_GUIMapWindowMapZoom = zoom;
+}
+
+static void EQAPP_GUI_MapWindow_Map_ResetZoom()
+{
+    g_GUIMapWindowMapZoom = 1.0f;
+}
+
+static void EQAPP_GUI_MapWindow_Map_Scroll(signed int speedX, signed int speedY)
+{
+    if (speedX != 0)
+    {
+        float addX = (float)speedX;
+
+        if (g_GUIMapWindowMapZoom != 0.0f)
+        {
+            addX = addX / g_GUIMapWindowMapZoom;
+        }
+
+        g_GUIMapWindowMapOffsetX += addX;
+    }
+
+    if (speedY != 0)
+    {
+        float addY = (float)speedY;
+
+        if (g_GUIMapWindowMapZoom != 0.0f)
+        {
+            addY = addY / g_GUIMapWindowMapZoom;
+        }
+
+        g_GUIMapWindowMapOffsetY += addY;
+    }
+}
+
+static void EQAPP_GUI_MapWindow_Map_Center()
+{
+    g_GUIMapWindowMapOffsetX = 0.0f;
+    g_GUIMapWindowMapOffsetY = 0.0f;
+}
+
+static void EQAPP_GUI_MapWindow_Map_DrawSpawnArrow(uint32_t spawn, ImColor& color)
+{
+    auto spawnY = EQ_GetSpawnY(spawn);
+    auto spawnX = EQ_GetSpawnX(spawn);
+
+    auto spawnHeading = EQ_GetSpawnHeading(spawn);
+
+    // line1
+
+    float line1BeginX = spawnX;
+    float line1BeginY = spawnY;
+
+    float line1EndX = spawnX;
+    float line1EndY = spawnY;
+
+    EQ_ApplyForwardMovement(line1EndY, line1EndX, spawnHeading, g_GUIMapWindowMapArrowSize);
+
+    float line1BeginMapX = 0.0f;
+    float line1BeginMapY = 0.0f;
+    EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPosition(-line1BeginX, -line1BeginY, line1BeginMapX, line1BeginMapY);
+
+    float line1EndMapX = 0.0f;
+    float line1EndMapY = 0.0f;
+    EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPosition(-line1EndX, -line1EndY, line1EndMapX, line1EndMapY);
+
+    // line 2
+
+    float line2BeginX = line1EndX;
+    float line2BeginY = line1EndY;
+
+    float line2EndX = line1EndX;
+    float line2EndY = line1EndY;
+
+    EQ_ApplyBackwardMovement(line2EndY, line2EndX, spawnHeading, g_GUIMapWindowMapArrowSize * 0.5f);
+    EQ_ApplyLeftwardMovement(line2EndY, line2EndX, spawnHeading, g_GUIMapWindowMapArrowSize * 0.25f);
+
+    float line2BeginMapX = 0.0f;
+    float line2BeginMapY = 0.0f;
+    EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPosition(-line2BeginX, -line2BeginY, line2BeginMapX, line2BeginMapY);
+
+    float line2EndMapX = 0.0f;
+    float line2EndMapY = 0.0f;
+    EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPosition(-line2EndX, -line2EndY, line2EndMapX, line2EndMapY);
+
+    // line 3
+
+    float line3BeginX = line1EndX;
+    float line3BeginY = line1EndY;
+
+    float line3EndX = line1EndX;
+    float line3EndY = line1EndY;
+
+    EQ_ApplyBackwardMovement(line3EndY, line3EndX, spawnHeading, g_GUIMapWindowMapArrowSize * 0.5f);
+    EQ_ApplyRightwardMovement(line3EndY, line3EndX, spawnHeading, g_GUIMapWindowMapArrowSize * 0.25f);
+
+    float line3BeginMapX = 0.0f;
+    float line3BeginMapY = 0.0f;
+    EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPosition(-line3BeginX, -line3BeginY, line3BeginMapX, line3BeginMapY);
+
+    float line3EndMapX = 0.0f;
+    float line3EndMapY = 0.0f;
+    EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPosition(-line3EndX, -line3EndY, line3EndMapX, line3EndMapY);
+
+    // draw lines
+
+    ImDrawList* drawList = ImGui::GetWindowDrawList();
+
+    drawList->AddLine(ImVec2(line1BeginMapX, line1BeginMapY), ImVec2(line1EndMapX, line1EndMapY), color);
+    drawList->AddLine(ImVec2(line2BeginMapX, line2BeginMapY), ImVec2(line2EndMapX, line2EndMapY), color);
+    drawList->AddLine(ImVec2(line3BeginMapX, line3BeginMapY), ImVec2(line3EndMapX, line3EndMapY), color);
+}
+
 static void EQAPP_GUI_MapWindow_Map_Draw()
 {
     ImGuiIO& io = ImGui::GetIO();
-    ImGuiStyle& style = ImGui::GetStyle();
-
-    ImVec2 drawPosition = ImGui::GetCursorScreenPos();
 
     uint32_t drawCount = 0;
+
+    ImVec2 drawPosition = ImGui::GetCursorScreenPos();
 
     g_GUIMapWindowMapX = drawPosition.x;
     g_GUIMapWindowMapY = drawPosition.y;
@@ -211,7 +360,7 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
     g_GUIMapWindowMapOriginX = g_GUIMapWindowMapX + (g_GUIMapWindowMapWidth  * 0.5f);
     g_GUIMapWindowMapOriginY = g_GUIMapWindowMapY + (g_GUIMapWindowMapHeight * 0.5f);
 
-    if (EQ_IsPointInsideRectangle((int)io.MousePos.x, (int)io.MousePos.y, (int)g_GUIMapWindowMapX, (int)g_GUIMapWindowMapY, (int)g_GUIMapWindowMapWidth, (int)g_GUIMapWindowMapHeight) == true)
+    if (EQAPP_GUI_MapWindow_Map_IsPointInsideMap((int)io.MousePos.x, (int)io.MousePos.y) == true)
     {
         if (io.MouseWheel < 0.0f)
         {
@@ -335,9 +484,9 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
                 float lineEndY = 0.0f;
                 EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPosition(mapLine->End.X, mapLine->End.Y, lineEndX, lineEndY);
 
-                if (EQ_IsPointInsideRectangle((int)lineBeginX, (int)lineBeginY, (int)g_GUIMapWindowMapX, (int)g_GUIMapWindowMapY, (int)g_GUIMapWindowMapWidth, (int)g_GUIMapWindowMapHeight) == false)
+                if (EQAPP_GUI_MapWindow_Map_IsPointInsideMap((int)lineBeginX, (int)lineBeginY) == false)
                 {
-                    if (EQ_IsPointInsideRectangle((int)lineEndX, (int)lineEndY, (int)g_GUIMapWindowMapX, (int)g_GUIMapWindowMapY, (int)g_GUIMapWindowMapWidth, (int)g_GUIMapWindowMapHeight) == false)
+                    if (EQAPP_GUI_MapWindow_Map_IsPointInsideMap((int)lineEndX, (int)lineEndY) == false)
                     {
                         mapLine = mapLine->Next;
                         continue;
@@ -370,8 +519,8 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
         float spawnMouseHoverY = 0.0f;
         std::string spawnMouseHoverText = std::string();
         ImVec2 spawnMouseHoverTextSize;
-        ImColor spawnMouseHoverColor = ImColor(1.0f, 1.0f, 0.0f, 1.0f);
-        ImColor spawnMouseHoverBackColor = ImColor(0.0f, 0.0f, 0.0f, 1.0f);
+        ImColor spawnMouseHoverColor = ImColor(1.0f, 1.0f, 0.0f, 1.0f); // yellow
+        ImColor spawnMouseHoverBackColor = ImColor(0.0f, 0.0f, 0.0f, 1.0f); // black
 
         auto spawn = EQ_GetFirstSpawn();
         while (spawn != NULL)
@@ -428,7 +577,7 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
             float spawnMapY = 0.0f;
             EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPosition(-spawnX, -spawnY, spawnMapX, spawnMapY);
 
-            if (EQ_IsPointInsideRectangle((int)spawnMapX, (int)spawnMapY, (int)g_GUIMapWindowMapX, (int)g_GUIMapWindowMapY, (int)g_GUIMapWindowMapWidth, (int)g_GUIMapWindowMapHeight) == false)
+            if (EQAPP_GUI_MapWindow_Map_IsPointInsideMap((int)spawnMapX, (int)spawnMapY) == false)
             {
                 spawn = EQ_GetSpawnNext(spawn);
                 continue;
@@ -617,7 +766,7 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
                 float labelMapY = 0.0f;
                 EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPosition(mapLabel->Location.X, mapLabel->Location.Y, labelMapX, labelMapY);
 
-                if (EQ_IsPointInsideRectangle((int)labelMapX, (int)labelMapY, (int)g_GUIMapWindowMapX, (int)g_GUIMapWindowMapY, (int)g_GUIMapWindowMapWidth, (int)g_GUIMapWindowMapHeight) == false)
+                if (EQAPP_GUI_MapWindow_Map_IsPointInsideMap((int)labelMapX, (int)labelMapY) == false)
                 {
                     mapLabel = mapLabel->Next;
                     continue;
@@ -657,6 +806,9 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
         drawList->AddCircle(ImVec2(playerMapX, playerMapY), spawnCircleSize, ImColor(1.0f, 0.0f, 1.0f, 1.0f)); // magenta
         drawCount++;
     }
+
+    EQAPP_GUI_MapWindow_Map_DrawSpawnArrow(playerSpawn, ImColor(1.0f, 0.5f, 0.0f, 1.0f));
+    drawCount += 3;
 
     drawList->PopClipRect();
 
