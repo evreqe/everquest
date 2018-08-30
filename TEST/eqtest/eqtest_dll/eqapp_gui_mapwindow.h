@@ -17,6 +17,30 @@ bool g_GUIMapWindowMapLayer3IsEnabled = false;
 
 bool g_GUIMapWindowMapScaleToZoomIsEnabled = true;
 
+bool g_GUIMapWindowMapSpawnsPlayerIsEnabled = true;
+bool g_GUIMapWindowMapSpawnsNPCIsEnabled = true;
+bool g_GUIMapWindowMapSpawnsCorpseIsEnabled = true;
+bool g_GUIMapWindowMapSpawnsPetIsEnabled = true;
+bool g_GUIMapWindowMapSpawnsMercenaryIsEnabled = true;
+
+ImColor g_GUIMapWindowMapBorderColor = ImColor(1.0f, 1.0f, 1.0f, 1.0f); // white
+
+ImColor g_GUIMapWindowMapSpawnDefaultColor        = ImColor(1.0f, 1.0f, 1.0f, 1.0f); // white
+ImColor g_GUIMapWindowMapSpawnYouColor            = ImColor(1.0f, 0.5f, 0.0f, 1.0f); // orange
+ImColor g_GUIMapWindowMapSpawnPlayerColor         = ImColor(1.0f, 0.0f, 0.0f, 1.0f); // red
+ImColor g_GUIMapWindowMapSpawnNPCColor            = ImColor(0.0f, 1.0f, 1.0f, 1.0f); // cyan
+ImColor g_GUIMapWindowMapSpawnCorpseColor         = ImColor(1.0f, 1.0f, 0.0f, 1.0f); // yellow
+ImColor g_GUIMapWindowMapSpawnMercenaryColor      = ImColor(0.5f, 0.0f, 0.0f, 1.0f); // dark red
+ImColor g_GUIMapWindowMapSpawnPetColor            = ImColor(0.0f, 0.5f, 0.5f, 1.0f); // dark cyan
+ImColor g_GUIMapWindowMapSpawnGroupMemberColor    = ImColor(0.0f, 1.0f, 0.0f, 1.0f); // green
+ImColor g_GUIMapWindowMapSpawnTargetColor         = ImColor(1.0f, 0.0f, 1.0f, 1.0f); // magenta
+
+bool g_GUIMapWindowMapSpawnMouseHover = false;
+bool g_GUIMapWindowMapSpawnMouseHoverDrawCircle = false;
+
+ImColor g_GUIMapWindowMapSpawnMouseHoverColor        = ImColor(1.0f, 1.0f, 0.0f, 1.0f); // yellow
+ImColor g_GUIMapWindowMapSpawnMouseHoverBackColor    = ImColor(0.0f, 0.0f, 0.0f, 1.0f); // black
+
 float g_GUIMapWindowX = 0.0f;
 float g_GUIMapWindowY = 0.0f;
 
@@ -60,6 +84,8 @@ float g_GUIMapWindowMapLabelCircleSize = 4.0f;
 float g_GUIMapWindowMapSpawnCircleSize = 4.0f;
 
 float g_GUIMapWindowMapArrowSize = 20.0f;
+
+float g_GUIMapWindowMapSpawnClickDistance = 400.0f;
 
 LPDIRECT3DTEXTURE9 g_GUIMapWindowMapBackgroundTexture = NULL;
 
@@ -106,6 +132,10 @@ static void EQAPP_GUI_MapWindow()
         {
             if (ImGui::MenuItem("Print Debug Information##MapWindowMenuItemFilePrintDebugInformation")) EQAPP_GUI_MapWindow_Map_PrintDebugInformation();
 
+            ImGui::Separator();
+
+            if (ImGui::MenuItem("Close##MapWindowMenuItemFileClose")) g_GUIMapWindowIsEnabled = false;
+
             ImGui::EndMenu();
         }
 
@@ -139,6 +169,34 @@ static void EQAPP_GUI_MapWindow()
             ImGui::Separator();
 
             if (ImGui::MenuItem("Scale to Zoom##MapWindowMenuItemOptionsScaleToZoom", NULL, &g_GUIMapWindowMapScaleToZoomIsEnabled)) {}
+
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Spawns##MapWindowMenuSpawns"))
+        {
+            if (ImGui::MenuItem("Player##MapWindowMenuItemSpawnsPlayer", NULL, &g_GUIMapWindowMapSpawnsPlayerIsEnabled)) {}
+            if (ImGui::MenuItem("NPC##MapWindowMenuItemSpawnsNPC", NULL, &g_GUIMapWindowMapSpawnsNPCIsEnabled)) {}
+            if (ImGui::MenuItem("Corpse##MapWindowMenuItemSpawnsCorpse", NULL, &g_GUIMapWindowMapSpawnsCorpseIsEnabled)) {}
+
+            ImGui::Separator();
+
+            if (ImGui::MenuItem("Mercenary##MapWindowMenuItemSpawnsMercenary", NULL, &g_GUIMapWindowMapSpawnsMercenaryIsEnabled)) {}
+            if (ImGui::MenuItem("Pet##MapWindowMenuItemSpawnsPet", NULL, &g_GUIMapWindowMapSpawnsPetIsEnabled)) {}
+
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Colors##MapWindowMenuColors"))
+        {
+            ImGui::ColorEdit4("Player##MapWindowColorEditSpawnPlayer", (float*)&g_GUIMapWindowMapSpawnPlayerColor.Value, ImGuiColorEditFlags_NoInputs);
+            ImGui::ColorEdit4("NPC##MapWindowColorEditSpawnNPC", (float*)&g_GUIMapWindowMapSpawnNPCColor.Value, ImGuiColorEditFlags_NoInputs);
+            ImGui::ColorEdit4("Corpse##MapWindowColorEditSpawnCorpse", (float*)&g_GUIMapWindowMapSpawnCorpseColor.Value, ImGuiColorEditFlags_NoInputs);
+
+            ImGui::Separator();
+
+            ImGui::ColorEdit4("Mercenary##MapWindowColorEditSpawnMercenary", (float*)&g_GUIMapWindowMapSpawnMercenaryColor.Value, ImGuiColorEditFlags_NoInputs);
+            ImGui::ColorEdit4("Pet##MapWindowColorEditSpawnPet", (float*)&g_GUIMapWindowMapSpawnPetColor.Value, ImGuiColorEditFlags_NoInputs);
 
             ImGui::EndMenu();
         }
@@ -372,29 +430,35 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
 {
     ImGuiIO& io = ImGui::GetIO();
 
-    if (EQAPP_GUI_MapWindow_Map_IsPointInsideMap((int)io.MousePos.x, (int)io.MousePos.y) == true)
+    if (ImGui::IsWindowHovered() == true)
     {
-        if (io.MouseWheel < 0.0f)
+        if (EQAPP_GUI_MapWindow_Map_IsPointInsideMap((int)io.MousePos.x, (int)io.MousePos.y) == true)
         {
-            EQAPP_GUI_MapWindow_Map_MouseWheelZoomOut();
-        }
-        else if (io.MouseWheel > 0.0f)
-        {
-            EQAPP_GUI_MapWindow_Map_MouseWheelZoomIn();
-        }
+            if (io.MouseWheel < 0.0f)
+            {
+                EQAPP_GUI_MapWindow_Map_MouseWheelZoomOut();
+            }
+            else if (io.MouseWheel > 0.0f)
+            {
+                EQAPP_GUI_MapWindow_Map_MouseWheelZoomIn();
+            }
 
-        if (ImGui::IsMouseDragging(0, 0.001f) == true)
-        {
-            ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeAll);
+            if (g_GUIMapWindowMapSpawnMouseHover == false)
+            {
+                if (ImGui::IsMouseDragging(0, 0.001f) == true)
+                {
+                    ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeAll);
 
-            EQAPP_GUI_MapWindow_Map_Scroll(io.MouseDelta.x, io.MouseDelta.y);
-        }
+                    EQAPP_GUI_MapWindow_Map_Scroll(io.MouseDelta.x, io.MouseDelta.y);
+                }
+            }
 
-        // middle click
-        if (io.MouseDown[2] == true)
-        {
-            EQAPP_GUI_MapWindow_Map_ResetZoom();
-            EQAPP_GUI_MapWindow_Map_Center();
+            // middle click
+            if (io.MouseDown[2] == true)
+            {
+                EQAPP_GUI_MapWindow_Map_ResetZoom();
+                EQAPP_GUI_MapWindow_Map_Center();
+            }
         }
     }
 
@@ -564,14 +628,13 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
 
     if (g_GUIMapWindowMapSpawnsIsEnabled == true)
     {
-        bool spawnMouseHover = false;
-        bool spawnMouseHoverDrawCircle = false;
+        g_GUIMapWindowMapSpawnMouseHover = false;
+        g_GUIMapWindowMapSpawnMouseHoverDrawCircle = false;
+
         float spawnMouseHoverX = 0.0f;
         float spawnMouseHoverY = 0.0f;
         std::string spawnMouseHoverText = std::string();
         ImVec2 spawnMouseHoverTextSize;
-        ImColor spawnMouseHoverColor = ImColor(1.0f, 1.0f, 0.0f, 1.0f); // yellow
-        ImColor spawnMouseHoverBackColor = ImColor(0.0f, 0.0f, 0.0f, 1.0f); // black
 
         auto spawn = EQ_GetFirstSpawn();
         while (spawn != NULL)
@@ -582,10 +645,28 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
                 continue;
             }
 
+            bool spawnIsGroupMember = EQ_IsSpawnGroupMember(spawn);
+            bool spawnIsMercenary = EQ_IsSpawnMercenary(spawn);
+            bool spawnIsPet = EQ_IsSpawnPet(spawn);
+
             auto spawnType = EQ_GetSpawnType(spawn);
 
-            if (spawnType == EQ_SPAWN_TYPE_NPC)
+            if (spawnType == EQ_SPAWN_TYPE_PLAYER)
             {
+                if (g_GUIMapWindowMapSpawnsPlayerIsEnabled == false)
+                {
+                    spawn = EQ_GetSpawnNext(spawn);
+                    continue;
+                }
+            }
+            else if (spawnType == EQ_SPAWN_TYPE_NPC)
+            {
+                if (g_GUIMapWindowMapSpawnsNPCIsEnabled == false)
+                {
+                    spawn = EQ_GetSpawnNext(spawn);
+                    continue;
+                }
+
                 if (EQ_IsSpawnMount(spawn) == true)
                 {
                     spawn = EQ_GetSpawnNext(spawn);
@@ -593,6 +674,32 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
                 }
 
                 if (EQ_IsSpawnAura(spawn) == true)
+                {
+                    spawn = EQ_GetSpawnNext(spawn);
+                    continue;
+                }
+            }
+            else if (spawnType == EQ_SPAWN_TYPE_CORPSE)
+            {
+                if (g_GUIMapWindowMapSpawnsCorpseIsEnabled == false)
+                {
+                    spawn = EQ_GetSpawnNext(spawn);
+                    continue;
+                }
+            }
+
+            if (spawnIsMercenary == true)
+            {
+                if (g_GUIMapWindowMapSpawnsMercenaryIsEnabled == false)
+                {
+                    spawn = EQ_GetSpawnNext(spawn);
+                    continue;
+                }
+            }
+
+            if (spawnIsPet == true)
+            {
+                if (g_GUIMapWindowMapSpawnsPetIsEnabled == false)
                 {
                     spawn = EQ_GetSpawnNext(spawn);
                     continue;
@@ -634,123 +741,135 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
                 continue;
             }
 
-            if (spawnMouseHover == false)
+            if (ImGui::IsWindowHovered() == true)
             {
-                auto mouseDistanceToSpawnX = std::fabsf(io.MousePos.x - spawnMapX);
-                auto mouseDistanceToSpawnY = std::fabsf(io.MousePos.y - spawnMapY);
-
-                float mouseDistanceToSpawnCheck = g_GUIMapWindowMapSpawnCircleSize + 1.0f;
-
-                if (g_GUIMapWindowMapScaleToZoomIsEnabled == true)
+                if (g_GUIMapWindowMapSpawnMouseHover == false)
                 {
-                    if (g_GUIMapWindowMapZoom != 0.0f)
-                    {
-                        mouseDistanceToSpawnCheck = mouseDistanceToSpawnCheck * g_GUIMapWindowMapZoom;
+                    auto mouseDistanceToSpawnX = std::fabsf(io.MousePos.x - spawnMapX);
+                    auto mouseDistanceToSpawnY = std::fabsf(io.MousePos.y - spawnMapY);
 
-                        if (mouseDistanceToSpawnCheck < 2.0f)
+                    float mouseDistanceToSpawnCheck = g_GUIMapWindowMapSpawnCircleSize + 1.0f;
+
+                    if (g_GUIMapWindowMapScaleToZoomIsEnabled == true)
+                    {
+                        if (g_GUIMapWindowMapZoom != 0.0f)
                         {
-                            mouseDistanceToSpawnCheck = 2.0f;
+                            mouseDistanceToSpawnCheck = mouseDistanceToSpawnCheck * g_GUIMapWindowMapZoom;
+
+                            if (mouseDistanceToSpawnCheck < 2.0f)
+                            {
+                                mouseDistanceToSpawnCheck = 2.0f;
+                            }
                         }
                     }
-                }
 
-                if (mouseDistanceToSpawnX < mouseDistanceToSpawnCheck)
-                {
-                    if (mouseDistanceToSpawnY < mouseDistanceToSpawnCheck)
+                    if (mouseDistanceToSpawnX < mouseDistanceToSpawnCheck)
                     {
-                        auto spawnName = EQ_GetSpawnName(spawn);
-                        if (spawnName.size() != 0)
+                        if (mouseDistanceToSpawnY < mouseDistanceToSpawnCheck)
                         {
-                            std::stringstream ssHoverText;
-                            ssHoverText << spawnName;
-
-                            if (spawnType == EQ_SPAWN_TYPE_NPC)
+                            auto spawnName = EQ_GetSpawnName(spawn);
+                            if (spawnName.size() != 0)
                             {
-                                auto spawnLastName = EQ_GetSpawnLastName(spawn);
-                                if (spawnLastName.size() != 0)
+                                std::stringstream ssHoverText;
+                                ssHoverText << spawnName;
+
+                                if (spawnType == EQ_SPAWN_TYPE_NPC)
                                 {
-                                    ssHoverText << "\n(" << spawnLastName << ")";
+                                    auto spawnLastName = EQ_GetSpawnLastName(spawn);
+                                    if (spawnLastName.size() != 0)
+                                    {
+                                        ssHoverText << "\n(" << spawnLastName << ")";
+                                    }
+                                }
+
+                                ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+
+                                spawnMouseHoverTextSize = ImGui::CalcTextSize(ssHoverText.str().c_str(), NULL);
+
+                                float textHeightOffset = g_GUIMapWindowMapTextHeightOffset;
+                                if (g_GUIMapWindowMapZoom > 1.0f)
+                                {
+                                    textHeightOffset = textHeightOffset * g_GUIMapWindowMapZoom;
+                                }
+
+                                spawnMouseHoverX = spawnMapX - (spawnMouseHoverTextSize.x * 0.5f);
+                                spawnMouseHoverY = spawnMapY - spawnMouseHoverTextSize.y - textHeightOffset - (g_GUIMapWindowMapSpawnCircleSize * g_GUIMapWindowMapZoom);
+
+                                spawnMouseHoverText = ssHoverText.str();
+
+                                g_GUIMapWindowMapSpawnMouseHover = true;
+
+                                g_GUIMapWindowMapSpawnMouseHoverDrawCircle = true;
+
+                                if (io.MouseClicked[0] == true)
+                                {
+                                    float spawnDistance = EQ_CalculateDistance3D(playerSpawnY, playerSpawnX, playerSpawnZ, spawnY, spawnX, spawnZ);
+                                    if (spawnDistance <= g_GUIMapWindowMapSpawnClickDistance)
+                                    {
+                                        EQ_SetTargetSpawn(spawn);
+                                    }
                                 }
                             }
-
-                            ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
-
-                            spawnMouseHoverTextSize = ImGui::CalcTextSize(ssHoverText.str().c_str(), NULL);
-
-                            float textHeightOffset = g_GUIMapWindowMapTextHeightOffset;
-                            if (g_GUIMapWindowMapZoom > 1.0f)
-                            {
-                                textHeightOffset = textHeightOffset * g_GUIMapWindowMapZoom;
-                            }
-
-                            spawnMouseHoverX = spawnMapX - (spawnMouseHoverTextSize.x * 0.5f);
-                            spawnMouseHoverY = spawnMapY - spawnMouseHoverTextSize.y - textHeightOffset - (g_GUIMapWindowMapSpawnCircleSize * g_GUIMapWindowMapZoom);
-
-                            spawnMouseHoverText = ssHoverText.str();
-
-                            spawnMouseHover = true;
-
-                            spawnMouseHoverDrawCircle = true;
                         }
                     }
                 }
             }
 
-            ImColor spawnColor = ImColor(1.0f, 1.0f, 1.0f, 1.0f); // white
+            ImColor spawnColor = g_GUIMapWindowMapSpawnDefaultColor;
 
             if (spawnType == EQ_SPAWN_TYPE_PLAYER)
             {
-                spawnColor = ImColor(1.0f, 0.0f, 0.0f, 1.0f); // red
+                spawnColor = g_GUIMapWindowMapSpawnPlayerColor;
             }
             else if (spawnType == EQ_SPAWN_TYPE_NPC)
             {
-                spawnColor = ImColor(0.0f, 1.0f, 1.0f, 1.0f); // cyan
+                spawnColor = g_GUIMapWindowMapSpawnNPCColor;
             }
             else if (spawnType == EQ_SPAWN_TYPE_CORPSE)
             {
-                spawnColor = ImColor(1.0f, 1.0f, 0.0f, 1.0f); // yellow
+                spawnColor = g_GUIMapWindowMapSpawnCorpseColor;
             }
 
-            if (EQ_IsSpawnMercenary(spawn) == true)
+            if (spawnIsMercenary == true)
             {
-                spawnColor = ImColor(0.5f, 0.0f, 0.0f, 1.0f); // dark red
+                spawnColor = g_GUIMapWindowMapSpawnMercenaryColor;
             }
 
-            if (EQ_IsSpawnPet(spawn) == true)
+            if (spawnIsPet == true)
             {
-                spawnColor = ImColor(0.0f, 0.5f, 0.5f, 1.0f); // dark cyan
+                spawnColor = g_GUIMapWindowMapSpawnPetColor;
             }
 
-            if (EQ_IsSpawnGroupMember(spawn) == true)
+            if (spawnIsGroupMember == true)
             {
-                spawnColor = ImColor(0.0f, 1.0f, 0.0f, 1.0f); // green
+                spawnColor = g_GUIMapWindowMapSpawnGroupMemberColor;
             }
 
             if (spawn == targetSpawn)
             {
-                spawnColor = ImColor(1.0f, 0.0f, 1.0f, 1.0f); // magenta
+                spawnColor = g_GUIMapWindowMapSpawnTargetColor;
             }
 
             drawList->AddCircleFilled(ImVec2(spawnMapX, spawnMapY), spawnCircleSize, spawnColor);
             drawCount++;
 
-            if (spawnMouseHoverDrawCircle == true)
+            if (g_GUIMapWindowMapSpawnMouseHoverDrawCircle == true)
             {
-                drawList->AddCircle(ImVec2(spawnMapX, spawnMapY), spawnCircleSize, spawnMouseHoverColor);
+                drawList->AddCircle(ImVec2(spawnMapX, spawnMapY), spawnCircleSize, g_GUIMapWindowMapSpawnMouseHoverColor);
                 drawCount++;
 
-                spawnMouseHoverDrawCircle = false;
+                g_GUIMapWindowMapSpawnMouseHoverDrawCircle = false;
             }
 
             spawn = EQ_GetSpawnNext(spawn);
         }
 
-        if (spawnMouseHover == true)
+        if (g_GUIMapWindowMapSpawnMouseHover == true)
         {
-            drawList->AddRectFilled(ImVec2(spawnMouseHoverX, spawnMouseHoverY), ImVec2(spawnMouseHoverX + spawnMouseHoverTextSize.x, spawnMouseHoverY + spawnMouseHoverTextSize.y), spawnMouseHoverBackColor);
+            drawList->AddRectFilled(ImVec2(spawnMouseHoverX, spawnMouseHoverY), ImVec2(spawnMouseHoverX + spawnMouseHoverTextSize.x, spawnMouseHoverY + spawnMouseHoverTextSize.y), g_GUIMapWindowMapSpawnMouseHoverBackColor);
             drawCount++;
 
-            drawList->AddText(ImVec2(spawnMouseHoverX, spawnMouseHoverY), spawnMouseHoverColor, spawnMouseHoverText.c_str(), NULL);
+            drawList->AddText(ImVec2(spawnMouseHoverX, spawnMouseHoverY), g_GUIMapWindowMapSpawnMouseHoverColor, spawnMouseHoverText.c_str(), NULL);
             drawCount++;
         }
     }
@@ -877,22 +996,22 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
     }
 
     // player spawn
-    drawList->AddCircleFilled(ImVec2(playerMapX, playerMapY), spawnCircleSize, ImColor(1.0f, 0.5f, 0.0f, 1.0f)); // orange
+    drawList->AddCircleFilled(ImVec2(playerMapX, playerMapY), spawnCircleSize, g_GUIMapWindowMapSpawnYouColor);
     drawCount++;
 
     if (playerSpawn == targetSpawn)
     {
-        drawList->AddCircle(ImVec2(playerMapX, playerMapY), spawnCircleSize, ImColor(1.0f, 0.0f, 1.0f, 1.0f)); // magenta
+        drawList->AddCircle(ImVec2(playerMapX, playerMapY), spawnCircleSize, g_GUIMapWindowMapSpawnTargetColor);
         drawCount++;
     }
 
-    EQAPP_GUI_MapWindow_Map_DrawSpawnArrow(playerSpawn, ImColor(1.0f, 0.5f, 0.0f, 1.0f));
+    EQAPP_GUI_MapWindow_Map_DrawSpawnArrow(playerSpawn, g_GUIMapWindowMapSpawnYouColor);
     drawCount += 3;
 
     drawList->PopClipRect();
 
     // map border
-    drawList->AddRect(ImVec2(g_GUIMapWindowMapX, g_GUIMapWindowMapY), ImVec2(g_GUIMapWindowMapMaxX, g_GUIMapWindowMapMaxY), ImColor(1.0f, 1.0f, 1.0f, 1.0f));
+    drawList->AddRect(ImVec2(g_GUIMapWindowMapX, g_GUIMapWindowMapY), ImVec2(g_GUIMapWindowMapMaxX, g_GUIMapWindowMapMaxY), g_GUIMapWindowMapBorderColor);
     drawCount++;
 
 /*
@@ -905,29 +1024,16 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
 
 static void EQAPP_GUI_MapWindow_Map_PrintDebugInformation()
 {
+    uint32_t numMapLines = 0;
+    uint32_t numMapLabels = 0;
+
     auto mapLines = EQ_MapWindow_GetLines();
     if (mapLines != NULL)
     {
         EQ::MapLine_ptr mapLine = (EQ::MapLine_ptr)mapLines;
         while (mapLine != NULL)
         {
-            std::cout << "mapLine->Begin.X: " << mapLine->Begin.X << std::endl;
-            std::cout << "mapLine->Begin.Y: " << mapLine->Begin.Y << std::endl;
-            std::cout << "mapLine->End.X: " << mapLine->End.X << std::endl;
-            std::cout << "mapLine->End.Y: " << mapLine->End.Y << std::endl;
-
-            float lineBeginX = 0.0f;
-            float lineBeginY = 0.0f;
-            EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPosition(mapLine->Begin.X, mapLine->Begin.Y, lineBeginX, lineBeginY);
-
-            float lineEndX = 0.0f;
-            float lineEndY = 0.0f;
-            EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPosition(mapLine->End.X, mapLine->End.Y, lineEndX, lineEndY);
-
-            std::cout << "lineBeginX: " << lineBeginX << std::endl;
-            std::cout << "lineBeginY: " << lineBeginY << std::endl;
-            std::cout << "lineEndX: " << lineEndX << std::endl;
-            std::cout << "lineEndY: " << lineEndY << std::endl;
+            numMapLines++;
 
             mapLine = mapLine->Next;
         }
@@ -939,19 +1045,14 @@ static void EQAPP_GUI_MapWindow_Map_PrintDebugInformation()
         EQ::MapLabel_ptr mapLabel = (EQ::MapLabel_ptr)mapLabels;
         while (mapLabel != NULL)
         {
-            std::cout << "mapLabel->Text: " << mapLabel->Text << std::endl;
+            numMapLabels++;
 
-            std::cout << "mapLabel->Location.X: " << mapLabel->Location.X << std::endl;
-            std::cout << "mapLabel->Location.Y: " << mapLabel->Location.Y << std::endl;
-
-            float labelMapX = 0.0f;
-            float labelMapY = 0.0f;
-            EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPosition(mapLabel->Location.X, mapLabel->Location.Y, labelMapX, labelMapY);
-
-            std::cout << "labelMapX: " << labelMapX << std::endl;
-            std::cout << "labelMapY: " << labelMapY << std::endl;
+            std::cout << "Map Label Text: " << mapLabel->Text << std::endl;
 
             mapLabel = mapLabel->Next;
         }
     }
+
+    std::cout << "Map Lines: " << numMapLines << std::endl;
+    std::cout << "Map Labels: " << numMapLabels << std::endl;
 }
