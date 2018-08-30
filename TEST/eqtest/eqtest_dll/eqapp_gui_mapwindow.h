@@ -15,6 +15,8 @@ bool g_GUIMapWindowMapLayer1IsEnabled = true;
 bool g_GUIMapWindowMapLayer2IsEnabled = false;
 bool g_GUIMapWindowMapLayer3IsEnabled = false;
 
+bool g_GUIMapWindowMapScaleToZoomIsEnabled = true;
+
 float g_GUIMapWindowX = 0.0f;
 float g_GUIMapWindowY = 0.0f;
 
@@ -64,6 +66,7 @@ LPDIRECT3DTEXTURE9 g_GUIMapWindowMapBackgroundTexture = NULL;
 static void EQAPP_GUI_MapWindow();
 static void EQAPP_GUI_MapWindow_LoadTextures();
 static void EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPosition(float x, float y, float& screenX, float& screenY);
+static void EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPositionEx(float x, float y, float& screenX, float& screenY, float zoom);
 static bool EQAPP_GUI_MapWindow_Map_IsPointInsideMap(int x, int y);
 static void EQAPP_GUI_MapWindow_Map_ZoomOut();
 static void EQAPP_GUI_MapWindow_Map_ZoomIn();
@@ -71,7 +74,7 @@ static void EQAPP_GUI_MapWindow_Map_MouseWheelZoomOut();
 static void EQAPP_GUI_MapWindow_Map_MouseWheelZoomIn();
 static void EQAPP_GUI_MapWindow_Map_SetZoom(float zoom);
 static void EQAPP_GUI_MapWindow_Map_ResetZoom();
-static void EQAPP_GUI_MapWindow_Map_Scroll(signed int speedX, signed int speedY);
+static void EQAPP_GUI_MapWindow_Map_Scroll(float deltaX, float deltaY);
 static void EQAPP_GUI_MapWindow_Map_Center();
 static void EQAPP_GUI_MapWindow_Map_DrawSpawnArrow(uint32_t spawn, ImColor& color);
 static void EQAPP_GUI_MapWindow_Map_Draw();
@@ -106,6 +109,14 @@ static void EQAPP_GUI_MapWindow()
             ImGui::EndMenu();
         }
 
+        if (ImGui::BeginMenu("View##MapWindowMenuView"))
+        {
+            if (ImGui::MenuItem("Reset Zoom##MapWindowMenuItemViewResetZoom")) EQAPP_GUI_MapWindow_Map_ResetZoom();
+            if (ImGui::MenuItem("Center##MapWindowMenuItemViewCenter")) EQAPP_GUI_MapWindow_Map_Center();
+
+            ImGui::EndMenu();
+        }
+
         if (ImGui::BeginMenu("Options##MapWindowMenuOptions"))
         {
             if (ImGui::MenuItem("Base Layer##MapWindowMenuItemOptionsLayer0", NULL, &g_GUIMapWindowMapLayer0IsEnabled)) {}
@@ -125,13 +136,23 @@ static void EQAPP_GUI_MapWindow()
             if (ImGui::MenuItem("Height Filter for Labels##MapWindowMenuItemOptionsHeightFilterForLabels", NULL, &g_GUIMapWindowMapHeightFilterLabelsIsEnabled)) {}
             if (ImGui::MenuItem("Height Filter for Spawns##MapWindowMenuItemOptionsHeightFilterForSpawns", NULL, &g_GUIMapWindowMapHeightFilterSpawnsIsEnabled)) {}
 
+            ImGui::Separator();
+
+            if (ImGui::MenuItem("Scale to Zoom##MapWindowMenuItemOptionsScaleToZoom", NULL, &g_GUIMapWindowMapScaleToZoomIsEnabled)) {}
+
             ImGui::EndMenu();
         }
 
         ImGui::EndMenuBar();
     }
 
+    ImVec2 mapSize = ImGui::GetContentRegionAvail();
+
+    ImGui::BeginChild("##MapWindowChildMap", ImVec2(mapSize.x, mapSize.y), false, ImGuiWindowFlags_NoMove);
+
     EQAPP_GUI_MapWindow_Map_Draw();
+
+    ImGui::EndChild();
 
     ImGui::End();
 }
@@ -169,10 +190,24 @@ static void EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPosition(float x
 
     auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
     auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
-    auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
 
     screenX = (((x * g_GUIMapWindowMapZoom) + g_GUIMapWindowMapOriginX) + ((playerSpawnX + g_GUIMapWindowMapOffsetX) * g_GUIMapWindowMapZoom));
     screenY = (((y * g_GUIMapWindowMapZoom) + g_GUIMapWindowMapOriginY) + ((playerSpawnY + g_GUIMapWindowMapOffsetY) * g_GUIMapWindowMapZoom));
+}
+
+static void EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPositionEx(float x, float y, float& screenX, float& screenY, float zoom)
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
+    auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
+
+    screenX = (((x * zoom) + g_GUIMapWindowMapOriginX) + ((playerSpawnX + g_GUIMapWindowMapOffsetX) * zoom));
+    screenY = (((y * zoom) + g_GUIMapWindowMapOriginY) + ((playerSpawnY + g_GUIMapWindowMapOffsetY) * zoom));
 }
 
 static bool EQAPP_GUI_MapWindow_Map_IsPointInsideMap(int x, int y)
@@ -230,30 +265,26 @@ static void EQAPP_GUI_MapWindow_Map_ResetZoom()
     g_GUIMapWindowMapZoom = 1.0f;
 }
 
-static void EQAPP_GUI_MapWindow_Map_Scroll(signed int speedX, signed int speedY)
+static void EQAPP_GUI_MapWindow_Map_Scroll(float deltaX, float deltaY)
 {
-    if (speedX != 0)
+    if (deltaX != 0.0f)
     {
-        float addX = (float)speedX;
-
         if (g_GUIMapWindowMapZoom != 0.0f)
         {
-            addX = addX / g_GUIMapWindowMapZoom;
+            deltaX = deltaX / g_GUIMapWindowMapZoom;
         }
 
-        g_GUIMapWindowMapOffsetX += addX;
+        g_GUIMapWindowMapOffsetX += deltaX;
     }
 
-    if (speedY != 0)
+    if (deltaY != 0.0f)
     {
-        float addY = (float)speedY;
-
         if (g_GUIMapWindowMapZoom != 0.0f)
         {
-            addY = addY / g_GUIMapWindowMapZoom;
+            deltaY = deltaY / g_GUIMapWindowMapZoom;
         }
 
-        g_GUIMapWindowMapOffsetY += addY;
+        g_GUIMapWindowMapOffsetY += deltaY;
     }
 }
 
@@ -265,66 +296,68 @@ static void EQAPP_GUI_MapWindow_Map_Center()
 
 static void EQAPP_GUI_MapWindow_Map_DrawSpawnArrow(uint32_t spawn, ImColor& color)
 {
+    float arrowZoom = g_GUIMapWindowMapZoom;
+
+    if (g_GUIMapWindowMapScaleToZoomIsEnabled == false)
+    {
+        arrowZoom = 1.0f;
+    }
+    else
+    {
+        if (g_GUIMapWindowMapZoom < 1.0f)
+        {
+            arrowZoom = 1.0f;
+        }
+    }
+
+    float arrowSize = g_GUIMapWindowMapArrowSize * arrowZoom;
+
+    // spawn
+
     auto spawnY = EQ_GetSpawnY(spawn);
     auto spawnX = EQ_GetSpawnX(spawn);
 
     auto spawnHeading = EQ_GetSpawnHeading(spawn);
 
+    spawnHeading = spawnHeading + EQ_HEADING_MAX_HALF;
+
+    spawnHeading = EQ_FixHeading(spawnHeading);
+
+    float spawnMapX = 0.0f;
+    float spawnMapY = 0.0f;
+    EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPositionEx(-spawnX, -spawnY, spawnMapX, spawnMapY, g_GUIMapWindowMapZoom);
+
     // line1
 
-    float line1BeginX = spawnX;
-    float line1BeginY = spawnY;
+    float line1BeginMapX = spawnMapX;
+    float line1BeginMapY = spawnMapY;
 
-    float line1EndX = spawnX;
-    float line1EndY = spawnY;
+    float line1EndMapX = line1BeginMapX;
+    float line1EndMapY = line1BeginMapY;
 
-    EQ_ApplyForwardMovement(line1EndY, line1EndX, spawnHeading, g_GUIMapWindowMapArrowSize);
-
-    float line1BeginMapX = 0.0f;
-    float line1BeginMapY = 0.0f;
-    EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPosition(-line1BeginX, -line1BeginY, line1BeginMapX, line1BeginMapY);
-
-    float line1EndMapX = 0.0f;
-    float line1EndMapY = 0.0f;
-    EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPosition(-line1EndX, -line1EndY, line1EndMapX, line1EndMapY);
+    EQ_ApplyForwardMovement(line1EndMapY, line1EndMapX, spawnHeading, arrowSize);
 
     // line 2
 
-    float line2BeginX = line1EndX;
-    float line2BeginY = line1EndY;
+    float line2BeginMapX = line1EndMapX;
+    float line2BeginMapY = line1EndMapY;
 
-    float line2EndX = line1EndX;
-    float line2EndY = line1EndY;
+    float line2EndMapX = line2BeginMapX;
+    float line2EndMapY = line2BeginMapY;
 
-    EQ_ApplyBackwardMovement(line2EndY, line2EndX, spawnHeading, g_GUIMapWindowMapArrowSize * 0.5f);
-    EQ_ApplyLeftwardMovement(line2EndY, line2EndX, spawnHeading, g_GUIMapWindowMapArrowSize * 0.25f);
-
-    float line2BeginMapX = 0.0f;
-    float line2BeginMapY = 0.0f;
-    EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPosition(-line2BeginX, -line2BeginY, line2BeginMapX, line2BeginMapY);
-
-    float line2EndMapX = 0.0f;
-    float line2EndMapY = 0.0f;
-    EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPosition(-line2EndX, -line2EndY, line2EndMapX, line2EndMapY);
+    EQ_ApplyBackwardMovement(line2EndMapY, line2EndMapX, spawnHeading, arrowSize * 0.5f);
+    EQ_ApplyLeftwardMovement(line2EndMapY, line2EndMapX, spawnHeading, arrowSize * 0.25f);
 
     // line 3
 
-    float line3BeginX = line1EndX;
-    float line3BeginY = line1EndY;
+    float line3BeginMapX = line1EndMapX;
+    float line3BeginMapY = line1EndMapY;
 
-    float line3EndX = line1EndX;
-    float line3EndY = line1EndY;
+    float line3EndMapX = line3BeginMapX;
+    float line3EndMapY = line3BeginMapY;
 
-    EQ_ApplyBackwardMovement(line3EndY, line3EndX, spawnHeading, g_GUIMapWindowMapArrowSize * 0.5f);
-    EQ_ApplyRightwardMovement(line3EndY, line3EndX, spawnHeading, g_GUIMapWindowMapArrowSize * 0.25f);
-
-    float line3BeginMapX = 0.0f;
-    float line3BeginMapY = 0.0f;
-    EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPosition(-line3BeginX, -line3BeginY, line3BeginMapX, line3BeginMapY);
-
-    float line3EndMapX = 0.0f;
-    float line3EndMapY = 0.0f;
-    EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPosition(-line3EndX, -line3EndY, line3EndMapX, line3EndMapY);
+    EQ_ApplyBackwardMovement(line3EndMapY, line3EndMapX, spawnHeading, arrowSize * 0.5f);
+    EQ_ApplyRightwardMovement(line3EndMapY, line3EndMapX, spawnHeading, arrowSize * 0.25f);
 
     // draw lines
 
@@ -338,6 +371,32 @@ static void EQAPP_GUI_MapWindow_Map_DrawSpawnArrow(uint32_t spawn, ImColor& colo
 static void EQAPP_GUI_MapWindow_Map_Draw()
 {
     ImGuiIO& io = ImGui::GetIO();
+
+    if (EQAPP_GUI_MapWindow_Map_IsPointInsideMap((int)io.MousePos.x, (int)io.MousePos.y) == true)
+    {
+        if (io.MouseWheel < 0.0f)
+        {
+            EQAPP_GUI_MapWindow_Map_MouseWheelZoomOut();
+        }
+        else if (io.MouseWheel > 0.0f)
+        {
+            EQAPP_GUI_MapWindow_Map_MouseWheelZoomIn();
+        }
+
+        if (ImGui::IsMouseDragging(0, 0.001f) == true)
+        {
+            ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeAll);
+
+            EQAPP_GUI_MapWindow_Map_Scroll(io.MouseDelta.x, io.MouseDelta.y);
+        }
+
+        // middle click
+        if (io.MouseDown[2] == true)
+        {
+            EQAPP_GUI_MapWindow_Map_ResetZoom();
+            EQAPP_GUI_MapWindow_Map_Center();
+        }
+    }
 
     uint32_t drawCount = 0;
 
@@ -360,26 +419,18 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
     g_GUIMapWindowMapOriginX = g_GUIMapWindowMapX + (g_GUIMapWindowMapWidth  * 0.5f);
     g_GUIMapWindowMapOriginY = g_GUIMapWindowMapY + (g_GUIMapWindowMapHeight * 0.5f);
 
-    if (EQAPP_GUI_MapWindow_Map_IsPointInsideMap((int)io.MousePos.x, (int)io.MousePos.y) == true)
-    {
-        if (io.MouseWheel < 0.0f)
-        {
-            EQAPP_GUI_MapWindow_Map_MouseWheelZoomOut();
-        }
-        else if (io.MouseWheel > 0.0f)
-        {
-            EQAPP_GUI_MapWindow_Map_MouseWheelZoomIn();
-        }
-    }
-
     float spawnCircleSize = g_GUIMapWindowMapSpawnCircleSize;
-    if (g_GUIMapWindowMapZoom != 0.0f)
-    {
-        spawnCircleSize = spawnCircleSize * g_GUIMapWindowMapZoom;
 
-        if (spawnCircleSize < 1.0f)
+    if (g_GUIMapWindowMapScaleToZoomIsEnabled == true)
+    {
+        if (g_GUIMapWindowMapZoom != 0.0f)
         {
-            spawnCircleSize = 1.0f;
+            spawnCircleSize = spawnCircleSize * g_GUIMapWindowMapZoom;
+
+            if (spawnCircleSize < 1.0f)
+            {
+                spawnCircleSize = 1.0f;
+            }
         }
     }
 
@@ -589,7 +640,19 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
                 auto mouseDistanceToSpawnY = std::fabsf(io.MousePos.y - spawnMapY);
 
                 float mouseDistanceToSpawnCheck = g_GUIMapWindowMapSpawnCircleSize + 1.0f;
-                mouseDistanceToSpawnCheck = mouseDistanceToSpawnCheck * g_GUIMapWindowMapZoom;
+
+                if (g_GUIMapWindowMapScaleToZoomIsEnabled == true)
+                {
+                    if (g_GUIMapWindowMapZoom != 0.0f)
+                    {
+                        mouseDistanceToSpawnCheck = mouseDistanceToSpawnCheck * g_GUIMapWindowMapZoom;
+
+                        if (mouseDistanceToSpawnCheck < 2.0f)
+                        {
+                            mouseDistanceToSpawnCheck = 2.0f;
+                        }
+                    }
+                }
 
                 if (mouseDistanceToSpawnX < mouseDistanceToSpawnCheck)
                 {
@@ -614,8 +677,14 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
 
                             spawnMouseHoverTextSize = ImGui::CalcTextSize(ssHoverText.str().c_str(), NULL);
 
+                            float textHeightOffset = g_GUIMapWindowMapTextHeightOffset;
+                            if (g_GUIMapWindowMapZoom > 1.0f)
+                            {
+                                textHeightOffset = textHeightOffset * g_GUIMapWindowMapZoom;
+                            }
+
                             spawnMouseHoverX = spawnMapX - (spawnMouseHoverTextSize.x * 0.5f);
-                            spawnMouseHoverY = spawnMapY - spawnMouseHoverTextSize.y - g_GUIMapWindowMapTextHeightOffset - (g_GUIMapWindowMapSpawnCircleSize * g_GUIMapWindowMapZoom);
+                            spawnMouseHoverY = spawnMapY - spawnMouseHoverTextSize.y - textHeightOffset - (g_GUIMapWindowMapSpawnCircleSize * g_GUIMapWindowMapZoom);
 
                             spawnMouseHoverText = ssHoverText.str();
 
@@ -689,13 +758,17 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
     if (g_GUIMapWindowMapLabelsIsEnabled == true)
     {
         float labelCircleSize = g_GUIMapWindowMapLabelCircleSize;
-        if (g_GUIMapWindowMapZoom != 0.0f)
-        {
-            labelCircleSize = labelCircleSize * g_GUIMapWindowMapZoom;
 
-            if (labelCircleSize < 1.0f)
+        if (g_GUIMapWindowMapScaleToZoomIsEnabled == true)
+        {
+            if (g_GUIMapWindowMapZoom != 0.0f)
             {
-                labelCircleSize = 1.0f;
+                labelCircleSize = labelCircleSize * g_GUIMapWindowMapZoom;
+
+                if (labelCircleSize < 1.0f)
+                {
+                    labelCircleSize = 1.0f;
+                }
             }
         }
 
@@ -786,8 +859,14 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
 
                 ImVec2 textSize = ImGui::CalcTextSize(mapLabel->Text, NULL);
 
+                float textHeightOffset = g_GUIMapWindowMapTextHeightOffset;
+                if (g_GUIMapWindowMapZoom > 1.0f)
+                {
+                    textHeightOffset = textHeightOffset * g_GUIMapWindowMapZoom;
+                }
+
                 labelMapX = labelMapX - (textSize.x * 0.5f);
-                labelMapY = labelMapY - textSize.y - g_GUIMapWindowMapTextHeightOffset - (g_GUIMapWindowMapLabelCircleSize * g_GUIMapWindowMapZoom);
+                labelMapY = labelMapY - textSize.y - textHeightOffset - (g_GUIMapWindowMapLabelCircleSize * g_GUIMapWindowMapZoom);
 
                 drawList->AddText(ImVec2(labelMapX, labelMapY), labelColor, mapLabel->Text, NULL);
                 drawCount++;

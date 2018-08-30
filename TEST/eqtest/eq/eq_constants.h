@@ -860,11 +860,11 @@ namespace EQ
 
     typedef struct _MouseInfo2
     {
-        uint32_t X;
-        uint32_t Y;
-        uint32_t SpeedX;
-        uint32_t SpeedY;
-        uint32_t Scroll;
+        signed int X;
+        signed int Y;
+        signed int SpeedX;
+        signed int SpeedY;
+        signed int Scroll;
     } MouseInfo2, *MouseInfo2_ptr;
 
     typedef struct _ColorARGB
