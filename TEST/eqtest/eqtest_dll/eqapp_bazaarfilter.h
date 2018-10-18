@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef EQ_FEATURE_BAZAAR
+
 bool g_BazaarFilterIsEnabled = false;
 
 bool g_BazaarFilterBeepIsEnabled = false;
@@ -7,8 +9,10 @@ bool g_BazaarFilterBeepIsEnabled = false;
 std::vector<std::string> g_BazaarFilterItemNameList;
 uint32_t g_BazaarFilterItemNameList_reserve = 1024;
 
-// 1    = 1cp    one copper piece
-// 1000 = 1pp    one platinum piece
+// 1    = 1cp                  one copper piece
+// 1000 = 1pp                  one platinum piece
+// 100000 = 100pp              one hundred platinum pieces
+// 2000000000 = 2,000,000pp    two million platinum pieces
 uint32_t g_BazaarFilterItemPriceMinimum = 1;       // 1cp
 uint32_t g_BazaarFilterItemPriceMaximum = 2000000000;    // 2,000,000pp
 
@@ -240,3 +244,5 @@ void EQAPP_BazaarFilter_PrintItemNameList()
         std::cout << itemName << std::endl;
     }
 }
+
+#endif // EQ_FEATURE_BAZAAR

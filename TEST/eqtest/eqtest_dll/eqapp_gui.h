@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef EQ_FEATURE_ADVANCED
+
 #include "imgui_impl_win32.h"
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -174,7 +176,7 @@ bool EQAPP_GUI_HandleEvent_ProcessMouseEvent()
     else
     {
         memset(io.MouseDown, 0, sizeof(io.MouseDown));
-        io.MouseWheel = 0;
+        io.MouseWheel = 0.0f;
 
         //EQ::MouseState_ptr mouseState = (EQ::MouseState_ptr)EQ_ADDRESS_DirectInputMouseCopy;
         //mouseState->InWindow = 1;
@@ -245,6 +247,11 @@ bool EQAPP_GUI_HandleEvent_CEverQuest__HandleMouseWheel(signed int delta)
         return true;
     }
 
+    if (ImGui::IsAnyWindowHovered() == true)
+    {
+        return true;
+    }
+
     return false;
 }
 
@@ -301,3 +308,5 @@ void EQAPP_GUI_HandleEvent_CRender__UpdateDisplay()
     ImGui::Render();
     ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
 }
+
+#endif // EQ_FEATURE_ADVANCED

@@ -1,3 +1,5 @@
+#define EQ_FEATURE_BAZAAR
+
 #include <algorithm>
 #include <array>
 #include <bitset>
@@ -127,9 +129,13 @@ namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not avai
 
 void EQAPP_Load()
 {
+#ifdef EQ_FEATURE_ADVANCED
     g_GUIIsLoaded = EQAPP_GUI_Load();
+#endif // EQ_FEATURE_ADVANCED
 
+#ifdef EQ_FEATURE_ADVANCED
     EQAPP_ActorCollision_Load();
+#endif // EQ_FEATURE_ADVANCED
     EQAPP_WaypointList_Load();
     EQAPP_NamedSpawns_Load();
 
@@ -197,7 +203,9 @@ DWORD WINAPI EQAPP_ThreadLoop(LPVOID param)
         Sleep(100);
     }
 
+#ifdef EQ_FEATURE_ADVANCED
     EQAPP_GUI_Unload();
+#endif // EQ_FEATURE_ADVANCED
 
     EQAPP_BoxChat_Unload();
     EQAPP_Detours_Unload();

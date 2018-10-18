@@ -20,15 +20,15 @@ function OnInterpretCommand(commandText)
     if commandText == "//AutoBankOn" then
         if g_AutoBankIsEnabled == 0 then
             AutoBank_Toggle()
-            return 1
         end
+        return 1
     end
 
     if commandText == "//AutoBankOff" then
         if g_AutoBankIsEnabled == 1 then
             AutoBank_Toggle()
-            return 1
         end
+        return 1
     end
 end
 

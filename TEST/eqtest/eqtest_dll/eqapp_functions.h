@@ -3,6 +3,7 @@
 #include "eqapp.h"
 
 void EQAPP_Log(const char* text);
+void EQAPP_PrintTextToFile(const char* fileName, const char* text);
 
 void EQAPP_PrintBool(const char* text, bool& b);
 void EQAPP_PrintDebugText(const char* functionName, const char* text);
@@ -36,12 +37,23 @@ bool EQAPP_UpdateClientWindowList();
 
 void EQAPP_Log(const char* text)
 {
-    std::stringstream fileName;
-    fileName << g_EQAppName << "/log.txt";
+    std::stringstream filePath;
+    filePath << g_EQAppName << "/log.txt";
 
     std::fstream file;
-    file.open(fileName.str().c_str(), std::ios::out | std::ios::app);
+    file.open(filePath.str().c_str(), std::ios::out | std::ios::app);
     file << "[" << __TIME__ << "] " << text << std::endl;
+    file.close();
+}
+
+void EQAPP_PrintTextToFile(const char* fileName, const char* text)
+{
+    std::stringstream filePath;
+    filePath << g_EQAppName << "/" << fileName;
+
+    std::fstream file;
+    file.open(filePath.str().c_str(), std::ios::out | std::ios::app);
+    file << text << std::endl;
     file.close();
 }
 

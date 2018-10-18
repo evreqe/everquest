@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef EQ_FEATURE_ADVANCED
+
 bool g_ActorCollisionIsEnabled = true;
 
 EQApp::Timer g_ActorCollisionTimer = EQAPP_Timer_GetTimeNow();
@@ -274,3 +276,4 @@ bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors_Player(uint32_t
     return false;
 }
 
+#endif // EQ_FEATURE_ADVANCED

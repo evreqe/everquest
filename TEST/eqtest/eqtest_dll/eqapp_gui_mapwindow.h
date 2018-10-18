@@ -33,6 +33,7 @@ ImColor g_GUIMapWindowMapSpawnCorpseColor         = ImColor(1.0f, 1.0f, 0.0f, 1.
 ImColor g_GUIMapWindowMapSpawnMercenaryColor      = ImColor(0.5f, 0.0f, 0.0f, 1.0f); // dark red
 ImColor g_GUIMapWindowMapSpawnPetColor            = ImColor(0.0f, 0.5f, 0.5f, 1.0f); // dark cyan
 ImColor g_GUIMapWindowMapSpawnGroupMemberColor    = ImColor(0.0f, 1.0f, 0.0f, 1.0f); // green
+ImColor g_GUIMapWindowMapSpawnNamedColor          = ImColor(0.5f, 0.0f, 1.0f, 1.0f); // purple
 ImColor g_GUIMapWindowMapSpawnTargetColor         = ImColor(1.0f, 0.0f, 1.0f, 1.0f); // magenta
 
 bool g_GUIMapWindowMapSpawnMouseHover = false;
@@ -82,6 +83,8 @@ float g_GUIMapWindowMapTextHeightOffset = 5.0f;
 
 float g_GUIMapWindowMapLabelCircleSize = 4.0f;
 float g_GUIMapWindowMapSpawnCircleSize = 4.0f;
+
+float g_GUIMapWindowMapSpawnNamedCircleSizeMultiplier = 4.0f;
 
 float g_GUIMapWindowMapArrowSize = 20.0f;
 
@@ -645,6 +648,19 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
                 continue;
             }
 
+            auto spawnID = EQ_GetSpawnID(spawn);
+
+            bool spawnIsNamed = false;
+
+            for (auto& namedSpawnID : g_NamedSpawnsIDList)
+            {
+                if (spawnID == namedSpawnID)
+                {
+                    spawnIsNamed = true;
+                    break;
+                }
+            }
+
             bool spawnIsGroupMember = EQ_IsSpawnGroupMember(spawn);
             bool spawnIsMercenary = EQ_IsSpawnMercenary(spawn);
             bool spawnIsPet = EQ_IsSpawnPet(spawn);
@@ -773,6 +789,11 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
                                 std::stringstream ssHoverText;
                                 ssHoverText << spawnName;
 
+                                if (spawnType == EQ_SPAWN_TYPE_CORPSE)
+                                {
+                                    ssHoverText << "'s corpse";
+                                }
+
                                 if (spawnType == EQ_SPAWN_TYPE_NPC)
                                 {
                                     auto spawnLastName = EQ_GetSpawnLastName(spawn);
@@ -845,17 +866,35 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
                 spawnColor = g_GUIMapWindowMapSpawnGroupMemberColor;
             }
 
+            if (spawnIsNamed == true)
+            {
+                spawnColor = g_GUIMapWindowMapSpawnNamedColor;
+            }
+
             if (spawn == targetSpawn)
             {
                 spawnColor = g_GUIMapWindowMapSpawnTargetColor;
             }
 
-            drawList->AddCircleFilled(ImVec2(spawnMapX, spawnMapY), spawnCircleSize, spawnColor);
+            float drawCircleSize = spawnCircleSize;
+
+            if (spawnIsNamed == true)
+            {
+                drawCircleSize = drawCircleSize * g_GUIMapWindowMapSpawnNamedCircleSizeMultiplier;
+            }
+
+            drawList->AddCircleFilled(ImVec2(spawnMapX, spawnMapY), drawCircleSize, spawnColor);
             drawCount++;
+
+            if (spawnIsNamed == true)
+            {
+                drawList->AddCircle(ImVec2(spawnMapX, spawnMapY), drawCircleSize, g_GUIMapWindowMapSpawnDefaultColor);
+                drawCount++;
+            }
 
             if (g_GUIMapWindowMapSpawnMouseHoverDrawCircle == true)
             {
-                drawList->AddCircle(ImVec2(spawnMapX, spawnMapY), spawnCircleSize, g_GUIMapWindowMapSpawnMouseHoverColor);
+                drawList->AddCircle(ImVec2(spawnMapX, spawnMapY), drawCircleSize, g_GUIMapWindowMapSpawnMouseHoverColor);
                 drawCount++;
 
                 g_GUIMapWindowMapSpawnMouseHoverDrawCircle = false;
@@ -871,6 +910,10 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
 
             drawList->AddText(ImVec2(spawnMouseHoverX, spawnMouseHoverY), g_GUIMapWindowMapSpawnMouseHoverColor, spawnMouseHoverText.c_str(), NULL);
             drawCount++;
+
+            ////ImGui::BeginTooltip();
+            ////ImGui::TextUnformatted(spawnMouseHoverText.c_str());
+            ////ImGui::EndTooltip();
         }
     }
 

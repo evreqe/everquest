@@ -1,5 +1,6 @@
 #pragma once
 
+#include "eqapp_namedspawns.h"
 #include "eqapp_spawncastspell.h"
 
 bool g_ESPIsEnabled = false;
@@ -19,8 +20,13 @@ float g_ESPDistance = 400.0f;
 
 float g_ESPDoorDistance = 100.0f;
 
+bool g_ESPFindLineIsEnabled = false;
+
 std::string g_ESPFindSpawnName;
 std::string g_ESPFindSpawnLastName;
+
+uint32_t g_ESPFindSpawnNameCount = 0;
+uint32_t g_ESPFindSpawnLastNameCount = 0;
 
 uint32_t g_ESPFindSpawnLevel = 0;
 uint32_t g_ESPFindSpawnType = EQ_SPAWN_TYPE_UNKNOWN;
@@ -31,6 +37,7 @@ void EQAPP_ESP_Toggle();
 void EQAPP_ESP_On();
 void EQAPP_ESP_Off();
 void EQAPP_ESP_HeightFilter_Toggle();
+void EQAPP_ESP_FindLine_Toggle();
 void EQAPP_ESP_ShowSpawnID_Toggle();
 void EQAPP_ESP_ShowSpawnRace_Toggle();
 void EQAPP_ESP_ShowSpawnClass_Toggle();
@@ -64,6 +71,12 @@ void EQAPP_ESP_HeightFilter_Toggle()
 {
     EQ_ToggleBool(g_ESPHeightFilterIsEnabled);
     EQAPP_PrintBool("ESP Height Filter", g_ESPHeightFilterIsEnabled);
+}
+
+void EQAPP_ESP_FindLine_Toggle()
+{
+    EQ_ToggleBool(g_ESPFindLineIsEnabled);
+    EQAPP_PrintBool("ESP Find Line", g_ESPFindLineIsEnabled);
 }
 
 void EQAPP_ESP_ShowSpawnID_Toggle()
@@ -189,6 +202,9 @@ void EQAPP_ESP_Execute()
 
     auto targetSpawn = EQ_GetTargetSpawn();
 
+    g_ESPFindSpawnNameCount = 0;
+    g_ESPFindSpawnLastNameCount = 0;
+
     auto spawn = EQ_GetFirstSpawn();
     while (spawn != NULL)
     {
@@ -207,6 +223,7 @@ void EQAPP_ESP_Execute()
 
         float spawnDistance = EQ_CalculateDistance(playerSpawnY, playerSpawnX, spawnY, spawnX);
 
+        auto spawnID = EQ_GetSpawnID(spawn);
         auto spawnType = EQ_GetSpawnType(spawn);
         auto spawnLevel = EQ_GetSpawnLevel(spawn);
         auto spawnRace = EQ_GetSpawnRace(spawn);
@@ -216,12 +233,29 @@ void EQAPP_ESP_Execute()
 
         bool bIgnoreDistance = false;
         bool bOutOfRange = false;
+        bool bDrawLine = false;
+
+        for (auto& namedSpawnID : g_NamedSpawnsIDList)
+        {
+            if (spawnID == namedSpawnID)
+            {
+                bIgnoreDistance = true;
+                break;
+            }
+        }
 
         if (g_ESPFindSpawnName.size() != 0)
         {
             if (EQAPP_String_Contains(spawnName, g_ESPFindSpawnName) == true)
             {
                 bIgnoreDistance = true;
+
+                g_ESPFindSpawnNameCount++;
+
+                if (g_ESPFindLineIsEnabled == true)
+                {
+                    bDrawLine = true;
+                }
             }
         }
 
@@ -230,6 +264,13 @@ void EQAPP_ESP_Execute()
             if (EQAPP_String_Contains(spawnLastName, g_ESPFindSpawnLastName) == true)
             {
                 bIgnoreDistance = true;
+
+                g_ESPFindSpawnLastNameCount++;
+
+                if (g_ESPFindLineIsEnabled == true)
+                {
+                    bDrawLine = true;
+                }
             }
         }
 
@@ -379,6 +420,8 @@ void EQAPP_ESP_Execute()
             }
 */
 
+#ifdef EQ_FEATURE_ADVANCED
+
             if (g_SpawnCastSpellIsEnabled == true && g_SpawnCastSpellESPIsEnabled == true)
             {
                 for (auto& spawnCastSpell : g_SpawnCastSpellList)
@@ -405,6 +448,8 @@ void EQAPP_ESP_Execute()
                     }
                 }
             }
+
+#endif // EQ_FEATURE_ADVANCED
 
             if (g_ESPShowSpawnIDIsEnabled == true)
             {
@@ -461,6 +506,11 @@ void EQAPP_ESP_Execute()
                         textColor = EQ_DRAW_TEXT_COLOR_YELLOW;
                     }
                 }
+            }
+
+            if (g_ESPFindLineIsEnabled == true && bDrawLine == true)
+            {
+                EQ_DrawLine(0.0f, 0.0f, screenX, screenY, EQ_COLOR_ARGB_GREY);
             }
 
             EQ_DrawTextByColor(drawText.c_str(), (int)screenX, (int)screenY, textColor);

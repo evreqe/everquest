@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef EQ_FEATURE_BAZAAR
+
 bool g_BazaarBotIsEnabled = false;
 
 EQApp::Timer g_BazaarBotFindItemsTimer = EQAPP_Timer_GetTimeNow();
@@ -230,3 +232,5 @@ bool EQAPP_BazaarBot_HandleEvent_CBazaarSearchWnd__AddItemToList(char* itemName,
 
     return bShouldAddItemToList;
 }
+
+#endif // EQ_FEATURE_BAZAAR

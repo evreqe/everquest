@@ -19,15 +19,15 @@ function OnInterpretCommand(commandText)
     if commandText == "//AutoAlternateAbilityOn" or commandText == "//AAAOn" then
         if g_AutoAlternateAbilityIsEnabled == 0 then
             AutoAlternateAbility_Toggle()
-            return 1
         end
+        return 1
     end
 
     if commandText == "//AutoAlternateAbilityOff" or commandText == "//AAAOff" then
         if g_AutoAlternateAbilityIsEnabled == 1 then
             AutoAlternateAbility_Toggle()
-            return 1
         end
+        return 1
     end
 end
 
@@ -47,44 +47,44 @@ function OnThreeSeconds()
         return
     end
 
-    local playerSpawnLevel = EQ_GetSpawnLevel(playerSpawn)
-    if playerSpawnLevel < 50 then
+    local playerLevel = EQ_GetSpawnLevel(playerSpawn)
+    if playerLevel < 50 then
         return
     end
 
-    local playerSpawnStandingState = EQ_GetSpawnStandingState(playerSpawn)
-    if playerSpawnStandingState ~= EQ_STANDING_STATE_STANDING then
+    local playerStandingState = EQ_GetSpawnStandingState(playerSpawn)
+    if playerStandingState ~= EQ_STANDING_STATE_STANDING then
         return
     end
 
-    local playerSpawnZoneID = EQ_GetSpawnZoneID(playerSpawn)
-    if EQ_IsZoneIDSafe(playerSpawnZoneID) == true then
+    local playerZoneID = EQ_GetSpawnZoneID(playerSpawn)
+    if EQ_IsZoneIDSafe(playerZoneID) == true then
         return
     end
 
-    local playerSpawnHPPercent = EQ_GetSpawnHPPercent(playerSpawn)
-    if playerSpawnHPPercent == 0 then
+    local playerHPPercent = EQ_GetSpawnHPPercent(playerSpawn)
+    if playerHPPercent == 0 then
         return
     end
 
-    local playerSpawnClass = EQ_GetSpawnClass(playerSpawn)
+    local playerClass = EQ_GetSpawnClass(playerSpawn)
 
     local targetSpawn = EQ_GetTargetSpawn()
 
-    alternateAbilityList = {}
+    local alternateAbilityList = {}
 
-    if playerSpawnHPPercent < 10 then
+    if playerHPPercent < 10 then
         table.insert(alternateAbilityList, 486)       -- Staunch Recovery
     end
 
-    if playerSpawnHPPercent < 25 then
+    if playerHPPercent < 25 then
         table.insert(alternateAbilityList, 2000)      -- Armor of Experience
         table.insert(alternateAbilityList, 482)       -- Infusion of the Faithful
         table.insert(alternateAbilityList, 487)       -- Intensity of the Resolute
     end
 
-    if playerSpawnClass == EQ_CLASS_BARD then
-        if playerSpawnHPPercent < 75 then
+    if playerClass == EQ_CLASS_BARD then
+        if playerHPPercent < 75 then
             -- Archetype
             table.insert(alternateAbilityList, 212)   -- Fading Memories
 
@@ -94,19 +94,19 @@ function OnThreeSeconds()
             table.insert(alternateAbilityList, 361)   -- Shield of Notes
             table.insert(alternateAbilityList, 8261)  -- Tune Stuck In Your Head
         end
-    elseif playerSpawnClass == EQ_CLASS_BEASTLORD then
-        if playerSpawnHPPercent < 50 then
+    elseif playerClass == EQ_CLASS_BEASTLORD then
+        if playerHPPercent < 50 then
             table.insert(alternateAbilityList, 128)   -- Paragon of Spirit
             table.insert(alternateAbilityList, 362)   -- Roar of Thunder
             table.insert(alternateAbilityList, 8302)  -- Protection of the Warder
         end
 
-        if playerSpawnHPPercent < 25 then
+        if playerHPPercent < 25 then
             -- Archetype
             table.insert(alternateAbilityList, 11073) -- Playing Possum
         end
-    elseif playerSpawnClass == EQ_CLASS_BERSERKER then
-        if playerSpawnHPPercent < 50 then
+    elseif playerClass == EQ_CLASS_BERSERKER then
+        if playerHPPercent < 50 then
             -- Archetype
             table.insert(alternateAbilityList, 734)   -- Hold the Line
             table.insert(alternateAbilityList, 8400)  -- Self Preservation
@@ -117,8 +117,8 @@ function OnThreeSeconds()
             table.insert(alternateAbilityList, 836)   -- Juggernauts Resolve
             table.insert(alternateAbilityList, 609)   -- Uncanny Resilience
         end
-    elseif playerSpawnClass == EQ_CLASS_CLERIC then
-        if playerSpawnHPPercent < 75 then
+    elseif playerClass == EQ_CLASS_CLERIC then
+        if playerHPPercent < 75 then
             -- Archetype
             table.insert(alternateAbilityList, 494)   -- Silent Casting
 
@@ -130,8 +130,8 @@ function OnThreeSeconds()
             table.insert(alternateAbilityList, 1472)  -- Fundament Third Spire of Divinity
             table.insert(alternateAbilityList, 396)   -- Sanctuary
         end
-    elseif playerSpawnClass == EQ_CLASS_DRUID then
-        if playerSpawnHPPercent < 75 then
+    elseif playerClass == EQ_CLASS_DRUID then
+        if playerHPPercent < 75 then
             -- Archetype
             table.insert(alternateAbilityList, 494)   -- Silent Casting
             table.insert(alternateAbilityList, 7003)  -- Forceful Rejuvenation
@@ -143,14 +143,14 @@ function OnThreeSeconds()
             table.insert(alternateAbilityList, 3714)  -- Protection of Direwood
             table.insert(alternateAbilityList, 8604)  -- Wall of Wind
         end
-    elseif playerSpawnClass == EQ_CLASS_ENCHANTER then
-        if playerSpawnHPPercent < 75 then
+    elseif playerClass == EQ_CLASS_ENCHANTER then
+        if playerHPPercent < 75 then
             -- Archetype
             table.insert(alternateAbilityList, 500)   -- Silent Casting
             table.insert(alternateAbilityList, 636)   -- Arcane Whisper
             table.insert(alternateAbilityList, 1211)  -- Focus of Arcanum
             table.insert(alternateAbilityList, 7003)  -- Forceful Rejuvenation
-            table.insert(alternateAbilityList, 1120)  -- Self Stasis
+            -- table.insert(alternateAbilityList, 1120)  -- Self Stasis
 
             -- Class
             table.insert(alternateAbilityList, 3551)  -- Beguilers Directed Banishment
@@ -162,8 +162,8 @@ function OnThreeSeconds()
             table.insert(alternateAbilityList, 1122)  -- Phantasmal Opponent
             table.insert(alternateAbilityList, 791)   -- Veil of Mindshadow
         end
-    elseif playerSpawnClass == EQ_CLASS_MAGICIAN then
-        if playerSpawnHPPercent < 75 then
+    elseif playerClass == EQ_CLASS_MAGICIAN then
+        if playerHPPercent < 75 then
             -- Archetype
             table.insert(alternateAbilityList, 636)   -- Arcane Whisper
             table.insert(alternateAbilityList, 8341)  -- Drape of Shadows
@@ -174,8 +174,8 @@ function OnThreeSeconds()
             table.insert(alternateAbilityList, 1372)  -- Fundament: Third Spire of the Elements
             table.insert(alternateAbilityList, 8342)  -- Host in the Shell
         end
-    elseif playerSpawnClass == EQ_CLASS_RANGER then
-        if playerSpawnHPPercent < 75 then
+    elseif playerClass == EQ_CLASS_RANGER then
+        if playerHPPercent < 75 then
             -- Archetype
             table.insert(alternateAbilityList, 2234)   -- Cover Tracks
 
@@ -184,26 +184,26 @@ function OnThreeSeconds()
             table.insert(alternateAbilityList, 876)   -- Outrider's Evasion
             table.insert(alternateAbilityList, 1462)  -- Fundament: Third Spire of the Pathfinders
         end
-    elseif playerSpawnClass == EQ_CLASS_SHADOWKNIGHT then
-        if playerSpawnHPPercent < 50 then
+    elseif playerClass == EQ_CLASS_SHADOWKNIGHT then
+        if playerHPPercent < 50 then
             -- Archetype
             --table.insert(alternateAbilityList, x)   -- 
 
             -- Class
             table.insert(alternateAbilityList, 1452)  -- Fundament: Third Spire of the Reavers
         end
-    elseif playerSpawnClass == EQ_CLASS_SHAMAN then
-        if playerSpawnHPPercent < 75 then
+    elseif playerClass == EQ_CLASS_SHAMAN then
+        if playerHPPercent < 75 then
             -- Archetype
-            table.insert(alternateAbilityList, 9504)  -- Inconspicuous Totem
+            -- table.insert(alternateAbilityList, 9504)  -- Inconspicuous Totem
 
             -- Class
             table.insert(alternateAbilityList, 528)   -- Ancestral Guard
             table.insert(alternateAbilityList, 447)   -- Ancestral Aid
             table.insert(alternateAbilityList, 321)   -- Call of the Ancients
         end
-    elseif playerSpawnClass == EQ_CLASS_WARRIOR then
-        if playerSpawnHPPercent < 50 then
+    elseif playerClass == EQ_CLASS_WARRIOR then
+        if playerHPPercent < 50 then
             -- Archetype
             table.insert(alternateAbilityList, 734)   -- Hold the Line
             table.insert(alternateAbilityList, 3213)  -- Projection of Fury
@@ -221,7 +221,7 @@ function OnThreeSeconds()
         end
     end
 
-    for _, alternateAbility in ipairs(alternateAbilityList) do
-        EQ_UseAlternateAbility(alternateAbility)
+    for _,alternateAbilityID in ipairs(alternateAbilityList) do
+        EQ_UseAlternateAbility(alternateAbilityID)
     end
 end

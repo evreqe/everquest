@@ -3,7 +3,11 @@ function GroupSay(text)
 end
 
 function OnChatText(chatText, chatTextColor)
-    if String_BeginsWith(chatText, "You have been assigned the task ") then
+    if String_BeginsWith(chatText, "You have been assigned the task") then
+        return GroupSay(chatText)
+    end
+
+    if String_BeginsWith(chatText, "You have reached the AA point cap") then
         return GroupSay(chatText)
     end
 end

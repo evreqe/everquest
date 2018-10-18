@@ -20,15 +20,15 @@ function OnInterpretCommand(commandText)
     if commandText == "//AutoInventoryOn" then
         if g_AutoInventoryIsEnabled == 0 then
             AutoInventory_Toggle()
-            return 1
         end
+        return 1
     end
 
     if commandText == "//AutoInventoryOff" then
         if g_AutoInventoryIsEnabled == 1 then
             AutoInventory_Toggle()
-            return 1
         end
+        return 1
     end
 end
 

@@ -12,7 +12,5 @@ function OnDrawHUD()
     hudText = hudText .. "- 11: " .. EQ_CastSpellWindow_GetSpellGemStateByIndex(10) .. "\n"
     hudText = hudText .. "- 12: " .. EQ_CastSpellWindow_GetSpellGemStateByIndex(11) .. "\n" .. "\n"
 
-    hudText = hudText .. "- CoD: " .. EQ_CastSpellWindow_GetSpellGemStateBySpellName("Circle of Divinity")
-
     return 1, hudText
 end

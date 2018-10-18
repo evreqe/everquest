@@ -6,6 +6,7 @@ function PriestBot_Toggle()
     if g_PriestBotIsEnabled == 0 then
         g_PriestBotIsEnabled = 1
         EQ_PrintTextToChat("Priest Bot: On")
+        EQ_ClearTarget()
     else
         g_PriestBotIsEnabled = 0
         EQ_PrintTextToChat("Priest Bot: Off")
@@ -47,21 +48,33 @@ function OnInterpretCommand(commandText)
     if commandText == "//PriestBotOn" then
         if g_PriestBotIsEnabled == 0 then
             PriestBot_Toggle()
-            return 1
         end
+        return 1
     end
 
     if commandText == "//PriestBotOff" then
         if g_PriestBotIsEnabled == 1 then
             PriestBot_Toggle()
-            return 1
         end
+        return 1
+    end
+
+    if String_BeginsWith(commandText, "//PriestBotTarget ") == true then
+        local tokens = String_Split(commandText, " ")
+
+        if tokens[2] ~= nil then
+            g_PriestBotTargetName = tokens[2]
+
+            EQ_PrintTextToChat("Priest Bot Target: " .. g_PriestBotTargetName)
+        end
+
+        return 1
     end
 end
 
 function OnDrawHUD()
     if g_PriestBotIsEnabled == 1 then
-        return 1, "- Priest Bot"
+        return 1, "- Priest Bot: " .. g_PriestBotTargetName
     end
 end
 
@@ -70,20 +83,32 @@ function OnFrame()
         return
     end
 
-    EQ_InterpretCommand("//Target " .. g_PriestBotTargetName)
+    local playerSpawn = EQ_GetPlayerSpawn()
+    if playerSpawn == 0 then
+        return
+    end
 
     local targetSpawn = EQ_GetTargetSpawn()
+    if targetSpawn == playerSpawn then
+        return
+    end
+
+    if targetSpawn ~= 0 then
+        local targetType = EQ_GetSpawnType(targetSpawn)
+        if targetType ~= EQ_SPAWN_TYPE_PLAYER then
+            return
+        end
+    end
+
+    EQ_InterpretCommand("//Target " .. g_PriestBotTargetName)
+
+    targetSpawn = EQ_GetTargetSpawn()
     if targetSpawn == 0 then
         return
     end
 
     local targetHP = EQ_GetSpawnHPCurrent(targetSpawn)
     if targetHP > 0 then
-        local playerSpawn = EQ_GetPlayerSpawn()
-        if playerSpawn == 0 then
-            return
-        end
-
         local playerHP = EQ_GetSpawnHPCurrent(playerSpawn)
 
         math.randomseed(os.time() + playerHP)

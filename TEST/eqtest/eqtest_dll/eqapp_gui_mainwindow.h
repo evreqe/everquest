@@ -21,6 +21,7 @@ static void EQAPP_GUI_MainWindow_MenuWindows();
 static void EQAPP_GUI_MainWindow_MenuClients();
 static void EQAPP_GUI_MainWindow_PopupMenuClients();
 static void EQAPP_GUI_MainWindow_MenuWaypoints();
+static void EQAPP_GUI_MainWindow_MenuWaypointEditor();
 static void EQAPP_GUI_MainWindow_MenuHelp();
 
 static void EQAPP_GUI_MainWindow()
@@ -80,11 +81,21 @@ static void EQAPP_GUI_MainWindow()
             ImGui::EndMenu();
         }
 
-        if (g_WaypointEditorIsEnabled == true)
+        if (g_WaypointIsEnabled == true)
         {
             if (ImGui::BeginMenu("Waypoints##MainWindowMenuWaypoints"))
             {
                 EQAPP_GUI_MainWindow_MenuWaypoints();
+
+                ImGui::EndMenu();
+            }
+        }
+
+        if (g_WaypointEditorIsEnabled == true)
+        {
+            if (ImGui::BeginMenu("Waypoint Editor##MainWindowMenuWaypointEditor"))
+            {
+                EQAPP_GUI_MainWindow_MenuWaypointEditor();
 
                 ImGui::EndMenu();
             }
@@ -195,8 +206,39 @@ static void EQAPP_GUI_MainWindow_PopupMenuClients()
 
 static void EQAPP_GUI_MainWindow_MenuWaypoints()
 {
-    if (ImGui::MenuItem("Connect##MainWindowMenuItemWaypointsConnect")) EQAPP_WaypointEditor_Command_Connect();
-    if (ImGui::MenuItem("Disconnect##MainWindowMenuItemWaypointsDisconnect")) EQAPP_WaypointEditor_Command_Disconnect();
+    if (g_WaypointList.size() == 0)
+    {
+        if (ImGui::MenuItem("(none)##MainWindowMenuItemWaypointsNone")) {}
+
+        return;
+    }
+
+    for (auto& waypoint : g_WaypointList)
+    {
+        if (waypoint.Name.size() == 0)
+        {
+            continue;
+        }
+
+        if (EQAPP_String_BeginsWith(waypoint.Name, "Waypoint") == true)
+        {
+            continue;
+        }
+
+        std::stringstream menuItemLabel;
+        menuItemLabel << waypoint.Name << "##MainWindowMenuItemWaypoints" << waypoint.Index;
+
+        if (ImGui::MenuItem(menuItemLabel.str().c_str()))
+        {
+            EQAPP_Waypoint_GotoByName(waypoint.Name.c_str());
+        }
+    }
+}
+
+static void EQAPP_GUI_MainWindow_MenuWaypointEditor()
+{
+    if (ImGui::MenuItem("Connect##MainWindowMenuItemWaypointEditorConnect")) EQAPP_WaypointEditor_Command_Connect();
+    if (ImGui::MenuItem("Disconnect##MainWindowMenuItemWaypointEditorDisconnect")) EQAPP_WaypointEditor_Command_Disconnect();
 }
 
 static void EQAPP_GUI_MainWindow_MenuHelp()

@@ -23,8 +23,12 @@ typedef int (__cdecl* EQ_FUNCTION_TYPE_DrawNetStatus)(int x, int y, int unknown)
 EQ_MACRO_FUNCTION_FunctionAtAddress(char* __cdecl EQ_FUNCTION_CrashDetected(), EQ_ADDRESS_FUNCTION_CrashDetected);
 typedef char* (__cdecl* EQ_FUNCTION_TYPE_CrashDetected)();
 
+#ifdef EQ_FEATURE_ADVANCED
+
 EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQ_FUNCTION_CollisionCallbackForActors(uint32_t cactor), EQ_ADDRESS_FUNCTION_CollisionCallbackForActors);
 typedef int (__cdecl* EQ_FUNCTION_TYPE_CollisionCallbackForActors)(uint32_t cactor);
+
+#endif // EQ_FEATURE_ADVANCED
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQ_FUNCTION_CastRay(uint32_t spawn, float y, float x, float z), EQ_ADDRESS_FUNCTION_CastRay);
 typedef int (__cdecl* EQ_FUNCTION_TYPE_CastRay)(uint32_t spawn, float y, float x, float z);
@@ -34,6 +38,8 @@ typedef int (__cdecl* EQ_FUNCTION_TYPE_CastRay2)(const EQClass::CVector3& source
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQ_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive, void* unknown, int zero), EQ_ADDRESS_FUNCTION_ExecuteCmd);
 typedef int (__cdecl* EQ_FUNCTION_TYPE_ExecuteCmd)(uint32_t commandID, int isActive, void* unknown, int zero);
+
+#ifdef EQ_FEATURE_ADVANCED
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQ_FUNCTION_DoSpellEffect(int type, int unknown, uint32_t spell, uint32_t spawn1, uint32_t spawn2, EQ::Location_ptr location, uint32_t missile, uint32_t duration), EQ_ADDRESS_FUNCTION_DoSpellEffect);
 typedef int (__cdecl* EQ_FUNCTION_TYPE_DoSpellEffect)(int type, int unknown, uint32_t spell, uint32_t spawn1, uint32_t spawn2, EQ::Location_ptr location, uint32_t missile, uint32_t duration);
@@ -52,6 +58,8 @@ typedef int (__cdecl* EQ_FUNCTION_TYPE_FlushDxMouse)();
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQ_FUNCTION_FlushDxKeyboard(), EQ_ADDRESS_FUNCTION_FlushDxKeyboard);
 typedef int (__cdecl* EQ_FUNCTION_TYPE_FlushDxKeyboard)();
+
+#endif // EQ_FEATURE_ADVANCED
 
 /* function prototypes */
 
@@ -165,6 +173,8 @@ uint32_t EQ_GetSpellGemIndexBySpellName(const char* spellName);
 bool EQ_CastSpellByGemIndex(uint32_t spellGemIndex);
 bool EQ_CastSpellByName(const char* spellName);
 bool EQ_CastSpellByID(uint32_t spellID);
+
+bool EQ_DoesSpawnExist(uint32_t spawn);
 
 uint32_t EQ_GetNumNearbySpawns(uint32_t spawnType, float distance, float distanceZ);
 
@@ -311,10 +321,12 @@ void EQ_SetPlayerSpawnHeadingSouthEast();
 void EQ_SetPlayerSpawnHeadingEast();
 void EQ_SetPlayerSpawnHeadingNorthEast();
 
+#ifdef EQ_FEATURE_ADVANCED
 bool EQ_SetSpawnItemSlot(uint32_t spawn, uint32_t updateItemSlot, const char* itemDefinition);
 bool EQ_SetSpawnItemSlotPrimary(uint32_t spawn, const char* itemDefinition);
 bool EQ_SetSpawnItemSlotSecondary(uint32_t spawn, const char* itemDefinition);
 bool EQ_SetSpawnItemSlotHead(uint32_t spawn, const char* itemDefinition);
+#endif // EQ_FEATURE_ADVANCED
 
 void EQ_TurnCameraTowardsLocation(float y, float x);
 void EQ_TurnSpawnTowardsLocation(uint32_t spawn, float y, float x);
@@ -397,9 +409,11 @@ void EQ_UseItem(const char* itemName);
 void EQ_UseDoor(const char* doorName);
 void EQ_UseDoorByDistance(float distance);
 void EQ_UseDoorOnCollision();
+#ifdef EQ_FEATURE_ADVANCED
 void EQ_SetStateForAllDoors(uint8_t state);
 void EQ_OpenAllDoors();
 void EQ_CloseAllDoors();
+#endif // EQ_FEATURE_ADVANCED
 
 void EQ_CXStr_Set(EQ::CXStr** cxstr, const char* text);
 void EQ_CXStr_Append(EQ::CXStr** cxstr, const char* text);
@@ -410,6 +424,8 @@ bool EQ_CXWnd_IsOpen(uint32_t cxwndAddressPointer);
 bool EQ_CXWnd_Open(uint32_t cxwndAddressPointer);
 bool EQ_CXWnd_Close(uint32_t cxwndAddressPointer);
 bool EQ_CXWnd_ClickButton(uint32_t cxwndAddressPointer, uint32_t cxwndButtonOffset);
+
+#ifdef EQ_FEATURE_BAZAAR
 
 bool EQ_BazaarWindow_IsOpen();
 bool EQ_BazaarWindow_ClickBeginTraderButton();
@@ -434,6 +450,8 @@ std::string EQ_BazaarSearchWindow_GetTraderName(uint32_t listIndex);
 bool EQ_BazaarSearchWindow_ClickFindItemsButton();
 bool EQ_BazaarSearchWindow_ClickUpdateTradersButton();
 bool EQ_BazaarSearchWindow_ClickResetButton();
+
+#endif // EQ_FEATURE_BAZAAR
 
 bool EQ_TaskSelectWindow_IsOpen();
 bool EQ_TaskSelectWindow_ClickAcceptButton();
@@ -1593,6 +1611,27 @@ bool EQ_CastSpellByName(const char* spellName)
                 return EQ_CastSpellByGemIndex(spellGemIndex);
             }
         }
+    }
+
+    return false;
+}
+
+bool EQ_DoesSpawnExist(uint32_t spawn)
+{
+    if (spawn == NULL)
+    {
+        return false;
+    }
+
+    auto currentSpawn = EQ_GetFirstSpawn();
+    while (currentSpawn != NULL)
+    {
+        if (currentSpawn == spawn)
+        {
+            return true;
+        }
+
+        currentSpawn = EQ_GetSpawnNext(currentSpawn);
     }
 
     return false;
@@ -2960,6 +2999,8 @@ void EQ_SetPlayerSpawnHeadingNorthEast()
     EQ_SetSpawnHeading(playerSpawn, EQ_HEADING_NORTH_EAST);
 }
 
+#ifdef EQ_FEATURE_ADVANCED
+
 bool EQ_SetSpawnItemSlot(uint32_t spawn, uint32_t updateItemSlot, const char* itemDefinition)
 {
     return ((EQClass::EQPlayer*)spawn)->UpdateItemSlot(updateItemSlot, itemDefinition, false, true, false);
@@ -2979,6 +3020,8 @@ bool EQ_SetSpawnItemSlotHead(uint32_t spawn, const char* itemDefinition)
 {
     return EQ_SetSpawnItemSlot(spawn, EQ_UPDATE_ITEM_SLOT_HEAD, itemDefinition);
 }
+
+#endif // 
 
 void EQ_TurnCameraTowardsLocation(float y, float x)
 {
@@ -3978,6 +4021,8 @@ void EQ_UseDoorOnCollision()
     }
 }
 
+#ifdef EQ_FEATURE_ADVANCED
+
 void EQ_SetStateForAllDoors(uint8_t state)
 {
     auto switchManager = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_EQSwitchManager);
@@ -4013,6 +4058,8 @@ void EQ_CloseAllDoors()
 {
     EQ_SetStateForAllDoors(EQ_SWITCH_STATE_CLOSING);
 }
+
+#endif // EQ_FEATURE_ADVANCED
 
 void EQ_CXStr_Set(EQ::CXStr** cxstr, const char* text)
 { 
@@ -4152,6 +4199,38 @@ bool EQ_CXWnd_ClickButton(uint32_t cxwndAddressPointer, uint32_t cxwndButtonOffs
     ((EQClass::CXWnd*)window)->WndNotification(button, EQ_CXWND_MESSAGE_LEFT_CLICK, (void*)0);
 
     return true;
+}
+
+#ifdef EQ_FEATURE_BAZAAR
+
+bool EQ_BazaarWindow_IsOpen()
+{
+    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CBazaarWnd) == true);
+}
+
+bool EQ_BazaarWindow_ClickBeginTraderButton()
+{
+    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CBazaarWnd, EQ_OFFSET_CBazaarWnd_BUTTON_BEGIN_TRADER);
+}
+
+bool EQ_BazaarWindow_ClickEndTraderButton()
+{
+    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CBazaarWnd, EQ_OFFSET_CBazaarWnd_BUTTON_END_TRADER);
+}
+
+bool EQ_BazaarConfirmationWindow_IsOpen()
+{
+    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd) == true);
+}
+
+bool EQ_BazaarConfirmationWindow_ClickToParcelsButton()
+{
+    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd, EQ_OFFSET_CBazaarConfirmationWnd_BUTTON_TO_PARCELS);
+}
+
+bool EQ_BazaarConfirmationWindow_ClickCancelButton()
+{
+    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd, EQ_OFFSET_CBazaarConfirmationWnd_BUTTON_CANCEL);
 }
 
 uint32_t EQ_GetBazaarSearchWindow()
@@ -4491,35 +4570,7 @@ bool EQ_BazaarSearchWindow_ClickResetButton()
     return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CBazaarSearchWnd, EQ_OFFSET_CBazaarSearchWnd_BUTTON_RESET);
 }
 
-bool EQ_BazaarConfirmationWindow_IsOpen()
-{
-    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd) == true);
-}
-
-bool EQ_BazaarConfirmationWindow_ClickToParcelsButton()
-{
-    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd, EQ_OFFSET_CBazaarConfirmationWnd_BUTTON_TO_PARCELS);
-}
-
-bool EQ_BazaarConfirmationWindow_ClickCancelButton()
-{
-    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd, EQ_OFFSET_CBazaarConfirmationWnd_BUTTON_CANCEL);
-}
-
-bool EQ_BazaarWindow_IsOpen()
-{
-    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CBazaarWnd) == true);
-}
-
-bool EQ_BazaarWindow_ClickBeginTraderButton()
-{
-    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CBazaarWnd, EQ_OFFSET_CBazaarWnd_BUTTON_BEGIN_TRADER);
-}
-
-bool EQ_BazaarWindow_ClickEndTraderButton()
-{
-    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CBazaarWnd, EQ_OFFSET_CBazaarWnd_BUTTON_END_TRADER);
-}
+#endif // EQ_FEATURE_BAZAAR
 
 bool EQ_TaskSelectWindow_IsOpen()
 {

@@ -20,9 +20,11 @@ namespace EQClass
     class CXWndManager;
     class CXWnd;
 
+#ifdef EQ_FEATURE_BAZAAR
     class CBazaarWnd;
     class CBazaarConfirmationWnd;
     class CBazaarSearchWnd;
+#endif // EQ_FEATURE_BAZAAR
     class CTaskSelectWnd;
     class CLargeDialogWnd;
     class CConfirmationDialog;
@@ -34,6 +36,8 @@ namespace EQClass
     class CVector3; // needed by CastRay2
 
     class CActorEx;
+
+    class CXMLData;
 } // namespace EQClass
 
 /* CEverQuest */
@@ -44,10 +48,14 @@ public:
     void CEverQuest::DoPercentConvert(char* text, bool isOutgoing);
     void CEverQuest::InterpretCmd(class EQPlayer* player, const char* text);
     void CEverQuest::dsp_chat(const char* text, int textColor, bool one_1, bool one_2, bool zero_1);
+#ifdef EQ_FEATURE_ADVANCED
     void CEverQuest::StartCasting(EQMessage::CEverQuest__StartCasting_ptr message);
+#endif // EQ_FEATURE_ADVANCED
     void CEverQuest::LMouseUp(int x, int y);
     void CEverQuest::RMouseUp(int x, int y);
+#ifdef EQ_FEATURE_ADVANCED
     void CEverQuest::HandleMouseWheel(signed int delta);
+#endif // EQ_FEATURE_ADVANCED
     void CEverQuest::SetGameState(int gameState);
 };
 
@@ -60,8 +68,12 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__InterpretCmd)(void* this_p
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::dsp_chat(const char* text, int textColor, bool one_1, bool one_2, bool zero_1), EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__dsp_chat)(void* this_ptr, const char* text, int textColor, bool one_1, bool one_2, bool zero_1);
 
+#ifdef EQ_FEATURE_ADVANCED
+
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::StartCasting(EQMessage::CEverQuest__StartCasting_ptr message), EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__StartCasting)(void* this_ptr, EQMessage::CEverQuest__StartCasting_ptr message);
+
+#endif // EQ_FEATURE_ADVANCED
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::LMouseUp(int x, int y), EQ_ADDRESS_FUNCTION_CEverQuest__LMouseUp);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__LMouseUp)(void* this_ptr, int x, int y);
@@ -69,8 +81,12 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__LMouseUp)(void* this_ptr, 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::RMouseUp(int x, int y), EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__RMouseUp)(void* this_ptr, int x, int y);
 
+#ifdef EQ_FEATURE_ADVANCED
+
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::HandleMouseWheel(signed int delta), EQ_ADDRESS_FUNCTION_CEverQuest__HandleMouseWheel);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__HandleMouseWheel)(void* this_ptr, signed int delta);
+
+#endif // EQ_FEATURE_ADVANCED
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::SetGameState(int gameState), EQ_ADDRESS_FUNCTION_CEverQuest__SetGameState);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__SetGameState)(void* this_ptr, int gameState);
@@ -84,13 +100,17 @@ class EQClass::CDisplay
 {
 public:
     static int __cdecl CDisplay::WriteTextHD2(const char* text, int x, int y, signed int color);
+#ifdef EQ_FEATURE_ADVANCED
     int CDisplay::CreateActor(char* actorDefinition, float y, float x, float z, float a5, float a6, float a7, float a8, float a9, float a10, int a11);
     int CDisplay::CreatePlayerActor(uint32_t spawn, int a2, int a3, int a4, int a5, int a6);
     void CDisplay::DeleteActor(uint32_t cactor);
+#endif // EQ_FEATURE_ADVANCED
 };
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQClass::CDisplay::WriteTextHD2(const char* text, int x, int y, signed int color), EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__WriteTextHD2)(void* this_ptr, const char* text, int x, int y, signed int color);
+
+#ifdef EQ_FEATURE_ADVANCED
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::CDisplay::CreateActor(char* actorDefinition, float y, float x, float z, float a5, float a6, float a7, float a8, float a9, float a10, int a11), EQ_ADDRESS_FUNCTION_CDisplay__CreateActor);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__CreateActor)(void* this_ptr, char* actorDefinition, float y, float x, float z, float a5, float a6, float a7, float a8, float a9, float a10, int a11);
@@ -100,6 +120,8 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__CreatePlayerActor)(void* thi
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CDisplay::DeleteActor(uint32_t cactor), EQ_ADDRESS_FUNCTION_CDisplay__DeleteActor);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__DeleteActor)(void* this_ptr, uint32_t cactor);
+
+#endif // EQ_FEATURE_ADVANCED
 
 EQClass::CDisplay** EQ_CLASS_POINTER_CDisplay_pptr;
 EQClass::CDisplay* EQ_CLASS_POINTER_CDisplay;
@@ -127,22 +149,34 @@ EQClass::EQPlayerManager* EQ_CLASS_POINTER_EQPlayerManager;
 class EQClass::EQPlayer
 {
 public:
+#ifdef EQ_FEATURE_ADVANCED
     void EQPlayer::FollowPlayerAI();
+#endif // EQ_FEATURE_ADVANCED
     void EQPlayer::ChangeHeight(float height, float a2, float a3, int a4);
+#ifdef EQ_FEATURE_ADVANCED
     bool EQPlayer::UpdateItemSlot(uint8_t updateItemSlot, const char* itemDefinition, bool b1, bool serverSide, bool b3);
+#endif // EQ_FEATURE_ADVANCED
     bool EQPlayer::IsTargetable();
     int EQPlayer::SetNameSpriteState(bool isNameVisible);
     bool EQPlayer::SetNameSpriteTint();
 };
 
+#ifdef EQ_FEATURE_ADVANCED
+
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQPlayer::FollowPlayerAI(), EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__FollowPlayerAI)(void* this_ptr);
+
+#endif // EQ_FEATURE_ADVANCED
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQPlayer::ChangeHeight(float height, float a2, float a3, int a4), EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__ChangeHeight)(void* this_ptr, float height, float a2, float a3, int a4);
 
+#ifdef EQ_FEATURE_ADVANCED
+
 EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::EQPlayer::UpdateItemSlot(uint8_t updateItemSlot, const char* itemDefinition, bool b1, bool serverSide, bool b3), EQ_ADDRESS_FUNCTION_EQPlayer__UpdateItemSlot);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__UpdateItemSlot)(void* this_ptr, uint8_t updateItemSlot, const char* itemDefinition, bool b1, bool serverSide, bool b3);
+
+#endif // EQ_FEATURE_ADVANCED
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::EQPlayer::IsTargetable(), EQ_ADDRESS_FUNCTION_EQPlayer__IsTargetable);
 
@@ -159,12 +193,18 @@ class EQClass::EQSwitch
 {
 public:
     void EQSwitch::UseSwitch(uint32_t spawnID, uint32_t keyID, uint32_t pickSkill, const void* hitLocation = 0);
+#ifdef EQ_FEATURE_ADVANCED
     void EQSwitch::ChangeState(uint8_t state, int zero1, int zero2);
+#endif // EQ_FEATURE_ADVANCED
 };
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQSwitch::UseSwitch(uint32_t spawnID, uint32_t keyID, uint32_t pickSkill, const void* hitLocation), EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch);
 
+#ifdef EQ_FEATURE_ADVANCED
+
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQSwitch::ChangeState(uint8_t state, int zero1, int zero2), EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState);
+
+#endif // EQ_FEATURE_ADVANCED
 
 /* CXStr */
 
@@ -246,6 +286,8 @@ EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::CXWnd::IsActive(), EQ_ADDRESS_
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::CXWnd::IsReallyVisible(), EQ_ADDRESS_FUNCTION_CXWnd__IsReallyVisible);
 
+#ifdef EQ_FEATURE_BAZAAR
+
 /* CBazaarWnd */
 
 class EQClass::CBazaarWnd
@@ -297,6 +339,8 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarSearchWnd__BuyItem)(void* this_
 EQClass::CBazaarSearchWnd** EQ_CLASS_POINTER_CBazaarSearchWnd_pptr;
 EQClass::CBazaarSearchWnd* EQ_CLASS_POINTER_CBazaarSearchWnd;
 
+#endif // EQ_FEATURE_BAZAAR
+
 /* CTaskSelectWnd */
 
 class EQClass::CTaskSelectWnd
@@ -333,6 +377,7 @@ class EQClass::CConfirmationDialog
 {
 public:
     int CConfirmationDialog::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
+    int CConfirmationDialog::Activate(int a1, unsigned int a2, const char* text, int a4, int timer, int a6, int a7);
 };
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CConfirmationDialog::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);

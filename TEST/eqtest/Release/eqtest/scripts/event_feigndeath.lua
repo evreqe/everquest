@@ -4,13 +4,13 @@ function OnChatText(chatText, chatTextColor)
         return
     end
 
-    local playerSpawnName = EQ_GetSpawnName(playerSpawn)
-    if playerSpawnName == "" then
+    local playerName = EQ_GetSpawnName(playerSpawn)
+    if playerName == "" then
         return
     end
 
     -- stand up when feign death fails
-    if chatText == playerSpawnName .. " has fallen to the ground." then
+    if chatText == playerName .. " has fallen to the ground." then
        EQ_InterpretCommand("/stand")
     end
 end

@@ -203,6 +203,7 @@ void EQAPP_HUD_Execute()
         g_HUDText << "- Speed: " << g_SpeedMultiplier << "\n";
     }
 
+#ifdef EQ_FEATURE_BAZAAR
     if (g_BazaarBotIsEnabled == true)
     {
         g_HUDText << "- Bazaar Bot\n";
@@ -212,6 +213,7 @@ void EQAPP_HUD_Execute()
     {
         g_HUDText << "- Bazaar Filter\n";
     }
+#endif // EQ_FEATURE_BAZAAR
 
     if (g_AlwaysAttackIsEnabled == true)
     {
@@ -245,6 +247,16 @@ void EQAPP_HUD_Execute()
         g_HUDText << "- ESP Height Filter\n";
     }
 
+    if (g_ESPFindSpawnName.size() != 0)
+    {
+        g_HUDText << "- ESP Find Spawn Name: " << g_ESPFindSpawnName << " (" << g_ESPFindSpawnNameCount << ")\n";
+    }
+
+    if (g_ESPFindSpawnLastName.size() != 0)
+    {
+        g_HUDText << "- ESP Find Spawn Last Name: " << g_ESPFindSpawnLastName << " (" << g_ESPFindSpawnLastNameCount << ")\n";
+    }
+
     if (g_ESPShowSpawnIDIsEnabled == true)
     {
         g_HUDText << "- ESP Show Spawn ID\n";
@@ -265,6 +277,7 @@ void EQAPP_HUD_Execute()
         g_HUDText << "- ESP Show Doors\n";
     }
 
+#ifdef EQ_FEATURE_ADVANCED
     if (g_FollowAIBehindIsEnabled == true)
     {
         g_HUDText << "- Follow AI Behind\n";
@@ -274,12 +287,14 @@ void EQAPP_HUD_Execute()
     {
         g_HUDText << "- Follow AI Use Z-Axis\n";
     }
+#endif // EQ_FEATURE_ADVANCED
 
     if (g_ChangeHeightIsEnabled == true)
     {
         g_HUDText << "- Change Height\n";
     }
 
+#ifdef EQ_FEATURE_ADVANCED
     if (g_SpawnCastSpellIsEnabled == true)
     {
         g_HUDText << "- Spawn Cast Spell\n";
@@ -289,6 +304,7 @@ void EQAPP_HUD_Execute()
     {
         g_HUDText << "- Spawn Cast Spell Group Chat\n";
     }
+#endif // EQ_FEATURE_ADVANCED
 
     for (auto& script : g_LuaEventScriptList)
     {

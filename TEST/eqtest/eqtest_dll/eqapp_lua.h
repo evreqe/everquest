@@ -117,11 +117,11 @@ void EQAPP_Lua_ResetTimers()
 
 void EQAPP_Lua_LoadAndPrintAllScripts()
 {
+    EQAPP_Lua_ScriptFolder_Print();
+
     EQAPP_Lua_LoadGlobalScripts(&g_LuaState);
 
     EQAPP_Lua_EventScriptList_Load();
-
-    EQAPP_Lua_ScriptFolder_Print();
 }
 
 void EQAPP_Lua_LoadGlobalScripts(sol::state* state)
@@ -284,6 +284,7 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
 {
     // EQAPP functions
     state->set_function("EQAPP_Log", EQAPP_Log);
+    state->set_function("EQAPP_PrintTextToFile", EQAPP_PrintTextToFile);
 
     state->set_function("EQAPP_EnableDebugPrivileges", EQAPP_EnableDebugPrivileges);
     state->set_function("EQAPP_IsForegroundWindowCurrentProcessID", EQAPP_IsForegroundWindowCurrentProcessID);
@@ -1883,6 +1884,10 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_CastSpellByID", EQ_CastSpellByID);
     state->set_function("EQ_CastSpellByName", EQ_CastSpellByName);
 
+    state->set_function("EQ_DoesSpawnExist", EQ_DoesSpawnExist);
+
+    state->set_function("EQ_GetNumNearbySpawns", EQ_GetNumNearbySpawns);
+
     state->set_function("EQ_GetSpawnByID", EQ_GetSpawnByID);
     state->set_function("EQ_GetSpawnByName", EQ_GetSpawnByName);
 
@@ -2025,10 +2030,12 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_SetPlayerSpawnHeadingEast", EQ_SetPlayerSpawnHeadingEast);
     state->set_function("EQ_SetPlayerSpawnHeadingNorthEast", EQ_SetPlayerSpawnHeadingNorthEast);
 
+#ifdef EQ_FEATURE_ADVANCED
     state->set_function("EQ_SetSpawnItemSlot", EQ_SetSpawnItemSlot);
     state->set_function("EQ_SetSpawnItemSlotPrimary", EQ_SetSpawnItemSlotPrimary);
     state->set_function("EQ_SetSpawnItemSlotSecondary", EQ_SetSpawnItemSlotSecondary);
     state->set_function("EQ_SetSpawnItemSlotHead", EQ_SetSpawnItemSlotHead);
+#endif // EQ_FEATURE_ADVANCED
 
     state->set_function("EQ_TurnCameraTowardsLocation", EQ_TurnCameraTowardsLocation);
     state->set_function("EQ_TurnSpawnTowardsLocation", EQ_TurnSpawnTowardsLocation);
@@ -2106,10 +2113,13 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_UseDoor", EQ_UseDoor);
     state->set_function("EQ_UseDoorByDistance", EQ_UseDoorByDistance);
     state->set_function("EQ_UseDoorOnCollision", EQ_UseDoorOnCollision);
+#ifdef EQ_FEATURE_ADVANCED
     state->set_function("EQ_SetStateForAllDoors", EQ_SetStateForAllDoors);
     state->set_function("EQ_OpenAllDoors", EQ_OpenAllDoors);
     state->set_function("EQ_CloseAllDoors", EQ_CloseAllDoors);
+#endif // EQ_FEATURE_ADVANCED
 
+#ifdef EQ_FEATURE_ADVANCED
     state->set_function("EQ_BazaarWindow_IsOpen", EQ_BazaarWindow_IsOpen);
     state->set_function("EQ_BazaarWindow_ClickBeginTraderButton", EQ_BazaarWindow_ClickBeginTraderButton);
     state->set_function("EQ_BazaarWindow_ClickEndTraderButton", EQ_BazaarWindow_ClickEndTraderButton);
@@ -2133,6 +2143,7 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_BazaarSearchWindow_ClickFindItemsButton", EQ_BazaarSearchWindow_ClickFindItemsButton);
     state->set_function("EQ_BazaarSearchWindow_ClickUpdateTradersButton", EQ_BazaarSearchWindow_ClickUpdateTradersButton);
     state->set_function("EQ_BazaarSearchWindow_ClickResetButton", EQ_BazaarSearchWindow_ClickResetButton);
+#endif // EQ_FEATURE_ADVANCED
 
     state->set_function("EQ_TaskSelectWindow_IsOpen", EQ_TaskSelectWindow_IsOpen);
     state->set_function("EQ_TaskSelectWindow_ClickAcceptButton", EQ_TaskSelectWindow_ClickAcceptButton);

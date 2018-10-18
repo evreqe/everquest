@@ -34,28 +34,38 @@ void EQAPP_Detours_OnEnterZone();
 void EQAPP_Detours_OnLeaveZone();
 
 EQ_MACRO_FUNCTION_DefineDetour(CrashDetected);
+#ifdef EQ_FEATURE_ADVANCED
 EQ_MACRO_FUNCTION_DefineDetour(CollisionCallbackForActors);
+#endif // EQ_FEATURE_ADVANCED
 EQ_MACRO_FUNCTION_DefineDetour(DrawNetStatus);
 EQ_MACRO_FUNCTION_DefineDetour(ExecuteCmd);
+#ifdef EQ_FEATURE_ADVANCED
 EQ_MACRO_FUNCTION_DefineDetour(WindowProc);
 EQ_MACRO_FUNCTION_DefineDetour(ProcessMouseEvent);
 EQ_MACRO_FUNCTION_DefineDetour(ProcessKeyboardEvent);
+#endif // EQ_FEATURE_ADVANCED
 
 EQ_MACRO_FUNCTION_DefineDetour(CXWndManager__DrawCursor);
 EQ_MACRO_FUNCTION_DefineDetour(CXWndManager__DrawWindows);
 
+#ifdef EQ_FEATURE_ADVANCED
 EQ_MACRO_FUNCTION_DefineDetour(EQPlayer__FollowPlayerAI);
 EQ_MACRO_FUNCTION_DefineDetour(EQPlayer__UpdateItemSlot);
+#endif // EQ_FEATURE_ADVANCED
 EQ_MACRO_FUNCTION_DefineDetour(EQPlayer__SetNameSpriteTint);
 
 EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__DoPercentConvert);
 EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__InterpretCmd);
+#ifdef EQ_FEATURE_ADVANCED
 EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__StartCasting);
+#endif // EQ_FEATURE_ADVANCED
 EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__dsp_chat);
 EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__SetGameState);
 EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__LMouseUp);
 EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__RMouseUp);
+#ifdef EQ_FEATURE_ADVANCED
 EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__HandleMouseWheel);
+#endif // EQ_FEATURE_ADVANCED
 
 EQ_MACRO_FUNCTION_DefineDetour(CCamera__SetCameraLocation);
 
@@ -64,11 +74,15 @@ EQ_MACRO_FUNCTION_DefineDetour(CRender__ClearRenderToBlack);
 EQ_MACRO_FUNCTION_DefineDetour(CRender__RenderPartialScene);
 EQ_MACRO_FUNCTION_DefineDetour(CRender__UpdateDisplay);
 
+#ifdef EQ_FEATURE_BAZAAR
 EQ_MACRO_FUNCTION_DefineDetour(CBazaarSearchWnd__AddItemToList);
+#endif // EQ_FEATURE_BAZAAR
 
+#ifdef EQ_FEATURE_ADVANCED
 EQ_MACRO_FUNCTION_DefineDetour(CDisplay__CreateActor);
 EQ_MACRO_FUNCTION_DefineDetour(CDisplay__CreatePlayerActor);
 EQ_MACRO_FUNCTION_DefineDetour(CDisplay__DeleteActor);
+#endif // EQ_FEATURE_ADVANCED
 
 char* __cdecl EQAPP_DETOURED_FUNCTION_CrashDetected();
 int __cdecl EQAPP_DETOURED_FUNCTION_CollisionCallbackForActors(uint32_t cactor);
@@ -101,7 +115,9 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CRender__ClearRenderToBlack(void* this_pt
 int __fastcall EQAPP_DETOURED_FUNCTION_CRender__RenderPartialScene(void* this_ptr, void* not_used);
 int __fastcall EQAPP_DETOURED_FUNCTION_CRender__UpdateDisplay(void* this_ptr, void* not_used);
 
+#ifdef EQ_FEATURE_BAZAAR
 int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* this_ptr, void* not_used, char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11);
+#endif // EQ_FEATURE_BAZAAR
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CDisplay__CreateActor(void* this_ptr, void* not_used, char* actorDefinition, float y, float x, float z, float a5, float a6, float a7, float a8, float a9, float a10, int a11);
 int __fastcall EQAPP_DETOURED_FUNCTION_CDisplay__CreatePlayerActor(void* this_ptr, void* not_used, uint32_t spawn, int a2, int a3, int a4, int a5, int a6);
@@ -250,12 +266,14 @@ void EQAPP_Detours_Load()
         EQAPP_Log("AddDetour: CrashDetected");
     }
 
+#ifdef EQ_FEATURE_ADVANCED
     if (EQ_ADDRESS_FUNCTION_CollisionCallbackForActors != 0)
     {
         EQ_MACRO_FUNCTION_AddDetour(CollisionCallbackForActors);
 
         EQAPP_Log("AddDetour: CollisionCallbackForActors");
     }
+#endif // EQ_FEATURE_ADVANCED
 
     if (EQ_ADDRESS_FUNCTION_DrawNetStatus != 0)
     {
@@ -271,6 +289,7 @@ void EQAPP_Detours_Load()
         EQAPP_Log("AddDetour: ExecuteCmd");
     }
 
+#ifdef EQ_FEATURE_ADVANCED
     if (EQ_ADDRESS_FUNCTION_WindowProc != 0)
     {
         EQ_MACRO_FUNCTION_AddDetour(WindowProc);
@@ -291,6 +310,7 @@ void EQAPP_Detours_Load()
 
         EQAPP_Log("AddDetour: ProcessKeyboardEvent");
     }
+#endif // EQ_FEATURE_ADVANCED
 
     if (EQ_ADDRESS_POINTER_CXWndManager != 0)
     {
@@ -309,6 +329,7 @@ void EQAPP_Detours_Load()
         }
     }
 
+#ifdef EQ_FEATURE_ADVANCED
     if (EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI != 0)
     {
         EQ_MACRO_FUNCTION_AddDetour(EQPlayer__FollowPlayerAI);
@@ -322,6 +343,7 @@ void EQAPP_Detours_Load()
 
         EQAPP_Log("AddDetour: EQPlayer__UpdateItemSlot");
     }
+#endif // EQ_FEATURE_ADVANCED
 
     if (EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteTint != 0)
     {
@@ -346,12 +368,14 @@ void EQAPP_Detours_Load()
             EQAPP_Log("AddDetour: CEverQuest__InterpretCmd");
         }
 
+#ifdef EQ_FEATURE_ADVANCED
         if (EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting != 0)
         {
             EQ_MACRO_FUNCTION_AddDetour(CEverQuest__StartCasting);
 
             EQAPP_Log("AddDetour: CEverQuest__StartCasting");
         }
+#endif // EQ_FEATURE_ADVANCED
 
         if (EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat != 0)
         {
@@ -381,14 +405,17 @@ void EQAPP_Detours_Load()
             EQAPP_Log("AddDetour: CEverQuest__RMouseUp");
         }
 
+#ifdef EQ_FEATURE_ADVANCED
         if (EQ_ADDRESS_FUNCTION_CEverQuest__HandleMouseWheel != 0)
         {
             EQ_MACRO_FUNCTION_AddDetour(CEverQuest__HandleMouseWheel);
 
             EQAPP_Log("AddDetour: CEverQuest__HandleMouseWheel");
         }
+#endif // EQ_FEATURE_ADVANCED
     }
 
+#ifdef EQ_FEATURE_BAZAAR
     if (EQ_ADDRESS_POINTER_CBazaarSearchWnd != 0)
     {
         if (EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList != 0)
@@ -398,9 +425,11 @@ void EQAPP_Detours_Load()
             EQAPP_Log("AddDetour: CBazaarSearchWnd__AddItemToList");
         }
     }
+#endif // EQ_FEATURE_BAZAAR
 
     if (EQ_ADDRESS_POINTER_CDisplay != 0)
     {
+#ifdef EQ_FEATURE_ADVANCED
         if (EQ_ADDRESS_FUNCTION_CDisplay__CreateActor != 0)
         {
             EQ_MACRO_FUNCTION_AddDetour(CDisplay__CreateActor);
@@ -421,6 +450,7 @@ void EQAPP_Detours_Load()
 
             EQAPP_Log("AddDetour: CDisplay__DeleteActor");
         }
+#endif // EQ_FEATURE_ADVANCED
     }
 
     EQAPP_Detours_AddDetoursForCamera();
@@ -439,10 +469,12 @@ void EQAPP_Detours_Unload()
         EQ_MACRO_FUNCTION_RemoveDetour(CrashDetected);
     }
 
+#ifdef EQ_FEATURE_ADVANCED
     if (EQ_ADDRESS_FUNCTION_CollisionCallbackForActors != 0)
     {
         EQ_MACRO_FUNCTION_RemoveDetour(CollisionCallbackForActors);
     }
+#endif // EQ_FEATURE_ADVANCED
 
     if (EQ_ADDRESS_FUNCTION_DrawNetStatus != 0)
     {
@@ -454,6 +486,7 @@ void EQAPP_Detours_Unload()
         EQ_MACRO_FUNCTION_RemoveDetour(ExecuteCmd);
     }
 
+#ifdef EQ_FEATURE_ADVANCED
     if (EQ_ADDRESS_FUNCTION_WindowProc != 0)
     {
         EQ_MACRO_FUNCTION_RemoveDetour(WindowProc);
@@ -472,6 +505,7 @@ void EQAPP_Detours_Unload()
 
         EQAPP_Log("AddDetour: ProcessKeyboardEvent");
     }
+#endif // EQ_FEATURE_ADVANCED
 
     if (EQ_ADDRESS_POINTER_CXWndManager != 0)
     {
@@ -486,6 +520,7 @@ void EQAPP_Detours_Unload()
         }
     }
 
+#ifdef EQ_FEATURE_ADVANCED
     if (EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI != 0)
     {
         EQ_MACRO_FUNCTION_RemoveDetour(EQPlayer__FollowPlayerAI);
@@ -495,6 +530,7 @@ void EQAPP_Detours_Unload()
     {
         EQ_MACRO_FUNCTION_RemoveDetour(EQPlayer__UpdateItemSlot);
     }
+#endif // EQ_FEATURE_ADVANCED
 
     if (EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteTint != 0)
     {
@@ -513,10 +549,12 @@ void EQAPP_Detours_Unload()
             EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__InterpretCmd);
         }
 
+#ifdef EQ_FEATURE_ADVANCED
         if (EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting != 0)
         {
             EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__StartCasting);
         }
+#endif // EQ_FEATURE_ADVANCED
 
         if (EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat != 0)
         {
@@ -538,12 +576,15 @@ void EQAPP_Detours_Unload()
             EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__RMouseUp);
         }
 
+#ifdef EQ_FEATURE_ADVANCED
         if (EQ_ADDRESS_FUNCTION_CEverQuest__HandleMouseWheel != 0)
         {
             EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__HandleMouseWheel);
         }
+#endif // EQ_FEATURE_ADVANCED
     }
 
+#ifdef EQ_FEATURE_BAZAAR
     if (EQ_ADDRESS_POINTER_CBazaarSearchWnd != 0)
     {
         if (EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList != 0)
@@ -551,9 +592,11 @@ void EQAPP_Detours_Unload()
             EQ_MACRO_FUNCTION_RemoveDetour(CBazaarSearchWnd__AddItemToList);
         }
     }
+#endif // EQ_FEATURE_BAZAAR
 
     if (EQ_ADDRESS_POINTER_CDisplay != 0)
     {
+#ifdef EQ_FEATURE_ADVANCED
         if (EQ_ADDRESS_FUNCTION_CDisplay__CreateActor != 0)
         {
             EQ_MACRO_FUNCTION_RemoveDetour(CDisplay__CreateActor);
@@ -568,6 +611,7 @@ void EQAPP_Detours_Unload()
         {
             EQ_MACRO_FUNCTION_RemoveDetour(CDisplay__DeleteActor);
         }
+#endif // EQ_FEATURE_ADVANCED
     }
 
     EQAPP_Detours_RemoveDetoursForCamera();
@@ -576,6 +620,10 @@ void EQAPP_Detours_Unload()
 
 void EQAPP_Detours_OnEnterOrLeaveZone()
 {
+    EQ_StopFollow();
+    g_FollowAISpawn = NULL;
+    EQ_SetAutoRun(false);
+
     g_AutoGroupIsInvited = false;
 
     EQAPP_Waypoint_FollowPath_Off();
@@ -591,7 +639,9 @@ void EQAPP_Detours_OnEnterZone()
 {
     EQAPP_Detours_OnEnterOrLeaveZone();
 
+#ifdef EQ_FEATURE_ADVANCED
     EQAPP_ActorCollision_Load();
+#endif // EQ_FEATURE_ADVANCED
     EQAPP_WaypointList_Load();
     EQAPP_NamedSpawns_Load();
 
@@ -626,6 +676,8 @@ char* __cdecl EQAPP_DETOURED_FUNCTION_CrashDetected()
 
     return EQAPP_REAL_FUNCTION_CrashDetected();
 }
+
+#ifdef EQ_FEATURE_ADVANCED
 
 int __cdecl EQAPP_DETOURED_FUNCTION_CollisionCallbackForActors(uint32_t cactor)
 {
@@ -670,6 +722,8 @@ int __cdecl EQAPP_DETOURED_FUNCTION_CollisionCallbackForActors(uint32_t cactor)
     return EQAPP_REAL_FUNCTION_CollisionCallbackForActors(cactor);
 }
 
+#endif // EQ_FEATURE_ADVANCED
+
 int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
 {
     if (g_EQAppShouldUnload == 1)
@@ -713,12 +767,14 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
 
     if (g_BoxChatIsEnabled == true)
     {
+#ifdef EQ_FEATURE_BAZAAR
         if (g_BazaarBotIsEnabled == true)
         {
             EQAPP_BoxChat_DisconnectEx();
         }
         else
         {
+#endif // EQ_FEATURE_BAZAAR
             if (g_BoxChatIsConnected == true)
             {
                 EQAPP_BoxChat_Execute();
@@ -740,7 +796,9 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
                     }
                 }
             }
+#ifdef EQ_FEATURE_BAZAAR
         }
+#endif // EQ_FEATURE_BAZAAR
     }
 
     if (g_SleepIsEnabled == true)
@@ -753,10 +811,17 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
         EQAPP_Speed_Execute();
     }
 
+    if (g_FollowAIIsEnabled == true)
+    {
+        EQAPP_FollowAI_Execute();
+    }
+
+#ifdef EQ_FEATURE_BAZAAR
     if (g_BazaarBotIsEnabled == true)
     {
         EQAPP_BazaarBot_Execute();
     }
+#endif // EQ_FEATURE_BAZAAR
 
     if (g_AlwaysAttackIsEnabled == true)
     {
@@ -786,6 +851,11 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
     if (g_NameColorIsEnabled == true)
     {
         EQAPP_NameColor_Execute();
+    }
+
+    if (g_NamedSpawnsIsEnabled == true)
+    {
+        EQAPP_NamedSpawns_Execute();
     }
 
     if (g_FindPathIsEnabled == true && g_FindPathFollowPathIsEnabled == true)
@@ -855,6 +925,11 @@ int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive,
         return EQAPP_REAL_FUNCTION_ExecuteCmd(commandID, isActive, unknown, zero);
     }
 
+    if (commandID == EQ_EXECUTECMD_DUCK)
+    {
+        g_EQAppIsInGame = true;
+    }
+
     if (g_EQAppIsInGame == false)
     {
         return EQAPP_REAL_FUNCTION_ExecuteCmd(commandID, isActive, unknown, zero);
@@ -887,6 +962,15 @@ int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive,
                     std::cout << "Lua error: " << error.what() << std::endl;
                 }
             }
+        }
+    }
+
+    if (g_FollowAIIsEnabled == true)
+    {
+        bool result = EQAPP_FollowAI_HandleEvent_ExecuteCmd(commandID, isActive, zero);
+        if (result == true)
+        {
+            return 1;
         }
     }
 
@@ -931,6 +1015,8 @@ int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive,
 
     return EQAPP_REAL_FUNCTION_ExecuteCmd(commandID, isActive, unknown, zero);
 }
+
+#ifdef EQ_FEATURE_ADVANCED
 
 LRESULT __stdcall EQAPP_DETOURED_FUNCTION_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -1023,6 +1109,8 @@ int __cdecl EQAPP_DETOURED_FUNCTION_ProcessKeyboardEvent()
     return EQAPP_REAL_FUNCTION_ProcessKeyboardEvent();
 }
 
+#endif // EQ_FEATURE_ADVANCED
+
 int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawCursor(void* this_ptr, void* not_used)
 {
     if (g_EQAppShouldUnload == 1)
@@ -1040,6 +1128,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawCursor(void* this_ptr, 
         return EQAPP_REAL_FUNCTION_CXWndManager__DrawCursor(this_ptr);
     }
 
+#ifdef EQ_FEATURE_ADVANCED
     if (g_GUIIsEnabled == true)
     {
         bool result =  EQAPP_GUI_HandleEvent_CXWndManager__DrawCursor();
@@ -1048,6 +1137,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawCursor(void* this_ptr, 
             return 0;
         }
     }
+#endif // EQ_FEATURE_ADVANCED
 
     return EQAPP_REAL_FUNCTION_CXWndManager__DrawCursor(this_ptr);
 }
@@ -1088,11 +1178,13 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawWindows(void* this_ptr,
         EQAPP_ESP_Execute();
     }
 
+#ifdef EQ_FEATURE_ADVANCED
     if (g_SpawnCastSpellIsEnabled == true)
     {
         EQAPP_SpawnCastSpell_Execute();
         EQAPP_SpawnCastSpell_DrawText();
     }
+#endif // EQ_FEATURE_ADVANCED
 
     if (g_LuaIsEnabled == true)
     {
@@ -1102,6 +1194,8 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawWindows(void* this_ptr,
 
     return EQAPP_REAL_FUNCTION_CXWndManager__DrawWindows(this_ptr);
 }
+
+#ifdef EQ_FEATURE_ADVANCED
 
 int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__FollowPlayerAI(void* this_ptr, void* not_used)
 {
@@ -1187,6 +1281,8 @@ int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__UpdateItemSlot(void* this_ptr, 
 
     return EQAPP_REAL_FUNCTION_EQPlayer__UpdateItemSlot(this_ptr, updateItemSlot, itemDefinition, b1, serverSide, b3);
 }
+
+#endif // EQ_FEATURE_ADVANCED
 
 int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__SetNameSpriteTint(void* this_ptr, void* not_used)
 {
@@ -1292,6 +1388,8 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__InterpretCmd(void* this_ptr, 
     return EQAPP_REAL_FUNCTION_CEverQuest__InterpretCmd(this_ptr, player, text);
 }
 
+#ifdef EQ_FEATURE_ADVANCED
+
 int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__StartCasting(void* this_ptr, void* not_used, EQMessage::CEverQuest__StartCasting_ptr message)
 {
     if (g_EQAppShouldUnload == 1)
@@ -1333,6 +1431,8 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__StartCasting(void* this_ptr, 
     return EQAPP_REAL_FUNCTION_CEverQuest__StartCasting(this_ptr, message);
 }
 
+#endif // EQ_FEATURE_ADVANCED
+
 int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void* not_used, const char* text, int textColor, bool one_1, bool one_2, bool zero_1)
 {
     if (g_EQAppShouldUnload == 1)
@@ -1354,7 +1454,14 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void
     std::stringstream enterZoneText;
     enterZoneText << "You have entered " << EQ_GetZoneLongName() << ".";
 
-    if (chatText == enterZoneText.str())
+    auto zoneID = EQ_GetZoneID();
+
+    std::string zoneName = EQ_StringMap_GetValueByKey(EQ_ZONE_ID_Name_Strings, zoneID);
+
+    std::stringstream enterZoneTextEx;
+    enterZoneTextEx << "You have entered " << zoneName << ".";
+
+    if (chatText == enterZoneText.str() || chatText == enterZoneTextEx.str())
     {
         EQAPP_Detours_OnEnterZone();
 
@@ -1385,10 +1492,12 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void
         }
     }
 
+#ifdef EQ_FEATURE_BAZAAR
     if (g_BazaarBotIsEnabled == true)
     {
         EQAPP_BazaarBot_HandleEvent_CEverQuest__dsp_chat(chatText, textColor);
     }
+#endif // EQ_FEATURE_BAZAAR
 
     if (g_AutoGroupIsEnabled == true)
     {
@@ -1448,6 +1557,10 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__SetGameState(void* this_ptr, 
 
     EQAPP_Detours_AddDetoursForCamera();
     EQAPP_Detours_AddDetoursForRender();
+
+    EQ_StopFollow();
+    g_FollowAISpawn = NULL;
+    EQ_SetAutoRun(false);
 
     return EQAPP_REAL_FUNCTION_CEverQuest__SetGameState(this_ptr, gameState);
 }
@@ -1512,6 +1625,8 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__RMouseUp(void* this_ptr, void
     return EQAPP_REAL_FUNCTION_CEverQuest__RMouseUp(this_ptr, x, y);
 }
 
+#ifdef EQ_FEATURE_ADVANCED
+
 int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__HandleMouseWheel(void* this_ptr, void* not_used, signed int delta)
 {
     if (g_EQAppShouldUnload == 1)
@@ -1549,6 +1664,8 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__HandleMouseWheel(void* this_p
     return EQAPP_REAL_FUNCTION_CEverQuest__HandleMouseWheel(this_ptr, delta);
 }
 
+#endif // EQ_FEATURE_ADVANCED
+
 int __fastcall EQAPP_DETOURED_FUNCTION_CCamera__SetCameraLocation(void* this_ptr, void* not_used, EQ::Location& location, bool canSetLocation)
 {
     if (g_EQAppShouldUnload == 1)
@@ -1582,17 +1699,21 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CRender__ResetDevice(void* this_ptr, void
         return EQAPP_REAL_FUNCTION_CRender__ResetDevice(this_ptr, unknown);
     }
 
+#ifdef EQ_FEATURE_ADVANCED
     if (g_GUIIsEnabled == true)
     {
         EQAPP_GUI_HandleEvent_CRender__ResetDevice_Before();
     }
+#endif // EQ_FEATURE_ADVANCED
 
     int result = EQAPP_REAL_FUNCTION_CRender__ResetDevice(this_ptr, unknown);
 
+#ifdef EQ_FEATURE_ADVANCED
     if (g_GUIIsEnabled == true)
     {
         EQAPP_GUI_HandleEvent_CRender__ResetDevice_After();
     }
+#endif // EQ_FEATURE_ADVANCED
 
     return result;
 }
@@ -1677,13 +1798,17 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CRender__UpdateDisplay(void* this_ptr, vo
         }
     }
 
+#ifdef EQ_FEATURE_ADVANCED
     if (g_GUIIsEnabled == true)
     {
         EQAPP_GUI_HandleEvent_CRender__UpdateDisplay();
     }
+#endif // #ifdef EQ_FEATURE_ADVANCED
 
     return EQAPP_REAL_FUNCTION_CRender__UpdateDisplay(this_ptr);
 }
+
+#ifdef EQ_FEATURE_BAZAAR
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* this_ptr, void* not_used, char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11)
 {
@@ -1724,6 +1849,10 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* thi
 
     return EQAPP_REAL_FUNCTION_CBazaarSearchWnd__AddItemToList(this_ptr, itemName, itemPrice, traderName, a4, a5, a6, a7, a8, a9, a10, a11);
 }
+
+#endif // EQ_FEATURE_BAZAAR
+
+#ifdef EQ_FEATURE_ADVANCED
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CDisplay__CreateActor(void* this_ptr, void* not_used, char* actorDefinition, float y, float x, float z, float a5, float a6, float a7, float a8, float a9, float a10, int a11)
 {
@@ -1832,3 +1961,5 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CDisplay__DeleteActor(void* this_ptr, voi
 
     return EQAPP_REAL_FUNCTION_CDisplay__DeleteActor(this_ptr, cactor);
 }
+
+#endif // EQ_FEATURE_ADVANCED

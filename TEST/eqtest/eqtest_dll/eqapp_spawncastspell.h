@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef EQ_FEATURE_ADVANCED
+
 namespace EQApp
 {
     typedef struct _SpawnCastSpell
@@ -278,3 +280,5 @@ void EQAPP_SpawnCastSpell_HandleEvent_CEverQuest__StartCasting(void* this_ptr, E
 
     g_SpawnCastSpellList.push_back(std::move(spawnCastSpell));
 }
+
+#endif // EQ_FEATURE_ADVANCED
