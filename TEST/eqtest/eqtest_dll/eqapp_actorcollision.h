@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_CollisionCallbackForActors
 
 bool g_ActorCollisionIsEnabled = true;
 
@@ -276,4 +276,4 @@ bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors_Player(uint32_t
     return false;
 }
 
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_CollisionCallbackForActors

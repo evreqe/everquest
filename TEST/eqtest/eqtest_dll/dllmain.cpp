@@ -1,4 +1,12 @@
 #define EQ_FEATURE_BAZAAR
+#undef EQ_FEATURE_GUI
+#undef EQ_FEATURE_CREATE_AND_DELETE_ACTORS
+#undef EQ_FEATURE_CollisionCallbackForActors
+#undef EQ_FEATURE_DoSpellEffect
+#undef EQ_FEATURE_EQPlayer__FollowPlayerAI
+#undef EQ_FEATURE_EQPlayer__UpdateItemSlot
+#undef EQ_FEATURE_EQSwitch__ChangeState
+#undef EQ_FEATURE_CEverQuest__StartCasting
 
 #include <algorithm>
 #include <array>
@@ -99,6 +107,7 @@ namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not avai
 #include "eqapp_alwaysattack.h"
 #include "eqapp_alwayshotbutton.h"
 #include "eqapp_autogroup.h"
+#include "eqapp_autologin.h"
 #include "eqapp_bazaarbot.h"
 #include "eqapp_bazaarfilter.h"
 #include "eqapp_boxchat.h"
@@ -129,13 +138,14 @@ namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not avai
 
 void EQAPP_Load()
 {
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_GUI
     g_GUIIsLoaded = EQAPP_GUI_Load();
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_GUI
 
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_CollisionCallbackForActors
     EQAPP_ActorCollision_Load();
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_CollisionCallbackForActors
+    EQAPP_AutoLogin_Load();
     EQAPP_WaypointList_Load();
     EQAPP_NamedSpawns_Load();
 
@@ -203,9 +213,9 @@ DWORD WINAPI EQAPP_ThreadLoop(LPVOID param)
         Sleep(100);
     }
 
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_GUI
     EQAPP_GUI_Unload();
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_GUI
 
     EQAPP_BoxChat_Unload();
     EQAPP_Detours_Unload();
@@ -234,8 +244,11 @@ DWORD WINAPI EQAPP_ThreadLoad(LPVOID param)
     EQAPP_LoadOptions();
     EQAPP_Lua_Load();
     EQAPP_Detours_Load();
+    EQAPP_AutoLogin_Load();
 
     EQ_SetNetStatus(true);
+
+    EQAPP_SetWindowTitle("EverQuest*");
 
     return 0;
 }

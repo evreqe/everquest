@@ -2321,8 +2321,6 @@ void EQAPP_Waypoint_FollowPathList(EQApp::WaypointIndexList& indexList)
                     EQ_GetSpawnGravityType(playerSpawn) == EQ_GRAVITY_TYPE_SWIMMING
                 );
 
-                isPlayerFlyingLevitatingOrSwimming = false; // TODO: fix gravity type
-
                 if (EQ_IsSpawnSwimming(playerSpawn) == true || isPlayerFlyingLevitatingOrSwimming == true)
                 {
                     if ((waypoint->Z - 1.0f) > playerZ)

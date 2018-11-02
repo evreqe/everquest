@@ -901,9 +901,12 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
         }
     }
 
-    if (g_HUDIsEnabled == true)
+    if (EQ_IsWindowInBackground() == false)
     {
-        EQAPP_HUD_Execute();
+        if (g_HUDIsEnabled == true)
+        {
+            EQAPP_HUD_Execute();
+        }
     }
 
     EQAPP_Console_Print();
@@ -1149,6 +1152,14 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawWindows(void* this_ptr,
         return EQAPP_REAL_FUNCTION_CXWndManager__DrawWindows(this_ptr);
     }
 
+    if (EQ_GetGameState() == EQ_GAME_STATE_CHARACTER_SELECT)
+    {
+        if (g_AutoLoginIsEnabled == true)
+        {
+            EQAPP_AutoLogin_Execute();
+        }
+    }
+
     if (EQ_IsInGame() == false)
     {
         return EQAPP_REAL_FUNCTION_CXWndManager__DrawWindows(this_ptr);
@@ -1173,9 +1184,12 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawWindows(void* this_ptr,
         EQAPP_WaypointEditor_DrawText();
     }
 
-    if (g_ESPIsEnabled == true)
+    if (EQ_IsWindowInBackground() == false)
     {
-        EQAPP_ESP_Execute();
+        if (g_ESPIsEnabled == true)
+        {
+            EQAPP_ESP_Execute();
+        }
     }
 
 #ifdef EQ_FEATURE_ADVANCED
@@ -1547,20 +1561,27 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__SetGameState(void* this_ptr, 
         return EQAPP_REAL_FUNCTION_CEverQuest__SetGameState(this_ptr, gameState);
     }
 
-    EQAPP_InitializeAddresses();
-
-    bool result = EQAPP_InitializeAddressPointers();
-    if (result == false)
+    if (gameState == EQ_GAME_STATE_IN_GAME)
     {
-        MessageBoxA(NULL, "Failed to initialize address pointers!", "Error", MB_ICONERROR);
+        g_AutoLoginIsEnabled = false;
     }
 
-    EQAPP_Detours_AddDetoursForCamera();
-    EQAPP_Detours_AddDetoursForRender();
+    if (gameState == EQ_GAME_STATE_CHARACTER_SELECT || gameState == EQ_GAME_STATE_IN_GAME)
+    {
+        g_AutoLoginCharacterIndex = 0;
 
-    EQ_StopFollow();
-    g_FollowAISpawn = NULL;
-    EQ_SetAutoRun(false);
+        EQAPP_SetWindowTitle("EverQuest*");
+
+        EQAPP_InitializeAddresses();
+        EQAPP_InitializeAddressPointers();
+
+        EQAPP_Detours_AddDetoursForCamera();
+        EQAPP_Detours_AddDetoursForRender();
+
+        EQ_StopFollow();
+        g_FollowAISpawn = NULL;
+        EQ_SetAutoRun(false);
+    }
 
     return EQAPP_REAL_FUNCTION_CEverQuest__SetGameState(this_ptr, gameState);
 }

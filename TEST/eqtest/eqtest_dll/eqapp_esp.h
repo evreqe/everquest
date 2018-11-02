@@ -10,6 +10,8 @@ bool g_ESPHeightFilterIsEnabled = false;
 float g_ESPHeightFilterDistanceLow  = 10.0f;
 float g_ESPHeightFilterDistanceHigh = 10.0f;
 
+bool g_ESPShowSpawnsIsEnabled = true;
+
 bool g_ESPShowSpawnIDIsEnabled = false;
 bool g_ESPShowSpawnRaceIsEnabled = false;
 bool g_ESPShowSpawnClassIsEnabled = false;
@@ -42,7 +44,9 @@ void EQAPP_ESP_ShowSpawnID_Toggle();
 void EQAPP_ESP_ShowSpawnRace_Toggle();
 void EQAPP_ESP_ShowSpawnClass_Toggle();
 void EQAPP_ESP_ShowDoors_Toggle();
+void EQAPP_ESP_ShowSpawns_Toggle();
 void EQAPP_ESP_DrawDoors();
+void EQAPP_ESP_DrawSpawns();
 void EQAPP_ESP_Execute();
 
 void EQAPP_ESP_Toggle()
@@ -101,6 +105,12 @@ void EQAPP_ESP_ShowDoors_Toggle()
 {
     EQ_ToggleBool(g_ESPShowDoorsIsEnabled);
     EQAPP_PrintBool("ESP Show Doors", g_ESPShowDoorsIsEnabled);
+}
+
+void EQAPP_ESP_ShowSpawns_Toggle()
+{
+    EQ_ToggleBool(g_ESPShowSpawnsIsEnabled);
+    EQAPP_PrintBool("ESP Show Spawns", g_ESPShowSpawnsIsEnabled);
 }
 
 void EQAPP_ESP_DrawDoors()
@@ -188,7 +198,7 @@ void EQAPP_ESP_DrawDoors()
     }
 }
 
-void EQAPP_ESP_Execute()
+void EQAPP_ESP_DrawSpawns()
 {
     auto playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)
@@ -205,12 +215,32 @@ void EQAPP_ESP_Execute()
     g_ESPFindSpawnNameCount = 0;
     g_ESPFindSpawnLastNameCount = 0;
 
-    auto spawn = EQ_GetFirstSpawn();
-    while (spawn != NULL)
+    auto spawnList = EQ_GetSpawnList();
+    for (auto spawnListIt = spawnList.begin(); spawnListIt != spawnList.end(); spawnListIt++)
     {
+        auto spawn = *spawnListIt;
+        if (spawn == NULL)
+        {
+            continue;
+        }
+
+        // move players to the back of the list
+        auto spawnType = EQ_GetSpawnType(spawn);
+        if (spawnType == EQ_SPAWN_TYPE_PLAYER)
+        {
+            std::rotate(spawnListIt, spawnListIt + 1, spawnList.end());
+        }
+    }
+
+    for (auto& spawn : spawnList)
+    {
+        if (spawn == NULL)
+        {
+            continue;
+        }
+
         if (spawn == playerSpawn)
         {
-            spawn = EQ_GetSpawnNext(spawn);
             continue;
         }
 
@@ -315,7 +345,6 @@ void EQAPP_ESP_Execute()
         {
             if (bOutOfRange == true)
             {
-                spawn = EQ_GetSpawnNext(spawn);
                 continue;
             }
 
@@ -325,7 +354,6 @@ void EQAPP_ESP_Execute()
                 {
                     if ((playerSpawnZ - spawnZ) > g_ESPHeightFilterDistanceLow)
                     {
-                        spawn = EQ_GetSpawnNext(spawn);
                         continue;
                     }
                 }
@@ -333,7 +361,6 @@ void EQAPP_ESP_Execute()
                 {
                     if ((spawnZ - playerSpawnZ) > g_ESPHeightFilterDistanceHigh)
                     {
-                        spawn = EQ_GetSpawnNext(spawn);
                         continue;
                     }
                 }
@@ -349,13 +376,11 @@ void EQAPP_ESP_Execute()
             {
                 if (EQ_IsSpawnMount(spawn) == true)
                 {
-                    spawn = EQ_GetSpawnNext(spawn);
                     continue;
                 }
 
                 if (EQ_IsSpawnAura(spawn) == true)
                 {
-                    spawn = EQ_GetSpawnNext(spawn);
                     continue;
                 }
             }
@@ -421,7 +446,6 @@ void EQAPP_ESP_Execute()
 */
 
 #ifdef EQ_FEATURE_ADVANCED
-
             if (g_SpawnCastSpellIsEnabled == true && g_SpawnCastSpellESPIsEnabled == true)
             {
                 for (auto& spawnCastSpell : g_SpawnCastSpellList)
@@ -448,7 +472,6 @@ void EQAPP_ESP_Execute()
                     }
                 }
             }
-
 #endif // EQ_FEATURE_ADVANCED
 
             if (g_ESPShowSpawnIDIsEnabled == true)
@@ -515,8 +538,14 @@ void EQAPP_ESP_Execute()
 
             EQ_DrawTextByColor(drawText.c_str(), (int)screenX, (int)screenY, textColor);
         }
+    }
+}
 
-        spawn = EQ_GetSpawnNext(spawn);
+void EQAPP_ESP_Execute()
+{
+    if (g_ESPShowSpawnsIsEnabled == true)
+    {
+        EQAPP_ESP_DrawSpawns();
     }
 
     if (g_ESPShowDoorsIsEnabled == true)

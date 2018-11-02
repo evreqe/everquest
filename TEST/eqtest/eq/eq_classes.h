@@ -25,6 +25,7 @@ namespace EQClass
     class CBazaarConfirmationWnd;
     class CBazaarSearchWnd;
 #endif // EQ_FEATURE_BAZAAR
+    class CCharacterListWnd;
     class CTaskSelectWnd;
     class CLargeDialogWnd;
     class CConfirmationDialog;
@@ -268,6 +269,8 @@ public:
     void CXWnd::BringToTop(bool bRecurse = true);
     bool CXWnd::IsActive();
     bool CXWnd::IsReallyVisible(); // is open
+    EQClass::CXWnd* CXWnd::GetChildItem(const EQClass::CXStr& name);
+    EQClass::CXStr CXWnd::GetWindowTextA();
 };
 
 #define EQ_VFTABLE_INDEX_CXWnd__WndNotification    0x88
@@ -280,11 +283,15 @@ EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CXWnd::Activate(), EQ_V
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CXWnd::Deactivate(), EQ_VFTABLE_INDEX_CXWnd__Deactivate);
 
-EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CXWnd::BringToTop(bool recurse), EQ_ADDRESS_FUNCTION_CXWnd__BringToTop);
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CXWnd::BringToTop(bool bRecurse), EQ_ADDRESS_FUNCTION_CXWnd__BringToTop);
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::CXWnd::IsActive(), EQ_ADDRESS_FUNCTION_CXWnd__IsActive);
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::CXWnd::IsReallyVisible(), EQ_ADDRESS_FUNCTION_CXWnd__IsReallyVisible);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(EQClass::CXWnd* EQClass::CXWnd::GetChildItem(const EQClass::CXStr& name), EQ_ADDRESS_FUNCTION_CXWnd__GetChildItem);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(EQClass::CXStr EQClass::CXWnd::GetWindowTextA(), EQ_ADDRESS_FUNCTION_CXWnd__GetWindowTextA);
 
 #ifdef EQ_FEATURE_BAZAAR
 
@@ -340,6 +347,31 @@ EQClass::CBazaarSearchWnd** EQ_CLASS_POINTER_CBazaarSearchWnd_pptr;
 EQClass::CBazaarSearchWnd* EQ_CLASS_POINTER_CBazaarSearchWnd;
 
 #endif // EQ_FEATURE_BAZAAR
+
+/* CCharacterListWnd */
+
+class EQClass::CCharacterListWnd
+{
+public:
+    int CCharacterListWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
+    void CCharacterListWnd::SelectCharacter(int index, bool switchVisually = true, bool forceUpdate = false);
+    void CCharacterListWnd::EnterWorld();
+    void CCharacterListWnd::Quit();
+};
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CCharacterListWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CCharacterListWnd::SelectCharacter(int index, bool switchVisually, bool forceUpdate), EQ_ADDRESS_FUNCTION_CCharacterListWnd__SelectCharacter);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CCharacterListWnd__SelectCharacter)(void* this_ptr, int index, bool switchVisually, bool forceUpdate);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CCharacterListWnd::EnterWorld(), EQ_ADDRESS_FUNCTION_CCharacterListWnd__EnterWorld);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CCharacterListWnd__EnterWorld)(void* this_ptr);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CCharacterListWnd::Quit(), EQ_ADDRESS_FUNCTION_CCharacterListWnd__Quit);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CCharacterListWnd__Quit)(void* this_ptr);
+
+EQClass::CCharacterListWnd** EQ_CLASS_POINTER_CCharacterListWnd_pptr;
+EQClass::CCharacterListWnd* EQ_CLASS_POINTER_CCharacterListWnd;
 
 /* CTaskSelectWnd */
 
@@ -571,6 +603,8 @@ EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CActorEx::ChangeBoneStr
 
 /**************************************************/
 
+#ifdef EQ_FEATURE_CollisionCallbackForActors
+
 // these classes are unknown and used in the game's CollisionCallbackForActors() function
 // we use them to disable collision with players in the eqapp_actorcollision.h header
 
@@ -600,3 +634,4 @@ public:
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(uint32_t CCollisionCallbackForActors3::Call_0x44(), 0x44);
 
+#endif // EQ_FEATURE_CollisionCallbackForActors

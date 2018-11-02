@@ -4,6 +4,7 @@
 #include "eqapp_alwaysattack.h"
 #include "eqapp_alwayshotbutton.h"
 #include "eqapp_autogroup.h"
+#include "eqapp_autologin.h"
 #include "eqapp_bazaarbot.h"
 #include "eqapp_bazaarfilter.h"
 #include "eqapp_boxchat.h"
@@ -78,6 +79,9 @@ void EQAPP_LoadOptions()
 
     EQAPP_LoadOption<bool>(g_AutoGroupIsEnabled, "bAutoGroup", pt);
     EQAPP_LoadOption<EQApp::TimerInterval>(g_AutoGroupTimerInterval, "iAutoGroupTimerInterval", pt);
+
+    EQAPP_LoadOption<bool>(g_AutoLoginIsEnabled, "bAutoLogin", pt);
+    EQAPP_LoadOption<EQApp::TimerInterval>(g_AutoLoginTimerInterval, "iAutoLoginTimerInterval", pt);
 
 #ifdef EQ_FEATURE_BAZAAR
     EQAPP_LoadOption<bool>(g_BazaarBotIsEnabled, "bBazaarBot", pt);

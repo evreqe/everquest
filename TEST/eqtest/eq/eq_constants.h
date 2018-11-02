@@ -52,19 +52,20 @@ const uint32_t EQ_FAR_CLIP_PLANE_MAX = 20;
 
 const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 
-#define EQ_NUM_HOTBARS                 11    // 10 + 1, potion belt was removed and replaced with another hotbar
-#define EQ_NUM_HOTBAR_BUTTONS          12
-#define EQ_NUM_SPELLS                  60000
-#define EQ_NUM_SPELL_GEMS              18
-#define EQ_NUM_SPELL_GEMS_IN_WINDOW    14    // CCastSpellWnd    CSPW_Spell%d
-#define EQ_NUM_BAGS                    10    // number of bags you can hold in your inventory
-#define EQ_NUM_BAG_SLOTS               40    // number of slots a bag can have
-#define EQ_NUM_GROUP_MEMBERS           6
-#define EQ_NUM_LONG_BUFFS              NUM_LONG_BUFFS
-#define EQ_NUM_SHORT_BUFFS             NUM_SHORT_BUFFS
-#define EQ_NUM_BUFF_SLOTS              NUM_BUFF_SLOTS
-#define EQ_NUM_AURAS                   2
-#define EQ_NUM_XTARGETS                20
+#define EQ_NUM_HOTBARS                       11    // 10 + 1, potion belt was removed and replaced with another hotbar
+#define EQ_NUM_HOTBAR_BUTTONS                12
+#define EQ_NUM_SPELLS                        60000
+#define EQ_NUM_SPELL_GEMS                    18
+#define EQ_NUM_SPELL_GEMS_IN_WINDOW          14    // CCastSpellWnd    CSPW_Spell%d
+#define EQ_NUM_BAGS                          10    // number of bags you can hold in your inventory
+#define EQ_NUM_BAG_SLOTS                     40    // number of slots a bag can have
+#define EQ_NUM_GROUP_MEMBERS                 6
+#define EQ_NUM_LONG_BUFFS                    NUM_LONG_BUFFS
+#define EQ_NUM_SHORT_BUFFS                   NUM_SHORT_BUFFS
+#define EQ_NUM_BUFF_SLOTS                    NUM_BUFF_SLOTS
+#define EQ_NUM_AURAS                         2
+#define EQ_NUM_XTARGETS                      20
+#define EQ_NUM_CHARACTERS_PER_ACCOUNT        8    // character select
 
 #define EQ_BAZAAR_SEARCH_MAX_RESULTS_PER_TRADER 200
 #define EQ_BAZAAR_SEARCH_LIST_INDEX_NULL 0xFFFFFFFF // uint32_t
@@ -88,22 +89,27 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_UPDATE_ITEM_SLOT_PRIMARY      7
 #define EQ_UPDATE_ITEM_SLOT_SECONDARY    8
 
-#define EQ_OFFSET_CEverQuest_GAME_STATE    0x5C8 // uint32_t, 1480 decimal    "Gamestate at crash = %d\n"
-#define EQ_OFFSET_CEverQuest_MOUSE_WHEEL_SCROLL_CAMERA_DISTANCE    0x5EC // float
+#define EQ_OFFSET_CEverQuest_GAME_STATE                            offsetof(EQData::_EVERQUEST, GameState)               // uint32_t, 1480 decimal    "Gamestate at crash = %d\n"
+#define EQ_OFFSET_CEverQuest_MOUSE_WHEEL_SCROLL_CAMERA_DISTANCE    offsetof(EQData::_EVERQUEST, TargetCameraDistance)    // float
 
 #define EQ_MOUSE_WHEEL_DELTA_DEFAULT    0       // not scrolling
 #define EQ_MOUSE_WHEEL_DELTA_MIN        -120    // scrolling down
 #define EQ_MOUSE_WHEEL_DELTA_MAX        120     // scrolling up
 
-#define EQ_GAME_STATE_IN_GAME    5
-#define EQ_GAME_STATE_NULL       0xFFFFFFFF // uint32_t
+#define EQ_GAME_STATE_CHARACTER_SELECT    1    // at character select
+#define EQ_GAME_STATE_LOADING_2           4    // to in game
+#define EQ_GAME_STATE_IN_GAME             5    // in game
+#define EQ_GAME_STATE_LOADING             6    // to character select
+#define EQ_GAME_STATE_LOADING_3           253  // right before in game
+#define EQ_GAME_STATE_NULL                0xFFFFFFFF // uint32_t
 
 #define EQ_OFFSET_CRender_Direct3DDevicePointer   0xEC8 // uint32_t pointer    LPDIRECT3DDEVICE9
 
-#define EQ_OFFSET_EQPlayerManager_FIRST_SPAWN    0x08
-#define EQ_OFFSET_EQPlayerManager_LAST_SPAWN     0x0C
+#define EQ_OFFSET_EQPlayerManager_FIRST_SPAWN    offsetof(EQData::_SPAWNMANAGER, FirstSpawn)
+#define EQ_OFFSET_EQPlayerManager_LAST_SPAWN     offsetof(EQData::_SPAWNMANAGER, LastSpawn)
 
-#define EQ_OFFSET_CXWndManager_FONTS_ARRAY    0x11C    // add 0x04 to get the actual array of CTextureFont objects
+#define EQ_OFFSET_CXWndManager_WINDOWS_ARRAY    offsetof(EQUIStructs::_CXWNDMGR, pWindows)      // add 0x04 to get the actual array of CXWnd objects
+#define EQ_OFFSET_CXWndManager_FONTS_ARRAY      offsetof(EQUIStructs::_CXWNDMGR, FontsArray)    // add 0x04 to get the actual array of CTextureFont objects
 
 #define EQ_CXSTR_TEXT_MAX_LENGTH    4096
 
@@ -222,7 +228,7 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_OFFSET_SPAWN_ENDURANCE_CURRENT          offsetof(EQData::_SPAWNINFO, EnduranceCurrent)    // uint32_t
 #define EQ_OFFSET_SPAWN_ENDURANCE_MAX              offsetof(EQData::_SPAWNINFO, EnduranceMax)        // uint32_t
 #define EQ_OFFSET_SPAWN_FOLLOW_SPAWN               offsetof(EQData::_SPAWNINFO, WhoFollowing)        // uint32_t pointer    struct _SPAWNINFO*   WhoFollowing; // NULL if autofollow off
-#define EQ_OFFSET_SPAWN_GRAVITY_TYPE               0x1FD4                                            // uint32_t
+#define EQ_OFFSET_SPAWN_GRAVITY_TYPE               offsetof(EQData::_SPAWNINFO, mPlayerPhysicsClient) + 0x12    // uint32_t
 #define EQ_OFFSET_SPAWN_PET_SPAWN_ID               offsetof(EQData::_SPAWNINFO, PetID)               // uint32_t
 #define EQ_OFFSET_SPAWN_PET_OWNER_SPAWN_ID         offsetof(EQData::_SPAWNINFO, MasterID)            // uint32_t
 #define EQ_OFFSET_SPAWN_ANONYMOUS_STATE            offsetof(EQData::_SPAWNINFO, Anon)                // uint32_t   // anonymous or roleplay
@@ -237,6 +243,7 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_OFFSET_SPAWN_IS_AFK                     offsetof(EQData::_SPAWNINFO, AFK)                 // uint32_t   // away from keyboard
 #define EQ_OFFSET_SPAWN_IS_LINKDEAD                offsetof(EQData::_SPAWNINFO, Linkdead)            // uint8_t
 #define EQ_OFFSET_SPAWN_IS_OFFLINE_MODE            offsetof(EQData::_SPAWNINFO, bOfflineMode)        // uint8_t
+#define EQ_OFFSET_SPAWN_IS_INVITED_TO_GROUP        offsetof(EQData::_SPAWNINFO, InvitedToGroup)      // uint8_t
 // ********************************************************************* //
 
 #define EQ_SIZE_SPAWN_NAME         64 // 0x40

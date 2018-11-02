@@ -147,6 +147,9 @@ float EQ_GetFogDistanceEnd();
 void EQ_SetFogDistanceBegin(float distance);
 void EQ_SetFogDistanceEnd(float distance);
 
+uint32_t EQ_GetCXWndManager();
+std::vector<uint32_t> EQ_GetCXWndList();
+
 uint32_t EQ_GetAuraManager();
 uint32_t EQ_GetNumAurasActive();
 bool EQ_IsAuraNameActive(const char* name);
@@ -174,8 +177,8 @@ bool EQ_CastSpellByGemIndex(uint32_t spellGemIndex);
 bool EQ_CastSpellByName(const char* spellName);
 bool EQ_CastSpellByID(uint32_t spellID);
 
+std::vector<uint32_t> EQ_GetSpawnList();
 bool EQ_DoesSpawnExist(uint32_t spawn);
-
 uint32_t EQ_GetNumNearbySpawns(uint32_t spawnType, float distance, float distanceZ);
 
 uint32_t EQ_GetSpawnByID(uint32_t spawnID);
@@ -427,10 +430,12 @@ bool EQ_CXWnd_ClickButton(uint32_t cxwndAddressPointer, uint32_t cxwndButtonOffs
 
 #ifdef EQ_FEATURE_BAZAAR
 
+uint32_t EQ_GetBazaarWindow();
 bool EQ_BazaarWindow_IsOpen();
 bool EQ_BazaarWindow_ClickBeginTraderButton();
 bool EQ_BazaarWindow_ClickEndTraderButton();
 
+uint32_t EQ_GetBazaarConfirmationWindow();
 bool EQ_BazaarConfirmationWindow_IsOpen();
 bool EQ_BazaarConfirmationWindow_ClickToParcelsButton();
 bool EQ_BazaarConfirmationWindow_ClickCancelButton();
@@ -453,10 +458,12 @@ bool EQ_BazaarSearchWindow_ClickResetButton();
 
 #endif // EQ_FEATURE_BAZAAR
 
+uint32_t EQ_GetTaskSelectWindow();
 bool EQ_TaskSelectWindow_IsOpen();
 bool EQ_TaskSelectWindow_ClickAcceptButton();
 bool EQ_TaskSelectWindow_ClickDeclineButton();
 
+uint32_t EQ_GetLargeDialogWindow();
 bool EQ_LargeDialogWindow_IsOpen();
 bool EQ_LargeDialogWindow_ClickOKButton();
 bool EQ_LargeDialogWindow_ClickYesButton();
@@ -465,6 +472,7 @@ void EQ_LargeDialogWindow_Open(const char* titleText, const char* bodyText);
 void EQ_LargeDialogWindow_OpenWithTimer(const char* titleText, const char* bodyText, unsigned long closeTimer);
 
 bool EQ_ConfirmationDialog_IsOpen();
+bool EQ_ConfirmationDialog_ClickButtonByName(const char* name);
 bool EQ_ConfirmationDialog_ClickYesButton();
 bool EQ_ConfirmationDialog_ClickNoButton();
 bool EQ_ConfirmationDialog_ClickCancelButton();
@@ -1174,6 +1182,53 @@ void EQ_SetFogDistanceEnd(float distance)
     EQ_WriteMemory<float>(EQ_ADDRESS_FogDistanceEnd, distance);
 }
 
+uint32_t EQ_GetCXWndManager()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CXWndManager);
+}
+
+std::vector<uint32_t> EQ_GetCXWndList()
+{
+    std::vector<uint32_t> windowList;
+
+    auto windowManager = EQ_GetCXWndManager();
+    if (windowManager == NULL)
+    {
+        return windowList;
+    }
+
+    auto windowsArray = EQ_ReadMemory<uint32_t>(windowManager + EQ_OFFSET_CXWndManager_WINDOWS_ARRAY);
+    if (windowsArray == NULL)
+    {
+        return windowList;
+    }
+
+    auto numWindows = EQ_ReadMemory<uint32_t>(windowManager + (EQ_OFFSET_CXWndManager_WINDOWS_ARRAY + 0x00));
+    if (numWindows == 0)
+    {
+        return windowList;
+    }
+
+    auto windows = EQ_ReadMemory<uint32_t>(windowManager + (EQ_OFFSET_CXWndManager_WINDOWS_ARRAY + 0x04)); // have to add offset 0x04 to get actual array from the EQ array class
+    if (windows == NULL)
+    {
+        return windowList;
+    }
+
+    for (unsigned int i = 0; i < numWindows; i++)
+    {
+        auto window = EQ_ReadMemory<uint32_t>(windows + (i * 0x04)); // each font pointer (uint32_t) takes up 0x04 bytes in the array
+        if (window == NULL)
+        {
+            continue;
+        }
+
+        windowList.push_back(window);
+    }
+
+    return windowList;
+}
+
 uint32_t EQ_GetAuraManager()
 {
     return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_AuraManager);
@@ -1614,6 +1669,22 @@ bool EQ_CastSpellByName(const char* spellName)
     }
 
     return false;
+}
+
+std::vector<uint32_t> EQ_GetSpawnList()
+{
+    std::vector<uint32_t> spawnList;
+    spawnList.reserve(4096);
+
+    uint32_t spawn = EQ_GetFirstSpawn();
+    while (spawn != NULL)
+    {
+        spawnList.push_back(spawn);
+
+        spawn = EQ_GetSpawnNext(spawn);
+    }
+
+    return spawnList;
 }
 
 bool EQ_DoesSpawnExist(uint32_t spawn)
@@ -3303,7 +3374,7 @@ void EQ_SetDrawTextFontStyle(uint32_t fontStyle)
         return;
     }
 
-    auto windowManager = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CXWndManager);
+    auto windowManager = EQ_GetCXWndManager();
     if (windowManager == NULL)
     {
         return;
@@ -4203,6 +4274,11 @@ bool EQ_CXWnd_ClickButton(uint32_t cxwndAddressPointer, uint32_t cxwndButtonOffs
 
 #ifdef EQ_FEATURE_BAZAAR
 
+uint32_t EQ_GetBazaarWindow()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarWnd);
+}
+
 bool EQ_BazaarWindow_IsOpen()
 {
     return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CBazaarWnd) == true);
@@ -4216,6 +4292,11 @@ bool EQ_BazaarWindow_ClickBeginTraderButton()
 bool EQ_BazaarWindow_ClickEndTraderButton()
 {
     return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CBazaarWnd, EQ_OFFSET_CBazaarWnd_BUTTON_END_TRADER);
+}
+
+uint32_t EQ_GetBazaarConfirmationWindow()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd);
 }
 
 bool EQ_BazaarConfirmationWindow_IsOpen()
@@ -4572,6 +4653,11 @@ bool EQ_BazaarSearchWindow_ClickResetButton()
 
 #endif // EQ_FEATURE_BAZAAR
 
+uint32_t EQ_GetTaskSelectWindow()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CTaskSelectWnd);
+}
+
 bool EQ_TaskSelectWindow_IsOpen()
 {
     return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CTaskSelectWnd) == true);
@@ -4585,6 +4671,11 @@ bool EQ_TaskSelectWindow_ClickAcceptButton()
 bool EQ_TaskSelectWindow_ClickDeclineButton()
 {
     return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CTaskSelectWnd, EQ_OFFSET_CTaskSelectWnd_BUTTON_DECLINE);
+}
+
+uint32_t EQ_GetLargeDialogWindow()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CLargeDialogWnd);
 }
 
 bool EQ_LargeDialogWindow_IsOpen()
@@ -4609,27 +4700,55 @@ bool EQ_LargeDialogWindow_ClickNoButton()
 
 bool EQ_ConfirmationDialog_IsOpen()
 {
+    // TODO: find "ConfirmationDialogBox" windows
+
     return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CConfirmationDialog) == true);
+}
+
+bool EQ_ConfirmationDialog_ClickButtonByName(const char* name)
+{
+    bool result = false;
+
+    const EQClass::CXStr buttonText(name);
+
+    auto windowList = EQ_GetCXWndList();
+    for (auto& window : windowList)
+    {
+        if (((EQUIStructs::CXWND*)window)->dShow == false)
+        {
+            continue;
+        }
+
+        auto button = ((EQClass::CXWnd*)window)->GetChildItem(buttonText);
+        if (button != NULL)
+        {
+            ((EQClass::CXWnd*)window)->WndNotification((uint32_t)button, EQ_CXWND_MESSAGE_LEFT_CLICK, (void*)0);
+
+            result = true;
+        }
+    }
+
+    return result;
 }
 
 bool EQ_ConfirmationDialog_ClickYesButton()
 {
-    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CConfirmationDialog, EQ_OFFSET_CConfirmationDialog_BUTTON_YES);
+    return EQ_ConfirmationDialog_ClickButtonByName("Yes_Button");
 }
 
 bool EQ_ConfirmationDialog_ClickNoButton()
 {
-    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CConfirmationDialog, EQ_OFFSET_CConfirmationDialog_BUTTON_NO);
+    return EQ_ConfirmationDialog_ClickButtonByName("No_Button");
 }
 
 bool EQ_ConfirmationDialog_ClickCancelButton()
 {
-    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CConfirmationDialog, EQ_OFFSET_CConfirmationDialog_BUTTON_CANCEL);
+    return EQ_ConfirmationDialog_ClickButtonByName("Cancel_Button");
 }
 
 bool EQ_ConfirmationDialog_ClickOKButton()
 {
-    return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CConfirmationDialog, EQ_OFFSET_CConfirmationDialog_BUTTON_OK);
+    return EQ_ConfirmationDialog_ClickButtonByName("OK_Button");
 }
 
 void EQ_LargeDialogWindow_Open(const char* titleText, const char* bodyText)

@@ -183,6 +183,7 @@
     <ClInclude Include="eqapp_alwaysattack.h" />
     <ClInclude Include="eqapp_alwayshotbutton.h" />
     <ClInclude Include="eqapp_autogroup.h" />
+    <ClInclude Include="eqapp_autologin.h" />
     <ClInclude Include="eqapp_bazaarbot.h" />
     <ClInclude Include="eqapp_bazaarfilter.h" />
     <ClInclude Include="eqapp_boxchat.h" />

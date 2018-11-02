@@ -247,8 +247,6 @@ void EQAPP_FollowAI_Execute()
         EQ_GetSpawnGravityType(playerSpawn) == EQ_GRAVITY_TYPE_SWIMMING
     );
 
-    isPlayerFlyingLevitatingOrSwimming = false; // TODO: fix gravity type
-
     // follow while swimming or levitating
     if (g_FollowAIUseZAxisIsEnabled == true || EQ_IsSpawnSwimming(playerSpawn) == true || isPlayerFlyingLevitatingOrSwimming == true)
     {
