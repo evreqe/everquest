@@ -23,12 +23,12 @@ typedef int (__cdecl* EQ_FUNCTION_TYPE_DrawNetStatus)(int x, int y, int unknown)
 EQ_MACRO_FUNCTION_FunctionAtAddress(char* __cdecl EQ_FUNCTION_CrashDetected(), EQ_ADDRESS_FUNCTION_CrashDetected);
 typedef char* (__cdecl* EQ_FUNCTION_TYPE_CrashDetected)();
 
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_CollisionCallbackForActors
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQ_FUNCTION_CollisionCallbackForActors(uint32_t cactor), EQ_ADDRESS_FUNCTION_CollisionCallbackForActors);
 typedef int (__cdecl* EQ_FUNCTION_TYPE_CollisionCallbackForActors)(uint32_t cactor);
 
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_CollisionCallbackForActors
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQ_FUNCTION_CastRay(uint32_t spawn, float y, float x, float z), EQ_ADDRESS_FUNCTION_CastRay);
 typedef int (__cdecl* EQ_FUNCTION_TYPE_CastRay)(uint32_t spawn, float y, float x, float z);
@@ -39,10 +39,14 @@ typedef int (__cdecl* EQ_FUNCTION_TYPE_CastRay2)(const EQClass::CVector3& source
 EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQ_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive, void* unknown, int zero), EQ_ADDRESS_FUNCTION_ExecuteCmd);
 typedef int (__cdecl* EQ_FUNCTION_TYPE_ExecuteCmd)(uint32_t commandID, int isActive, void* unknown, int zero);
 
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_DoSpellEffect
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQ_FUNCTION_DoSpellEffect(int type, int unknown, uint32_t spell, uint32_t spawn1, uint32_t spawn2, EQ::Location_ptr location, uint32_t missile, uint32_t duration), EQ_ADDRESS_FUNCTION_DoSpellEffect);
 typedef int (__cdecl* EQ_FUNCTION_TYPE_DoSpellEffect)(int type, int unknown, uint32_t spell, uint32_t spawn1, uint32_t spawn2, EQ::Location_ptr location, uint32_t missile, uint32_t duration);
+
+#endif
+
+#ifdef EQ_FEATURE_GUI
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(LRESULT __stdcall EQ_FUNCTION_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam), EQ_ADDRESS_FUNCTION_WindowProc);
 typedef LRESULT (__stdcall* EQ_FUNCTION_TYPE_WindowProc)(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -59,7 +63,7 @@ typedef int (__cdecl* EQ_FUNCTION_TYPE_FlushDxMouse)();
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQ_FUNCTION_FlushDxKeyboard(), EQ_ADDRESS_FUNCTION_FlushDxKeyboard);
 typedef int (__cdecl* EQ_FUNCTION_TYPE_FlushDxKeyboard)();
 
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_GUI
 
 /* function prototypes */
 
@@ -167,7 +171,6 @@ uint32_t EQ_GetXTargetStatus(uint32_t index);
 uint32_t EQ_GetXTargetSpawn(uint32_t index);
 std::string EQ_GetXTargetName(uint32_t index);
 uint32_t EQ_GetGroup();
-uint32_t EQ_GetCI2();
 uint32_t EQ_GetCharInfo2();
 uint32_t EQ_GetMemorizedSpellID(uint32_t spellGemIndex);
 uint32_t EQ_GetSpellGemIndexBySpellID(uint32_t spellID);
@@ -324,12 +327,12 @@ void EQ_SetPlayerSpawnHeadingSouthEast();
 void EQ_SetPlayerSpawnHeadingEast();
 void EQ_SetPlayerSpawnHeadingNorthEast();
 
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_EQPlayer__UpdateItemSlot
 bool EQ_SetSpawnItemSlot(uint32_t spawn, uint32_t updateItemSlot, const char* itemDefinition);
 bool EQ_SetSpawnItemSlotPrimary(uint32_t spawn, const char* itemDefinition);
 bool EQ_SetSpawnItemSlotSecondary(uint32_t spawn, const char* itemDefinition);
 bool EQ_SetSpawnItemSlotHead(uint32_t spawn, const char* itemDefinition);
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_EQPlayer__UpdateItemSlot
 
 void EQ_TurnCameraTowardsLocation(float y, float x);
 void EQ_TurnSpawnTowardsLocation(uint32_t spawn, float y, float x);
@@ -412,11 +415,11 @@ void EQ_UseItem(const char* itemName);
 void EQ_UseDoor(const char* doorName);
 void EQ_UseDoorByDistance(float distance);
 void EQ_UseDoorOnCollision();
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_EQSwitch__ChangeState
 void EQ_SetStateForAllDoors(uint8_t state);
 void EQ_OpenAllDoors();
 void EQ_CloseAllDoors();
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_EQSwitch__ChangeState
 
 void EQ_CXStr_Set(EQ::CXStr** cxstr, const char* text);
 void EQ_CXStr_Append(EQ::CXStr** cxstr, const char* text);
@@ -1145,7 +1148,7 @@ void EQ_SetZoneGravity(float gravity)
 
 bool EQ_IsFogEnabled()
 {
-    auto value = EQ_ReadMemory<uint8_t>(EQ_ADDRESS_FogEnabled);
+    auto value = EQ_ReadMemory<uint8_t>(EQ_ADDRESS_EQZoneInfo + EQ_OFFSET_EQZoneInfo_FOG_ENABLED);
 
     return value == EQ_FOG_ON;
 }
@@ -1159,27 +1162,27 @@ void EQ_SetFog(bool b)
         value = EQ_FOG_ON;
     }
 
-    EQ_WriteMemory<uint8_t>(EQ_ADDRESS_FogEnabled, value);
+    EQ_WriteMemory<uint8_t>(EQ_ADDRESS_EQZoneInfo + EQ_OFFSET_EQZoneInfo_FOG_ENABLED, value);
 }
 
 float EQ_GetFogDistanceBegin()
 {
-    return EQ_ReadMemory<float>(EQ_ADDRESS_FogDistanceBegin);
+    return EQ_ReadMemory<float>(EQ_ADDRESS_EQZoneInfo + EQ_OFFSET_EQZoneInfo_FOG_DISTANCE_BEGIN);
 }
 
 float EQ_GetFogDistanceEnd()
 {
-    return EQ_ReadMemory<float>(EQ_ADDRESS_FogDistanceEnd);
+    return EQ_ReadMemory<float>(EQ_ADDRESS_EQZoneInfo + EQ_OFFSET_EQZoneInfo_FOG_DISTANCE_END);
 }
 
 void EQ_SetFogDistanceBegin(float distance)
 {
-    EQ_WriteMemory<float>(EQ_ADDRESS_FogDistanceBegin, distance);
+    EQ_WriteMemory<float>(EQ_ADDRESS_EQZoneInfo + EQ_OFFSET_EQZoneInfo_FOG_DISTANCE_BEGIN, distance);
 }
 
 void EQ_SetFogDistanceEnd(float distance)
 {
-    EQ_WriteMemory<float>(EQ_ADDRESS_FogDistanceEnd, distance);
+    EQ_WriteMemory<float>(EQ_ADDRESS_EQZoneInfo + EQ_OFFSET_EQZoneInfo_FOG_DISTANCE_END, distance);
 }
 
 uint32_t EQ_GetCXWndManager()
@@ -1542,7 +1545,7 @@ uint32_t EQ_GetGroup()
     return EQ_ReadMemory<uint32_t>(playerCharacter + EQ_OFFSET_CHARACTER_GROUP);
 }
 
-uint32_t EQ_GetCI2()
+uint32_t EQ_GetCharInfo2()
 {
     auto playerCharacter = EQ_GetPlayerCharacter();
     if (playerCharacter == NULL)
@@ -1550,18 +1553,24 @@ uint32_t EQ_GetCI2()
         return NULL;
     }
 
-    return EQ_ReadMemory<uint32_t>(playerCharacter + EQ_OFFSET_CHARACTER_CI2);
-}
-
-uint32_t EQ_GetCharInfo2()
-{
-    auto CI2 = EQ_GetCI2();
-    if (CI2 == NULL)
+    EQData::PCHARINFO pCharInfo = (EQData::PCHARINFO)playerCharacter;
+    if (pCharInfo == NULL)
     {
         return NULL;
     }
 
-    return EQ_ReadMemory<uint32_t>(CI2 + EQ_OFFSET_CI2_CHARINFO2);
+    if (pCharInfo->ProfileManager.pFirst == NULL)
+    {
+        return NULL;
+    }
+
+    EQData::PCHARINFO2 pCharInfo2 = (EQData::PCHARINFO2)pCharInfo->ProfileManager.GetCurrentProfile();
+    if (pCharInfo2 == NULL)
+    {
+        return NULL;
+    }
+
+    return (uint32_t)*&pCharInfo2;
 }
 
 uint32_t EQ_GetMemorizedSpellID(uint32_t spellGemIndex)
@@ -1602,8 +1611,7 @@ uint32_t EQ_GetSpellGemIndexBySpellName(const char* spellName)
     auto spellID = EQ_GetSpellIDByName(spellName);
     if (spellID == EQ_SPELL_ID_NULL)
     {
-        EQ_SPELL_GEM_INDEX_NULL;
-        
+        return EQ_SPELL_GEM_INDEX_NULL;
     }
 
     return EQ_GetSpellGemIndexBySpellID(spellID);
@@ -1651,7 +1659,7 @@ bool EQ_CastSpellByName(const char* spellName)
 
     if (spellGemIndexRank3 != EQ_SPELL_GEM_INDEX_NULL)
     {
-        return EQ_CastSpellByGemIndex(spellGemIndex);
+        return EQ_CastSpellByGemIndex(spellGemIndexRank3);
     }
     else
     {
@@ -3070,7 +3078,7 @@ void EQ_SetPlayerSpawnHeadingNorthEast()
     EQ_SetSpawnHeading(playerSpawn, EQ_HEADING_NORTH_EAST);
 }
 
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_EQPlayer__UpdateItemSlot
 
 bool EQ_SetSpawnItemSlot(uint32_t spawn, uint32_t updateItemSlot, const char* itemDefinition)
 {
@@ -3092,7 +3100,7 @@ bool EQ_SetSpawnItemSlotHead(uint32_t spawn, const char* itemDefinition)
     return EQ_SetSpawnItemSlot(spawn, EQ_UPDATE_ITEM_SLOT_HEAD, itemDefinition);
 }
 
-#endif // 
+#endif // EQ_FEATURE_EQPlayer__UpdateItemSlot
 
 void EQ_TurnCameraTowardsLocation(float y, float x)
 {
@@ -4092,7 +4100,7 @@ void EQ_UseDoorOnCollision()
     }
 }
 
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_EQSwitch__ChangeState
 
 void EQ_SetStateForAllDoors(uint8_t state)
 {
@@ -4130,7 +4138,7 @@ void EQ_CloseAllDoors()
     EQ_SetStateForAllDoors(EQ_SWITCH_STATE_CLOSING);
 }
 
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_EQSwitch__ChangeState
 
 void EQ_CXStr_Set(EQ::CXStr** cxstr, const char* text)
 { 
@@ -4139,6 +4147,15 @@ void EQ_CXStr_Set(EQ::CXStr** cxstr, const char* text)
     (*temp) = text;
 
     cxstr = (EQ::CXStr**)temp;
+}
+
+void EQ_CXStr_SetEx(EQData::PCXSTR* cxstr, const char* text)
+{ 
+    EQClass::CXStr* temp = (EQClass::CXStr*)cxstr;
+
+    (*temp) = text;
+
+    cxstr = (EQData::PCXSTR*)temp;
 }
 
 void EQ_CXStr_Append(EQ::CXStr** cxstr, const char* text)

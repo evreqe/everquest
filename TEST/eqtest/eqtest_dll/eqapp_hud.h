@@ -277,7 +277,7 @@ void EQAPP_HUD_Execute()
         g_HUDText << "- ESP Show Doors\n";
     }
 
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_EQPlayer__FollowPlayerAI
     if (g_FollowAIBehindIsEnabled == true)
     {
         g_HUDText << "- Follow AI Behind\n";
@@ -287,14 +287,14 @@ void EQAPP_HUD_Execute()
     {
         g_HUDText << "- Follow AI Use Z-Axis\n";
     }
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_EQPlayer__FollowPlayerAI
 
     if (g_ChangeHeightIsEnabled == true)
     {
         g_HUDText << "- Change Height\n";
     }
 
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_CEverQuest__StartCasting
     if (g_SpawnCastSpellIsEnabled == true)
     {
         g_HUDText << "- Spawn Cast Spell\n";
@@ -304,7 +304,7 @@ void EQAPP_HUD_Execute()
     {
         g_HUDText << "- Spawn Cast Spell Group Chat\n";
     }
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_CEverQuest__StartCasting
 
     for (auto& script : g_LuaEventScriptList)
     {

@@ -245,6 +245,10 @@ function OnTick()
         BuffPet("Burnout XII Rk. II")
     end
 
+    if playerClass == EQ_CLASS_PALADIN then
+        AuraMe("Blessed Aura")
+    end
+
     if playerClass == EQ_CLASS_RANGER then
         BuffMe("Corpsestalker's Unity Rk. II")
         BuffMe("Jolting Swords Rk. II")

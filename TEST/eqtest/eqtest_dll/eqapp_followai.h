@@ -119,6 +119,15 @@ void EQAPP_FollowAI_Execute()
 
             if (targetSpawn != NULL)
             {
+                auto targetType = EQ_GetSpawnType(targetSpawn);
+                if (targetType == EQ_SPAWN_TYPE_CORPSE)
+                {
+                    g_FollowAISpawn = NULL;
+                    EQ_SetAutoRun(false);
+
+                    return;
+                }
+
                 auto targetHPCurrent = EQ_GetSpawnHPCurrent(targetSpawn);
                 if (targetHPCurrent <= 0)
                 {

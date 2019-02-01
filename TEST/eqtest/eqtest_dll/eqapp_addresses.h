@@ -59,10 +59,6 @@ void EQAPP_InitializeAddresses()
 
     EQAPP_FixAddress(EQ_ADDRESS_EQZoneInfo);
 
-    EQAPP_FixAddress(EQ_ADDRESS_FogEnabled);
-    EQAPP_FixAddress(EQ_ADDRESS_FogDistanceBegin);
-    EQAPP_FixAddress(EQ_ADDRESS_FogDistanceEnd);
-
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CrashDetected);
 #ifdef EQ_FEATURE_CollisionCallbackForActors
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CollisionCallbackForActors);
@@ -149,6 +145,8 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CXStr__operator_equal1);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CXStr__operator_plus_equal1);
 
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CXWnd__DrawTooltip);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CXWnd__DrawTooltipAtPoint);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CXWnd__BringToTop);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CXWnd__IsActive);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CXWnd__IsReallyVisible);

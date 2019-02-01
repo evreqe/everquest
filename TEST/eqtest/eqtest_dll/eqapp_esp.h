@@ -445,7 +445,7 @@ void EQAPP_ESP_DrawSpawns()
             }
 */
 
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_CEverQuest__StartCasting
             if (g_SpawnCastSpellIsEnabled == true && g_SpawnCastSpellESPIsEnabled == true)
             {
                 for (auto& spawnCastSpell : g_SpawnCastSpellList)
@@ -472,7 +472,7 @@ void EQAPP_ESP_DrawSpawns()
                     }
                 }
             }
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_CEverQuest__StartCasting
 
             if (g_ESPShowSpawnIDIsEnabled == true)
             {

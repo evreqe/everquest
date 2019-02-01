@@ -1,5 +1,7 @@
 #pragma once
 
+extern bool EQAPP_Waypoint_Goto(uint32_t index);
+
 namespace EQApp
 {
     typedef struct _LuaEventScript
@@ -301,6 +303,8 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQAPP_PrintMouseLocation", EQAPP_PrintMouseLocation);
     state->set_function("EQAPP_InventoryFind", EQAPP_InventoryFind);
     state->set_function("EQAPP_SetWindowTitle", EQAPP_SetWindowTitle);
+
+    state->set_function("EQAPP_Waypoint_Goto", EQAPP_Waypoint_Goto);
 
     // EQ constants
     state->set("EQ_WINDOW_TITLE_DEFAULT", EQ_WINDOW_TITLE_DEFAULT);
@@ -1202,6 +1206,7 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set("EQ_EXECUTECMD_CMD_EVENT_CALENDAR", EQ_EXECUTECMD_CMD_EVENT_CALENDAR);
     state->set("EQ_EXECUTECMD_CMD_TOGGLE_FINDITEM_WND", EQ_EXECUTECMD_CMD_TOGGLE_FINDITEM_WND);
     state->set("EQ_EXECUTECMD_CMD_HEROSJOURNEY_TEXT", EQ_EXECUTECMD_CMD_HEROSJOURNEY_TEXT);
+    state->set("EQ_EXECUTECMD_CMD_TOGGLE_FACTION_WND", EQ_EXECUTECMD_CMD_TOGGLE_FACTION_WND);
     state->set("EQ_EXECUTECMD_TOGGLE_FPS", EQ_EXECUTECMD_TOGGLE_FPS);
     state->set("EQ_EXECUTECMD_TOGGLE_AVATAR", EQ_EXECUTECMD_TOGGLE_AVATAR);
     state->set("EQ_EXECUTECMD_TOGGLE_PETITION", EQ_EXECUTECMD_TOGGLE_PETITION);
@@ -1874,7 +1879,6 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_GetXTargetSpawn", EQ_GetXTargetSpawn);
     state->set_function("EQ_GetXTargetName", EQ_GetXTargetName);
     state->set_function("EQ_GetGroup", EQ_GetGroup);
-    state->set_function("EQ_GetCI2", EQ_GetCI2);
     state->set_function("EQ_GetCharInfo2", EQ_GetCharInfo2);
     state->set_function("EQ_GetMemorizedSpellID", EQ_GetMemorizedSpellID);
     state->set_function("EQ_GetSpellGemIndexBySpellID", EQ_GetSpellGemIndexBySpellID);
@@ -2030,12 +2034,12 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_SetPlayerSpawnHeadingEast", EQ_SetPlayerSpawnHeadingEast);
     state->set_function("EQ_SetPlayerSpawnHeadingNorthEast", EQ_SetPlayerSpawnHeadingNorthEast);
 
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_EQPlayer__UpdateItemSlot
     state->set_function("EQ_SetSpawnItemSlot", EQ_SetSpawnItemSlot);
     state->set_function("EQ_SetSpawnItemSlotPrimary", EQ_SetSpawnItemSlotPrimary);
     state->set_function("EQ_SetSpawnItemSlotSecondary", EQ_SetSpawnItemSlotSecondary);
     state->set_function("EQ_SetSpawnItemSlotHead", EQ_SetSpawnItemSlotHead);
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_EQPlayer__UpdateItemSlot
 
     state->set_function("EQ_TurnCameraTowardsLocation", EQ_TurnCameraTowardsLocation);
     state->set_function("EQ_TurnSpawnTowardsLocation", EQ_TurnSpawnTowardsLocation);
@@ -2113,13 +2117,13 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_UseDoor", EQ_UseDoor);
     state->set_function("EQ_UseDoorByDistance", EQ_UseDoorByDistance);
     state->set_function("EQ_UseDoorOnCollision", EQ_UseDoorOnCollision);
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_EQSwitch__ChangeState
     state->set_function("EQ_SetStateForAllDoors", EQ_SetStateForAllDoors);
     state->set_function("EQ_OpenAllDoors", EQ_OpenAllDoors);
     state->set_function("EQ_CloseAllDoors", EQ_CloseAllDoors);
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_EQSwitch__ChangeState
 
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_BAZAAR
     state->set_function("EQ_BazaarWindow_IsOpen", EQ_BazaarWindow_IsOpen);
     state->set_function("EQ_BazaarWindow_ClickBeginTraderButton", EQ_BazaarWindow_ClickBeginTraderButton);
     state->set_function("EQ_BazaarWindow_ClickEndTraderButton", EQ_BazaarWindow_ClickEndTraderButton);
@@ -2143,7 +2147,7 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_BazaarSearchWindow_ClickFindItemsButton", EQ_BazaarSearchWindow_ClickFindItemsButton);
     state->set_function("EQ_BazaarSearchWindow_ClickUpdateTradersButton", EQ_BazaarSearchWindow_ClickUpdateTradersButton);
     state->set_function("EQ_BazaarSearchWindow_ClickResetButton", EQ_BazaarSearchWindow_ClickResetButton);
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_BAZAAR
 
     state->set_function("EQ_TaskSelectWindow_IsOpen", EQ_TaskSelectWindow_IsOpen);
     state->set_function("EQ_TaskSelectWindow_ClickAcceptButton", EQ_TaskSelectWindow_ClickAcceptButton);

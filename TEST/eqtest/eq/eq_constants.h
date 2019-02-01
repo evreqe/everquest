@@ -141,7 +141,7 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_OFFSET_AURA_SPAWN_ID    offsetof(EQData::_AURAINFO, SpawnID)    // uint32_t
 
 // class XTarget Manager
-#define EQ_OFFSET_XTargetManager_XTARGETS_ARRAY    0x04
+#define EQ_OFFSET_XTargetManager_XTARGETS_ARRAY    offsetof(ExtendedTargetList, XTargetSlots)
 #define EQ_OFFSET_XTargetManager_XTARGETS          0x08
 
 #define EQ_SIZE_XTARGET_NAME    0x40
@@ -164,7 +164,6 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 // class EQCharacter
 #define EQ_OFFSET_CHARACTER_XTargetManager     offsetof(EQData::_CHARINFO, pXTargetMgr)    // uint32_t pointer
 #define EQ_OFFSET_CHARACTER_GROUP              offsetof(EQData::_CHARINFO, pGroupInfo)     // uint32_t pointer
-#define EQ_OFFSET_CHARACTER_CI2                offsetof(EQData::_CHARINFO, pCI2)           // uint32_t pointer
 
 // struct CI2_INFO
 #define EQ_OFFSET_CI2_CHARINFO2    offsetof(EQData::_CI2_INFO, pCharInfo2)    // uint32_t pointer
@@ -331,17 +330,17 @@ std::unordered_map<uint32_t, std::string> EQ_COMBAT_STATE_Strings =
 
 #define EQ_SIZE_ACTOR_DEFINITION_NAME 0x40 // char[64]
 
-#define EQ_OFFSET_EQZoneInfo_PLAYER_NAME           0x00     // char[64]
-#define EQ_OFFSET_EQZoneInfo_ZONE_LONG_NAME        0xC0     // char[128]
-#define EQ_OFFSET_EQZoneInfo_ZONE_SHORT_NAME       0x2A0    // char[32]
-#define EQ_OFFSET_EQZoneInfo_ZONE_GRAVITY          0x204    // uint32_t
-#define EQ_OFFSET_EQZoneInfo_ZONE_ID               0x334    // uint32_t
-#define EQ_OFFSET_EQZoneInfo_FOG_ENABLED           0x1D6    // uint8_t // 0x00=Off 0xFF=On
-#define EQ_OFFSET_EQZoneInfo_FOG_COLOR_RED         0x1D7    // uint32_t ColorARGB
-#define EQ_OFFSET_EQZoneInfo_FOG_COLOR_GREEN       0x1DB    // uint32_t ColorARGB
-#define EQ_OFFSET_EQZoneInfo_FOG_COLOR_BLUE        0x1DF    // uint32_t ColorARGB
-#define EQ_OFFSET_EQZoneInfo_FOG_DISTANCE_BEGIN    0x1E4    // float[4]
-#define EQ_OFFSET_EQZoneInfo_FOG_DISTANCE_END      0x1F4    // float[4]
+#define EQ_OFFSET_EQZoneInfo_PLAYER_NAME           offsetof(EQData::_ZONEINFO, CharacterName)    // char[64]
+#define EQ_OFFSET_EQZoneInfo_ZONE_LONG_NAME        offsetof(EQData::_ZONEINFO, LongName)         // char[128]
+#define EQ_OFFSET_EQZoneInfo_ZONE_SHORT_NAME       0x2A0 // char[32]
+#define EQ_OFFSET_EQZoneInfo_ZONE_GRAVITY          offsetof(EQData::_ZONEINFO, ZoneGravity)    // float
+#define EQ_OFFSET_EQZoneInfo_ZONE_ID               offsetof(EQData::_ZONEINFO, ZoneID)         // uint32_t
+#define EQ_OFFSET_EQZoneInfo_FOG_ENABLED           offsetof(EQData::_ZONEINFO, FogOnOff)       // uint8_t // 0x00=Off 0xFF=On
+#define EQ_OFFSET_EQZoneInfo_FOG_COLOR_RED         offsetof(EQData::_ZONEINFO, FogRed)         // uint32_t ColorARGB
+#define EQ_OFFSET_EQZoneInfo_FOG_COLOR_GREEN       offsetof(EQData::_ZONEINFO, FogGreen)       // uint32_t ColorARGB
+#define EQ_OFFSET_EQZoneInfo_FOG_COLOR_BLUE        offsetof(EQData::_ZONEINFO, FogBlue)        // uint32_t ColorARGB
+#define EQ_OFFSET_EQZoneInfo_FOG_DISTANCE_BEGIN    offsetof(EQData::_ZONEINFO, FogStart)       // float[4]
+#define EQ_OFFSET_EQZoneInfo_FOG_DISTANCE_END      offsetof(EQData::_ZONEINFO, FogEnd)         // float[4]
 
 #define EQ_SIZE_EQZoneInfo_PLAYER_NAME        0x40    // char[64]
 #define EQ_SIZE_EQZoneInfo_ZONE_LONG_NAME     0x80    // char[128]
@@ -434,6 +433,7 @@ std::unordered_map<uint32_t, std::string> EQ_COMBAT_STATE_Strings =
 #define EQ_SWITCH_TYPE_156                       156    // book rotating in a circle on table in potranquility
 #define EQ_SWITCH_TYPE_158                       158    // book of legends in the pok library, click shows book text
 
+// EQData::_DOOR
 #define EQ_OFFSET_EQSwitch_VFTABLE                0x00 // uint32_t pointer
 #define EQ_OFFSET_EQSwitch_OBJECT_TYPE            0x04 // uint8_t
 #define EQ_OFFSET_EQSwitch_INDEX                  0x05 // uint8_t

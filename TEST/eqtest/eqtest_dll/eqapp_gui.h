@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_GUI
 
 #include "imgui_impl_win32.h"
 
@@ -309,4 +309,4 @@ void EQAPP_GUI_HandleEvent_CRender__UpdateDisplay()
     ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
 }
 
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_GUI

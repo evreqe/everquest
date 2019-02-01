@@ -4,6 +4,12 @@ g_GiveawayPlayerName = "Jenhunda"
 
 g_GiveawayItemName = "Symbol of the Dragon's Scale"
 
+g_GiveawayClock = os.clock
+function Giveaway_Sleep(n)  -- seconds
+  local t0 = g_GiveawayClock()
+  while g_GiveawayClock() - t0 <= n do end
+end
+
 function Giveaway_Toggle()
     if g_GiveawayIsEnabled == 0 then
         g_GiveawayIsEnabled = 1
@@ -48,7 +54,7 @@ function OnInterpretCommand(commandText)
     end
 
     if String_BeginsWith(commandText, "//GiveawayItem ") == true then
-        g_GiveawayItemName = string.sub(commandText, 20, -1)
+        g_GiveawayItemName = string.sub(commandText, 16, -1)
 
         EQ_PrintTextToChat("Giveaway Item Name: " .. g_GiveawayItemName)
 
@@ -93,9 +99,11 @@ function OnChatText(chatText, chatTextColor)
     for m in string.gmatch(chatText, "\018%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x[%w%s%p]+\018") do
         if String_Contains(m, "00000000000000000000000000000000000000000000000000000000") == false then
             if String_Contains(m, g_GiveawayItemName) == true then
-                EQ_InterpretCommand("/say " .. m)
+                Giveaway_Sleep(1)
+                EQ_InterpretCommand("/1 " .. m)
                 g_GiveawayIsEnabled = 0
                 EQ_PrintTextToChat("Giveaway: Off")
+                break
             end
         end
     end

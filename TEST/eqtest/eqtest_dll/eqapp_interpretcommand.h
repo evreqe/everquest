@@ -47,7 +47,7 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//Sleep",                        &EQAPP_Sleep_Toggle},
     {"//SleepOn",                      &EQAPP_Sleep_On},
     {"//SleepOff",                     &EQAPP_Sleep_Off},
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_CollisionCallbackForActors
     {"//ActorCollision",               &EQAPP_ActorCollision_Toggle},
     {"//ActorCollisionOn",             &EQAPP_ActorCollision_On},
     {"//ActorCollisionOff",            &EQAPP_ActorCollision_Off},
@@ -66,7 +66,7 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//ACDebug",                      &EQAPP_ActorCollision_Debug_Toggle},
     {"//ACAll",                        &EQAPP_ActorCollision_All_Toggle},
     {"//ACPlayer",                     &EQAPP_ActorCollision_Player_Toggle},
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_CollisionCallbackForActors
     {"//AlwaysAttack",                 &EQAPP_AlwaysAttack_Toggle},
     {"//AlwaysAttackOn",               &EQAPP_AlwaysAttack_On},
     {"//AlwaysAttackOff",              &EQAPP_AlwaysAttack_Off},
@@ -148,18 +148,18 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//FPS",                          &EQAPP_FPS_Toggle},
     {"//FPSOn",                        &EQAPP_FPS_On},
     {"//FPSOff",                       &EQAPP_FPS_Off},
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_GUI
     {"//GUI",                          &EQAPP_GUI_Toggle},
     {"//GUIOn",                        &EQAPP_GUI_On},
     {"//GUIOff",                       &EQAPP_GUI_Off},
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_GUI
     {"//ChangeHeight",                 &EQAPP_ChangeHeight_Toggle},
     {"//ChangeHeightOn",               &EQAPP_ChangeHeight_On},
     {"//ChangeHeightOff",              &EQAPP_ChangeHeight_Off},
     {"//CH",                           &EQAPP_ChangeHeight_Toggle},
     {"//CHOn",                         &EQAPP_ChangeHeight_On},
     {"//CHOff",                        &EQAPP_ChangeHeight_Off},
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_CEverQuest__StartCasting
     {"//SpawnCastSpell",               &EQAPP_SpawnCastSpell_Toggle},
     {"//SpawnCastSpellOn",             &EQAPP_SpawnCastSpell_On},
     {"//SpawnCastSpellOff",            &EQAPP_SpawnCastSpell_Off},
@@ -171,7 +171,7 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//SCSESP",                       &EQAPP_SpawnCastSpell_ESP_Toggle},
     {"//SCSGC",                        &EQAPP_SpawnCastSpell_GroupChat_Toggle},
     {"//SCSGroupChat",                 &EQAPP_SpawnCastSpell_GroupChat_Toggle},
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_CEverQuest__StartCasting
     {"//Speed",                        &EQAPP_Speed_Toggle},
     {"//SpeedOn",                      &EQAPP_Speed_On},
     {"//SpeedOff",                     &EQAPP_Speed_Off},
@@ -222,10 +222,10 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//FC",                           &EQAPP_FreeCamera_Toggle},
     {"//FCOn",                         &EQAPP_FreeCamera_On},
     {"//FCOff",                        &EQAPP_FreeCamera_Off},
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_EQSwitch__ChangeState
     {"//OpenAllDoors",                 &EQ_OpenAllDoors},
     {"//CloseAllDoors",                &EQ_CloseAllDoors},
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_EQSwitch__ChangeState
     {"//WPLoad",                       &EQAPP_WaypointList_Load},
     {"//WPSave",                       &EQAPP_WaypointList_Save},
     {"//WPList",                       &EQAPP_WaypointList_Print},
@@ -502,9 +502,11 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//Lua",                          &EQAPP_InterpretCommand_NULL},
     {"//LuaEvent",                     &EQAPP_InterpretCommand_NULL},
     {"//Echo",                         &EQAPP_InterpretCommand_NULL},
+#ifdef EQ_FEATURE_EQPlayer__UpdateItemSlot
     {"//ItemSlotPrimary",              &EQAPP_InterpretCommand_NULL},
     {"//ItemSlotSecondary",            &EQAPP_InterpretCommand_NULL},
     {"//ItemSlotHead",                 &EQAPP_InterpretCommand_NULL},
+#endif // EQ_FEATURE_EQPlayer__UpdateItemSlot
     {"//IfMoving",                     &EQAPP_InterpretCommand_NULL},
     {"//IfNotMoving",                  &EQAPP_InterpretCommand_NULL},
     {"//UseDoor",                      &EQAPP_InterpretCommand_NULL},
@@ -921,7 +923,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_GUI
     if (commandText == "//ClientsMenu")
     {
         if (g_GUIIsEnabled == true && g_GUIIsLoaded == true)
@@ -931,7 +933,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
             return true;
         }
     }
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_GUI
 
     if (commandText == "//InGame")
     {
@@ -3991,7 +3993,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                 fileName << ".lua";
             }
 
-            bool result = EQAPP_Lua_ExecuteFile(&g_LuaState, fileName.str().c_str());
+            EQAPP_Lua_ExecuteFile(&g_LuaState, fileName.str().c_str());
         }
 
         return true;
@@ -4048,7 +4050,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_EQPlayer__UpdateItemSlot
 
     if (EQAPP_String_BeginsWith(commandText, "//ItemSlotPrimary ") == true)
     {
@@ -4095,7 +4097,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_EQPlayer__UpdateItemSlot
 
     if (EQAPP_String_BeginsWith(commandText, "//IfMoving ") == true)
     {
@@ -4789,11 +4791,11 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                     {
                         uint32_t index = std::stoul(tokens.at(0));
 
-                        std::string scriptFileName = tokens.at(1);
-                        if (scriptFileName.size() != 0)
+                        auto waypoint = EQAPP_Waypoint_GetByIndex(index);
+                        if (waypoint != NULL)
                         {
-                            auto waypoint = EQAPP_Waypoint_GetByIndex(index);
-                            if (waypoint != NULL)
+                            std::string scriptFileName = tokens.at(1);
+                            if (scriptFileName.size() != 0)
                             {
                                 EQAPP_Waypoint_SetScriptFileName(index, scriptFileName.c_str());
                             }
@@ -4805,17 +4807,17 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
             return true;
         }
 
-        // //WPClearFlags <index>
-        if (EQAPP_String_BeginsWith(commandText, "//WPCF ") == true || EQAPP_String_BeginsWith(commandText, "//WPClearFlags ") == true)
+        // //WPDisconnectAll <index>
+        if (EQAPP_String_BeginsWith(commandText, "//WPDA ") == true || EQAPP_String_BeginsWith(commandText, "//WPDisconnectAll ") == true)
         {
-            std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
-            if (commandTextAfterSpace.size() != 0)
+            std::string indexText = EQAPP_String_GetAfter(commandText, " ");
+            if (indexText.size() != 0)
             {
-                if (EQAPP_String_IsDigits(commandTextAfterSpace) == true)
+                if (EQAPP_String_IsDigits(indexText) == true)
                 {
-                    uint32_t index = std::stoul(commandTextAfterSpace);
+                    uint32_t index = std::stoul(indexText);
 
-                    EQAPP_Waypoint_ClearFlags(index);
+                    EQAPP_Waypoint_DisconnectAll(index);
                 }
             }
 
@@ -4866,6 +4868,23 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                             EQAPP_Waypoint_RemoveFlag(index, flag);
                         }
                     }
+                }
+            }
+
+            return true;
+        }
+
+        // //WPClearFlags <index>
+        if (EQAPP_String_BeginsWith(commandText, "//WPCF ") == true || EQAPP_String_BeginsWith(commandText, "//WPClearFlags ") == true)
+        {
+            std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+            if (commandTextAfterSpace.size() != 0)
+            {
+                if (EQAPP_String_IsDigits(commandTextAfterSpace) == true)
+                {
+                    uint32_t index = std::stoul(commandTextAfterSpace);
+
+                    EQAPP_Waypoint_ClearFlags(index);
                 }
             }
 

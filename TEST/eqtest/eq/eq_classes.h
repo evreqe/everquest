@@ -15,6 +15,7 @@ namespace EQClass
 
     class EQSwitch;
 
+    class CXPoint;
     class CXStr;
 
     class CXWndManager;
@@ -49,14 +50,14 @@ public:
     void CEverQuest::DoPercentConvert(char* text, bool isOutgoing);
     void CEverQuest::InterpretCmd(class EQPlayer* player, const char* text);
     void CEverQuest::dsp_chat(const char* text, int textColor, bool one_1, bool one_2, bool zero_1);
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_CEverQuest__StartCasting
     void CEverQuest::StartCasting(EQMessage::CEverQuest__StartCasting_ptr message);
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_CEverQuest__StartCasting
     void CEverQuest::LMouseUp(int x, int y);
     void CEverQuest::RMouseUp(int x, int y);
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_GUI
     void CEverQuest::HandleMouseWheel(signed int delta);
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_GUI
     void CEverQuest::SetGameState(int gameState);
 };
 
@@ -69,12 +70,12 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__InterpretCmd)(void* this_p
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::dsp_chat(const char* text, int textColor, bool one_1, bool one_2, bool zero_1), EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__dsp_chat)(void* this_ptr, const char* text, int textColor, bool one_1, bool one_2, bool zero_1);
 
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_CEverQuest__StartCasting
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::StartCasting(EQMessage::CEverQuest__StartCasting_ptr message), EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__StartCasting)(void* this_ptr, EQMessage::CEverQuest__StartCasting_ptr message);
 
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_CEverQuest__StartCasting
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::LMouseUp(int x, int y), EQ_ADDRESS_FUNCTION_CEverQuest__LMouseUp);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__LMouseUp)(void* this_ptr, int x, int y);
@@ -82,12 +83,12 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__LMouseUp)(void* this_ptr, 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::RMouseUp(int x, int y), EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__RMouseUp)(void* this_ptr, int x, int y);
 
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_GUI
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::HandleMouseWheel(signed int delta), EQ_ADDRESS_FUNCTION_CEverQuest__HandleMouseWheel);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__HandleMouseWheel)(void* this_ptr, signed int delta);
 
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_GUI
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::SetGameState(int gameState), EQ_ADDRESS_FUNCTION_CEverQuest__SetGameState);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__SetGameState)(void* this_ptr, int gameState);
@@ -101,17 +102,17 @@ class EQClass::CDisplay
 {
 public:
     static int __cdecl CDisplay::WriteTextHD2(const char* text, int x, int y, signed int color);
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_CREATE_AND_DELETE_ACTORS
     int CDisplay::CreateActor(char* actorDefinition, float y, float x, float z, float a5, float a6, float a7, float a8, float a9, float a10, int a11);
     int CDisplay::CreatePlayerActor(uint32_t spawn, int a2, int a3, int a4, int a5, int a6);
     void CDisplay::DeleteActor(uint32_t cactor);
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_CREATE_AND_DELETE_ACTORS
 };
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQClass::CDisplay::WriteTextHD2(const char* text, int x, int y, signed int color), EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__WriteTextHD2)(void* this_ptr, const char* text, int x, int y, signed int color);
 
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_CREATE_AND_DELETE_ACTORS
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::CDisplay::CreateActor(char* actorDefinition, float y, float x, float z, float a5, float a6, float a7, float a8, float a9, float a10, int a11), EQ_ADDRESS_FUNCTION_CDisplay__CreateActor);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__CreateActor)(void* this_ptr, char* actorDefinition, float y, float x, float z, float a5, float a6, float a7, float a8, float a9, float a10, int a11);
@@ -122,7 +123,7 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__CreatePlayerActor)(void* thi
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CDisplay::DeleteActor(uint32_t cactor), EQ_ADDRESS_FUNCTION_CDisplay__DeleteActor);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__DeleteActor)(void* this_ptr, uint32_t cactor);
 
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_CREATE_AND_DELETE_ACTORS
 
 EQClass::CDisplay** EQ_CLASS_POINTER_CDisplay_pptr;
 EQClass::CDisplay* EQ_CLASS_POINTER_CDisplay;
@@ -150,34 +151,34 @@ EQClass::EQPlayerManager* EQ_CLASS_POINTER_EQPlayerManager;
 class EQClass::EQPlayer
 {
 public:
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_EQPlayer__FollowPlayerAI
     void EQPlayer::FollowPlayerAI();
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_EQPlayer__FollowPlayerAI
     void EQPlayer::ChangeHeight(float height, float a2, float a3, int a4);
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_EQPlayer__UpdateItemSlot
     bool EQPlayer::UpdateItemSlot(uint8_t updateItemSlot, const char* itemDefinition, bool b1, bool serverSide, bool b3);
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_EQPlayer__UpdateItemSlot
     bool EQPlayer::IsTargetable();
     int EQPlayer::SetNameSpriteState(bool isNameVisible);
     bool EQPlayer::SetNameSpriteTint();
 };
 
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_EQPlayer__FollowPlayerAI
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQPlayer::FollowPlayerAI(), EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__FollowPlayerAI)(void* this_ptr);
 
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_EQPlayer__FollowPlayerAI
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQPlayer::ChangeHeight(float height, float a2, float a3, int a4), EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__ChangeHeight)(void* this_ptr, float height, float a2, float a3, int a4);
 
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_EQPlayer__UpdateItemSlot
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::EQPlayer::UpdateItemSlot(uint8_t updateItemSlot, const char* itemDefinition, bool b1, bool serverSide, bool b3), EQ_ADDRESS_FUNCTION_EQPlayer__UpdateItemSlot);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__UpdateItemSlot)(void* this_ptr, uint8_t updateItemSlot, const char* itemDefinition, bool b1, bool serverSide, bool b3);
 
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_EQPlayer__UpdateItemSlot
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::EQPlayer::IsTargetable(), EQ_ADDRESS_FUNCTION_EQPlayer__IsTargetable);
 
@@ -194,18 +195,29 @@ class EQClass::EQSwitch
 {
 public:
     void EQSwitch::UseSwitch(uint32_t spawnID, uint32_t keyID, uint32_t pickSkill, const void* hitLocation = 0);
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_EQSwitch__ChangeState
     void EQSwitch::ChangeState(uint8_t state, int zero1, int zero2);
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_EQSwitch__ChangeState
 };
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQSwitch::UseSwitch(uint32_t spawnID, uint32_t keyID, uint32_t pickSkill, const void* hitLocation), EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch);
 
-#ifdef EQ_FEATURE_ADVANCED
+#ifdef EQ_FEATURE_EQSwitch__ChangeState
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQSwitch::ChangeState(uint8_t state, int zero1, int zero2), EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState);
 
-#endif // EQ_FEATURE_ADVANCED
+#endif // EQ_FEATURE_EQSwitch__ChangeState
+
+/* CXPoint */
+
+class EQClass::CXPoint
+{
+public:
+    class CXPoint CXPoint::operator=(class CXPoint);
+
+    uint32_t X;
+    uint32_t Y;
+};
 
 /* CXStr */
 
@@ -263,6 +275,8 @@ EQClass::CXWndManager* EQ_CLASS_POINTER_CXWndManager;
 class EQClass::CXWnd
 {
 public:
+    int CXWnd::DrawTooltip(class EQClass::CXWnd* cxwnd);
+    void CXWnd::DrawTooltipAtPoint(class EQClass::CXPoint cxpoint);
     int CXWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
     void CXWnd::Activate();
     void CXWnd::Deactivate();
@@ -273,9 +287,20 @@ public:
     EQClass::CXStr CXWnd::GetWindowTextA();
 };
 
-#define EQ_VFTABLE_INDEX_CXWnd__WndNotification    0x88
-#define EQ_VFTABLE_INDEX_CXWnd__Activate           0x90 // show window
-#define EQ_VFTABLE_INDEX_CXWnd__Deactivate         0x94 // hide window
+#define EQ_VFTABLE_INDEX_CXWnd__DrawTooltip           0x24
+#define EQ_VFTABLE_INDEX_CXWnd__DrawTooltipAtPoint    0x28
+#define EQ_VFTABLE_INDEX_CXWnd__WndNotification       0x88
+#define EQ_VFTABLE_INDEX_CXWnd__Activate              0x90 // show window
+#define EQ_VFTABLE_INDEX_CXWnd__Deactivate            0x94 // hide window
+
+//EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CXWnd::DrawTooltip(class EQClass::CXWnd*), EQ_VFTABLE_INDEX_CXWnd__DrawTooltip);
+
+//EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CXWnd::DrawTooltipAtPoint(class EQClass::CXPoint), EQ_VFTABLE_INDEX_CXWnd__DrawTooltipAtPoint);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::CXWnd::DrawTooltip(class EQClass::CXWnd* cxwnd), EQ_ADDRESS_FUNCTION_CXWnd__DrawTooltip);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CXWnd__DrawTooltip)(void* this_ptr, class EQClass::CXWnd* cxwnd);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CXWnd::DrawTooltipAtPoint(class EQClass::CXPoint cxpoint),  EQ_ADDRESS_FUNCTION_CXWnd__DrawTooltipAtPoint);
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CXWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
 
@@ -492,95 +517,93 @@ EQClass::CRender* EQ_CLASS_POINTER_CRender;
 class EQClass::CVector3
 {
 public:
+    float X;
+    float Y;
+    float Z;
 
-float X;
-float Y;
-float Z;
+    float CVector3::NormalizeAndReturnLength(void);
+    void CVector3::Normalize(void);
 
-float CVector3::NormalizeAndReturnLength(void);
-void CVector3::Normalize(void);
+    void CVector3::Set(float x, float y, float z)
+    {
+        X = x;
+        Y = y;
+        Z = z;
+    }
 
-void CVector3::Set(float x, float y, float z)
-{
-    X = x;
-    Y = y;
-    Z = z;
-}
+    inline CVector3& operator-=(const CVector3& vec)
+    {
+        X -= vec.X;
+        Y -= vec.Y;
+        Z -= vec.Z;
 
-inline CVector3& operator-=(const CVector3& vec)
-{
-    X -= vec.X;
-    Y -= vec.Y;
-    Z -= vec.Z;
+        return *this;
+    }
 
-    return *this;
-}
+    inline CVector3& operator+=(const CVector3& vec)
+    {
+        X += vec.X;
+        Y += vec.Y;
+        Z += vec.Z;
 
-inline CVector3& operator+=(const CVector3& vec)
-{
-    X += vec.X;
-    Y += vec.Y;
-    Z += vec.Z;
+        return *this;
+    }
 
-    return *this;
-}
+    inline void Scale(float value)
+    {
+        X *= value;
+        Y *= value;
+        Z *= value;
+    }
 
-inline void Scale(float value)
-{
-    X *= value;
-    Y *= value;
-    Z *= value;
-}
+    inline CVector3 operator*(float value) const
+    {
+        CVector3 vector(*this);
+        vector.Scale(value);
+        return vector;
+    }
 
-inline CVector3 operator*(float value) const
-{
-    CVector3 vector(*this);
-    vector.Scale(value);
-    return vector;
-}
+    void SetMax()
+    {
+        X = Y = Z = 3.402823466e+38F;
+    }
 
-void SetMax()
-{
-    X = Y = Z = 3.402823466e+38F;
-}
+    float GetLengthSquared() const
+    {
+        return ((X * X) + (Y * Y) + (Z * Z));
+    }
 
-float GetLengthSquared() const
-{
-    return ((X * X) + (Y * Y) + (Z * Z));
-}
+    float GetLength() const
+    { 
+        return std::sqrtf(GetLengthSquared());
+    }
 
-float GetLength() const
-{ 
-    return std::sqrtf(GetLengthSquared());
-}
+    CVector3 operator-() const
+    {
+        CVector3 vector;
+        vector.Set(-X, -Y, -Z);
+        return vector;
+    }
 
-CVector3 operator-() const
-{
-    CVector3 vector;
-    vector.Set(-X, -Y, -Z);
-    return vector;
-}
+    CVector3 operator-(const CVector3& vector) const
+    {
+        CVector3 result;
+        result.Set(X - vector.X, Y - vector.Y, Z - vector.Z);
+        return result;
+    }
 
-CVector3 operator-(const CVector3& vector) const
-{
-    CVector3 result;
-    result.Set(X - vector.X, Y - vector.Y, Z - vector.Z);
-    return result;
-}
+    CVector3 operator+(const CVector3& vector) const
+    {
+        CVector3 result;
+        result.Set(vector.X + X, vector.Y + Y, vector.Z + Z);
+        return result;
+    }
 
-CVector3 operator+(const CVector3& vector) const
-{
-    CVector3 result;
-    result.Set(vector.X + X, vector.Y + Y, vector.Z + Z);
-    return result;
-}
-
-float GetDistanceSquared(const CVector3& vector) const
-{
-    CVector3 result = *this - vector;
-    return result.GetLengthSquared();
-}
-
+    float GetDistanceSquared(const CVector3& vector) const
+    {
+        CVector3 result = *this - vector;
+        return result.GetLengthSquared();
+    }
 };
 
 /**************************************************/

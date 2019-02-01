@@ -73,46 +73,68 @@ Terebro
 }Clawed Tablet of the Ring of Scale
 
 ##### Conflagrant Armor Set #####
+Arcanist's Conflagrant Robe
+Archon's Conflagrant Breastplate
+Suzerain Protector's Conflagrant Breastplate
 #}'s Conflagrant
 {Arcanist's Conflagrant
-{Arch Convoker's Conflagrant
-{Arch Lich's Conflagrant
+#{Arch Convoker's Conflagrant
+#{Arch Lich's Conflagrant
 {Archon's Conflagrant
-{Coercer's Conflagrant
-{Deceiver's Conflagrant
+#{Coercer's Conflagrant
+#{Deceiver's Conflagrant
 #{Dread Suzerain's Conflagrant
-{Feral Lord's Conflagrant
-{Forest Stalker's Conflagrant
-{Fury's Conflagrant
-{Maestro's Conflagrant
+#{Feral Lord's Conflagrant
+#{Forest Stalker's Conflagrant
+#{Fury's Conflagrant
+#{Maestro's Conflagrant
 #{Overlord's Conflagrant
-{Prophet's Conflagrant
+#{Prophet's Conflagrant
 #{Storm Warden's Conflagrant
 {Suzerain Protector's Conflagrant
-{Transcendent's Conflagrant
+#{Transcendent's Conflagrant
 
 ##### Bags #####
-#Scuffed Travelers's Rucksack
-#Scuffed Journeyman's Rucksack
-Scuffed Journeyman's Pocketed Rucksack
-#Caravan Satchel
-#Chest of Empires
-#Satchel of the Combine Hero
-#Enameled Box
 Cleansing Steam Satchel
+Chest of Empires
+Caravan Satchel
+Enameled Box
+Satchel of the Combine Hero
+Scuffed Journeyman's Pocketed Rucksack
+Scuffed Journeyman's Rucksack
+Scuffed Travelers's Rucksack
 
 ##### Prizes #####
+Prize: Aspect of the Brood
+Prize: Ornate Flying Carpet
+Adoptable Halasian Battle Bear
+Adoptable Ursus Antonicus
+Adoptable Lumbering Chokidai
+Wrapped Froglok Head in a Jar
+Wrapped Ice Giant Facade
+Adoptable Fourth Gate Guardian
 Prize: Ping's Poignant Potion Pack
 Prize: Ping's Practical Potion Pack
 Prize: Ping's Prodigious Potion Pack
+Prize: Chalandria's Fang
 Prize: Scale of Rodcet Nife
 Prize: Kiss of Erollisi Marr
 #Prize: Tear of Tranquility
-Prize: Chalandria's Fang
 #Prize: Fiery Dragonhide Pack
 @Mechamatic Blueprint
 #{Contract of the
 #}Contract
+Prize: Visage of the Siren Enticer
+Prize: Doll's Mask
+Prize: Ember Wurm Saddle
+#Prize: Mask of Scaled Cunning
+Prize: Mastruq Bone Mask
+#Prize: Miniature Eyepatch
+Prize: Shadowstone Tiara
+Prize: Scaley Horned Mask
+Prize: Strange Bone Mask
+Prize: Steed of War Saddle
+#Mask of the Chetari
 
 ##### Mounts #####
 #@Bridle

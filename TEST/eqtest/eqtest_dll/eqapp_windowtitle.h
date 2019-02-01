@@ -63,6 +63,7 @@ void EQAPP_WindowTitle_Execute()
         return;
     }
 
+/*
     std::stringstream ss;
     ss << "EQ: " << spawnName;
 
@@ -75,4 +76,13 @@ void EQAPP_WindowTitle_Execute()
     }
 
     SetWindowTextA(hwnd, ss.str().c_str());
+*/
+
+    auto spawnClass = EQ_GetSpawnClass(playerSpawn);
+
+    std::string spawnClassShortName = EQ_GetClassShortNameByID(spawnClass);
+    if (spawnClassShortName.size() != 0)
+    {
+        SetWindowTextA(hwnd, spawnClassShortName.c_str());
+    }
 }

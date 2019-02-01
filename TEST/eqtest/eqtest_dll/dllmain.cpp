@@ -1,12 +1,12 @@
 #define EQ_FEATURE_BAZAAR
-#undef EQ_FEATURE_GUI
-#undef EQ_FEATURE_CREATE_AND_DELETE_ACTORS
-#undef EQ_FEATURE_CollisionCallbackForActors
-#undef EQ_FEATURE_DoSpellEffect
-#undef EQ_FEATURE_EQPlayer__FollowPlayerAI
-#undef EQ_FEATURE_EQPlayer__UpdateItemSlot
-#undef EQ_FEATURE_EQSwitch__ChangeState
-#undef EQ_FEATURE_CEverQuest__StartCasting
+#define EQ_FEATURE_GUI
+#define EQ_FEATURE_CREATE_AND_DELETE_ACTORS
+#define EQ_FEATURE_CollisionCallbackForActors
+#define EQ_FEATURE_DoSpellEffect
+#define EQ_FEATURE_EQPlayer__FollowPlayerAI
+#define EQ_FEATURE_EQPlayer__UpdateItemSlot
+#define EQ_FEATURE_EQSwitch__ChangeState
+#define EQ_FEATURE_CEverQuest__StartCasting
 
 #include <algorithm>
 #include <array>

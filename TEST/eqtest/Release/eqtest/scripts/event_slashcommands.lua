@@ -19,6 +19,17 @@ function OnInterpretCommand(commandText)
         return 1
     end
 
+    if commandText == "//DarkElf" then
+        local playerSpawn = EQ_GetPlayerSpawn()
+        if playerSpawn ~= 0 then
+            local playerRace = EQ_GetSpawnRace(playerSpawn)
+            if playerRace == EQ_RACE_OGRE or playerRace == EQ_RACE_TROLL or playerRace == EQ_RACE_BARBARIAN then
+                EQ_InterpretCommand("/useitem Guise of the Deceiver")
+            end
+        end
+        return 1
+    end
+
     if commandText == "//Drum" or commandText == "//Mount" then
         EQ_InterpretCommand("/useitem Glowing Black Drum")
         return 1
