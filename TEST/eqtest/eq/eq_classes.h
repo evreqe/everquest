@@ -1,12 +1,14 @@
 #pragma once
 
-#include "eq.h"
 #include "eq_constants.h"
 #include "eq_macros.h"
 #include "eq_messages.h"
 
 namespace EQClass
 {
+    class CDBStr;
+    class StringTable;
+
     class CEverQuest;
     class CDisplay;
 
@@ -21,6 +23,8 @@ namespace EQClass
     class CXWndManager;
     class CXWnd;
 
+    class AltAdvManager;
+
 #ifdef EQ_FEATURE_BAZAAR
     class CBazaarWnd;
     class CBazaarConfirmationWnd;
@@ -30,6 +34,7 @@ namespace EQClass
     class CTaskSelectWnd;
     class CLargeDialogWnd;
     class CConfirmationDialog;
+    class CInventoryWnd;
 
     // EQGraphicsDX9.dll
     class CCamera;
@@ -38,9 +43,21 @@ namespace EQClass
     class CVector3; // needed by CastRay2
 
     class CActorEx;
-
-    class CXMLData;
 } // namespace EQClass
+
+/* CDBStr */
+
+class EQClass::CDBStr
+{
+public:
+    char* CDBStr::GetString(int index, int subIndex, int* isFound);
+};
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(char* EQClass::CDBStr::GetString(int index, int subIndex, int* isFound), EQ_ADDRESS_FUNCTION_CDBStr__GetString);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CDBStr__GetString)(void* this_ptr, int index, int subIndex, int* isFound);
+
+EQClass::CDBStr** EQ_CLASS_POINTER_CDBStr_pptr;
+EQClass::CDBStr* EQ_CLASS_POINTER_CDBStr;
 
 /* CEverQuest */
 
@@ -318,6 +335,20 @@ EQ_MACRO_FUNCTION_FunctionAtAddress(EQClass::CXWnd* EQClass::CXWnd::GetChildItem
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(EQClass::CXStr EQClass::CXWnd::GetWindowTextA(), EQ_ADDRESS_FUNCTION_CXWnd__GetWindowTextA);
 
+/* AltAdvManager */
+
+class EQClass::AltAdvManager
+{
+public:
+    struct EQData::_ALTABILITY * AltAdvManager::GetAAById(int id, int playerLevel);
+};
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(struct EQData::_ALTABILITY * EQClass::AltAdvManager::GetAAById(int id, int playerLevel), EQ_ADDRESS_FUNCTION_AltAdvManager__GetAAById);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_AltAdvManager__GetAAById)(void* this_ptr, int id, int playerLevel);
+
+EQClass::AltAdvManager** EQ_CLASS_POINTER_AltAdvManager_pptr;
+EQClass::AltAdvManager* EQ_CLASS_POINTER_AltAdvManager;
+
 #ifdef EQ_FEATURE_BAZAAR
 
 /* CBazaarWnd */
@@ -441,6 +472,19 @@ EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CConfirmationDialog::Wnd
 
 EQClass::CConfirmationDialog** EQ_CLASS_POINTER_CConfirmationDialog_pptr;
 EQClass::CConfirmationDialog* EQ_CLASS_POINTER_CConfirmationDialog;
+
+/* CInventoryWnd */
+
+class EQClass::CInventoryWnd
+{
+public:
+    int CInventoryWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
+};
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CInventoryWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
+
+EQClass::CInventoryWnd** EQ_CLASS_POINTER_CInventoryWnd_pptr;
+EQClass::CInventoryWnd* EQ_CLASS_POINTER_CInventoryWnd;
 
 /* CCamera */
 

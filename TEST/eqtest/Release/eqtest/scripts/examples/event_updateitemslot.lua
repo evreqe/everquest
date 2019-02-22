@@ -39,6 +39,7 @@ function OnInterpretCommand(commandText)
             EQ_PrintTextToChat("UpdateItemSlot: On")
         else
             g_UpdateItemSlotIsEnabled = 0
+            g_UpdateItemSlotIndex = 0
             EQ_PrintTextToChat("UpdateItemSlot: Off")
         end
 
@@ -53,6 +54,7 @@ function OnInterpretCommand(commandText)
 
     if commandText == "//UpdateItemSlotOff" then
         g_UpdateItemSlotIsEnabled = 0
+        g_UpdateItemSlotIndex = 0
         EQ_PrintTextToChat("UpdateItemSlot: Off")
         return 1
     end
@@ -64,15 +66,31 @@ function OnFrame()
         return
     end
 
-    if EQAPP_IsVKKeyDown(EQ_VK_LEFT_ALT) == true then
-        UpdateItemSlot_Prev()
-    end
+    -- if EQAPP_IsVKKeyDown(EQ_VK_LEFT_ALT) == true then
+        -- UpdateItemSlot_Prev()
+    -- end
 
-    if EQAPP_IsVKKeyDown(EQ_VK_RIGHT_ALT) == true then
-        UpdateItemSlot_Next()
-    end
+    -- if EQAPP_IsVKKeyDown(EQ_VK_RIGHT_ALT) == true then
+        -- UpdateItemSlot_Next()
+    -- end
 
     EQ_DrawTextByStyle("IT" .. g_UpdateItemSlotIndex, 800, 350, EQ_DRAW_TEXT_COLOR_YELLOW, EQ_FONT_STYLE_NAME_SPRITE)
+end
 
-    -- UpdateItemSlot_Screenshot()
+function OnOneSecond()
+    if g_UpdateItemSlotIsEnabled == 0 then
+        return
+    end
+
+    UpdateItemSlot_Screenshot()
+
+    UpdateItemSlot_Next()
+end
+
+function OnUpdateItemSlot(updateItemSlot, itemDefinition)
+    if string.find(itemDefinition, "IT") == nil then
+        return
+    end
+
+    EQAPP_PrintTextToFileNoDuplicates("updateitemslot.txt", itemDefinition)
 end

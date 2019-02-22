@@ -35,6 +35,11 @@ function OnInterpretCommand(commandText)
         return 1
     end
 
+    if commandText == "//Dismount" then
+        EQ_InterpretCommand("/dismount")
+        return 1
+    end
+
     if commandText == "//Skeleton" then
         EQ_InterpretCommand("/useitem Amulet of Necropotence")
         return 1

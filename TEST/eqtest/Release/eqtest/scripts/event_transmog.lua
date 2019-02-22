@@ -183,26 +183,25 @@ function OnUpdateItemSlot(updateItemSlot, itemDefinition)
 
     if playerClass == EQ_CLASS_WARRIOR then
 
-        if EQ_GetSpawnEquipmentPrimaryID(playerSpawn) ~= 0 then
-            if updateItemSlot == EQ_UPDATE_ITEM_SLOT_SECONDARY then
-                -- return 1, "IT60018" -- The Lion
+        if updateItemSlot == EQ_UPDATE_ITEM_SLOT_PRIMARY then
+
+            if itemDefinition == "IT101242" then -- Honed Wurmslayer
+                return 1, "IT60018" -- The Lion
             end
+
+            if itemDefinition == "IT101207" then -- Skycleaver
+                return 1, "IT10797" -- Obsidian Scale Katana
+            end
+
         end
 
-        if EQ_GetSpawnEquipmentSecondaryID(playerSpawn) ~= 0 then
-            if updateItemSlot == EQ_UPDATE_ITEM_SLOT_PRIMARY then
-                -- return 1, "IT60018" -- The Lion
+        if updateItemSlot == EQ_UPDATE_ITEM_SLOT_SECONDARY then
+
+            if itemDefinition == "IT101217" then -- Skyiron Kite
+                return 1, "IT13958" -- Inny Star Shield
             end
+
         end
-
-        -- if updateItemSlot == EQ_UPDATE_ITEM_SLOT_PRIMARY then
-            -- return 1, "IT101227" -- kunark spiked club
-        -- end
-
-        -- if updateItemSlot == EQ_UPDATE_ITEM_SLOT_SECONDARY then
-            -- return 1, "IT101242" -- wurmslayer
-            -- return 1, "IT12610" -- purple axe
-        -- end
 
     end
 

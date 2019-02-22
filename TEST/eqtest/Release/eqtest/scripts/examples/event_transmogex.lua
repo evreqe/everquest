@@ -1,7 +1,4 @@
-function OnTick()
-
-    return
-
+function Transmog()
     local playerSpawn = EQ_GetPlayerSpawn()
     if playerSpawn == 0 then
         return
@@ -9,18 +6,27 @@ function OnTick()
 
     local playerClass = EQ_GetSpawnClass(playerSpawn)
 
-    if playerClass == EQ_CLASS_BERSERKER then
-
-        EQ_SetSpawnItemSlot(playerSpawn, EQ_UPDATE_ITEM_SLOT_SECONDARY, 0)
-        EQ_SetSpawnItemSlot(playerSpawn, EQ_UPDATE_ITEM_SLOT_PRIMARY, "IT10727")
-
+    if playerClass == EQ_CLASS_WARRIOR then
+        if EQ_GetSpawnEquipmentPrimaryID(playerSpawn) ~= 0 then
+            if EQ_GetSpawnEquipmentSecondaryID(playerSpawn) ~= 0 then
+                EQ_SetSpawnItemSlot(playerSpawn, EQ_UPDATE_ITEM_SLOT_PRIMARY, "IT60018") -- The Lion
+                EQ_SetSpawnItemSlot(playerSpawn, EQ_UPDATE_ITEM_SLOT_SECONDARY, "IT13958") -- Inny Star Shield
+                --EQ_SetSpawnItemSlot(playerSpawn, EQ_UPDATE_ITEM_SLOT_SECONDARY, "IT10537") -- Vallon Zek Shield
+            else
+                EQ_SetSpawnItemSlot(playerSpawn, EQ_UPDATE_ITEM_SLOT_PRIMARY, "IT12221") -- Resplendent Great Sword
+            end
+        end
     end
+end
 
-    if playerClass == EQ_CLASS_ENCHANTER then
+function OnTick()
+    Transmog()
+end
 
-        EQ_SetSpawnItemSlot(playerSpawn, EQ_UPDATE_ITEM_SLOT_SECONDARY, "IT56")
-        EQ_SetSpawnItemSlot(playerSpawn, EQ_UPDATE_ITEM_SLOT_PRIMARY, "IT12")
+function OnLoad()
+    Transmog()
+end
 
-    end
-
+function OnEnterZone(zoneID)
+    Transmog()
 end

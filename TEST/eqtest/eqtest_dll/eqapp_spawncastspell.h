@@ -189,7 +189,7 @@ void EQAPP_SpawnCastSpell_DrawText()
 
             //drawText.precision(1);
             //drawText << " " << std::fixed << spellCastTimeCurrentFloat;
-            drawText << fmt::format(" {:.2f}", spellCastTimeCurrentFloat);
+            drawText << fmt::format(" {:.2f}s", spellCastTimeCurrentFloat);
         }
 
         drawText << "\n";

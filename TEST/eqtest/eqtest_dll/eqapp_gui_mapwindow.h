@@ -1,14 +1,19 @@
 #pragma once
 
+extern bool g_GUIDarkThemeIsEnabled;
+
 bool g_GUIMapWindowIsEnabled = false;
 
 bool g_GUIMapWindowMapLinesIsEnabled = true;
 bool g_GUIMapWindowMapLabelsIsEnabled = false;
 bool g_GUIMapWindowMapSpawnsIsEnabled = true;
+bool g_GUIMapWindowMapWaypointsIsEnabled = false;
+bool g_GUIMapWindowMapWaypointConnectionsIsEnabled = true;
 
 bool g_GUIMapWindowMapHeightFilterLinesIsEnabled = false;
 bool g_GUIMapWindowMapHeightFilterLabelsIsEnabled = false;
 bool g_GUIMapWindowMapHeightFilterSpawnsIsEnabled = false;
+bool g_GUIMapWindowMapHeightFilterWaypointsIsEnabled = false;
 
 bool g_GUIMapWindowMapLayer0IsEnabled = true;
 bool g_GUIMapWindowMapLayer1IsEnabled = true;
@@ -41,6 +46,14 @@ bool g_GUIMapWindowMapSpawnMouseHoverDrawCircle = false;
 
 ImColor g_GUIMapWindowMapSpawnMouseHoverColor        = ImColor(1.0f, 1.0f, 0.0f, 1.0f); // yellow
 ImColor g_GUIMapWindowMapSpawnMouseHoverBackColor    = ImColor(0.0f, 0.0f, 0.0f, 1.0f); // black
+
+ImColor g_GUIMapWindowMapWaypointDefaultColor        = ImColor(1.0f, 0.5f, 1.0f, 1.0f); // pink
+
+bool g_GUIMapWindowMapWaypointMouseHover = false;
+bool g_GUIMapWindowMapWaypointMouseHoverDrawCircle = false;
+
+ImColor g_GUIMapWindowMapWaypointMouseHoverColor        = ImColor(1.0f, 1.0f, 0.0f, 1.0f); // yellow
+ImColor g_GUIMapWindowMapWaypointMouseHoverBackColor    = ImColor(0.0f, 0.0f, 0.0f, 1.0f); // black
 
 float g_GUIMapWindowX = 0.0f;
 float g_GUIMapWindowY = 0.0f;
@@ -81,8 +94,9 @@ float g_GUIMapWindowMapMouseCursorSize = 16.0f;
 
 float g_GUIMapWindowMapTextHeightOffset = 5.0f;
 
-float g_GUIMapWindowMapLabelCircleSize = 4.0f;
-float g_GUIMapWindowMapSpawnCircleSize = 4.0f;
+float g_GUIMapWindowMapLabelCircleSize    = 4.0f;
+float g_GUIMapWindowMapSpawnCircleSize    = 4.0f;
+float g_GUIMapWindowMapWaypointCircleSize = 4.0f;
 
 float g_GUIMapWindowMapSpawnNamedCircleSizeMultiplier = 4.0f;
 
@@ -147,6 +161,10 @@ static void EQAPP_GUI_MapWindow()
             if (ImGui::MenuItem("Reset Zoom##MapWindowMenuItemViewResetZoom")) EQAPP_GUI_MapWindow_Map_ResetZoom();
             if (ImGui::MenuItem("Center##MapWindowMenuItemViewCenter")) EQAPP_GUI_MapWindow_Map_Center();
 
+            ImGui::Separator();
+
+            ImGui::DragFloat("Zoom##MapWindowMenuItemOptionsZoom", &g_GUIMapWindowMapZoom);
+
             ImGui::EndMenu();
         }
 
@@ -162,12 +180,20 @@ static void EQAPP_GUI_MapWindow()
             if (ImGui::MenuItem("Lines##MapWindowMenuItemOptionsLines", NULL, &g_GUIMapWindowMapLinesIsEnabled)) {}
             if (ImGui::MenuItem("Labels##MapWindowMenuItemOptionsLabels", NULL, &g_GUIMapWindowMapLabelsIsEnabled)) {}
             if (ImGui::MenuItem("Spawns##MapWindowMenuItemOptionsSpawns", NULL, &g_GUIMapWindowMapSpawnsIsEnabled)) {}
+            if (ImGui::MenuItem("Waypoints##MapWindowMenuItemOptionsWaypoints", NULL, &g_GUIMapWindowMapWaypointsIsEnabled)) {}
+            if (ImGui::MenuItem("Waypoint Connections##MapWindowMenuItemOptionsWaypointConnections", NULL, &g_GUIMapWindowMapWaypointConnectionsIsEnabled)) {}
 
             ImGui::Separator();
 
-            if (ImGui::MenuItem("Height Filter for Lines##MapWindowMenuItemOptionsHeightFilterForLines", NULL, &g_GUIMapWindowMapHeightFilterLinesIsEnabled)) {}
-            if (ImGui::MenuItem("Height Filter for Labels##MapWindowMenuItemOptionsHeightFilterForLabels", NULL, &g_GUIMapWindowMapHeightFilterLabelsIsEnabled)) {}
-            if (ImGui::MenuItem("Height Filter for Spawns##MapWindowMenuItemOptionsHeightFilterForSpawns", NULL, &g_GUIMapWindowMapHeightFilterSpawnsIsEnabled)) {}
+            ImGui::Text("Height Filter:");
+
+            if (ImGui::MenuItem("Lines##MapWindowMenuItemOptionsHeightFilterForLines", NULL, &g_GUIMapWindowMapHeightFilterLinesIsEnabled)) {}
+            if (ImGui::MenuItem("Labels##MapWindowMenuItemOptionsHeightFilterForLabels", NULL, &g_GUIMapWindowMapHeightFilterLabelsIsEnabled)) {}
+            if (ImGui::MenuItem("Spawns##MapWindowMenuItemOptionsHeightFilterForSpawns", NULL, &g_GUIMapWindowMapHeightFilterSpawnsIsEnabled)) {}
+            if (ImGui::MenuItem("Waypoints##MapWindowMenuItemOptionsHeightFilterForWaypoints", NULL, &g_GUIMapWindowMapHeightFilterWaypointsIsEnabled)) {}
+
+            ImGui::DragFloat("Low##MapWindowMenuItemOptionsHeightFilterLow", &g_GUIMapWindowMapHeightFilterLow);
+            ImGui::DragFloat("High##MapWindowMenuItemOptionsHeightFilterHigh", &g_GUIMapWindowMapHeightFilterHigh);
 
             ImGui::Separator();
 
@@ -487,16 +513,22 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
     g_GUIMapWindowMapOriginY = g_GUIMapWindowMapY + (g_GUIMapWindowMapHeight * 0.5f);
 
     float spawnCircleSize = g_GUIMapWindowMapSpawnCircleSize;
+    float waypointCircleSize = g_GUIMapWindowMapWaypointCircleSize;
 
     if (g_GUIMapWindowMapScaleToZoomIsEnabled == true)
     {
         if (g_GUIMapWindowMapZoom != 0.0f)
         {
             spawnCircleSize = spawnCircleSize * g_GUIMapWindowMapZoom;
-
             if (spawnCircleSize < 1.0f)
             {
                 spawnCircleSize = 1.0f;
+            }
+
+            waypointCircleSize = waypointCircleSize * g_GUIMapWindowMapZoom;
+            if (waypointCircleSize < 1.0f)
+            {
+                waypointCircleSize = 1.0f;
             }
         }
     }
@@ -613,12 +645,25 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
 
                 ImColor lineColor = ImColor(mapLine->Color.R, mapLine->Color.G, mapLine->Color.B, mapLine->Color.A);
 
-                // convert black lines to white lines
-                if (lineColor.Value.x == 0 && lineColor.Value.y == 0 && lineColor.Value.z == 0)
+                if (g_GUIDarkThemeIsEnabled == true)
                 {
-                    lineColor.Value.x = 1;
-                    lineColor.Value.y = 1;
-                    lineColor.Value.z = 1;
+                    // convert black lines to white lines
+                    if (lineColor.Value.x == 0.0f && lineColor.Value.y == 0.0f && lineColor.Value.z == 0.0f)
+                    {
+                        lineColor.Value.x = 1.0f;
+                        lineColor.Value.y = 1.0f;
+                        lineColor.Value.z = 1.0f;
+                    }
+                }
+                else
+                {
+                    // convert white lines to black lines
+                    if (lineColor.Value.x >= 0.9f && lineColor.Value.y >= 0.9f && lineColor.Value.z >= 0.9f)
+                    {
+                        lineColor.Value.x = 0.0f;
+                        lineColor.Value.y = 0.0f;
+                        lineColor.Value.z = 0.0f;
+                    }
                 }
 
                 drawList->AddLine(ImVec2(lineBeginX, lineBeginY), ImVec2(lineEndX, lineEndY), lineColor);
@@ -909,6 +954,171 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
             drawCount++;
 
             drawList->AddText(ImVec2(spawnMouseHoverX, spawnMouseHoverY), g_GUIMapWindowMapSpawnMouseHoverColor, spawnMouseHoverText.c_str(), NULL);
+            drawCount++;
+
+            ////ImGui::BeginTooltip();
+            ////ImGui::TextUnformatted(spawnMouseHoverText.c_str());
+            ////ImGui::EndTooltip();
+        }
+    }
+
+    if (g_GUIMapWindowMapWaypointsIsEnabled == true)
+    {
+        g_GUIMapWindowMapWaypointMouseHover = false;
+        g_GUIMapWindowMapWaypointMouseHoverDrawCircle = false;
+
+        float waypointMouseHoverX = 0.0f;
+        float waypointMouseHoverY = 0.0f;
+        std::string waypointMouseHoverText = std::string();
+        ImVec2 waypointMouseHoverTextSize;
+
+        for (auto& waypoint : g_WaypointList)
+        {
+            if (g_GUIMapWindowMapHeightFilterWaypointsIsEnabled == true)
+            {
+                if (g_GUIMapWindowMapHeightFilterLow > 0.0f)
+                {
+                    if (waypoint.Z < (playerSpawnZ - g_GUIMapWindowMapHeightFilterLow))
+                    {
+                        continue;
+                    }
+                }
+
+                if (g_GUIMapWindowMapHeightFilterHigh > 0.0f)
+                {
+                    if (waypoint.Z > (playerSpawnZ + g_GUIMapWindowMapHeightFilterHigh))
+                    {
+                        continue;
+                    }
+                }
+            }
+
+            float waypointMapX = 0.0f;
+            float waypointMapY = 0.0f;
+            EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPosition(-waypoint.X, -waypoint.Y, waypointMapX, waypointMapY);
+
+            if (EQAPP_GUI_MapWindow_Map_IsPointInsideMap((int)waypointMapX, (int)waypointMapY) == false)
+            {
+                continue;
+            }
+
+            if (ImGui::IsWindowHovered() == true)
+            {
+                if (g_GUIMapWindowMapWaypointMouseHover == false)
+                {
+                    auto mouseDistanceToWaypointX = std::fabsf(io.MousePos.x - waypointMapX);
+                    auto mouseDistanceToWaypointY = std::fabsf(io.MousePos.y - waypointMapY);
+
+                    float mouseDistanceToWaypointCheck = g_GUIMapWindowMapWaypointCircleSize + 1.0f;
+
+                    if (g_GUIMapWindowMapScaleToZoomIsEnabled == true)
+                    {
+                        if (g_GUIMapWindowMapZoom != 0.0f)
+                        {
+                            mouseDistanceToWaypointCheck = mouseDistanceToWaypointCheck * g_GUIMapWindowMapZoom;
+
+                            if (mouseDistanceToWaypointCheck < 2.0f)
+                            {
+                                mouseDistanceToWaypointCheck = 2.0f;
+                            }
+                        }
+                    }
+
+                    if (mouseDistanceToWaypointX < mouseDistanceToWaypointCheck)
+                    {
+                        if (mouseDistanceToWaypointY < mouseDistanceToWaypointCheck)
+                        {
+                            if (waypoint.Name.size() != 0)
+                            {
+                                std::stringstream ssHoverText;
+                                ssHoverText << waypoint.Name << "\n(Index: " << waypoint.Index << ")";
+
+                                ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+
+                                waypointMouseHoverTextSize = ImGui::CalcTextSize(ssHoverText.str().c_str(), NULL);
+
+                                float textHeightOffset = g_GUIMapWindowMapTextHeightOffset;
+                                if (g_GUIMapWindowMapZoom > 1.0f)
+                                {
+                                    textHeightOffset = textHeightOffset * g_GUIMapWindowMapZoom;
+                                }
+
+                                waypointMouseHoverX = waypointMapX - (waypointMouseHoverTextSize.x * 0.5f);
+                                waypointMouseHoverY = waypointMapY - waypointMouseHoverTextSize.y - textHeightOffset - (g_GUIMapWindowMapWaypointCircleSize * g_GUIMapWindowMapZoom);
+
+                                waypointMouseHoverText = ssHoverText.str();
+
+                                g_GUIMapWindowMapWaypointMouseHover = true;
+
+                                g_GUIMapWindowMapWaypointMouseHoverDrawCircle = true;
+
+                                if (io.MouseClicked[0] == true)
+                                {
+                                    EQAPP_Waypoint_Goto(waypoint.Index);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            ImColor waypointColor = g_GUIMapWindowMapWaypointDefaultColor;
+
+            float drawCircleSize = waypointCircleSize;
+
+            drawList->AddCircleFilled(ImVec2(waypointMapX, waypointMapY), drawCircleSize, waypointColor);
+            drawCount++;
+
+            if (g_GUIMapWindowMapWaypointMouseHoverDrawCircle == true)
+            {
+                drawList->AddCircle(ImVec2(waypointMapX, waypointMapY), drawCircleSize, g_GUIMapWindowMapWaypointMouseHoverColor);
+                drawCount++;
+
+                g_GUIMapWindowMapWaypointMouseHoverDrawCircle = false;
+            }
+
+            if (g_GUIMapWindowMapWaypointConnectionsIsEnabled == true)
+            {
+                for (auto& connectIndex : waypoint.ConnectIndexList)
+                {
+                    auto connectWaypoint = EQAPP_Waypoint_GetByIndex(connectIndex);
+                    if (connectWaypoint == NULL)
+                    {
+                        continue;
+                    }
+
+                    float connectWaypointMapX = 0.0f;
+                    float connectWaypointMapY = 0.0f;
+                    EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPosition(-connectWaypoint->X, -connectWaypoint->Y, connectWaypointMapX, connectWaypointMapY);
+
+                    if (EQAPP_GUI_MapWindow_Map_IsPointInsideMap((int)connectWaypointMapX, (int)connectWaypointMapY) == false)
+                    {
+                        continue;
+                    }
+
+                    uint32_t lineColor = EQ_COLOR_ARGB_PINK;
+
+                    // one way connection
+                    if (EQAPP_Waypoint_IsConnected(waypoint.Index, connectWaypoint->Index) == true)
+                    {
+                        if (EQAPP_Waypoint_IsConnected(connectWaypoint->Index, waypoint.Index) == false)
+                        {
+                            lineColor = EQ_COLOR_ARGB_YELLOW;
+                        }
+                    }
+
+                    drawList->AddLine(ImVec2(waypointMapX, waypointMapY), ImVec2(connectWaypointMapX, connectWaypointMapY), lineColor);
+                    drawCount++;
+                }
+            }
+        }
+
+        if (g_GUIMapWindowMapWaypointMouseHover == true)
+        {
+            drawList->AddRectFilled(ImVec2(waypointMouseHoverX, waypointMouseHoverY), ImVec2(waypointMouseHoverX + waypointMouseHoverTextSize.x, waypointMouseHoverY + waypointMouseHoverTextSize.y), g_GUIMapWindowMapWaypointMouseHoverBackColor);
+            drawCount++;
+
+            drawList->AddText(ImVec2(waypointMouseHoverX, waypointMouseHoverY), g_GUIMapWindowMapWaypointMouseHoverColor, waypointMouseHoverText.c_str(), NULL);
             drawCount++;
 
             ////ImGui::BeginTooltip();

@@ -10,6 +10,10 @@
 #include <psapi.h>
 #pragma comment(lib, "psapi.lib")
 
+// MacroQuest2
+#include "mq2.h"
+
+// EverQuest
 #include "eq.h"
 
 #define APPLICATION_NAME "EQTest Inject DLL"

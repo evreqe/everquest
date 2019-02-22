@@ -287,6 +287,7 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     // EQAPP functions
     state->set_function("EQAPP_Log", EQAPP_Log);
     state->set_function("EQAPP_PrintTextToFile", EQAPP_PrintTextToFile);
+    state->set_function("EQAPP_PrintTextToFileNoDuplicates", EQAPP_PrintTextToFileNoDuplicates);
 
     state->set_function("EQAPP_EnableDebugPrivileges", EQAPP_EnableDebugPrivileges);
     state->set_function("EQAPP_IsForegroundWindowCurrentProcessID", EQAPP_IsForegroundWindowCurrentProcessID);
@@ -2014,6 +2015,8 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_GetSpawnGravityType", EQ_GetSpawnGravityType);
     state->set_function("EQ_GetSpawnDirection", EQ_GetSpawnDirection);
     state->set_function("EQ_GetSpawnPetSpawnID", EQ_GetSpawnPetSpawnID);
+    state->set_function("EQ_GetSpawnEquipmentPrimaryID", EQ_GetSpawnEquipmentPrimaryID);
+    state->set_function("EQ_GetSpawnEquipmentSecondaryID", EQ_GetSpawnEquipmentSecondaryID);
 
     state->set_function("EQ_SetSpawnNameColor", EQ_SetSpawnNameColor);
 
@@ -2033,6 +2036,10 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_SetPlayerSpawnHeadingSouthEast", EQ_SetPlayerSpawnHeadingSouthEast);
     state->set_function("EQ_SetPlayerSpawnHeadingEast", EQ_SetPlayerSpawnHeadingEast);
     state->set_function("EQ_SetPlayerSpawnHeadingNorthEast", EQ_SetPlayerSpawnHeadingNorthEast);
+
+    state->set_function("EQ_TurnLeft", EQ_TurnLeft);
+    state->set_function("EQ_TurnRight", EQ_TurnRight);
+    state->set_function("EQ_TurnAround", EQ_TurnAround);
 
 #ifdef EQ_FEATURE_EQPlayer__UpdateItemSlot
     state->set_function("EQ_SetSpawnItemSlot", EQ_SetSpawnItemSlot);

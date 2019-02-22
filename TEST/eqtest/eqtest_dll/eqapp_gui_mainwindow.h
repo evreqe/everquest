@@ -1,8 +1,11 @@
 #pragma once
 
+extern bool g_GUIDarkThemeIsEnabled;
+
 extern bool g_GUIDemoWindowIsEnabled;
 
 extern bool g_GUIMapWindowIsEnabled;
+extern bool g_GUIWaypointEditorWindowIsEnabled;
 
 bool g_GUIMainWindowIsEnabled = false;
 
@@ -21,7 +24,7 @@ static void EQAPP_GUI_MainWindow_MenuWindows();
 static void EQAPP_GUI_MainWindow_MenuClients();
 static void EQAPP_GUI_MainWindow_PopupMenuClients();
 static void EQAPP_GUI_MainWindow_MenuWaypoints();
-static void EQAPP_GUI_MainWindow_MenuWaypointEditor();
+static void EQAPP_GUI_MainWindow_MenuGUI();
 static void EQAPP_GUI_MainWindow_MenuHelp();
 
 static void EQAPP_GUI_MainWindow()
@@ -91,14 +94,11 @@ static void EQAPP_GUI_MainWindow()
             }
         }
 
-        if (g_WaypointEditorIsEnabled == true)
+        if (ImGui::BeginMenu("GUI##MenuGUI"))
         {
-            if (ImGui::BeginMenu("Waypoint Editor##MainWindowMenuWaypointEditor"))
-            {
-                EQAPP_GUI_MainWindow_MenuWaypointEditor();
+            EQAPP_GUI_MainWindow_MenuGUI();
 
-                ImGui::EndMenu();
-            }
+            ImGui::EndMenu();
         }
 
         if (ImGui::BeginMenu("Help##MenuHelp"))
@@ -123,10 +123,6 @@ static void EQAPP_GUI_MainWindow_MenuFile()
 
     ImGui::Separator();
 
-    if (ImGui::MenuItem("Show Demo Window##MainWindowMenuItemOptionsShowDemoWindow", NULL, &g_GUIDemoWindowIsEnabled)) {}
-
-    ImGui::Separator();
-
     if (ImGui::MenuItem("Unload##MainWindowMenuItemFileUnload")) EQAPP_Unload();
 }
 
@@ -144,6 +140,16 @@ static void EQAPP_GUI_MainWindow_MenuWindows()
 {
     if (ImGui::MenuItem("Map##MainWindowMenuItemWindowsMap", NULL, false)) EQ_ToggleBool(g_GUIMapWindowIsEnabled);
     if (ImGui::MenuItem("Spawn List##MainWindowMenuItemWindowsSpawnList", NULL, false)) {}
+
+    if (g_WaypointIsEnabled == true)
+    {
+        if (ImGui::MenuItem("Waypoint Editor##MainWindowMenuWaypointEditor"))
+        {
+            EQ_ToggleBool(g_GUIWaypointEditorWindowIsEnabled);
+
+            g_WaypointEditorIsEnabled = g_GUIWaypointEditorWindowIsEnabled;
+        }
+    }
 }
 
 static void EQAPP_GUI_MainWindow_MenuClients()
@@ -213,32 +219,90 @@ static void EQAPP_GUI_MainWindow_MenuWaypoints()
         return;
     }
 
-    for (auto& waypoint : g_WaypointList)
+    if (g_WaypointList.size() <= 20)
     {
-        if (waypoint.Name.size() == 0)
+        for (auto& waypoint : g_WaypointList)
         {
-            continue;
+            if (waypoint.Name.size() == 0)
+            {
+                continue;
+            }
+
+            if (EQAPP_String_BeginsWith(waypoint.Name, "Waypoint") == true)
+            {
+                continue;
+            }
+
+            std::stringstream menuItemLabel;
+            menuItemLabel << waypoint.Name << "##MainWindowMenuItemWaypoints" << waypoint.Index;
+
+            if (ImGui::MenuItem(menuItemLabel.str().c_str()))
+            {
+                EQAPP_Waypoint_GotoByName(waypoint.Name.c_str());
+            }
+        }
+    }
+    else
+    {
+        ImGui::BeginChild("##MainWindowMenuItemWaypointsList", ImVec2(200,400), false);
+
+        auto waypointList = g_WaypointList;
+
+        std::sort
+        (
+            waypointList.begin(), waypointList.end(),
+            [] (const EQApp::Waypoint& a, const EQApp::Waypoint& b) -> bool
+            { 
+                return a.Name < b.Name;
+            }
+        );
+
+        for (auto& waypoint : waypointList)
+        {
+            if (waypoint.Name.size() == 0)
+            {
+                continue;
+            }
+
+            if (EQAPP_String_BeginsWith(waypoint.Name, "Waypoint") == true)
+            {
+                continue;
+            }
+
+            std::stringstream menuItemLabel;
+            menuItemLabel << waypoint.Name << "##MainWindowMenuItemWaypoints" << waypoint.Index;
+
+            if (ImGui::Selectable(menuItemLabel.str().c_str(), false))
+            {
+                EQAPP_Waypoint_GotoByName(waypoint.Name.c_str());
+
+                ImGui::CloseCurrentPopup();
+            }
         }
 
-        if (EQAPP_String_BeginsWith(waypoint.Name, "Waypoint") == true)
-        {
-            continue;
-        }
-
-        std::stringstream menuItemLabel;
-        menuItemLabel << waypoint.Name << "##MainWindowMenuItemWaypoints" << waypoint.Index;
-
-        if (ImGui::MenuItem(menuItemLabel.str().c_str()))
-        {
-            EQAPP_Waypoint_GotoByName(waypoint.Name.c_str());
-        }
+        ImGui::EndChild();
     }
 }
 
-static void EQAPP_GUI_MainWindow_MenuWaypointEditor()
+static void EQAPP_GUI_MainWindow_MenuGUI()
 {
-    if (ImGui::MenuItem("Connect##MainWindowMenuItemWaypointEditorConnect")) EQAPP_WaypointEditor_Command_Connect();
-    if (ImGui::MenuItem("Disconnect##MainWindowMenuItemWaypointEditorDisconnect")) EQAPP_WaypointEditor_Command_Disconnect();
+    if (ImGui::MenuItem("Show Demo Window##MainWindowMenuItemGUIShowDemoWindow", NULL, &g_GUIDemoWindowIsEnabled)) {}
+
+    ImGui::Separator();
+
+    if (ImGui::MenuItem("Dark Theme##MainWindowMenuItemGUIDarkTheme"))
+    {
+        ImGui::StyleColorsDark();
+
+        g_GUIDarkThemeIsEnabled = true;
+    }
+
+    if (ImGui::MenuItem("Light Theme##MainWindowMenuItemGUILightTheme"))
+    {
+        ImGui::StyleColorsLight();
+
+        g_GUIDarkThemeIsEnabled = false;
+    }
 }
 
 static void EQAPP_GUI_MainWindow_MenuHelp()

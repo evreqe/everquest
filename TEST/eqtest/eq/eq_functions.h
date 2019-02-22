@@ -307,6 +307,8 @@ uint32_t EQ_GetSpawnFollowSpawn(uint32_t spawn);
 uint32_t EQ_GetSpawnGravityType(uint32_t spawn);
 uint32_t EQ_GetSpawnDirection(uint32_t spawn);
 uint32_t EQ_GetSpawnPetSpawnID(uint32_t spawn);
+uint32_t EQ_GetSpawnEquipmentPrimaryID(uint32_t spawn);
+uint32_t EQ_GetSpawnEquipmentSecondaryID(uint32_t spawn);
 
 void EQ_SetSpawnNameColor(uint32_t spawn, uint32_t colorARGB);
 
@@ -326,6 +328,10 @@ void EQ_SetPlayerSpawnHeadingSouth();
 void EQ_SetPlayerSpawnHeadingSouthEast();
 void EQ_SetPlayerSpawnHeadingEast();
 void EQ_SetPlayerSpawnHeadingNorthEast();
+
+void EQ_TurnLeft();
+void EQ_TurnRight();
+void EQ_TurnAround();
 
 #ifdef EQ_FEATURE_EQPlayer__UpdateItemSlot
 bool EQ_SetSpawnItemSlot(uint32_t spawn, uint32_t updateItemSlot, const char* itemDefinition);
@@ -407,7 +413,12 @@ std::string EQ_GetRaceShortNameByID(uint32_t race);
 std::string EQ_GetClassNameByID(uint32_t class_);
 std::string EQ_GetClassShortNameByID(uint32_t class_);
 
+std::string EQ_GetAlternateAbilityNameByID(uint32_t alternateAbilityID);
+std::string EQ_GetAlternateAbilityDescriptionByID(uint32_t alternateAbilityID);
+uint32_t EQ_GetAlternateAbilityIDByName(const char* alternateAbilityName);
+
 void EQ_UseAlternateAbility(uint32_t alternateAbilityID);
+void EQ_UseAlternateAbilityByName(const char* alternateAbilityName);
 void EQ_UseDiscipline(const char* disciplineName);
 void EQ_UseAbility(uint32_t abilityNumber);
 void EQ_UseItem(const char* itemName);
@@ -518,6 +529,9 @@ uint32_t EQ_GetMapWindow();
 bool EQ_MapWindow_IsOpen();
 uint32_t EQ_MapWindow_GetLines();
 uint32_t EQ_MapWindow_GetLabels();
+
+uint32_t EQ_GetInventoryWindow();
+bool EQ_InventoryWindow_IsOpen();
 
 /* functions */
 
@@ -2904,6 +2918,16 @@ uint32_t EQ_GetSpawnPetSpawnID(uint32_t spawn)
     return EQ_ReadMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_PET_SPAWN_ID);
 }
 
+uint32_t EQ_GetSpawnEquipmentPrimaryID(uint32_t spawn)
+{
+    return ((EQData::_SPAWNINFO*)spawn)->Equipment.Primary.ID;
+}
+
+uint32_t EQ_GetSpawnEquipmentSecondaryID(uint32_t spawn)
+{
+    return ((EQData::_SPAWNINFO*)spawn)->Equipment.Offhand.ID;
+}
+
 void EQ_SetSpawnNameColor(uint32_t spawn, uint32_t colorARGB)
 {
     if (spawn == NULL)
@@ -3076,6 +3100,57 @@ void EQ_SetPlayerSpawnHeadingNorthEast()
     }
 
     EQ_SetSpawnHeading(playerSpawn, EQ_HEADING_NORTH_EAST);
+}
+
+void EQ_TurnLeft()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn != NULL)
+    {
+        auto playerHeading = EQ_GetSpawnHeading(playerSpawn);
+
+        playerHeading = EQ_RoundHeading(playerHeading);
+
+        playerHeading = playerHeading + EQ_HEADING_MAX_QUARTER;
+
+        playerHeading = EQ_FixHeading(playerHeading);
+
+        EQ_SetSpawnHeading(playerSpawn, playerHeading);
+    }
+}
+
+void EQ_TurnRight()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn != NULL)
+    {
+        auto playerHeading = EQ_GetSpawnHeading(playerSpawn);
+
+        playerHeading = EQ_RoundHeading(playerHeading);
+
+        playerHeading = playerHeading - EQ_HEADING_MAX_QUARTER;
+
+        playerHeading = EQ_FixHeading(playerHeading);
+
+        EQ_SetSpawnHeading(playerSpawn, playerHeading);
+    }
+}
+
+void EQ_TurnAround()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn != NULL)
+    {
+        auto playerHeading = EQ_GetSpawnHeading(playerSpawn);
+
+        playerHeading = EQ_RoundHeading(playerHeading);
+
+        playerHeading = playerHeading + EQ_HEADING_MAX_HALF;
+
+        playerHeading = EQ_FixHeading(playerHeading);
+
+        EQ_SetSpawnHeading(playerSpawn, playerHeading);
+    }
 }
 
 #ifdef EQ_FEATURE_EQPlayer__UpdateItemSlot
@@ -3901,12 +3976,122 @@ std::string EQ_GetClassShortNameByID(uint32_t class_)
     return EQ_StringMap_GetValueByKey(EQ_CLASS_ShortName_Strings, class_);
 }
 
+std::string EQ_GetAlternateAbilityNameByID(uint32_t alternateAbilityID)
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return std::string();
+    }
+
+    auto playerLevel = EQ_GetSpawnLevel(playerSpawn);
+
+    for (unsigned int i = 0; i < EQ_NUM_ALTERNATE_ABILITIES; i++)
+    {
+        auto alternateAbility = EQ_CLASS_POINTER_AltAdvManager->GetAAById(i, playerLevel);
+        if (alternateAbility == NULL)
+        {
+            continue;
+        }
+
+        std::string alternateAbilityName = EQ_CLASS_POINTER_CDBStr->GetString(alternateAbility->nName, 1, NULL);
+        if (alternateAbilityName.size() == 0)
+        {
+            continue;
+        }
+
+        if (alternateAbility->ID == alternateAbilityID)
+        {
+            return alternateAbilityName;
+        }
+    }
+
+    return std::string();
+}
+
+std::string EQ_GetAlternateAbilityDescriptionByID(uint32_t alternateAbilityID)
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return std::string();
+    }
+
+    auto playerLevel = EQ_GetSpawnLevel(playerSpawn);
+
+    for (unsigned int i = 0; i < EQ_NUM_ALTERNATE_ABILITIES; i++)
+    {
+        auto alternateAbility = EQ_CLASS_POINTER_AltAdvManager->GetAAById(i, playerLevel);
+        if (alternateAbility == NULL)
+        {
+            continue;
+        }
+
+        std::string alternateAbilityDescription = EQ_CLASS_POINTER_CDBStr->GetString(alternateAbility->nName, 4, NULL);
+        if (alternateAbilityDescription.size() == 0)
+        {
+            continue;
+        }
+
+        if (alternateAbility->ID == alternateAbilityID)
+        {
+            return alternateAbilityDescription;
+        }
+    }
+
+    return std::string();
+}
+
+uint32_t EQ_GetAlternateAbilityIDByName(const char* alternateAbilityName)
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return EQ_ALTERNATE_ABILITY_ID_NULL;
+    }
+
+    auto playerLevel = EQ_GetSpawnLevel(playerSpawn);
+
+    for (unsigned int i = 0; i < EQ_NUM_ALTERNATE_ABILITIES; i++)
+    {
+        auto alternateAbility = EQ_CLASS_POINTER_AltAdvManager->GetAAById(i, playerLevel);
+        if (alternateAbility == NULL)
+        {
+            continue;
+        }
+
+        std::string alternateAbilityNameEx = EQ_CLASS_POINTER_CDBStr->GetString(alternateAbility->nName, 1, NULL);
+        if (alternateAbilityNameEx.size() == 0)
+        {
+            continue;
+        }
+
+        if (alternateAbilityNameEx == alternateAbilityName)
+        {
+            return alternateAbility->ID;
+        }
+    }
+
+    return EQ_ALTERNATE_ABILITY_ID_NULL;
+}
+
 void EQ_UseAlternateAbility(uint32_t alternateAbilityID)
 {
     std::stringstream ss;
     ss << "/alt activate " << alternateAbilityID;
 
     EQ_InterpretCommand(ss.str().c_str());
+}
+
+void EQ_UseAlternateAbilityByName(const char* alternateAbilityName)
+{
+    auto alternateAbilityID = EQ_GetAlternateAbilityIDByName(alternateAbilityName);
+    if (alternateAbilityID == EQ_ALTERNATE_ABILITY_ID_NULL)
+    {
+        return;
+    }
+
+    EQ_UseAlternateAbility(alternateAbilityID);
 }
 
 void EQ_UseDiscipline(const char* disciplineName)
@@ -5165,4 +5350,14 @@ uint32_t EQ_MapWindow_GetLabels()
     }
 
     return EQ_ReadMemory<uint32_t>(mapWindow + EQ_OFFSET_CMapViewWnd_LABELS);
+}
+
+uint32_t EQ_GetInventoryWindow()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CInventoryWnd);
+}
+
+bool EQ_InventoryWindow_IsOpen()
+{
+    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CInventoryWnd) == true);
 }

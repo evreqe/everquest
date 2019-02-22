@@ -231,18 +231,24 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//WPList",                       &EQAPP_WaypointList_Print},
     {"//WPNames",                      &EQAPP_WaypointList_PrintNames},
     {"//WPClear",                      &EQAPP_WaypointList_Clear},
-    {"//WPEditor",                     &EQAPP_Waypoint_Editor_Toggle},
-    {"//WPEditorOn",                   &EQAPP_Waypoint_Editor_On},
-    {"//WPEditorOff",                  &EQAPP_Waypoint_Editor_Off},
-    {"//WPEditorHeightFilter",         &EQAPP_Waypoint_Editor_HeightFilter_Toggle},
-    {"//WPEditorHeightFilterOn",       &EQAPP_Waypoint_Editor_HeightFilter_On},
-    {"//WPEditorHeightFilterOff",      &EQAPP_Waypoint_Editor_HeightFilter_Off},
-    {"//WPEdit",                       &EQAPP_Waypoint_Editor_Toggle},
-    {"//WPEditOn",                     &EQAPP_Waypoint_Editor_On},
-    {"//WPEditOff",                    &EQAPP_Waypoint_Editor_Off},
-    {"//WPEditHF",                     &EQAPP_Waypoint_Editor_HeightFilter_Toggle},
-    {"//WPEditHFOn",                   &EQAPP_Waypoint_Editor_HeightFilter_On},
-    {"//WPEditHFOff",                  &EQAPP_Waypoint_Editor_HeightFilter_Off},
+    {"//WPEditor",                     &EQAPP_WaypointEditor_Toggle},
+    {"//WPEditorOn",                   &EQAPP_WaypointEditor_On},
+    {"//WPEditorOff",                  &EQAPP_WaypointEditor_Off},
+    {"//WPEditorHeightFilter",         &EQAPP_WaypointEditor_HeightFilter_Toggle},
+    {"//WPEditorHeightFilterOn",       &EQAPP_WaypointEditor_HeightFilter_On},
+    {"//WPEditorHeightFilterOff",      &EQAPP_WaypointEditor_HeightFilter_Off},
+    {"//WPEditorDistanceFilter",       &EQAPP_WaypointEditor_DistanceFilter_Toggle},
+    {"//WPEditorDistanceFilterOn",     &EQAPP_WaypointEditor_DistanceFilter_On},
+    {"//WPEditorDistanceFilterOff",    &EQAPP_WaypointEditor_DistanceFilter_Off},
+    {"//WPEdit",                       &EQAPP_WaypointEditor_Toggle},
+    {"//WPEditOn",                     &EQAPP_WaypointEditor_On},
+    {"//WPEditOff",                    &EQAPP_WaypointEditor_Off},
+    {"//WPEditHF",                     &EQAPP_WaypointEditor_HeightFilter_Toggle},
+    {"//WPEditHFOn",                   &EQAPP_WaypointEditor_HeightFilter_On},
+    {"//WPEditHFOff",                  &EQAPP_WaypointEditor_HeightFilter_Off},
+    {"//WPEditDF",                     &EQAPP_WaypointEditor_DistanceFilter_Toggle},
+    {"//WPEditDFOn",                   &EQAPP_WaypointEditor_DistanceFilter_On},
+    {"//WPEditDFOff",                  &EQAPP_WaypointEditor_DistanceFilter_Off},
     {"//NameColor",                    &EQAPP_NameColor_Toggle},
     {"//NameColorOn",                  &EQAPP_NameColor_On},
     {"//NameColorOff",                 &EQAPP_NameColor_Off},
@@ -773,6 +779,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
     {
         std::cout << "Testing123" << std::endl;
 
+/*
         auto windowManager = EQ_GetCXWndManager();
         if (windowManager == NULL)
         {
@@ -829,7 +836,6 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                 }
             }
 
-/*
             auto windowText = ((EQUIStructs::CXWND*)window)->WindowText;
             if (windowText != NULL)
             {
@@ -844,8 +850,8 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                     }
                 }
             }
-*/
         }
+*/
 
 /*
         auto win = EQ_GetTaskSelectWindow();
@@ -860,7 +866,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         }
 */
 
-        /*
+/*
         if (EQ_TargetWindow_FindBuffSpellName("Blessing of Aegolism") == true)
         {
             std::cout << "Target has Blessing of Aegolism buff." << std::endl;
@@ -905,7 +911,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                 std::cout << "xname: " << xname << std::endl;
             }
         }
-        */
+*/
 
         return true;
     }
@@ -3204,6 +3210,19 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
+    // //UseItem <itemName>
+    if (EQAPP_String_BeginsWith(commandText, "//UseItem ") == true)
+    {
+        std::string itemName = EQAPP_String_GetAfter(commandText, " ");
+        if (itemName.size() != 0)
+        {
+            std::stringstream ss;
+            ss << "/useitem " << itemName;
+
+            EQ_InterpretCommand(ss.str().c_str());
+        }
+    }
+
     if (EQAPP_String_BeginsWith(commandText, "//CombatHotButton ") == true || EQAPP_String_BeginsWith(commandText, "//CHB ") == true)
     {
         std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
@@ -4010,6 +4029,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
+    // //LuaEvent <script_filename>;<lua_code>
     if (EQAPP_String_BeginsWith(commandText, "//LuaEvent ") == true)
     {
         std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
@@ -4979,6 +4999,28 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
             return true;
         }
 
+        // //WPSplit <from index>,<to index>
+        if (EQAPP_String_BeginsWith(commandText, "//WPSplit ") == true)
+        {
+            std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+            if (commandTextAfterSpace.size() != 0)
+            {
+                std::vector<std::string> tokens = EQAPP_String_Split(commandTextAfterSpace, ',');
+                if (tokens.size() == 2)
+                {
+                    if (EQAPP_String_IsDigits(tokens.at(0)) == true && EQAPP_String_IsDigits(tokens.at(1)) == true)
+                    {
+                        uint32_t fromIndex = std::stoul(tokens.at(0));
+                        uint32_t toIndex = std::stoul(tokens.at(1));
+
+                        EQAPP_Waypoint_Split(fromIndex, toIndex);
+                    }
+                }
+            }
+
+            return true;
+        }
+
         // //WPPush <index,distance>
         if (EQAPP_String_BeginsWith(commandText, "//WPPush ") == true)
         {
@@ -5203,6 +5245,22 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
     if (commandText == "//WPFP" || commandText == "//WPFollowPath")
     {
         EQAPP_Waypoint_FollowPath_Toggle();
+
+        return true;
+    }
+
+    if (commandText == "//WPIW" || commandText == "//WPIgnoreWait")
+    {
+        EQAPP_Waypoint_IgnoreWait_Toggle();
+
+        return true;
+    }
+
+    if (commandText == "//WPIM" || commandText == "//WPIgnoreMovement")
+    {
+        EQAPP_Waypoint_IgnoreMovement_Toggle();
+
+        return true;
     }
 
     if (EQAPP_String_BeginsWith(commandText, "//WPG ") == true || EQAPP_String_BeginsWith(commandText, "//WPGoto ") == true)
@@ -5273,57 +5331,21 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
     if (commandText == "//TurnLeft")
     {
-        auto playerSpawn = EQ_GetPlayerSpawn();
-        if (playerSpawn != NULL)
-        {
-            auto playerHeading = EQ_GetSpawnHeading(playerSpawn);
-
-            playerHeading = EQ_RoundHeading(playerHeading);
-
-            playerHeading = playerHeading + EQ_HEADING_MAX_QUARTER;
-
-            playerHeading = EQ_FixHeading(playerHeading);
-
-            EQ_SetSpawnHeading(playerSpawn, playerHeading);
-        }
+        EQ_TurnLeft();
 
         return true;
     }
 
     if (commandText == "//TurnRight")
     {
-        auto playerSpawn = EQ_GetPlayerSpawn();
-        if (playerSpawn != NULL)
-        {
-            auto playerHeading = EQ_GetSpawnHeading(playerSpawn);
-
-            playerHeading = EQ_RoundHeading(playerHeading);
-
-            playerHeading = playerHeading - EQ_HEADING_MAX_QUARTER;
-
-            playerHeading = EQ_FixHeading(playerHeading);
-
-            EQ_SetSpawnHeading(playerSpawn, playerHeading);
-        }
+        EQ_TurnRight();
 
         return true;
     }
 
     if (commandText == "//TurnAround")
     {
-        auto playerSpawn = EQ_GetPlayerSpawn();
-        if (playerSpawn != NULL)
-        {
-            auto playerHeading = EQ_GetSpawnHeading(playerSpawn);
-
-            playerHeading = EQ_RoundHeading(playerHeading);
-
-            playerHeading = playerHeading + EQ_HEADING_MAX_HALF;
-
-            playerHeading = EQ_FixHeading(playerHeading);
-
-            EQ_SetSpawnHeading(playerSpawn, playerHeading);
-        }
+        EQ_TurnAround();
 
         return true;
     }
@@ -5402,6 +5424,17 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
     if (commandText == "//HideWindow")
     {
         ShowWindow(EQ_GetWindow(), SW_HIDE);
+
+        return true;
+    }
+
+    if (commandText == "//ForegroundWindow" || commandText == "//Foreground")
+    {
+        auto window = EQ_GetWindow();
+
+        ShowWindow(window, SW_SHOW);
+        SetForegroundWindow(window);
+        SetFocus(window);
 
         return true;
     }
@@ -5491,6 +5524,123 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
             ss << "/grouproles set " << playerName << " 5";
 
             EQ_InterpretCommand(ss.str().c_str());
+        }
+
+        return true;
+    }
+
+    if (commandText == "//ListAA")
+    {
+        auto playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn != NULL)
+        {
+            auto playerLevel = EQ_GetSpawnLevel(playerSpawn);
+
+            for (unsigned int i = 0; i < EQ_NUM_ALTERNATE_ABILITIES; i++)
+            {
+                auto alternateAbility = EQ_CLASS_POINTER_AltAdvManager->GetAAById(i, playerLevel);
+                if (alternateAbility == NULL)
+                {
+                    continue;
+                }
+
+                std::string alternateAbilityName = EQ_CLASS_POINTER_CDBStr->GetString(alternateAbility->nName, 1, NULL);
+                if (alternateAbilityName.size() == 0)
+                {
+                    continue;
+                }
+
+                std::cout << alternateAbility->ID << ": " << alternateAbilityName << " (" << alternateAbility->Type << ")" << std::endl;
+
+                //std::string alternateAbilityDescription = EQ_CLASS_POINTER_CDBStr->GetString(alternateAbility->nName, 4, NULL);
+                //if (alternateAbilityDescription.size() != 0)
+                //{
+                    //std::cout << alternateAbilityDescription << std::endl;
+                //}
+            }
+        }
+
+        return true;
+    }
+
+    if (EQAPP_String_BeginsWith(commandText, "//GetAA ") == true)
+    {
+        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+        if (commandTextAfterSpace.size() != 0)
+        {
+            uint32_t alternateAbilityID = EQ_ALTERNATE_ABILITY_ID_NULL;
+
+            if (EQAPP_String_IsDigits(commandTextAfterSpace) == true)
+            {
+                alternateAbilityID = std::stoi(commandTextAfterSpace);
+
+                std::string alternateAbilityName = EQ_GetAlternateAbilityNameByID(alternateAbilityID);
+                if (alternateAbilityName.size() != 0)
+                {
+                    std::cout << alternateAbilityID << ": " << alternateAbilityName << std::endl;
+                }
+            }
+            else
+            {
+                alternateAbilityID = EQ_GetAlternateAbilityIDByName(commandTextAfterSpace.c_str());
+                if (alternateAbilityID != EQ_ALTERNATE_ABILITY_ID_NULL)
+                {
+                    std::cout << alternateAbilityID << ": " << commandTextAfterSpace << std::endl;
+                }
+            }
+
+            if (alternateAbilityID != EQ_ALTERNATE_ABILITY_ID_NULL)
+            {
+                std::string alternateAbilityDescription = EQ_GetAlternateAbilityDescriptionByID(alternateAbilityID);
+                if (alternateAbilityDescription.size() != 0)
+                {
+                    std::cout << alternateAbilityDescription << std::endl;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    if (EQAPP_String_BeginsWith(commandText, "//UseAA ") == true)
+    {
+        std::string alternateAbilityName = EQAPP_String_GetAfter(commandText, " ");
+        if (alternateAbilityName.size() != 0)
+        {
+            EQ_UseAlternateAbilityByName(alternateAbilityName.c_str());
+        }
+
+        return true;
+    }
+
+    if (commandText == "//GetItemDef")
+    {
+        auto spawnList = EQ_GetSpawnList();
+        for (auto& spawn : spawnList)
+        {
+            if (spawn == NULL)
+            {
+                continue;
+            }
+
+            auto primaryID = ((EQData::_SPAWNINFO*)spawn)->Equipment.Primary.ID;
+            auto secondaryID = ((EQData::_SPAWNINFO*)spawn)->Equipment.Offhand.ID;
+
+            if (primaryID != 0)
+            {
+                std::stringstream ss;
+                ss << "IT" << primaryID;
+
+                EQAPP_PrintTextToFileNoDuplicates("updateitemslot.txt", ss.str().c_str());
+            }
+
+            if (secondaryID != 0)
+            {
+                std::stringstream ss;
+                ss << "IT" << secondaryID;
+
+                EQAPP_PrintTextToFileNoDuplicates("updateitemslot.txt", ss.str().c_str());
+            }
         }
 
         return true;

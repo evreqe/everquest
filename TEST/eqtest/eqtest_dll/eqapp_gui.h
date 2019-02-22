@@ -10,22 +10,24 @@ extern void EQAPP_InterpretCommand_PrintList();
 
 #include "eqapp_gui_mainwindow.h"
 #include "eqapp_gui_mapwindow.h"
+#include "eqapp_gui_waypointeditorwindow.h"
 
 bool g_GUIIsEnabled = true;
 
 bool g_GUIIsLoaded = false;
 
+bool g_GUIDarkThemeIsEnabled = true;
+
 bool g_GUIDemoWindowIsEnabled = false;
 
 ImFont* g_GUIFont = NULL;
-
-std::string g_GUIFontName = "default.ttf";
 
 void EQAPP_GUI_Toggle();
 void EQAPP_GUI_On();
 void EQAPP_GUI_Off();
 bool EQAPP_GUI_Load();
 void EQAPP_GUI_Unload();
+bool EQAPP_GUI_IsMouseOver();
 signed int EQAPP_GUI_HandleEvent_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 bool EQAPP_GUI_HandleEvent_ProcessMouseEvent();
 bool EQAPP_GUI_HandleEvent_ProcessKeyboardEvent();
@@ -77,10 +79,13 @@ bool EQAPP_GUI_Load()
 
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     ////io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;    // enable keyboard controls
+    io.ConfigWindowsMoveFromTitleBarOnly = true;
 
-    std::stringstream fontFilePath;
-    fontFilePath << g_EQAppName << "/fonts/" << g_GUIFontName;
-    g_GUIFont = io.Fonts->AddFontFromFileTTF(fontFilePath.str().c_str(), 14.0f);
+    g_GUIFont = io.Fonts->AddFontDefault();
+    if (g_GUIFont == NULL)
+    {
+        return false;
+    }
 
     if (ImGui_ImplWin32_Init(window) == false)
     {
@@ -102,7 +107,7 @@ bool EQAPP_GUI_Load()
     style.FrameBorderSize = 1.0f;
 
     ImGui::StyleColorsDark();
-    ////ImGui::StyleColorsClassic();
+    g_GUIDarkThemeIsEnabled = true;
 
     //// EQAPP_GUI_MapWindow_LoadTextures();
 
@@ -117,6 +122,31 @@ void EQAPP_GUI_Unload()
     ImGui_ImplWin32_Shutdown();
 
     ImGui::DestroyContext();
+}
+
+bool EQAPP_GUI_IsMouseOver()
+{
+    if (g_GUIIsEnabled == false)
+    {
+        return false;
+    }
+
+    if (g_GUIIsLoaded == false)
+    {
+        return false;
+    }
+
+    if (EQ_IsWindowInBackground() == true || EQ_IsMouseLookEnabled() == true)
+    {
+        return false;
+    }
+
+    if (ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) == false)
+    {
+        return false;
+    }
+
+    return true;
 }
 
 signed int EQAPP_GUI_HandleEvent_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -247,7 +277,7 @@ bool EQAPP_GUI_HandleEvent_CEverQuest__HandleMouseWheel(signed int delta)
         return true;
     }
 
-    if (ImGui::IsAnyWindowHovered() == true)
+    if (ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) == true)
     {
         return true;
     }
@@ -301,6 +331,11 @@ void EQAPP_GUI_HandleEvent_CRender__UpdateDisplay()
     if (g_GUIMapWindowIsEnabled == true)
     {
         EQAPP_GUI_MapWindow();
+    }
+
+    if (g_GUIWaypointEditorWindowIsEnabled == true)
+    {
+        EQAPP_GUI_WaypointEditorWindow();
     }
 
     ImGui::EndFrame();

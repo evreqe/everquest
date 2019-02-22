@@ -66,6 +66,7 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_NUM_AURAS                         2
 #define EQ_NUM_XTARGETS                      20
 #define EQ_NUM_CHARACTERS_PER_ACCOUNT        8    // character select
+#define EQ_NUM_ALTERNATE_ABILITIES           NUM_ALT_ABILITIES
 
 #define EQ_BAZAAR_SEARCH_MAX_RESULTS_PER_TRADER 200
 #define EQ_BAZAAR_SEARCH_LIST_INDEX_NULL 0xFFFFFFFF // uint32_t
@@ -75,6 +76,14 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_SPELL_GEM_INDEX_NULL 0xFF
 
 #define EQ_SPELL_GEM_ICON_NULL 0xFFFFFFFF // uint32_t
+
+#define EQ_ALTERNATE_ABILITY_ID_NULL 0xFFFFFFFF // uint32_t
+
+#define EQ_ALTERNATE_ABILITY_TYPE_GENERAL      1
+#define EQ_ALTERNATE_ABILITY_TYPE_ARCHETYPE    2
+#define EQ_ALTERNATE_ABILITY_TYPE_CLASS        3
+#define EQ_ALTERNATE_ABILITY_TYPE_SPECIAL      4
+#define EQ_ALTERNATE_ABILITY_TYPE_FOCUS        5
 
 // CSpellGemWnd
 #define EQ_SPELL_GEM_STATE_READY_TO_CAST    0
@@ -751,7 +760,9 @@ std::unordered_map<uint32_t, std::string> EQ_CLASS_LongName_Strings =
     {EQ_CLASS_ENCHANTER,       "Enchanter"},
     {EQ_CLASS_BEASTLORD,       "Beastlord"},
     {EQ_CLASS_BERSERKER,       "Berserker"},
+
     {EQ_CLASS_MERCENARY,       "Mercenary"},
+
     {EQ_CLASS_BANKER,          "Banker"},
     {EQ_CLASS_MERCHANT,        "Merchant"},
 
@@ -784,7 +795,9 @@ std::unordered_map<uint32_t, std::string> EQ_CLASS_ShortName_Strings =
     {EQ_CLASS_ENCHANTER,       "ENC"},
     {EQ_CLASS_BEASTLORD,       "BST"},
     {EQ_CLASS_BERSERKER,       "BER"},
+
     {EQ_CLASS_MERCENARY,       "MERC"},
+
     ////{EQ_CLASS_BANKER,          "BNKR"},
     ////{EQ_CLASS_MERCHANT,        "MCHT"},
 };

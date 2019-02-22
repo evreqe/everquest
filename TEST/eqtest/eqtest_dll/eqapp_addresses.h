@@ -71,6 +71,9 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_DoSpellEffect);
 #endif // EQ_FEATURE_DoSpellEffect
 
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CDBStr);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CDBStr__GetString);
+
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_StringTable);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_StringTable__getString);
 
@@ -108,6 +111,10 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_AuraManager);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_SpellManager);
+
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_AltAdvManager);
+
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_AltAdvManager__GetAAById);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CXWndManager);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CXWndManager__DrawCursor);
@@ -189,6 +196,8 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CCastingWnd);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CMapViewWnd);
+
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CInventoryWnd);
 }
 
 bool EQAPP_IsAddressPointerValid(uint32_t addressPointer)
@@ -213,11 +222,13 @@ bool EQAPP_InitializeAddressPointers()
 
     std::vector<uint32_t> addressPointerList =
     {
+        EQ_ADDRESS_POINTER_CDBStr,
         EQ_ADDRESS_POINTER_EQPlayerManager,
         EQ_ADDRESS_POINTER_CXWndManager,
         EQ_ADDRESS_POINTER_CEverQuest,
         EQ_ADDRESS_POINTER_CDisplay,
         EQ_ADDRESS_POINTER_CRender,
+        EQ_ADDRESS_POINTER_AltAdvManager,
 #ifdef EQ_FEATURE_BAZAAR
         EQ_ADDRESS_POINTER_CBazaarWnd,
         EQ_ADDRESS_POINTER_CBazaarConfirmationWnd,
@@ -237,6 +248,9 @@ bool EQAPP_InitializeAddressPointers()
         }
     }
 
+    EQ_CLASS_POINTER_CDBStr_pptr = (EQClass::CDBStr**)EQ_ADDRESS_POINTER_CDBStr;
+    EQ_CLASS_POINTER_CDBStr = (*EQ_CLASS_POINTER_CDBStr_pptr);
+
     EQ_CLASS_POINTER_EQPlayerManager_pptr = (EQClass::EQPlayerManager**)EQ_ADDRESS_POINTER_EQPlayerManager;
     EQ_CLASS_POINTER_EQPlayerManager = (*EQ_CLASS_POINTER_EQPlayerManager_pptr);
 
@@ -251,6 +265,9 @@ bool EQAPP_InitializeAddressPointers()
 
     EQ_CLASS_POINTER_CRender_pptr = (EQClass::CRender**)EQ_ADDRESS_POINTER_CRender;
     EQ_CLASS_POINTER_CRender = (*EQ_CLASS_POINTER_CRender_pptr);
+
+    EQ_CLASS_POINTER_AltAdvManager_pptr = (EQClass::AltAdvManager**)EQ_ADDRESS_POINTER_AltAdvManager;
+    EQ_CLASS_POINTER_AltAdvManager = (*EQ_CLASS_POINTER_AltAdvManager_pptr);
 
 #ifdef EQ_FEATURE_BAZAAR
     EQ_CLASS_POINTER_CBazaarWnd_pptr = (EQClass::CBazaarWnd**)EQ_ADDRESS_POINTER_CBazaarWnd;

@@ -66,6 +66,7 @@ namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not avai
 // imgui
 // https://github.com/ocornut/imgui
 #include "imgui.h"
+#include "misc/cpp/imgui_stdlib.h"
 #include "imgui_impl_dx9.h"
 #include "imgui_impl_win32.h"
 
@@ -165,6 +166,23 @@ void EQAPP_Load()
             }
         }
     }
+
+    auto render = EQ_GetRender();
+    if (render != NULL)
+    {
+        std::cout << "CRender: 0x" << std::hex << render << std::dec << std::endl;
+
+        auto devicePointer = EQ_ReadMemory<LPDIRECT3DDEVICE9>(render + EQ_OFFSET_CRender_Direct3DDevicePointer);
+        if (devicePointer != NULL)
+        {
+            std::cout << "CRender Device Pointer: 0x" << std::hex << devicePointer << std::dec << std::endl;
+        }
+    }
+
+    std::cout << "EQ_SIZE_CSidlWnd: 0x" << std::hex << EQ_SIZE_CSidlWnd << std::dec << std::endl;
+
+    std::cout << "EQ_OFFSET_CMapViewWnd_LINES: 0x" << std::hex << EQ_OFFSET_CMapViewWnd_LINES << std::dec << std::endl;
+    std::cout << "EQ_OFFSET_CMapViewWnd_LABELS: 0x" << std::hex << EQ_OFFSET_CMapViewWnd_LABELS << std::dec << std::endl;
 
     if (g_LuaIsEnabled == true)
     {

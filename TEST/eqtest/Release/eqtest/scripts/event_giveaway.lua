@@ -96,15 +96,13 @@ function OnChatText(chatText, chatTextColor)
         return
     end
 
-    for m in string.gmatch(chatText, "\018%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x[%w%s%p]+\018") do
-        if String_Contains(m, "00000000000000000000000000000000000000000000000000000000") == false then
-            if String_Contains(m, g_GiveawayItemName) == true then
-                Giveaway_Sleep(1)
-                EQ_InterpretCommand("/1 " .. m)
-                g_GiveawayIsEnabled = 0
-                EQ_PrintTextToChat("Giveaway: Off")
-                break
-            end
+    for m in string.gmatch(chatText, "\018%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x[%w%s%p]+\018") do
+        if String_Contains(m, g_GiveawayItemName) == true then
+            Giveaway_Sleep(1)
+            EQ_InterpretCommand("/1 " .. m)
+            g_GiveawayIsEnabled = 0
+            EQ_PrintTextToChat("Giveaway: Off")
+            break
         end
     end
 end

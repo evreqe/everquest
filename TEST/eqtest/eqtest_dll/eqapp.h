@@ -26,7 +26,7 @@ std::mt19937 g_EQAppRandomEngine(g_EQAppRandomDevice());
 
 bool g_EQAppDebugTextIsEnabled = false;
 
-std::map<std::string, HWND> g_EQAppClientWindowList;
+std::unordered_map<std::string, HWND> g_EQAppClientWindowList;
 
 HMODULE g_EQAppModule;
 

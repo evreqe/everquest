@@ -119,7 +119,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;EQTEST_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\Code\!libraries\directx9sdk\Include;D:\Code\!libraries\detours;D:\Code\!libraries\luajit-2.0.5\src;D:\Code\!libraries\sol2-2.20.4;D:\Code\!libraries\boost_1_66_0;D:\Code\!libraries\fmt-4.1.0;D:\Code\!libraries\imgui-1.62;D:\Code\everquest\eqtest\mq2;D:\Code\everquest\eqtest\eq;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Code\!libraries\directx9sdk\Include;D:\Code\!libraries\detours;D:\Code\!libraries\luajit-2.0.5\src;D:\Code\!libraries\sol2-2.20.4;D:\Code\!libraries\boost_1_66_0;D:\Code\!libraries\fmt-4.1.0;D:\Code\!libraries\imgui-1.67;D:\Code\everquest\eqtest\mq2;D:\Code\everquest\eqtest\eq;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -158,6 +158,8 @@
     <ClCompile Include="imgui_draw.cpp" />
     <ClCompile Include="imgui_impl_dx9.cpp" />
     <ClCompile Include="imgui_impl_win32.cpp" />
+    <ClCompile Include="imgui_stdlib.cpp" />
+    <ClCompile Include="imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\eq\eq.h" />
@@ -200,6 +202,7 @@
     <ClInclude Include="eqapp_gui.h" />
     <ClInclude Include="eqapp_gui_mainwindow.h" />
     <ClInclude Include="eqapp_gui_mapwindow.h" />
+    <ClInclude Include="eqapp_gui_waypointeditorwindow.h" />
     <ClInclude Include="eqapp_hud.h" />
     <ClInclude Include="eqapp_ini.h" />
     <ClInclude Include="eqapp_interpretcommand.h" />
@@ -221,9 +224,10 @@
     <ClInclude Include="imgui_impl_dx9.h" />
     <ClInclude Include="imgui_impl_win32.h" />
     <ClInclude Include="imgui_internal.h" />
-    <ClInclude Include="stb_rect_pack.h" />
-    <ClInclude Include="stb_textedit.h" />
-    <ClInclude Include="stb_truetype.h" />
+    <ClInclude Include="imgui_stdlib.h" />
+    <ClInclude Include="imstb_rectpack.h" />
+    <ClInclude Include="imstb_textedit.h" />
+    <ClInclude Include="imstb_truetype.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

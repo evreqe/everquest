@@ -70,17 +70,18 @@ Terebro
 #}Briny Essence
 #}Essence of Life
 #}Writ of the Combine
-}Clawed Tablet of the Ring of Scale
+#}Clawed Tablet of the Ring of Scale
+#}Spellbound Lamp
 
 ##### Conflagrant Armor Set #####
-Arcanist's Conflagrant Robe
-Archon's Conflagrant Breastplate
-Suzerain Protector's Conflagrant Breastplate
+#Arcanist's Conflagrant Robe
+#Archon's Conflagrant Breastplate
+#Suzerain Protector's Conflagrant Breastplate
 #}'s Conflagrant
-{Arcanist's Conflagrant
+#{Arcanist's Conflagrant
 #{Arch Convoker's Conflagrant
 #{Arch Lich's Conflagrant
-{Archon's Conflagrant
+#{Archon's Conflagrant
 #{Coercer's Conflagrant
 #{Deceiver's Conflagrant
 #{Dread Suzerain's Conflagrant
@@ -91,7 +92,7 @@ Suzerain Protector's Conflagrant Breastplate
 #{Overlord's Conflagrant
 #{Prophet's Conflagrant
 #{Storm Warden's Conflagrant
-{Suzerain Protector's Conflagrant
+#{Suzerain Protector's Conflagrant
 #{Transcendent's Conflagrant
 
 ##### Bags #####
@@ -101,8 +102,8 @@ Caravan Satchel
 Enameled Box
 Satchel of the Combine Hero
 Scuffed Journeyman's Pocketed Rucksack
-Scuffed Journeyman's Rucksack
-Scuffed Travelers's Rucksack
+#Scuffed Journeyman's Rucksack
+#Scuffed Travelers's Rucksack
 
 ##### Prizes #####
 Prize: Aspect of the Brood
@@ -113,27 +114,29 @@ Adoptable Lumbering Chokidai
 Wrapped Froglok Head in a Jar
 Wrapped Ice Giant Facade
 Adoptable Fourth Gate Guardian
-Prize: Ping's Poignant Potion Pack
-Prize: Ping's Practical Potion Pack
-Prize: Ping's Prodigious Potion Pack
-Prize: Chalandria's Fang
-Prize: Scale of Rodcet Nife
+#Prize: Ping's Poignant Potion Pack
+#Prize: Ping's Practical Potion Pack
+#Prize: Ping's Prodigious Potion Pack
+#Prize: Chalandria's Fang
+#Prize: Scale of Rodcet Nife
 Prize: Kiss of Erollisi Marr
 #Prize: Tear of Tranquility
 #Prize: Fiery Dragonhide Pack
+Prize: Mechamatic Blueprint
 @Mechamatic Blueprint
 #{Contract of the
 #}Contract
 Prize: Visage of the Siren Enticer
-Prize: Doll's Mask
-Prize: Ember Wurm Saddle
+#Prize: Doll's Mask
+#Prize: Ember Wurm Saddle
+#Prize: Frost Wurm Saddle
 #Prize: Mask of Scaled Cunning
-Prize: Mastruq Bone Mask
+#Prize: Mastruq Bone Mask
 #Prize: Miniature Eyepatch
-Prize: Shadowstone Tiara
-Prize: Scaley Horned Mask
-Prize: Strange Bone Mask
-Prize: Steed of War Saddle
+#Prize: Shadowstone Tiara
+#Prize: Scaley Horned Mask
+#Prize: Strange Bone Mask
+#Prize: Steed of War Saddle
 #Mask of the Chetari
 
 ##### Mounts #####
@@ -141,11 +144,17 @@ Prize: Steed of War Saddle
 #@Saddle
 
 ##### Augments #####
+Inflexible Scale
+Moonstone of the Frozen Priest
+Pakjol's Appetite for Destruction
+Vitalizing Stone
+Krucidon's Inverted War Charm
+Fragmented Echo
 #Tavon's Burnished Gemstone
 #Tavon's Polished Gemstone
 #Stone of Tranquility
 #Oath of Marr
-Extra Planar Potential Shard
+#Extra Planar Potential Shard
 #Sebilisian Harmony
 #Sebilisian Intensity
 #Sebilisian Proficiency
@@ -156,7 +165,7 @@ Extra Planar Potential Shard
 #Sebilisian Efficacy
 
 ##### Power Sources #####
-Xorbb's Caged Hatred
+#Xorbb's Caged Hatred
 
 ##### Misc #####
 #Amulet of the Drowned Mariner
@@ -184,22 +193,22 @@ Draught of Adventure
 #Glowing Sebilisian Tunic
 
 ##### Merc Gear #####
-#{Assassin's Extravagant
-#{Defender's Extravagant
-{Soother's Extravagant
-#{Sorcerer's Extravagant
+#{Assassin's Vigilant
+{Defender's Vigilant
+{Soother's Vigilant
+#{Sorcerer's Vigilant
 
 ##### Conflagrant #####
 #{Conflagrant
-Conflagrant Celerity
-Conflagrant Harmony
-Conflagrant Ingenuity
-Conflagrant Intensity
-Conflagrant Proficiency
-Conflagrant Resilience
-Conflagrant Savviness
-{Wrapped Conflagrant
-{Conflagrant Gem of
+#Conflagrant Celerity
+#Conflagrant Harmony
+#Conflagrant Ingenuity
+#Conflagrant Intensity
+#Conflagrant Proficiency
+#Conflagrant Resilience
+#Conflagrant Savviness
+#{Wrapped Conflagrant
+#{Conflagrant Gem of
 #{Athletic Conflagrant
 #{Fleet Conflagrant
 #{Ingenious Conflagrant

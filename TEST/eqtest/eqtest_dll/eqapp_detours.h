@@ -202,10 +202,10 @@ void EQAPP_Detours_AddDetoursForRender()
         return;
     }
 
-    EQ_ADDRESS_POINTER_CRender = EQ_GetRender();
-    if (EQ_ADDRESS_POINTER_CRender != 0)
+    auto render = EQ_GetRender();
+    if (render != 0)
     {
-        auto EQ_VFTABLE_CRender = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CRender + EQ_OFFSET_CRender_VFTABLE);
+        auto EQ_VFTABLE_CRender = EQ_ReadMemory<uint32_t>(render + EQ_OFFSET_CRender_VFTABLE);
         if (EQ_VFTABLE_CRender != 0)
         {
             EQ_ADDRESS_FUNCTION_CRender__ResetDevice        = EQ_ReadMemory<uint32_t>(EQ_VFTABLE_CRender + EQ_VFTABLE_INDEX_CRender__ResetDevice);
@@ -242,10 +242,10 @@ void EQAPP_Detours_RemoveDetoursForRender()
         return;
     }
 
-    EQ_ADDRESS_POINTER_CRender = EQ_GetRender();
-    if (EQ_ADDRESS_POINTER_CRender != 0)
+    auto render = EQ_GetRender();
+    if (render != 0)
     {
-        auto EQ_VFTABLE_CRender = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CRender + EQ_OFFSET_CRender_VFTABLE);
+        auto EQ_VFTABLE_CRender = EQ_ReadMemory<uint32_t>(render + EQ_OFFSET_CRender_VFTABLE);
         if (EQ_VFTABLE_CRender != 0)
         {
             EQ_ADDRESS_FUNCTION_CRender__ResetDevice        = EQ_ReadMemory<uint32_t>(EQ_VFTABLE_CRender + EQ_VFTABLE_INDEX_CRender__ResetDevice);
@@ -523,14 +523,14 @@ void EQAPP_Detours_Unload()
     {
         EQ_MACRO_FUNCTION_RemoveDetour(ProcessMouseEvent);
 
-        EQAPP_Log("AddDetour: ProcessMouseEvent");
+        EQAPP_Log("RemoveDetour: ProcessMouseEvent");
     }
 
     if (EQ_ADDRESS_FUNCTION_ProcessKeyboardEvent != 0)
     {
         EQ_MACRO_FUNCTION_RemoveDetour(ProcessKeyboardEvent);
 
-        EQAPP_Log("AddDetour: ProcessKeyboardEvent");
+        EQAPP_Log("RemoveDetour: ProcessKeyboardEvent");
     }
 #endif // EQ_FEATURE_GUI
 
@@ -666,7 +666,7 @@ void EQAPP_Detours_OnEnterOrLeaveZone()
     g_AutoLoginCharacterIndex = 0;
 
     EQAPP_Waypoint_FollowPath_Off();
-    EQAPP_Waypoint_Editor_Reset();
+    EQAPP_WaypointEditor_Reset();
 
     EQAPP_FindPath_FollowPath_Off();
     g_FindPathFollowPathList.clear();
@@ -765,14 +765,21 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
         return EQAPP_REAL_FUNCTION_DrawNetStatus(x, y, unknown);
     }
 
-    // kill switch
-    if (GetAsyncKeyState(g_EQAppKillSwitchKey))
+#ifdef EQ_FEATURE_BAZAAR
+    if (g_BazaarBotIsEnabled == false)
     {
-        EQAPP_Unload();
-        EQAPP_Console_Print();
+#endif // EQ_FEATURE_BAZAAR
+        // kill switch
+        if (GetAsyncKeyState(g_EQAppKillSwitchKey))
+        {
+            EQAPP_Unload();
+            EQAPP_Console_Print();
 
-        return EQAPP_REAL_FUNCTION_DrawNetStatus(x, y, unknown);
+            return EQAPP_REAL_FUNCTION_DrawNetStatus(x, y, unknown);
+        }
+#ifdef EQ_FEATURE_BAZAAR
     }
+#endif // EQ_FEATURE_BAZAAR
 
     if (g_EQAppIsLoaded == 0)
     {
@@ -1160,56 +1167,101 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CXWnd__DrawTooltip(void* this_ptr, void* 
         return EQAPP_REAL_FUNCTION_CXWnd__DrawTooltip(this_ptr, cxwnd);
     }
 
-    /*
-    auto windowList = EQ_GetCXWndList();
-    for (auto& window : windowList)
-    {
-        if (((EQUIStructs::CXWND*)window)->dShow == false)
-        {
-            continue;
-        }
-
-        if (((EQUIStructs::CXWND*)window)->Tooltip == NULL)
-        {
-            continue;
-        }
-
-        if (((EQUIStructs::CXWND*)window)->Tooltip->Length == 0)
-        {
-            continue;
-        }
-
-        if (strcmp(((EQUIStructs::CXWND*)window)->Tooltip->Text, "Area\nTaunt") == 0)
-        {
-            auto windowPtr = (EQUIStructs::CXWND*)window;
-
-            EQ_CXStr_SetEx(&windowPtr->Tooltip, "awea\ntaunt\nthis spell makes\nyou taunt a lot\nof shit!");
-        }
-    }
-*/
-
-    ////EQ_PrintTextToChat("drawing a tooltip!");
+/*
+    //std::cout << "tooltip 1!" << std::endl;
 
     auto window = (EQUIStructs::CXWND*)cxwnd;
     if (window != NULL)
     {
-        if (window->dShow == true)
+        //std::cout << "tooltip 2!" << std::endl;
+
+        //if (window->dShow == true)
         {
-            if (window->MouseOver == true)
+            //std::cout << "tooltip 3!" << std::endl;
+
+            //if (window->MouseOver == true)
             {
-                if (window->Tooltip != NULL)
+                //std::cout << "tooltip 4!" << std::endl;
+
+                //if (window->Tooltip != NULL)
                 {
-                    if (window->Tooltip->Length != 0)
+                    //std::cout << "tooltip 5!" << std::endl;
+
+                    //if (window->Tooltip->Length != 0)
                     {
-                        if (strcmp(window->Tooltip->Text, "Area\nTaunt") == 0)
+                        //std::cout << "tooltip 6!" << std::endl;
+
+                        auto playerSpawn = EQ_GetPlayerSpawn();
+                        if (playerSpawn != NULL)
                         {
-                            EQ_CXStr_SetEx(&window->Tooltip, "AREA TAUNT\nThis spell makes\nyou taunt a lot\nof shit!");
+                            auto playerLevel = EQ_GetSpawnLevel(playerSpawn);
+
+                            for (unsigned int i = 0; i < EQ_NUM_ALTERNATE_ABILITIES; i++)
+                            {
+                                auto alternateAbility = EQ_CLASS_POINTER_AltAdvManager->GetAAById(i, playerLevel);
+                                if (alternateAbility == NULL)
+                                {
+                                    continue;
+                                }
+
+                                std::string findString = std::string();
+
+                                std::string alternateAbilityName = EQ_CLASS_POINTER_CDBStr->GetString(alternateAbility->nName, 1, NULL);
+                                if (alternateAbilityName.size() == 0)
+                                {
+                                    continue;
+                                }
+
+                                std::string alternateAbilityName2 = EQ_CLASS_POINTER_CDBStr->GetString(alternateAbility->nName, 2, NULL);
+                                std::string alternateAbilityName3 = EQ_CLASS_POINTER_CDBStr->GetString(alternateAbility->nName, 3, NULL);
+
+                                if (alternateAbilityName2.size() != 0 && alternateAbilityName3.size() != 0)
+                                {
+                                    std::stringstream ss;
+                                    ss << alternateAbilityName2 << "\n" << alternateAbilityName3;
+
+                                    findString = ss.str();
+                                }
+                                else
+                                {
+                                    findString = alternateAbilityName;
+                                }
+
+                                if (findString.size() == 0)
+                                {
+                                    continue;
+                                }
+
+                                //std::cout << "findString = " << findString << std::endl;
+
+                                if (window->WindowText == NULL)
+                                {
+                                    continue;
+                                }
+
+                                if (strcmp(window->WindowText->Text, findString.c_str()) == 0)
+                                {
+                                    std::string alternateAbilityDescription = EQ_CLASS_POINTER_CDBStr->GetString(alternateAbility->nName, 4, NULL);
+                                    if (alternateAbilityDescription.size() != 0)
+                                    {
+                                        std::stringstream ss;
+                                        ss << alternateAbilityName << "\n" << alternateAbilityDescription;
+
+                                        std::cout << ss.str().c_str() << std::endl;
+
+                                        //EQ_CXStr_SetEx(&window->Tooltip, ss.str().c_str());
+
+                                        break;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
         }
     }
+*/
 
     return EQAPP_REAL_FUNCTION_CXWnd__DrawTooltip(this_ptr, cxwnd);
 }
@@ -1360,7 +1412,16 @@ int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__UpdateItemSlot(void* this_ptr, 
         return EQAPP_REAL_FUNCTION_EQPlayer__UpdateItemSlot(this_ptr, updateItemSlot, itemDefinition, b1, serverSide, b3);
     }
 
-    //std::cout << "EQPlayer::UpdateItemSlot(): " << (int)updateItemSlot << ", " << itemDefinition << std::endl;
+    if (g_EQAppDebugTextIsEnabled == true)
+    {
+        if (strcmp(itemDefinition, "0") != 0)
+        {
+            if (strcmp(itemDefinition, "IT0") != 0)
+            {
+                std::cout << "EQPlayer::UpdateItemSlot(): " << (int)updateItemSlot << " = " << itemDefinition << std::endl;
+            }
+        }
+    }
 
     if (g_LuaIsEnabled == true)
     {

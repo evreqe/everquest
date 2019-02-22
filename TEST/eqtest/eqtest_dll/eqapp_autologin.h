@@ -52,6 +52,11 @@ void EQAPP_AutoLogin_Load()
 
 void EQAPP_AutoLogin_Execute()
 {
+    if (g_AutoLoginIsEnabled == false)
+    {
+        return;
+    }
+
     if (EQAPP_Timer_HasTimeElapsed(g_AutoLoginTimer, g_AutoLoginTimerInterval) == false)
     {
         return;

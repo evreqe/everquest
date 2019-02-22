@@ -1,5 +1,7 @@
 #pragma once
 
+extern bool EQAPP_GUI_IsMouseOver();
+
 #include "eqapp_lua.h"
 
 namespace EQApp
@@ -87,6 +89,10 @@ bool g_WaypointEditorHeightFilterIsEnabled = false;
 float g_WaypointEditorHeightFilterDistanceLow  = 10.0f;
 float g_WaypointEditorHeightFilterDistanceHigh = 10.0f;
 
+bool g_WaypointEditorDistanceFilterIsEnabled = false;
+
+float g_WaypointEditorDistanceFilterDistance = 400.0f;
+
 uint32_t g_WaypointEditorDrawTextX = 600;
 uint32_t g_WaypointEditorDrawTextY = 10;
 
@@ -110,6 +116,10 @@ float g_WaypointUseDoorDistance = 20.0f;
 
 float g_WaypointAddAtTargetDistance = 5.0f;
 
+bool g_WaypointIgnoreWaitIsEnabled = false;
+
+bool g_WaypointIgnoreMovementIsEnabled = false;
+
 EQApp::WaypointList g_WaypointList;
 
 std::list<EQApp::WaypointList> g_WaypointUndoList;
@@ -121,15 +131,24 @@ EQApp::WaypointIndexList g_WaypointGetPathIndexList;
 
 EQApp::WaypointIndexList g_WaypointFollowPathIndexList;
 
-void EQAPP_Waypoint_Editor_Toggle();
-void EQAPP_Waypoint_Editor_On();
-void EQAPP_Waypoint_Editor_Off();
-void EQAPP_Waypoint_Editor_HeightFilter_Toggle();
-void EQAPP_Waypoint_Editor_HeightFilter_On();
-void EQAPP_Waypoint_Editor_HeightFilter_Off();
+void EQAPP_WaypointEditor_Toggle();
+void EQAPP_WaypointEditor_On();
+void EQAPP_WaypointEditor_Off();
+void EQAPP_WaypointEditor_HeightFilter_Toggle();
+void EQAPP_WaypointEditor_HeightFilter_On();
+void EQAPP_WaypointEditor_HeightFilter_Off();
+void EQAPP_WaypointEditor_DistanceFilter_Toggle();
+void EQAPP_WaypointEditor_DistanceFilter_On();
+void EQAPP_WaypointEditor_DistanceFilter_Off();
 void EQAPP_Waypoint_FollowPath_Toggle();
 void EQAPP_Waypoint_FollowPath_On();
 void EQAPP_Waypoint_FollowPath_Off();
+void EQAPP_Waypoint_IgnoreWait_Toggle();
+void EQAPP_Waypoint_IgnoreWait_On();
+void EQAPP_Waypoint_IgnoreWait_Off();
+void EQAPP_Waypoint_IgnoreMovement_Toggle();
+void EQAPP_Waypoint_IgnoreMovement_On();
+void EQAPP_Waypoint_IgnoreMovement_Off();
 void EQAPP_Waypoint_Undo_AddToList();
 void EQAPP_Waypoint_Undo();
 void EQAPP_Waypoint_Redo();
@@ -143,6 +162,7 @@ uint32_t  EQAPP_Waypoint_AddAtTargetAndConnectToLastAddedIndex();
 uint32_t  EQAPP_Waypoint_AddAtTargetBetween(uint32_t fromIndex, uint32_t toIndex);
 uint32_t  EQAPP_Waypoint_AddBehindTarget(const char* waypointName);
 uint32_t  EQAPP_Waypoint_AddBehindTargetAndConnectToLastAddedIndex();
+uint32_t  EQAPP_Waypoint_Split(uint32_t fromIndex, uint32_t toIndex);
 void EQAPP_Waypoint_Remove(uint32_t index);
 void EQAPP_Waypoint_Connect(uint32_t fromIndex, uint32_t toIndex, bool bOneWayConnection);
 void EQAPP_Waypoint_Disconnect(uint32_t fromIndex, uint32_t toIndex, bool bOneWayConnection);
@@ -193,12 +213,20 @@ bool EQAPP_WaypointEditor_HandleEvent_ExecuteCmd(uint32_t commandID, int isActiv
 void EQAPP_WaypointEditor_Command_Reset();
 void EQAPP_WaypointEditor_Command_Connect();
 void EQAPP_WaypointEditor_Command_Disconnect();
+void EQAPP_WaypointEditor_Command_DisconnectAll();
 void EQAPP_WaypointEditor_Command_AddAtPlayer();
+void EQAPP_WaypointEditor_Command_AddAtPlayerAndConnectToLastAddedIndex();
+void EQAPP_WaypointEditor_Command_AddAtPlayerBetween();
 void EQAPP_WaypointEditor_Command_AddAtTarget();
+void EQAPP_WaypointEditor_Command_AddAtTargetBetween();
+void EQAPP_WaypointEditor_Command_AddBehindTarget();
 void EQAPP_WaypointEditor_Command_Remove();
 void EQAPP_WaypointEditor_Command_Align();
+void EQAPP_WaypointEditor_Command_Split();
+void EQAPP_WaypointEditor_Command_MoveToPlayer();
+void EQAPP_WaypointEditor_Command_MoveToTarget();
 
-void EQAPP_Waypoint_Editor_Reset()
+void EQAPP_WaypointEditor_Reset()
 {
     g_WaypointEditorFromIndex = EQApp::WaypointIndexNull;
     g_WaypointEditorToIndex   = EQApp::WaypointIndexNull;
@@ -212,12 +240,12 @@ void EQAPP_Waypoint_Editor_Reset()
     g_WaypointFollowPathIndexList.clear();
 }
 
-void EQAPP_Waypoint_Editor_Toggle()
+void EQAPP_WaypointEditor_Toggle()
 {
     EQ_ToggleBool(g_WaypointEditorIsEnabled);
     EQAPP_PrintBool("Waypoint Editor", g_WaypointEditorIsEnabled);
 
-    EQAPP_Waypoint_Editor_Reset();
+    EQAPP_WaypointEditor_Reset();
 
     if (g_WaypointEditorIsEnabled == false)
     {
@@ -228,41 +256,63 @@ void EQAPP_Waypoint_Editor_Toggle()
     }
 }
 
-void EQAPP_Waypoint_Editor_On()
+void EQAPP_WaypointEditor_On()
 {
     if (g_WaypointEditorIsEnabled == false)
     {
-        EQAPP_Waypoint_Editor_Toggle();
+        EQAPP_WaypointEditor_Toggle();
     }
 }
 
-void EQAPP_Waypoint_Editor_Off()
+void EQAPP_WaypointEditor_Off()
 {
     if (g_WaypointEditorIsEnabled == true)
     {
-        EQAPP_Waypoint_Editor_Toggle();
+        EQAPP_WaypointEditor_Toggle();
     }
 }
 
-void EQAPP_Waypoint_Editor_HeightFilter_Toggle()
+void EQAPP_WaypointEditor_HeightFilter_Toggle()
 {
     EQ_ToggleBool(g_WaypointEditorHeightFilterIsEnabled);
     EQAPP_PrintBool("Waypoint Editor Height Filter", g_WaypointEditorHeightFilterIsEnabled);
 }
 
-void EQAPP_Waypoint_Editor_HeightFilter_On()
+void EQAPP_WaypointEditor_HeightFilter_On()
 {
     if (g_WaypointEditorHeightFilterIsEnabled == false)
     {
-        EQAPP_Waypoint_Editor_HeightFilter_Toggle();
+        EQAPP_WaypointEditor_HeightFilter_Toggle();
     }
 }
 
-void EQAPP_Waypoint_Editor_HeightFilter_Off()
+void EQAPP_WaypointEditor_HeightFilter_Off()
 {
     if (g_WaypointEditorHeightFilterIsEnabled == true)
     {
-        EQAPP_Waypoint_Editor_HeightFilter_Toggle();
+        EQAPP_WaypointEditor_HeightFilter_Toggle();
+    }
+}
+
+void EQAPP_WaypointEditor_DistanceFilter_Toggle()
+{
+    EQ_ToggleBool(g_WaypointEditorDistanceFilterIsEnabled);
+    EQAPP_PrintBool("Waypoint Editor Distance Filter", g_WaypointEditorDistanceFilterIsEnabled);
+}
+
+void EQAPP_WaypointEditor_DistanceFilter_On()
+{
+    if (g_WaypointEditorDistanceFilterIsEnabled == false)
+    {
+        EQAPP_WaypointEditor_DistanceFilter_Toggle();
+    }
+}
+
+void EQAPP_WaypointEditor_DistanceFilter_Off()
+{
+    if (g_WaypointEditorDistanceFilterIsEnabled == true)
+    {
+        EQAPP_WaypointEditor_DistanceFilter_Toggle();
     }
 }
 
@@ -301,6 +351,54 @@ void EQAPP_Waypoint_FollowPath_Off()
     if (g_WaypointFollowPathIsEnabled == true)
     {
         EQAPP_Waypoint_FollowPath_Toggle();
+    }
+}
+
+void EQAPP_Waypoint_IgnoreWait_Toggle()
+{
+    EQ_ToggleBool(g_WaypointIgnoreWaitIsEnabled);
+    EQAPP_PrintBool("Waypoint Ignore Wait", g_WaypointIgnoreWaitIsEnabled);
+
+    g_WaypointFollowPathWaitIsEnabled = false;
+}
+
+void EQAPP_Waypoint_IgnoreWait_On()
+{
+    if (g_WaypointIgnoreWaitIsEnabled == false)
+    {
+        EQAPP_Waypoint_IgnoreWait_Toggle();
+    }
+}
+
+void EQAPP_Waypoint_IgnoreWait_Off()
+{
+    if (g_WaypointIgnoreWaitIsEnabled == true)
+    {
+        EQAPP_Waypoint_IgnoreWait_Toggle();
+    }
+}
+
+void EQAPP_Waypoint_IgnoreMovement_Toggle()
+{
+    EQ_ToggleBool(g_WaypointIgnoreMovementIsEnabled);
+    EQAPP_PrintBool("Waypoint Ignore Movement", g_WaypointIgnoreMovementIsEnabled);
+
+    g_WaypointFollowPathWaitIsEnabled = false;
+}
+
+void EQAPP_Waypoint_IgnoreMovement_On()
+{
+    if (g_WaypointIgnoreMovementIsEnabled == false)
+    {
+        EQAPP_Waypoint_IgnoreMovement_Toggle();
+    }
+}
+
+void EQAPP_Waypoint_IgnoreMovement_Off()
+{
+    if (g_WaypointIgnoreMovementIsEnabled == true)
+    {
+        EQAPP_Waypoint_IgnoreMovement_Toggle();
     }
 }
 
@@ -604,6 +702,60 @@ uint32_t EQAPP_Waypoint_AddAtTargetBetween(uint32_t fromIndex, uint32_t toIndex)
     EQAPP_Waypoint_Disconnect(fromIndex, toIndex, false);
 
     auto betweenIndex = EQAPP_Waypoint_AddAtTarget("");
+
+    if (betweenIndex == EQApp::WaypointIndexNull)
+    {
+        EQAPP_PrintDebugText(__FUNCTION__, "between index is null");
+        return EQApp::WaypointIndexNull;
+    }
+
+    EQAPP_Waypoint_Connect(fromIndex, betweenIndex, false);
+    EQAPP_Waypoint_Connect(betweenIndex, toIndex, false);
+
+    return betweenIndex;
+}
+
+uint32_t EQAPP_Waypoint_Split(uint32_t fromIndex, uint32_t toIndex)
+{
+    if (fromIndex == EQApp::WaypointIndexNull)
+    {
+        EQAPP_PrintDebugText(__FUNCTION__, "from index is null");
+        return EQApp::WaypointIndexNull;
+    }
+
+    if (toIndex == EQApp::WaypointIndexNull)
+    {
+        EQAPP_PrintDebugText(__FUNCTION__, "to index is null");
+        return EQApp::WaypointIndexNull;
+    }
+
+    if (fromIndex == toIndex)
+    {
+        EQAPP_PrintDebugText(__FUNCTION__, "from index and to index are the same");
+        return EQApp::WaypointIndexNull;
+    }
+
+    auto fromWaypoint = EQAPP_Waypoint_GetByIndex(fromIndex);
+    if (fromWaypoint == NULL)
+    {
+        EQAPP_PrintDebugText(__FUNCTION__, "from waypoint is null");
+        return EQApp::WaypointIndexNull;
+    }
+
+    auto toWaypoint = EQAPP_Waypoint_GetByIndex(toIndex);
+    if (toWaypoint == NULL)
+    {
+        EQAPP_PrintDebugText(__FUNCTION__, "to waypoint is null");
+        return EQApp::WaypointIndexNull;
+    }
+
+    EQAPP_Waypoint_Disconnect(fromIndex, toIndex, false);
+
+    float splitY = (fromWaypoint->Y + toWaypoint->Y) * 0.5f;
+    float splitX = (fromWaypoint->X + toWaypoint->X) * 0.5f;
+    float splitZ = (fromWaypoint->Z + toWaypoint->Z) * 0.5f;
+
+    auto betweenIndex = EQAPP_Waypoint_Add(splitY, splitX, splitZ, "");
 
     if (betweenIndex == EQApp::WaypointIndexNull)
     {
@@ -1950,7 +2102,18 @@ void EQAPP_WaypointList_PrintNames()
         return;
     }
 
-    for (auto& waypoint : g_WaypointList)
+    auto waypointList = g_WaypointList;
+
+    std::sort
+    (
+        waypointList.begin(), waypointList.end(),
+        [] (const EQApp::Waypoint& a, const EQApp::Waypoint& b) -> bool
+        { 
+            return a.Name < b.Name;
+        }
+    );
+
+    for (auto& waypoint : waypointList)
     {
         if (waypoint.Name.size() == 0)
         {
@@ -2007,6 +2170,17 @@ void EQAPP_WaypointList_Draw()
                         waypoint.IsDrawn = false;
                         continue;
                     }
+                }
+            }
+
+            if (g_WaypointEditorDistanceFilterIsEnabled == true)
+            {
+                float waypointDistance = EQ_CalculateDistance3D(playerSpawnY, playerSpawnX, playerSpawnZ, waypoint.Y, waypoint.X, waypoint.Z);
+
+                if (waypointDistance > g_WaypointEditorDistanceFilterDistance)
+                {
+                    waypoint.IsDrawn = false;
+                    continue;
                 }
             }
 
@@ -2159,11 +2333,14 @@ void EQAPP_WaypointList_Draw()
                 textColor = EQ_DRAW_TEXT_COLOR_TEAL;
             }
 
-            auto mouseX = EQ_GetMouseX();
-            auto mouseY = EQ_GetMouseY();
-            if (EQAPP_WaypointEditor_GetClickedIndex(mouseX, mouseY) == waypoint.Index)
+            if (EQAPP_GUI_IsMouseOver() == false)
             {
-                textColor = EQ_DRAW_TEXT_COLOR_PINK;
+                auto mouseX = EQ_GetMouseX();
+                auto mouseY = EQ_GetMouseY();
+                if (EQAPP_WaypointEditor_GetClickedIndex(mouseX, mouseY) == waypoint.Index)
+                {
+                    textColor = EQ_DRAW_TEXT_COLOR_PINK;
+                }
             }
 
             EQ_DrawTextByColor(drawText.c_str(), (int)waypointScreenX, (int)waypointScreenY, textColor);
@@ -2303,7 +2480,7 @@ void EQAPP_Waypoint_FollowPathList(EQApp::WaypointIndexList& indexList)
         return;
     }
 
-    if (g_WaypointFollowPathWaitIsEnabled == true)
+    if (g_WaypointFollowPathWaitIsEnabled == true && g_WaypointIgnoreWaitIsEnabled == false)
     {
         if (EQAPP_Timer_HasTimeElapsed(g_WaypointFollowPathWaitTimer, g_WaypointFollowPathWaitTimerInterval) == true)
         {
@@ -2536,7 +2713,11 @@ bool EQAPP_Waypoint_FollowPath_HandleEvent_ExecuteCmd(uint32_t commandID, int is
         commandID == EQ_EXECUTECMD_AUTORUN
     )
     {
-        EQAPP_Waypoint_FollowPath_Off();
+        if (g_WaypointIgnoreMovementIsEnabled == false)
+        {
+            EQAPP_Waypoint_FollowPath_Off();
+        }
+
         return true;
     }
 
@@ -2668,6 +2849,18 @@ void EQAPP_WaypointEditor_Command_Disconnect()
     EQAPP_WaypointEditor_Command_Reset();
 }
 
+void EQAPP_WaypointEditor_Command_DisconnectAll()
+{
+    if (g_WaypointEditorFromIndex == EQApp::WaypointIndexNull)
+    {
+        return;
+    }
+
+    EQAPP_Waypoint_DisconnectAll(g_WaypointEditorFromIndex);
+
+    EQAPP_WaypointEditor_Command_Reset();
+}
+
 void EQAPP_WaypointEditor_Command_AddAtPlayer()
 {
     EQAPP_Waypoint_AddAtPlayer("");
@@ -2675,9 +2868,47 @@ void EQAPP_WaypointEditor_Command_AddAtPlayer()
     EQAPP_WaypointEditor_Command_Reset();
 }
 
+void EQAPP_WaypointEditor_Command_AddAtPlayerAndConnectToLastAddedIndex()
+{
+    EQAPP_Waypoint_AddAtPlayerAndConnectToLastAddedIndex();
+
+    EQAPP_WaypointEditor_Command_Reset();
+}
+
+void EQAPP_WaypointEditor_Command_AddAtPlayerBetween()
+{
+    if (g_WaypointEditorFromIndex == EQApp::WaypointIndexNull || g_WaypointEditorToIndex == EQApp::WaypointIndexNull)
+    {
+        return;
+    }
+
+    EQAPP_Waypoint_AddAtPlayerBetween(g_WaypointEditorFromIndex, g_WaypointEditorToIndex);
+
+    EQAPP_WaypointEditor_Command_Reset();
+}
+
 void EQAPP_WaypointEditor_Command_AddAtTarget()
 {
     EQAPP_Waypoint_AddAtTarget("");
+
+    EQAPP_WaypointEditor_Command_Reset();
+}
+
+void EQAPP_WaypointEditor_Command_AddAtTargetBetween()
+{
+    if (g_WaypointEditorFromIndex == EQApp::WaypointIndexNull || g_WaypointEditorToIndex == EQApp::WaypointIndexNull)
+    {
+        return;
+    }
+
+    EQAPP_Waypoint_AddAtTargetBetween(g_WaypointEditorFromIndex, g_WaypointEditorToIndex);
+
+    EQAPP_WaypointEditor_Command_Reset();
+}
+
+void EQAPP_WaypointEditor_Command_AddBehindTarget()
+{
+    EQAPP_Waypoint_AddBehindTarget("");
 
     EQAPP_WaypointEditor_Command_Reset();
 }
@@ -2702,6 +2933,42 @@ void EQAPP_WaypointEditor_Command_Align()
     }
 
     EQAPP_Waypoint_Align(g_WaypointEditorFromIndex, g_WaypointEditorToIndex);
+
+    EQAPP_WaypointEditor_Command_Reset();
+}
+
+void EQAPP_WaypointEditor_Command_Split()
+{
+    if (g_WaypointEditorFromIndex == EQApp::WaypointIndexNull || g_WaypointEditorToIndex == EQApp::WaypointIndexNull)
+    {
+        return;
+    }
+
+    EQAPP_Waypoint_Split(g_WaypointEditorFromIndex, g_WaypointEditorToIndex);
+
+    EQAPP_WaypointEditor_Command_Reset();
+}
+
+void EQAPP_WaypointEditor_Command_MoveToPlayer()
+{
+    if (g_WaypointEditorFromIndex == EQApp::WaypointIndexNull)
+    {
+        return;
+    }
+
+    EQAPP_Waypoint_MoveToPlayer(g_WaypointEditorFromIndex);
+
+    EQAPP_WaypointEditor_Command_Reset();
+}
+
+void EQAPP_WaypointEditor_Command_MoveToTarget()
+{
+    if (g_WaypointEditorFromIndex == EQApp::WaypointIndexNull)
+    {
+        return;
+    }
+
+    EQAPP_Waypoint_MoveToTarget(g_WaypointEditorFromIndex);
 
     EQAPP_WaypointEditor_Command_Reset();
 }
