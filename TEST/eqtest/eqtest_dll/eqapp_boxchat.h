@@ -40,6 +40,8 @@ void EQAPP_BoxChat_Toggle();
 void EQAPP_BoxChat_On();
 void EQAPP_BoxChat_Off();
 void EQAPP_BoxChat_AutoConnect_Toggle();
+void EQAPP_BoxChat_AutoConnect_On();
+void EQAPP_BoxChat_AutoConnect_Off();
 void EQAPP_BoxChat_Load();
 void EQAPP_BoxChat_Unload();
 bool EQAPP_BoxChat_Connect(std::string clientName);
@@ -77,6 +79,22 @@ void EQAPP_BoxChat_AutoConnect_Toggle()
 {
     EQ_ToggleBool(g_BoxChatAutoConnectIsEnabled);
     EQAPP_PrintBool("Box Chat Auto Connect", g_BoxChatAutoConnectIsEnabled);
+}
+
+void EQAPP_BoxChat_AutoConnect_On()
+{
+    if (g_BoxChatAutoConnectIsEnabled == false)
+    {
+        EQAPP_BoxChat_AutoConnect_Toggle();
+    }
+}
+
+void EQAPP_BoxChat_AutoConnect_Off()
+{
+    if (g_BoxChatAutoConnectIsEnabled == true)
+    {
+        EQAPP_BoxChat_AutoConnect_Toggle();
+    }
 }
 
 void EQAPP_BoxChat_Load()

@@ -98,7 +98,7 @@ function OnChatText(chatText, chatTextColor)
 
     for m in string.gmatch(chatText, "\018%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x%x[%w%s%p]+\018") do
         if String_Contains(m, g_GiveawayItemName) == true then
-            Giveaway_Sleep(1)
+            Giveaway_Sleep(3)
             EQ_InterpretCommand("/1 " .. m)
             g_GiveawayIsEnabled = 0
             EQ_PrintTextToChat("Giveaway: Off")

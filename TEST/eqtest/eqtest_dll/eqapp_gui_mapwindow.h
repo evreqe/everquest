@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef EQ_FEATURE_GUI
+
 extern bool g_GUIDarkThemeIsEnabled;
 
 bool g_GUIMapWindowIsEnabled = false;
@@ -7,12 +9,14 @@ bool g_GUIMapWindowIsEnabled = false;
 bool g_GUIMapWindowMapLinesIsEnabled = true;
 bool g_GUIMapWindowMapLabelsIsEnabled = false;
 bool g_GUIMapWindowMapSpawnsIsEnabled = true;
+bool g_GUIMapWindowMapGroundSpawnsIsEnabled = false;
 bool g_GUIMapWindowMapWaypointsIsEnabled = false;
 bool g_GUIMapWindowMapWaypointConnectionsIsEnabled = true;
 
 bool g_GUIMapWindowMapHeightFilterLinesIsEnabled = false;
 bool g_GUIMapWindowMapHeightFilterLabelsIsEnabled = false;
 bool g_GUIMapWindowMapHeightFilterSpawnsIsEnabled = false;
+bool g_GUIMapWindowMapHeightFilterGroundSpawnsIsEnabled = false;
 bool g_GUIMapWindowMapHeightFilterWaypointsIsEnabled = false;
 
 bool g_GUIMapWindowMapLayer0IsEnabled = true;
@@ -46,6 +50,14 @@ bool g_GUIMapWindowMapSpawnMouseHoverDrawCircle = false;
 
 ImColor g_GUIMapWindowMapSpawnMouseHoverColor        = ImColor(1.0f, 1.0f, 0.0f, 1.0f); // yellow
 ImColor g_GUIMapWindowMapSpawnMouseHoverBackColor    = ImColor(0.0f, 0.0f, 0.0f, 1.0f); // black
+
+ImColor g_GUIMapWindowMapGroundSpawnDefaultColor        = ImColor(1.0f, 1.0f, 1.0f, 1.0f); // white
+
+bool g_GUIMapWindowMapGroundSpawnMouseHover = false;
+bool g_GUIMapWindowMapGroundSpawnMouseHoverDrawCircle = false;
+
+ImColor g_GUIMapWindowMapGroundSpawnMouseHoverColor        = ImColor(1.0f, 1.0f, 0.0f, 1.0f); // yellow
+ImColor g_GUIMapWindowMapGroundSpawnMouseHoverBackColor    = ImColor(0.0f, 0.0f, 0.0f, 1.0f); // black
 
 ImColor g_GUIMapWindowMapWaypointDefaultColor        = ImColor(1.0f, 0.5f, 1.0f, 1.0f); // pink
 
@@ -94,9 +106,10 @@ float g_GUIMapWindowMapMouseCursorSize = 16.0f;
 
 float g_GUIMapWindowMapTextHeightOffset = 5.0f;
 
-float g_GUIMapWindowMapLabelCircleSize    = 4.0f;
-float g_GUIMapWindowMapSpawnCircleSize    = 4.0f;
-float g_GUIMapWindowMapWaypointCircleSize = 4.0f;
+float g_GUIMapWindowMapLabelCircleSize          = 4.0f;
+float g_GUIMapWindowMapSpawnCircleSize          = 4.0f;
+float g_GUIMapWindowMapGroundSpawnCircleSize    = 4.0f;
+float g_GUIMapWindowMapWaypointCircleSize       = 4.0f;
 
 float g_GUIMapWindowMapSpawnNamedCircleSizeMultiplier = 4.0f;
 
@@ -105,6 +118,10 @@ float g_GUIMapWindowMapArrowSize = 20.0f;
 float g_GUIMapWindowMapSpawnClickDistance = 400.0f;
 
 LPDIRECT3DTEXTURE9 g_GUIMapWindowMapBackgroundTexture = NULL;
+
+void EQAPP_GUI_MapWindow_Toggle();
+void EQAPP_GUI_MapWindow_On();
+void EQAPP_GUI_MapWindow_Off();
 
 static void EQAPP_GUI_MapWindow();
 static void EQAPP_GUI_MapWindow_LoadTextures();
@@ -122,6 +139,27 @@ static void EQAPP_GUI_MapWindow_Map_Center();
 static void EQAPP_GUI_MapWindow_Map_DrawSpawnArrow(uint32_t spawn, ImColor& color);
 static void EQAPP_GUI_MapWindow_Map_Draw();
 static void EQAPP_GUI_MapWindow_Map_PrintDebugInformation();
+
+void EQAPP_GUI_MapWindow_Toggle()
+{
+    EQ_ToggleBool(g_GUIMapWindowIsEnabled);
+}
+
+void EQAPP_GUI_MapWindow_On()
+{
+    if (g_GUIMapWindowIsEnabled == false)
+    {
+        EQAPP_GUI_MapWindow_Toggle();
+    }
+}
+
+void EQAPP_GUI_MapWindow_Off()
+{
+    if (g_GUIMapWindowIsEnabled == true)
+    {
+        EQAPP_GUI_MapWindow_Toggle();
+    }
+}
 
 static void EQAPP_GUI_MapWindow()
 {
@@ -180,6 +218,7 @@ static void EQAPP_GUI_MapWindow()
             if (ImGui::MenuItem("Lines##MapWindowMenuItemOptionsLines", NULL, &g_GUIMapWindowMapLinesIsEnabled)) {}
             if (ImGui::MenuItem("Labels##MapWindowMenuItemOptionsLabels", NULL, &g_GUIMapWindowMapLabelsIsEnabled)) {}
             if (ImGui::MenuItem("Spawns##MapWindowMenuItemOptionsSpawns", NULL, &g_GUIMapWindowMapSpawnsIsEnabled)) {}
+            if (ImGui::MenuItem("Ground Spawns##MapWindowMenuItemOptionsGroundSpawns", NULL, &g_GUIMapWindowMapGroundSpawnsIsEnabled)) {}
             if (ImGui::MenuItem("Waypoints##MapWindowMenuItemOptionsWaypoints", NULL, &g_GUIMapWindowMapWaypointsIsEnabled)) {}
             if (ImGui::MenuItem("Waypoint Connections##MapWindowMenuItemOptionsWaypointConnections", NULL, &g_GUIMapWindowMapWaypointConnectionsIsEnabled)) {}
 
@@ -190,6 +229,7 @@ static void EQAPP_GUI_MapWindow()
             if (ImGui::MenuItem("Lines##MapWindowMenuItemOptionsHeightFilterForLines", NULL, &g_GUIMapWindowMapHeightFilterLinesIsEnabled)) {}
             if (ImGui::MenuItem("Labels##MapWindowMenuItemOptionsHeightFilterForLabels", NULL, &g_GUIMapWindowMapHeightFilterLabelsIsEnabled)) {}
             if (ImGui::MenuItem("Spawns##MapWindowMenuItemOptionsHeightFilterForSpawns", NULL, &g_GUIMapWindowMapHeightFilterSpawnsIsEnabled)) {}
+            if (ImGui::MenuItem("Ground Spawns##MapWindowMenuItemOptionsHeightFilterForGroundSpawns", NULL, &g_GUIMapWindowMapHeightFilterGroundSpawnsIsEnabled)) {}
             if (ImGui::MenuItem("Waypoints##MapWindowMenuItemOptionsHeightFilterForWaypoints", NULL, &g_GUIMapWindowMapHeightFilterWaypointsIsEnabled)) {}
 
             ImGui::DragFloat("Low##MapWindowMenuItemOptionsHeightFilterLow", &g_GUIMapWindowMapHeightFilterLow);
@@ -513,6 +553,7 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
     g_GUIMapWindowMapOriginY = g_GUIMapWindowMapY + (g_GUIMapWindowMapHeight * 0.5f);
 
     float spawnCircleSize = g_GUIMapWindowMapSpawnCircleSize;
+    float groundSpawnCircleSize = g_GUIMapWindowMapGroundSpawnCircleSize;
     float waypointCircleSize = g_GUIMapWindowMapWaypointCircleSize;
 
     if (g_GUIMapWindowMapScaleToZoomIsEnabled == true)
@@ -523,6 +564,12 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
             if (spawnCircleSize < 1.0f)
             {
                 spawnCircleSize = 1.0f;
+            }
+
+            groundSpawnCircleSize = groundSpawnCircleSize * g_GUIMapWindowMapZoom;
+            if (groundSpawnCircleSize < 1.0f)
+            {
+                groundSpawnCircleSize = 1.0f;
             }
 
             waypointCircleSize = waypointCircleSize * g_GUIMapWindowMapZoom;
@@ -962,6 +1009,158 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
         }
     }
 
+    if (g_GUIMapWindowMapGroundSpawnsIsEnabled == true)
+    {
+        EQClass::GroundItemManager* groundItemList = EQ_GetGroundItemList();
+        if (groundItemList != NULL && groundItemList->Top != NULL)
+        {
+            auto groundSpawn = groundItemList->Top;
+
+            while (groundSpawn)
+            {
+                g_GUIMapWindowMapGroundSpawnMouseHover = false;
+                g_GUIMapWindowMapGroundSpawnMouseHoverDrawCircle = false;
+
+                // cannot be picked up
+                if (groundSpawn->Weight == -1)
+                {
+                    groundSpawn = groundSpawn->Next;
+                    continue;
+                }
+
+                if (g_GUIMapWindowMapHeightFilterGroundSpawnsIsEnabled == true)
+                {
+                    if (g_GUIMapWindowMapHeightFilterLow > 0.0f)
+                    {
+                        if (groundSpawn->Z < (playerSpawnZ - g_GUIMapWindowMapHeightFilterLow))
+                        {
+                            groundSpawn = groundSpawn->Next;
+                            continue;
+                        }
+                    }
+
+                    if (g_GUIMapWindowMapHeightFilterHigh > 0.0f)
+                    {
+                        if (groundSpawn->Z > (playerSpawnZ + g_GUIMapWindowMapHeightFilterHigh))
+                        {
+                            groundSpawn = groundSpawn->Next;
+                            continue;
+                        }
+                    }
+                }
+
+                float groundSpawnMapX = 0.0f;
+                float groundSpawnMapY = 0.0f;
+                EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPosition(-groundSpawn->X, -groundSpawn->Y, groundSpawnMapX, groundSpawnMapY);
+
+                if (EQAPP_GUI_MapWindow_Map_IsPointInsideMap((int)groundSpawnMapX, (int)groundSpawnMapY) == false)
+                {
+                    groundSpawn = groundSpawn->Next;
+                    continue;
+                }
+
+                std::string groundSpawnName = groundSpawn->Name;
+
+                EQAPP_String_ReplaceAll(groundSpawnName, "_ACTORDEF", "");
+
+                if (ImGui::IsWindowHovered() == true)
+                {
+                    if (g_GUIMapWindowMapGroundSpawnMouseHover == false)
+                    {
+                        auto mouseDistanceToGroundSpawnX = std::fabsf(io.MousePos.x - groundSpawnMapX);
+                        auto mouseDistanceToGroundSpawnY = std::fabsf(io.MousePos.y - groundSpawnMapY);
+
+                        float mouseDistanceToGroundSpawnCheck = g_GUIMapWindowMapGroundSpawnCircleSize + 1.0f;
+
+                        if (g_GUIMapWindowMapScaleToZoomIsEnabled == true)
+                        {
+                            if (g_GUIMapWindowMapZoom != 0.0f)
+                            {
+                                mouseDistanceToGroundSpawnCheck = mouseDistanceToGroundSpawnCheck * g_GUIMapWindowMapZoom;
+
+                                if (mouseDistanceToGroundSpawnCheck < 2.0f)
+                                {
+                                    mouseDistanceToGroundSpawnCheck = 2.0f;
+                                }
+                            }
+                        }
+
+                        if (mouseDistanceToGroundSpawnX < mouseDistanceToGroundSpawnCheck)
+                        {
+                            if (mouseDistanceToGroundSpawnY < mouseDistanceToGroundSpawnCheck)
+                            {
+                                if (groundSpawnName.size() != 0)
+                                {
+                                    std::stringstream ssHoverText;
+                                    ssHoverText << "GS: " << groundSpawnName;
+
+                                    ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+
+                                    ImVec2 groundSpawnMouseHoverTextSize = ImGui::CalcTextSize(ssHoverText.str().c_str(), NULL);
+
+                                    float textHeightOffset = g_GUIMapWindowMapTextHeightOffset;
+                                    if (g_GUIMapWindowMapZoom > 1.0f)
+                                    {
+                                        textHeightOffset = textHeightOffset * g_GUIMapWindowMapZoom;
+                                    }
+
+                                    float groundSpawnMouseHoverX = groundSpawnMapX - (groundSpawnMouseHoverTextSize.x * 0.5f);
+                                    float groundSpawnMouseHoverY = groundSpawnMapY - groundSpawnMouseHoverTextSize.y - textHeightOffset - (g_GUIMapWindowMapGroundSpawnCircleSize * g_GUIMapWindowMapZoom);
+
+                                    std::string groundSpawnMouseHoverText = ssHoverText.str();
+
+                                    g_GUIMapWindowMapGroundSpawnMouseHover = true;
+                                    g_GUIMapWindowMapGroundSpawnMouseHoverDrawCircle = true;
+
+                                    drawList->AddRectFilled(ImVec2(groundSpawnMouseHoverX, groundSpawnMouseHoverY), ImVec2(groundSpawnMouseHoverX + groundSpawnMouseHoverTextSize.x, groundSpawnMouseHoverY + groundSpawnMouseHoverTextSize.y), g_GUIMapWindowMapGroundSpawnMouseHoverBackColor);
+                                    drawCount++;
+
+                                    drawList->AddText(ImVec2(groundSpawnMouseHoverX, groundSpawnMouseHoverY), g_GUIMapWindowMapGroundSpawnMouseHoverColor, groundSpawnMouseHoverText.c_str(), NULL);
+                                    drawCount++;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                float drawCircleSize = groundSpawnCircleSize;
+
+                drawList->AddCircleFilled(ImVec2(groundSpawnMapX, groundSpawnMapY), drawCircleSize, g_GUIMapWindowMapGroundSpawnDefaultColor);
+                drawCount++;
+
+                if (g_GUIMapWindowMapGroundSpawnMouseHoverDrawCircle == true)
+                {
+                    drawList->AddCircle(ImVec2(groundSpawnMapX, groundSpawnMapY), drawCircleSize, g_GUIMapWindowMapGroundSpawnMouseHoverColor);
+                    drawCount++;
+
+                    g_GUIMapWindowMapGroundSpawnMouseHoverDrawCircle = false;
+                }
+
+                if (g_GUIMapWindowMapGroundSpawnMouseHover == false)
+                {
+                    if (groundSpawnName.size() != 0)
+                    {
+                        ImVec2 textSize = ImGui::CalcTextSize(groundSpawnName.c_str(), NULL);
+
+                        float textHeightOffset = g_GUIMapWindowMapTextHeightOffset;
+                        if (g_GUIMapWindowMapZoom > 1.0f)
+                        {
+                            textHeightOffset = textHeightOffset * g_GUIMapWindowMapZoom;
+                        }
+
+                        float groundSpawnLabelMapX = groundSpawnMapX - (textSize.x * 0.5f);
+                        float groundSpawnLabelMapY = groundSpawnMapY - textSize.y - textHeightOffset - (g_GUIMapWindowMapGroundSpawnCircleSize * g_GUIMapWindowMapZoom);
+
+                        drawList->AddText(ImVec2(groundSpawnLabelMapX, groundSpawnLabelMapY), g_GUIMapWindowMapGroundSpawnDefaultColor, groundSpawnName.c_str(), NULL);
+                        drawCount++;
+                    }
+                }
+
+                groundSpawn = groundSpawn->Next;
+            }
+        }
+    }
+
     if (g_GUIMapWindowMapWaypointsIsEnabled == true)
     {
         g_GUIMapWindowMapWaypointMouseHover = false;
@@ -1031,7 +1230,7 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
                             if (waypoint.Name.size() != 0)
                             {
                                 std::stringstream ssHoverText;
-                                ssHoverText << waypoint.Name << "\n(Index: " << waypoint.Index << ")";
+                                ssHoverText << "WP: " << waypoint.Name << "\n(Index: " << waypoint.Index << ")";
 
                                 ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
 
@@ -1049,7 +1248,6 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
                                 waypointMouseHoverText = ssHoverText.str();
 
                                 g_GUIMapWindowMapWaypointMouseHover = true;
-
                                 g_GUIMapWindowMapWaypointMouseHoverDrawCircle = true;
 
                                 if (io.MouseClicked[0] == true)
@@ -1309,3 +1507,5 @@ static void EQAPP_GUI_MapWindow_Map_PrintDebugInformation()
     std::cout << "Map Lines: " << numMapLines << std::endl;
     std::cout << "Map Labels: " << numMapLabels << std::endl;
 }
+
+#endif // EQ_FEATURE_GUI

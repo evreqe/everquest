@@ -202,15 +202,16 @@ function OnTick()
 
     if playerClass == EQ_CLASS_BEASTLORD then
         if
-            EQ_BuffWindows_FindBuffSpellName("Pact of the Wurine Form") == false or
+            --EQ_BuffWindows_FindBuffSpellName("Pact of the Wurine Form") == false or
             EQ_BuffWindows_FindBuffSpellName("Pact of the Wurine I") == false and
             EQ_BuffWindows_FindBuffSpellName("Pact of the Wurine II") == false and
             EQ_BuffWindows_FindBuffSpellName("Pact of the Wurine III") == false and
             EQ_BuffWindows_FindBuffSpellName("Pact of the Wurine IV") == false and
             EQ_BuffWindows_FindBuffSpellName("Pact of the Wurine V") == false and
-            EQ_BuffWindows_FindBuffSpellName("Pact of the Wurine VI") == false
+            EQ_BuffWindows_FindBuffSpellName("Pact of the Wurine VI") == false and
+            EQ_BuffWindows_FindBuffSpellName("Pact of the Wurine VII") == false
         then
-            EQ_UseAlternateAbility(3709) -- Pact of the Wurine
+            EQ_UseAlternateAbilityByName("Pact of the Wurine") 
             return
         end
 

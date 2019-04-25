@@ -81,6 +81,8 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_PlayerPath);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_PlayerCharacter);
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_EQ_PC);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQ_PC__DestroyHeldItemOrMoney);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_PlayerSpawn);
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_TargetSpawn);
@@ -101,14 +103,16 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteState);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteTint);
 
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_AuraManager__GetSingleton);
+
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_GroundItemManager__Instance);
+
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_EQSwitchManager);
 
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch);
 #ifdef EQ_FEATURE_EQSwitch__ChangeState
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState);
 #endif // EQ_FEATURE_EQSwitch__ChangeState
-
-    EQAPP_FixAddress(EQ_ADDRESS_POINTER_AuraManager);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_SpellManager);
 
@@ -223,6 +227,8 @@ bool EQAPP_InitializeAddressPointers()
     std::vector<uint32_t> addressPointerList =
     {
         EQ_ADDRESS_POINTER_CDBStr,
+        EQ_ADDRESS_POINTER_EQ_PC,
+        EQ_ADDRESS_POINTER_SpellManager,
         EQ_ADDRESS_POINTER_EQPlayerManager,
         EQ_ADDRESS_POINTER_CXWndManager,
         EQ_ADDRESS_POINTER_CEverQuest,
@@ -250,6 +256,12 @@ bool EQAPP_InitializeAddressPointers()
 
     EQ_CLASS_POINTER_CDBStr_pptr = (EQClass::CDBStr**)EQ_ADDRESS_POINTER_CDBStr;
     EQ_CLASS_POINTER_CDBStr = (*EQ_CLASS_POINTER_CDBStr_pptr);
+
+    EQ_CLASS_POINTER_EQ_PC_pptr = (EQClass::EQ_PC**)EQ_ADDRESS_POINTER_EQ_PC;
+    EQ_CLASS_POINTER_EQ_PC = (*EQ_CLASS_POINTER_EQ_PC_pptr);
+
+    EQ_CLASS_POINTER_SpellManager_pptr = (EQClass::SpellManager**)EQ_ADDRESS_POINTER_SpellManager;
+    EQ_CLASS_POINTER_SpellManager = (*EQ_CLASS_POINTER_SpellManager_pptr);
 
     EQ_CLASS_POINTER_EQPlayerManager_pptr = (EQClass::EQPlayerManager**)EQ_ADDRESS_POINTER_EQPlayerManager;
     EQ_CLASS_POINTER_EQPlayerManager = (*EQ_CLASS_POINTER_EQPlayerManager_pptr);

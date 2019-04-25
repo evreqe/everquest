@@ -258,7 +258,7 @@ int main(int argc , char *argv[])
                 }
                 else
                 {
-                    recvBuffer[recvResult] = '\0'; // append null terminator
+                    recvBuffer[EQ_BCS_STRING_MAX - 1] = '\0'; // append null terminator
 
                     std::string recvText = recvBuffer;
                     if (recvText.size() == 0)

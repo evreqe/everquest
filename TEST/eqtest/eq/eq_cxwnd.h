@@ -31,7 +31,11 @@
 
 // ******************** randomized after each patch ******************** //
 
+#define EQ_SIZE_CXWnd    sizeof(EQUIStructs::_CXWND)
+
 #define EQ_SIZE_CSidlWnd    sizeof(EQUIStructs::_CSIDLWND)
+
+#define EQ_OFFSET_FixWrongSize -0x08
 
 #ifdef EQ_FEATURE_BAZAAR
 
@@ -73,9 +77,9 @@
 #define EQ_OFFSET_CTaskSelectWnd_BUTTON_ACCEPT     EQ_SIZE_CSidlWnd + 0x08 // uint32_t pointer    "Accept" button         "TSEL_AcceptButton"     "AcceptButton"
 #define EQ_OFFSET_CTaskSelectWnd_BUTTON_DECLINE    EQ_SIZE_CSidlWnd + 0x0C // uint32_t pointer    "Decline All" button    "TSEL_DeclineButton"    "DeclineButton"
 
-#define EQ_OFFSET_CLargeDialogWnd_BUTTON_OK     EQ_SIZE_CSidlWnd + 0x14 // uint32_t pointer    "Ok" button     "LDW_OkButton"
-#define EQ_OFFSET_CLargeDialogWnd_BUTTON_YES    EQ_SIZE_CSidlWnd + 0x18 // uint32_t pointer    "Yes" button    "LDW_YesButton"
-#define EQ_OFFSET_CLargeDialogWnd_BUTTON_NO     EQ_SIZE_CSidlWnd + 0x1C // uint32_t pointer    "No" button     "LDW_NoButton"
+#define EQ_OFFSET_CLargeDialogWnd_BUTTON_OK     EQ_SIZE_CSidlWnd + 0x04 // uint32_t pointer    "Ok" button     "LDW_OkButton"
+#define EQ_OFFSET_CLargeDialogWnd_BUTTON_YES    EQ_SIZE_CSidlWnd + 0x08 // uint32_t pointer    "Yes" button    "LDW_YesButton"
+#define EQ_OFFSET_CLargeDialogWnd_BUTTON_NO     EQ_SIZE_CSidlWnd + 0x0C // uint32_t pointer    "No" button     "LDW_NoButton"
 
 #define EQ_OFFSET_CConfirmationDialog_BUTTON_YES        EQ_SIZE_CSidlWnd + 0x04 // uint32_t pointer    "Yes" button       "Yes_Button"
 #define EQ_OFFSET_CConfirmationDialog_BUTTON_NO         EQ_SIZE_CSidlWnd + 0x08 // uint32_t pointer    "No" button        "No_Button"
@@ -84,28 +88,28 @@
 
 // ********************************************************************* //
 
-#define EQ_OFFSET_CPlayerWnd_COMBAT_STATE    offsetof(EQUIStructs::_CPLAYERWND, CombatState) // uint32_t
+#define EQ_OFFSET_CPlayerWnd_COMBAT_STATE    offsetof(EQUIStructs::_CPLAYERWND, CombatState) + EQ_OFFSET_FixWrongSize // uint32_t
 // "A_PWCSInCombat"    "You are in combat and cannot rest currently."
 // "A_PWCSDebuff"      "You are weakened and cannot rest currently."
 // "A_PWCSTimer"       "You are recovering from combat and cannot rest currently."
 // "A_PWCSStanding"    "You are not in combat and may rest at any time."
 // "A_PWCSRegen"       "You are resting and recovering health, mana and endurance at an increased rate."
 
-#define EQ_OFFSET_CTargetWnd_BUFF_SPELL_IDS    offsetof(EQUIStructs::_CTARGETWND, BuffSpellID) // uint32_t[EQ_NUM_BUFF_SLOTS]
-#define EQ_OFFSET_CTargetWnd_BUFF_TIMERS       offsetof(EQUIStructs::_CTARGETWND, BuffTimer)   // uint32_t[EQ_NUM_BUFF_SLOTS]
+#define EQ_OFFSET_CTargetWnd_BUFF_SPELL_IDS    offsetof(EQUIStructs::_CTARGETWND, BuffSpellID) + EQ_OFFSET_FixWrongSize // uint32_t[EQ_NUM_BUFF_SLOTS]
+#define EQ_OFFSET_CTargetWnd_BUFF_TIMERS       offsetof(EQUIStructs::_CTARGETWND, BuffTimer)   + EQ_OFFSET_FixWrongSize // uint32_t[EQ_NUM_BUFF_SLOTS]
 
-#define EQ_OFFSET_CPetInfoWindow_SPAWN_ID          offsetof(EQUIStructs::_EQPETINFOWINDOW, PetSpawnID)     // uint32_t
-#define EQ_OFFSET_CPetInfoWindow_BUFF_SPELL_IDS    offsetof(EQUIStructs::_EQPETINFOWINDOW, Buff)           // uint32_t[EQ_NUM_BUFF_SLOTS]
-#define EQ_OFFSET_CPetInfoWindow_BUFF_TIMERS       offsetof(EQUIStructs::_EQPETINFOWINDOW, PetBuffTimer)   // uint32_t[EQ_NUM_BUFF_SLOTS]
+#define EQ_OFFSET_CPetInfoWindow_SPAWN_ID          offsetof(EQUIStructs::_EQPETINFOWINDOW, PetSpawnID)     + EQ_OFFSET_FixWrongSize // uint32_t
+#define EQ_OFFSET_CPetInfoWindow_BUFF_SPELL_IDS    offsetof(EQUIStructs::_EQPETINFOWINDOW, Buff)           + EQ_OFFSET_FixWrongSize // uint32_t[EQ_NUM_BUFF_SLOTS]
+#define EQ_OFFSET_CPetInfoWindow_BUFF_TIMERS       offsetof(EQUIStructs::_EQPETINFOWINDOW, PetBuffTimer)   + EQ_OFFSET_FixWrongSize // uint32_t[EQ_NUM_BUFF_SLOTS]
 
-#define EQ_OFFSET_CBuffWnd_BUFF_BUTTONS      offsetof(EQUIStructs::_EQBUFFWINDOW, pBuff)       // uint32_t pointer[EQ_NUM_BUFF_SLOTS]
-#define EQ_OFFSET_CBuffWnd_BUFF_SPELL_IDS    offsetof(EQUIStructs::_EQBUFFWINDOW, BuffId)      // uint32_t[EQ_NUM_BUFF_SLOTS]
-#define EQ_OFFSET_CBuffWnd_BUFF_TIMERS       offsetof(EQUIStructs::_EQBUFFWINDOW, BuffTimer)   // uint32_t[EQ_NUM_BUFF_SLOTS]
+#define EQ_OFFSET_CBuffWnd_BUFF_BUTTONS      offsetof(EQUIStructs::_EQBUFFWINDOW, pBuff)       + EQ_OFFSET_FixWrongSize // uint32_t pointer[EQ_NUM_BUFF_SLOTS]
+#define EQ_OFFSET_CBuffWnd_BUFF_SPELL_IDS    offsetof(EQUIStructs::_EQBUFFWINDOW, BuffId)      + EQ_OFFSET_FixWrongSize // uint32_t[EQ_NUM_BUFF_SLOTS]
+#define EQ_OFFSET_CBuffWnd_BUFF_TIMERS       offsetof(EQUIStructs::_EQBUFFWINDOW, BuffTimer)   + EQ_OFFSET_FixWrongSize // uint32_t[EQ_NUM_BUFF_SLOTS]
 
-#define EQ_OFFSET_CCastSpellWnd_SPELL_GEMS    offsetof(EQUIStructs::_EQCASTSPELLWINDOW, SpellSlots) // uint32_t pointer[EQ_NUM_SPELL_GEMS_IN_WINDOW]
+#define EQ_OFFSET_CCastSpellWnd_SPELL_GEMS    offsetof(EQUIStructs::_EQCASTSPELLWINDOW, SpellSlots) + EQ_OFFSET_FixWrongSize // uint32_t pointer[EQ_NUM_SPELL_GEMS_IN_WINDOW]
 
-#define EQ_OFFSET_CSpellGemWnd_ICON     offsetof(EQUIStructs::_EQCASTSPELLGEM, spellicon)     // uint32_t
-#define EQ_OFFSET_CSpellGemWnd_STATE    offsetof(EQUIStructs::_EQCASTSPELLGEM, spellstate)    // uint32_t
+#define EQ_OFFSET_CSpellGemWnd_ICON     offsetof(EQUIStructs::_EQCASTSPELLGEM, spellicon)     + EQ_OFFSET_FixWrongSize // uint32_t
+#define EQ_OFFSET_CSpellGemWnd_STATE    offsetof(EQUIStructs::_EQCASTSPELLGEM, spellstate)    + EQ_OFFSET_FixWrongSize // uint32_t
 
-#define EQ_OFFSET_CMapViewWnd_LINES     offsetof(EQUIStructs::_EQMAPWINDOW, pLines)     // uint32_t pointer
-#define EQ_OFFSET_CMapViewWnd_LABELS    offsetof(EQUIStructs::_EQMAPWINDOW, pLabels)    // uint32_t pointer
+#define EQ_OFFSET_CMapViewWnd_LINES     offsetof(EQUIStructs::_EQMAPWINDOW, pLines)     + EQ_OFFSET_FixWrongSize // uint32_t pointer
+#define EQ_OFFSET_CMapViewWnd_LABELS    offsetof(EQUIStructs::_EQMAPWINDOW, pLabels)    + EQ_OFFSET_FixWrongSize // uint32_t pointer

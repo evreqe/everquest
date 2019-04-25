@@ -8,7 +8,11 @@ void EQAPP_PrintTextToFileNoDuplicates(const char* fileName, const char* text);
 
 void EQAPP_PrintBool(const char* text, bool& b);
 void EQAPP_PrintDebugText(const char* functionName, const char* text);
-void EQAPP_ToggleDebugText();
+void EQAPP_DebugText_Toggle();
+void EQAPP_DebugText_On();
+void EQAPP_DebugText_Off();
+
+void EQAPP_PrintNumberToChat(uint32_t number);
 
 void EQAPP_EnableDebugPrivileges();
 DWORD EQAPP_GetModuleBaseAddress(DWORD processID, const wchar_t* moduleName);
@@ -94,10 +98,31 @@ void EQAPP_PrintDebugText(const char* functionName, const char* text)
     std::cout << "[DEBUG] " << functionName << "(): " << text << std::endl;
 }
 
-void EQAPP_ToggleDebugText()
+void EQAPP_DebugText_Toggle()
 {
     EQ_ToggleBool(g_EQAppDebugTextIsEnabled);
     EQAPP_PrintBool("Debug Text", g_EQAppDebugTextIsEnabled);
+}
+
+void EQAPP_DebugText_On()
+{
+    if (g_EQAppDebugTextIsEnabled == false)
+    {
+        EQAPP_DebugText_Toggle();
+    }
+}
+
+void EQAPP_DebugText_Off()
+{
+    if (g_EQAppDebugTextIsEnabled == true)
+    {
+        EQAPP_DebugText_Toggle();
+    }
+}
+
+void EQAPP_PrintNumberToChat(uint32_t number)
+{
+    EQ_PrintTextToChat(fmt::format("{}", number).c_str());
 }
 
 void EQAPP_EnableDebugPrivileges()

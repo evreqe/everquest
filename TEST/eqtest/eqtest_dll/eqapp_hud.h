@@ -16,7 +16,7 @@ bool g_HUDIsEnabled = true;
 
 bool g_HUDDebugTextIsEnabled = false;
 
-fmt::MemoryWriter g_HUDText;
+std::stringstream g_HUDText;
 
 uint32_t g_HUDXDefault = 200;
 uint32_t g_HUDYDefault = 10;
@@ -122,7 +122,10 @@ void EQAPP_HUD_DrawDebugText()
     auto spawnGravityType = EQ_GetSpawnGravityType(targetSpawn);
     g_HUDText << "Gravity Type: " << spawnGravityType << "\n";
 
-    EQ_DrawText(g_HUDText.c_str(), g_HUDX, g_HUDY);
+    auto spawnIsInvitedToGroup = EQ_IsSpawnInvitedToGroup(targetSpawn);
+    g_HUDText << "Is Invited To Group: " << (int)spawnIsInvitedToGroup << "\n";
+
+    EQ_DrawText(g_HUDText.str().c_str(), g_HUDX, g_HUDY);
 }
 
 void EQAPP_HUD_AddText(const char* text)
@@ -132,6 +135,7 @@ void EQAPP_HUD_AddText(const char* text)
 
 void EQAPP_HUD_Execute()
 {
+    g_HUDText.str(std::string());
     g_HUDText.clear();
 
     g_HUDX = g_HUDXDefault;
@@ -335,5 +339,7 @@ void EQAPP_HUD_Execute()
         }
     }
 
-    EQ_DrawText(g_HUDText.c_str(), g_HUDX, g_HUDY);
+    g_HUDText << "- Group Average HP%: " << EQ_GetGroupAverageHPPercent() << "\n";
+
+    EQ_DrawText(g_HUDText.str().c_str(), g_HUDX, g_HUDY);
 }

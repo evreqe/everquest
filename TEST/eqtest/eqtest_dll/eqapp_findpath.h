@@ -70,6 +70,8 @@ void EQAPP_FindPath_FollowPath_Toggle()
     {
         EQ_StopFollow();
 
+        g_FollowAISpawn = NULL;
+
         g_FindPathFollowPathList = EQAPP_FindPath_GetPathList();
         if (g_FindPathFollowPathList.size() == 0)
         {
@@ -294,10 +296,10 @@ void EQAPP_FindPath_Draw()
         bool result = EQ_WorldLocationToScreenLocation(path.Y, path.X, path.Z, screenX, screenY);
         if (result == true)
         {
-            fmt::MemoryWriter mw;
-            mw << "P" << path.Index << " (" << (int)path.Distance << "m)";
+            std::stringstream ss;
+            ss << "P" << path.Index << " (" << (int)path.Distance << "m)";
 
-            EQ_DrawTextByColor(mw.c_str(), (int)screenX, (int)screenY, EQ_DRAW_TEXT_COLOR_PINK);
+            EQ_DrawTextByColor(ss.str().c_str(), (int)screenX, (int)screenY, EQ_DRAW_TEXT_COLOR_PINK);
         }
     }
 }

@@ -37,6 +37,11 @@ void EQAPP_AutoGroup_Off()
 
 void EQAPP_AutoGroup_Execute()
 {
+    if (EQ_IsInvitedToGroup() == true)
+    {
+        g_AutoGroupIsInvited = true;
+    }
+
     if (g_AutoGroupIsInvited == true)
     {
         if (EQAPP_Timer_HasTimeElapsed(g_AutoGroupTimer, g_AutoGroupTimerInterval) == true)

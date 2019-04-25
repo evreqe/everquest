@@ -289,6 +289,8 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQAPP_PrintTextToFile", EQAPP_PrintTextToFile);
     state->set_function("EQAPP_PrintTextToFileNoDuplicates", EQAPP_PrintTextToFileNoDuplicates);
 
+    state->set_function("EQAPP_PrintNumberToChat", EQAPP_PrintNumberToChat);
+
     state->set_function("EQAPP_EnableDebugPrivileges", EQAPP_EnableDebugPrivileges);
     state->set_function("EQAPP_IsForegroundWindowCurrentProcessID", EQAPP_IsForegroundWindowCurrentProcessID);
     state->set_function("EQAPP_IsVKKeyDown", EQAPP_IsVKKeyDown);
@@ -385,8 +387,6 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
 
     state->set("EQ_GAME_STATE_IN_GAME", EQ_GAME_STATE_IN_GAME);
     state->set("EQ_GAME_STATE_NULL", EQ_GAME_STATE_NULL);
-
-    state->set("EQ_CXSTR_TEXT_MAX_LENGTH", EQ_CXSTR_TEXT_MAX_LENGTH);
 
     state->set("EQ_CXSTR_ENCODING_ASCII", EQ_CXSTR_ENCODING_ASCII);
     state->set("EQ_CXSTR_ENCODING_UNICODE", EQ_CXSTR_ENCODING_UNICODE);
@@ -1819,6 +1819,8 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
 
     state->set_function("EQ_GetLineSlope", EQ_GetLineSlope);
 
+    state->set_function("EQ_GetDatabaseString", EQ_GetDatabaseString);
+
     state->set_function("EQ_GetGameState", EQ_GetGameState);
     state->set_function("EQ_IsInGame", EQ_IsInGame);
     state->set_function("EQ_IsSpellIDValid", EQ_IsSpellIDValid);
@@ -1875,13 +1877,13 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
 
     state->set_function("EQ_GetPlayerCharacter", EQ_GetPlayerCharacter);
     state->set_function("EQ_GetXTargetManager", EQ_GetXTargetManager);
-    state->set_function("EQ_GetXTargetType", EQ_GetXTargetType);
-    state->set_function("EQ_GetXTargetStatus", EQ_GetXTargetStatus);
-    state->set_function("EQ_GetXTargetSpawn", EQ_GetXTargetSpawn);
-    state->set_function("EQ_GetXTargetName", EQ_GetXTargetName);
+    state->set_function("EQ_GetXTargetTypeByIndex", EQ_GetXTargetTypeByIndex);
+    state->set_function("EQ_GetXTargetStatusByIndex", EQ_GetXTargetStatusByIndex);
+    state->set_function("EQ_GetXTargetSpawnByIndex", EQ_GetXTargetSpawnByIndex);
+    state->set_function("EQ_GetXTargetNameByIndex", EQ_GetXTargetNameByIndex);
     state->set_function("EQ_GetGroup", EQ_GetGroup);
     state->set_function("EQ_GetCharInfo2", EQ_GetCharInfo2);
-    state->set_function("EQ_GetMemorizedSpellID", EQ_GetMemorizedSpellID);
+    state->set_function("EQ_GetMemorizedSpellIDBySpellGemIndex", EQ_GetMemorizedSpellIDBySpellGemIndex);
     state->set_function("EQ_GetSpellGemIndexBySpellID", EQ_GetSpellGemIndexBySpellID);
     state->set_function("EQ_GetSpellGemIndexBySpellName", EQ_GetSpellGemIndexBySpellName);
 
@@ -1915,8 +1917,11 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_GetTargetSpawnLastName", EQ_GetTargetSpawnLastName);
 
     state->set_function("EQ_GetGroupCount", EQ_GetGroupCount);
-    state->set_function("EQ_GetGroupMemberSpawn", EQ_GetGroupMemberSpawn);
+    state->set_function("EQ_GetGroupMemberSpawnByIndex", EQ_GetGroupMemberSpawnByIndex);
+    state->set_function("EQ_GetGroupMemberSpawnByName", EQ_GetGroupMemberSpawnByName);
+    state->set_function("EQ_GetGroupMemberSpawnWithLowestHPPercent", EQ_GetGroupMemberSpawnWithLowestHPPercent);
     state->set_function("EQ_GetGroupLeaderSpawn", EQ_GetGroupLeaderSpawn);
+    state->set_function("EQ_GetGroupAverageHPPercent", EQ_GetGroupAverageHPPercent);
 
     state->set_function("EQ_IsSpawnBuyer", EQ_IsSpawnBuyer);
     state->set_function("EQ_IsSpawnTrader", EQ_IsSpawnTrader);
@@ -1926,6 +1931,9 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_IsSpawnAura", EQ_IsSpawnAura);
     state->set_function("EQ_IsSpawnGroupMember", EQ_IsSpawnGroupMember);
     state->set_function("EQ_IsSpawnGroupLeader", EQ_IsSpawnGroupLeader);
+    state->set_function("EQ_IsSpawnInvitedToGroup", EQ_IsSpawnInvitedToGroup);
+
+    state->set_function("EQ_IsInvitedToGroup", EQ_IsInvitedToGroup);
 
     state->set_function("EQ_GetSpawnDistance", EQ_GetSpawnDistance);
     state->set_function("EQ_GetSpawnDistance3D", EQ_GetSpawnDistance3D);
@@ -1955,7 +1963,9 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
 
     state->set_function("EQ_IsSpawnBehindSpawn", EQ_IsSpawnBehindSpawn);
     state->set_function("EQ_IsSpawnBehindSpawnEx", EQ_IsSpawnBehindSpawnEx);
+    state->set_function("EQ_IsPlayerBehindSpawn", EQ_IsPlayerBehindSpawn);
     state->set_function("EQ_IsPlayerBehindTarget", EQ_IsPlayerBehindTarget);
+    state->set_function("EQ_IsSpawnBehindPlayer", EQ_IsSpawnBehindPlayer);
     state->set_function("EQ_IsTargetBehindPlayer", EQ_IsTargetBehindPlayer);
 
     state->set_function("EQ_IsSpawnClassTank", EQ_IsSpawnClassTank);
@@ -2059,8 +2069,10 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_TurnPlayerAwayFromTarget", EQ_TurnPlayerAwayFromTarget);
 
     state->set_function("EQ_LookCameraAtLocation", EQ_LookCameraAtLocation);
+    state->set_function("EQ_LookCameraAtSpawn", EQ_LookCameraAtSpawn);
     state->set_function("EQ_LookCameraAtTarget", EQ_LookCameraAtTarget);
     state->set_function("EQ_LookPlayerAtLocation", EQ_LookPlayerAtLocation);
+    state->set_function("EQ_LookPlayerAtSpawn", EQ_LookPlayerAtSpawn);
     state->set_function("EQ_LookPlayerAtTarget", EQ_LookPlayerAtTarget);
 
     state->set_function("EQ_InterpretCommand", EQ_InterpretCommand);
@@ -2082,12 +2094,14 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_GetCameraPitch", EQ_GetCameraPitch);
     state->set_function("EQ_GetCameraFieldOfView", EQ_GetCameraFieldOfView);
     state->set_function("EQ_GetCameraDrawDistance", EQ_GetCameraDrawDistance);
+    state->set_function("EQ_GetCameraFarClipPlane", EQ_GetCameraFarClipPlane);
 
     state->set_function("EQ_SetCameraType", EQ_SetCameraType);
     state->set_function("EQ_SetCameraLocation", EQ_SetCameraLocation);
     state->set_function("EQ_SetCameraPitch", EQ_SetCameraPitch);
     state->set_function("EQ_SetCameraFieldOfView", EQ_SetCameraFieldOfView);
     state->set_function("EQ_SetCameraDrawDistance", EQ_SetCameraDrawDistance);
+    state->set_function("EQ_SetCameraFarClipPlane", EQ_SetCameraFarClipPlane);
 
     state->set_function("EQ_WorldLocationToScreenLocation", EQ_WorldLocationToScreenLocationAsTuple);
 
@@ -2116,7 +2130,13 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_GetClassNameByID", EQ_GetClassNameByID);
     state->set_function("EQ_GetClassShortNameByID", EQ_GetClassShortNameByID);
 
+    state->set_function("EQ_GetAlternateAbilityNameByID", EQ_GetAlternateAbilityNameByID);
+    state->set_function("EQ_GetAlternateAbilityDescriptionByID", EQ_GetAlternateAbilityDescriptionByID);
+    state->set_function("EQ_GetAlternateAbilityIDByName", EQ_GetAlternateAbilityIDByName);
+    state->set_function("EQ_BuyAllAlternateAbility", EQ_BuyAllAlternateAbility);
+
     state->set_function("EQ_UseAlternateAbility", EQ_UseAlternateAbility);
+    state->set_function("EQ_UseAlternateAbilityByName", EQ_UseAlternateAbilityByName);
     state->set_function("EQ_UseDiscipline", EQ_UseDiscipline);
     state->set_function("EQ_UseAbility", EQ_UseAbility);
     state->set_function("EQ_UseItem", EQ_UseItem);
@@ -2129,6 +2149,8 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_OpenAllDoors", EQ_OpenAllDoors);
     state->set_function("EQ_CloseAllDoors", EQ_CloseAllDoors);
 #endif // EQ_FEATURE_EQSwitch__ChangeState
+
+    state->set_function("EQ_DestroyHeldItemOrMoney", EQ_DestroyHeldItemOrMoney);
 
 #ifdef EQ_FEATURE_BAZAAR
     state->set_function("EQ_BazaarWindow_IsOpen", EQ_BazaarWindow_IsOpen);
@@ -2171,6 +2193,7 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_ConfirmationDialog_ClickOKButton", EQ_ConfirmationDialog_ClickOKButton);
     state->set_function("EQ_ConfirmationDialog_ClickYesButton", EQ_ConfirmationDialog_ClickYesButton);
     state->set_function("EQ_ConfirmationDialog_ClickNoButton", EQ_ConfirmationDialog_ClickNoButton);
+    state->set_function("EQ_ConfirmationDialog_ClickCancelButton", EQ_ConfirmationDialog_ClickCancelButton);
 
     state->set_function("EQ_GetPlayerWindow", EQ_GetPlayerWindow);
     state->set_function("EQ_PlayerWindow_IsOpen", EQ_PlayerWindow_IsOpen);
@@ -2209,4 +2232,7 @@ void EQAPP_Lua_BindFunctionsAndVariables(sol::state* state)
     state->set_function("EQ_MapWindow_IsOpen", EQ_MapWindow_IsOpen);
     state->set_function("EQ_MapWindow_GetLines", EQ_MapWindow_GetLines);
     state->set_function("EQ_MapWindow_GetLabels", EQ_MapWindow_GetLabels);
+
+    state->set_function("EQ_GetInventoryWindow", EQ_GetInventoryWindow);
+    state->set_function("EQ_InventoryWindow_IsOpen", EQ_InventoryWindow_IsOpen);
 }

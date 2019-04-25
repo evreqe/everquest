@@ -4,7 +4,7 @@ bool g_NamedSpawnsIsEnabled = true;
 
 bool g_NamedSpawnsTextIsEnabled = true;
 
-fmt::MemoryWriter g_NamedSpawnsText;
+std::stringstream g_NamedSpawnsText;
 
 uint32_t g_NamedSpawnsTextXDefault = 400;
 uint32_t g_NamedSpawnsTextYDefault = 10;
@@ -95,6 +95,7 @@ void EQAPP_NamedSpawns_DrawText()
         return;
     }
 
+    g_NamedSpawnsText.str(std::string());
     g_NamedSpawnsText.clear();
 
     g_NamedSpawnsTextX = g_NamedSpawnsTextXDefault;
@@ -132,7 +133,7 @@ void EQAPP_NamedSpawns_DrawText()
         }
     }
 
-    EQ_DrawText(g_NamedSpawnsText.c_str(), g_NamedSpawnsTextX, g_NamedSpawnsTextY);
+    EQ_DrawText(g_NamedSpawnsText.str().c_str(), g_NamedSpawnsTextX, g_NamedSpawnsTextY);
 }
 
 void EQAPP_NamedSpawns_PrintList()

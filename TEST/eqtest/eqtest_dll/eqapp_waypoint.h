@@ -1,6 +1,8 @@
 #pragma once
 
+#ifdef EQ_FEATURE_GUI
 extern bool EQAPP_GUI_IsMouseOver();
+#endif // EQ_FEATURE_GUI
 
 #include "eqapp_lua.h"
 
@@ -28,7 +30,7 @@ namespace EQApp
         uint32_t F = 0;
         uint32_t G = 0;
         uint32_t H = 0;
-        struct _Waypoint* Parent;
+        struct _Waypoint* Parent = NULL;
     } Waypoint, *Waypoint_ptr;
 
     typedef std::vector<EQApp::Waypoint> WaypointList;
@@ -89,7 +91,7 @@ bool g_WaypointEditorHeightFilterIsEnabled = false;
 float g_WaypointEditorHeightFilterDistanceLow  = 10.0f;
 float g_WaypointEditorHeightFilterDistanceHigh = 10.0f;
 
-bool g_WaypointEditorDistanceFilterIsEnabled = false;
+bool g_WaypointEditorDistanceFilterIsEnabled = true;
 
 float g_WaypointEditorDistanceFilterDistance = 400.0f;
 
@@ -326,6 +328,8 @@ void EQAPP_Waypoint_FollowPath_Toggle()
     if (g_WaypointFollowPathIsEnabled == true)
     {
         EQ_StopFollow();
+
+        g_FollowAISpawn = NULL;
 
         g_WaypointEditorFromIndex = EQApp::WaypointIndexNull;
         g_WaypointEditorToIndex = EQApp::WaypointIndexNull;
@@ -1519,6 +1523,11 @@ uint32_t EQAPP_Waypoint_GetIndexNearestToLocationInList(float y, float x, float 
 
     for (auto& index : indexList)
     {
+        if (index == EQApp::WaypointIndexNull)
+        {
+            continue;
+        }
+
         auto waypoint = EQAPP_Waypoint_GetByIndex(index);
         if (waypoint == NULL)
         {
@@ -1715,6 +1724,93 @@ void EQAPP_Waypoint_GotoByName(const char* name)
     }
 }
 
+void EQAPP_Waypoint_GotoBySpawnName(const char* spawnName)
+{
+    std::cout << "Waypoint Goto by Spawn Name: " << spawnName << std::endl;
+
+    uint32_t toIndex = EQApp::WaypointIndexNull;
+
+    EQApp::WaypointIndexList indexList;
+
+    for (auto& waypoint : g_WaypointList)
+    {
+        if (waypoint.Index == EQApp::WaypointIndexNull)
+        {
+            continue;
+        }
+
+        indexList.push_back(waypoint.Index);
+    }
+
+    if (indexList.size() == 0)
+    {
+        return;
+    }
+
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    auto playerName = EQ_GetSpawnName(playerSpawn);
+
+    auto spawnList = EQ_GetSpawnList();
+
+    for (auto& spawn : spawnList)
+    {
+        auto spawnListName = EQ_GetSpawnName(spawn);
+
+        if (spawnListName == playerName)
+        {
+            continue;
+        }
+
+        if (EQAPP_String_BeginsWith(spawnListName, spawnName) == true)
+        {
+            auto spawnY = EQ_GetSpawnY(spawn);
+            auto spawnX = EQ_GetSpawnX(spawn);
+            auto spawnZ = EQ_GetSpawnZ(spawn);
+
+            toIndex = EQAPP_Waypoint_GetIndexNearestToLocationInList(spawnY, spawnX, spawnZ, indexList);
+
+            std::cout << "Waypoint index nearest to " << spawnName << ": " << toIndex << std::endl;
+
+            auto waypoint = EQAPP_Waypoint_GetByIndex(toIndex);
+            if (waypoint != NULL)
+            {
+                float waypointDistance = EQ_CalculateDistance3D(spawnY, spawnX, spawnZ, waypoint->Y, waypoint->X, waypoint->Z);
+
+                if (waypointDistance > 100.0f)
+                {
+                    std::cout << "Waypoint index " << toIndex << " is too far away." << std::endl;
+                    return;
+                }
+
+                if (EQ_CanSpawnCastRayToLocation(spawn, waypoint->Y, waypoint->X, waypoint->Z) == false)
+                {
+                    std::cout << "Spawn with name '" << spawnName << "' cannot see waypoint index: " << toIndex << std::endl;
+                    return;
+                }
+            }
+
+            break;
+        }
+    }
+
+    if (toIndex == EQApp::WaypointIndexNull)
+    {
+        std::cout << "Waypoint Goto by Spawn Name has failed because waypoint to index is NULL." << std::endl;
+        return;
+    }
+
+    bool result = EQAPP_Waypoint_Goto(toIndex);
+    if (result == false)
+    {
+        std::cout << "Waypoint Goto by Spawn Name has failed using waypoint index " << toIndex << "." << std::endl;
+    }
+}
+
 EQApp::WaypointIndexList EQAPP_Waypoint_GetPathList(uint32_t fromIndex, uint32_t toIndex)
 {
     EQApp::WaypointIndexList indexList;
@@ -1766,8 +1862,8 @@ EQApp::WaypointIndexList EQAPP_Waypoint_GetPathList(uint32_t fromIndex, uint32_t
     }
 */
 
-    EQApp::Waypoint_ptr current;
-    EQApp::Waypoint_ptr child;
+    EQApp::Waypoint_ptr current = NULL;
+    EQApp::Waypoint_ptr child = NULL;
 
     std::list<EQApp::Waypoint_ptr> openedList;
     std::list<EQApp::Waypoint_ptr> closedList;
@@ -2034,38 +2130,38 @@ void EQAPP_WaypointList_Save()
 
     for (auto& waypoint : g_WaypointList)
     {
-        fmt::MemoryWriter mw;
-        mw << waypoint.Index << "^" << waypoint.Name << "^" << waypoint.Y << "^" << waypoint.X << "^" << waypoint.Z << "^";
+        std::stringstream ss;
+        ss << waypoint.Index << "^" << waypoint.Name << "^" << waypoint.Y << "^" << waypoint.X << "^" << waypoint.Z << "^";
 
         if (waypoint.ConnectIndexList.size() == 0)
         {
-            mw << "-1";
+            ss << "-1";
         }
         else
         {
             for (auto& connectIndex : waypoint.ConnectIndexList)
             {
-                mw << connectIndex;
+                ss << connectIndex;
 
                 if (connectIndex != waypoint.ConnectIndexList.back())
                 {
-                    mw << ",";
+                    ss << ",";
                 }
             }
         }
 
-        mw << "^" << waypoint.Flags;
+        ss << "^" << waypoint.Flags;
 
         if (waypoint.ScriptFileName.size() == 0)
         {
-            mw << "^null.lua";
+            ss << "^null.lua";
         }
         else
         {
-            mw << "^" << waypoint.ScriptFileName;
+            ss << "^" << waypoint.ScriptFileName;
         }
 
-        file << mw.c_str() << "\n";
+        file << ss.str().c_str() << "\n";
     }
 
     std::cout << "Waypoints saved to file: " << filePathStr << std::endl;
@@ -2186,7 +2282,7 @@ void EQAPP_WaypointList_Draw()
 
             waypoint.IsDrawn = true;
 
-            fmt::MemoryWriter drawText;
+            std::stringstream drawText;
             drawText << "[Waypoint] " << waypoint.Name;
 
             drawText << "\nIndex: " << waypoint.Index;
@@ -2333,6 +2429,7 @@ void EQAPP_WaypointList_Draw()
                 textColor = EQ_DRAW_TEXT_COLOR_TEAL;
             }
 
+#ifdef EQ_FEATURE_GUI
             if (EQAPP_GUI_IsMouseOver() == false)
             {
                 auto mouseX = EQ_GetMouseX();
@@ -2342,8 +2439,9 @@ void EQAPP_WaypointList_Draw()
                     textColor = EQ_DRAW_TEXT_COLOR_PINK;
                 }
             }
+#endif // EQ_FEATURE_GUI
 
-            EQ_DrawTextByColor(drawText.c_str(), (int)waypointScreenX, (int)waypointScreenY, textColor);
+            EQ_DrawTextByColor(drawText.str().c_str(), (int)waypointScreenX, (int)waypointScreenY, textColor);
         }
 
         for (auto& connectIndex : waypoint.ConnectIndexList)
@@ -2726,7 +2824,7 @@ bool EQAPP_Waypoint_FollowPath_HandleEvent_ExecuteCmd(uint32_t commandID, int is
 
 void EQAPP_WaypointEditor_DrawText()
 {
-    fmt::MemoryWriter drawText;
+    std::stringstream drawText;
 
     drawText << "WAYPOINT EDITOR\n";
     drawText << "ESCAPE - Reset Selection\n";

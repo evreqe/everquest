@@ -192,6 +192,10 @@ function OnInterpretCommand(commandText)
         EQ_InterpretCommand("//RemoveBuff Shauri's Sonorous Clouding II")
         EQ_InterpretCommand("//RemoveBuff Shauri's Sonorous Clouding III")
         EQ_InterpretCommand("//RemoveBuff Selo's Song of Travel")
+        EQ_InterpretCommand("//RemoveBuff Cloak of Shadows")
+        EQ_InterpretCommand("//RemoveBuff Cloak of Shadows I")
+        EQ_InterpretCommand("//RemoveBuff Cloak of Shadows II")
+        EQ_InterpretCommand("//RemoveBuff Cloak of Shadows III")
         return 1
     end
 

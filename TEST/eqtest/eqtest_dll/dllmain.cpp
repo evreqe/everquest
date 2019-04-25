@@ -1,12 +1,12 @@
-#define EQ_FEATURE_BAZAAR
-#define EQ_FEATURE_GUI
-#define EQ_FEATURE_CREATE_AND_DELETE_ACTORS
+#undef EQ_FEATURE_BAZAAR
+#undef EQ_FEATURE_GUI
+#undef EQ_FEATURE_CREATE_AND_DELETE_ACTORS
 #define EQ_FEATURE_CollisionCallbackForActors
-#define EQ_FEATURE_DoSpellEffect
-#define EQ_FEATURE_EQPlayer__FollowPlayerAI
+#undef EQ_FEATURE_DoSpellEffect
+#undef EQ_FEATURE_EQPlayer__FollowPlayerAI
 #define EQ_FEATURE_EQPlayer__UpdateItemSlot
-#define EQ_FEATURE_EQSwitch__ChangeState
-#define EQ_FEATURE_CEverQuest__StartCasting
+#undef EQ_FEATURE_EQSwitch__ChangeState
+#undef EQ_FEATURE_CEverQuest__StartCasting
 
 #include <algorithm>
 #include <array>
@@ -21,6 +21,7 @@
 #include <memory>
 #include <numeric>
 #include <random>
+#include <regex>
 #include <set>
 #include <string>
 #include <sstream>
@@ -28,7 +29,7 @@
 #include <vector>
 
 #include <filesystem>
-namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not available yet
+namespace std__filesystem = std::experimental::filesystem::v1; // not available yet
 
 #include <cstdio>
 #include <cstdlib>
@@ -85,6 +86,7 @@ namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not avai
 
 // libfmt
 // https://github.com/fmtlib/fmt
+#define FMT_HEADER_ONLY
 #include "fmt/format.h"
 
 // boost
@@ -109,6 +111,7 @@ namespace std__filesystem = std::experimental::filesystem::v1; // C++17 not avai
 #include "eqapp_alwayshotbutton.h"
 #include "eqapp_autogroup.h"
 #include "eqapp_autologin.h"
+#include "eqapp_autotrade.h"
 #include "eqapp_bazaarbot.h"
 #include "eqapp_bazaarfilter.h"
 #include "eqapp_boxchat.h"
@@ -178,6 +181,8 @@ void EQAPP_Load()
             std::cout << "CRender Device Pointer: 0x" << std::hex << devicePointer << std::dec << std::endl;
         }
     }
+
+    std::cout << "EQ_SIZE_CXWnd: 0x" << std::hex << EQ_SIZE_CXWnd << std::dec << std::endl;
 
     std::cout << "EQ_SIZE_CSidlWnd: 0x" << std::hex << EQ_SIZE_CSidlWnd << std::dec << std::endl;
 

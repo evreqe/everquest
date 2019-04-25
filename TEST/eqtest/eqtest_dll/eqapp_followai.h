@@ -20,7 +20,11 @@ void EQAPP_FollowAI_Toggle();
 void EQAPP_FollowAI_On();
 void EQAPP_FollowAI_Off();
 void EQAPP_FollowAI_UseZAxis_Toggle();
+void EQAPP_FollowAI_UseZAxis_On();
+void EQAPP_FollowAI_UseZAxis_Off();
 void EQAPP_FollowAI_Behind_Toggle();
+void EQAPP_FollowAI_Behind_On();
+void EQAPP_FollowAI_Behind_Off();
 void EQAPP_FollowAI_Execute();
 bool EQAPP_FollowAI_HandleEvent_ExecuteCmd(uint32_t commandID, int isActive, int zero);
 
@@ -62,10 +66,42 @@ void EQAPP_FollowAI_UseZAxis_Toggle()
     EQ_CenterView();
 }
 
+void EQAPP_FollowAI_UseZAxis_On()
+{
+    if (g_FollowAIUseZAxisIsEnabled == false)
+    {
+        EQAPP_FollowAI_UseZAxis_Toggle();
+    }
+}
+
+void EQAPP_FollowAI_UseZAxis_Off()
+{
+    if (g_FollowAIUseZAxisIsEnabled == true)
+    {
+        EQAPP_FollowAI_UseZAxis_Toggle();
+    }
+}
+
 void EQAPP_FollowAI_Behind_Toggle()
 {
     EQ_ToggleBool(g_FollowAIBehindIsEnabled);
     EQAPP_PrintBool("Follow AI Behind", g_FollowAIBehindIsEnabled);
+}
+
+void EQAPP_FollowAI_Behind_On()
+{
+    if (g_FollowAIBehindIsEnabled == false)
+    {
+        EQAPP_FollowAI_Behind_Toggle();
+    }
+}
+
+void EQAPP_FollowAI_Behind_Off()
+{
+    if (g_FollowAIBehindIsEnabled == true)
+    {
+        EQAPP_FollowAI_Behind_Toggle();
+    }
 }
 
 void EQAPP_FollowAI_Execute()
@@ -275,6 +311,14 @@ void EQAPP_FollowAI_Execute()
         {
             // look forward
             EQ_ExecuteCommand(EQ_EXECUTECMD_FIRST_PERSON_CAMERA, 1);
+            EQ_ExecuteCommand(EQ_EXECUTECMD_CENTERVIEW, 1);
+        }
+    }
+    else
+    {
+        if (EQ_GetCameraType() == EQ_CAMERA_TYPE_FIRST_PERSON)
+        {
+            // look forward
             EQ_ExecuteCommand(EQ_EXECUTECMD_CENTERVIEW, 1);
         }
     }

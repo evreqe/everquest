@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef EQ_FEATURE_GUI
+
 bool g_GUIWaypointEditorWindowIsEnabled = false;
 
 float g_GUIWaypointEditorWindowX = 0.0f;
@@ -349,3 +351,5 @@ static void EQAPP_GUI_WaypointEditorWindow()
 
     ImGui::PopStyleVar();
 }
+
+#endif // EQ_FEATURE_GUI

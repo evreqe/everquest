@@ -10,6 +10,7 @@ bool EQAPP_String_BeginsWith(std::string& subject, const std::string& search);
 bool EQAPP_String_EndsWith(std::string& subject, const std::string& search);
 void EQAPP_String_ReplaceAll(std::string& subject, const std::string& search, const std::string& replace);
 std::string EQAPP_String_GetBetween(std::string& subject, const std::string& begin, const std::string& end);
+std::string EQAPP_String_GetBetweenBeginAndEnd(std::string& subject, const std::string& begin, const std::string& end);
 std::string EQAPP_String_GetBefore(const std::string& subject, const std::string& search);
 std::string EQAPP_String_GetAfter(const std::string& subject, const std::string& search);
 std::string EQAPP_String_JoinStrings(const std::vector<std::string>& elements, const std::string& separator);
@@ -19,6 +20,7 @@ bool EQAPP_String_IsUppercase(const std::string &subject);
 bool EQAPP_String_IsLowercase(const std::string &subject);
 std::string EQAPP_String_ToLowercase(const std::string& subject);
 std::string EQAPP_String_ToUppercase(const std::string& subject);
+std::string EQAPP_String_RemoveHTMLTags(std::string subject);
 
 bool EQAPP_String_Contains(std::string& subject, const std::string& search)
 {
@@ -86,14 +88,31 @@ std::string EQAPP_String_GetBetween(std::string& subject, const std::string& beg
     return std::string();
 }
 
+std::string EQAPP_String_GetBetweenBeginAndEnd(std::string& subject, const std::string& begin, const std::string& end)
+{
+    std::size_t beginPosition;
+    if ((beginPosition = subject.find(begin)) != std::string::npos)
+    {
+        std::size_t endPosition;
+        if ((endPosition = subject.find(end, beginPosition)) != std::string::npos && endPosition != beginPosition)
+        {
+            endPosition = endPosition + 1;
+
+            return subject.substr(beginPosition, endPosition - beginPosition);
+        }
+    }
+
+    return std::string();
+}
+
 std::string EQAPP_String_GetBefore(const std::string& subject, const std::string& search)
 {
     std::string result = std::string();
 
-    std::string::size_type pos = subject.find(search);
-    if (pos != std::string::npos)
+    std::string::size_type position = subject.find(search);
+    if (position != std::string::npos)
     {
-        result = subject.substr(0, pos);
+        result = subject.substr(0, position);
     }
 
     return result;
@@ -103,10 +122,10 @@ std::string EQAPP_String_GetAfter(const std::string& subject, const std::string&
 {
     std::string result = std::string();
 
-    std::string::size_type pos = subject.find(search);
-    if (pos != std::string::npos)
+    std::string::size_type position = subject.find(search);
+    if (position != std::string::npos)
     {
-        result = subject.substr(pos + search.length(), subject.length());
+        result = subject.substr(position + search.length(), subject.length());
     }
 
     return result;
@@ -176,4 +195,58 @@ std::string EQAPP_String_ToUppercase(const std::string& subject)
     std::transform(str.begin(), str.end(), str.begin(), ::toupper);
 
     return str;
+}
+
+std::string EQAPP_String_RemoveHTMLTags(std::string subject)
+{
+    std::string result = std::string();
+
+    for (;;)
+    {
+        std::string::size_type beginPosition = subject.find('<');
+
+        if (beginPosition == std::string::npos)
+        {
+            result = result + subject;
+            break;
+        }
+
+        if (beginPosition != 0)
+        {
+            result = result + subject.substr(0, beginPosition);
+            subject = subject.substr(beginPosition, subject.size() - beginPosition);
+            beginPosition = 0;
+        }
+
+        std::string::size_type endPosition;
+        for
+        (
+            endPosition = beginPosition;
+            endPosition < subject.size() && subject[endPosition] != '>';
+            ++endPosition
+        )
+        {
+            if (subject[endPosition] == '"')
+            {
+                endPosition++;
+                while (endPosition < subject.size() && subject[endPosition] != '"')
+                {
+                    endPosition++;
+                }
+            }
+        }
+
+        if (endPosition == subject.size())
+        {
+            subject = subject.substr(endPosition, subject.size() - endPosition);
+            break;
+        }
+        else
+        {
+            endPosition++;
+            subject = subject.substr(endPosition, subject.size() - endPosition);
+        }
+    }
+
+    return result;
 }

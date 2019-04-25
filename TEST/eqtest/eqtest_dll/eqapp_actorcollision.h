@@ -116,7 +116,16 @@ bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor
     // cactor is EQData::ActorClient()->pcactorex and EQClass::CActorEx
 
     auto actorDefinitionObject = EQ_ReadMemory<uint32_t>(cactor + EQ_OFFSET_CActor_ACTOR_DEFINITION_OBJECT);
+    if (actorDefinitionObject == NULL)
+    {
+        return false;
+    }
+
     auto actorDefinitionAddress = EQ_ReadMemory<uint32_t>(actorDefinitionObject + EQ_OFFSET_ACTOR_DEFINITION_OBJECT_ACTOR_DEFINITION_ADDRESS);
+    if (actorDefinitionAddress == NULL)
+    {
+        return false;
+    }
 
     char actorDefinitionName[EQ_SIZE_ACTOR_DEFINITION_NAME];
     std::memmove(actorDefinitionName, (LPVOID)(actorDefinitionAddress), sizeof(actorDefinitionName));
@@ -140,10 +149,10 @@ bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor
         bool result = EQ_WorldLocationToScreenLocation(actorY, actorX, actorZ, screenX, screenY);
         if (result == true)
         {
-            fmt::MemoryWriter drawText;
+            std::stringstream drawText;
             drawText << "[Actor] " << actorDefinitionName;
 
-            drawText << "\nAddress: 0x" << fmt::hex(cactor);
+            drawText << "\nAddress: 0x" << std::hex << cactor << std::dec;
 
             ////drawText << "\nAD: 0x" << fmt::hex(actorApplicationData);
 
@@ -155,7 +164,7 @@ bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor
 
             drawText << "\nC: " << actorCollisionScale;
 
-            EQ_DrawTextByColor(drawText.c_str(), (int)screenX, (int)screenY, EQ_DRAW_TEXT_COLOR_WHITE);
+            EQ_DrawTextByColor(drawText.str().c_str(), (int)screenX, (int)screenY, EQ_DRAW_TEXT_COLOR_WHITE);
         }
     }
 

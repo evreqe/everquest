@@ -12,6 +12,10 @@ namespace EQClass
     class CEverQuest;
     class CDisplay;
 
+    class EQ_PC;
+
+    class SpellManager;
+
     class EQPlayerManager;
     class EQPlayer;
 
@@ -24,6 +28,12 @@ namespace EQClass
     class CXWnd;
 
     class AltAdvManager;
+
+    class Aura;
+    class AuraManager;
+
+    class GroundItem;
+    class GroundItemManager;
 
 #ifdef EQ_FEATURE_BAZAAR
     class CBazaarWnd;
@@ -145,6 +155,31 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__DeleteActor)(void* this_ptr,
 EQClass::CDisplay** EQ_CLASS_POINTER_CDisplay_pptr;
 EQClass::CDisplay* EQ_CLASS_POINTER_CDisplay;
 
+/* EQ_PC */
+
+class EQClass::EQ_PC
+{
+public:
+    void EQ_PC::DestroyHeldItemOrMoney();
+};
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQ_PC::DestroyHeldItemOrMoney(), EQ_ADDRESS_FUNCTION_EQ_PC__DestroyHeldItemOrMoney);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_PC__DestroyHeldItemOrMoney)(void* this_ptr);
+
+EQClass::EQ_PC** EQ_CLASS_POINTER_EQ_PC_pptr;
+EQClass::EQ_PC* EQ_CLASS_POINTER_EQ_PC;
+
+/* SpellManager */
+
+class EQClass::SpellManager
+{
+public:
+    //
+};
+
+EQClass::SpellManager** EQ_CLASS_POINTER_SpellManager_pptr;
+EQClass::SpellManager* EQ_CLASS_POINTER_SpellManager;
+
 /* EQPlayerManager */
 
 class EQClass::EQPlayerManager
@@ -204,7 +239,6 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__SetNameSpriteState)(void* th
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::EQPlayer::SetNameSpriteTint(), EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteTint);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__SetNameSpriteTint)(void* this_ptr);
-
 
 /* EQSwitch */
 
@@ -348,6 +382,66 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_AltAdvManager__GetAAById)(void* this_p
 
 EQClass::AltAdvManager** EQ_CLASS_POINTER_AltAdvManager_pptr;
 EQClass::AltAdvManager* EQ_CLASS_POINTER_AltAdvManager;
+
+/* Aura */
+
+class EQClass::Aura
+{
+public:
+/*0x000*/ char Name[0x40];
+/*0x040*/ unsigned int SpawnID;
+/*0x044*/ int Cost;
+/*0x048*/ int IconID;
+/*0x04C*/
+};
+
+/* AuraManager */
+
+class EQClass::AuraManager
+{
+public:
+    ArrayClass2_RO<EQClass::Aura> Auras;
+    static EQClass::AuraManager* AuraManager::GetSingleton();
+};
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(EQClass::AuraManager* EQClass::AuraManager::GetSingleton(), EQ_ADDRESS_FUNCTION_AuraManager__GetSingleton);
+
+/* GroundItem */
+
+class EQClass::GroundItem
+{
+public:
+/*0x00*/ GroundItem* Previous;
+/*0x04*/ GroundItem* Next;
+/*0x08*/ VePointer<EQData::CONTENTS> Contents;
+/*0x0C*/ uint32_t DropID; //unique id
+/*0x10*/ uint32_t ZoneID;
+/*0x14*/ uint32_t  DropSubID; //well zonefile id, but yeah...
+/*0x18*/ void* ActorInterface; //CActorInterface
+/*0x1C*/ char Name[0x40];
+/*0x5C*/ long Expires;
+/*0x60*/ float Heading;
+/*0x64*/ float Pitch;
+/*0x68*/ float Roll;
+/*0x6C*/ float Scale;
+/*0x70*/ float Y;
+/*0x74*/ float X;
+/*0x78*/ float Z;
+/*0x7C*/ signed int Weight; //-1 means it cannot be picked up
+/*0x80*/
+};
+
+/* GroundItemManager */
+// this used to be EQItemList
+
+class EQClass::GroundItemManager
+{
+public:
+    static EQClass::GroundItemManager& GroundItemManager::Instance();
+    EQClass::GroundItem* Top; // First
+};
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(EQClass::GroundItemManager& EQClass::GroundItemManager::Instance(), EQ_ADDRESS_FUNCTION_GroundItemManager__Instance);
 
 #ifdef EQ_FEATURE_BAZAAR
 

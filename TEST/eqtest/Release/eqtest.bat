@@ -1,2 +1,1 @@
 eqtest.exe
-pause

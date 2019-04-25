@@ -5,6 +5,7 @@
 #include "eqapp_alwayshotbutton.h"
 #include "eqapp_autogroup.h"
 #include "eqapp_autologin.h"
+#include "eqapp_autotrade.h"
 #include "eqapp_bazaarbot.h"
 #include "eqapp_bazaarfilter.h"
 #include "eqapp_boxchat.h"
@@ -43,7 +44,9 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
 {
     {"//Unload",                       &EQAPP_Unload},
     {"//LoadOptions",                  &EQAPP_LoadOptions},
-    {"//DebugText",                    &EQAPP_ToggleDebugText},
+    {"//DebugText",                    &EQAPP_DebugText_Toggle},
+    {"//DebugTextOn",                  &EQAPP_DebugText_On},
+    {"//DebugTextOff",                 &EQAPP_DebugText_Off},
     {"//Sleep",                        &EQAPP_Sleep_Toggle},
     {"//SleepOn",                      &EQAPP_Sleep_On},
     {"//SleepOff",                     &EQAPP_Sleep_Off},
@@ -123,6 +126,8 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//BoxChatOn",                    &EQAPP_BoxChat_On},
     {"//BoxChatOff",                   &EQAPP_BoxChat_Off},
     {"//BoxChatAutoConnect",           &EQAPP_BoxChat_AutoConnect_Toggle},
+    {"//BoxChatAutoConnectOn",         &EQAPP_BoxChat_AutoConnect_On},
+    {"//BoxChatAutoConnectOff",        &EQAPP_BoxChat_AutoConnect_Off},
     {"//BC",                           &EQAPP_BoxChat_Toggle},
     {"//BCOn",                         &EQAPP_BoxChat_On},
     {"//BCOff",                        &EQAPP_BoxChat_Off},
@@ -137,6 +142,7 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//ESPShowSpawnRace",             &EQAPP_ESP_ShowSpawnRace_Toggle},
     {"//ESPShowSpawnClass",            &EQAPP_ESP_ShowSpawnClass_Toggle},
     {"//ESPShowSpawns",                &EQAPP_ESP_ShowSpawns_Toggle},
+    {"//ESPShowGroundSpawns",          &EQAPP_ESP_ShowGroundSpawns_Toggle},
     {"//ESPShowDoors",                 &EQAPP_ESP_ShowDoors_Toggle},
     {"//ESPHF",                        &EQAPP_ESP_HeightFilter_Toggle},
     {"//ESPFL",                        &EQAPP_ESP_FindLine_Toggle},
@@ -144,6 +150,7 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//ESPRace",                      &EQAPP_ESP_ShowSpawnRace_Toggle},
     {"//ESPClass",                     &EQAPP_ESP_ShowSpawnClass_Toggle},
     {"//ESPSpawns",                    &EQAPP_ESP_ShowSpawns_Toggle},
+    {"//ESPGroundSpawns",              &EQAPP_ESP_ShowGroundSpawns_Toggle},
     {"//ESPDoors",                     &EQAPP_ESP_ShowDoors_Toggle},
     {"//FPS",                          &EQAPP_FPS_Toggle},
     {"//FPSOn",                        &EQAPP_FPS_On},
@@ -152,6 +159,9 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//GUI",                          &EQAPP_GUI_Toggle},
     {"//GUIOn",                        &EQAPP_GUI_On},
     {"//GUIOff",                       &EQAPP_GUI_Off},
+    {"//GUIMap",                       &EQAPP_GUI_MapWindow_Toggle},
+    {"//GUIMapOn",                     &EQAPP_GUI_MapWindow_On},
+    {"//GUIMapOff",                    &EQAPP_GUI_MapWindow_Off},
 #endif // EQ_FEATURE_GUI
     {"//ChangeHeight",                 &EQAPP_ChangeHeight_Toggle},
     {"//ChangeHeightOn",               &EQAPP_ChangeHeight_On},
@@ -164,13 +174,20 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//SpawnCastSpellOn",             &EQAPP_SpawnCastSpell_On},
     {"//SpawnCastSpellOff",            &EQAPP_SpawnCastSpell_Off},
     {"//SpawnCastSpellESP",            &EQAPP_SpawnCastSpell_ESP_Toggle},
+    {"//SpawnCastSpellESPOn",          &EQAPP_SpawnCastSpell_ESP_On},
+    {"//SpawnCastSpellESPOff",         &EQAPP_SpawnCastSpell_ESP_Off},
     {"//SpawnCastSpellGroupChat",      &EQAPP_SpawnCastSpell_GroupChat_Toggle},
+    {"//SpawnCastSpellGroupChatOn",    &EQAPP_SpawnCastSpell_GroupChat_On},
+    {"//SpawnCastSpellGroupChatOff",   &EQAPP_SpawnCastSpell_GroupChat_Off},
     {"//SCS",                          &EQAPP_SpawnCastSpell_Toggle},
     {"//SCSOn",                        &EQAPP_SpawnCastSpell_On},
     {"//SCSOff",                       &EQAPP_SpawnCastSpell_Off},
     {"//SCSESP",                       &EQAPP_SpawnCastSpell_ESP_Toggle},
+    {"//SCSESPOn",                     &EQAPP_SpawnCastSpell_ESP_On},
+    {"//SCSESPOff",                    &EQAPP_SpawnCastSpell_ESP_Off},
     {"//SCSGC",                        &EQAPP_SpawnCastSpell_GroupChat_Toggle},
-    {"//SCSGroupChat",                 &EQAPP_SpawnCastSpell_GroupChat_Toggle},
+    {"//SCSGCOn",                      &EQAPP_SpawnCastSpell_GroupChat_On},
+    {"//SCSGCOff",                     &EQAPP_SpawnCastSpell_GroupChat_Off},
 #endif // EQ_FEATURE_CEverQuest__StartCasting
     {"//Speed",                        &EQAPP_Speed_Toggle},
     {"//SpeedOn",                      &EQAPP_Speed_On},
@@ -183,14 +200,25 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//FollowAIOn",                   &EQAPP_FollowAI_On},
     {"//FollowAIOff",                  &EQAPP_FollowAI_Off},
     {"//FollowAIUseZAxis",             &EQAPP_FollowAI_UseZAxis_Toggle},
+    {"//FollowAIUseZAxisOn",           &EQAPP_FollowAI_UseZAxis_On},
+    {"//FollowAIUseZAxisOff",          &EQAPP_FollowAI_UseZAxis_Off},
     {"//FollowAIBehind",               &EQAPP_FollowAI_Behind_Toggle},
-    {"//FAI",                          &EQAPP_FollowAI_Toggle},
-    {"//FAIOn",                        &EQAPP_FollowAI_On},
-    {"//FAIOff",                       &EQAPP_FollowAI_Off},
-    {"//FAIUseZAxis",                  &EQAPP_FollowAI_UseZAxis_Toggle},
+    {"//FollowAIBehindOn",             &EQAPP_FollowAI_Behind_On},
+    {"//FollowAIBehindOff",            &EQAPP_FollowAI_Behind_Off},
+    {"//FollowOn",                     &EQAPP_FollowAI_On},
+    {"//FollowOff",                    &EQAPP_FollowAI_Off},
+    {"//FollowZ",                      &EQAPP_FollowAI_UseZAxis_Toggle},
+    {"//FollowZOn",                    &EQAPP_FollowAI_UseZAxis_On},
+    {"//FollowZOff",                   &EQAPP_FollowAI_UseZAxis_Off},
     {"//FZ",                           &EQAPP_FollowAI_UseZAxis_Toggle},
-    {"//FAIBehind",                    &EQAPP_FollowAI_Behind_Toggle},
+    {"//FZOn",                         &EQAPP_FollowAI_UseZAxis_On},
+    {"//FZOff",                        &EQAPP_FollowAI_UseZAxis_Off},
+    {"//FollowBehind",                 &EQAPP_FollowAI_Behind_Toggle},
+    {"//FollowBehindOn",               &EQAPP_FollowAI_Behind_On},
+    {"//FollowBehindOff",              &EQAPP_FollowAI_Behind_Off},
     {"//FB",                           &EQAPP_FollowAI_Behind_Toggle},
+    {"//FBOn",                         &EQAPP_FollowAI_Behind_On},
+    {"//FBOff",                        &EQAPP_FollowAI_Behind_Off},
     {"//FindPath",                     &EQAPP_FindPath_Toggle},
     {"//FindPathOn",                   &EQAPP_FindPath_On},
     {"//FindPathOff",                  &EQAPP_FindPath_Off},
@@ -226,6 +254,7 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//OpenAllDoors",                 &EQ_OpenAllDoors},
     {"//CloseAllDoors",                &EQ_CloseAllDoors},
 #endif // EQ_FEATURE_EQSwitch__ChangeState
+    {"//Destroy",                      &EQ_DestroyHeldItemOrMoney},
     {"//WPLoad",                       &EQAPP_WaypointList_Load},
     {"//WPSave",                       &EQAPP_WaypointList_Save},
     {"//WPList",                       &EQAPP_WaypointList_Print},
@@ -273,260 +302,6 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//ND",                           &EQAPP_NoDraw_Toggle},
     {"//NDOn",                         &EQAPP_NoDraw_On},
     {"//NDOff",                        &EQAPP_NoDraw_Off},
-    ////
-    ////{"//Null",                         &EQAPP_InterpretCommand_NULL},
-    ////
-    {"//Test",                         &EQAPP_InterpretCommand_NULL},
-    {"//TestChatTextColors",           &EQAPP_InterpretCommand_NULL},
-    {"//Pause",                        &EQAPP_InterpretCommand_NULL},
-    {"//InGame",                       &EQAPP_InterpretCommand_NULL},
-    {"//NotInGame",                    &EQAPP_InterpretCommand_NULL},
-    {"//Beep",                         &EQAPP_InterpretCommand_NULL},
-    {"//BeepEx",                       &EQAPP_InterpretCommand_NULL},
-    {"//PlaySound",                    &EQAPP_InterpretCommand_NULL},
-    {"//PlaySoundEx",                  &EQAPP_InterpretCommand_NULL},
-    {"//StopSound",                    &EQAPP_InterpretCommand_NULL},
-    {"//StopSoundEx",                  &EQAPP_InterpretCommand_NULL},
-    {"//TaskAccept",                   &EQAPP_InterpretCommand_NULL},
-    {"//TaskDecline",                  &EQAPP_InterpretCommand_NULL},
-#ifdef EQ_FEATURE_BAZAAR
-    {"//BazaarListCount",              &EQAPP_InterpretCommand_NULL},
-    {"//BazaarListIndex",              &EQAPP_InterpretCommand_NULL},
-    {"//BazaarPrintList",              &EQAPP_InterpretCommand_NULL},
-    {"//BazaarDoQuery",                &EQAPP_InterpretCommand_NULL},
-    {"//BazaarFindItems",              &EQAPP_InterpretCommand_NULL},
-    {"//BazaarUpdateTraders",          &EQAPP_InterpretCommand_NULL},
-    {"//BazaarReset",                  &EQAPP_InterpretCommand_NULL},
-    {"//BazaarBuy",                    &EQAPP_InterpretCommand_NULL},
-    {"//BazaarToParcels",              &EQAPP_InterpretCommand_NULL},
-    {"//BazaarBeginTrader",            &EQAPP_InterpretCommand_NULL},
-    {"//BazaarEndTrader",              &EQAPP_InterpretCommand_NULL},
-#endif // EQ_FEATURE_BAZAAR
-    {"//LDWOK",                        &EQAPP_InterpretCommand_NULL},
-    {"//LDWYes",                       &EQAPP_InterpretCommand_NULL},
-    {"//LDWNo",                        &EQAPP_InterpretCommand_NULL},
-    {"//CDYes",                        &EQAPP_InterpretCommand_NULL},
-    {"//CDNo",                         &EQAPP_InterpretCommand_NULL},
-    {"//CDCancel",                     &EQAPP_InterpretCommand_NULL},
-    {"//CDOK",                         &EQAPP_InterpretCommand_NULL},
-    {"//Screencap",                    &EQAPP_InterpretCommand_NULL},
-    {"//Screenshot",                   &EQAPP_InterpretCommand_NULL},
-    {"//TakeScreenshot",               &EQAPP_InterpretCommand_NULL},
-    {"//Campfire",                     &EQAPP_InterpretCommand_NULL},
-    {"//Stein",                        &EQAPP_InterpretCommand_NULL},
-    {"//Origin",                       &EQAPP_InterpretCommand_NULL},
-    {"//Gate",                         &EQAPP_InterpretCommand_NULL},
-    {"//MassGroupBuff",                &EQAPP_InterpretCommand_NULL},
-    {"//MGB",                          &EQAPP_InterpretCommand_NULL},
-    {"//TranquilBlessings",            &EQAPP_InterpretCommand_NULL},
-    {"//MGB2",                         &EQAPP_InterpretCommand_NULL},
-    {"//ThroneOfHeroes",               &EQAPP_InterpretCommand_NULL},
-    {"//GuildLobby",                   &EQAPP_InterpretCommand_NULL},
-    {"//GL",                           &EQAPP_InterpretCommand_NULL},
-    {"//HarmonicDissonance",           &EQAPP_InterpretCommand_NULL},
-    {"//TheaterOfBlood",               &EQAPP_InterpretCommand_NULL},
-    {"//BindAffinity",                 &EQAPP_InterpretCommand_NULL},
-    {"//Identify",                     &EQAPP_InterpretCommand_NULL},
-    {"//LessonOfTheDevoted",           &EQAPP_InterpretCommand_NULL},
-    {"//LOTD",                         &EQAPP_InterpretCommand_NULL},
-    {"//ExpedientRecovery",            &EQAPP_InterpretCommand_NULL},
-    {"//EXPR",                         &EQAPP_InterpretCommand_NULL},
-    {"//ArmorOfExperience",            &EQAPP_InterpretCommand_NULL},
-    {"//AOEXP",                        &EQAPP_InterpretCommand_NULL},
-    {"//InfusionOfTheFaithful",        &EQAPP_InterpretCommand_NULL},
-    {"//IOTF",                         &EQAPP_InterpretCommand_NULL},
-    {"//IntensityOfTheResolute",       &EQAPP_InterpretCommand_NULL},
-    {"//IOTR",                         &EQAPP_InterpretCommand_NULL},
-    {"//Banestrike",                   &EQAPP_InterpretCommand_NULL},
-    {"//SteadfastServant",             &EQAPP_InterpretCommand_NULL},
-    {"//ChaoticJester",                &EQAPP_InterpretCommand_NULL},
-    {"//SummonClockworkBanker",        &EQAPP_InterpretCommand_NULL},
-    {"//SCB",                          &EQAPP_InterpretCommand_NULL},
-    {"//SummonPermutationPeddler",     &EQAPP_InterpretCommand_NULL},
-    {"//SPP",                          &EQAPP_InterpretCommand_NULL},
-    {"//SummonPersonalTributeMaster",  &EQAPP_InterpretCommand_NULL},
-    {"//SPTM",                         &EQAPP_InterpretCommand_NULL},
-    {"//SummonResupplyAgent",          &EQAPP_InterpretCommand_NULL},
-    {"//SRA",                          &EQAPP_InterpretCommand_NULL},
-    {"//AutoAttack",                   &EQAPP_InterpretCommand_NULL},
-    {"//AutoAttackOn",                 &EQAPP_InterpretCommand_NULL},
-    {"//AutoAttackOff",                &EQAPP_InterpretCommand_NULL},
-    {"//AutoFire",                     &EQAPP_InterpretCommand_NULL},
-    {"//AutoFireOn",                   &EQAPP_InterpretCommand_NULL},
-    {"//AutoFireOff",                  &EQAPP_InterpretCommand_NULL},
-    {"//AutoRun",                      &EQAPP_InterpretCommand_NULL},
-    {"//AutoRunOn",                    &EQAPP_InterpretCommand_NULL},
-    {"//AutoRunOff",                   &EQAPP_InterpretCommand_NULL},
-    {"//AcceptInvite",                 &EQAPP_InterpretCommand_NULL},
-    {"//JoinGroup",                    &EQAPP_InterpretCommand_NULL},
-    {"//Disband",                      &EQAPP_InterpretCommand_NULL},
-    {"//FieldOfView",                  &EQAPP_InterpretCommand_NULL},
-    {"//FOV",                          &EQAPP_InterpretCommand_NULL},
-    {"//FieldOfViewDefault",           &EQAPP_InterpretCommand_NULL},
-    {"//FOVDefault",                   &EQAPP_InterpretCommand_NULL},
-    {"//DrawDistance",                 &EQAPP_InterpretCommand_NULL},
-    {"//FogOff",                       &EQAPP_InterpretCommand_NULL},
-    {"//FogOn",                        &EQAPP_InterpretCommand_NULL},
-    {"//FogDistanceBegin",             &EQAPP_InterpretCommand_NULL},
-    {"//FogDistanceEnd",               &EQAPP_InterpretCommand_NULL},
-    {"//ShrinkTarget",                 &EQAPP_InterpretCommand_NULL},
-    {"//GrowTarget",                   &EQAPP_InterpretCommand_NULL},
-    {"//ChangeTargetHeight",           &EQAPP_InterpretCommand_NULL},
-    {"//FaceTargetHeading",            &EQAPP_InterpretCommand_NULL},
-    {"//FaceTarget",                   &EQAPP_InterpretCommand_NULL},
-    {"//TargetMe",                     &EQAPP_InterpretCommand_NULL},
-    {"//TargetMyself",                 &EQAPP_InterpretCommand_NULL},
-    {"//Target",                       &EQAPP_InterpretCommand_NULL},
-    {"//TargetID",                     &EQAPP_InterpretCommand_NULL},
-    {"//Follow",                       &EQAPP_InterpretCommand_NULL},
-    {"//StopFollow",                   &EQAPP_InterpretCommand_NULL},
-    {"//StopCast",                     &EQAPP_InterpretCommand_NULL},
-    {"//StopSong",                     &EQAPP_InterpretCommand_NULL},
-    {"//StopAction",                   &EQAPP_InterpretCommand_NULL},
-    {"//ClearTarget",                  &EQAPP_InterpretCommand_NULL},
-    {"//CloseTopWindow",               &EQAPP_InterpretCommand_NULL},
-    {"//CloseAllTopWindows",           &EQAPP_InterpretCommand_NULL},
-    {"//Hail",                         &EQAPP_InterpretCommand_NULL},
-    {"//Camp",                         &EQAPP_InterpretCommand_NULL},
-    {"//Use",                          &EQAPP_InterpretCommand_NULL},
-    {"//Jump",                         &EQAPP_InterpretCommand_NULL},
-    {"//Duck",                         &EQAPP_InterpretCommand_NULL},
-    {"//Crouch",                       &EQAPP_InterpretCommand_NULL},
-    {"//SitStand",                     &EQAPP_InterpretCommand_NULL},
-    {"//Sit",                          &EQAPP_InterpretCommand_NULL},
-    {"//Stand",                        &EQAPP_InterpretCommand_NULL},
-    {"//RunWalk",                      &EQAPP_InterpretCommand_NULL},
-    {"//ConfirmNo",                    &EQAPP_InterpretCommand_NULL},
-    {"//ConfirmYes",                   &EQAPP_InterpretCommand_NULL},
-    {"//PitchDown",                    &EQAPP_InterpretCommand_NULL},
-    {"//LookDown",                     &EQAPP_InterpretCommand_NULL},
-    {"//PitchUp",                      &EQAPP_InterpretCommand_NULL},
-    {"//LookUp",                       &EQAPP_InterpretCommand_NULL},
-    {"//CenterView",                   &EQAPP_InterpretCommand_NULL},
-    {"//LookForward",                  &EQAPP_InterpretCommand_NULL},
-    {"//FirstPersonCamera",            &EQAPP_InterpretCommand_NULL},
-    {"//OverheadCamera",               &EQAPP_InterpretCommand_NULL},
-    {"//ChaseCamera",                  &EQAPP_InterpretCommand_NULL},
-    {"//User1Camera",                  &EQAPP_InterpretCommand_NULL},
-    {"//ThirdPersonCamera1",           &EQAPP_InterpretCommand_NULL},
-    {"//User2Camera",                  &EQAPP_InterpretCommand_NULL},
-    {"//ThirdPersonCamera2",           &EQAPP_InterpretCommand_NULL},
-    {"//ThirdPersonCamera",            &EQAPP_InterpretCommand_NULL},
-    {"//TetherCamera",                 &EQAPP_InterpretCommand_NULL},
-    {"//OpenBags",                     &EQAPP_InterpretCommand_NULL},
-    {"//CloseBags",                    &EQAPP_InterpretCommand_NULL},
-    {"//InspectBuffs",                 &EQAPP_InterpretCommand_NULL},
-    {"//Consider",                     &EQAPP_InterpretCommand_NULL},
-    {"//Party1",                       &EQAPP_InterpretCommand_NULL},
-    {"//Group1",                       &EQAPP_InterpretCommand_NULL},
-    {"//HotButton1",                   &EQAPP_InterpretCommand_NULL},
-    {"//HotButton1_1",                 &EQAPP_InterpretCommand_NULL},
-    {"//Discipline1",                  &EQAPP_InterpretCommand_NULL},
-    {"//XTargetCycle",                 &EQAPP_InterpretCommand_NULL},
-    {"//XTarget1",                     &EQAPP_InterpretCommand_NULL},
-    {"//UseItemCharm",                 &EQAPP_InterpretCommand_NULL},
-    {"//UseItemLeftEar",               &EQAPP_InterpretCommand_NULL},
-    {"//UseItemHead",                  &EQAPP_InterpretCommand_NULL},
-    {"//UseItemFace",                  &EQAPP_InterpretCommand_NULL},
-    {"//UseItemRightEar",              &EQAPP_InterpretCommand_NULL},
-    {"//UseItemNeck",                  &EQAPP_InterpretCommand_NULL},
-    {"//UseItemShoulders",             &EQAPP_InterpretCommand_NULL},
-    {"//UseItemArms",                  &EQAPP_InterpretCommand_NULL},
-    {"//UseItemBack",                  &EQAPP_InterpretCommand_NULL},
-    {"//UseItemLeftWrist",             &EQAPP_InterpretCommand_NULL},
-    {"//UseItemLeftEar",               &EQAPP_InterpretCommand_NULL},
-    {"//UseItemRightWrist",            &EQAPP_InterpretCommand_NULL},
-    {"//UseItemRange",                 &EQAPP_InterpretCommand_NULL},
-    {"//UseItemHands",                 &EQAPP_InterpretCommand_NULL},
-    {"//UseItemPrimary",               &EQAPP_InterpretCommand_NULL},
-    {"//UseItemSecondary",             &EQAPP_InterpretCommand_NULL},
-    {"//UseItemLeftRing",              &EQAPP_InterpretCommand_NULL},
-    {"//UseItemRightRing",             &EQAPP_InterpretCommand_NULL},
-    {"//UseItemChest",                 &EQAPP_InterpretCommand_NULL},
-    {"//UseItemLegs",                  &EQAPP_InterpretCommand_NULL},
-    {"//UseItemFeet",                  &EQAPP_InterpretCommand_NULL},
-    {"//UseItemWaist",                 &EQAPP_InterpretCommand_NULL},
-    {"//UseItemPowerSource",           &EQAPP_InterpretCommand_NULL},
-    {"//UseItemAmmo",                  &EQAPP_InterpretCommand_NULL},
-    {"//UseItemBag1_1",                &EQAPP_InterpretCommand_NULL},
-    {"//ESPFindName",                  &EQAPP_InterpretCommand_NULL},
-    {"//ESPFindLastName",              &EQAPP_InterpretCommand_NULL},
-    {"//ESPFindType",                  &EQAPP_InterpretCommand_NULL},
-    {"//ESPFindTypePlayer",            &EQAPP_InterpretCommand_NULL},
-    {"//ESPFindTypeNPC",               &EQAPP_InterpretCommand_NULL},
-    {"//ESPFindTypeCorpse",            &EQAPP_InterpretCommand_NULL},
-    {"//ESPFindLevel",                 &EQAPP_InterpretCommand_NULL},
-    {"//ESPFindRace",                  &EQAPP_InterpretCommand_NULL},
-    {"//ESPFindClass",                 &EQAPP_InterpretCommand_NULL},
-    {"//ESPFindClassBanker",           &EQAPP_InterpretCommand_NULL},
-    {"//ESPFindClassMerchant",         &EQAPP_InterpretCommand_NULL},
-    {"//ESPFindClassObject",           &EQAPP_InterpretCommand_NULL},
-    {"//Multiline",                    &EQAPP_InterpretCommand_NULL},
-    {"//MultilineRandom",              &EQAPP_InterpretCommand_NULL},
-    {"//Cast",                         &EQAPP_InterpretCommand_NULL},
-    {"//CastRandom",                   &EQAPP_InterpretCommand_NULL},
-    {"//DoAbility",                    &EQAPP_InterpretCommand_NULL},
-    {"//DoAbilityRandom",              &EQAPP_InterpretCommand_NULL},
-    {"//Discipline",                   &EQAPP_InterpretCommand_NULL},
-    {"//DisciplineRandom",             &EQAPP_InterpretCommand_NULL},
-    {"//AltActivate",                  &EQAPP_InterpretCommand_NULL},
-    {"//AltActivateRandom",            &EQAPP_InterpretCommand_NULL},
-    {"//BoxChatConnect",               &EQAPP_InterpretCommand_NULL},
-    {"//BCC",                          &EQAPP_InterpretCommand_NULL},
-    {"//BoxChatDisconnect",            &EQAPP_InterpretCommand_NULL},
-    {"//BCD",                          &EQAPP_InterpretCommand_NULL},
-    {"//BoxChatStatus",                &EQAPP_InterpretCommand_NULL},
-    {"//BCS",                          &EQAPP_InterpretCommand_NULL},
-    {"//BoxChatSetChannel",            &EQAPP_InterpretCommand_NULL},
-    {"//BCSC",                         &EQAPP_InterpretCommand_NULL},
-    {"//BoxChatTell",                  &EQAPP_InterpretCommand_NULL},
-    {"//BCT",                          &EQAPP_InterpretCommand_NULL},
-    {"//BoxChatToChannel",             &EQAPP_InterpretCommand_NULL},
-    {"//BCTC",                         &EQAPP_InterpretCommand_NULL},
-    {"//BoxChatGroup",                 &EQAPP_InterpretCommand_NULL},
-    {"//BCG",                          &EQAPP_InterpretCommand_NULL},
-    {"//BoxChatGroupAll",              &EQAPP_InterpretCommand_NULL},
-    {"//BCGA",                         &EQAPP_InterpretCommand_NULL},
-    {"//BoxChatOthers",                &EQAPP_InterpretCommand_NULL},
-    {"//BCA",                          &EQAPP_InterpretCommand_NULL},
-    {"//BoxChatAll",                   &EQAPP_InterpretCommand_NULL},
-    {"//BCAA",                         &EQAPP_InterpretCommand_NULL},
-    {"//SpawnList",                    &EQAPP_InterpretCommand_NULL},
-    {"//Location",                     &EQAPP_InterpretCommand_NULL},
-    {"//Loc",                          &EQAPP_InterpretCommand_NULL},
-    {"//MouseLocation",                &EQAPP_InterpretCommand_NULL},
-    {"//MouseLoc",                     &EQAPP_InterpretCommand_NULL},
-    {"//NearbyNPC",                    &EQAPP_InterpretCommand_NULL},
-    {"//Melody",                       &EQAPP_InterpretCommand_NULL},
-    {"//ScriptFolder",                 &EQAPP_InterpretCommand_NULL},
-    {"//Scripts",                      &EQAPP_InterpretCommand_NULL},
-    {"//Script",                       &EQAPP_InterpretCommand_NULL},
-    {"//LoadScripts",                  &EQAPP_InterpretCommand_NULL},
-    {"//LoadEventScriptList",          &EQAPP_InterpretCommand_NULL},
-    {"//LoadEventScripts",             &EQAPP_InterpretCommand_NULL},
-    {"//EventScriptList",              &EQAPP_InterpretCommand_NULL},
-    {"//Lua",                          &EQAPP_InterpretCommand_NULL},
-    {"//LuaEvent",                     &EQAPP_InterpretCommand_NULL},
-    {"//Echo",                         &EQAPP_InterpretCommand_NULL},
-#ifdef EQ_FEATURE_EQPlayer__UpdateItemSlot
-    {"//ItemSlotPrimary",              &EQAPP_InterpretCommand_NULL},
-    {"//ItemSlotSecondary",            &EQAPP_InterpretCommand_NULL},
-    {"//ItemSlotHead",                 &EQAPP_InterpretCommand_NULL},
-#endif // EQ_FEATURE_EQPlayer__UpdateItemSlot
-    {"//IfMoving",                     &EQAPP_InterpretCommand_NULL},
-    {"//IfNotMoving",                  &EQAPP_InterpretCommand_NULL},
-    {"//UseDoor",                      &EQAPP_InterpretCommand_NULL},
-    {"//InventoryFind",                &EQAPP_InterpretCommand_NULL},
-    {"//InvFind",                      &EQAPP_InterpretCommand_NULL},
-    {"//ZoneInfo",                     &EQAPP_InterpretCommand_NULL},
-    {"//FaceNorth",                    &EQAPP_InterpretCommand_NULL},
-    {"//FaceNorthWest",                &EQAPP_InterpretCommand_NULL},
-    {"//FaceWest",                     &EQAPP_InterpretCommand_NULL},
-    {"//FaceSouthWest",                &EQAPP_InterpretCommand_NULL},
-    {"//FaceSouth",                    &EQAPP_InterpretCommand_NULL},
-    {"//FaceSouthEast",                &EQAPP_InterpretCommand_NULL},
-    {"//FaceEast",                     &EQAPP_InterpretCommand_NULL},
-    {"//FaceNorthEast",                &EQAPP_InterpretCommand_NULL},
 };
 
 void EQAPP_InterpretCommand_PrintList();
@@ -913,6 +688,36 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         }
 */
 
+        EQClass::GroundItemManager* groundItemList = EQ_GetGroundItemList();
+        if (groundItemList == NULL || groundItemList->Top == NULL)
+        {
+            return true;
+        }
+
+        auto groundSpawn = groundItemList->Top;
+
+        while (groundSpawn)
+        {
+            std::cout << "Ground Spawn: " << groundSpawn->Name << std::endl;
+
+            groundSpawn = groundSpawn->Next;
+        }
+
+/*
+        auto mapWindow = EQ_GetMapWindow();
+        if (mapWindow != NULL)
+        {
+            EQUIStructs::PMAPLABEL mapLabel = ((EQUIStructs::EQMAPWINDOW*)mapWindow)->pLabels;
+
+            while (mapLabel)
+            {
+                std::cout << "Map Label: " << mapLabel->Label << std::endl;
+
+                mapLabel = mapLabel->pNext;
+            }
+        }
+*/
+
         return true;
     }
 
@@ -924,6 +729,42 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
             ss << i << " ^ Test123";
 
             EQ_PrintTextToChatByColor(ss.str().c_str(), i);
+        }
+
+        return true;
+    }
+
+    if (commandText == "//TestWindows")
+    {
+        auto windowList = EQ_GetCXWndList();
+        for (auto& window : windowList)
+        {
+            std::cout << "dShow: " << (int)((EQUIStructs::CXWND*)window)->dShow << std::endl;
+
+            std::cout << "Location.top: " << (int)((EQUIStructs::CXWND*)window)->Location.top << std::endl;
+            std::cout << "Location.bottom: " << (int)((EQUIStructs::CXWND*)window)->Location.bottom << std::endl;
+            std::cout << "Location.left: " << (int)((EQUIStructs::CXWND*)window)->Location.left << std::endl;
+            std::cout << "Location.right: " << (int)((EQUIStructs::CXWND*)window)->Location.right << std::endl;
+        }
+
+        return true;
+    }
+
+    if (commandText == "//TestSpellGems")
+    {
+        auto window = EQ_GetCastSpellWindow();
+        if (window != NULL)
+        {
+            for (unsigned int i = 0; i < EQ_NUM_SPELL_GEMS_IN_WINDOW; i++)
+            {
+                auto spellGem = ((EQUIStructs::_EQCASTSPELLWINDOW*)window)->SpellSlots[i];
+                if (spellGem == NULL)
+                {
+                    continue;
+                }
+
+                std::cout << "Spell Gem #" << i << " State: " << (int)spellGem->spellstate << std::endl;
+            }
         }
 
         return true;
@@ -1058,7 +899,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
     {
         if (EQ_TaskSelectWindow_IsOpen() == true)
         {
-            EQ_TaskSelectWindow_ClickAcceptButton();
+            EQ_TaskSelectWindow_ClickDeclineButton();
         }
 
         return true;
@@ -1207,7 +1048,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (commandText == "//LDWOK")
+    if (commandText == "//LDWOK" || commandText == "//LDWOk")
     {
         if (EQ_LargeDialogWindow_IsOpen() == true)
         {
@@ -1242,6 +1083,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         ////if (EQ_ConfirmationDialog_IsOpen() == true)
         ////{
             EQ_ConfirmationDialog_ClickYesButton();
+            EQ_ConfirmationDialog_ClickOKButton();
         ////}
 
         return true;
@@ -1252,6 +1094,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         ////if (EQ_ConfirmationDialog_IsOpen() == true)
         ////{
             EQ_ConfirmationDialog_ClickNoButton();
+            EQ_ConfirmationDialog_ClickCancelButton();
         ////}
 
         return true;
@@ -1262,6 +1105,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         ////if (EQ_ConfirmationDialog_IsOpen() == true)
         ////{
             EQ_ConfirmationDialog_ClickCancelButton();
+            EQ_ConfirmationDialog_ClickNoButton();
         ////}
 
         return true;
@@ -1272,6 +1116,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         ////if (EQ_ConfirmationDialog_IsOpen() == true)
         ////{
             EQ_ConfirmationDialog_ClickOKButton();
+            EQ_ConfirmationDialog_ClickYesButton();
         ////}
 
         return true;
@@ -1397,6 +1242,16 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
+    if (commandText == "//GetFieldOfView")
+    {
+        std::stringstream ss;
+        ss << "Field of View: " << EQ_GetCameraFieldOfView();
+
+        std::cout << ss.str() << std::endl;
+
+        return true;
+    }
+
     if (commandText == "//FieldOfViewDefault" || commandText == "//FOVDefault")
     {
         EQ_SetCameraFieldOfView(EQ_CAMERA_FIELD_OF_VIEW_DEFAULT);
@@ -1426,6 +1281,16 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
+    if (commandText == "//GetDrawDistance")
+    {
+        std::stringstream ss;
+        ss << "Draw Distance: " << EQ_GetCameraDrawDistance();
+
+        std::cout << ss.str() << std::endl;
+
+        return true;
+    }
+
     if (EQAPP_String_BeginsWith(commandText, "//DrawDistance ") == true)
     {
         std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
@@ -1439,6 +1304,36 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                     EQ_SetCameraDrawDistance(distance);
 
                     std::cout << "Draw Distance: " << distance << std::endl;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    if (commandText == "//GetFarClipPlane")
+    {
+        std::stringstream ss;
+        ss << "Far Clip Plane: " << EQ_GetCameraFarClipPlane();
+
+        std::cout << ss.str() << std::endl;
+
+        return true;
+    }
+
+    if (EQAPP_String_BeginsWith(commandText, "//FarClipPlane ") == true)
+    {
+        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+        if (commandTextAfterSpace.size() != 0)
+        {
+            if (EQAPP_String_IsDigits(commandTextAfterSpace) == true)
+            {
+                float distance = std::stof(commandTextAfterSpace);
+                if (distance > 0.0f)
+                {
+                    EQ_SetCameraFarClipPlane(distance);
+
+                    std::cout << "Far Clip Plane: " << distance << std::endl;
                 }
             }
         }
@@ -5263,7 +5158,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (EQAPP_String_BeginsWith(commandText, "//WPG ") == true || EQAPP_String_BeginsWith(commandText, "//WPGoto ") == true)
+    if (EQAPP_String_BeginsWith(commandText, "//WPGoto ") == true)
     {
         std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
         if (commandTextAfterSpace.size() != 0)
@@ -5278,6 +5173,17 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
             {
                 EQAPP_Waypoint_GotoByName(commandTextAfterSpace.c_str());
             }
+        }
+
+        return true;
+    }
+
+    if (EQAPP_String_BeginsWith(commandText, "//WPGotoSpawn ") == true)
+    {
+        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+        if (commandTextAfterSpace.size() != 0)
+        {
+            EQAPP_Waypoint_GotoBySpawnName(commandTextAfterSpace.c_str());
         }
 
         return true;
@@ -5609,6 +5515,13 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         {
             EQ_UseAlternateAbilityByName(alternateAbilityName.c_str());
         }
+
+        return true;
+    }
+
+    if (commandText == "//BuyAllAA")
+    {
+        EQ_BuyAllAlternateAbility();
 
         return true;
     }

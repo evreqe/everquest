@@ -16,9 +16,13 @@ bool g_ESPShowSpawnIDIsEnabled = false;
 bool g_ESPShowSpawnRaceIsEnabled = false;
 bool g_ESPShowSpawnClassIsEnabled = false;
 
+bool g_ESPShowGroundSpawnsIsEnabled = false;
+
 bool g_ESPShowDoorsIsEnabled = false;
 
-float g_ESPDistance = 400.0f;
+float g_ESPSpawnDistance = 400.0f;
+
+float g_ESPGroundSpawnDistance = 400.0f;
 
 float g_ESPDoorDistance = 100.0f;
 
@@ -43,10 +47,12 @@ void EQAPP_ESP_FindLine_Toggle();
 void EQAPP_ESP_ShowSpawnID_Toggle();
 void EQAPP_ESP_ShowSpawnRace_Toggle();
 void EQAPP_ESP_ShowSpawnClass_Toggle();
-void EQAPP_ESP_ShowDoors_Toggle();
 void EQAPP_ESP_ShowSpawns_Toggle();
-void EQAPP_ESP_DrawDoors();
+void EQAPP_ESP_ShowGroundSpawns_Toggle();
+void EQAPP_ESP_ShowDoors_Toggle();
 void EQAPP_ESP_DrawSpawns();
+void EQAPP_ESP_DrawGroundSpawns();
+void EQAPP_ESP_DrawDoors();
 void EQAPP_ESP_Execute();
 
 void EQAPP_ESP_Toggle()
@@ -101,101 +107,22 @@ void EQAPP_ESP_ShowSpawnClass_Toggle()
     EQAPP_PrintBool("ESP Show Spawn Class", g_ESPShowSpawnClassIsEnabled);
 }
 
-void EQAPP_ESP_ShowDoors_Toggle()
-{
-    EQ_ToggleBool(g_ESPShowDoorsIsEnabled);
-    EQAPP_PrintBool("ESP Show Doors", g_ESPShowDoorsIsEnabled);
-}
-
 void EQAPP_ESP_ShowSpawns_Toggle()
 {
     EQ_ToggleBool(g_ESPShowSpawnsIsEnabled);
     EQAPP_PrintBool("ESP Show Spawns", g_ESPShowSpawnsIsEnabled);
 }
 
-void EQAPP_ESP_DrawDoors()
+void EQAPP_ESP_ShowGroundSpawns_Toggle()
 {
-    auto switchManager = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_EQSwitchManager);
-    if (switchManager == NULL)
-    {
-        return;
-    }
+    EQ_ToggleBool(g_ESPShowGroundSpawnsIsEnabled);
+    EQAPP_PrintBool("ESP Show Ground Spawns", g_ESPShowGroundSpawnsIsEnabled);
+}
 
-    auto numDoors = EQ_ReadMemory<uint32_t>(switchManager + EQ_OFFSET_EQSwitchManager_NUM_SWITCHES);
-    if (numDoors == 0)
-    {
-        return;
-    }
-
-    auto playerSpawn = EQ_GetPlayerSpawn();
-    if (playerSpawn == NULL)
-    {
-        return;
-    }
-
-    auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
-    auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
-    auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
-
-    for (unsigned int i = 0; i < numDoors; i++)
-    {
-        auto door = EQ_ReadMemory<uint32_t>(switchManager + (EQ_OFFSET_EQSwitchManager_FIRST_SWITCH + (i * 0x04)));
-        if (door == NULL)
-        {
-            continue;
-        }
-
-        auto doorY = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_Y);
-        auto doorX = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_X);
-        auto doorZ = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_Z);
-
-        float doorDistance = EQ_CalculateDistance(playerSpawnY, playerSpawnX, doorY, doorX);
-        if (doorDistance > g_ESPDoorDistance)
-        {
-            continue;
-        }
-
-        float screenX = -1.0f;
-        float screenY = -1.0f;
-        bool result = EQ_WorldLocationToScreenLocation(doorY, doorX, doorZ, screenX, screenY);
-        if (result == true)
-        {
-            char doorName[EQ_SIZE_EQSwitch_NAME];
-            std::memmove(doorName, (LPVOID)(door + EQ_OFFSET_EQSwitch_NAME), sizeof(doorName));
-
-            fmt::MemoryWriter drawText;
-            drawText << "[Door] " << doorName << " (" << (int)doorDistance << "m)";
-
-            drawText << "\nAddress: 0x" << fmt::hex(door);
-
-            ////auto doorObjectType = EQ_ReadMemory<uint8_t>(door + EQ_OFFSET_EQSwitch_OBJECT_TYPE);
-            auto doorType = EQ_ReadMemory<uint8_t>(door + EQ_OFFSET_EQSwitch_TYPE);
-
-            ////drawText << "\nObject Type: " << (int)doorObjectType;
-            drawText << "\nType: " << (int)doorType;
-
-            drawText << "\nY: " << doorY;
-            drawText << "\nX: " << doorX;
-            drawText << "\nZ: " << doorZ;
-
-            auto doorHeading = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_HEADING);
-            ////auto doorAngle = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_ANGLE);
-
-            drawText << "\nHeading: " << doorHeading;
-            ////drawText << "\nAngle: " << doorAngle;
-
-            auto doorKeyID = EQ_ReadMemory<uint32_t>(door + EQ_OFFSET_EQSwitch_KEY_ID);
-            if (doorKeyID != EQ_SWITCH_KEY_ID_NULL)
-            {
-                drawText << "\nKey ID: " << fmt::hex(doorKeyID);
-            }
-
-            ////auto doorIsUseable = EQ_ReadMemory<uint8_t>(door + EQ_OFFSET_EQSwitch_IS_USEABLE);
-            ////drawText << "\nIs Useable: " << (int)doorIsUseable;
-
-            EQ_DrawTextByColor(drawText.c_str(), (int)screenX, (int)screenY, EQ_DRAW_TEXT_COLOR_WHITE);
-        }
-    }
+void EQAPP_ESP_ShowDoors_Toggle()
+{
+    EQ_ToggleBool(g_ESPShowDoorsIsEnabled);
+    EQAPP_PrintBool("ESP Show Doors", g_ESPShowDoorsIsEnabled);
 }
 
 void EQAPP_ESP_DrawSpawns()
@@ -336,7 +263,7 @@ void EQAPP_ESP_DrawSpawns()
             }
         }
 
-        if (spawnDistance > g_ESPDistance)
+        if (spawnDistance > g_ESPSpawnDistance)
         {
             bOutOfRange = true;
         }
@@ -385,7 +312,7 @@ void EQAPP_ESP_DrawSpawns()
                 }
             }
 
-            fmt::MemoryWriter drawText;
+            std::stringstream drawText;
             drawText << "[" << spawnLevel;
 
             bool bShowSpawnClassShortName = true;
@@ -536,7 +463,147 @@ void EQAPP_ESP_DrawSpawns()
                 EQ_DrawLine(0.0f, 0.0f, screenX, screenY, EQ_COLOR_ARGB_GREY);
             }
 
-            EQ_DrawTextByColor(drawText.c_str(), (int)screenX, (int)screenY, textColor);
+            EQ_DrawTextByColor(drawText.str().c_str(), (int)screenX, (int)screenY, textColor);
+        }
+    }
+}
+
+void EQAPP_ESP_DrawGroundSpawns()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
+    auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
+    auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
+
+    EQClass::GroundItemManager* groundItemList = EQ_GetGroundItemList();
+    if (groundItemList == NULL || groundItemList->Top == NULL)
+    {
+        return;
+    }
+
+    auto groundSpawn = groundItemList->Top;
+
+    while (groundSpawn)
+    {
+        // cannot be picked up
+        if (groundSpawn->Weight == -1)
+        {
+            groundSpawn = groundSpawn->Next;
+            continue;
+        }
+
+        float groundSpawnDistance = EQ_CalculateDistance(playerSpawnY, playerSpawnX, groundSpawn->Y, groundSpawn->X);
+
+        if (EQ_IsMouseLookEnabled() == false)
+        {
+            if (groundSpawnDistance > g_ESPGroundSpawnDistance)
+            {
+                groundSpawn = groundSpawn->Next;
+                continue;
+            }
+        }
+
+        float screenX = -1.0f;
+        float screenY = -1.0f;
+        bool result = EQ_WorldLocationToScreenLocation(groundSpawn->Y, groundSpawn->X, groundSpawn->Z, screenX, screenY);
+        if (result == true)
+        {
+            std::stringstream drawText;
+            drawText << "[Ground Spawn] " << groundSpawn->Name << " (" << (int)groundSpawnDistance << "m)";
+
+            EQ_DrawTextByColor(drawText.str().c_str(), (int)screenX, (int)screenY, EQ_DRAW_TEXT_COLOR_WHITE);
+        }
+
+        groundSpawn = groundSpawn->Next;
+    }
+}
+
+void EQAPP_ESP_DrawDoors()
+{
+    auto switchManager = EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_EQSwitchManager);
+    if (switchManager == NULL)
+    {
+        return;
+    }
+
+    auto numDoors = EQ_ReadMemory<uint32_t>(switchManager + EQ_OFFSET_EQSwitchManager_NUM_SWITCHES);
+    if (numDoors == 0)
+    {
+        return;
+    }
+
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
+    auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
+    auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
+
+    for (unsigned int i = 0; i < numDoors; i++)
+    {
+        auto door = EQ_ReadMemory<uint32_t>(switchManager + (EQ_OFFSET_EQSwitchManager_FIRST_SWITCH + (i * 0x04)));
+        if (door == NULL)
+        {
+            continue;
+        }
+
+        auto doorY = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_Y);
+        auto doorX = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_X);
+        auto doorZ = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_Z);
+
+        float doorDistance = EQ_CalculateDistance(playerSpawnY, playerSpawnX, doorY, doorX);
+        if (doorDistance > g_ESPDoorDistance)
+        {
+            continue;
+        }
+
+        float screenX = -1.0f;
+        float screenY = -1.0f;
+        bool result = EQ_WorldLocationToScreenLocation(doorY, doorX, doorZ, screenX, screenY);
+        if (result == true)
+        {
+            char doorName[EQ_SIZE_EQSwitch_NAME];
+            std::memmove(doorName, (LPVOID)(door + EQ_OFFSET_EQSwitch_NAME), sizeof(doorName));
+
+            std::stringstream drawText;
+            drawText << "[Door] " << doorName << " (" << (int)doorDistance << "m)";
+
+            drawText << "\nAddress: 0x" << std::hex << door << std::dec;
+
+            ////auto doorObjectType = EQ_ReadMemory<uint8_t>(door + EQ_OFFSET_EQSwitch_OBJECT_TYPE);
+            auto doorType = EQ_ReadMemory<uint8_t>(door + EQ_OFFSET_EQSwitch_TYPE);
+
+            ////drawText << "\nObject Type: " << (int)doorObjectType;
+            drawText << "\nType: " << (int)doorType;
+
+            drawText << "\nY: " << doorY;
+            drawText << "\nX: " << doorX;
+            drawText << "\nZ: " << doorZ;
+
+            auto doorHeading = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_HEADING);
+            ////auto doorAngle = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_ANGLE);
+
+            drawText << "\nHeading: " << doorHeading;
+            ////drawText << "\nAngle: " << doorAngle;
+
+            auto doorKeyID = EQ_ReadMemory<uint32_t>(door + EQ_OFFSET_EQSwitch_KEY_ID);
+            if (doorKeyID != EQ_SWITCH_KEY_ID_NULL)
+            {
+                drawText << "\nKey ID: " <<  std::hex << doorKeyID << std::dec;
+            }
+
+            ////auto doorIsUseable = EQ_ReadMemory<uint8_t>(door + EQ_OFFSET_EQSwitch_IS_USEABLE);
+            ////drawText << "\nIs Useable: " << (int)doorIsUseable;
+
+            EQ_DrawTextByColor(drawText.str().c_str(), (int)screenX, (int)screenY, EQ_DRAW_TEXT_COLOR_WHITE);
         }
     }
 }
@@ -546,6 +613,11 @@ void EQAPP_ESP_Execute()
     if (g_ESPShowSpawnsIsEnabled == true)
     {
         EQAPP_ESP_DrawSpawns();
+    }
+
+    if (g_ESPShowGroundSpawnsIsEnabled == true)
+    {
+        EQAPP_ESP_DrawGroundSpawns();
     }
 
     if (g_ESPShowDoorsIsEnabled == true)

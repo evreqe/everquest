@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef EQ_FEATURE_GUI
+
 extern bool g_GUIDarkThemeIsEnabled;
 
 extern bool g_GUIDemoWindowIsEnabled;
@@ -313,3 +315,5 @@ static void EQAPP_GUI_MainWindow_MenuHelp()
 
     if (ImGui::MenuItem("About##MainWindowMenuItemHelpAbout")) {};
 }
+
+#endif // EQ_FEATURE_GUI

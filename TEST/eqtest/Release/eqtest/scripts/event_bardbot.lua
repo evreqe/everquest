@@ -3,6 +3,9 @@ g_BardBotIsEnabled = 0
 g_BardBotMelody = {1, 2, 3, 4, 5}
 
 function BardBot_Toggle()
+    EQ_InterpretCommand("/stopsong")
+    EQ_InterpretCommand("/melody")
+
     if g_BardBotIsEnabled == 0 then
         g_BardBotIsEnabled = 1
         EQ_PrintTextToChat("Bard Bot: On")

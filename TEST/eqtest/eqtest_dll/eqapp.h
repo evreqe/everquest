@@ -19,6 +19,8 @@ volatile int g_EQAppShouldUnload = 0;
 
 int g_EQAppKillSwitchKey = VK_F12;
 
+int g_EQAppShowWindowsKey = VK_PRINT;
+
 bool g_EQAppIsInGame = false;
 
 std::random_device g_EQAppRandomDevice;

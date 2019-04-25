@@ -18,7 +18,7 @@ namespace EQApp
 
 bool g_SpawnCastSpellIsEnabled = true;
 
-bool g_SpawnCastSpellGroupChatIsEnabled = true;
+bool g_SpawnCastSpellGroupChatIsEnabled = false;
 
 bool g_SpawnCastSpellESPIsEnabled = true;
 
@@ -36,7 +36,11 @@ void EQAPP_SpawnCastSpell_Toggle();
 void EQAPP_SpawnCastSpell_On();
 void EQAPP_SpawnCastSpell_Off();
 void EQAPP_SpawnCastSpell_ESP_Toggle();
+void EQAPP_SpawnCastSpell_ESP_On();
+void EQAPP_SpawnCastSpell_ESP_Off();
 void EQAPP_SpawnCastSpell_GroupChat_Toggle();
+void EQAPP_SpawnCastSpell_GroupChat_On();
+void EQAPP_SpawnCastSpell_GroupChat_Off();
 void EQAPP_SpawnCastSpell_Execute();
 void EQAPP_SpawnCastSpell_DrawText();
 void EQAPP_SpawnCastSpell_HandleEvent_CEverQuest__StartCasting(void* this_ptr, EQMessage::CEverQuest__StartCasting_ptr message);
@@ -69,10 +73,42 @@ void EQAPP_SpawnCastSpell_ESP_Toggle()
     EQAPP_PrintBool("Spawn Cast Spell ESP", g_SpawnCastSpellESPIsEnabled);
 }
 
+void EQAPP_SpawnCastSpell_ESP_On()
+{
+    if (g_SpawnCastSpellESPIsEnabled == false)
+    {
+        EQAPP_SpawnCastSpell_ESP_Toggle();
+    }
+}
+
+void EQAPP_SpawnCastSpell_ESP_Off()
+{
+    if (g_SpawnCastSpellESPIsEnabled == true)
+    {
+        EQAPP_SpawnCastSpell_ESP_Toggle();
+    }
+}
+
 void EQAPP_SpawnCastSpell_GroupChat_Toggle()
 {
     EQ_ToggleBool(g_SpawnCastSpellGroupChatIsEnabled);
     EQAPP_PrintBool("Spawn Cast Spell Group Chat", g_SpawnCastSpellGroupChatIsEnabled);
+}
+
+void EQAPP_SpawnCastSpell_GroupChat_On()
+{
+    if (g_SpawnCastSpellGroupChatIsEnabled == false)
+    {
+        EQAPP_SpawnCastSpell_GroupChat_Toggle();
+    }
+}
+
+void EQAPP_SpawnCastSpell_GroupChat_Off()
+{
+    if (g_SpawnCastSpellGroupChatIsEnabled == true)
+    {
+        EQAPP_SpawnCastSpell_GroupChat_Toggle();
+    }
 }
 
 void EQAPP_SpawnCastSpell_Execute()
@@ -147,7 +183,7 @@ void EQAPP_SpawnCastSpell_DrawText()
         return;
     }
 
-    fmt::MemoryWriter drawText;
+    std::stringstream drawText;
 
     for (auto& spawnCastSpell : g_SpawnCastSpellList)
     {
@@ -187,9 +223,9 @@ void EQAPP_SpawnCastSpell_DrawText()
         {
             float spellCastTimeCurrentFloat = (float)(spawnCastSpell->SpellCastTimeCountdown / 1000.0f);
 
-            //drawText.precision(1);
-            //drawText << " " << std::fixed << spellCastTimeCurrentFloat;
-            drawText << fmt::format(" {:.2f}s", spellCastTimeCurrentFloat);
+            drawText.precision(1);
+            drawText << " " << std::fixed << spellCastTimeCurrentFloat;
+            //drawText << fmt::format(" {:.2f}s", spellCastTimeCurrentFloat);
         }
 
         drawText << "\n";

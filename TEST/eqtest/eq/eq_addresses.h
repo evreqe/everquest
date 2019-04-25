@@ -86,6 +86,9 @@ uint32_t EQ_ADDRESS_POINTER_PlayerPath = 0x0; // "Initializing player path."
 
 // class EQCharacter
 uint32_t EQ_ADDRESS_POINTER_PlayerCharacter = 0x0;
+uint32_t EQ_ADDRESS_POINTER_EQ_PC = 0x0;
+
+uint32_t EQ_ADDRESS_FUNCTION_EQ_PC__DestroyHeldItemOrMoney = 0x0;
 
 // class EQPlayer
 uint32_t EQ_ADDRESS_POINTER_PlayerSpawn = 0x0; // pinstLocalPlayer    "Local Player's World location at time of crash: %f, %f, %f.\n"
@@ -143,14 +146,16 @@ uint32_t EQ_ADDRESS_FUNCTION_CDisplay__CreatePlayerActor = 0x0;
 uint32_t EQ_ADDRESS_FUNCTION_CDisplay__DeleteActor = 0x0;
 #endif // EQ_FEATURE_CREATE_AND_DELETE_ACTORS
 
+uint32_t EQ_ADDRESS_FUNCTION_AuraManager__GetSingleton = 0x0;
+
+uint32_t EQ_ADDRESS_FUNCTION_GroundItemManager__Instance = 0x0;
+
 uint32_t EQ_ADDRESS_POINTER_EQSwitchManager = 0x0;
 
 uint32_t EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch = 0x0;
 #ifdef EQ_FEATURE_EQSwitch__ChangeState
 uint32_t EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState = 0x0;
 #endif // EQ_FEATURE_EQSwitch__ChangeState
-
-uint32_t EQ_ADDRESS_POINTER_AuraManager = 0x0;
 
 uint32_t EQ_ADDRESS_POINTER_SpellManager = 0x0;
 
@@ -239,15 +244,7 @@ void EQ_InitializeAddresses()
 
     EQ_ADDRESS_WindowHWND = __HWnd_x;
 
-#ifdef EQ_FEATURE_GUI
-    EQ_ADDRESS_FUNCTION_WindowProc = 0x006A37D0;
-
-    EQ_ADDRESS_FUNCTION_ProcessMouseEvent = 0x005F69E0;
-    EQ_ADDRESS_FUNCTION_ProcessKeyboardEvent = 0x006A2830;
-
-    EQ_ADDRESS_FUNCTION_FlushDxMouse = 0x006A08F0;
-    EQ_ADDRESS_FUNCTION_FlushDxKeyboard = 0x006A0CF0;
-#endif // EQ_FEATURE_GUI
+    // **** //
 
     EQ_ADDRESS_AutoAttack    = __Attack_x;
     EQ_ADDRESS_AutoFire      = __Autofire_x;
@@ -272,16 +269,12 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_EQZoneInfo = instEQZoneInfo_x;
 
     EQ_ADDRESS_FUNCTION_CrashDetected                 = CrashDetected_x;
-#ifdef EQ_FEATURE_CollisionCallbackForActors
-    EQ_ADDRESS_FUNCTION_CollisionCallbackForActors    = 0x0051AA30;
-#endif // EQ_FEATURE_CollisionCallbackForActors
+    // **** //
     EQ_ADDRESS_FUNCTION_CastRay                       = __CastRay_x;
     EQ_ADDRESS_FUNCTION_CastRay2                      = __CastRay2_x;
     EQ_ADDRESS_FUNCTION_DrawNetStatus                 = DrawNetStatus_x;
     EQ_ADDRESS_FUNCTION_ExecuteCmd                    = __ExecuteCmd_x;
-#ifdef EQ_FEATURE_DoSpellEffect
-    EQ_ADDRESS_FUNCTION_DoSpellEffect                 = 0x005F6290;
-#endif // EQ_FEATURE_DoSpellEffect
+    // **** //
 
     EQ_ADDRESS_POINTER_CDBStr = pinstCDBStr_x;
 
@@ -294,6 +287,8 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_POINTER_PlayerPath = pinstPlayerPath_x;
 
     EQ_ADDRESS_POINTER_PlayerCharacter = pinstCharData_x;
+    EQ_ADDRESS_POINTER_EQ_PC = pinstCharData_x;
+    EQ_ADDRESS_FUNCTION_EQ_PC__DestroyHeldItemOrMoney = EQ_PC__DestroyHeldItemOrMoney_x;
 
     EQ_ADDRESS_POINTER_PlayerSpawn = pinstLocalPlayer_x;
     EQ_ADDRESS_POINTER_TargetSpawn = pinstTarget_x;
@@ -302,13 +297,9 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID                = EQPlayerManager__GetSpawnByID_x;
     EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName              = EQPlayerManager__GetSpawnByName_x;
     EQ_ADDRESS_FUNCTION_EQPlayerManager__GetPlayerFromPartialName    = EQPlayerManager__GetPlayerFromPartialName_x;
-#ifdef EQ_FEATURE_EQPlayer__FollowPlayerAI
-    EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI        = 0x0063F780;
-#endif // EQ_FEATURE_EQPlayer__FollowPlayerAI
+    // **** //
     EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight          = PlayerZoneClient__ChangeHeight_x;
-#ifdef EQ_FEATURE_EQPlayer__UpdateItemSlot
-    EQ_ADDRESS_FUNCTION_EQPlayer__UpdateItemSlot        = 0x00645500;
-#endif // EQ_FEATURE_EQPlayer__UpdateItemSlot
+    // **** //
     EQ_ADDRESS_FUNCTION_EQPlayer__IsTargetable          = EQPlayer__IsTargetable_x;
     EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteState    = EQPlayer__SetNameSpriteState_x;
     EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteTint     = EQPlayer__SetNameSpriteTint_x;
@@ -322,32 +313,24 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_FUNCTION_CEverQuest__EnterZone           = CEverQuest__EnterZone_x;
     EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd        = CEverQuest__InterpretCmd_x;
     EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat            = CEverQuest__dsp_chat_x;
-#ifdef EQ_FEATURE_CEverQuest__StartCasting
-    EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting        = 0x005D9C70; // %s <%s>
-#endif // EQ_FEATURE_CEverQuest__StartCasting
+    // **** //
     EQ_ADDRESS_FUNCTION_CEverQuest__LMouseUp            = CEverQuest__LMouseUp_x;
     EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp            = CEverQuest__RMouseUp_x;
-#ifdef EQ_FEATURE_GUI
-    EQ_ADDRESS_FUNCTION_CEverQuest__HandleMouseWheel    = 0x005D0A30;
-#endif // EQ_FEATURE_GUI
+    // **** //
     EQ_ADDRESS_FUNCTION_CEverQuest__SetGameState        = CEverQuest__SetGameState_x;
 
     EQ_ADDRESS_POINTER_CDisplay = pinstCDisplay_x;
     EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2         = CDisplay__WriteTextHD2_x;
-#ifdef EQ_FEATURE_CREATE_AND_DELETE_ACTORS
-    EQ_ADDRESS_FUNCTION_CDisplay__CreateActor          = 0x00535400;
-    EQ_ADDRESS_FUNCTION_CDisplay__CreatePlayerActor    = 0x00530F60;
-    EQ_ADDRESS_FUNCTION_CDisplay__DeleteActor          = 0x00535370;
-#endif // EQ_FEATURE_CREATE_AND_DELETE_ACTORS
+    // **** //
+
+    EQ_ADDRESS_FUNCTION_AuraManager__GetSingleton = ClientSOIManager__GetSingleton_x;
+
+    EQ_ADDRESS_FUNCTION_GroundItemManager__Instance = EQGroundItemListManager__Instance_x;
 
     EQ_ADDRESS_POINTER_EQSwitchManager = pinstSwitchManager_x;
 
     EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch      = EQSwitch__UseSwitch_x;
-#ifdef EQ_FEATURE_EQSwitch__ChangeState
-    EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState    = 0x005C8790;
-#endif // EQ_FEATURE_EQSwitch__ChangeState
-
-    EQ_ADDRESS_POINTER_AuraManager = pinstAuraMgr_x;
+    // **** //
 
     EQ_ADDRESS_POINTER_SpellManager = pinstSpellManager_x;
 
@@ -385,13 +368,7 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_POINTER_CBazaarConfirmationWnd = pinstCBazaarConfirmationWnd_x;
 
     EQ_ADDRESS_POINTER_CBazaarSearchWnd = pinstCBazaarSearchWnd_x;
-
-#ifdef EQ_FEATURE_BAZAAR
-    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__HandleBazaarMsg    = CBazaarSearchWnd__HandleBazaarMsg_x;
-    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList      = 0x006D5AC0;
-    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery            = 0x006D6350;
-    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem            = 0x006D6880;
-#endif // EQ_FEATURE_BAZAAR
+    // **** //
 
     EQ_ADDRESS_POINTER_CCharacterListWnd = pinstCCharacterListWnd_x;
     EQ_ADDRESS_FUNCTION_CCharacterListWnd__SelectCharacter    = CCharacterListWnd__SelectCharacter_x;
@@ -420,4 +397,55 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_POINTER_CMapViewWnd = pinstCMapViewWnd_x;
 
     EQ_ADDRESS_POINTER_CInventoryWnd = pinstCInventoryWnd_x;
+
+#ifdef EQ_FEATURE_GUI
+    EQ_ADDRESS_FUNCTION_WindowProc = 0x006A6AC0;
+
+    EQ_ADDRESS_FUNCTION_ProcessMouseEvent = 0x005FA470;
+    EQ_ADDRESS_FUNCTION_ProcessKeyboardEvent = 0x006A5B20;
+
+    EQ_ADDRESS_FUNCTION_FlushDxMouse = 0x006A3BE0;
+    EQ_ADDRESS_FUNCTION_FlushDxKeyboard = 0x006A3FE0;
+#endif // EQ_FEATURE_GUI
+
+#ifdef EQ_FEATURE_CollisionCallbackForActors
+    EQ_ADDRESS_FUNCTION_CollisionCallbackForActors = 0x0051D6D0;
+#endif // EQ_FEATURE_CollisionCallbackForActors
+
+#ifdef EQ_FEATURE_DoSpellEffect
+    EQ_ADDRESS_FUNCTION_DoSpellEffect = 0x005F9D20;
+#endif // EQ_FEATURE_DoSpellEffect
+
+#ifdef EQ_FEATURE_EQPlayer__FollowPlayerAI
+    EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI = 0x00642D90;
+#endif // EQ_FEATURE_EQPlayer__FollowPlayerAI
+
+#ifdef EQ_FEATURE_EQPlayer__UpdateItemSlot
+    EQ_ADDRESS_FUNCTION_EQPlayer__UpdateItemSlot = 0x0064AC70;
+#endif // EQ_FEATURE_EQPlayer__UpdateItemSlot
+
+#ifdef EQ_FEATURE_CEverQuest__StartCasting
+    EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting = 0x005DD710;
+#endif // EQ_FEATURE_CEverQuest__StartCasting
+
+#ifdef EQ_FEATURE_GUI
+    EQ_ADDRESS_FUNCTION_CEverQuest__HandleMouseWheel = 0x005D3C40;
+#endif // EQ_FEATURE_GUI
+
+#ifdef EQ_FEATURE_CREATE_AND_DELETE_ACTORS
+    EQ_ADDRESS_FUNCTION_CDisplay__CreateActor          = 0x00537980;
+    EQ_ADDRESS_FUNCTION_CDisplay__CreatePlayerActor    = 0x005334E0;
+    EQ_ADDRESS_FUNCTION_CDisplay__DeleteActor          = 0x005378F0;
+#endif // EQ_FEATURE_CREATE_AND_DELETE_ACTORS
+
+#ifdef EQ_FEATURE_EQSwitch__ChangeState
+    EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState = 0x005CB9E0;
+#endif // EQ_FEATURE_EQSwitch__ChangeState
+
+#ifdef EQ_FEATURE_BAZAAR
+    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__HandleBazaarMsg    = CBazaarSearchWnd__HandleBazaarMsg_x;
+    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList      = 0x006D8960;
+    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery            = 0x006D9200;
+    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem            = 0x006D9730;
+#endif // EQ_FEATURE_BAZAAR
 }

@@ -5,6 +5,7 @@
 #include "eqapp_alwayshotbutton.h"
 #include "eqapp_autogroup.h"
 #include "eqapp_autologin.h"
+#include "eqapp_autotrade.h"
 #include "eqapp_bazaarbot.h"
 #include "eqapp_bazaarfilter.h"
 #include "eqapp_boxchat.h"

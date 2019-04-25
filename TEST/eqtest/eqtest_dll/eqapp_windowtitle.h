@@ -45,8 +45,8 @@ void EQAPP_WindowTitle_Reset()
 
 void EQAPP_WindowTitle_Execute()
 {
-    HWND hwnd = EQ_GetWindow();
-    if (hwnd == NULL)
+    HWND window = EQ_GetWindow();
+    if (window == NULL)
     {
         return;
     }
@@ -75,7 +75,7 @@ void EQAPP_WindowTitle_Execute()
         ss << " (" << spawnClassShortName << ")";
     }
 
-    SetWindowTextA(hwnd, ss.str().c_str());
+    SetWindowTextA(window, ss.str().c_str());
 */
 
     auto spawnClass = EQ_GetSpawnClass(playerSpawn);
@@ -83,6 +83,12 @@ void EQAPP_WindowTitle_Execute()
     std::string spawnClassShortName = EQ_GetClassShortNameByID(spawnClass);
     if (spawnClassShortName.size() != 0)
     {
-        SetWindowTextA(hwnd, spawnClassShortName.c_str());
+        SetWindowTextA(window, spawnClassShortName.c_str());
+    }
+
+    HWND foregroundWindow = GetForegroundWindow();
+    if (window == foregroundWindow)
+    {
+        ShowWindow(window, SW_MAXIMIZE);
     }
 }

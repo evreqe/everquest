@@ -42,6 +42,11 @@ void EQAPP_AutoLogin_Off()
 
 void EQAPP_AutoLogin_Load()
 {
+    if (EQ_IsInGame() == true)
+    {
+        g_AutoLoginIsEnabled = false;
+    }
+
     g_AutoLoginCharacterIndex = 0;
 
     g_AutoLoginCharacterNameList.clear();
@@ -67,15 +72,49 @@ void EQAPP_AutoLogin_Execute()
         return;
     }
 
-    if (EQ_ADDRESS_POINTER_CCharacterListWnd == NULL || EQ_CLASS_POINTER_CCharacterListWnd == NULL)
+    if (EQ_ADDRESS_POINTER_CEverQuest == NULL || EQ_ADDRESS_POINTER_CCharacterListWnd == NULL || EQ_CLASS_POINTER_CCharacterListWnd == NULL)
     {
-        ////EQAPP_SetWindowTitle("CCharacterListWnd address or pointer is NULL");
-
         EQAPP_InitializeAddresses();
         EQAPP_InitializeAddressPointers();
         return;
     }
 
+    auto everquest = (EQData::PEVERQUEST)EQ_CLASS_POINTER_CEverQuest;
+    if (everquest == NULL)
+    {
+        return;
+    }
+
+    auto characterCount = everquest->pCharSelectPlayerArray.Count;
+    if (characterCount == 0)
+    {
+        return;
+    }
+
+    for (auto i = 0; i < characterCount; i++)
+    {
+        char characterName[EQ_SIZE_CHARACTER_SELECT_NAME] = {0};
+        strncpy_s(characterName, everquest->pCharSelectPlayerArray[i].Name, sizeof(characterName));
+
+        for (auto& autoLoginCharacterName : g_AutoLoginCharacterNameList)
+        {
+            if (autoLoginCharacterName == characterName)
+            {
+                g_AutoLoginIsEnabled = false;
+                g_AutoLoginCharacterIndex = 0;
+
+                EQAPP_SetWindowTitle("EverQuest - Auto Login");
+
+                EQ_CLASS_POINTER_CCharacterListWnd->SelectCharacter(i, true, false);
+
+                EQ_CLASS_POINTER_CCharacterListWnd->EnterWorld();
+
+                return;
+            }
+        }
+    }
+
+/*
     auto playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)
     {
@@ -117,4 +156,5 @@ void EQAPP_AutoLogin_Execute()
     {
         g_AutoLoginCharacterIndex = 0;
     }
+*/
 }

@@ -657,7 +657,9 @@ void EQAPP_Detours_Unload()
 void EQAPP_Detours_OnEnterOrLeaveZone()
 {
     EQ_StopFollow();
+
     g_FollowAISpawn = NULL;
+
     EQ_SetAutoRun(false);
 
     g_AutoGroupIsInvited = false;
@@ -666,12 +668,15 @@ void EQAPP_Detours_OnEnterOrLeaveZone()
     g_AutoLoginCharacterIndex = 0;
 
     EQAPP_Waypoint_FollowPath_Off();
+
     EQAPP_WaypointEditor_Reset();
 
     EQAPP_FindPath_FollowPath_Off();
     g_FindPathFollowPathList.clear();
 
     EQAPP_FreeCamera_Off();
+
+    EQAPP_Speed_Off();
 }
 
 void EQAPP_Detours_OnEnterZone()
@@ -780,6 +785,14 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
 #ifdef EQ_FEATURE_BAZAAR
     }
 #endif // EQ_FEATURE_BAZAAR
+
+    // show windows
+    if (GetAsyncKeyState(g_EQAppShowWindowsKey))
+    {
+        ShowWindow(EQ_GetWindow(), SW_SHOW);
+
+        return EQAPP_REAL_FUNCTION_DrawNetStatus(x, y, unknown);
+    }
 
     if (g_EQAppIsLoaded == 0)
     {
@@ -1066,12 +1079,12 @@ LRESULT __stdcall EQAPP_DETOURED_FUNCTION_WindowProc(HWND hwnd, UINT uMsg, WPARA
 
     if (EQ_IsInGame() == false)
     {
-        EQAPP_REAL_FUNCTION_WindowProc(hwnd, uMsg, wParam, lParam);
+        return EQAPP_REAL_FUNCTION_WindowProc(hwnd, uMsg, wParam, lParam);
     }
 
     if (g_EQAppIsInGame == false)
     {
-        EQAPP_REAL_FUNCTION_WindowProc(hwnd, uMsg, wParam, lParam);
+        return EQAPP_REAL_FUNCTION_WindowProc(hwnd, uMsg, wParam, lParam);
     }
 
     if (g_GUIIsEnabled == true)
@@ -1167,34 +1180,34 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CXWnd__DrawTooltip(void* this_ptr, void* 
         return EQAPP_REAL_FUNCTION_CXWnd__DrawTooltip(this_ptr, cxwnd);
     }
 
-/*
-    //std::cout << "tooltip 1!" << std::endl;
+    // TODO: eqapp_tooltips.h
 
     auto window = (EQUIStructs::CXWND*)cxwnd;
     if (window != NULL)
     {
-        //std::cout << "tooltip 2!" << std::endl;
-
-        //if (window->dShow == true)
+        if (window->dShow == true)
         {
-            //std::cout << "tooltip 3!" << std::endl;
-
-            //if (window->MouseOver == true)
+            if (window->MouseOver == true)
             {
-                //std::cout << "tooltip 4!" << std::endl;
-
-                //if (window->Tooltip != NULL)
+                if (window->Tooltip != NULL)
                 {
-                    //std::cout << "tooltip 5!" << std::endl;
-
-                    //if (window->Tooltip->Length != 0)
+                    if (window->Tooltip->Length != 0)
                     {
-                        //std::cout << "tooltip 6!" << std::endl;
-
                         auto playerSpawn = EQ_GetPlayerSpawn();
                         if (playerSpawn != NULL)
                         {
                             auto playerLevel = EQ_GetSpawnLevel(playerSpawn);
+
+                            auto playerClass = EQ_GetSpawnClass(playerSpawn);
+
+                            bool foundAA = false;
+
+                            std::string tooltipText = window->Tooltip->Text;
+
+                            if (EQAPP_String_Contains(tooltipText, "This ") == true)
+                            {
+                                return EQAPP_REAL_FUNCTION_CXWnd__DrawTooltip(this_ptr, cxwnd);
+                            }
 
                             for (unsigned int i = 0; i < EQ_NUM_ALTERNATE_ABILITIES; i++)
                             {
@@ -1205,54 +1218,145 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CXWnd__DrawTooltip(void* this_ptr, void* 
                                 }
 
                                 std::string findString = std::string();
+                                std::string findString2 = std::string();
 
-                                std::string alternateAbilityName = EQ_CLASS_POINTER_CDBStr->GetString(alternateAbility->nName, 1, NULL);
+                                std::string alternateAbilityName = EQ_GetDatabaseString(alternateAbility->nName, 1);
                                 if (alternateAbilityName.size() == 0)
                                 {
                                     continue;
                                 }
 
-                                std::string alternateAbilityName2 = EQ_CLASS_POINTER_CDBStr->GetString(alternateAbility->nName, 2, NULL);
-                                std::string alternateAbilityName3 = EQ_CLASS_POINTER_CDBStr->GetString(alternateAbility->nName, 3, NULL);
+                                findString = alternateAbilityName;
 
-                                if (alternateAbilityName2.size() != 0 && alternateAbilityName3.size() != 0)
+                                std::string alternateAbilityName2 = EQ_GetDatabaseString(alternateAbility->nName, 2);
+                                std::string alternateAbilityName3 = EQ_GetDatabaseString(alternateAbility->nName, 3);
+
+                                if (alternateAbilityName2.size() != 0)
                                 {
                                     std::stringstream ss;
-                                    ss << alternateAbilityName2 << "\n" << alternateAbilityName3;
+                                    ss << alternateAbilityName2;
 
-                                    findString = ss.str();
-                                }
-                                else
-                                {
-                                    findString = alternateAbilityName;
-                                }
+                                    if (alternateAbilityName3.size() != 0)
+                                    {
+                                        ss << "\n" << alternateAbilityName3;
+                                    }
 
-                                if (findString.size() == 0)
-                                {
-                                    continue;
+                                    findString2 = ss.str();
                                 }
 
-                                //std::cout << "findString = " << findString << std::endl;
-
-                                if (window->WindowText == NULL)
+                                if (findString == window->Tooltip->Text || findString2 == window->Tooltip->Text)
                                 {
-                                    continue;
-                                }
-
-                                if (strcmp(window->WindowText->Text, findString.c_str()) == 0)
-                                {
-                                    std::string alternateAbilityDescription = EQ_CLASS_POINTER_CDBStr->GetString(alternateAbility->nName, 4, NULL);
+                                    std::string alternateAbilityDescription = EQ_GetDatabaseString(alternateAbility->nName, 4);
                                     if (alternateAbilityDescription.size() != 0)
                                     {
-                                        std::stringstream ss;
-                                        ss << alternateAbilityName << "\n" << alternateAbilityDescription;
+                                        EQAPP_String_ReplaceAll(alternateAbilityDescription, "<br>", " ");
 
-                                        std::cout << ss.str().c_str() << std::endl;
+                                        std::string alternateAbilityDescriptionRemovedHTMLTags = EQAPP_String_RemoveHTMLTags(alternateAbilityDescription);
+                                        if (alternateAbilityDescriptionRemovedHTMLTags.size() != 0)
+                                        {
+                                            std::stringstream ss;
+                                            ss << alternateAbilityName << "\n" << alternateAbilityDescriptionRemovedHTMLTags;
 
-                                        //EQ_CXStr_SetEx(&window->Tooltip, ss.str().c_str());
+                                            EQ_CXStr_SetEx(&window->Tooltip, ss.str().c_str());
 
-                                        break;
+                                            foundAA = true;
+
+                                            break;
+                                        }
                                     }
+                                }
+                            }
+
+                            if (foundAA == false)
+                            {
+                                if (EQAPP_String_Contains(tooltipText, "\n") == true)
+                                {
+                                    return EQAPP_REAL_FUNCTION_CXWnd__DrawTooltip(this_ptr, cxwnd);
+                                }
+
+                                unsigned int numSkipped = 0;
+
+                                for (unsigned int i = 0; i < EQ_NUM_SPELLS; i++)
+                                {
+                                    EQData::PSPELL spell = &(*((EQData::PSPELLMGR)EQ_CLASS_POINTER_SpellManager)->Spells[i]);
+                                    if (spell == NULL)
+                                    {
+                                        numSkipped++;
+                                        continue;
+                                    }
+
+                                    if (spell->IsSkill == false)
+                                    {
+                                        numSkipped++;
+                                        continue;
+                                    }
+
+                                    if (spell->DescriptionIndex == 0)
+                                    {
+                                        numSkipped++;
+                                        continue;
+                                    }
+
+                                    if (spell->Deletable != 0)
+                                    {
+                                        numSkipped++;
+                                        continue;
+                                    }
+
+                                    if (spell->ClassLevel[playerClass] == 0)
+                                    {
+                                        numSkipped++;
+                                        continue;
+                                    }
+
+                                    if (playerLevel < spell->ClassLevel[playerClass])
+                                    {
+                                        numSkipped++;
+                                        continue;
+                                    }
+
+                                    std::string spellName = spell->Name;
+                                    if (spellName.size() == 0)
+                                    {
+                                        numSkipped++;
+                                        continue;
+                                    }
+
+                                    if (spellName != window->Tooltip->Text)
+                                    {
+                                        //numSkipped++;
+                                        continue;
+                                    }
+
+                                    std::string spellDescription = EQ_GetDatabaseString(spell->DescriptionIndex, 6);
+                                    if (spellDescription.size() == 0)
+                                    {
+                                        numSkipped++;
+                                        continue;
+                                    }
+
+                                    std::stringstream ss;
+                                    ss << spellName << "\n" << spellDescription;
+
+                                    //ss << "\nnumSkipped: " << numSkipped << "\n";
+
+                                    //ss << "\nCategory: " << spell->Category;
+                                    //ss << "\nSubcategory: " << spell->Subcategory;
+                                    //ss << "\nSubcategory2: " << spell->Subcategory2;
+                                    //ss << "\nSpellGroup: " << spell->SpellGroup;
+                                    //ss << "\nSpellSubGroup: " << spell->SpellSubGroup;
+                                    //ss << "\nSpellClass: " << spell->SpellClass;
+                                    //ss << "\nSpellSubClass: " << spell->SpellSubClass;
+                                    //ss << "\nIsSkill: " << spell->IsSkill;
+                                    //ss << "\nCannotBeScribed: " << (int)spell->CannotBeScribed;
+                                    //ss << "\nScribable: " << (int)spell->Scribable;
+                                    //ss << "\nBookIcon: " << spell->BookIcon;
+                                    //ss << "\nClassLevel: " << (int)spell->ClassLevel[playerClass];
+                                    //ss << "\nDeletable: " << (int)spell->Deletable;
+
+                                    EQ_CXStr_SetEx(&window->Tooltip, ss.str().c_str());
+
+                                    break;
                                 }
                             }
                         }
@@ -1261,7 +1365,6 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CXWnd__DrawTooltip(void* this_ptr, void* 
             }
         }
     }
-*/
 
     return EQAPP_REAL_FUNCTION_CXWnd__DrawTooltip(this_ptr, cxwnd);
 }
@@ -1634,17 +1737,18 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void
         EQAPP_Detours_OnLeaveZone();
     }
 
-    std::stringstream enterZoneText;
-    enterZoneText << "You have entered " << EQ_GetZoneLongName() << ".";
+    //std::stringstream enterZoneText;
+    //enterZoneText << "You have entered " << EQ_GetZoneLongName() << ".";
 
-    auto zoneID = EQ_GetZoneID();
+    //auto zoneID = EQ_GetZoneID();
 
-    std::string zoneName = EQ_StringMap_GetValueByKey(EQ_ZONE_ID_Name_Strings, zoneID);
+    //std::string zoneName = EQ_StringMap_GetValueByKey(EQ_ZONE_ID_Name_Strings, zoneID);
 
-    std::stringstream enterZoneTextEx;
-    enterZoneTextEx << "You have entered " << zoneName << ".";
+    //std::stringstream enterZoneTextEx;
+    //enterZoneTextEx << "You have entered " << zoneName << ".";
 
-    if (chatText == enterZoneText.str() || chatText == enterZoneTextEx.str())
+    //if (chatText == enterZoneText.str() || chatText == enterZoneTextEx.str())
+    if (EQAPP_String_BeginsWith(chatText, "You have entered ") == true)
     {
         EQAPP_Detours_OnEnterZone();
 
@@ -1747,8 +1851,8 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__SetGameState(void* this_ptr, 
         EQAPP_Detours_AddDetoursForRender();
 
         EQ_StopFollow();
+
         g_FollowAISpawn = NULL;
-        EQ_SetAutoRun(false);
     }
 
     return EQAPP_REAL_FUNCTION_CEverQuest__SetGameState(this_ptr, gameState);
