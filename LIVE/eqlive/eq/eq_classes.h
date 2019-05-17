@@ -1,0 +1,325 @@
+#pragma once
+
+#include "eq_constants.h"
+#include "eq_macros.h"
+#include "eq_messages.h"
+
+namespace EQClass
+{
+    class CEverQuest;
+    class CDisplay;
+
+    class EQPlayerManager;
+    class EQPlayer;
+
+    class CXWndManager;
+    class CXWnd;
+
+    // EQGraphicsDX9.dll
+    class CCamera;
+    class CRender;
+
+    class CVector3; // needed by CastRay2
+} // namespace EQClass
+
+/* CEverQuest */
+
+class EQClass::CEverQuest
+{
+public:
+    void DoPercentConvert(char* text, bool isOutgoing);
+    void InterpretCmd(class EQPlayer* player, const char* text);
+    void dsp_chat(const char* text, int textColor, bool one_1, bool one_2, bool zero_1);
+    void SetGameState(int gameState);
+};
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::DoPercentConvert(char* text, bool isOutgoing), EQ_ADDRESS_FUNCTION_CEverQuest__DoPercentConvert);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__DoPercentConvert)(void* this_ptr, char* text, bool isOutgoing);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::InterpretCmd(class EQPlayer* player, const char* text), EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__InterpretCmd)(void* this_ptr, class EQPlayer* player, const char* text);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::dsp_chat(const char* text, int textColor, bool one_1, bool one_2, bool zero_1), EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__dsp_chat)(void* this_ptr, const char* text, int textColor, bool one_1, bool one_2, bool zero_1);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::SetGameState(int gameState), EQ_ADDRESS_FUNCTION_CEverQuest__SetGameState);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__SetGameState)(void* this_ptr, int gameState);
+
+EQClass::CEverQuest** EQ_CLASS_POINTER_CEverQuest_pptr;
+EQClass::CEverQuest* EQ_CLASS_POINTER_CEverQuest;
+
+/* CDisplay */
+
+class EQClass::CDisplay
+{
+public:
+    static int __cdecl WriteTextHD2(const char* text, int x, int y, signed int color);
+};
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQClass::CDisplay::WriteTextHD2(const char* text, int x, int y, signed int color), EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CDisplay__WriteTextHD2)(void* this_ptr, const char* text, int x, int y, signed int color);
+
+EQClass::CDisplay** EQ_CLASS_POINTER_CDisplay_pptr;
+EQClass::CDisplay* EQ_CLASS_POINTER_CDisplay;
+
+/* EQPlayerManager */
+
+class EQClass::EQPlayerManager
+{
+public:
+    uint32_t* GetSpawnByID(uint32_t spawnID);
+    uint32_t* GetSpawnByName(const char* spawnName);
+};
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(uint32_t* EQClass::EQPlayerManager::GetSpawnByID(uint32_t spawnID), EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayerManager__GetSpawnByID)(void* this_ptr, uint32_t spawnID);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(uint32_t* EQClass::EQPlayerManager::GetSpawnByName(const char* spawnName), EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayerManager__GetSpawnByName)(void* this_ptr, const char* spawnName);
+
+EQClass::EQPlayerManager** EQ_CLASS_POINTER_EQPlayerManager_pptr;
+EQClass::EQPlayerManager* EQ_CLASS_POINTER_EQPlayerManager;
+
+/* EQPlayer */
+
+class EQClass::EQPlayer
+{
+public:
+
+    void ChangeHeight(float height, float a2, float a3, int a4);
+    uint8_t GetLevel();
+};
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQPlayer::ChangeHeight(float height, float a2, float a3, int a4), EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__ChangeHeight)(void* this_ptr, float height, float a2, float a3, int a4);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(uint8_t EQClass::EQPlayer::GetLevel(), EQ_ADDRESS_FUNCTION_EQPlayer__GetLevel);
+
+/* CXWndManager */
+
+class EQClass::CXWndManager
+{
+public:
+    int DrawWindows();
+};
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::CXWndManager::DrawWindows(), EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CXWndManager__DrawWindows)(void* this_ptr);
+
+EQClass::CXWndManager** EQ_CLASS_POINTER_CXWndManager_pptr;
+EQClass::CXWndManager* EQ_CLASS_POINTER_CXWndManager;
+
+/* CXWnd */
+
+class EQClass::CXWnd
+{
+public:
+    int WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
+    void Activate();
+    void Deactivate();
+};
+
+#define EQ_VFTABLE_INDEX_CXWnd__WndNotification       0x88
+#define EQ_VFTABLE_INDEX_CXWnd__Activate              0x90 // show window
+#define EQ_VFTABLE_INDEX_CXWnd__Deactivate            0x94 // hide window
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CXWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CXWnd::Activate(), EQ_VFTABLE_INDEX_CXWnd__Activate);
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CXWnd::Deactivate(), EQ_VFTABLE_INDEX_CXWnd__Deactivate);
+
+/* CCamera */
+
+class EQClass::CCamera
+{
+public:
+    int SetCameraLocation(EQ::Location& location, bool canSetLocation);
+    bool WorldSpaceToScreenSpace(EQ::Location& location, float& screenX, float& screenY);
+};
+
+#define EQ_VFTABLE_INDEX_CCamera__SetCameraLocation          0x38
+#define EQ_VFTABLE_INDEX_CCamera__WorldSpaceToScreenSpace    0x74
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CCamera::SetCameraLocation(EQ::Location& location, bool canSetLocation), EQ_VFTABLE_INDEX_CCamera__SetCameraLocation);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CCamera__SetCameraLocation)(void* this_ptr, EQ::Location& location, bool canSetLocation);
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CCamera::WorldSpaceToScreenSpace(EQ::Location& location, float& screenX, float& screenY), EQ_VFTABLE_INDEX_CCamera__WorldSpaceToScreenSpace);
+
+// calculated at run time
+EQClass::CCamera** EQ_CLASS_POINTER_CCamera_pptr;
+EQClass::CCamera* EQ_CLASS_POINTER_CCamera;
+
+/* CRender */
+
+class EQClass::CRender
+{
+public:
+    bool ResetDevice(bool unknown);
+    bool DrawLine(EQ::Vector3f& vectorBegin, EQ::Vector3f& vectorEnd, uint32_t colorARGB);
+    bool DrawWrappedText(uint32_t fontStyle, const char* text, EQ::CXRect& cxrect1, EQ::CXRect& cxrect2, uint32_t colorARGB, uint16_t flags, int startX);
+    bool DrawColoredRectangle(EQ::Rectangle& rectangle, uint32_t colorARGB);
+    void ClearRenderToBlack();
+    void RenderPartialScene();
+    void UpdateDisplay();
+    void TakeScreenshot(const char* fileName);
+};
+
+#define EQ_VFTABLE_INDEX_CRender__InitDevice              0x5C
+#define EQ_VFTABLE_INDEX_CRender__ResetDevice             0x64    // "ResetDevice() failed!"
+#define EQ_VFTABLE_INDEX_CRender__DrawLine                0x88
+#define EQ_VFTABLE_INDEX_CRender__DrawWrappedText         0x94
+#define EQ_VFTABLE_INDEX_CRender__DrawColoredRectangle    0xA0    // "*ScreenShot.jpg"
+#define EQ_VFTABLE_INDEX_CRender__ClearRenderToBlack      0xA8
+#define EQ_VFTABLE_INDEX_CRender__RenderPartialScene      0xAC
+#define EQ_VFTABLE_INDEX_CRender__RenderUNKNOWN           0xB0    // draws something, called after ClearRenderToBlack() while blind
+#define EQ_VFTABLE_INDEX_CRender__UpdateDisplay           0xB4
+#define EQ_VFTABLE_INDEX_CRender__TakeScreenshot          0xC4
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::ResetDevice(bool unknown), EQ_VFTABLE_INDEX_CRender__ResetDevice);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CRender__ResetDevice)(void* this_ptr, bool unknown);
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawLine(EQ::Vector3f& vectorBegin, EQ::Vector3f& vectorEnd, uint32_t colorARGB), EQ_VFTABLE_INDEX_CRender__DrawLine);
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawWrappedText(uint32_t fontStyle, const char* text, EQ::CXRect& cxrect1, EQ::CXRect& cxrect2, uint32_t colorARGB, uint16_t flags, int startX), EQ_VFTABLE_INDEX_CRender__DrawWrappedText);
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawColoredRectangle(EQ::Rectangle& rectangle, uint32_t colorARGB), EQ_VFTABLE_INDEX_CRender__DrawColoredRectangle);
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CRender::ClearRenderToBlack(), EQ_VFTABLE_INDEX_CRender__ClearRenderToBlack);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CRender__ClearRenderToBlack)(void* this_ptr);
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CRender::RenderPartialScene(), EQ_VFTABLE_INDEX_CRender__RenderPartialScene);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CRender__RenderPartialScene)(void* this_ptr);
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CRender::UpdateDisplay(), EQ_VFTABLE_INDEX_CRender__UpdateDisplay);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CRender__UpdateDisplay)(void* this_ptr);
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CRender::TakeScreenshot(const char* fileName), EQ_VFTABLE_INDEX_CRender__TakeScreenshot);
+
+EQClass::CRender** EQ_CLASS_POINTER_CRender_pptr;
+EQClass::CRender* EQ_CLASS_POINTER_CRender;
+
+/**************************************************/
+
+class EQClass::CVector3
+{
+public:
+    float X;
+    float Y;
+    float Z;
+
+    float NormalizeAndReturnLength(void);
+    void Normalize(void);
+
+    void Set(float x, float y, float z)
+    {
+        X = x;
+        Y = y;
+        Z = z;
+    }
+
+    inline CVector3& operator-=(const CVector3& vec)
+    {
+        X -= vec.X;
+        Y -= vec.Y;
+        Z -= vec.Z;
+
+        return *this;
+    }
+
+    inline CVector3& operator+=(const CVector3& vec)
+    {
+        X += vec.X;
+        Y += vec.Y;
+        Z += vec.Z;
+
+        return *this;
+    }
+
+    inline void Scale(float value)
+    {
+        X *= value;
+        Y *= value;
+        Z *= value;
+    }
+
+    inline CVector3 operator*(float value) const
+    {
+        CVector3 vector(*this);
+        vector.Scale(value);
+        return vector;
+    }
+
+    void SetMax()
+    {
+        X = Y = Z = 3.402823466e+38F;
+    }
+
+    float GetLengthSquared() const
+    {
+        return ((X * X) + (Y * Y) + (Z * Z));
+    }
+
+    float GetLength() const
+    { 
+        return std::sqrtf(GetLengthSquared());
+    }
+
+    CVector3 operator-() const
+    {
+        CVector3 vector;
+        vector.Set(-X, -Y, -Z);
+        return vector;
+    }
+
+    CVector3 operator-(const CVector3& vector) const
+    {
+        CVector3 result;
+        result.Set(X - vector.X, Y - vector.Y, Z - vector.Z);
+        return result;
+    }
+
+    CVector3 operator+(const CVector3& vector) const
+    {
+        CVector3 result;
+        result.Set(vector.X + X, vector.Y + Y, vector.Z + Z);
+        return result;
+    }
+
+    float GetDistanceSquared(const CVector3& vector) const
+    {
+        CVector3 result = *this - vector;
+        return result.GetLengthSquared();
+    }
+};
+
+/**************************************************/
+
+// these classes are unknown and used in the game's CollisionCallbackForActors() function
+// we use them to disable collision with players in the eqapp_actorcollision.h header
+
+class CCollisionCallbackForActors1
+{
+public:
+    uint32_t Call_0x20();
+    uint32_t Call_0x30();
+};
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(uint32_t CCollisionCallbackForActors1::Call_0x20(), 0x20);
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(uint32_t CCollisionCallbackForActors1::Call_0x30(), 0x30);
+
+class CCollisionCallbackForActors2
+{
+public:
+    uint32_t Call_0x0C();
+};
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(uint32_t CCollisionCallbackForActors2::Call_0x0C(), 0x0C);
+
+class CCollisionCallbackForActors3
+{
+public:
+    uint32_t Call_0x44();
+};
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(uint32_t CCollisionCallbackForActors3::Call_0x44(), 0x44);

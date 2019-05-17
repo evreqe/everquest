@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="eqapp_functions.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_hud.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_ini.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_interpretcommand.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_nodraw.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_sleep.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_string.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_timer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_windowtitle.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_actorcollision.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_addresses.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_alwaysattack.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_alwayshotbutton.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_autogroup.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_boxchat.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_changeheight.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_combathotbutton.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_console.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_detours.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_followai.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\eq\eq.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\eq\eq_addresses.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\eq\eq_classes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\eq\eq_constants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\eq\eq_cxwnd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\eq\eq_executecmd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\eq\eq_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\eq\eq_keys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\eq\eq_macros.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\eq\eq_memory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\eq\eq_messages.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\eq\eq_virtualkeycodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_freecamera.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_esp.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_chatevent.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
