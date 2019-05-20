@@ -17,23 +17,45 @@ functionList = {
     "CastRay2": 0,
     "DrawNetStatus": 0,
     "ExecuteCmd": 0,
+    "DoSpellEffect": 0,
+    "PlaySoundAtLocation": 0,
+    "GetTime": 0,
+    "EQZoneInfo": 0,
     "PlayerSpawn": 0,
     "TargetSpawn": 0,
+    "StringTable": 0,
+    "StringTable__getString": 0,
+    "CDBStr": 0,
+    "CDBStr__GetString": 0,
     "EQPlayerManager": 0,
     "EQPlayerManager__GetSpawnByID": 0,
     "EQPlayerManager__GetSpawnByName": 0,
     "EQPlayer__ChangeHeight": 0,
     "EQPlayer__GetLevel": 0,
+    "EQPlayer__FollowPlayerAI": 0,
+    "EQPlayer__UpdateItemSlot": 0,
+    "EQPlayer__IsTargetable": 0,
+    "EQSwitchManager": 0,
+    "EQSwitch__UseSwitch": 0,
+    "EQSwitch__ChangeState": 0,
     "CXWndManager": 0,
     "CXWndManager__DrawWindows": 0,
+    "CXWnd__IsReallyVisible": 0,
     "CEverQuest": 0,
     "CEverQuest__DoPercentConvert": 0,
     "CEverQuest__EnterZone": 0,
     "CEverQuest__InterpretCmd": 0,
     "CEverQuest__dsp_chat": 0,
     "CEverQuest__SetGameState": 0,
+    "CEverQuest__LMouseUp": 0,
+    "CEverQuest__RMouseUp": 0,
+    "CEverQuest__HandleMouseWheel": 0,
+    "CEverQuest__StartCasting": 0,
     "CDisplay": 0,
     "CDisplay__WriteTextHD2": 0,
+    "CDisplay__CreateActor": 0,
+    "CDisplay__CreatePlayerActor": 0,
+    "CDisplay__DeleteActor": 0,
     "CRender": 0,
 }
 
@@ -158,6 +180,67 @@ with open("eqgame.c", "rt") as in_file:
                 if functionString.find("\"help.html\"") != -1:
                     functionList["ExecuteCmd"] = functionAddress
 
+            # DoSpellEffect
+            if functionString.find("\"Source\"") != -1:
+                if functionString.find("\"%sSPELL_POINT_DAG\"") != -1:
+                    if functionString.find("\"***DAG Error DAG = %08x\"") != -1:
+                        functionList["DoSpellEffect"] = functionAddress
+
+            # PlaySoundAtLocation
+            # void __stdcall sub_53A330(float a1, float a2, float a3, int a4)    # 0x0053A330
+            # {
+            #   char v4; // [esp+0h] [ebp-30h]
+            #   float v5; // [esp+10h] [ebp-20h]
+            #   float v6; // [esp+14h] [ebp-1Ch]
+            #   float v7; // [esp+18h] [ebp-18h]
+            #   float v8; // [esp+1Ch] [ebp-14h]
+            #   float v9; // [esp+20h] [ebp-10h]
+            #   int v10; // [esp+28h] [ebp-8h]
+            #
+            #   sub_671CD0((float *)&v4);
+            #   v5 = a1;
+            #   v6 = a2;
+            #   v7 = a3;
+            #   v8 = 5.0;
+            #   v9 = 80.0;
+            #   v10 = 0;
+            #   sub_561A20(dword_DCDD68, a4, (int)&v4);
+            # }
+            if functionString.find("= a1;") != -1:
+                if functionString.find("= a2;") != -1:
+                    if functionString.find("= a3;") != -1:
+                        if functionString.find("= 5.0;") != -1:
+                            if functionString.find("= 80.0;") != -1:
+                                if functionString.find("= 0;") != -1:
+                                    if functionString.find(", a4,") != -1:
+                                        functionList["PlaySoundAtLocation"] = functionAddress
+
+            # GetTime
+            # DWORD sub_8EEB80()    # 0x008EEB80
+            # {
+            #   return GetTickCount() - dword_16C8F20;
+            # }
+            if functionString.find("return GetTickCount() - ") != -1:
+                matches = re.findall("return GetTickCount\(\) - dword_([0-9A-F]+);", functionString, re.MULTILINE)
+                if matches:
+                    functionList["GetTime"] = functionAddress
+
+            # EQZoneInfo
+            # if ( dword_E816AC )
+            # {
+            #   sub_8F0550("Item done, MSG_WEATHER_EVENT received.\n");
+            #   v1008 = a15;
+            #   dword_E8F63C = 1;
+            #   if ( a15 )
+            #     sub_593A70(byte_E8F240, *(_BYTE *)(v1008 + 12));    # 0x00E8F240
+            #   v100 = sub_65F720();
+            #   sub_65FC10(v100, (_DWORD *)v1008);
+            # }
+            if functionString.find("\"Item done, MSG_WEATHER_EVENT received.\\n\"") != -1:
+                matches = re.findall("sub_[0-9A-F]+\(\"Item done, MSG_WEATHER_EVENT received..n\"\);\n.*\n.*\n.*\n.*sub_[0-9A-F]+\(byte_([0-9A-F]+),", functionString, re.MULTILINE)
+                if matches:
+                    functionList["EQZoneInfo"] = "0x00" + matches[0]
+
             # PlayerSpawn
             # if ( dword_E7F5A4 )
             #   sub_8EEB00(
@@ -176,6 +259,51 @@ with open("eqgame.c", "rt") as in_file:
                 matches = re.findall("[0-9a-z]+ = sub_[0-9A-F]+\(\(int \*\)dword_[0-9A-F]+, 0x3391u, dword_([0-9A-F]+)\);", functionString, re.MULTILINE)
                 if matches:
                     functionList["TargetSpawn"] = "0x00" + matches[0]
+
+            # StringTable
+            # switch ( a1 )
+            # {
+            #   case 1:
+            #     result = sub_8B5330((int *)dword_E80480, 0x5DEu, 0);    # 0x00E80480
+            #     break;
+            #   case 2:
+            #     result = sub_8B5330((int *)dword_E80480, 0x5E2u, 0);
+            #     break;
+            #   case 3:
+            #     result = sub_8B5330((int *)dword_E80480, 0x5E6u, 0);
+            #     break;
+            #   case 4:
+            #     result = sub_8B5330((int *)dword_E80480, 0x5EEu, 0);
+            #     break;
+            if functionString.find("0x5DEu") != -1:    # 1502 Warrior
+                if functionString.find("0x5E2u") != -1:    # 1506 Cleric
+                    if functionString.find("0x5E6u") != -1:    # 1510 Paladin
+                        if functionString.find("0x5EEu") != -1:    # 1514 Shadow Knight
+                            matches = re.findall("result = sub_[0-9A-F]+\(\(int \*\)dword_([0-9A-F]+), 0x5DEu, 0\);", functionString, re.MULTILINE)
+                            if matches:
+                                functionList["StringTable"] = "0x00" + matches[0]
+
+            # StringTable__getString
+            # sub_4818F0((int)&unk_108DA10, (int)"%s (%d)", (int)off_C5D5DC);
+            if functionString.find("%s (%d)") != -1:
+                if re.search("sub_[0-9A-F]+\(\(int\)&unk_[0-9A-F]+, \(int\)\"%s \(%d\)\", \(int\)off_[0-9A-F]+\);", functionString):
+                    functionList["StringTable__getString"] = functionAddress
+
+            # CDBStr
+            # v3 = "Unknown AA";
+            # if ( dword_DCBB6C )    # 0x00DCBB6C
+            #   v3 = sub_52FC80(dword_DCBB6C, this[4], 1u, 0);    # 0x00DCBB6C
+            # sub_599A20((int)&v8, 0xE6Fu, (int)v3, 0, 0, 0, 0, 0, 0, 0, 0);
+            # sub_8EB050(&lpMem, &v8);
+            if functionString.find("Unknown AA") != -1:
+                if functionString.find("0xE6Fu") != -1:    # 3695 AA: %1
+                    matches = re.findall("[0-9a-z]+ = sub_[0-9A-F]+\(dword_([0-9A-F]+), this\[\d+\], 1u, 0\);", functionString, re.MULTILINE)
+                    if matches:
+                        functionList["CDBStr"] = "0x00" + matches[0]
+
+            # CDBStr__GetString
+            if functionString.find("\"Unknown DB String %d-%d\"") != -1:
+                functionList["CDBStr__GetString"] = functionAddress
 
             # EQPlayerManager
             # EQPlayerManager__GetSpawnByID
@@ -223,10 +351,84 @@ with open("eqgame.c", "rt") as in_file:
             #   v135 = sub_659850(v7);    # 0x00659850
             #   sub_4A4110(&v178, (int)" (Lvl: %d)", v135);
             # }
-            if functionString.find(" (Lvl: %d)") != -1:
+            if functionString.find("\" (Lvl: %d)\"") != -1:
                     matches = re.findall("[0-9a-z]+ = sub_([0-9A-F]+)\([0-9a-z]+\);\n\s+sub_[0-9A-F]+\(&[0-9a-z]+, \(int\)\" \(Lvl: %d\)\", [0-9a-z]+\);", functionString, re.MULTILINE)
                     if matches:
                         functionList["EQPlayer__GetLevel"] = "0x00" + matches[0]
+
+            # EQPlayer__FollowPlayerAI
+            if functionString.find("0x3194u") != -1:    # 12692 %1 is dead, canceling auto-follow.
+                if functionString.find("0x3195u") != -1:    # 12693 %1 is too far away, canceling auto-follow.
+                    if functionString.find("> 200.0") != -1:
+                        if functionString.find(">= 20.0") != -1:
+                            if functionString.find("+ 15.0 <=") != -1:
+                                if functionString.find("+ 30.0 <=") != -1:
+                                    functionList["EQPlayer__FollowPlayerAI"] = functionAddress
+
+            # EQPlayer__UpdateItemSlot
+            if functionString.find("IT36") != -1:
+                if functionString.find("IT159") != -1:
+                    if functionString.find("IT10758") != -1:
+                        if functionString.find("IT10742") != -1:
+                            functionList["EQPlayer__UpdateItemSlot"] = functionAddress
+
+            # EQPlayer__IsTargetable
+            # if ( !sub_97D670(v2) || sub_6574C0((int *)dword_E805BC, (int *)v3, 1) )    # 0x0097D670
+            # {
+            #   v4 = sub_8B5330((int *)dword_E80480, 0x12Fu, 0);
+            #   sub_4E5B40();
+            #   sub_4E61E0(v4, (LPVOID)0xD, (LPVOID)1, (LPVOID)1, 0);
+            # }
+            # else
+            # {
+            #   dword_E80690 = v3;
+            # }
+            if functionString.find("0x12Fu") != -1:    # 303 I don't see anyone by that name around here...
+                matches = re.findall("if \( \!sub_([0-9A-F]+)\([0-9a-z]+\) \|\| sub_[0-9A-F]+\(\(int \*\)dword_[0-9A-F]+, \(int \*\)[0-9a-z]+, 1\) \)", functionString, re.MULTILINE)
+                if matches:
+                    functionList["EQPlayer__IsTargetable"] = "0x00" + matches[0]
+
+            # EQSwitchManager
+            # sub_8C5830((_DWORD *)dword_E815A8, a2, (int)&v6);
+            # v2 = &v5;
+            # do
+            # v3 = (v2++)[1];
+            # while ( v3 );
+            # *(_DWORD *)v2 = 1769435999;
+            # *((_DWORD *)v2 + 1) = 1701340020;
+            # *((_DWORD *)v2 + 2) = 2020879987;
+            # *((_WORD *)v2 + 6) = 116;
+            # sub_5CDC50(dword_E7F110, a1);
+            # return sub_5CD400((int *)dword_E7F110, &v6, 0);    # 0x00E7F110
+            if functionString.find("= 1769435999;") != -1:
+                if functionString.find("= 1701340020;") != -1:
+                    if functionString.find("= 2020879987;") != -1:
+                        if functionString.find("= 116;") != -1:
+                            matches = re.findall("sub_[0-9A-F]+\(\(int \*\)dword_([0-9A-F]+), &[0-9a-z]+, 0\);", functionString, re.MULTILINE)
+                            if matches:
+                                functionList["EQSwitchManager"] = "0x00" + matches[0]
+
+            # EQSwitch__UseSwitch
+            if functionString.find("!= 54") != -1:
+                if functionString.find("!= 55") != -1:
+                    if functionString.find("== -98") != -1:
+                        if functionString.find("== -99") != -1:
+                            if functionString.find(" * 0.0099999998") != -1:
+                                if functionString.find(", 4,") != -1:
+                                    if functionString.find(", 3,") != -1:
+                                        if functionString.find(", 2,") != -1:
+                                            if functionString.find("1462, (LPVOID)0xA);") != -1:    # 1462 You can't reach that, get closer.
+                                                functionList["EQSwitch__UseSwitch"] = functionAddress
+
+            # EQSwitch__ChangeState
+            if functionString.find("!= 57") != -1:
+                if functionString.find("!= 58") != -1:
+                    if functionString.find("!= -97") != -1:
+                        if functionString.find("!= -96") != -1:
+                            if functionString.find("!= -95") != -1:
+                                if functionString.find("== 2") != -1:
+                                    if functionString.find("== 3") != -1:
+                                        functionList["EQSwitch__ChangeState"] = functionAddress
 
             # CXWndManager
             # if ( dword_16C8928 )
@@ -244,6 +446,28 @@ with open("eqgame.c", "rt") as in_file:
                 if functionString.find("-939523968") != -1:
                     if functionString.find("GetTickCount();") != -1:
                         functionList["CXWndManager__DrawWindows"] = functionAddress
+
+            # CXWnd__IsReallyVisible
+            # v4 = this;
+            # if ( !sub_917EF0((int)this) )    # 0x00917EF0
+            #   return 1;
+            # if ( v4[733]
+            #   && dword_E815BC
+            #   && *((_DWORD *)dword_E815BC + 347) == *((_DWORD *)v4 + 185)
+            #   && (dword_F30F80 && *(_BYTE *)dword_F30F80 || v4[668]) )
+            # {
+            #   v5 = sub_8B6670((int *)dword_E81480, 0x1553u, 0);
+            #   sub_4E5910();
+            #   sub_4E5FB0(v5, (LPVOID)0xF, (LPVOID)1, (LPVOID)1, 0);
+            #   return 0;
+            # }
+            if functionString.find("0x1553u") != -1:    # 5459 Manually zooming and panning is disabled when the map is in Find mode and the "Auto-Find" button is active.  If you wish to manually adjust the map while in Find mode, then disable the "Auto-Find" button.
+                if functionString.find(" * 1.5;") != -1:
+                    if functionString.find(" * 0.66666669;") != -1:
+                        if functionString.find(" < 1.0 )") != -1:
+                            matches = re.findall("if \( \!sub_([0-9A-F]+)\(\(int\)this\) \)\n\s+return 1;", functionString, re.MULTILINE)
+                            if matches:
+                                functionList["CXWnd__IsReallyVisible"] = "0x00" + matches[0]
 
             # CEverQuest
             # sub_8EEB00("Gamestate at crash = %d\n", *(_DWORD *)(dword_103C944 + 1480));    # 0x0103C944
@@ -351,6 +575,44 @@ with open("eqgame.c", "rt") as in_file:
                                                                     if matches:
                                                                         functionList["CEverQuest__SetGameState"] = functionAddress
 
+            # CEverQuest__LMouseUp
+            if functionString.find("while ( ShowCursor(1) < 0 )") != -1:
+                if functionString.find("SetCursorPos") != -1:
+                    if functionString.find("\"POINT1\"") != -1:
+                        if functionString.find("\"POINT2\"") != -1:
+                            if functionString.find("\"POINT3\"") != -1:
+                                if functionString.find("\"POINT4\"") != -1:
+                                    if functionString.find("0x3020u") != -1: # 12320 You currently cannot drop items.  Goto General Options or use /fastdrop to enable dropping.
+                                        functionList["CEverQuest__LMouseUp"] = functionAddress
+
+            # CEverQuest__RMouseUp
+            if functionString.find("while ( ShowCursor(1) < 0 )") != -1:
+                if functionString.find("SetCursorPos") != -1:
+                    if functionString.find("-572662307") != -1:
+                        if functionString.find("858993459") != -1:
+                            if functionString.find("572662306") != -1:
+                                functionList["CEverQuest__RMouseUp"] = functionAddress
+
+            # CEverQuest__HandleMouseWheel
+            # v19 = 100.0;
+            # v20 = fabs(v3[379] - v18);
+            # if ( v20 < 5.0 )
+            #   v19 = v20 * 0.2 * 90.0 + 10.0;
+            if functionString.find("fabs") != -1:
+                if functionString.find(" = 53.0;") != -1:
+                    if functionString.find(" = 212.0;") != -1:
+                        if functionString.find(" = 100.0;") != -1:
+                            if functionString.find(" * 0.2 * 90.0 + 10.0;") != -1:
+                                functionList["CEverQuest__HandleMouseWheel"] = functionAddress
+
+            # CEverQuest__StartCasting
+            if functionString.find("8152") != -1:    # 8152 %1 begins singing %2.
+                if functionString.find("12205") != -1:    # 12205 You begin casting %1.
+                    if functionString.find("12206") != -1:    # 12206 %1 begins casting %2.
+                        if functionString.find(", 0, 500);") != -1:
+                            if functionString.find(", 99);") != -1:
+                                functionList["CEverQuest__StartCasting"] = functionAddress
+
             # CDisplay
             # *(_DWORD *)v12 = 1413693791;
             # *((_DWORD *)v12 + 1) = 1162105423;
@@ -382,6 +644,60 @@ with open("eqgame.c", "rt") as in_file:
                                                                             if functionString.find("-10461088") != -1:
                                                                                 functionList["CDisplay__WriteTextHD2"] = functionAddress
 
+            # CDisplay__CreateActor
+            if functionString.find("\"PLAYER_1\"") != -1:
+                if functionString.find("\"BBBOARD\"") != -1:
+                    if functionString.find("\"IT\"") != -1:
+                        functionList["CDisplay__CreateActor"] = functionAddress
+
+            # CDisplay__CreatePlayerActor
+            if functionString.find("\"CDisplay::CreatePlayerActor - FATAL ERROR - mySpriteDef is NULL. actor_tag=%s\\n\"") != -1:
+                if functionString.find("\"OBP_SPELLTREE_ACTORDEF\"") != -1:
+                    if functionString.find("\"HUM_ACTORDEF\"") != -1:
+                        if functionString.find("\"HUF_ACTORDEF\"") != -1:
+                            functionList["CDisplay__CreatePlayerActor"] = functionAddress
+
+            # CDisplay__DeleteActor
+            # void __userpurge sub_5380F0(int a1@<ecx>, double a2@<st0>, int a3)    # 0x005380F0
+            # {
+            #   _DWORD **v3; // edi
+            #   _DWORD *v4; // eax
+            #   int v5; // eax
+            #
+            #   v3 = (_DWORD **)a1;
+            #   if ( a3 )
+            #   {
+            #     *(_DWORD *)(a1 + 348) = 0;
+            #     v4 = dword_E805BC;
+            #     if ( dword_E805BC && *((_DWORD *)dword_E805BC + 1091) == a3 )
+            #     {
+            #       if ( dword_DCBC48 )
+            #       {
+            #         sub_7A6730(dword_DCBC48, a2, 0, 1);
+            #         v4 = dword_E805BC;
+            #       }
+            #       if ( dword_DCBC28 )
+            #       {
+            #         sub_786EB0((int)dword_DCBC28, a2, 0, (LPVOID)1);
+            #         v4 = dword_E805BC;
+            #       }
+            #     }
+            #     if ( dword_DCC1BC == a3 )
+            #     {
+            #       if ( v4 && (v5 = v4[1091], v5 != dword_DCC1BC) )
+            #         sub_537F50(v3, v5);
+            #       else
+            #         sub_537F50(v3, 0);
+            #     }
+            #     (*(void (__stdcall **)(int))(*(_DWORD *)dword_16CA77C + 108))(a3);
+            #   }
+            # }
+            if re.search("\(\*\(void \(__stdcall \*\*\)\(int\)\)\(\*\(_DWORD \*\)dword_[0-9A-F]+ \+ 108\)\)\(\w+\d+\);", functionString):
+                if functionString.find(", 0, 1);") != -1:
+                    if functionString.find(", 0);") != -1:
+                        if functionString.find(", 0, (LPVOID)1);") != -1:
+                            functionList["CDisplay__DeleteActor"] = functionAddress
+
             # CRender
             # HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
             # if ( !(*(unsigned __int8 (__stdcall **)(signed int))(*(_DWORD *)dword_16C9768 + 100))(1) )    # 0x016C9768
@@ -405,58 +721,66 @@ if mapOffset != 0:
                     hWnd = int(matches[0], 16) + int(mapOffset, 0)
                     functionList["WindowHWND"] = "0x00" + str(hex(hWnd).upper()[2:])
 
-for k, v in functionList.items():
+for k, v in sorted(functionList.items()):
     print(k, v)
 
-print("")
-
 # EQ_InitializeAddresses()
-print("void EQ_InitializeAddresses()")
-print("{")
-print("    // " + buildDate + " " + buildTime)
-print("")
-print("    EQ_ADDRESS_WindowHWND = " + functionList["WindowHWND"] + ";")
-print("")
-print("    EQ_ADDRESS_AutoAttack    = " + functionList["AutoAttack"] + ";")
-print("    EQ_ADDRESS_AutoRun       = " + functionList["AutoRun"] + ";")
-print("    EQ_ADDRESS_MouseLook     = " + functionList["MouseLook"] + ";")
-print("    EQ_ADDRESS_NetStatus     = " + functionList["NetStatus"] + ";")
-print("")
-print("    EQ_ADDRESS_FUNCTION_CollisionCallbackForActors    = " + functionList["CollisionCallbackForActors"] + ";")
-print("    EQ_ADDRESS_FUNCTION_CastRay                       = " + functionList["CastRay"] + ";")
-print("    EQ_ADDRESS_FUNCTION_CastRay2                      = " + functionList["CastRay2"] + ";")
-print("    EQ_ADDRESS_FUNCTION_DrawNetStatus                 = " + functionList["DrawNetStatus"] + ";")
-print("    EQ_ADDRESS_FUNCTION_ExecuteCmd                    = " + functionList["ExecuteCmd"] + ";")
-print("")
-print("    EQ_ADDRESS_POINTER_PlayerSpawn    = " + functionList["PlayerSpawn"] + ";")
-print("    EQ_ADDRESS_POINTER_TargetSpawn    = " + functionList["TargetSpawn"] + ";")
-print("")
-print("    EQ_ADDRESS_POINTER_EQPlayerManager = " + functionList["EQPlayerManager"] + ";")
-print("    EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID      = " + functionList["EQPlayerManager__GetSpawnByID"] + ";")
-print("    EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName    = " + functionList["EQPlayerManager__GetSpawnByName"] + ";")
-print("")
-print("    EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight    = " + functionList["EQPlayer__ChangeHeight"] + ";")
-print("    EQ_ADDRESS_FUNCTION_EQPlayer__GetLevel        = " + functionList["EQPlayer__GetLevel"] + ";")
-print("")
-print("    EQ_ADDRESS_POINTER_CXWndManager = " + functionList["CXWndManager"] + ";")
-print("    EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows    = " + functionList["CXWndManager__DrawWindows"] + ";")
-print("")
-print("    EQ_ADDRESS_POINTER_CEverQuest = " + functionList["CEverQuest"] + ";")
-print("    EQ_ADDRESS_FUNCTION_CEverQuest__DoPercentConvert    = " + functionList["CEverQuest__DoPercentConvert"] + ";")
-print("    EQ_ADDRESS_FUNCTION_CEverQuest__EnterZone           = " + functionList["CEverQuest__EnterZone"] + ";")
-print("    EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd        = " + functionList["CEverQuest__InterpretCmd"] + ";")
-print("    EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat            = " + functionList["CEverQuest__dsp_chat"] + ";")
-print("    EQ_ADDRESS_FUNCTION_CEverQuest__SetGameState        = " + functionList["CEverQuest__SetGameState"] + ";")
-print("")
-print("    EQ_ADDRESS_POINTER_CDisplay = " + functionList["CDisplay"] + ";")
-print("    EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2    = " + functionList["CDisplay__WriteTextHD2"] + ";")
-print("")
-print("    //EQ_ADDRESS_POINTER_CCamera = 0x0; // calculated at runtime")
-print("    //EQ_ADDRESS_FUNCTION_CCamera__SetCameraLocation    = 0x0; // calculated at runtime")
-print("")
-print("    EQ_ADDRESS_POINTER_CRender = " + functionList["CRender"] + ";")
-print("    //EQ_ADDRESS_FUNCTION_CRender__ResetDevice    = 0x0; // calculated at runtime")
-print("    //EQ_ADDRESS_FUNCTION_CRender__ClearRenderToBlack    = 0x0; // calculated at runtime")
-print("    //EQ_ADDRESS_FUNCTION_CRender__RenderPartialScene    = 0x0; // calculated at runtime")
-print("    //EQ_ADDRESS_FUNCTION_CRender__UpdateDisplay         = 0x0; // calculated at runtime")
-print("}")
+with open("addresses.txt", "w") as out_file:
+    out_file.write("void EQ_InitializeAddresses()\n")
+    out_file.write("{\n")
+    out_file.write("    // " + buildDate + " " + buildTime + "\n")
+    out_file.write("\n")
+    out_file.write("    EQ_ADDRESS_WindowHWND = " + functionList["WindowHWND"] + ";\n")
+    out_file.write("\n")
+    out_file.write("    EQ_ADDRESS_AutoAttack    = " + functionList["AutoAttack"] + ";\n")
+    out_file.write("    EQ_ADDRESS_AutoFire      = " + functionList["AutoFire"] + ";\n")
+    out_file.write("    EQ_ADDRESS_AutoRun       = " + functionList["AutoRun"] + ";\n")
+    out_file.write("    EQ_ADDRESS_MouseLook     = " + functionList["MouseLook"] + ";\n")
+    out_file.write("    EQ_ADDRESS_NetStatus     = " + functionList["NetStatus"] + ";\n")
+    out_file.write("\n")
+    out_file.write("    EQ_ADDRESS_EQZoneInfo = " + functionList["EQZoneInfo"] + ";\n")
+    out_file.write("\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CollisionCallbackForActors    = " + functionList["CollisionCallbackForActors"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CastRay                       = " + functionList["CastRay"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CastRay2                      = " + functionList["CastRay2"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_DrawNetStatus                 = " + functionList["DrawNetStatus"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_ExecuteCmd                    = " + functionList["ExecuteCmd"] + ";\n")
+    out_file.write("\n")
+    out_file.write("    EQ_ADDRESS_POINTER_PlayerSpawn    = " + functionList["PlayerSpawn"] + ";\n")
+    out_file.write("    EQ_ADDRESS_POINTER_TargetSpawn    = " + functionList["TargetSpawn"] + ";\n")
+    out_file.write("\n")
+    out_file.write("    EQ_ADDRESS_POINTER_EQPlayerManager = " + functionList["EQPlayerManager"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID      = " + functionList["EQPlayerManager__GetSpawnByID"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName    = " + functionList["EQPlayerManager__GetSpawnByName"] + ";\n")
+    out_file.write("\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight    = " + functionList["EQPlayer__ChangeHeight"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_EQPlayer__GetLevel        = " + functionList["EQPlayer__GetLevel"] + ";\n")
+    out_file.write("\n")
+    out_file.write("    EQ_ADDRESS_POINTER_CXWndManager = " + functionList["CXWndManager"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows    = " + functionList["CXWndManager__DrawWindows"] + ";\n")
+    out_file.write("\n")
+    out_file.write("    EQ_ADDRESS_POINTER_CEverQuest = " + functionList["CEverQuest"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__DoPercentConvert    = " + functionList["CEverQuest__DoPercentConvert"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__EnterZone           = " + functionList["CEverQuest__EnterZone"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd        = " + functionList["CEverQuest__InterpretCmd"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat            = " + functionList["CEverQuest__dsp_chat"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__SetGameState        = " + functionList["CEverQuest__SetGameState"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__LMouseUp            = " + functionList["CEverQuest__LMouseUp"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp            = " + functionList["CEverQuest__RMouseUp"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__HandleMouseWheel    = " + functionList["CEverQuest__HandleMouseWheel"] + ";\n")
+    out_file.write("\n")
+    out_file.write("    EQ_ADDRESS_POINTER_CDisplay = " + functionList["CDisplay"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2         = " + functionList["CDisplay__WriteTextHD2"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CDisplay__CreateActor          = " + functionList["CDisplay__CreateActor"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CDisplay__CreatePlayerActor    = " + functionList["CDisplay__CreatePlayerActor"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CDisplay__DeleteActor          = " + functionList["CDisplay__DeleteActor"] + ";\n")
+    out_file.write("\n")
+    out_file.write("    //EQ_ADDRESS_POINTER_CCamera = 0x0; // calculated at runtime\n")
+    out_file.write("    //EQ_ADDRESS_FUNCTION_CCamera__SetCameraLocation    = 0x0; // calculated at runtime\n")
+    out_file.write("\n")
+    out_file.write("    EQ_ADDRESS_POINTER_CRender = " + functionList["CRender"] + ";\n")
+    out_file.write("    //EQ_ADDRESS_FUNCTION_CRender__ResetDevice    = 0x0; // calculated at runtime\n")
+    out_file.write("    //EQ_ADDRESS_FUNCTION_CRender__ClearRenderToBlack    = 0x0; // calculated at runtime\n")
+    out_file.write("    //EQ_ADDRESS_FUNCTION_CRender__RenderPartialScene    = 0x0; // calculated at runtime\n")
+    out_file.write("    //EQ_ADDRESS_FUNCTION_CRender__UpdateDisplay         = 0x0; // calculated at runtime\n")
+    out_file.write("}\n")

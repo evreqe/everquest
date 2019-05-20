@@ -1,0 +1,58 @@
+void EQ_InitializeAddresses()
+{
+    // May 13 2019 11:56:03
+
+    EQ_ADDRESS_WindowHWND = 0x00F328F4;
+
+    EQ_ADDRESS_AutoAttack    = 0x00F2CCFB;
+    EQ_ADDRESS_AutoFire      = 0x00F2CCFC;
+    EQ_ADDRESS_AutoRun       = 0x00E8E068;
+    EQ_ADDRESS_MouseLook     = 0x00E8E04A;
+    EQ_ADDRESS_NetStatus     = 0x00E8E04D;
+
+    EQ_ADDRESS_EQZoneInfo = 0x00E8E240;
+
+    EQ_ADDRESS_FUNCTION_CollisionCallbackForActors    = 0x0051D6D0;
+    EQ_ADDRESS_FUNCTION_CastRay                       = 0x0059BCA0;
+    EQ_ADDRESS_FUNCTION_CastRay2                      = 0x0059BCF0;
+    EQ_ADDRESS_FUNCTION_DrawNetStatus                 = 0x006279B0;
+    EQ_ADDRESS_FUNCTION_ExecuteCmd                    = 0x005945C0;
+
+    EQ_ADDRESS_POINTER_PlayerSpawn    = 0x00E805BC;
+    EQ_ADDRESS_POINTER_TargetSpawn    = 0x00E80690;
+
+    EQ_ADDRESS_POINTER_EQPlayerManager = 0x00F2FEE8;
+    EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID      = 0x0064FD90;
+    EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName    = 0x0064FDB0;
+
+    EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight    = 0x006579A0;
+    EQ_ADDRESS_FUNCTION_EQPlayer__GetLevel        = 0x00659F30;
+
+    EQ_ADDRESS_POINTER_CXWndManager = 0x016C9938;
+    EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows    = 0x0091AFC0;
+
+    EQ_ADDRESS_POINTER_CEverQuest = 0x0103D948;
+    EQ_ADDRESS_FUNCTION_CEverQuest__DoPercentConvert    = 0x005E9540;
+    EQ_ADDRESS_FUNCTION_CEverQuest__EnterZone           = 0x005E3D30;
+    EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd        = 0x005F7890;
+    EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat            = 0x004E61E0;
+    EQ_ADDRESS_FUNCTION_CEverQuest__SetGameState        = 0x005D0440;
+    EQ_ADDRESS_FUNCTION_CEverQuest__LMouseUp            = 0x005D2C20;
+    EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp            = 0x005D3BB0;
+    EQ_ADDRESS_FUNCTION_CEverQuest__HandleMouseWheel    = 0x005D4290;
+
+    EQ_ADDRESS_POINTER_CDisplay = 0x0E806A0;
+    EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2         = 0x005350B0;
+    EQ_ADDRESS_FUNCTION_CDisplay__CreateActor          = 0x00538180;
+    EQ_ADDRESS_FUNCTION_CDisplay__CreatePlayerActor    = 0x00533CE0;
+    EQ_ADDRESS_FUNCTION_CDisplay__DeleteActor          = 0x005380F0;
+
+    //EQ_ADDRESS_POINTER_CCamera = 0x0; // calculated at runtime
+    //EQ_ADDRESS_FUNCTION_CCamera__SetCameraLocation    = 0x0; // calculated at runtime
+
+    EQ_ADDRESS_POINTER_CRender = 0x016CA778;
+    //EQ_ADDRESS_FUNCTION_CRender__ResetDevice    = 0x0; // calculated at runtime
+    //EQ_ADDRESS_FUNCTION_CRender__ClearRenderToBlack    = 0x0; // calculated at runtime
+    //EQ_ADDRESS_FUNCTION_CRender__RenderPartialScene    = 0x0; // calculated at runtime
+    //EQ_ADDRESS_FUNCTION_CRender__UpdateDisplay         = 0x0; // calculated at runtime
+}
