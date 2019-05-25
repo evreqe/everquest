@@ -1,6 +1,8 @@
 void EQ_InitializeAddresses()
 {
-    // May 13 2019 11:56:03
+    // May 20 2019 12:50:50
+
+    EQ_OFFSET_SPAWN_STANDING_STATE = 0x4b4;
 
     EQ_ADDRESS_WindowHWND = 0x00F328F4;
 
@@ -12,6 +14,7 @@ void EQ_InitializeAddresses()
 
     EQ_ADDRESS_EQZoneInfo = 0x00E8E240;
 
+    EQ_ADDRESS_FUNCTION_DetectVirtualMachine          = 0x008F37C0;
     EQ_ADDRESS_FUNCTION_CollisionCallbackForActors    = 0x0051D6D0;
     EQ_ADDRESS_FUNCTION_CastRay                       = 0x0059BCA0;
     EQ_ADDRESS_FUNCTION_CastRay2                      = 0x0059BCF0;
@@ -25,8 +28,16 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID      = 0x0064FD90;
     EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName    = 0x0064FDB0;
 
-    EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight    = 0x006579A0;
-    EQ_ADDRESS_FUNCTION_EQPlayer__GetLevel        = 0x00659F30;
+    EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight          = 0x006579A0;
+    EQ_ADDRESS_FUNCTION_EQPlayer__ChangePosition        = 0x006583D0;
+    EQ_ADDRESS_FUNCTION_EQPlayer__GetLevel              = 0x00659F30;
+    EQ_ADDRESS_FUNCTION_EQPlayer__GetActorClient        = 0x00592620;
+    EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteState    = 0x00644D30;
+    EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteTint     = 0x00645C00;
+
+    EQ_ADDRESS_POINTER_EQSwitchManager = 0x00E7E110;
+    EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch      = 0x005CBB70;
+    EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState    = 0x005CC050;
 
     EQ_ADDRESS_POINTER_CXWndManager = 0x016C9938;
     EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows    = 0x0091AFC0;
@@ -55,4 +66,6 @@ void EQ_InitializeAddresses()
     //EQ_ADDRESS_FUNCTION_CRender__ClearRenderToBlack    = 0x0; // calculated at runtime
     //EQ_ADDRESS_FUNCTION_CRender__RenderPartialScene    = 0x0; // calculated at runtime
     //EQ_ADDRESS_FUNCTION_CRender__UpdateDisplay         = 0x0; // calculated at runtime
+
+    EQ_ADDRESS_POINTER_CAlertWnd = 0x0DCC180;
 }

@@ -5,13 +5,18 @@ mapOffset = 0
 buildDate = ""
 buildTime = ""
 
+CXWndSize = 0
+CSidlScreenWndSize = 0
+
 functionList = {
+    "OffsetSpawnStandingState": 0,
     "WindowHWND": 0,
     "AutoAttack": 0,
     "AutoFire": 0,
     "AutoRun": 0,
     "MouseLook": 0,
     "NetStatus": 0,
+    "DetectVirtualMachine": 0,
     "CollisionCallbackForActors": 0,
     "CastRay": 0,
     "CastRay2": 0,
@@ -31,10 +36,14 @@ functionList = {
     "EQPlayerManager__GetSpawnByID": 0,
     "EQPlayerManager__GetSpawnByName": 0,
     "EQPlayer__ChangeHeight": 0,
+    "EQPlayer__ChangePosition": 0,
     "EQPlayer__GetLevel": 0,
+    "EQPlayer__GetActorClient": 0,
     "EQPlayer__FollowPlayerAI": 0,
     "EQPlayer__UpdateItemSlot": 0,
     "EQPlayer__IsTargetable": 0,
+    "EQPlayer__SetNameSpriteState": 0,
+    "EQPlayer__SetNameSpriteTint": 0,
     "EQSwitchManager": 0,
     "EQSwitch__UseSwitch": 0,
     "EQSwitch__ChangeState": 0,
@@ -57,6 +66,7 @@ functionList = {
     "CDisplay__CreatePlayerActor": 0,
     "CDisplay__DeleteActor": 0,
     "CRender": 0,
+    "CAlertWnd": 0,
 }
 
 functionAddress = ""
@@ -104,6 +114,71 @@ with open("eqgame.c", "rt") as in_file:
                     print("buildDate", buildDate)
                     print("buildTime", buildTime)
 
+            # CXWndSize
+            # void __thiscall sub_932DD0(_DWORD *this, int a2)
+            # {
+            #   _DWORD *v2; // esi
+            #   _DWORD *v3; // eax
+            #   int v4; // eax
+            # 
+            #   v2 = this;
+            #   if ( a2 )
+            #   {
+            #     if ( !this[149] )
+            #     {
+            #       v3 = operator new(0x1E8u);    # 0x1E8
+            #       if ( v3 )
+            #         v4 = sub_911BB0(v3, 0, 0, 0, 0, 0, 0);
+            #       else
+            #         v4 = 0;
+            #       v2[149] = v4;
+            #     }
+            #     sub_917480(v2[149], a2);
+            #   }
+            # }
+            if functionString.find("= this;") != -1:
+                if functionString.find("= operator new") != -1:
+                    if functionString.find(", 0, 0, 0, 0, 0, 0);") != -1:
+                        matches = re.findall("[0-9a-z]+ = operator new\(0x([0-9A-F]+)u\);\n\s+if \( [0-9a-z]+ \)\n\s+[0-9a-z]+ = sub_[0-9A-F]+\([0-9a-z]+, 0, 0, 0, 0, 0, 0\);\n\s+else\n\s+[0-9a-z]+ = 0;", functionString, re.MULTILINE)
+                        if matches:
+                            CXWndSize = "0x" + matches[0]
+                            print("CXWndSize", CXWndSize)
+
+            # CSidlScreenWndSize
+            # = &CSidlScreenWnd::`vftable';    # goto xref, first function in vftable
+            #
+            # if ( v8 )
+            # {
+            #   sub_481880((int)&v26, (int)"%s is a NO DROP item, are you sure you wish to loot it?", (int)(a2 + 1));
+            #   if ( dword_DCBC44 )
+            #     v20 = dword_DCBC44 + 560;    # 560 dec = 0x230
+            #   else
+            #     v20 = 0;
+            #   sub_7C0B60((int *)dword_104E8F0, v20, 100, (int)&v26, 0xCu, 20000, (int)v8, 1);
+            # }
+            # return;
+            if functionString.find("\"%s is a NO DROP item, are you sure you wish to loot it?\"") != -1:
+                if functionString.find("0x283u") != -1:    # 643 You cannot perform that action right now. Please try again in a moment.
+                    if functionString.find("0x2C39u") != -1:    # 11321 These item(s) are locked because you were not present when the enemy died. To loot them you will first need to right-click that enemy's corpse to unlock.
+                        matches = re.findall("if \( dword_[0-9A-F]+ \)\n\s+[0-9a-z]+ = dword_[0-9A-F]+ \+ (\d+);\n\s+else\n\s+[0-9a-z]+ = 0;", functionString, re.MULTILINE)
+                        if matches:
+                            CSidlScreenWndSize = int(matches[0])
+                            print("CSidlScreenWndSize", hex(CSidlScreenWndSize))
+
+            # OffsetSpawnStandingState
+            # if ( sub_5B94A0() )
+            # {
+            #   v12 = sub_8B5330((int *)dword_E80480, 0x3292u, 0);
+            #   if ( sub_8EFD50(a12, (int)v12, 3) || *(_BYTE *)(a11 + 1204) == 110 )    # 1204 dec
+            #     sub_5E9200(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
+            # }
+            if functionString.find("0x3292u") != -1:    # off
+                if functionString.find(", 3)") != -1:    # strlen "off" is 3
+                    if functionString.find("== 110") != -1:
+                        matches = re.findall("if \( sub_[0-9A-F]+\([0-9a-z]+, \(int\)[0-9a-z]+, 3\) \|\| \*\(_BYTE \*\)\([0-9a-z]+ \+ (\d+)\) == 110 \)", functionString, re.MULTILINE)
+                        if matches:
+                            functionList["OffsetSpawnStandingState"] = int(matches[0])
+
             # AutoAttack
             # "ExecuteCmd has received a CMD_EXITGAME.\n"
             # ------if ( byte_F2BCEB )    # 0x00F2BCEB
@@ -147,6 +222,18 @@ with open("eqgame.c", "rt") as in_file:
             matches = re.findall("byte_([0-9A-F]+) = sub_[0-9A-F]+\(\"Defaults\", \"NetStat\", 0, 0\);", functionString, re.MULTILINE)
             if matches:
                 functionList["NetStatus"] = "0x00" + matches[0]
+
+            # DetectVirtualMachine
+            if functionString.find("\"prleth.sys\"") != -1:
+                if functionString.find("\"hgfs.sys\"") != -1:
+                    if functionString.find("\"vmhgfs.sys\"") != -1:
+                        if functionString.find("\"wmcheck.dll\"") != -1:
+                            if functionString.find("\"VMWARE\"") != -1:
+                                if functionString.find("\"QEMU\"") != -1:
+                                    if functionString.find("\"VBOX\"") != -1:
+                                        if functionString.find("\"VirtualBox\"") != -1:
+                                            if functionString.find("\"55274-640-2673064-23950\"") != -1:
+                                                functionList["DetectVirtualMachine"] = functionAddress
 
             # CollisionCallbackForActors
             if functionString.find("v1 = (*(int (__thiscall **)(int))(*(_DWORD *)a1 + 32))(a1);") != -1:
@@ -345,6 +432,18 @@ with open("eqgame.c", "rt") as in_file:
                     if matches:
                         functionList["EQPlayer__ChangeHeight"] = "0x00" + matches[0]
 
+            # EQPlayer__ChangePosition
+            if functionString.find("0x30D1u") != -1:    # 12497 Your attempt to apply poison has been cancelled.
+                if functionString.find("== 100") != -1:
+                    if functionString.find("== 110") != -1:
+                        if functionString.find("== 111") != -1:
+                            if functionString.find("case 0x64u:") != -1:
+                                if functionString.find("case 0x69u:") != -1:
+                                    if functionString.find("case 0x6Eu:") != -1:
+                                        if functionString.find("case 0x6Fu:") != -1:
+                                            if functionString.find("case 0x73u:") != -1:
+                                                functionList["EQPlayer__ChangePosition"] = functionAddress
+
             # EQPlayer__GetLevel
             # if ( !(unsigned __int8)sub_642DC0(v7) && !v7[110] )
             # {
@@ -355,6 +454,27 @@ with open("eqgame.c", "rt") as in_file:
                     matches = re.findall("[0-9a-z]+ = sub_([0-9A-F]+)\([0-9a-z]+\);\n\s+sub_[0-9A-F]+\(&[0-9a-z]+, \(int\)\" \(Lvl: %d\)\", [0-9a-z]+\);", functionString, re.MULTILINE)
                     if matches:
                         functionList["EQPlayer__GetLevel"] = "0x00" + matches[0]
+
+            # EQPlayer__GetActorClient
+            # for ( l = sub_650330((_DWORD *)dword_F30EE8); l; l = sub_592CC0((_DWORD *)l) )
+            # {
+            #   a12 = 0.0;
+            #   sub_658030((float *)l, 0.0, 1.0);
+            #   v105 = (_DWORD *)sub_5928C0((char *)l);    # 0x005928C0
+            #   if ( sub_592AB0(v105) )
+            #   {
+            #     *(_DWORD *)&v309[8] = 1;
+            #     *(_DWORD *)&v309[4] = v106;
+            #     a12 = *(float *)(l + 472);
+            #     *(float *)&v309[4] = *(float *)(l + 472);
+            #     v107 = sub_5928C0((char *)l);    # 0x005928C0
+            #     sub_488260((int)v107, *(float *)&v309[4], 1);
+            #   }
+            # }
+            if functionString.find("\"*** DISCONNECTING: %s\\n\"") != -1:
+                matches = re.findall("[0-9a-z]+ = 0.0;\n\s+sub_[0-9A-F]+\(\(float \*\)\w, 0.0, 1.0\);\n\s+[0-9a-z]+ = \(_DWORD \*\)sub_([0-9A-F]+)\(\(char \*\)\w\);\n\s+if \( sub_[0-9A-F]+\([0-9a-z]+\) \)", functionString, re.MULTILINE)
+                if matches:
+                    functionList["EQPlayer__GetActorClient"] = "0x00" + matches[0]
 
             # EQPlayer__FollowPlayerAI
             if functionString.find("0x3194u") != -1:    # 12692 %1 is dead, canceling auto-follow.
@@ -388,6 +508,38 @@ with open("eqgame.c", "rt") as in_file:
                 if matches:
                     functionList["EQPlayer__IsTargetable"] = "0x00" + matches[0]
 
+            # EQPlayer__SetNameSpriteState
+            # (*(void (__stdcall **)(_DWORD, char *, char *))(*(_DWORD *)v177 + 400))(0, v185, &v190);
+            # 400 = CActorInterface->ChangeBoneStringSprite() virtual function
+            if functionString.find("\"!\"") != -1:
+                if functionString.find("\"%s [%d %s]\\n%s\"") != -1:
+                    if functionString.find("\" - %d%%\"") != -1:
+                        if functionString.find("\" - %lld%%\"") != -1:
+                            if functionString.find("\"%d - \"") != -1:
+                                if functionString.find("0x301Au") != -1:    # 12314  LFG
+                                    if functionString.find("0x3017") != -1:    # 12311  AFK 
+                                        if functionString.find("0x8C0u") != -1:    # 2240  LD
+                                            if functionString.find("0x2FEu") != -1:    # 766 Offline
+                                                if functionString.find("0x157Fu") != -1:    # 5503 Trader
+                                                    if functionString.find("0x17A7u") != -1:    # 6055 Buyer
+                                                        functionList["EQPlayer__SetNameSpriteState"] = functionAddress
+
+            # EQPlayer__SetNameSpriteTint
+            # (*(void (__cdecl **)(unsigned __int8 *))(**((_DWORD **)v3 + 1090) + 404))(&v18);
+            # 404 = CActorInterface->SetNameColor() virtual function
+            # 404 = EQData::_SPAWNINFO::mActorClient->pcactorex->SetNameColor()
+            if functionString.find("= -7755;") != -1:
+                if functionString.find("= 6072;") != -1:
+                    if functionString.find("= -4259;") != -1:
+                        if functionString.find("= -23020;") != -1:
+                            if functionString.find("= 16639;") != -1:
+                                if functionString.find("= -31416;") != -1:
+                                    if functionString.find("= 15723;") != -1:
+                                        if functionString.find("= -31416;") != -1:
+                                            if functionString.find("= 7590;") != -1:
+                                                if functionString.find("= 26367;") != -1:
+                                                    if functionString.find("* 0.2 * 1000.0);") != -1:
+                                                        functionList["EQPlayer__SetNameSpriteTint"] = functionAddress
             # EQSwitchManager
             # sub_8C5830((_DWORD *)dword_E815A8, a2, (int)&v6);
             # v2 = &v5;
@@ -706,7 +858,33 @@ with open("eqgame.c", "rt") as in_file:
                     matches = re.findall("\(\*\(_DWORD \*\)dword_([0-9A-F]+) \+ 100\)\)", functionString, re.MULTILINE)
                     if matches:
                         functionList["CRender"] = "0x0" + matches[0]
-            
+
+            # CAlertWnd
+            # if ( a7 == v74 )
+            # {
+            #   if ( *(_BYTE *)(v74 + 500) )
+            #   {
+            #     byte_E8F66B = 1;
+            #     v123 = "Alerts triggered by first use of a window will be suppressed from now on.";
+            #   }
+            #   else
+            #   {
+            #     byte_E8F66B = 0;
+            #     v123 = "Alerts triggered by first use of a window will be displayed from now on.";
+            #   }
+            #   sub_4E5B40();
+            #   sub_4E61E0(v123, (LPVOID)0x111, (LPVOID)1, (LPVOID)1, 0);
+            #   sub_6C64A0((_DWORD *)dword_DCC180, (unsigned __int8)byte_E8F66B);
+            #   sub_921AB0("Defaults", "HideFirstUseAlerts", byte_E8F66B);
+            #   return 0;
+            # }
+            if functionString.find("\"Alerts triggered by first use of a window will be suppressed from now on.\"") != -1:
+                if functionString.find("\"Alerts triggered by first use of a window will be displayed from now on.\"") != -1:
+                    if functionString.find("\"HideFirstUseAlerts\"") != -1:
+                        matches = re.findall("sub_[0-9A-F]+\(\(_DWORD \*\)dword_([0-9A-F]+), \(unsigned __int8\)byte_[0-9A-F]+\);\n\s+sub_[0-9A-F]+\(\"Defaults\", \"HideFirstUseAlerts\", byte_[0-9A-F]+\);\n\s+return 0;", functionString, re.MULTILINE)
+                        if matches:
+                            functionList["CAlertWnd"] = "0x0" + matches[0]
+
             functionString = ""
 
 if mapOffset != 0:
@@ -730,6 +908,8 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("{\n")
     out_file.write("    // " + buildDate + " " + buildTime + "\n")
     out_file.write("\n")
+    out_file.write("    EQ_OFFSET_SPAWN_STANDING_STATE = " + hex(functionList["OffsetSpawnStandingState"]) + ";\n")
+    out_file.write("\n")
     out_file.write("    EQ_ADDRESS_WindowHWND = " + functionList["WindowHWND"] + ";\n")
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_AutoAttack    = " + functionList["AutoAttack"] + ";\n")
@@ -740,6 +920,7 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_EQZoneInfo = " + functionList["EQZoneInfo"] + ";\n")
     out_file.write("\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_DetectVirtualMachine          = " + functionList["DetectVirtualMachine"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CollisionCallbackForActors    = " + functionList["CollisionCallbackForActors"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CastRay                       = " + functionList["CastRay"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CastRay2                      = " + functionList["CastRay2"] + ";\n")
@@ -753,8 +934,16 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("    EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID      = " + functionList["EQPlayerManager__GetSpawnByID"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName    = " + functionList["EQPlayerManager__GetSpawnByName"] + ";\n")
     out_file.write("\n")
-    out_file.write("    EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight    = " + functionList["EQPlayer__ChangeHeight"] + ";\n")
-    out_file.write("    EQ_ADDRESS_FUNCTION_EQPlayer__GetLevel        = " + functionList["EQPlayer__GetLevel"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight          = " + functionList["EQPlayer__ChangeHeight"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_EQPlayer__ChangePosition        = " + functionList["EQPlayer__ChangePosition"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_EQPlayer__GetLevel              = " + functionList["EQPlayer__GetLevel"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_EQPlayer__GetActorClient        = " + functionList["EQPlayer__GetActorClient"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteState    = " + functionList["EQPlayer__SetNameSpriteState"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteTint     = " + functionList["EQPlayer__SetNameSpriteTint"] + ";\n")
+    out_file.write("\n")
+    out_file.write("    EQ_ADDRESS_POINTER_EQSwitchManager = " + functionList["EQSwitchManager"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch      = " + functionList["EQSwitch__UseSwitch"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState    = " + functionList["EQSwitch__ChangeState"] + ";\n")
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_POINTER_CXWndManager = " + functionList["CXWndManager"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows    = " + functionList["CXWndManager__DrawWindows"] + ";\n")
@@ -783,4 +972,6 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("    //EQ_ADDRESS_FUNCTION_CRender__ClearRenderToBlack    = 0x0; // calculated at runtime\n")
     out_file.write("    //EQ_ADDRESS_FUNCTION_CRender__RenderPartialScene    = 0x0; // calculated at runtime\n")
     out_file.write("    //EQ_ADDRESS_FUNCTION_CRender__UpdateDisplay         = 0x0; // calculated at runtime\n")
+    out_file.write("\n")
+    out_file.write("    EQ_ADDRESS_POINTER_CAlertWnd = " + functionList["CAlertWnd"] + ";\n")
     out_file.write("}\n")
