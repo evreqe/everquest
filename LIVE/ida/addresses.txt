@@ -5,8 +5,15 @@ void EQ_InitializeAddresses()
     EQ_SIZE_CXWnd = 0x1E8;
     EQ_SIZE_CSidlScreenWnd = 0x230;
 
-    EQ_OFFSET_SPAWN_STANDING_STATE    = 0x4b4;
-    EQ_OFFSET_SPAWN_FOLLOW_SPAWN      = 0xf2c;
+    EQ_OFFSET_SPAWN_STANDING_STATE       = 0x4b4;
+    EQ_OFFSET_SPAWN_FOLLOW_SPAWN         = 0xf2c;
+    EQ_OFFSET_SPAWN_HP_CURRENT           = 0x588;
+    EQ_OFFSET_SPAWN_HP_MAX               = 0x390;
+    EQ_OFFSET_SPAWN_MANA_CURRENT         = 0x2e4;
+    EQ_OFFSET_SPAWN_MANA_MAX             = 0x3d0;
+    EQ_OFFSET_SPAWN_ENDURANCE_CURRENT    = 0x1a0;
+    EQ_OFFSET_SPAWN_ENDURANCE_MAX        = 0x4f8;
+    EQ_OFFSET_SPAWN_EQ_Character2        = 0x4bc;
 
     EQ_ADDRESS_WindowHWND = 0x00F328F4;
 
@@ -31,6 +38,7 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_FUNCTION_PlaySoundAtLocation           = 0x0053A330;
     EQ_ADDRESS_FUNCTION_GetTime                       = 0x008EEB80;
     EQ_ADDRESS_FUNCTION_UpdateLight                   = 0x005B8DD0;
+    EQ_ADDRESS_FUNCTION_GetGaugeValueFromEQ           = 0x00801820;
 
     EQ_ADDRESS_POINTER_StringTable = 0x00E80480;
     EQ_ADDRESS_FUNCTION_StringTable__getString    = 0x008B5330;
@@ -47,6 +55,7 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_FUNCTION_EQ_Character__UnStunMe              = 0x004D3460;
     EQ_ADDRESS_FUNCTION_EQ_Character__ProcessEnvironment    = 0x004DE6F0;
     EQ_ADDRESS_FUNCTION_EQ_Character__TotalSpellAffects     = 0x004C2410;
+    EQ_ADDRESS_FUNCTION_EQ_Character__SetNoGrav             = 0x004B8960;
 
     EQ_ADDRESS_POINTER_EQPlayerManager = 0x00F2FEE8;
     EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID      = 0x0064FD90;
@@ -67,6 +76,8 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_POINTER_EQSwitchManager = 0x00E7E110;
     EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch      = 0x005CBB70;
     EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState    = 0x005CC050;
+
+    EQ_ADDRESS_FUNCTION_EQSpell_SpellAffects    = 0x004B7FA0;
 
     EQ_ADDRESS_POINTER_CXWndManager = 0x016C9938;
     EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows    = 0x0091AFC0;

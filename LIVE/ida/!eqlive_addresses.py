@@ -10,6 +10,13 @@ functionList = {
     "SizeCSidlScreenWnd": 0,
     "OffsetSpawnStandingState": 0,
     "OffsetSpawnFollowSpawn": 0,
+    "OffsetSpawnHPCurrent": 0,
+    "OffsetSpawnHPMax": 0,
+    "OffsetSpawnManaCurrent": 0,
+    "OffsetSpawnManaMax": 0,
+    "OffsetSpawnEnduranceCurrent": 0,
+    "OffsetSpawnEnduranceMax": 0,
+    "OffsetSpawnEQ_Character2": 0,
     "WindowHWND": 0,
     "AutoAttack": 0,
     "AutoFire": 0,
@@ -26,6 +33,7 @@ functionList = {
     "PlaySoundAtLocation": 0,
     "GetTime": 0,
     "UpdateLight": 0,
+    "GetGaugeValueFromEQ": 0,
     "EQZoneInfo": 0,
     "PlayerSpawn": 0,
     "TargetSpawn": 0,
@@ -42,6 +50,7 @@ functionList = {
     "EQ_Character__UnStunMe": 0,
     "EQ_Character__ProcessEnvironment": 0,
     "EQ_Character__TotalSpellAffects": 0,
+    "EQ_Character__SetNoGrav": 0,
     "EQPlayerManager": 0,
     "EQPlayerManager__GetSpawnByID": 0,
     "EQPlayerManager__GetSpawnByName": 0,
@@ -59,6 +68,7 @@ functionList = {
     "EQSwitchManager": 0,
     "EQSwitch__UseSwitch": 0,
     "EQSwitch__ChangeState": 0,
+    "EQSpell__SpellAffects": 0,
     "CXWndManager": 0,
     "CXWndManager__DrawWindows": 0,
     "CXWnd__IsReallyVisible": 0,
@@ -88,6 +98,11 @@ functionAddress = ""
 functionString = ""
 
 insideFunction = 0
+
+# the functions for spawn mana and endurance offsets are identical
+# it goes hp, mana, then endurance in that order in the code
+# so we find mana first, set this boolean, then find endurance
+foundFunctionsForOffsetSpawnManaAndEndurance = 0
 
 with open("eqgame.c", "rt") as in_file:
     lines = in_file.readlines()
@@ -267,6 +282,126 @@ with open("eqgame.c", "rt") as in_file:
                                                 matches = re.findall("if \( [0-9a-z]+ \)\n\s+\*\(_DWORD \*\)\(dword_[0-9A-F]+ \+ (\d+)\) = [0-9a-z]+;", functionString, re.MULTILINE)
                                                 if matches:
                                                     functionList["OffsetSpawnFollowSpawn"] = int(matches[0])
+
+            # OffsetSpawnHPCurrent
+            # OffsetSpawnHPMax
+            # ----------------------------------------------------------------------------------------------------
+            # GetGaugeValueFromEQ():
+            # case 16:
+            #   sub_80A8B0(a2);
+            #   v5 = -1;
+            #   v22 = *((_DWORD *)dword_E7E264 + 2312);
+            #   if ( !v22 )
+            #     return v5;
+            #   v23 = *(_DWORD *)(v22 + 1296);
+            #   if ( v23 == -1 )
+            #     return v5;
+            #   v24 = sub_64FD90((_DWORD **)dword_F2FEE8, v23);
+            #   v25 = v24;
+            #   if ( !v24 )
+            #     return v5;
+            #   v26 = (void *)sub_5F4C50(v24 + 164);
+            #   sub_8EB2C0(v26);
+            #   v5 = 10 * sub_64F750(*(_QWORD *)(v25 + 1416), *(_QWORD *)(v25 + 912));    # 1416 = OffsetSpawnHPCurrent    # 912 = OffsetSpawnHPMax
+            #   goto LABEL_175;
+            # case 17:
+            if functionString.find("\"%s\\n%s\"") != -1:
+                if functionString.find("\"%d%%%%\"") != -1:
+                    if functionString.find("\"------\"") != -1:
+                        if functionString.find("\"%s\"") != -1:
+                            if functionString.find("\"Total Completed: %d/%d\"") != -1:
+                                if functionString.find("\"Category Completed: %d/%d\"") != -1:
+                                    if functionString.find("\"Completed: %d/%d\"") != -1:
+                                        if functionString.find("* 3.03031") != -1:
+                                                matches = re.findall("[0-9a-z]+ = 10 \* sub_[0-9A-F]+\(\*\(_QWORD \*\)\([0-9a-z]+ \+ (\d+)\), \*\(_QWORD \*\)\([0-9a-z]+ \+ (\d+)\)\);\n\s+goto LABEL_\d+;\n\s+case 17:", functionString, re.MULTILINE)
+                                                if matches:
+                                                    functionList["OffsetSpawnHPCurrent"] = int(matches[0][0])
+                                                    functionList["OffsetSpawnHPMax"] = int(matches[0][1])
+
+            # OffsetSpawnManaCurrent
+            # OffsetSpawnManaMax
+            # ----------------------------------------------------------------------------------------------------
+            # char __cdecl sub_58B3E0(unsigned int a1, signed int a2, int a3, char a4)
+            # {
+            #   int v4; // eax
+            #   int v5; // esi
+            #   signed __int64 v6; // rax
+            #   signed __int64 v8; // [esp+4h] [ebp-8h]
+            #
+            #   v4 = sub_64FD90((_DWORD **)dword_F2FEE8, a1);
+            #   v5 = v4;
+            #   if ( !v4 )
+            #     return v4;
+            #   if ( a4 )
+            #     *(_BYTE *)(v4 + 4800) = 1;
+            #   if ( (LPVOID)v4 == dword_E805BC )
+            #   {
+            #     LOBYTE(v4) = a3;
+            #     *(_DWORD *)(v5 + 740) = a2;
+            #     *(_DWORD *)(v5 + 976) = a3;
+            #     if ( dword_E7E264 )
+            #     {
+            #       v4 = sub_8BC690((char *)dword_E7E264 + *(_DWORD *)(*((_DWORD *)dword_E7E264 + 2) + 4) + 12);
+            #       *(_DWORD *)(v4 + 15628) = a2;
+            #     }
+            #     goto LABEL_19;
+            #   }
+            #   LOBYTE(v4) = a2;
+            #   if ( *(_BYTE *)(v5 + 293) == 1 && a2 <= 100 && a3 == 100 )
+            #     goto LABEL_24;
+            #   if ( a2 > 0 )
+            #   {
+            #     v6 = a3;
+            #     v8 = v6;
+            #     v4 = HIDWORD(v6) | v6;
+            #     if ( v4 )
+            #       v4 = (signed int)((double)a2 / ((double)v8 * 0.0099999998));
+            #     *(_DWORD *)(v5 + 740) = v4;
+            #     if ( v4 <= 0 )
+            #       *(_DWORD *)(v5 + 740) = 1;
+            #     goto LABEL_18;
+            #   }
+            #   if ( a2 >= -126 )
+            # LABEL_24:
+            #     *(_DWORD *)(v5 + 740) = a2;
+            #   else
+            #     *(_DWORD *)(v5 + 740) = -126;    # 740 = OffsetSpawnManaCurrent
+            # LABEL_18:
+            #   *(_DWORD *)(v5 + 976) = 100;    # 976 = OffsetSpawnManaMax
+            # LABEL_19:
+            #   if ( BYTE2(dword_E8F4D0) )
+            #     LOBYTE(v4) = sub_6464C0((_BYTE *)v5);
+            #   return v4;
+            # }
+            if functionString.find("== 1") != -1:
+                if functionString.find("<= 100") != -1:
+                    if functionString.find("== 100") != -1:
+                        if functionString.find("* 0.0099999998") != -1:
+                            if functionString.find("<= 0") != -1:
+                                if functionString.find("= 1;") != -1:
+                                    if functionString.find(">= -126") != -1:
+                                        if functionString.find("= -126;") != -1:
+                                            if functionString.find("= 100;") != -1:
+                                                matches = re.findall("\*\(_DWORD \*\)\([0-9a-z]+ \+ (\d+)\) = -126;\nLABEL_\d+:\n\s+\*\(_DWORD \*\)\([0-9a-z]+ \+ (\d+)\) = 100;", functionString, re.MULTILINE)
+                                                if matches:
+                                                    if foundFunctionsForOffsetSpawnManaAndEndurance == 0:
+                                                        foundFunctionsForOffsetSpawnManaAndEndurance = 1
+                                                        functionList["OffsetSpawnManaCurrent"] = int(matches[0][0])
+                                                        functionList["OffsetSpawnManaMax"] = int(matches[0][1])
+                                                    elif foundFunctionsForOffsetSpawnManaAndEndurance == 1:
+                                                        foundFunctionsForOffsetSpawnManaAndEndurance = 2
+                                                        functionList["OffsetSpawnEnduranceCurrent"] = int(matches[0][0])
+                                                        functionList["OffsetSpawnEnduranceMax"] = int(matches[0][1])
+
+            # OffsetSpawnEQ_Character2
+            # ----------------------------------------------------------------------------------------------------
+            # sub_5999F0(*(_DWORD *)(v6 + 1212), 14609, (LPVOID)0x12F);    # 1212 dec = OffsetSpawnEQ_Character2
+            # return 0;
+            if functionString.find("), 14609, (LPVOID)0x12F);") != -1:
+                if functionString.find("return 0;") != -1:
+                    matches = re.findall("sub_[0-9A-F]+\(\*\(_DWORD \*\)\([0-9a-z]+ \+ (\d+)\), 14609, \(LPVOID\)0x12F\);", functionString, re.MULTILINE)
+                    if matches:
+                        functionList["OffsetSpawnEQ_Character2"] = int(matches[0])
 
             # AutoAttack
             # ----------------------------------------------------------------------------------------------------
@@ -621,6 +756,18 @@ with open("eqgame.c", "rt") as in_file:
                                                                                 if functionString.find("case 4:") != -1:
                                                                                     if functionString.find("case 6:") != -1:
                                                                                         functionList["UpdateLight"] = functionAddress
+
+            # GetGaugeValueFromEQ
+            # ----------------------------------------------------------------------------------------------------
+            if functionString.find("\"%s\\n%s\"") != -1:
+                if functionString.find("\"%d%%%%\"") != -1:
+                    if functionString.find("\"------\"") != -1:
+                        if functionString.find("\"%s\"") != -1:
+                            if functionString.find("\"Total Completed: %d/%d\"") != -1:
+                                if functionString.find("\"Category Completed: %d/%d\"") != -1:
+                                    if functionString.find("\"Completed: %d/%d\"") != -1:
+                                        if functionString.find("* 3.03031") != -1:
+                                            functionList["GetGaugeValueFromEQ"] = functionAddress
 
             # EQZoneInfo
             # ----------------------------------------------------------------------------------------------------
@@ -1053,6 +1200,49 @@ with open("eqgame.c", "rt") as in_file:
                                 if matches:
                                     functionList["EQ_Character__TotalSpellAffects"] = "0x00" + matches[0]
 
+            # EQ_Character__SetNoGrav
+            # ----------------------------------------------------------------------------------------------------
+            # void __thiscall sub_4B8960(_DWORD *this, int a2)    # 0x004B8960
+            # {
+            #   _DWORD *v2; // edi
+            #   _BYTE *v3; // ecx
+            #   unsigned int v4; // esi
+            #   _DWORD *v5; // eax
+            #   int v6; // eax
+            #   _DWORD *v7; // eax
+            #
+            #   v2 = this;
+            #   v3 = (_BYTE *)this[2];
+            #   if ( v3 )
+            #   {
+            #     if ( v3[293]
+            #       || (*(unsigned __int8 (**)(void))(*(_DWORD *)v3 + 224))()
+            #       || !sub_8C4A80((_DWORD *)dword_E805A8, *(_DWORD *)((char *)v2 + *(_DWORD *)(v2[1] + 4) + 356)) && !byte_E8E5CC )
+            #     {
+            #       v4 = a2 != 0 ? 5 : 2;
+            #     }
+            #     else
+            #     {
+            #       v4 = 0;
+            #     }
+            #     if ( *(_DWORD *)((*(int (**)(void))(*(_DWORD *)v2[2] + 120))() + 12) == 1 )
+            #       v4 = 1;
+            #     v5 = (_DWORD *)(*(int (**)(void))(*(_DWORD *)v2[2] + 120))();
+            #     sub_97DFA0(v5, v4);
+            #     if ( sub_97D130((_DWORD *)v2[2]) )
+            #     {
+            #       v6 = sub_97D130((_DWORD *)v2[2]);
+            #       v7 = (_DWORD *)(*(int (__thiscall **)(int))(*(_DWORD *)v6 + 120))(v6);
+            #       sub_97DFA0(v7, v4);
+            #     }
+            #   }
+            # }
+            if functionString.find("!= 0 ? 5 : 2;") != -1:
+                if functionString.find("= 0;") != -1:
+                    if functionString.find("= 1;") != -1:
+                        if functionString.find("== 1") != -1:
+                            functionList["EQ_Character__SetNoGrav"] = functionAddress
+
             # EQPlayerManager
             # EQPlayerManager__GetSpawnByID
             # ----------------------------------------------------------------------------------------------------
@@ -1276,6 +1466,167 @@ with open("eqgame.c", "rt") as in_file:
                                 if functionString.find("== 2") != -1:
                                     if functionString.find("== 3") != -1:
                                         functionList["EQSwitch__ChangeState"] = functionAddress
+
+            # EQSpell__SpellAffects
+            # ----------------------------------------------------------------------------------------------------
+            # void __userpurge sub_4B7FA0(_DWORD *a1@<ecx>, double a2@<st0>, int a3)
+            # {
+            #   int v3; // edi
+            #   int v4; // eax
+            #   unsigned int v5; // ebp
+            #   int v6; // eax
+            #   int v7; // ebx
+            #   int v8; // esi
+            #   _DWORD *v9; // esi
+            #   unsigned __int8 v10; // al
+            #   int v11; // eax
+            #   unsigned __int8 v12; // al
+            #   int v13; // eax
+            #   char v14; // al
+            #   signed int v15; // eax
+            #   char v16; // al
+            #   signed int v17; // eax
+            #   unsigned __int8 v18; // al
+            #   int v19; // eax
+            #   char v20; // al
+            #   signed int v21; // eax
+            #   int v22; // eax
+            #   _DWORD *v23; // ecx
+            #   int v24; // [esp+10h] [ebp-4h]
+            #
+            #   v3 = (int)a1;
+            #   v4 = a1[2];
+            #   if ( v4 && !*(_BYTE *)(v4 + 293) && !byte_E8DF9C )
+            #   {
+            #     sub_4B8310(a1, 0);
+            #     v5 = 0;
+            #     if ( sub_4B7F60((_DWORD *)v3) )
+            #     {
+            #       while ( 1 )
+            #       {
+            #         v6 = sub_4B7DD0((_DWORD *)v3, v5);
+            #         v7 = v6;
+            #         if ( !*(_BYTE *)v6 )
+            #           goto LABEL_45;
+            #         v8 = *(_DWORD *)(v6 + 8);
+            #         v24 = *(_DWORD *)(v6 + 8);
+            #         if ( !sub_564550(v8) )
+            #           goto LABEL_45;
+            #         v9 = (_DWORD *)(*(int (__stdcall **)(int))(*(_DWORD *)dword_F31660 + 32))(v8);
+            #         if ( !v9 )
+            #           goto LABEL_45;
+            #         if ( !a3 )
+            #           goto LABEL_30;
+            #         if ( a3 != 2 )
+            #           break;
+            #         if ( !sub_5668E0(v9, 67)
+            #           && !sub_5668E0(v9, 31)
+            #           && !sub_5668E0(v9, 58)
+            #           && !sub_5668E0(v9, 73)
+            #           && !sub_5668E0(v9, 64)
+            #           && !sub_5668E0(v9, 156) )
+            #         {
+            #           goto LABEL_30;
+            #         }
+            #         if ( !sub_565DA0(v9) )
+            #           goto LABEL_19;
+            #         v10 = sub_5668E0(v9, 58);
+            #         v11 = sub_4B3E10(v9, v10 - 1);
+            #         sub_4B87B0(v3, a2, (int)v9, v24, *(_DWORD *)(v11 + 4), v7, 0);
+            # LABEL_45:
+            #         if ( (signed int)++v5 >= (unsigned __int8)sub_4B7F60((_DWORD *)v3) )
+            #           goto LABEL_46;
+            #       }
+            #       if ( *(_DWORD *)(v7 + 12) != -4 )
+            #       {
+            #         if ( !sub_5668E0(v9, 67)
+            #           && !sub_5668E0(v9, 31)
+            #           && !sub_5668E0(v9, 58)
+            #           && !sub_5668E0(v9, 22)
+            #           && !sub_5668E0(v9, 23)
+            #           && !sub_5668E0(v9, 73)
+            #           && !sub_5668E0(v9, 64)
+            #           && !sub_5668E0(v9, 156) )
+            #         {
+            #           goto LABEL_30;
+            #         }
+            #         if ( sub_565DA0(v9) )
+            #         {
+            #           v12 = sub_5668E0(v9, 58);
+            #           v13 = sub_4B3E10(v9, v12 - 1);
+            #           sub_4B87B0(v3, a2, (int)v9, v24, *(_DWORD *)(v13 + 4), v7, 0);
+            # LABEL_30:
+            #           v14 = sub_5668E0(v9, 3);
+            #           if ( v14 )
+            #           {
+            #             v15 = sub_4C14B0((_DWORD *)v3, (int)v9, *(_BYTE *)(v7 + 1), v14 - 1, 0, v5, 0, 0, -1, 1);
+            #             sub_4B8310((_DWORD *)v3, v15);
+            #           }
+            #           v16 = sub_5668E0(v9, 99);
+            #           if ( v16 )
+            #           {
+            #             v17 = sub_4C14B0((_DWORD *)v3, (int)v9, *(_BYTE *)(v7 + 1), v16 - 1, 0, v5, 0, 0, -1, 1);
+            #             sub_4B8310((_DWORD *)v3, v17);
+            #           }
+            #           if ( sub_5668E0(v9, 34) || sub_5668E0(v9, 20) )
+            #             *(_BYTE *)(*(_DWORD *)(v3 + 8) + 397) = 1;
+            #           v18 = sub_5668E0(v9, 57);
+            #           if ( v18 )
+            #           {
+            #             v19 = sub_4B3E10(v9, v18 - 1);
+            #             sub_4B8960((_DWORD *)v3, *(_DWORD *)(v19 + 8));
+            #           }
+            #           v20 = sub_5668E0(v9, 87);
+            #           if ( v20 )
+            #           {
+            #             v21 = sub_4C14B0((_DWORD *)v3, (int)v9, *(_BYTE *)(v7 + 1), v20 - 1, 0, v5, 0, 0, -1, 1);
+            #             sub_539230((float *)dword_E806A0, v21);
+            #           }
+            #           if ( sub_5668E0(v9, 65) )
+            #             *(_DWORD *)(sub_8BC690((_DWORD *)(*(_DWORD *)(*(_DWORD *)(v3 + 4) + 4) + v3 + 8)) + 15304) = 0;
+            #           if ( sub_5668E0(v9, 66) )
+            #             *(_DWORD *)(sub_8BC690((_DWORD *)(*(_DWORD *)(*(_DWORD *)(v3 + 4) + 4) + v3 + 8)) + 15332) = 0;
+            #           goto LABEL_45;
+            #         }
+            #       }
+            # LABEL_19:
+            #       a2 = sub_4BCBF0(v7, 0, 0);
+            #       goto LABEL_45;
+            #     }
+            # LABEL_46:
+            #     v22 = sub_4C2410(v3, 0x63u, 1, 0, 1, 1);
+            #     v23 = (_DWORD *)v3;
+            #     if ( v22 >= 0 )
+            #     {
+            #       v22 = sub_4C2410(v3, 3u, 1, 0, 1, 1);
+            #       v23 = (_DWORD *)v3;
+            #     }
+            #     sub_4B8310(v23, v22);
+            #     *(_BYTE *)(v3 + 12) = 1;
+            #   }
+            # }
+            if functionString.find(", 67)") != -1:
+                if functionString.find(", 31)") != -1:
+                    if functionString.find(", 58)") != -1:
+                        if functionString.find(", 22)") != -1:
+                            if functionString.find(", 23)") != -1:
+                                if functionString.find(", 73)") != -1:
+                                    if functionString.find(", 64)") != -1:
+                                        if functionString.find(", 156)") != -1:
+                                            if functionString.find(", 3)") != -1:
+                                                if functionString.find(", 99)") != -1:
+                                                    if functionString.find(", 34)") != -1:
+                                                        if functionString.find(", 20)") != -1:
+                                                            if functionString.find(", 57)") != -1:
+                                                                if functionString.find(", 87)") != -1:
+                                                                    if functionString.find(", 65)") != -1:
+                                                                        if functionString.find(", 66)") != -1:
+                                                                            if functionString.find("0x63u, 1, 0, 1, 1);") != -1:
+                                                                                if functionString.find("3u, 1, 0, 1, 1);") != -1:
+                                                                                    if functionString.find("0, 0, -1, 1);") != -1:
+                                                                                        if functionString.find("!= -4") != -1:
+                                                                                            if functionString.find("while ( 1 )") != -1:
+                                                                                                functionList["EQSpell__SpellAffects"] = functionAddress
 
             # CXWndManager
             # ----------------------------------------------------------------------------------------------------
@@ -1848,8 +2199,15 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("    EQ_SIZE_CXWnd = " + functionList["SizeCXWnd"] + ";\n")
     out_file.write("    EQ_SIZE_CSidlScreenWnd = " + hex(functionList["SizeCSidlScreenWnd"]) + ";\n")
     out_file.write("\n")
-    out_file.write("    EQ_OFFSET_SPAWN_STANDING_STATE    = " + hex(functionList["OffsetSpawnStandingState"]) + ";\n")
-    out_file.write("    EQ_OFFSET_SPAWN_FOLLOW_SPAWN      = " + hex(functionList["OffsetSpawnFollowSpawn"]) + ";\n")
+    out_file.write("    EQ_OFFSET_SPAWN_STANDING_STATE       = " + hex(functionList["OffsetSpawnStandingState"]) + ";\n")
+    out_file.write("    EQ_OFFSET_SPAWN_FOLLOW_SPAWN         = " + hex(functionList["OffsetSpawnFollowSpawn"]) + ";\n")
+    out_file.write("    EQ_OFFSET_SPAWN_HP_CURRENT           = " + hex(functionList["OffsetSpawnHPCurrent"]) + ";\n")
+    out_file.write("    EQ_OFFSET_SPAWN_HP_MAX               = " + hex(functionList["OffsetSpawnHPMax"]) + ";\n")
+    out_file.write("    EQ_OFFSET_SPAWN_MANA_CURRENT         = " + hex(functionList["OffsetSpawnManaCurrent"]) + ";\n")
+    out_file.write("    EQ_OFFSET_SPAWN_MANA_MAX             = " + hex(functionList["OffsetSpawnManaMax"]) + ";\n")
+    out_file.write("    EQ_OFFSET_SPAWN_ENDURANCE_CURRENT    = " + hex(functionList["OffsetSpawnEnduranceCurrent"]) + ";\n")
+    out_file.write("    EQ_OFFSET_SPAWN_ENDURANCE_MAX        = " + hex(functionList["OffsetSpawnEnduranceMax"]) + ";\n")
+    out_file.write("    EQ_OFFSET_SPAWN_EQ_Character2        = " + hex(functionList["OffsetSpawnEQ_Character2"]) + ";\n")
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_WindowHWND = " + functionList["WindowHWND"] + ";\n")
     out_file.write("\n")
@@ -1874,6 +2232,7 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("    EQ_ADDRESS_FUNCTION_PlaySoundAtLocation           = " + functionList["PlaySoundAtLocation"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_GetTime                       = " + functionList["GetTime"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_UpdateLight                   = " + functionList["UpdateLight"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_GetGaugeValueFromEQ           = " + functionList["GetGaugeValueFromEQ"] + ";\n")
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_POINTER_StringTable = " + functionList["StringTable"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_StringTable__getString    = " + functionList["StringTable__getString"] + ";\n")
@@ -1890,6 +2249,7 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("    EQ_ADDRESS_FUNCTION_EQ_Character__UnStunMe              = " + functionList["EQ_Character__UnStunMe"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_EQ_Character__ProcessEnvironment    = " + functionList["EQ_Character__ProcessEnvironment"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_EQ_Character__TotalSpellAffects     = " + functionList["EQ_Character__TotalSpellAffects"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_EQ_Character__SetNoGrav             = " + functionList["EQ_Character__SetNoGrav"] + ";\n")
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_POINTER_EQPlayerManager = " + functionList["EQPlayerManager"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID      = " + functionList["EQPlayerManager__GetSpawnByID"] + ";\n")
@@ -1910,6 +2270,8 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("    EQ_ADDRESS_POINTER_EQSwitchManager = " + functionList["EQSwitchManager"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch      = " + functionList["EQSwitch__UseSwitch"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState    = " + functionList["EQSwitch__ChangeState"] + ";\n")
+    out_file.write("\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_EQSpell_SpellAffects    = " + functionList["EQSpell__SpellAffects"] + ";\n")
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_POINTER_CXWndManager = " + functionList["CXWndManager"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows    = " + functionList["CXWndManager__DrawWindows"] + ";\n")
