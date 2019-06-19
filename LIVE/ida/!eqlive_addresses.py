@@ -148,6 +148,9 @@ with open("eqgame.c", "rt") as in_file:
 
             # SizeCXWnd
             # ----------------------------------------------------------------------------------------------------
+            # ----------------------------------------------------------------------------------------------------
+            # = &CXWnd::`vftable';    # goto xref, first function in vftable
+            #
             # void __thiscall sub_932DD0(_DWORD *this, int a2)
             # {
             #   _DWORD *v2; // esi
@@ -170,11 +173,12 @@ with open("eqgame.c", "rt") as in_file:
             #   }
             # }
             if functionString.find("= this;") != -1:
-                if functionString.find("= operator new") != -1:
+                if functionString.find("operator new") != -1:
                     if functionString.find(", 0, 0, 0, 0, 0, 0);") != -1:
-                        matches = re.findall("[0-9a-z]+ = operator new\(0x([0-9A-F]+)u\);\n\s+if \( [0-9a-z]+ \)\n\s+[0-9a-z]+ = sub_[0-9A-F]+\([0-9a-z]+, 0, 0, 0, 0, 0, 0\);\n\s+else\n\s+[0-9a-z]+ = 0;", functionString, re.MULTILINE)
-                        if matches:
-                            functionList["SizeCXWnd"] = "0x" + matches[0]
+                        if functionString.find("= 0;") != -1:
+                            matches = re.findall("operator new\(0x([0-9A-F]+)u\);\n\s+if \( [0-9a-z]+ \)\n\s+[0-9a-z]+ = sub_[0-9A-F]+\([0-9a-z]+, 0, 0, 0, 0, 0, 0\);\n\s+else\n\s+[0-9a-z]+ = 0;", functionString, re.MULTILINE)
+                            if matches:
+                                functionList["SizeCXWnd"] = "0x" + matches[0]
 
             # SizeCSidlScreenWnd
             # ----------------------------------------------------------------------------------------------------
@@ -305,18 +309,86 @@ with open("eqgame.c", "rt") as in_file:
             #   v5 = 10 * sub_64F750(*(_QWORD *)(v25 + 1416), *(_QWORD *)(v25 + 912));    # 1416 = OffsetSpawnHPCurrent    # 912 = OffsetSpawnHPMax
             #   goto LABEL_175;
             # case 17:
-            if functionString.find("\"%s\\n%s\"") != -1:
-                if functionString.find("\"%d%%%%\"") != -1:
-                    if functionString.find("\"------\"") != -1:
-                        if functionString.find("\"%s\"") != -1:
-                            if functionString.find("\"Total Completed: %d/%d\"") != -1:
-                                if functionString.find("\"Category Completed: %d/%d\"") != -1:
-                                    if functionString.find("\"Completed: %d/%d\"") != -1:
-                                        if functionString.find("* 3.03031") != -1:
-                                                matches = re.findall("[0-9a-z]+ = 10 \* sub_[0-9A-F]+\(\*\(_QWORD \*\)\([0-9a-z]+ \+ (\d+)\), \*\(_QWORD \*\)\([0-9a-z]+ \+ (\d+)\)\);\n\s+goto LABEL_\d+;\n\s+case 17:", functionString, re.MULTILINE)
-                                                if matches:
-                                                    functionList["OffsetSpawnHPCurrent"] = int(matches[0][0])
-                                                    functionList["OffsetSpawnHPMax"] = int(matches[0][1])
+            #
+            # ----
+            #
+            # char __cdecl sub_58A330(unsigned int a1, __int64 a2, __int64 a3, char a4)
+            # {
+            #   int v4; // eax
+            #   int v5; // esi
+            #
+            #   v4 = sub_64FA30((_DWORD **)dword_F30FE8, a1);
+            #   v5 = v4;
+            #   if ( !v4 )
+            #     return v4;
+            #   if ( a4 )
+            #     *(_BYTE *)(v4 + 4808) = 1;
+            #   if ( (LPVOID)v4 == dword_E7F3F0 )
+            #   {
+            #     *(_QWORD *)(v4 + 928) = a2;
+            #     if ( dword_E7F920 )
+            #     {
+            #       v4 = sub_8BD2C0((char *)dword_E7F920 + *(_DWORD *)(*((_DWORD *)dword_E7F920 + 2) + 4) + 12);
+            #       *(_QWORD *)(v4 + 15248) = a2;
+            #     }
+            #     goto LABEL_26;
+            #   }
+            #   LOBYTE(v4) = BYTE4(a2);
+            #   if ( *(_BYTE *)(v5 + 293) == 1 )
+            #   {
+            #     if ( SHIDWORD(a2) > 0 )
+            #     {
+            # LABEL_18:
+            #       if ( a3 )
+            #         v4 = (signed int)((double)a2 / ((double)a3 * 0.0099999998));
+            #       else
+            #         v4 = 0;
+            #       *(_QWORD *)(v5 + 928) = v4;
+            #       if ( v4 >> 31 <= 0 && (v4 >> 31 < 0 || !v4) )
+            #       {
+            #         *(_DWORD *)(v5 + 928) = 1;
+            #         *(_DWORD *)(v5 + 932) = 0;
+            #       }
+            #       goto LABEL_25;
+            #     }
+            #     if ( (a2 < 0 || (unsigned int)a2 <= 0x64) && a3 == 100 )
+            #       goto LABEL_12;
+            #   }
+            #   if ( SHIDWORD(a2) > 0 || a2 >= 0 && (_DWORD)a2 )
+            #     goto LABEL_18;
+            #   if ( a2 < -126 )
+            #   {
+            #     *(_DWORD *)(v5 + 928) = -126;
+            #     *(_DWORD *)(v5 + 932) = -1;
+            #     goto LABEL_25;
+            #   }
+            # LABEL_12:
+            #   *(_QWORD *)(v5 + 928) = a2;
+            # LABEL_25:
+            #   *(_DWORD *)(v5 + 1368) = 100;
+            #   *(_DWORD *)(v5 + 1372) = 0;
+            # LABEL_26:
+            #   if ( BYTE2(dword_E905D0) )
+            #     LOBYTE(v4) = sub_646070((_BYTE *)v5);
+            #   return v4;
+            # }
+            if functionString.find("== 1") != -1:
+                if functionString.find("<= 0") != -1:
+                    if functionString.find(">= 0") != -1:
+                        if functionString.find("== 100") != -1:
+                            if functionString.find("* 0.0099999998") != -1:
+                                if functionString.find("<= 0") != -1:
+                                    if functionString.find("= 1;") != -1:
+                                            if functionString.find("= -126;") != -1:
+                                                if functionString.find("= -1;") != -1:
+                                                    if functionString.find("= 100;") != -1:
+                                                        if functionString.find("= 0;") != -1:
+                                                            matches = re.findall("\*\(_DWORD \*\)\([0-9a-z]+ \+ (\d+)\) = -126;\n\s+\*\(_DWORD \*\)\([0-9a-z]+ \+ \d+\) = -1;", functionString, re.MULTILINE)
+                                                            if matches:
+                                                                functionList["OffsetSpawnHPCurrent"] = int(matches[0])
+                                                            matches = re.findall("\*\(_DWORD \*\)\([0-9a-z]+ \+ (\d+)\) = 100;\n\s+\*\(_DWORD \*\)\([0-9a-z]+ \+ \d+\) = 0;", functionString, re.MULTILINE)
+                                                            if matches:
+                                                                functionList["OffsetSpawnHPMax"] = int(matches[0])
 
             # OffsetSpawnManaCurrent
             # OffsetSpawnManaMax
@@ -406,23 +478,24 @@ with open("eqgame.c", "rt") as in_file:
             # AutoAttack
             # ----------------------------------------------------------------------------------------------------
             # "ExecuteCmd has received a CMD_EXITGAME.\n"
+            #
             #       if ( byte_F2BCEB )    # 0x00F2BCEB
-            #         v37 = sub_8B4BE0((int *)dword_E7F46C, 0x3052u, 0);    # 12370 Auto attack is on.
+            #         v37 = (char *)sub_8B4BE0((int *)dword_E7F46C, 0x3052u, 0);    # 12370 Auto attack is on.
             #       else
-            #         v37 = sub_8B4BE0((int *)dword_E7F46C, 0x3053u, 0);    # 12371 Auto attack is off.
+            #         v37 = (char *)sub_8B4BE0((int *)dword_E7F46C, 0x3053u, 0);    # 12371 Auto attack is off.
             if functionString.find("\"ExecuteCmd has received a CMD_EXITGAME.\\n\"") != -1:
-                matches = re.findall("if \( byte_([0-9A-F]+) \)\n\s+[0-9a-z]+ = sub_[0-9A-F]+\(\(int \*\)dword_[0-9A-F]+, 0x3052u, 0\);\n", functionString, re.MULTILINE)
+                matches = re.findall("if \( byte_([0-9A-F]+) \)\n\s+[0-9a-z]+ = (?:\(char \*\))sub_[0-9A-F]+\(\(int \*\)dword_[0-9A-F]+, 0x3052u, 0\);", functionString, re.MULTILINE)
                 if matches:
                     functionList["AutoAttack"] = "0x00" + matches[0]
 
             # AutoFire
             # ----------------------------------------------------------------------------------------------------
-            # v4 = byte_F2BCEC ? sub_8B4BE0((int *)dword_E7F46C, 0x116u, 0) : sub_8B4BE0((int *)dword_E7F46C, 0x117u, 0);    # 0x00F2BCEC
+            # v4 = (char *)byte_F2BCEC ? sub_8B4BE0((int *)dword_E7F46C, 0x116u, 0) : sub_8B4BE0((int *)dword_E7F46C, 0x117u, 0);    # 0x00F2BCEC
             # 278 Auto fire on.
             # 279 Auto fire off.
             if functionString.find("0x116u") != -1:
                 if functionString.find("0x117u") != -1:
-                    matches = re.findall("[0-9a-z]+ = byte_([0-9A-F]+) \? sub_[0-9A-F]+", functionString, re.MULTILINE)
+                    matches = re.findall("byte_([0-9A-F]+) \? sub_[0-9A-F]+", functionString, re.MULTILINE)
                     if matches:
                         functionList["AutoFire"] = "0x00" + matches[0]
 
@@ -761,12 +834,10 @@ with open("eqgame.c", "rt") as in_file:
             # ----------------------------------------------------------------------------------------------------
             if functionString.find("\"%s\\n%s\"") != -1:
                 if functionString.find("\"%d%%%%\"") != -1:
-                    if functionString.find("\"------\"") != -1:
                         if functionString.find("\"%s\"") != -1:
                             if functionString.find("\"Total Completed: %d/%d\"") != -1:
                                 if functionString.find("\"Category Completed: %d/%d\"") != -1:
                                     if functionString.find("\"Completed: %d/%d\"") != -1:
-                                        if functionString.find("* 3.03031") != -1:
                                             functionList["GetGaugeValueFromEQ"] = functionAddress
 
             # EQZoneInfo
@@ -803,7 +874,7 @@ with open("eqgame.c", "rt") as in_file:
             # ----------------------------------------------------------------------------------------------------
             # v0 = sub_8B4BE0((int *)dword_E7F46C, 0x3391u, dword_E7F678);    # 0x00E7F678    # 13201 You must first target a corpse to loot!
             if functionString.find("0x3391u") != -1:
-                matches = re.findall("[0-9a-z]+ = sub_[0-9A-F]+\(\(int \*\)dword_[0-9A-F]+, 0x3391u, dword_([0-9A-F]+)\);", functionString, re.MULTILINE)
+                matches = re.findall("sub_[0-9A-F]+\(\(int \*\)dword_[0-9A-F]+, 0x3391u, dword_([0-9A-F]+)\);", functionString, re.MULTILINE)
                 if matches:
                     functionList["TargetSpawn"] = "0x00" + matches[0]
 
@@ -1307,7 +1378,7 @@ with open("eqgame.c", "rt") as in_file:
             #   sub_4A4110(&v178, (int)" (Lvl: %d)", v135);
             # }
             if functionString.find("\" (Lvl: %d)\"") != -1:
-                    matches = re.findall("[0-9a-z]+ = sub_([0-9A-F]+)\([0-9a-z]+\);\n\s+sub_[0-9A-F]+\(&[0-9a-z]+, \(int\)\" \(Lvl: %d\)\", [0-9a-z]+\);", functionString, re.MULTILINE)
+                    matches = re.findall("sub_([0-9A-F]+)\([0-9a-z]+\);\n\s+sub_[0-9A-F]+\(&[0-9a-z]+, \(int\)\" \(Lvl: %d\)\", [0-9a-z]+\);", functionString, re.MULTILINE)
                     if matches:
                         functionList["EQPlayer__GetLevel"] = "0x00" + matches[0]
 
@@ -2271,7 +2342,7 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("    EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch      = " + functionList["EQSwitch__UseSwitch"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState    = " + functionList["EQSwitch__ChangeState"] + ";\n")
     out_file.write("\n")
-    out_file.write("    EQ_ADDRESS_FUNCTION_EQSpell_SpellAffects    = " + functionList["EQSpell__SpellAffects"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_EQSpell__SpellAffects    = " + functionList["EQSpell__SpellAffects"] + ";\n")
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_POINTER_CXWndManager = " + functionList["CXWndManager"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows    = " + functionList["CXWndManager__DrawWindows"] + ";\n")
