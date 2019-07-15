@@ -5,15 +5,17 @@ void EQ_InitializeAddresses()
     EQ_SIZE_CXWnd = 0x1E8;
     EQ_SIZE_CSidlScreenWnd = 0x230;
 
-    EQ_OFFSET_SPAWN_STANDING_STATE       = 0x60f;
-    EQ_OFFSET_SPAWN_FOLLOW_SPAWN         = 0xf30;
-    EQ_OFFSET_SPAWN_HP_CURRENT           = 0x3a0;
-    EQ_OFFSET_SPAWN_HP_MAX               = 0x558;
-    EQ_OFFSET_SPAWN_MANA_CURRENT         = 0x1ec;
-    EQ_OFFSET_SPAWN_MANA_MAX             = 0x518;
-    EQ_OFFSET_SPAWN_ENDURANCE_CURRENT    = 0x1a4;
-    EQ_OFFSET_SPAWN_ENDURANCE_MAX        = 0x394;
-    EQ_OFFSET_SPAWN_EQ_Character2        = 0x610;
+    EQ_OFFSET_SPAWN_STANDING_STATE             = 0x60f;
+    EQ_OFFSET_SPAWN_FOLLOW_SPAWN               = 0xf30;
+    EQ_OFFSET_SPAWN_HP_CURRENT                 = 0x3a0;
+    EQ_OFFSET_SPAWN_HP_MAX                     = 0x558;
+    EQ_OFFSET_SPAWN_MANA_CURRENT               = 0x1ec;
+    EQ_OFFSET_SPAWN_MANA_MAX                   = 0x518;
+    EQ_OFFSET_SPAWN_ENDURANCE_CURRENT          = 0x1a4;
+    EQ_OFFSET_SPAWN_ENDURANCE_MAX              = 0x394;
+    EQ_OFFSET_SPAWN_CharacterZoneClient        = 0x610;
+    EQ_OFFSET_EQ_Character____CharacterBase    = 0x284c;
+    EQ_OFFSET_CharInfo2__Bandolier             = 0x75b4;
 
     EQ_ADDRESS_WindowHWND = 0x00F339F4;
 
@@ -55,7 +57,8 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_FUNCTION_EQ_Character__UnStunMe              = 0x004D3450;
     EQ_ADDRESS_FUNCTION_EQ_Character__ProcessEnvironment    = 0x004DE620;
     EQ_ADDRESS_FUNCTION_EQ_Character__TotalSpellAffects     = 0x004C2500;
-    EQ_ADDRESS_FUNCTION_EQ_Character__SetNoGrav             = 0x004B8A60;
+
+    EQ_ADDRESS_FUNCTION_CharacterZoneClient__SetNoGrav    = 0x004B8A60;
 
     EQ_ADDRESS_POINTER_EQPlayerManager = 0x00F30FE8;
     EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID      = 0x0064FA30;
@@ -94,6 +97,7 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp            = 0x005D2D80;
     EQ_ADDRESS_FUNCTION_CEverQuest__HandleMouseWheel    = 0x005D3460;
     EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting        = 0x005DCF90;
+    EQ_ADDRESS_FUNCTION_CEverQuest__SendNewText         = 0x005DDCB0;
 
     EQ_ADDRESS_POINTER_CDisplay = 0x0E81B64;
     EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2         = 0x00534220;
@@ -114,4 +118,8 @@ void EQ_InitializeAddresses()
     //EQ_ADDRESS_FUNCTION_CRender__UpdateDisplay         = 0x0; // calculated at runtime
 
     EQ_ADDRESS_POINTER_CAlertWnd = 0x0DCD538;
+
+    EQ_ADDRESS_POINTER_CSpellBookWnd = 0x00DCD514;
+    EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellMemTicksLeft       = 0x007FA800;
+    EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellScribeTicksLeft    = 0x007FA960;
 }

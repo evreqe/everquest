@@ -16,7 +16,9 @@ functionList = {
     "OffsetSpawnManaMax": 0,
     "OffsetSpawnEnduranceCurrent": 0,
     "OffsetSpawnEnduranceMax": 0,
-    "OffsetSpawnEQ_Character2": 0,
+    "OffsetSpawnCharacterZoneClient": 0,
+    "OffsetCharacterBase": 0,
+    "OffsetCharInfo2Bandolier": 0,
     "WindowHWND": 0,
     "AutoAttack": 0,
     "AutoFire": 0,
@@ -34,6 +36,8 @@ functionList = {
     "GetTime": 0,
     "UpdateLight": 0,
     "GetGaugeValueFromEQ": 0,
+    "vehicle_premove": 0,
+    "vehicle_postmove": 0,
     "EQZoneInfo": 0,
     "PlayerSpawn": 0,
     "TargetSpawn": 0,
@@ -50,7 +54,7 @@ functionList = {
     "EQ_Character__UnStunMe": 0,
     "EQ_Character__ProcessEnvironment": 0,
     "EQ_Character__TotalSpellAffects": 0,
-    "EQ_Character__SetNoGrav": 0,
+    "CharacterZoneClient__SetNoGrav": 0,
     "EQPlayerManager": 0,
     "EQPlayerManager__GetSpawnByID": 0,
     "EQPlayerManager__GetSpawnByName": 0,
@@ -82,6 +86,7 @@ functionList = {
     "CEverQuest__RMouseUp": 0,
     "CEverQuest__HandleMouseWheel": 0,
     "CEverQuest__StartCasting": 0,
+    "CEverQuest__SendNewText": 0,
     "CDisplay": 0,
     "CDisplay__WriteTextHD2": 0,
     "CDisplay__CreateActor": 0,
@@ -92,6 +97,9 @@ functionList = {
     "CDisplay__DeleteLight": 0,
     "CRender": 0,
     "CAlertWnd": 0,
+    "CSpellBookWnd": 0,
+    "CSpellBookWnd__GetSpellMemTicksLeft": 0,
+    "CSpellBookWnd__GetSpellScribeTicksLeft": 0,
 }
 
 functionAddress = ""
@@ -465,15 +473,95 @@ with open("eqgame.c", "rt") as in_file:
                                                         functionList["OffsetSpawnEnduranceCurrent"] = int(matches[0][0])
                                                         functionList["OffsetSpawnEnduranceMax"] = int(matches[0][1])
 
-            # OffsetSpawnEQ_Character2
+            # OffsetSpawnCharacterZoneClient
             # ----------------------------------------------------------------------------------------------------
-            # sub_5999F0(*(_DWORD *)(v6 + 1212), 14609, (LPVOID)0x12F);    # 1212 dec = OffsetSpawnEQ_Character2
+            # sub_5999F0(*(_DWORD *)(v6 + 1212), 14609, (LPVOID)0x12F);    # 1212 dec = OffsetSpawnCharacterZoneClient
             # return 0;
             if functionString.find("), 14609, (LPVOID)0x12F);") != -1:
                 if functionString.find("return 0;") != -1:
                     matches = re.findall("sub_[0-9A-F]+\(\*\(_DWORD \*\)\([0-9a-z]+ \+ (\d+)\), 14609, \(LPVOID\)0x12F\);", functionString, re.MULTILINE)
                     if matches:
-                        functionList["OffsetSpawnEQ_Character2"] = int(matches[0])
+                        functionList["OffsetSpawnCharacterZoneClient"] = int(matches[0])
+
+            # OffsetCharacterBase
+            # ----------------------------------------------------------------------------------------------------
+            # int __thiscall sub_6312C8(_DWORD *this)
+            # {
+            #   int result; // eax
+            #
+            #   if ( (char *)this - *(this - 1) - 10316 == dword_E7F920 )    # 10316 dec = OffsetCharacterBase
+            #     result = *(_DWORD *)sub_8BDD00();
+            #   else
+            #     result = 0;
+            #   return result;
+            # }
+            if functionString.find("int result;") != -1:
+                if functionString.find("result = 0;") != -1:
+                    if functionString.find("this - *(this - 1) - ") != -1:
+                        if functionString.find("== dword_") != -1:
+                            if functionString.find("return result;") != -1:
+                                matches = re.findall("if \( (?:\(char \*\))this - \*\(this - 1\) - (\d+) == dword_[0-9A-F]+ \)", functionString, re.MULTILINE)
+                                if matches:
+                                    functionList["OffsetCharacterBase"] = int(matches[0])
+
+            # OffsetCharInfo2Bandolier
+            # ----------------------------------------------------------------------------------------------------
+            # int __thiscall sub_8E3880(char *this, int a2, int a3, _DWORD *a4, int a5)
+            # {
+            #   _DWORD *v5; // esi
+            #   int result; // eax
+            #   unsigned int v7; // ebx
+            #   signed int v8; // edi
+            #   signed int v9; // ebx
+            #   int v10; // [esp+0h] [ebp-14h]
+            #   unsigned int v11; // [esp+Ch] [ebp-8h]
+            #   int v12; // [esp+10h] [ebp-4h]
+            #   signed int v13; // [esp+24h] [ebp+10h]
+            #
+            #   v5 = a4;
+            #   result = (int)(this + 30132);
+            #   v7 = 0;
+            #   v12 = (int)(this + 30132);
+            #   v11 = 0;
+            #   v8 = 0;
+            #   do
+            #   {
+            #     if ( v7 >= 0x14 )
+            #       __debugbreak();
+            #     if ( *(_BYTE *)(v8 + result) )
+            #     {
+            #       *v5 += sub_8F01A0(*v5 + a2, a3 - *v5, (int)"%sBandolier%d=", a5);
+            #       if ( v7 >= 0x14 )
+            #         __debugbreak();
+            #       v13 = 4;
+            #       *v5 += sub_8F01A0(*v5 + a2, a3 - *v5, (int)"\"%s\"", v8 + v12);
+            #       v9 = v8;
+            #       do
+            #       {
+            #         if ( (unsigned int)v8 >= 0x1900 )
+            #           __debugbreak();
+            #         *v5 += sub_8F01A0(*v5 + a2, a3 - *v5, (int)"^%d", *(_DWORD *)(v9 + v12 + 32));
+            #         v9 += 72;
+            #         --v13;
+            #       }
+            #       while ( v13 );
+            #       v7 = v11;
+            #       *v5 += sub_8F01A0(*v5 + a2, a3 - *v5, (int)"\n", v10);
+            #       result = v12;
+            #     }
+            #     ++v7;
+            #     v8 += 320;
+            #     v11 = v7;
+            #   }
+            #   while ( v8 < 6400 );
+            #   return result;
+            # }
+            if functionString.find("int result;") != -1:
+                if functionString.find("\"%sBandolier%d=\"") != -1:
+                    if functionString.find("return result;") != -1:
+                        matches = re.findall("result = \(int\)\(this \+ (\d+)\);", functionString, re.MULTILINE)
+                        if matches:
+                            functionList["OffsetCharInfo2Bandolier"] = int(matches[0])
 
             # AutoAttack
             # ----------------------------------------------------------------------------------------------------
@@ -839,6 +927,95 @@ with open("eqgame.c", "rt") as in_file:
                                 if functionString.find("\"Category Completed: %d/%d\"") != -1:
                                     if functionString.find("\"Completed: %d/%d\"") != -1:
                                             functionList["GetGaugeValueFromEQ"] = functionAddress
+
+            # vehicle_premove
+            # vehicle_postmove
+            # ----------------------------------------------------------------------------------------------------
+            # signed int __cdecl sub_580A20(unsigned __int16 *a1)
+            # {
+            #   int v1; // esi
+            #   char v2; // bl
+            #   float *v4; // ebx
+            #   _DWORD *v5; // eax
+            #
+            #   v1 = sub_64FA30((_DWORD **)dword_F30FE8, *a1);
+            #   if ( v1 )
+            #   {
+            #     v4 = 0;
+            #     if ( a1[1] )
+            #       v4 = (float *)sub_64FA30((_DWORD **)dword_F30FE8, a1[1]);
+            #     if ( sub_97E300((_DWORD *)v1) )
+            #     {
+            #       sub_5994E0((float *)(v1 + 100), (_DWORD *)a1 + 1, (_BYTE *)v1, 0, v4);
+            #       *(_DWORD *)(v1 + 4812) = *((_DWORD *)dword_E81B64 + 85);
+            #       v1 = sub_64C7C0((_DWORD *)v1);
+            #     }
+            #     else if ( sub_97E310((_DWORD *)v1) )
+            #     {
+            #       return 1;
+            #     }
+            #     if ( (*((_DWORD *)a1 + 4) & 0x1FF80000) != 34603008 || (*((_DWORD *)a1 + 2) & 0x3FF) != 66 )
+            #     {
+            #       sub_5C7C90((_DWORD *)v1);
+            #       *(_DWORD *)(v1 + 476) = 0;
+            #       sub_97F9B0((float *)v1);    # 0x0097F9B0 = vehicle_premove
+            #       v5 = a1 + 2;
+            #     }
+            #     else
+            #     {
+            #       *(_DWORD *)(v1 + 476) = 6;
+            #       sub_5C7C90((_DWORD *)v1);
+            #       sub_97F9B0((float *)v1);    # 0x0097F9B0 = vehicle_premove
+            #       *((_DWORD *)a1 + 4) &= 0xE007FFFF;
+            #       v5 = a1 + 2;
+            #       *((_DWORD *)a1 + 2) &= 0xFFFFFC00;
+            #       *((_DWORD *)a1 + 6) &= 0xFFFFE000;
+            #       *((_DWORD *)a1 + 5) &= 0xFFFFE000;
+            #       *v5 &= 0xFFFFE000;
+            #     }
+            #     sub_5994E0((float *)(v1 + 100), v5, (_BYTE *)v1, 0, v4);
+            #     sub_97FA60((float *)v1, 0);    # 0x0097FA60 = vehicle_postmove
+            #     *(_DWORD *)(v1 + 4812) = *((_DWORD *)dword_E81B64 + 85);
+            #     sub_5C5560((float *)v1);
+            #     return 1;
+            #   }
+            #   if ( *(_DWORD *)(dword_103DA3C + 1480) == 5
+            #     && dword_E7F3F0
+            #     && (unsigned int)(*((_DWORD *)dword_E81B64 + 85) - *((_DWORD *)dword_E7F3F0 + 210)) >= 0x3A98 )
+            #   {
+            #     *((_DWORD *)dword_E7F3F0 + 210) = *((_DWORD *)dword_E81B64 + 85);
+            #     if ( *(_DWORD *)dword_E81B60 )
+            #     {
+            #       word_E81930 = sub_89E000(22786, 0);
+            #       LOWORD(dword_E81932) = *a1;
+            #       v2 = sub_83EDA0(*(int *)dword_E81B60, 4, &word_E81930, 4u);
+            #       j_j_j___free_base(0);
+            #       --dword_1070014;
+            #       if ( !v2 )
+            #       {
+            #         sub_4EB5F0((int *)dword_C99C84, (LPCRITICAL_SECTION **)dword_E81B60);
+            #         return 0;
+            #       }
+            #     }
+            #     else if ( !byte_E8F09C )
+            #     {
+            #       sub_8F00D0("Attempt to send message %d on a void connection.", 22786);
+            #     }
+            #   }
+            #   return 0;
+            # }
+            if functionString.find("& 0x1FF80000") != -1:
+                if functionString.find("!= 34603008") != -1:
+                    if functionString.find("&= 0xE007FFFF;") != -1:
+                        if functionString.find("&= 0xFFFFFC00;") != -1:
+                            if functionString.find("&= 0xFFFFE000;") != -1:
+                                if functionString.find(">= 0x3A98") != -1:
+                                    matches = re.findall("= 0;\n\s+sub_([0-9A-F]+)\(\(float \*\)[0-9a-z]+\);", functionString, re.MULTILINE)
+                                    if matches:
+                                        functionList["vehicle_premove"] = "0x00" + matches[0]
+                                    matches = re.findall("sub_([0-9A-F]+)\(\(float \*\)[0-9a-z]+, 0\);", functionString, re.MULTILINE)
+                                    if matches:
+                                        functionList["vehicle_postmove"] = "0x00" + matches[0]
 
             # EQZoneInfo
             # ----------------------------------------------------------------------------------------------------
@@ -1271,7 +1448,7 @@ with open("eqgame.c", "rt") as in_file:
                                 if matches:
                                     functionList["EQ_Character__TotalSpellAffects"] = "0x00" + matches[0]
 
-            # EQ_Character__SetNoGrav
+            # CharacterZoneClient__SetNoGrav
             # ----------------------------------------------------------------------------------------------------
             # void __thiscall sub_4B8960(_DWORD *this, int a2)    # 0x004B8960
             # {
@@ -1312,7 +1489,7 @@ with open("eqgame.c", "rt") as in_file:
                 if functionString.find("= 0;") != -1:
                     if functionString.find("= 1;") != -1:
                         if functionString.find("== 1") != -1:
-                            functionList["EQ_Character__SetNoGrav"] = functionAddress
+                            functionList["CharacterZoneClient__SetNoGrav"] = functionAddress
 
             # EQPlayerManager
             # EQPlayerManager__GetSpawnByID
@@ -1895,6 +2072,95 @@ with open("eqgame.c", "rt") as in_file:
                             if functionString.find(", 99);") != -1:
                                 functionList["CEverQuest__StartCasting"] = functionAddress
 
+            # CEverQuest__SendNewText
+            # ----------------------------------------------------------------------------------------------------
+            # void __cdecl sub_59D4C0(int a1, const char *a2)    # do_say(EQPlayer *, char *)
+            # {
+            #   int v2; // eax
+            #   double v3; // st7
+            #   LPVOID v4; // esi
+            #   double v5; // st6
+            #   int v6; // eax
+            #   double v7; // st5
+            #   double v8; // st7
+            #   char *v9; // edx
+            #   char *v10; // esi
+            #   char v11; // al
+            #   void *v12; // [esp+8h] [ebp-187Ch]
+            #   float v13; // [esp+Ch] [ebp-1878h]
+            #   float v14; // [esp+10h] [ebp-1874h]
+            #   float v15; // [esp+14h] [ebp-1870h]
+            #   float v16; // [esp+1Ch] [ebp-1868h]
+            #   char v17; // [esp+20h] [ebp-1864h]
+            #   char v18; // [esp+24h] [ebp-1860h]
+            #   char v19[4096]; // [esp+884h] [ebp-1000h]
+            #
+            #   strcpy((char *)(dword_103DA3C + 95780), a2);
+            #   if ( dword_E7F444 && *((_BYTE *)dword_E7F444 + 293) == 1 )
+            #   {
+            #     v2 = *(_DWORD *)dword_E7F444;
+            #     v16 = *((float *)dword_E7F444 + 27);
+            #     if ( *(_DWORD *)(*(int (__stdcall **)(char *))(v2 + 136))(&v17) != dword_BFB8A4
+            #       && *(_DWORD *)(*(int (__stdcall **)(char *))(*(_DWORD *)dword_E7F444 + 136))(&v17) != dword_BFB8A8
+            #       && *(_DWORD *)(*(int (__stdcall **)(char *))(*(_DWORD *)dword_E7F444 + 136))(&v17) != dword_BFB898 )
+            #     {
+            #       v3 = v16;
+            #     }
+            #     else
+            #     {
+            #       v3 = v16 + 1.0;
+            #     }
+            #     v4 = dword_E7F3F0;
+            #     v5 = *((float *)dword_E7F444 + 26);
+            #     if ( dword_E7F3F0
+            #       && (v6 = *(_DWORD *)dword_E7F3F0,
+            #           v7 = v3,
+            #           v8 = *((float *)dword_E7F444 + 25),
+            #           v15 = v7,
+            #           v14 = v5,
+            #           v13 = v8,
+            #           (*(void (__thiscall **)(LPVOID, void **))(v6 + 136))(dword_E7F3F0, &v12),
+            #           sub_59ADF0((int)v4, (int)v4 + 100, (int)v12, v13, v14, v15)) )
+            #     {
+            #       sub_5DDCB0((LPVOID)8, (char *)dword_E7F444 + 164, (char *)(dword_103DA3C + 95780), 0);    # 0x005DDCB0
+            #       if ( !sub_4C2500((int)dword_E7F920 + 9240, 0x4Bu, 1, 0, 1, 1) )
+            #       {
+            #         v9 = (char *)(dword_103DA3C + 95780);
+            #         v10 = &v19[-dword_103DA3C - 95780];
+            #         do
+            #         {
+            #           v11 = *v9++;
+            #           v9[(_DWORD)v10 - 1] = v11;
+            #         }
+            #         while ( v11 );
+            #         sub_5E8770(v19, 1);
+            #         sub_598B20((int)&v18, 0x331Eu, (int)v19, 0, 0, 0, 0, 0, 0, 0, 0);
+            #         v15 = 0.0;
+            #         LODWORD(v14) = 1;
+            #         LODWORD(v13) = 1;
+            #         v12 = (void *)307;
+            #         sub_4E5850();
+            #         sub_4E5EF0(&v18, v12, (LPVOID)LODWORD(v13), (LPVOID)LODWORD(v14), (LPVOID)LODWORD(v15));
+            #       }
+            #     }
+            #     else
+            #     {
+            #       sub_5D1650((char *)dword_103DA3C, 0);
+            #     }
+            #   }
+            #   else
+            #   {
+            #     sub_5D1650((char *)dword_103DA3C, 0);
+            #   }
+            # }
+            if functionString.find("0x4Bu, 1, 0, 1, 1)") != -1:    # TotalSpellAffects() with 75 = Ventriloquism
+                if functionString.find("0x331Eu") != -1:    # 13086 You say, '%1'
+                    if functionString.find("307;") != -1:    # CEverQuest__dsp_chat() with 307 text color
+                        if functionString.find("strcpy") != -1:
+                            matches = re.findall("sub_([0-9A-F]+)\(\(LPVOID\)8,", functionString, re.MULTILINE)
+                            if matches:
+                                functionList["CEverQuest__SendNewText"] = "0x00" + matches[0]
+
             # CDisplay
             # ----------------------------------------------------------------------------------------------------
             # *(_DWORD *)v12 = 1413693791;
@@ -2243,6 +2509,201 @@ with open("eqgame.c", "rt") as in_file:
                         if matches:
                             functionList["CAlertWnd"] = "0x0" + matches[0]
 
+            # CSpellBookWnd
+            # ----------------------------------------------------------------------------------------------------
+            # void __cdecl sub_5ADB30(int a1, char *a2)
+            # {
+            #   int v2; // eax
+            #   const char *v3; // eax
+            #   const char *v4; // eax
+            #   char *v5; // ST04_4
+            #   signed int v6; // ecx
+            #
+            #   if ( sub_5B85B0() )
+            #   {
+            #     v2 = sub_8BD2C0((char *)dword_E7F920 + *(_DWORD *)(*((_DWORD *)dword_E7F920 + 2) + 4) + 12);
+            #     if ( v2 )
+            #     {
+            #       if ( !*(_DWORD *)(v2 + 15376) )
+            #       {
+            #         if ( sub_915540((_BYTE *)dword_DCD514) && !*a2 )
+            #         {
+            #           (*(void (**)(void))(*(_DWORD *)dword_DCD514 + 148))();    # 0x00DCD514
+            #           return;
+            #         }
+            #         if ( strlen(a2) )
+            #         {
+            #           v3 = (const char *)sub_8B5EB0((int *)dword_E81B68, 0x22B3u, 0);
+            #           if ( !_stricmp(a2, v3) )
+            #           {
+            #             if ( sub_915540((_BYTE *)dword_DCD514) )
+            #               (*(void (**)(void))(*(_DWORD *)dword_DCD514 + 148))();    # 0x00DCD514
+            #             return;
+            #           }
+            #           v4 = (const char *)sub_8B5EB0((int *)dword_E81B68, 0x22B2u, 0);
+            #           _stricmp(a2, v4);
+            #         }
+            #         if ( sub_4D6BC0((_DWORD *)dword_E7F920 + 2310) )
+            #         {
+            #           if ( dword_E7F448 && *(float *)(dword_E7F448 + 124) > 0.0099999998 )
+            #           {
+            #             v5 = (char *)sub_8B5EB0((int *)dword_E81B68, 0x2F35u, 0);
+            #             sub_4E5850();
+            #             sub_4E5EF0(v5, (LPVOID)0x111, (LPVOID)1, (LPVOID)1, 0);
+            #           }
+            #           else if ( *((_BYTE *)dword_E7F3F0 + 1551) != 105 )
+            #           {
+            #             if ( !sub_915540((_BYTE *)dword_DCD514) )    # 0x00DCD514
+            #               (*(void (**)(void))(*(_DWORD *)dword_DCD514 + 144))();    # 0x00DCD514
+            #             if ( strlen(a2) )
+            #             {
+            #               v6 = sub_995C4D((int)a2) - 1;
+            #               if ( v6 >= 1 )
+            #               {
+            #                 if ( v6 % 2 )
+            #                   --v6;
+            #                 sub_7FA360((_BYTE *)dword_DCD514, v6);    # 0x00DCD514
+            #               }
+            #               else
+            #               {
+            #                 sub_7FA360((_BYTE *)dword_DCD514, 0);    # 0x00DCD514
+            #               }
+            #             }
+            #           }
+            #         }
+            #       }
+            #     }
+            #   }
+            # }
+            if functionString.find("0x2F35u") != -1:    # 12085 You must be completely stopped before doing this action.
+                if functionString.find("0x22B2u") != -1:    # 8882 open
+                    if functionString.find("0x22B3u") != -1:    # 8883 close
+                        if functionString.find("> 0.0099999998") != -1:
+                            matches = re.findall("dword_([0-9A-F]+) \+ 148\)\)\(\);", functionString, re.MULTILINE)
+                            if matches:
+                                functionList["CSpellBookWnd"] = "0x00" + matches[0]
+
+            # CSpellBookWnd__GetSpellMemTicksLeft
+            # ----------------------------------------------------------------------------------------------------
+            # int __thiscall sub_7FA800(_DWORD *this)
+            # {
+            #   _DWORD *v1; // esi
+            #   int result; // eax
+            #   unsigned int v3; // edx
+            #   unsigned int v4; // eax
+            #   int v5; // ebx
+            #   int v6; // edi
+            #   char v7; // bl
+            #   int v8; // [esp+4h] [ebp-4h]
+            #
+            #   v1 = this;
+            #   if ( this[145] == -1 )
+            #     return 0;
+            #   v3 = *((_DWORD *)dword_E81B64 + 85);
+            #   v4 = this[148];
+            #   if ( v3 < v4 )
+            #     return (signed int)(1000 * (v4 - v3)) / (signed int)(v4 - this[147]);
+            #   ++dword_F2DE00;
+            #   v8 = 41;
+            #   if ( (unsigned int)((*(_DWORD *)(dword_103DA3C + 235044) - *(_DWORD *)(dword_103DA3C + 235040)) >> 2) < 0x14 )
+            #     sub_69ACA0((_DWORD *)(dword_103DA3C + 235040), (unsigned int *)&v8);
+            #   v5 = v1[146];
+            #   v6 = v1[145];
+            #   if ( *(_DWORD *)dword_E81B60 )
+            #   {
+            #     word_E81930 = sub_89E000(7000, 0);
+            #     dword_E81932 = v6;
+            #     LODWORD(qword_E81936) = v5;
+            #     HIDWORD(qword_E81936) = 2;
+            #     dword_E8193E = 0;
+            #     v7 = sub_83EDA0(*(int *)dword_E81B60, 4, &word_E81930, 0x12u);
+            #     j_j_j___free_base(0);
+            #     --dword_1070014;
+            #     if ( !v7 )
+            #       sub_4EB5F0((int *)dword_C99C84, (LPCRITICAL_SECTION **)dword_E81B60);
+            #   }
+            #   else if ( !byte_E8F09C )
+            #   {
+            #     sub_8F00D0("Attempt to send message %d on a void connection.", 7000);
+            #   }
+            #   (*(void (**)(void))(*(_DWORD *)dword_DCCF90 + 148))();
+            #   v1[147] = -1;
+            #   result = 0;
+            #   v1[148] = -1;
+            #   v1[145] = -1;
+            #   v1[146] = -1;
+            #   return result;
+            # }
+            if functionString.find("int result;") != -1:
+                if functionString.find("return 0;") != -1:
+                    if functionString.find("result = 0;") != -1:
+                        if functionString.find("return result;") != -1:
+                            matches = re.findall("if \( [0-9a-z]+ < [0-9a-z]+ \)\n\s+return \(signed int\)\(1000 \* \([0-9a-z]+ - [0-9a-z]+\)\) / \(signed int\)\([0-9a-z]+ - this\[\d+\]\);", functionString, re.MULTILINE)
+                            if matches:
+                                functionList["CSpellBookWnd__GetSpellMemTicksLeft"] = functionAddress
+
+            # CSpellBookWnd__GetSpellScribeTicksLeft
+            # ----------------------------------------------------------------------------------------------------
+            # int __thiscall sub_7FA960(_DWORD *this)    # 0x007FA960
+            # {
+            #   _DWORD *v1; // esi
+            #   int result; // eax
+            #   int v3; // ecx
+            #   int v4; // eax
+            #   unsigned int v5; // ebx
+            #   int v6; // edi
+            #   char v7; // bl
+            #   int v8; // [esp+4h] [ebp-4h]
+            #
+            #   v1 = this;
+            #   if ( this[149] == -1 )
+            #     return 0;
+            #   v3 = *((_DWORD *)dword_E81B64 + 85);
+            #   if ( (unsigned int)(*((_DWORD *)dword_E81B64 + 85) - dword_1050B1C) > 1 )
+            #   {
+            #     v1[150] -= 3;
+            #     dword_1050B1C = v3;
+            #   }
+            #   v4 = v1[150];
+            #   if ( v4 > 0 )
+            #     return 1000 * v4 / 92;
+            #   ++dword_F2DE00;
+            #   v8 = 43;
+            #   if ( (unsigned int)((*(_DWORD *)(dword_103DA3C + 235044) - *(_DWORD *)(dword_103DA3C + 235040)) >> 2) < 0x14 )
+            #     sub_69ACA0((_DWORD *)(dword_103DA3C + 235040), (unsigned int *)&v8);
+            #   v5 = v1[146];
+            #   v6 = v1[149];
+            #   if ( *(_DWORD *)dword_E81B60 )
+            #   {
+            #     word_E81930 = sub_89E000(7000, 0);
+            #     dword_E81932 = v6;
+            #     qword_E81936 = v5;
+            #     dword_E8193E = 0;
+            #     v7 = sub_83EDA0(*(int *)dword_E81B60, 4, &word_E81930, 0x12u);
+            #     j_j_j___free_base(0);
+            #     --dword_1070014;
+            #     if ( !v7 )
+            #       sub_4EB5F0((int *)dword_C99C84, (LPCRITICAL_SECTION **)dword_E81B60);
+            #   }
+            #   else if ( !byte_E8F09C )
+            #   {
+            #     sub_8F00D0("Attempt to send message %d on a void connection.", 7000);
+            #   }
+            #   v1[146] = -1;
+            #   result = 0;
+            #   v1[149] = -1;
+            #   v1[150] = 0;
+            #   dword_1050B1C = 0;
+            #   return result;
+            # }
+            if functionString.find("int result;") != -1:
+                if functionString.find("return 0;") != -1:
+                    if functionString.find("result = 0;") != -1:
+                        if functionString.find("return result;") != -1:
+                            matches = re.findall("if \( [0-9a-z]+ > 0 \)\n\s+return 1000 \* [0-9a-z]+ / 92;", functionString, re.MULTILINE)
+                            if matches:
+                                functionList["CSpellBookWnd__GetSpellScribeTicksLeft"] = functionAddress
+
             functionString = ""
 
 if mapOffset != 0:
@@ -2270,15 +2731,17 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("    EQ_SIZE_CXWnd = " + functionList["SizeCXWnd"] + ";\n")
     out_file.write("    EQ_SIZE_CSidlScreenWnd = " + hex(functionList["SizeCSidlScreenWnd"]) + ";\n")
     out_file.write("\n")
-    out_file.write("    EQ_OFFSET_SPAWN_STANDING_STATE       = " + hex(functionList["OffsetSpawnStandingState"]) + ";\n")
-    out_file.write("    EQ_OFFSET_SPAWN_FOLLOW_SPAWN         = " + hex(functionList["OffsetSpawnFollowSpawn"]) + ";\n")
-    out_file.write("    EQ_OFFSET_SPAWN_HP_CURRENT           = " + hex(functionList["OffsetSpawnHPCurrent"]) + ";\n")
-    out_file.write("    EQ_OFFSET_SPAWN_HP_MAX               = " + hex(functionList["OffsetSpawnHPMax"]) + ";\n")
-    out_file.write("    EQ_OFFSET_SPAWN_MANA_CURRENT         = " + hex(functionList["OffsetSpawnManaCurrent"]) + ";\n")
-    out_file.write("    EQ_OFFSET_SPAWN_MANA_MAX             = " + hex(functionList["OffsetSpawnManaMax"]) + ";\n")
-    out_file.write("    EQ_OFFSET_SPAWN_ENDURANCE_CURRENT    = " + hex(functionList["OffsetSpawnEnduranceCurrent"]) + ";\n")
-    out_file.write("    EQ_OFFSET_SPAWN_ENDURANCE_MAX        = " + hex(functionList["OffsetSpawnEnduranceMax"]) + ";\n")
-    out_file.write("    EQ_OFFSET_SPAWN_EQ_Character2        = " + hex(functionList["OffsetSpawnEQ_Character2"]) + ";\n")
+    out_file.write("    EQ_OFFSET_SPAWN_STANDING_STATE             = " + hex(functionList["OffsetSpawnStandingState"]) + ";\n")
+    out_file.write("    EQ_OFFSET_SPAWN_FOLLOW_SPAWN               = " + hex(functionList["OffsetSpawnFollowSpawn"]) + ";\n")
+    out_file.write("    EQ_OFFSET_SPAWN_HP_CURRENT                 = " + hex(functionList["OffsetSpawnHPCurrent"]) + ";\n")
+    out_file.write("    EQ_OFFSET_SPAWN_HP_MAX                     = " + hex(functionList["OffsetSpawnHPMax"]) + ";\n")
+    out_file.write("    EQ_OFFSET_SPAWN_MANA_CURRENT               = " + hex(functionList["OffsetSpawnManaCurrent"]) + ";\n")
+    out_file.write("    EQ_OFFSET_SPAWN_MANA_MAX                   = " + hex(functionList["OffsetSpawnManaMax"]) + ";\n")
+    out_file.write("    EQ_OFFSET_SPAWN_ENDURANCE_CURRENT          = " + hex(functionList["OffsetSpawnEnduranceCurrent"]) + ";\n")
+    out_file.write("    EQ_OFFSET_SPAWN_ENDURANCE_MAX              = " + hex(functionList["OffsetSpawnEnduranceMax"]) + ";\n")
+    out_file.write("    EQ_OFFSET_SPAWN_CharacterZoneClient        = " + hex(functionList["OffsetSpawnCharacterZoneClient"]) + ";\n")
+    out_file.write("    EQ_OFFSET_EQ_Character____CharacterBase    = " + hex(functionList["OffsetCharacterBase"]) + ";\n")
+    out_file.write("    EQ_OFFSET_CharInfo2__Bandolier             = " + hex(functionList["OffsetCharInfo2Bandolier"]) + ";\n")
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_WindowHWND = " + functionList["WindowHWND"] + ";\n")
     out_file.write("\n")
@@ -2320,7 +2783,8 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("    EQ_ADDRESS_FUNCTION_EQ_Character__UnStunMe              = " + functionList["EQ_Character__UnStunMe"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_EQ_Character__ProcessEnvironment    = " + functionList["EQ_Character__ProcessEnvironment"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_EQ_Character__TotalSpellAffects     = " + functionList["EQ_Character__TotalSpellAffects"] + ";\n")
-    out_file.write("    EQ_ADDRESS_FUNCTION_EQ_Character__SetNoGrav             = " + functionList["EQ_Character__SetNoGrav"] + ";\n")
+    out_file.write("\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CharacterZoneClient__SetNoGrav    = " + functionList["CharacterZoneClient__SetNoGrav"] + ";\n")
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_POINTER_EQPlayerManager = " + functionList["EQPlayerManager"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID      = " + functionList["EQPlayerManager__GetSpawnByID"] + ";\n")
@@ -2359,6 +2823,7 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp            = " + functionList["CEverQuest__RMouseUp"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__HandleMouseWheel    = " + functionList["CEverQuest__HandleMouseWheel"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting        = " + functionList["CEverQuest__StartCasting"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__SendNewText         = " + functionList["CEverQuest__SendNewText"] + ";\n")
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_POINTER_CDisplay = " + functionList["CDisplay"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2         = " + functionList["CDisplay__WriteTextHD2"] + ";\n")
@@ -2379,4 +2844,8 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("    //EQ_ADDRESS_FUNCTION_CRender__UpdateDisplay         = 0x0; // calculated at runtime\n")
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_POINTER_CAlertWnd = " + functionList["CAlertWnd"] + ";\n")
+    out_file.write("\n")
+    out_file.write("    EQ_ADDRESS_POINTER_CSpellBookWnd = " + functionList["CSpellBookWnd"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellMemTicksLeft       = " + functionList["CSpellBookWnd__GetSpellMemTicksLeft"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellScribeTicksLeft    = " + functionList["CSpellBookWnd__GetSpellScribeTicksLeft"] + ";\n")
     out_file.write("}\n")
