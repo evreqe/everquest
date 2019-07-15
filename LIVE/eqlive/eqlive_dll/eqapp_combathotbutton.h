@@ -91,6 +91,12 @@ void EQAPP_CombatHotButton_Execute()
         return;
     }
 
+    auto playerSpawnStandingState = EQ_GetSpawnStandingState(playerSpawn);
+    if (playerSpawnStandingState != EQ_STANDING_STATE_STANDING)
+    {
+        return;
+    }
+
     if (g_CombatHotButtonIndex < 0 || g_CombatHotButtonIndex > (EQ_NUM_HOTBAR_BUTTONS - 1))
     {
         return;

@@ -71,10 +71,18 @@ namespace std__filesystem = std::experimental::filesystem::v1; // not available 
 #include "eqapp_alwaysattack.h"
 #include "eqapp_alwayshotbutton.h"
 #include "eqapp_autogroup.h"
+#include "eqapp_bandolier.h"
 #include "eqapp_boxchat.h"
 #include "eqapp_changeheight.h"
 #include "eqapp_chatevent.h"
+#include "eqapp_cheat.h"
 #include "eqapp_combathotbutton.h"
+#include "eqapp_killmobs.h"
+#include "eqapp_lantern.h"
+#include "eqapp_namecolor.h"
+#include "eqapp_namedspawns.h"
+#include "eqapp_speed.h"
+#include "eqapp_waypoint.h"
 #include "eqapp_console.h"
 #include "eqapp_detours.h"
 #include "eqapp_followai.h"
@@ -85,12 +93,16 @@ namespace std__filesystem = std::experimental::filesystem::v1; // not available 
 #include "eqapp_nodraw.h"
 #include "eqapp_sleep.h"
 #include "eqapp_windowtitle.h"
+#include "eqapp_windowforeground.h"
 
 void EQAPP_Load()
 {
     EQAPP_ActorCollision_Load();
-
+    EQAPP_WaypointList_Load();
+    EQAPP_NamedSpawns_Load();
+    EQAPP_KillMobs_Load();
     EQAPP_ChatEvent_Load();
+    EQAPP_Bandolier_Load();
 
     if (g_WindowTitleIsEnabled == true)
     {
@@ -121,6 +133,10 @@ void EQAPP_Load()
         }
     }
 
+    std::cout << "PlayerSpawn: 0x" << std::hex << EQ_GetPlayerSpawn() << std::dec << std::endl;
+
+    std::cout << "PlayerPhysicsClient: 0x" << std::hex << EQ_GetPlayerSpawnPhysicsClient() << std::dec << std::endl;
+
     std::string timeText = EQAPP_Timer_GetTimeAsString();
 
     std::cout << "Loaded!    " << timeText;
@@ -133,6 +149,7 @@ void EQAPP_Unload()
     g_NoDrawIsEnabled = false;
 
     EQAPP_FreeCamera_Off();
+    EQAPP_Speed_Off();
 
     g_WindowTitleIsEnabled = false;
     EQAPP_WindowTitle_Reset();

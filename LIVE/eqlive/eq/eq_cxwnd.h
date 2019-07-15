@@ -21,6 +21,12 @@
 #define EQ_CXWND_KEYBOARD_FLAG_LALT     4
 #define EQ_CXWND_KEYBOARD_FLAG_RALT     8
 
+// class CXWnd
+uint32_t EQ_SIZE_CXWnd = 0x1F8;    // const CXWnd::`vftable'    // = &CXWnd::`vftable'
+
+// class CSidlScreenWnd
+uint32_t EQ_SIZE_CSidlScreenWnd = 0x230;    // const CSidlScreenWnd::`vftable'    // = &CSidlScreenWnd::`vftable'
+
 // search for one of these strings to find the
 // function where all of the windows are created:
 // "Initializing game UI."
@@ -28,3 +34,5 @@
 // "Loading Icons."
 // "Resetting viewport."
 // "Game UI Initialized."
+
+#define EQ_OFFSET_CAlertWnd_BUTTON_CLOSE    EQ_SIZE_CSidlScreenWnd + 0x14    // uint32_t    "ALW_Close_Button"

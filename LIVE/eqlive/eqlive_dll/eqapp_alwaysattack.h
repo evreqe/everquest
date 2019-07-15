@@ -72,5 +72,12 @@ void EQAPP_AlwaysAttack_Execute()
         return;
     }
 
+    auto playerStandingState = EQ_GetSpawnStandingState(playerSpawn);
+    if (playerStandingState != EQ_STANDING_STATE_STANDING)
+    {
+        EQ_SetAutoAttack(false);
+        return;
+    }
+
     EQ_SetAutoAttack(true);
 }

@@ -123,6 +123,33 @@
     <ClInclude Include="eqapp_chatevent.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="eqapp_namedspawns.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_speed.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_waypoint.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_namecolor.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_windowforeground.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_lantern.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_bandolier.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_cheat.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_killmobs.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

@@ -36,7 +36,11 @@ const float EQ_SPAWN_HEADING_SPEED_DEFAULT    = 0.0f;      // stop turning
 const float EQ_SPAWN_HEADING_SPEED_MIN        = -12.0f;    // turning right
 const float EQ_SPAWN_HEADING_SPEED_MAX        = 12.0f;     // turning left
 
-const float EQ_SPAWN_ACCELERATION_FRICTION_DEFAULT = 0.8000000119f;
+const float EQ_SPAWN_AREA_FRICTION_DEFAULT    = 0.625f;
+const float EQ_SPAWN_AREA_FRICTION_ICE        = 0.9900000095f;    // floor is slippery
+
+const float EQ_SPAWN_ACCELERATION_FRICTION_DEFAULT    = 0.8000000119f;
+const float EQ_SPAWN_ACCELERATION_FRICTION_ICE        = 0.01999999955f;    // floor is slippery
 
 const float EQ_MELEE_DISTANCE_MIN    = 14.0f; // get_melee_range()
 const float EQ_MELEE_DISTANCE_MAX    = 75.0f; // get_melee_range()
@@ -57,6 +61,7 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_NUM_AURAS                         2
 #define EQ_NUM_XTARGETS                      20
 #define EQ_NUM_CHARACTERS_PER_ACCOUNT        8    // character select
+#define EQ_NUM_BANDOLIER_SLOTS               20
 
 #define EQ_SPELL_ID_NULL 0xFFFFFFFF // uint32_t
 
@@ -130,12 +135,23 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_OFFSET_SPAWN_TYPE                               0x125    // uint8_t
 #define EQ_OFFSET_SPAWN_HEIGHT_Z                           0x138    // float       // height of player in z-axis units
 #define EQ_OFFSET_SPAWN_HEIGHT                             0x13C    // float       // determines height, width, length, bounding radius, etc
-#define EQ_OFFSET_SPAWN_ID                                 0x148    // uint32_t
-#define EQ_OFFSET_SPAWN_STATE_FLAGS                        0x14C    // uint32_t    // uses bitwise flags (AND, OR)
-#define EQ_OFFSET_SPAWN_VEHICLE_SPAWN                      0x150    // uint32_t    // boats, airships, etc
-#define EQ_OFFSET_SPAWN_MOUNT_SPAWN                        0x154    // uint32_t    // horses, etc
-#define EQ_OFFSET_SPAWN_MOUNT_RIDER_SPAWN                  0x158    // uint32_t    // spawn that is riding the mount
-#define EQ_OFFSET_SPAWN_IS_TARGETABLE                      0x160    // uint8_t
+#define EQ_OFFSET_SPAWN_ID                                 0x150    // uint32_t
+#define EQ_OFFSET_SPAWN_STATE_FLAGS                        0x154    // uint32_t    // uses bitwise flags (AND, OR)
+#define EQ_OFFSET_SPAWN_VEHICLE_SPAWN                      0x158    // uint32_t    // boats, airships, etc
+#define EQ_OFFSET_SPAWN_MOUNT_SPAWN                        0x15C    // uint32_t    // horses, etc
+#define EQ_OFFSET_SPAWN_MOUNT_RIDER_SPAWN                  0x160    // uint32_t    // spawn that is riding the mount
+#define EQ_OFFSET_SPAWN_IS_TARGETABLE                      0x168    // uint8_t
+uint32_t EQ_OFFSET_SPAWN_STANDING_STATE                  = 0;       // uint8_t
+uint32_t EQ_OFFSET_SPAWN_FOLLOW_SPAWN                    = 0;       // uint32_t pointer
+uint32_t EQ_OFFSET_SPAWN_HP_CURRENT                      = 0;       // uint64_t
+uint32_t EQ_OFFSET_SPAWN_HP_MAX                          = 0;       // uint64_t
+uint32_t EQ_OFFSET_SPAWN_MANA_CURRENT                    = 0;       // uint32_t
+uint32_t EQ_OFFSET_SPAWN_MANA_MAX                        = 0;       // uint32_t
+uint32_t EQ_OFFSET_SPAWN_ENDURANCE_CURRENT               = 0;       // uint32_t
+uint32_t EQ_OFFSET_SPAWN_ENDURANCE_MAX                   = 0;       // uint32_t
+uint32_t EQ_OFFSET_SPAWN_CharacterZoneClient             = 0;       // uint32_t pointer
+uint32_t EQ_OFFSET_EQ_Character____CharacterBase         = 0;       // uint32_t pointer
+uint32_t EQ_OFFSET_CharInfo2__Bandolier                  = 0;       // uint32_t pointer
 
 #define EQ_SIZE_SPAWN_NAME         64 // 0x40
 #define EQ_SIZE_SPAWN_LAST_NAME    32 // 0x20
@@ -155,6 +171,37 @@ std::unordered_map<uint32_t, std::string> EQ_SPAWN_TYPE_Strings =
     {EQ_SPAWN_TYPE_UNKNOWN,     "Unknown"},
 };
 
+uint32_t EQ_OFFSET_PlayerPhysicsClient__GravityType    = 0x0C; // EQ_GRAVITY_TYPE_x    // eGravityBehavior
+
+uint32_t EQ_OFFSET_EQ_Character____CharacterZoneClient    = 0x2418; // check after patch
+
+uint32_t EQ_OFFSET_CharacterBase__CProfileManager    = 0x04;
+
+#define EQ_SIZE_BANDOLIER_SET_NAME     32 // 0x20
+#define EQ_SIZE_BANDOLIER_ITEM_NAME    64 // 0x40
+
+#define EQ_GENDER_MALE      0
+#define EQ_GENDER_FEMALE    1
+#define EQ_GENDER_UNKNOWN   2
+
+#define EQ_GRAVITY_TYPE_GROUND               0
+#define EQ_GRAVITY_TYPE_FLYING               1
+#define EQ_GRAVITY_TYPE_LEVITATING           2
+#define EQ_GRAVITY_TYPE_SWIMMING             3
+#define EQ_GRAVITY_TYPE_RIDING_VEHICLE       4 // boat, airship, etc
+#define EQ_GRAVITY_TYPE_SINKING_TO_GROUND    5 // levitation wore off
+#define EQ_GRAVITY_TYPE_DEFAULT              EQ_GRAVITY_TYPE_GROUND
+
+std::unordered_map<uint32_t, std::string> EQ_GRAVITY_TYPE_Strings =
+{
+    {EQ_GRAVITY_TYPE_GROUND,               "Ground"},
+    {EQ_GRAVITY_TYPE_FLYING,               "Flying"},
+    {EQ_GRAVITY_TYPE_LEVITATING,           "Levitating"},
+    {EQ_GRAVITY_TYPE_SWIMMING,             "Swimming"},
+    {EQ_GRAVITY_TYPE_RIDING_VEHICLE,       "Riding Vehicle"},
+    {EQ_GRAVITY_TYPE_SINKING_TO_GROUND,    "Sinking to Ground"},
+};
+
 #define EQ_ACTOR_TYPE_UNDEFINED        0
 #define EQ_ACTOR_TYPE_PLAYER           1
 #define EQ_ACTOR_TYPE_CORPSE           2
@@ -165,6 +212,15 @@ std::unordered_map<uint32_t, std::string> EQ_SPAWN_TYPE_Strings =
 #define EQ_ACTOR_TYPE_TREE             7
 #define EQ_ACTOR_TYPE_WALL             8    // trees
 #define EQ_ACTOR_TYPE_PLACED_OBJECT    9
+
+// class ActorBase
+// EQData::_SPAWNINFO::mActorClient
+#define EQ_OFFSET_CActorClient_RACE                0x10     // signed int
+#define EQ_OFFSET_CActorClient_CLASS               0x18     // signed int
+#define EQ_OFFSET_CActorClient_GENDER              0x19     // uint8_t
+#define EQ_OFFSET_CActorClient_ACTOR_DEFINITION    0x20     // char[0x40]
+#define EQ_OFFSET_CActorClient_CActorInterface     0x180    // uint32_t pointer   // 384 dec    // EQData::_SPAWNINFO::mActorClient->pcactorex
+#define EQ_OFFSET_CActorClinet_CLightInterface     0x184    // uint32_t pointer
 
 #define EQ_OFFSET_CActor_Y                          0x2C  // float
 #define EQ_OFFSET_CActor_X                          0x30  // float
@@ -184,7 +240,91 @@ std::unordered_map<uint32_t, std::string> EQ_SPAWN_TYPE_Strings =
 
 #define EQ_SIZE_ACTOR_DEFINITION_NAME 0x40 // char[64]
 
+#define EQ_OFFSET_EQZoneInfo_PLAYER_NAME            0x00     // char[64]
+#define EQ_OFFSET_EQZoneInfo_ZONE_LONG_NAME         0xC0     // char[128]
+#define EQ_OFFSET_EQZoneInfo_FOG_ENABLED            0x1D6    // uint8_t // 0x00=Off 0xFF=On
+#define EQ_OFFSET_EQZoneInfo_ZONE_GRAVITY           0x204    // float
+#define EQ_OFFSET_EQZoneInfo_ZONE_SHORT_NAME        0x2A0    // char[32]
+#define EQ_OFFSET_EQZoneInfo_ZONE_ID                0x334    // uint32_t
+
+#define EQ_SIZE_EQZoneInfo_PLAYER_NAME        0x40    // char[64]
+#define EQ_SIZE_EQZoneInfo_ZONE_LONG_NAME     0x80    // char[128]
+#define EQ_SIZE_EQZoneInfo_ZONE_SHORT_NAME    0x20    // char[32]
+
+#define EQ_FOG_OFF    0x00 // uint8_t
+#define EQ_FOG_ON     0xFF // uint8_t
+
 #define EQ_ENVIRONMENT_TYPE_WATER    5
+
+#define EQ_LIGHT_TYPE_GLOOMING_DEEP_LANTERN    11    // uint8_t
+
+#define EQ_STANDING_STATE_UNKNOWN     0
+#define EQ_STANDING_STATE_STANDING    100
+#define EQ_STANDING_STATE_FROZEN      102 // stunned, mesmerized or feared    "You lose control of yourself!"
+#define EQ_STANDING_STATE_KNEELING    105 // looting or binding wounds
+#define EQ_STANDING_STATE_SITTING     110
+#define EQ_STANDING_STATE_DUCKING     111 // crouching
+#define EQ_STANDING_STATE_FEIGN_DEATH 115 // pretending to be dead
+#define EQ_STANDING_STATE_DEAD        120
+
+std::unordered_map<uint32_t, std::string> EQ_STANDING_STATE_Strings =
+{
+    {EQ_STANDING_STATE_UNKNOWN,        "Unknown"},
+    {EQ_STANDING_STATE_STANDING,       "Standing"},
+    {EQ_STANDING_STATE_FROZEN,         "Frozen"},
+    {EQ_STANDING_STATE_KNEELING,       "Kneeling"},
+    {EQ_STANDING_STATE_SITTING,        "Sitting"},
+    {EQ_STANDING_STATE_DUCKING,        "Ducking"},
+    {EQ_STANDING_STATE_FEIGN_DEATH,    "Feign Death"},
+    {EQ_STANDING_STATE_DEAD,           "Dead"},
+};
+
+#define EQ_OFFSET_EQSwitchManager_NUM_SWITCHES    0x00    // uint32_t            // offsetof(EQData::_DOORTABLE, NumEntries)
+#define EQ_OFFSET_EQSwitchManager_FIRST_SWITCH    0x04    // uint32_t pointer    // offsetof(EQData::_DOORTABLE, pDoor)         class EQSwitch
+
+#define EQ_SWITCH_KEY_ID_NULL    0xFFFFFFFF // uint32_t
+
+#define EQ_SWITCH_STATE_CLOSED     0
+#define EQ_SWITCH_STATE_OPEN       1
+#define EQ_SWITCH_STATE_OPENING    2
+#define EQ_SWITCH_STATE_CLOSING    3
+
+#define EQ_SWITCH_TYPE_0                         0      // used as a static model in the zone, do not use
+#define EQ_SWITCH_TYPE_5                         5      // opens at an angle like a regular door
+#define EQ_SWITCH_TYPE_27                        27     // slides left to right
+#define EQ_SWITCH_TYPE_TOUCH_OR_CLICK_TO_ZONE    57     // pok books, step on teleporters in bazaar
+#define EQ_SWITCH_TYPE_CLICK_TO_ZONE             58     // pok stones, pok to guild lobby, bazaar to pok
+#define EQ_SWITCH_TYPE_59                        59     // pok library elevator, goes up and down
+#define EQ_SWITCH_TYPE_77                        77     // slides up and down
+#define EQ_SWITCH_TYPE_109                       109    // pok library elevator switch, goes backwards and forwards
+#define EQ_SWITCH_TYPE_156                       156    // book rotating in a circle on table in potranquility
+#define EQ_SWITCH_TYPE_158                       158    // book of legends in the pok library, click shows book text
+
+// class EQSwitch
+// EQData::_DOOR
+#define EQ_OFFSET_EQSwitch_VFTABLE                0x00    // uint32_t pointer    offsetof(EQData::_DOOR, vtable)
+#define EQ_OFFSET_EQSwitch_OBJECT_TYPE            0x04    // uint8_t             offsetof(EQData::_DOOR, ObjType)
+#define EQ_OFFSET_EQSwitch_INDEX                  0x05    // uint8_t             offsetof(EQData::_DOOR, ID)
+#define EQ_OFFSET_EQSwitch_NAME                   0x06    // char[32]            offsetof(EQData::_DOOR, Name)
+#define EQ_OFFSET_EQSwitch_TYPE                   0x26    // uint8_t             offsetof(EQData::_DOOR, Type)
+#define EQ_OFFSET_EQSwitch_STATE                  0x27    // uint8_t             offsetof(EQData::_DOOR, State)
+#define EQ_OFFSET_EQSwitch_DEFAULT_Y              0x28    // float               offsetof(EQData::_DOOR, DefaultY)
+#define EQ_OFFSET_EQSwitch_DEFAULT_X              0x2C    // float               offsetof(EQData::_DOOR, DefaultX)
+#define EQ_OFFSET_EQSwitch_DEFAULT_Z              0x30    // float               offsetof(EQData::_DOOR, DefaultZ)
+#define EQ_OFFSET_EQSwitch_DEFAULT_HEADING        0x34    // float               offsetof(EQData::_DOOR, DefaultHeading)
+#define EQ_OFFSET_EQSwitch_DEFAULT_ANGLE          0x38    // float               offsetof(EQData::_DOOR, DefaultDoorAngle)
+#define EQ_OFFSET_EQSwitch_Y                      0x44    // float               offsetof(EQData::_DOOR, Y)
+#define EQ_OFFSET_EQSwitch_X                      0x48    // float               offsetof(EQData::_DOOR, X)
+#define EQ_OFFSET_EQSwitch_Z                      0x4C    // float               offsetof(EQData::_DOOR, Z)
+#define EQ_OFFSET_EQSwitch_HEADING                0x50    // float               offsetof(EQData::_DOOR, Heading)
+#define EQ_OFFSET_EQSwitch_ANGLE                  0x54    // float               offsetof(EQData::_DOOR, DoorAngle)
+#define EQ_OFFSET_EQSwitch_KEY_ID                 0x70    // uint32_t            offsetof(EQData::_DOOR, Key)
+#define EQ_OFFSET_EQSwitch_CActor                 0xA4    // uint32_t pointer    offsetof(EQData::_DOOR, pSwitch)
+#define EQ_OFFSET_EQSwitch_IS_USEABLE             0xD4    // uint8_t             offsetof(EQData::_DOOR, bUsable)
+#define EQ_OFFSET_EQSwitch_SHOULD_REMAIN_OPEN     0xD5    // uint8_t             offsetof(EQData::_DOOR, bRemainOpen)
+#define EQ_OFFSET_EQSwitch_IS_VISIBLE             0xD6    // uint8_t             offsetof(EQData::_DOOR, bVisible)
+
+#define EQ_SIZE_EQSwitch_NAME    32 // 0x20
 
 #define EQ_SPAWN_STATE_FLAGS_IDLE                         0
 #define EQ_SPAWN_STATE_FLAGS_OPEN                         1
@@ -613,4 +753,24 @@ namespace EQ
         ColorARGB Color;
         uint32_t Layer; // 0-3
     } MapLine, *MapLine_ptr;
+
+    struct BandolierItemInfo
+    {
+/*0x00*/ int ItemID;
+/*0x04*/ int IconID;
+/*0x08*/ char Name[EQ_SIZE_BANDOLIER_ITEM_NAME];
+/*0x48*/
+    };
+
+    struct BandolierSet
+    {
+/*0x000*/ char Name[EQ_SIZE_BANDOLIER_SET_NAME];
+/*0x020*/ BandolierItemInfo Items[4]; // 0x120 = 0x48 * 4
+/*0x140*/
+    };
+
+    typedef struct _CharInfo2Bandolier
+    {
+/*0x00*/ BandolierSet Bandolier[EQ_NUM_BANDOLIER_SLOTS];
+    } CharInfo2Bandolier, *CharInfo2Bandolier_ptr;
 } // namespace EQ

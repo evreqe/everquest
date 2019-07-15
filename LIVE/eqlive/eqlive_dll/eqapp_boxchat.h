@@ -343,6 +343,11 @@ void EQAPP_BoxChat_InterpretCommands()
         return;
     }
 
+    if (EQAPP_String_Contains(commandText, "/") == false)
+    {
+        return;
+    }
+
     bool bUseTimer = false;
 
     bool bHasTimeElapsed = false;

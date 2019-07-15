@@ -125,8 +125,25 @@ void EQAPP_FollowAI_Execute()
     {
         if (EQ_IsAutoRunEnabled() == true)
         {
+            auto followSpawnType = EQ_GetSpawnType(followSpawn);
+            if (followSpawnType == EQ_SPAWN_TYPE_CORPSE)
+            {
+                g_FollowAISpawn = NULL;
+                EQ_SetAutoRun(false);
+
+                return;
+            }
+
+            if (EQ_DoesSpawnExist(followSpawn) == false)
+            {
+                g_FollowAISpawn = NULL;
+                EQ_SetAutoRun(false);
+
+                return;
+            }
+
             auto targetSpawn = EQ_GetTargetSpawn();
-            if (targetSpawn == NULL || targetSpawn == playerSpawn)
+            if (targetSpawn == playerSpawn)
             {
                 g_FollowAISpawn = NULL;
                 EQ_SetAutoRun(false);

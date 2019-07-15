@@ -68,9 +68,16 @@ void EQAPP_WindowTitle_Execute()
 
     SetWindowTextA(window, ss.str().c_str());
 
+    ////
+
     HWND foregroundWindow = GetForegroundWindow();
     if (window == foregroundWindow)
     {
         ShowWindow(window, SW_MAXIMIZE);
+    }
+
+    if (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CAlertWnd) == true)
+    {
+        EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CAlertWnd, EQ_OFFSET_CAlertWnd_BUTTON_CLOSE);
     }
 }

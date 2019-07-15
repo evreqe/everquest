@@ -2,12 +2,17 @@
 
 bool g_ChatEventIsEnabled = true;
 
+bool g_ChatEventDebugIsEnabled = false;
+
 std::unordered_map<std::string, std::string> g_ChatEventList;
 uint32_t g_ChatEventList_reserve = 1024;
 
 void EQAPP_ChatEvent_Toggle();
 void EQAPP_ChatEvent_On();
 void EQAPP_ChatEvent_Off();
+void EQAPP_ChatEvent_Debug_Toggle();
+void EQAPP_ChatEvent_Debug_On();
+void EQAPP_ChatEvent_Debug_Off();
 void EQAPP_ChatEvent_Load();
 void EQAPP_ChatEvent_AddToList(std::string chatText, std::string commandText);
 void EQAPP_ChatEvent_RemoveFromList(std::string chatText);
@@ -34,6 +39,28 @@ void EQAPP_ChatEvent_Off()
     if (g_ChatEventIsEnabled == true)
     {
         EQAPP_ChatEvent_Toggle();
+    }
+}
+
+void EQAPP_ChatEvent_Debug_Toggle()
+{
+    EQ_ToggleBool(g_ChatEventDebugIsEnabled);
+    EQAPP_PrintBool("Chat Event Debug", g_ChatEventDebugIsEnabled);
+}
+
+void EQAPP_ChatEvent_Debug_On()
+{
+    if (g_ChatEventDebugIsEnabled == false)
+    {
+        EQAPP_ChatEvent_Debug_Toggle();
+    }
+}
+
+void EQAPP_ChatEvent_Debug_Off()
+{
+    if (g_ChatEventDebugIsEnabled == true)
+    {
+        EQAPP_ChatEvent_Debug_Toggle();
     }
 }
 
@@ -87,24 +114,26 @@ void EQAPP_ChatEvent_Load()
             continue;
         }
 
-        if (EQAPP_String_Contains(line, "^") == false)
+        if (EQAPP_String_Contains(line, "|") == false)
         {
             continue;
         }
 
-        std::vector<std::string> tokens = EQAPP_String_Split(line, '^');
+        std::vector<std::string> tokens = EQAPP_String_Split(line, '|');
         if (tokens.size() != 2)
         {
             continue;
         }
 
-        std::string chatText = tokens.at(0);
-        std::string commandText = tokens.at(1);
+        //std::string chatText = tokens.at(0);
+        //std::string commandText = tokens.at(1);
 
-        std::cout << "[" << index << "] Chat Text: " << chatText << std::endl;
-        std::cout << "[" << index << "] Command Text: " << commandText << std::endl;
+        //std::cout << "[" << index << "] Chat Text: " << chatText << std::endl;
+        //std::cout << "[" << index << "] Command Text: " << commandText << std::endl;
 
-        g_ChatEventList.insert(std::make_pair(chatText, commandText));
+        //g_ChatEventList.insert(std::make_pair(chatText, commandText));
+
+        g_ChatEventList.insert(std::make_pair(tokens.at(0), tokens.at(1)));
 
         index++;
     }
@@ -142,6 +171,15 @@ void EQAPP_ChatEvent_PrintList()
 {
     std::cout << "Chat Events:" << std::endl;
 
+    bool bDisable = false;
+
+    if (g_ChatEventIsEnabled == true)
+    {
+        bDisable = true;
+
+        g_ChatEventIsEnabled = false;
+    }
+
     unsigned int index = 0;
 
     for (auto& keyValue : g_ChatEventList)
@@ -151,11 +189,19 @@ void EQAPP_ChatEvent_PrintList()
 
         index++;
     }
+
+    if (bDisable == true)
+    {
+        g_ChatEventIsEnabled = true;
+    }
 }
 
 void EQAPP_ChatEvent_HandleEvent_CEverQuest__dsp_chat(std::string text, int textColor)
 {
-    EQAPP_PrintTextToFile("chateventdebug.txt", text.c_str());
+    if (g_ChatEventDebugIsEnabled == true)
+    {
+        EQAPP_PrintTextToFile("chateventdebug.txt", text.c_str());
+    }
 
     for (auto& keyValue : g_ChatEventList)
     {

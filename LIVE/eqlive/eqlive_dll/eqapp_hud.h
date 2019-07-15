@@ -17,6 +17,8 @@ uint32_t g_HUDYDefault = 10;
 uint32_t g_HUDX = g_HUDXDefault;
 uint32_t g_HUDY = g_HUDYDefault;
 
+bool g_HUDPlayersInZoneIsEnabled = true;
+
 bool g_HUDNearbyPlayersIsEnabled = true;
 
 float g_HUDNearbyPlayersDistance = 30.0f;
@@ -63,7 +65,7 @@ void EQAPP_HUD_Execute()
     g_HUDX = g_HUDXDefault;
     g_HUDY = g_HUDYDefault;
 
-    g_HUDText << "EQTEST\n";
+    g_HUDText << g_EQAppNameEx << "\n";
 
     if (g_SleepIsEnabled == true)
     {
@@ -74,6 +76,15 @@ void EQAPP_HUD_Execute()
     if (numClients > 1)
     {
         g_HUDText << "- Clients: " << numClients << "\n";
+    }
+
+    if (g_HUDPlayersInZoneIsEnabled == true)
+    {
+        auto numPlayersInZone = EQ_GetNumSpawnsInZone(EQ_SPAWN_TYPE_PLAYER);
+        if (numPlayersInZone > 0)
+        {
+            g_HUDText << "- Players in Zone: " << numPlayersInZone << "\n";
+        }
     }
 
     if (g_HUDNearbyPlayersIsEnabled == true)
@@ -96,6 +107,16 @@ void EQAPP_HUD_Execute()
     if (g_FreeCameraIsEnabled == true)
     {
         g_HUDText << "- Free Camera\n";
+    }
+
+    if (g_WaypointFollowPathIsEnabled == true)
+    {
+        g_HUDText << "- Waypoint Follow Path\n";
+    }
+
+    if (g_SpeedIsEnabled == true)
+    {
+        g_HUDText << "- Speed: " << g_SpeedMultiplier << "\n";
     }
 
     if (g_AlwaysAttackIsEnabled == true)
@@ -140,6 +161,11 @@ void EQAPP_HUD_Execute()
         g_HUDText << "- ESP Find Spawn Last Name: " << g_ESPFindSpawnLastName << " (" << g_ESPFindSpawnLastNameCount << ")\n";
     }
 
+    if (g_ESPShowSpawnIDIsEnabled == true)
+    {
+        g_HUDText << "- ESP Show Spawn ID\n";
+    }
+
     if (g_FollowAIBehindIsEnabled == true)
     {
         g_HUDText << "- Follow AI Behind\n";
@@ -153,6 +179,16 @@ void EQAPP_HUD_Execute()
     if (g_ChangeHeightIsEnabled == true)
     {
         g_HUDText << "- Change Height\n";
+    }
+
+    if (g_ChatEventIsEnabled == true)
+    {
+        g_HUDText << "- Chat Event (" << g_ChatEventList.size() << ")\n";
+    }
+
+    if (g_KillMobsIsEnabled == true)
+    {
+        g_HUDText << "- Kill Mobs (" << g_KillMobsList.size() << ")\n";
     }
 
     EQ_DrawText(g_HUDText.str().c_str(), g_HUDX, g_HUDY);
