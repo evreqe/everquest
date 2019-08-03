@@ -25,7 +25,11 @@ functionList = {
     "AutoRun": 0,
     "MouseLook": 0,
     "NetStatus": 0,
-    "DetectVirtualMachine": 0,
+    "FlushDxKeyboard": 0,
+    "FlushDxMouse": 0,
+    "ProcessKeyboardEvent": 0,
+    "ProcessMouseEvent": 0,
+    "WindowProc": 0,
     "CollisionCallbackForActors": 0,
     "CastRay": 0,
     "CastRay2": 0,
@@ -36,9 +40,12 @@ functionList = {
     "GetTime": 0,
     "UpdateLight": 0,
     "GetGaugeValueFromEQ": 0,
+    "get_bearing": 0,
+    "get_melee_range": 0,
     "vehicle_premove": 0,
     "vehicle_postmove": 0,
     "EQZoneInfo": 0,
+    "ControlledSpawn": 0,
     "PlayerSpawn": 0,
     "TargetSpawn": 0,
     "StringTable": 0,
@@ -55,6 +62,8 @@ functionList = {
     "EQ_Character__ProcessEnvironment": 0,
     "EQ_Character__TotalSpellAffects": 0,
     "CharacterZoneClient__SetNoGrav": 0,
+    "EQ_PC": 0,
+    "EQ_PC__DestroyHeldItemOrMoney": 0,
     "EQPlayerManager": 0,
     "EQPlayerManager__GetSpawnByID": 0,
     "EQPlayerManager__GetSpawnByName": 0,
@@ -69,6 +78,7 @@ functionList = {
     "EQPlayer__SetNameSpriteState": 0,
     "EQPlayer__SetNameSpriteTint": 0,
     "EQPlayer__ChangeLight": 0,
+    "EQPlayer__push_along_heading": 0,
     "EQSwitchManager": 0,
     "EQSwitch__UseSwitch": 0,
     "EQSwitch__ChangeState": 0,
@@ -87,6 +97,7 @@ functionList = {
     "CEverQuest__HandleMouseWheel": 0,
     "CEverQuest__StartCasting": 0,
     "CEverQuest__SendNewText": 0,
+    "CEverQuest__DropHeldItemOnGround": 0,
     "CDisplay": 0,
     "CDisplay__WriteTextHD2": 0,
     "CDisplay__CreateActor": 0,
@@ -155,7 +166,6 @@ with open("eqgame.c", "rt") as in_file:
                     print("buildTime", buildTime)
 
             # SizeCXWnd
-            # ----------------------------------------------------------------------------------------------------
             # ----------------------------------------------------------------------------------------------------
             # = &CXWnd::`vftable';    # goto xref, first function in vftable
             #
@@ -613,18 +623,539 @@ with open("eqgame.c", "rt") as in_file:
             if matches:
                 functionList["NetStatus"] = "0x00" + matches[0]
 
-            # DetectVirtualMachine
+            # FlushDxKeyboard
             # ----------------------------------------------------------------------------------------------------
-            if functionString.find("\"prleth.sys\"") != -1:
-                if functionString.find("\"hgfs.sys\"") != -1:
-                    if functionString.find("\"vmhgfs.sys\"") != -1:
-                        if functionString.find("\"wmcheck.dll\"") != -1:
-                            if functionString.find("\"VMWARE\"") != -1:
-                                if functionString.find("\"QEMU\"") != -1:
-                                    if functionString.find("\"VBOX\"") != -1:
-                                        if functionString.find("\"VirtualBox\"") != -1:
-                                            if functionString.find("\"55274-640-2673064-23950\"") != -1:
-                                                functionList["DetectVirtualMachine"] = functionAddress
+            # int sub_6A5C80()    # 0x006A5C80
+            # {
+            #   int v1; // [esp+14h] [ebp-284h]
+            #   char v2; // [esp+18h] [ebp-280h]
+            #
+            #   v1 = 32;
+            #   (*(void (__stdcall **)(int, signed int, char *, int *, _DWORD))(*(_DWORD *)dword_F3FB94 + 40))(
+            #     dword_F3FB94,
+            #     20,
+            #     &v2,
+            #     &v1,
+            #     0);
+            #   dword_E9AEA4 = 0;
+            #   dword_E9AEA8 = 0;
+            #   byte_E9AEAC = 0;
+            #   if ( dword_16D6198 )
+            #     sub_929940(dword_16D6198);
+            #   return v1;
+            # }
+            if re.search("[0-9a-z]+ \= 32;", functionString):
+                if functionString.find("__stdcall") != -1:
+                    if re.search("dword_[0-9A-F]+ \+ 40", functionString):
+                        if functionString.find("20,") != -1:
+                            if re.search("dword_[0-9A-F]+ \= 0;", functionString):
+                                if re.search("byte_[0-9A-F]+ \= 0;", functionString):
+                                    if re.search("if \( dword_[0-9A-F]+ \)", functionString):
+                                        if re.search("sub_[0-9A-F]+\(dword_[0-9A-F]+\);", functionString):
+                                            if re.search("return [0-9a-z]+;", functionString):
+                                                functionList["FlushDxKeyboard"] = functionAddress
+
+            # FlushDxMouse
+            # ----------------------------------------------------------------------------------------------------
+            # signed int sub_6A5900()    # 0x006A5900
+            # {
+            #   signed int result; // eax
+            #   int v1; // [esp+0h] [ebp-A04h]
+            #   char v2; // [esp+4h] [ebp-A00h]
+            #
+            #   v1 = 128;
+            #   dword_F3FB84 = 0;
+            #   dword_F3FB88 = 0;
+            #   if ( dword_F3F150 )
+            #     result = (*(int (__stdcall **)(int, signed int, char *, int *, _DWORD))(*(_DWORD *)dword_F3F150 + 40))(
+            #                dword_F3F150,
+            #                20,
+            #                &v2,
+            #                &v1,
+            #                0) >= 0 ? 1 : 7;
+            #   else
+            #     result = dword_F3F150 + 7;
+            #   return result;
+            # }
+            if re.search("[0-9a-z]+ \= 128;", functionString):
+                if functionString.find("__stdcall") != -1:
+                    if re.search("dword_[0-9A-F]+ \+ 40", functionString):
+                        if functionString.find("20,") != -1:
+                            if functionString.find(">= 0 ? 1 : 7;") != -1:
+                                if re.search("result \= dword_[0-9A-F]+ \+ 7;", functionString):
+                                    if functionString.find("return result;") != -1:
+                                        functionList["FlushDxMouse"] = functionAddress
+
+            # ProcessKeyboardEvent
+            # ----------------------------------------------------------------------------------------------------
+            # unsigned int __usercall sub_6A77B0@<eax>(double a1@<st7>, double a2@<st6>, double a3@<st5>, double a4@<st4>, double a5@<st3>, double a6@<st2>, double a7@<st1>, double a8@<st0>)
+            # {
+            #   HWND v8; // eax
+            #   unsigned int v10; // edi
+            #   char *v11; // esi
+            #   char v12; // al
+            #   unsigned __int8 v13; // al
+            #   char v14; // al
+            #   unsigned __int8 v15; // al
+            #   char v16; // al
+            #   unsigned __int8 v17; // al
+            #   char v18; // [esp+Ch] [ebp-294h]
+            #   char v19; // [esp+18h] [ebp-288h]
+            #   unsigned int v20; // [esp+1Ch] [ebp-284h]
+            #   char v21; // [esp+20h] [ebp-280h]
+            #
+            #   v20 = 32;
+            #   v8 = GetForegroundWindow();
+            #   if ( !v8 || v8 != hwnd )
+            #     return 1;
+            #   (*(void (__stdcall **)(int))(*(_DWORD *)dword_F3FB94 + 28))(dword_F3FB94);
+            #   if ( (*(int (__stdcall **)(int, signed int, char *, unsigned int *, _DWORD))(*(_DWORD *)dword_F3FB94 + 40))(
+            #          dword_F3FB94,
+            #          20,
+            #          &v21,
+            #          &v20,
+            #          0) )
+            #   {
+            #     sub_6A5C80();
+            #     return 1;
+            #   }
+            #   v10 = 0;
+            #   if ( v20 )
+            #   {
+            #     v11 = &v21;
+            #     do
+            #     {
+            #       v18 = *v11;
+            #       if ( v11[4] >= 0 )
+            #         sub_6A5EC0(a1, a2, a3, a4, a5, a6, a7, a8, v18);
+            #       else
+            #         sub_6A5CE0(a1, a2, a3, a4, a5, a6, a7, a8, v18);
+            #       ++v10;
+            #       v11 += 20;
+            #     }
+            #     while ( v10 < v20 );
+            #   }
+            #   if ( !(_BYTE)dword_E9AEA4 )
+            #     goto LABEL_33;
+            #   if ( !(GetAsyncKeyState(16) & 0x8000) )
+            #   {
+            #     LOBYTE(dword_E9AEA4) = 0;
+            #     sub_907350(&v19, 42, 0, SBYTE1(dword_E9AEA4), SBYTE2(dword_E9AEA4));
+            #     v12 = sub_908080(&v19);
+            #     sub_6A5EC0(a1, a2, a3, a4, a5, a6, a7, a8, v12);
+            #     goto LABEL_18;
+            #   }
+            #   if ( !(_BYTE)dword_E9AEA4 )
+            #   {
+            # LABEL_33:
+            #     if ( GetAsyncKeyState(16) & 0x8000 )
+            #     {
+            #       LOBYTE(dword_E9AEA4) = 1;
+            #       sub_907350(&v19, 42, 1, SBYTE1(dword_E9AEA4), SBYTE2(dword_E9AEA4));
+            #       v13 = sub_908080(&v19);
+            #       sub_6A5CE0(a1, a2, a3, a4, a5, a6, a7, a8, v13);
+            #     }
+            #   }
+            # LABEL_18:
+            #   if ( !BYTE1(dword_E9AEA4) )
+            #     goto LABEL_22;
+            #   if ( GetAsyncKeyState(17) & 0x8000 )
+            #   {
+            #     if ( BYTE1(dword_E9AEA4) )
+            #       goto LABEL_24;
+            # LABEL_22:
+            #     if ( GetAsyncKeyState(17) & 0x8000 )
+            #     {
+            #       BYTE1(dword_E9AEA4) = 1;
+            #       sub_907350(&v19, 29, dword_E9AEA4, 1, SBYTE2(dword_E9AEA4));
+            #       v15 = sub_908080(&v19);
+            #       sub_6A5CE0(a1, a2, a3, a4, a5, a6, a7, a8, v15);
+            #     }
+            #     goto LABEL_24;
+            #   }
+            #   BYTE1(dword_E9AEA4) = 0;
+            #   sub_907350(&v19, 29, dword_E9AEA4, 0, SBYTE2(dword_E9AEA4));
+            #   v14 = sub_908080(&v19);
+            #   sub_6A5EC0(a1, a2, a3, a4, a5, a6, a7, a8, v14);
+            # LABEL_24:
+            #   if ( !BYTE2(dword_E9AEA4) )
+            #     goto LABEL_34;
+            #   if ( !(GetAsyncKeyState(18) & 0x8000) )
+            #   {
+            #     BYTE2(dword_E9AEA4) = 0;
+            #     sub_907350(&v19, 56, dword_E9AEA4, SBYTE1(dword_E9AEA4), 0);
+            #     v16 = sub_908080(&v19);
+            #     sub_6A5EC0(a1, a2, a3, a4, a5, a6, a7, a8, v16);
+            #     return v20;
+            #   }
+            #   if ( !BYTE2(dword_E9AEA4) )
+            #   {
+            # LABEL_34:
+            #     if ( GetAsyncKeyState(18) & 0x8000 )
+            #     {
+            #       BYTE2(dword_E9AEA4) = 1;
+            #       sub_907350(&v19, 56, dword_E9AEA4, SBYTE1(dword_E9AEA4), 1);
+            #       v17 = sub_908080(&v19);
+            #       sub_6A5CE0(a1, a2, a3, a4, a5, a6, a7, a8, v17);
+            #     }
+            #   }
+            #   return v20;
+            # }
+            if functionString.find("GetForegroundWindow()") != -1:
+                if functionString.find("!= hwnd") != -1:
+                        if functionString.find("return 1;") != -1:
+                            if functionString.find("GetAsyncKeyState(16) & 0x8000") != -1:
+                                if functionString.find("GetAsyncKeyState(17) & 0x8000") != -1:
+                                    if functionString.find("GetAsyncKeyState(18) & 0x8000") != -1:
+                                        functionList["ProcessKeyboardEvent"] = functionAddress
+
+            # ProcessMouseEvent
+            # ----------------------------------------------------------------------------------------------------
+            # void __usercall sub_5FB500(int a1@<ebp>, int a2@<edi>, double a3@<st7>, double a4@<st6>, double a5@<st5>, double a6@<st4>, double a7@<st3>, double a8@<st2>, double a9@<st1>, double a10@<st0>)
+            # {
+            #   int v10; // eax
+            #   char v11; // bl
+            #   HWND v12; // eax
+            #   char *v13; // ST04_4
+            #   int v14; // edi
+            #   int v15; // eax
+            #   signed __int64 v16; // rax
+            #   char v17; // al
+            #   _BYTE *v18; // eax
+            #   void *v19; // eax
+            #   _BYTE *v20; // eax
+            #   HWND v21; // eax
+            #   int v22; // eax
+            #   int v23; // eax
+            #   _BYTE *v24; // eax
+            #   _BYTE *v25; // eax
+            #   _BYTE *v26; // eax
+            #   int v27; // eax
+            #   int *v28; // ecx
+            #   _BYTE *v29; // eax
+            #   char v30; // al
+            #   BOOL v31; // eax
+            #   _BYTE *v32; // eax
+            #   _BYTE *v33; // eax
+            #   int v34; // eax
+            #   int *v35; // ecx
+            #   _BYTE *v36; // eax
+            #   char v37; // al
+            #   bool v38; // zf
+            #   _BYTE *v39; // eax
+            #   _BYTE *v40; // eax
+            #   int v41; // [esp-4h] [ebp-18h]
+            #   struct tagPOINT Point; // [esp+4h] [ebp-10h]
+            #   int v43; // [esp+Ch] [ebp-8h]
+            #   int v44; // [esp+10h] [ebp-4h]
+            #
+            #   v10 = *(_DWORD *)(dword_104919C + 1480);
+            #   v11 = 0;
+            #   if ( v10 == 2 || v10 == 1 || v10 == 5 )
+            #   {
+            #     v12 = GetForegroundWindow();
+            #     if ( v12 )
+            #     {
+            #       if ( v12 == hwnd )
+            #       {
+            #         if ( dword_C287F8 && dword_F3F150 )
+            #           (*(void (__stdcall **)(int))(*(_DWORD *)dword_F3F150 + 28))(dword_F3F150);
+            #         if ( !dword_E8AC50 || *(_DWORD *)(dword_104919C + 1480) != 5 || *((_BYTE *)dword_E8AC50 + 1228) != 102 )
+            #         {
+            #           if ( byte_ED0FCC[0] )
+            #           {
+            #             if ( word_E9A8EC )
+            #             {
+            #               v13 = (char *)sub_8B7230((int *)dword_E8D3C8, 0x2F3Fu, 0);
+            #               sub_4E5F10();
+            #               sub_4E65B0(v13, (LPVOID)0x111, (LPVOID)1, (LPVOID)1, 0);
+            #             }
+            #             return;
+            #           }
+            #           v41 = a2;
+            #           v14 = sub_8F1280();
+            #           v15 = *(_DWORD *)(dword_104919C + 1480);
+            #           if ( v15 != 2 && v15 != 1 )
+            #           {
+            #             LODWORD(v16) = sub_4CF660((int)dword_E8D11C + 9240, 0, 1);
+            #             if ( v16 < 1
+            #               || (v17 = *((_BYTE *)dword_E8D11C + *(_DWORD *)(*((_DWORD *)dword_E8D11C + 2) + 4) + 356), v17 == 3)
+            #               || v17 == 4 )
+            #             {
+            #               v11 = 1;
+            #               if ( (_BYTE)word_E9A8AA )
+            #               {
+            #                 LOBYTE(word_E9A8AA) = 0;
+            #                 while ( ShowCursor(1) < 0 )
+            #                   ;
+            #                 SetCursorPos(*(_DWORD *)(dword_16D6198 + 312), *(_DWORD *)(dword_16D6198 + 316));
+            #               }
+            #               v18 = sub_612200();
+            #               if ( sub_6122D0(v18) )
+            #               {
+            #                 v19 = sub_612200();
+            #                 sub_612B60((int)v19, 0, 0);
+            #               }
+            #             }
+            #           }
+            #           sub_6A5700();
+            #           byte_E9A840 = sub_6A7C30(&Point);
+            #           v20 = sub_612200();
+            #           if ( sub_6122D0(v20) && !byte_E9A840 && *(_BYTE *)(lParam + 2116) )
+            #           {
+            #             sub_6A5540();
+            #             Point = *(struct tagPOINT *)&qword_E9A82C;
+            #             v21 = (HWND)(*(int (**)(void))(*(_DWORD *)lParam + 28))();
+            #             if ( !*(_BYTE *)(lParam + 4) )
+            #               ClientToScreen(v21, &Point);
+            #             SetCursorPos(Point.x, Point.y);
+            #             byte_E9A840 = sub_6A7C30(&Point);
+            #           }
+            #           if ( Point.x >= 0 )
+            #           {
+            #             v22 = sub_992F80((_DWORD *)lParam);
+            #             if ( Point.x <= v22 - 1 )
+            #               dword_F3FB7C = Point.x;
+            #             else
+            #               dword_F3FB7C = sub_992F80((_DWORD *)lParam) - 1;
+            #           }
+            #           else
+            #           {
+            #             dword_F3FB7C = 0;
+            #           }
+            #           if ( Point.y >= 0 )
+            #           {
+            #             v23 = sub_992F40((_DWORD *)lParam);
+            #             if ( Point.y <= v23 - 1 )
+            #               dword_F3FB80 = Point.y;
+            #             else
+            #               dword_F3FB80 = sub_992F40((_DWORD *)lParam) - 1;
+            #           }
+            #           else
+            #           {
+            #             dword_F3FB80 = 0;
+            #           }
+            #           if ( (_BYTE)word_E9A8EC )
+            #           {
+            #             if ( byte_F3FB9F )
+            #               LOBYTE(word_E9A8EC) = 0;
+            #           }
+            #           else
+            #           {
+            #             byte_F3FB9F = 0;
+            #           }
+            #           qword_E9A82C = (signed __int16)dword_F3FB7C;
+            #           *(&qword_E9A82C + 1) = (signed __int16)dword_F3FB80;
+            #           dword_E9A834 = (signed __int16)dword_F3FB8C;
+            #           dword_E9A838 = dword_F3FB84;
+            #           dword_E9A83C = dword_F3FB88;
+            #           if ( dword_E9A8DC != dword_F3FB7C || dword_E9A8E0 != dword_F3FB80 )
+            #           {
+            #             dword_E9AE6C = 0;
+            #             dword_E9AE64 = sub_8F1280();
+            #           }
+            #           if ( !v11 )
+            #           {
+            #             v24 = sub_612200();
+            #             if ( !sub_6122D0(v24) || (_BYTE)word_E9A8AA )
+            #               sub_5D46F0((float *)dword_104919C, dword_E9A834);
+            #           }
+            #           if ( (_BYTE)word_E9A8EC )
+            #           {
+            #             sub_80C5F0(dword_F3FB7C, dword_F3FB80);
+            #             if ( !(_BYTE)word_E9A8E4 )
+            #             {
+            #               dword_F3A03C = sub_8F0E40();
+            #               unk_E9A950 = v14;
+            #               if ( dword_16D6198 )
+            #               {
+            #                 if ( (_BYTE)word_E9A8AA || (v25 = sub_612200(), sub_6122D0(v25)) )
+            #                 {
+            #                   if ( !v11 )
+            #                     goto LABEL_63;
+            #                 }
+            #                 if ( !byte_E9A840 )
+            #                   goto LABEL_64;
+            #                 if ( dword_DD8A3C != 3 )
+            #                 {
+            #                   v43 = dword_F3FB7C;
+            #                   v44 = dword_F3FB80;
+            #                   if ( sub_927830((int *)dword_16D6198, &v43) )
+            #                     goto LABEL_64;
+            #                 }
+            #               }
+            #               if ( v11 )
+            #               {
+            # LABEL_64:
+            #                 dword_E8ABC8 = 2;
+            #                 goto LABEL_85;
+            #               }
+            # LABEL_63:
+            #               sub_5D3F70(dword_F3FB7C, dword_F3FB80);
+            #               goto LABEL_64;
+            #             }
+            #             if ( (unsigned int)(v14 - unk_E9A950) > 0x2EE && !byte_F395ED )
+            #             {
+            #               byte_F395ED = 1;
+            #               if ( !(_BYTE)word_E9A8AA )
+            #               {
+            #                 v26 = sub_612200();
+            #                 if ( !sub_6122D0(v26) )
+            #                 {
+            #                   if ( dword_16D6198 )
+            #                   {
+            #                     v43 = dword_F3FB7C;
+            #                     v44 = dword_F3FB80;
+            #                     sub_928280((int *)dword_16D6198, &v43);
+            #                   }
+            #                 }
+            #               }
+            #             }
+            #           }
+            #           else
+            #           {
+            #             if ( (_BYTE)word_E9A8E4 )
+            #             {
+            #               v27 = sub_8F0E40();
+            #               v28 = (int *)dword_16D6198;
+            #               dword_F3A03C = v27;
+            #               byte_E9A81B = 0;
+            #               if ( dword_16D6198 )
+            #               {
+            #                 if ( ((_BYTE)word_E9A8AA || (v29 = sub_612200(), v30 = sub_6122D0(v29), v28 = (int *)dword_16D6198, v30))
+            #                   && !v11
+            #                   || ((v43 = dword_F3FB7C, v44 = dword_F3FB80, byte_F395ED == 1) ? (v31 = sub_928390(v28, &v43)) : (v31 = sub_928030(v28, &v43)),
+            #                       !v31 && !dword_E9A948 && !v11) )
+            #                 {
+            #                   sub_5D3080((int *)dword_104919C, a3, a4, a5, a6, a7, a8, a9, a10, dword_F3FB7C, dword_F3FB80);
+            #                 }
+            #               }
+            #               dword_E9A948 = 0;
+            #               unk_E9A950 = 0;
+            #               dword_E8ABC8 = 2;
+            #             }
+            #             byte_F395ED = 0;
+            #           }
+            # LABEL_85:
+            #           LOBYTE(word_E9A8E4) = word_E9A8EC;
+            #           if ( HIBYTE(word_E9A8EC) )
+            #           {
+            #             sub_80C5F0(dword_F3FB7C, dword_F3FB80);
+            #             if ( HIBYTE(word_E9A8E4) )
+            #             {
+            #               if ( !(_BYTE)word_E9A8AA )
+            #               {
+            #                 v33 = sub_612200();
+            #                 if ( !sub_6122D0(v33) && (unsigned int)(v14 - dword_E9A94C) > 0x1F4 && !byte_F395EE )
+            #                 {
+            #                   byte_F395EE = 1;
+            #                   if ( dword_16D6198 )
+            #                   {
+            #                     v43 = dword_F3FB7C;
+            #                     v44 = dword_F3FB80;
+            #                     sub_928730((int *)dword_16D6198, &v43);
+            #                   }
+            #                 }
+            #               }
+            #               goto LABEL_120;
+            #             }
+            #             dword_F3A03C = sub_8F0E40();
+            #             dword_E9A94C = v14;
+            #             if ( dword_16D6198 )
+            #             {
+            #               if ( (_BYTE)word_E9A8AA || (v32 = sub_612200(), sub_6122D0(v32)) )
+            #               {
+            #                 if ( !v11 )
+            #                   goto LABEL_94;
+            #               }
+            #               if ( dword_DD8A3C != 3 )
+            #               {
+            #                 v43 = dword_F3FB7C;
+            #                 v44 = dword_F3FB80;
+            #                 if ( sub_9284B0((int *)dword_16D6198, &v43) )
+            #                   goto LABEL_95;
+            #               }
+            #             }
+            #             if ( v11 )
+            #             {
+            # LABEL_95:
+            #               dword_E8ABC8 = 2;
+            #               goto LABEL_120;
+            #             }
+            # LABEL_94:
+            #             sub_5D45A0(dword_F3FB7C, dword_F3FB80);
+            #             goto LABEL_95;
+            #           }
+            #           if ( !HIBYTE(word_E9A8E4) )
+            #           {
+            # LABEL_119:
+            #             byte_F395EE = 0;
+            # LABEL_120:
+            #             HIBYTE(word_E9A8E4) = HIBYTE(word_E9A8EC);
+            #             v40 = sub_612200();
+            #             if ( sub_6122D0(v40) && !(_BYTE)word_E9A8AA )
+            #               sub_5DCE30(v11, a1, v41);
+            #             sub_5FBCB0(a3, a4, a5, a6, a7, a8, a9, a10);
+            #             return;
+            #           }
+            #           v34 = sub_8F0E40();
+            #           v35 = (int *)dword_16D6198;
+            #           dword_F3A03C = v34;
+            #           if ( dword_16D6198 )
+            #           {
+            #             if ( (_BYTE)word_E9A8AA || (v36 = sub_612200(), v37 = sub_6122D0(v36), v35 = (int *)dword_16D6198, v37) )
+            #             {
+            #               if ( !v11 )
+            #                 goto LABEL_117;
+            #             }
+            #             v43 = dword_F3FB7C;
+            #             v44 = dword_F3FB80;
+            #             if ( byte_F395EE == 1 )
+            #             {
+            #               sub_928840(v35, &v43);
+            #               goto LABEL_118;
+            #             }
+            #             if ( sub_928620(v35, &v43) || dword_E9A944 )
+            #               goto LABEL_118;
+            #             v38 = v11 == 0;
+            #           }
+            #           else
+            #           {
+            #             if ( v11 )
+            #               goto LABEL_118;
+            #             if ( (_BYTE)word_E9A8AA )
+            #               goto LABEL_117;
+            #             v39 = sub_612200();
+            #             if ( sub_6122D0(v39) )
+            #               goto LABEL_117;
+            #             v38 = dword_E9A944 == 0;
+            #           }
+            #           if ( v38 )
+            # LABEL_117:
+            #             sub_5D4010(dword_104919C, a10, a9, dword_F3FB7C, dword_F3FB80);
+            # LABEL_118:
+            #           dword_E9A944 = 0;
+            #           dword_E9A94C = 0;
+            #           dword_E8ABC8 = 2;
+            #           goto LABEL_119;
+            #         }
+            #       }
+            #     }
+            #   }
+            # }
+            if functionString.find("0x2F3Fu") != -1:    # 12095 Interface locked.  Please use /safelock to unlock it.
+                if functionString.find("GetForegroundWindow()") != -1:
+                    if functionString.find("== hwnd") != -1:
+                            if functionString.find("ShowCursor(1)") != -1:
+                                if functionString.find("ClientToScreen") != -1:
+                                    if functionString.find("SetCursorPos(Point.x, Point.y);") != -1:    # struct tagPOINT Point;
+                                        functionList["ProcessMouseEvent"] = functionAddress
+
+            # WindowProc
+            # ----------------------------------------------------------------------------------------------------
+            # WndClass.lpfnWndProc = (WNDPROC)sub_XXXXXX;
+            if functionString.find("return DefWindowProcA(hWnd") != -1:
+                functionList["WindowProc"] = functionAddress
 
             # CollisionCallbackForActors
             # ----------------------------------------------------------------------------------------------------
@@ -928,6 +1459,103 @@ with open("eqgame.c", "rt") as in_file:
                                     if functionString.find("\"Completed: %d/%d\"") != -1:
                                             functionList["GetGaugeValueFromEQ"] = functionAddress
 
+            # get_bearing
+            # ----------------------------------------------------------------------------------------------------
+            # long double __cdecl sub_59B4D0(float a1, float a2, float a3, float a4)    # 0x0059B4D0
+            # {
+            #   double v4; // st6
+            #   long double v5; // st5
+            #   double v6; // st4
+            #   long double v7; // st2
+            #   long double v8; // rt2
+            #   long double v9; // st2
+            #   double v10; // st5
+            #   long double v11; // st7
+            #   long double result; // st7
+            #   double v13; // st3
+            #
+            #   v4 = a3;
+            #   v5 = fabs(a1 - a3);
+            #   v6 = a2;
+            #   v7 = fabs(a2 - a4);
+            #   if ( v5 < 0.0000009999999974752427 )
+            #     v5 = 0.0000009999999974752427;
+            #   v8 = v7;
+            #   v9 = v5;
+            #   v10 = a4;
+            #   v11 = atan2(v8, v9) * 180.0 * 0.3183099014828645;
+            #   if ( a1 < v4 )
+            #   {
+            #     v13 = a1;
+            #   }
+            #   else
+            #   {
+            #     if ( a4 >= v6 )
+            #       return (90.0 - v11 + 90.0) * 511.5 * 0.0027777778;
+            #     if ( a4 <= v6 )
+            #       return (v11 + 180.0) * 511.5 * 0.0027777778;
+            #     v13 = a1;
+            #     v10 = a4;
+            #   }
+            #   if ( v13 > v4 || v10 > v6 )
+            #     result = v11 * 511.5 * 0.0027777778;
+            #   else
+            #     result = (90.0 - v11 + 270.0) * 511.5 * 0.0027777778;
+            #   return result;
+            # }
+            if functionString.find("fabs") != -1:
+                if functionString.find("atan2") != -1:
+                    if functionString.find("0.0000009999999974752427") != -1:
+                        if functionString.find(" * 180.0 * 0.3183099014828645;") != -1:
+                            if functionString.find(" + 90.0) * 511.5 * 0.0027777778;") != -1:
+                                if functionString.find(" + 180.0) * 511.5 * 0.0027777778;") != -1:
+                                    if functionString.find(" * 511.5 * 0.0027777778;") != -1:
+                                        if functionString.find(" + 270.0) * 511.5 * 0.0027777778;") != -1:
+                                            functionList["get_bearing"] = functionAddress
+
+            # get_melee_range
+            # ----------------------------------------------------------------------------------------------------
+            # double __cdecl sub_59BBC0(float *a1, float *a2)    # 0x0059BBC0
+            # {
+            #   float v3; // ST0C_4
+            #   float v4; // ST00_4
+            #   float v5; // [esp+4h] [ebp-18h]
+            #   float v6; // [esp+8h] [ebp-14h]
+            #   float v7; // [esp+10h] [ebp-Ch]
+            #   float v8; // [esp+18h] [ebp-4h]
+            #   float v9; // [esp+18h] [ebp-4h]
+            #   signed int retaddr; // [esp+20h] [ebp+4h]
+            #
+            #   if ( !a1 || !a2 )
+            #     return 14.0;
+            #   v8 = sub_65C240(a1);
+            #   v6 = sub_65C240(a2);
+            #   if ( dword_F3FB6C == -572662307 )
+            #   {
+            #     dword_F3F15C = retaddr;
+            #     if ( retaddr > 286331153 )
+            #       *((_BYTE *)&off_C1117D - 2) = 0;
+            #   }
+            #   v3 = sub_5BF990(a1);
+            #   v4 = v3 - sub_5BF990(a2);
+            #   v5 = sub_5BFF40(v4);
+            #   v9 = (v8 + v6) * 0.75;
+            #   if ( v9 < 14.0 )
+            #     v9 = 14.0;
+            #   v7 = v9 + 2.0 + v5;
+            #   if ( v7 > 75.0 )
+            #     v7 = 75.0;
+            #   return v7;
+            # }
+            if functionString.find("return 14.0") != -1:
+                if functionString.find("== -572662307") != -1:
+                    if functionString.find("> 286331153") != -1:
+                        if functionString.find("< 14.0") != -1:
+                            if functionString.find("= 14.0") != -1:
+                                if functionString.find("> 75.0") != -1:
+                                    if functionString.find("= 75.0") != -1:
+                                        functionList["get_melee_range"] = functionAddress
+
             # vehicle_premove
             # vehicle_postmove
             # ----------------------------------------------------------------------------------------------------
@@ -1004,11 +1632,11 @@ with open("eqgame.c", "rt") as in_file:
             #   }
             #   return 0;
             # }
-            if functionString.find("& 0x1FF80000") != -1:
-                if functionString.find("!= 34603008") != -1:
-                    if functionString.find("&= 0xE007FFFF;") != -1:
-                        if functionString.find("&= 0xFFFFFC00;") != -1:
-                            if functionString.find("&= 0xFFFFE000;") != -1:
+            if functionString.find("return 0;") != -1:
+                if functionString.find("return 1;") != -1:
+                    if functionString.find("= 6;") != -1:
+                        if functionString.find("== 5") != -1:
+                            if functionString.find("& 0x3FF) != 66") != -1:
                                 if functionString.find(">= 0x3A98") != -1:
                                     matches = re.findall("= 0;\n\s+sub_([0-9A-F]+)\(\(float \*\)[0-9a-z]+\);", functionString, re.MULTILINE)
                                     if matches:
@@ -1033,6 +1661,16 @@ with open("eqgame.c", "rt") as in_file:
                 matches = re.findall("sub_[0-9A-F]+\(\"Item done, MSG_WEATHER_EVENT received..n\"\);\n.*\n.*\n.*\n.*sub_[0-9A-F]+\(byte_([0-9A-F]+),", functionString, re.MULTILINE)
                 if matches:
                     functionList["EQZoneInfo"] = "0x00" + matches[0]
+
+            # ControlledSpawn
+            # ----------------------------------------------------------------------------------------------------
+            #            if ( -20001.1 == v83 )
+            #              sub_646C10(dword_E7F448, 0.0, 0);    # 0x00E7F448    0x00646C10 = EQPlayer::SetAccel()
+            if functionString.find("-20001.1") != -1:
+                if functionString.find(", 0.0, 0);") != -1:
+                    matches = re.findall("if \( -20001.1 == [0-9a-z]+ \)\n\s+sub_[0-9A-F]+\(dword_([0-9A-F]+), 0.0, 0\);", functionString, re.MULTILINE)
+                    if matches:
+                        functionList["ControlledSpawn"] = "0x00" + matches[0]
 
             # PlayerSpawn
             # ----------------------------------------------------------------------------------------------------
@@ -1491,6 +2129,263 @@ with open("eqgame.c", "rt") as in_file:
                         if functionString.find("== 1") != -1:
                             functionList["CharacterZoneClient__SetNoGrav"] = functionAddress
 
+            # EQ_PC
+            # ----------------------------------------------------------------------------------------------------
+            # void *__thiscall sub_832810(_DWORD *this)
+            # {
+            #   _DWORD *v1; // esi
+            #   void *result; // eax
+            #   int *v3; // ecx
+            #   char *v4; // eax
+            #   LPVOID *v5; // eax
+            #   LPVOID lpMem; // [esp+4h] [ebp-14h]
+            #   void *v7; // [esp+8h] [ebp-10h]
+            #   int v8; // [esp+14h] [ebp-4h]
+            #
+            #   v1 = this;
+            #   result = (void *)this[6];
+            #   if ( (signed int)result < 0 || (signed int)result >= 6 || !dword_E8D11C || byte_E9A7FC )    # 0x00E8D11C
+            #   {
+            #     v7 = 0;
+            #     v8 = 2;
+            #     sub_8EFE70(&v7, (int)"groupmember%d", (char)result);
+            #     sub_832240((char *)v1, &v7, (volatile signed __int32 **)v1 + 5);
+            #     result = v7;
+            #     v8 = 3;
+            #     if ( !v7 )
+            #       return result;
+            #     return (void *)sub_8EF7E0(result);
+            #   }
+            #   v3 = (int *)*((_DWORD *)dword_E8D11C + 2569);
+            #   if ( v3 )
+            #   {
+            #     v4 = sub_608320(v3, (int)result, *((_DWORD *)dword_E8D11C + 2312));
+            #     v5 = sub_8ED3B0(&lpMem, v4);
+            #     v8 = 0;
+            #     sub_832240((char *)v1, v5, (volatile signed __int32 **)v1 + 5);
+            #     result = lpMem;
+            #     v8 = 1;
+            #     if ( lpMem )
+            #       return (void *)sub_8EF7E0(result);
+            #   }
+            #   return result;
+            # }
+            if functionString.find("\"groupmember%d\"") != -1:
+                if functionString.find(">= 6") != -1:
+                    matches = re.findall("\|\| \!dword_([0-9A-F]+)", functionString, re.MULTILINE)
+                    if matches:
+                        functionList["EQ_PC"] = "0x00" + matches[0]
+
+            # EQ_PC__DestroyHeldItemOrMoney
+            # ----------------------------------------------------------------------------------------------------
+            # _DWORD *__usercall sub_636A20@<eax>(unsigned int a1@<ecx>, double a2@<st0>)
+            # {
+            #   int v2; // edi
+            #   _DWORD *v3; // eax
+            #   int v4; // ecx
+            #   int v5; // eax
+            #   volatile signed __int32 *v6; // esi
+            #   int v7; // ST10_4
+            #   int v8; // eax
+            #   char v9; // bl
+            #   int v10; // eax
+            #   _DWORD *result; // eax
+            #   int v12; // eax
+            #   int v13; // eax
+            #   int v14; // ecx
+            #   bool v15; // zf
+            #   bool v16; // sf
+            #   int v17; // eax
+            #   signed int v18; // ebx
+            #   int v19; // esi
+            #   int v20; // eax
+            #   int v21; // ecx
+            #   int v22; // eax
+            #   int v23; // eax
+            #   int v24; // ecx
+            #   int v25; // eax
+            #   void *v26; // eax
+            #   char v27; // bl
+            #   int v28; // [esp+Ch] [ebp-54h]
+            #   int v29; // [esp+10h] [ebp-50h]
+            #   int v30; // [esp+14h] [ebp-4Ch]
+            #   int v31; // [esp+18h] [ebp-48h]
+            #   int v32; // [esp+1Ch] [ebp-44h]
+            #   __int16 v33; // [esp+20h] [ebp-40h]
+            #   int v34; // [esp+24h] [ebp-3Ch]
+            #   int v35; // [esp+30h] [ebp-30h]
+            #   int v36; // [esp+38h] [ebp-28h]
+            #   int v37; // [esp+3Ch] [ebp-24h]
+            #   int v38; // [esp+40h] [ebp-20h]
+            #   int v39; // [esp+44h] [ebp-1Ch]
+            #   int v40; // [esp+48h] [ebp-18h]
+            #   int v41; // [esp+4Ch] [ebp-14h]
+            #   bool v42; // [esp+53h] [ebp-Dh]
+            #   int v43; // [esp+5Ch] [ebp-4h]
+            #
+            #   v2 = a1;
+            #   v41 = a1;
+            #   v3 = sub_4B4300((_DWORD *)(*(_DWORD *)(*(_DWORD *)(a1 + 8) + 4) + a1 + 8), &v40, 33);
+            #   v4 = v40;
+            #   v42 = *v3 != 0;
+            #   if ( v40 && !_InterlockedExchangeAdd((volatile signed __int32 *)(v40 + 4), 0xFFFFFFFF) && v4 )
+            #     (*(void (__stdcall **)(signed int))(*(_DWORD *)v4 + 4))(1);
+            #   if ( v42 )
+            #   {
+            #     v31 = -1;
+            #     v32 = -1;
+            #     v33 = -1;
+            #     v5 = sub_8BE590((_DWORD *)(*(_DWORD *)(*(_DWORD *)(v2 + 8) + 4) + v2 + 12));
+            #     sub_8C7840((_BYTE *)(v5 + 20), (int)&v37, 0, 33, -1, -1);
+            #     v28 = v37;
+            #     v29 = v38;
+            #     v30 = v39;
+            #     v34 = 0;
+            #     if ( !sub_987AE0(&unk_E9BC20, 0x2Eu) )
+            #     {
+            #       sub_4B4300((char *)dword_E8D11C + *(_DWORD *)(*((_DWORD *)dword_E8D11C + 2) + 4) + 8, &v40, 33);
+            #       v6 = (volatile signed __int32 *)v40;
+            #       v43 = 0;
+            #       if ( v40 )
+            #       {
+            #         v7 = *(_DWORD *)(v40 + 144);
+            #         v8 = sub_89B200((void *)v40);
+            #         sub_636E60(v8, v7);
+            #       }
+            #       v43 = -1;
+            #       if ( v6 && !_InterlockedDecrement(v6 + 1) )
+            #         (*(void (__thiscall **)(volatile signed __int32 *, signed int))(*v6 + 4))(v6, 1);
+            #     }
+            #     if ( *(_DWORD *)dword_E8D1B4 )
+            #     {
+            #       word_E8D1B8 = sub_89F370(31419, 0);
+            #       qmemcpy(&dword_E8D1BA, &v28, 0x1Cu);
+            #       v9 = sub_83FC50(*(int *)dword_E8D1B4, 4, &word_E8D1B8, 0x1Eu);
+            #       j_j_j___free_base(0);
+            #       --dword_107B774;
+            #       if ( !v9 )
+            #         sub_4EBB90((_DWORD *)dword_CA6E74, (LPCRITICAL_SECTION **)dword_E8D1B4);
+            #       v2 = v41;
+            #     }
+            #     else if ( !byte_E9A7FC )
+            #     {
+            #       sub_8F15B0("Attempt to send message %d on a void connection.", 31419);
+            #     }
+            #     *((_BYTE *)dword_E8D3BC + 16) = 0;
+            #     v10 = sub_8BE590((_DWORD *)(v2 + *(_DWORD *)(*(_DWORD *)(v2 + 8) + 4) + 12));
+            #     result = sub_4E2E90((unsigned int *)(v10 + 20), 0x21u);
+            #     if ( dword_E8D11C )
+            #       result = sub_62E9A0(v2, a2);
+            #   }
+            #   else
+            #   {
+            #     result = dword_E8D3BC;
+            #     if ( *((_BYTE *)dword_E8D3BC + 17) )
+            #     {
+            #       v12 = *(_DWORD *)(v2 + 8);
+            #       v36 = 0;
+            #       v35 = 0;
+            #       v13 = sub_8BE590((_DWORD *)(*(_DWORD *)(v12 + 4) + v2 + 12));
+            #       v14 = v2 + 12;
+            #       v15 = *(_DWORD *)(v13 + 14920) == 0;
+            #       v16 = *(_DWORD *)(v13 + 14920) < 0;
+            #       v17 = *(_DWORD *)(*(_DWORD *)(v2 + 8) + 4);
+            #       if ( v16 || v15 )
+            #       {
+            #         v20 = sub_8BE590((_DWORD *)(v17 + v14));
+            #         v21 = v2 + 12;
+            #         v15 = *(_DWORD *)(v20 + 14924) == 0;
+            #         v16 = *(_DWORD *)(v20 + 14924) < 0;
+            #         v22 = *(_DWORD *)(*(_DWORD *)(v2 + 8) + 4);
+            #         if ( v16 || v15 )
+            #         {
+            #           v23 = sub_8BE590((_DWORD *)(v22 + v21));
+            #           v24 = v2 + 12;
+            #           v15 = *(_DWORD *)(v23 + 14928) == 0;
+            #           v16 = *(_DWORD *)(v23 + 14928) < 0;
+            #           v25 = *(_DWORD *)(*(_DWORD *)(v2 + 8) + 4);
+            #           if ( v16 || v15 )
+            #           {
+            #             result = (_DWORD *)sub_8BE590((_DWORD *)(v25 + v24));
+            #             if ( result[3733] <= 0 )
+            #               goto LABEL_38;
+            #             v18 = 0;
+            #             result = (_DWORD *)sub_8BE590((_DWORD *)(*(_DWORD *)(*(_DWORD *)(v2 + 8) + 4) + v2 + 12));
+            #             v41 = 4025;
+            #             v19 = result[3733];
+            #           }
+            #           else
+            #           {
+            #             v18 = 1;
+            #             result = (_DWORD *)sub_8BE590((_DWORD *)(v25 + v24));
+            #             v41 = 4024;
+            #             v19 = result[3732];
+            #           }
+            #         }
+            #         else
+            #         {
+            #           v18 = 2;
+            #           result = (_DWORD *)sub_8BE590((_DWORD *)(v22 + v21));
+            #           v41 = 4023;
+            #           v19 = result[3731];
+            #         }
+            #       }
+            #       else
+            #       {
+            #         v18 = 3;
+            #         result = (_DWORD *)sub_8BE590((_DWORD *)(v17 + v14));
+            #         v41 = 4022;
+            #         v19 = result[3730];
+            #       }
+            #       if ( v19 > 0 )
+            #       {
+            #         if ( !sub_987AE0(&unk_E9BC20, 0x2Eu) )
+            #         {
+            #           v26 = sub_8B7230((int *)dword_E8D3C8, v41, 0);
+            #           sub_636E60((int)v26, v19);
+            #         }
+            #         if ( *(_DWORD *)dword_E8D1B4 )
+            #         {
+            #           word_E8D1B8 = sub_89F370(31809, 0);
+            #           dword_E8D1BA = 0;
+            #           LODWORD(qword_E8D1BE) = -1;
+            #           HIDWORD(qword_E8D1BE) = v18;
+            #           dword_E8D1C6 = v18;
+            #           dword_E8D1CA = v19;
+            #           v27 = sub_83FC50(*(int *)dword_E8D1B4, 4, &word_E8D1B8, 0x16u);
+            #           j_j_j___free_base(0);
+            #           --dword_107B774;
+            #           if ( !v27 )
+            #             sub_4EBB90((_DWORD *)dword_CA6E74, (LPCRITICAL_SECTION **)dword_E8D1B4);
+            #         }
+            #         else if ( !byte_E9A7FC )
+            #         {
+            #           sub_8F15B0("Attempt to send message %d on a void connection.", 31809);
+            #         }
+            #         *((_BYTE *)dword_E8D3BC + 17) = 0;
+            #         *(_DWORD *)(sub_8BE590((_DWORD *)(*(_DWORD *)(*(_DWORD *)(v2 + 8) + 4) + v2 + 12)) + 14920) = 0;
+            #         *(_DWORD *)(sub_8BE590((_DWORD *)(*(_DWORD *)(*(_DWORD *)(v2 + 8) + 4) + v2 + 12)) + 14924) = 0;
+            #         *(_DWORD *)(sub_8BE590((_DWORD *)(*(_DWORD *)(*(_DWORD *)(v2 + 8) + 4) + v2 + 12)) + 14928) = 0;
+            #         result = (_DWORD *)sub_8BE590((_DWORD *)(*(_DWORD *)(*(_DWORD *)(v2 + 8) + 4) + v2 + 12));
+            #         result[3733] = 0;
+            #       }
+            #     }
+            #   }
+            # LABEL_38:
+            #   *(_BYTE *)(v2 + 9252) = 1;
+            #   return result;
+            # }
+            if functionString.find(", 0, 33, -1, -1);") != -1:
+                if functionString.find("= 4022;") != -1:
+                    if functionString.find("= 4023;") != -1:
+                        if functionString.find("= 4024;") != -1:
+                            if functionString.find("= 4025;") != -1:
+                                if functionString.find("= 0;") != -1:
+                                    if functionString.find("= 1;") != -1:
+                                        if functionString.find("= 2;") != -1:
+                                            if functionString.find("= 3;") != -1:
+                                                functionList["EQ_PC__DestroyHeldItemOrMoney"] = functionAddress
+
             # EQPlayerManager
             # EQPlayerManager__GetSpawnByID
             # ----------------------------------------------------------------------------------------------------
@@ -1577,7 +2472,7 @@ with open("eqgame.c", "rt") as in_file:
             #   }
             # }
             if functionString.find("\"*** DISCONNECTING: %s\\n\"") != -1:
-                matches = re.findall("[0-9a-z]+ = 0.0;\n\s+sub_[0-9A-F]+\(\(float \*\)\w, 0.0, 1.0\);\n\s+[0-9a-z]+ = \(_DWORD \*\)sub_([0-9A-F]+)\(\(char \*\)\w\);\n\s+if \( sub_[0-9A-F]+\([0-9a-z]+\) \)", functionString, re.MULTILINE)
+                matches = re.findall("[0-9a-z]+ = 0.0;\n\s+sub_[0-9A-F]+\(\(float \*\)\w+, 0.0, 1.0\);\n\s+[0-9a-z]+ = \(_DWORD \*\)sub_([0-9A-F]+)\(\(char \*\)\w+\);\n\s+if \( sub_[0-9A-F]+\([0-9a-z]+\) \)", functionString, re.MULTILINE)
                 if matches:
                     functionList["EQPlayer__GetActorClient"] = "0x00" + matches[0]
 
@@ -1669,6 +2564,56 @@ with open("eqgame.c", "rt") as in_file:
                                     if functionString.find("== 9") != -1:
                                         if functionString.find("== 10") != -1:
                                             functionList["EQPlayer__ChangeLight"] = functionAddress
+
+            # EQPlayer__push_along_heading
+            # ----------------------------------------------------------------------------------------------------
+            # int __thiscall sub_5C61F0(float *this, float a2)    # 0x005C61F0
+            # {
+            #   float *v2; // esi
+            #   double v3; // st7
+            #   double v4; // st7
+            #   int result; // eax
+            #
+            #   v2 = this;
+            #   v3 = this[32];
+            #   (*(void (__stdcall **)(float))(*(_DWORD *)dword_16CB880 + 12))(this[32]);
+            #   v2[28] = v3 * a2 + v2[28];
+            #   v4 = v2[32];
+            #   result = (*(int (__stdcall **)(float))(*(_DWORD *)dword_16CB880 + 8))(v2[32]);
+            #   v2[29] = v4 * a2 + v2[29];
+            #   return result;
+            # }
+            # ////////////////////////////////////////////////////////////////////////////////////////////////////
+            # int __thiscall sub_64A920(float *this, char a2)    # EQPlayer__DoSwimJump
+            # {
+            #   float *v2; // esi
+            #   int result; // eax
+            #
+            #   v2 = this;
+            #   result = sub_65AD60(this);
+            #   if ( (_BYTE)result )
+            #   {
+            #     result = *((_DWORD *)dword_E81B64 + 85) + 1500;
+            #     *((_DWORD *)v2 + 151) = result;
+            #     if ( a2 )
+            #     {
+            #       result = sub_5C58E0(v2);
+            #       if ( result )
+            #       {
+            #         v2[30] = v2[5] * 3.0 + v2[30];
+            #         result = sub_5C61F0(v2, 1.0);    # 0x005C61F0
+            #       }
+            #     }
+            #   }
+            #   return result;
+            # }
+            if functionString.find("int result;") != -1:
+                if functionString.find("if ( result )") != -1:
+                    if functionString.find("result = sub_") != -1:
+                        if functionString.find("return result;") != -1:
+                            matches = re.findall("if \( result \)\n\s+{\n\s+[0-9a-z]+\[\d+\] = [0-9a-z]+\[\d+\] \* 3.0 \+ [0-9a-z]+\[\d+\];\n\s+result = sub_([0-9A-F]+)\([0-9a-z]+, 1.0\);", functionString, re.MULTILINE)
+                            if matches:
+                                functionList["EQPlayer__push_along_heading"] = "0x00" + matches[0]
 
             # EQSwitchManager
             # ----------------------------------------------------------------------------------------------------
@@ -2160,6 +3105,87 @@ with open("eqgame.c", "rt") as in_file:
                             matches = re.findall("sub_([0-9A-F]+)\(\(LPVOID\)8,", functionString, re.MULTILINE)
                             if matches:
                                 functionList["CEverQuest__SendNewText"] = "0x00" + matches[0]
+
+            # CEverQuest__DropHeldItemOnGround
+            # ----------------------------------------------------------------------------------------------------
+            # _DWORD *__stdcall sub_5D0B10(int a1)
+            # {
+            #   _DWORD *result; // eax
+            #   int v2; // ecx
+            #   bool v3; // zf
+            #   void (__thiscall ***v4)(LPVOID, _DWORD, signed int, signed int, int); // edi
+            #   void *v5; // ecx
+            #   void (__thiscall **v6)(LPVOID, _DWORD, signed int, signed int, int); // esi
+            #   int v7; // eax
+            #   int v8; // ecx
+            #   int v9; // eax
+            #   char v10; // bl
+            #   int v11; // [esp+4h] [ebp-14h]
+            #   bool v12; // [esp+Bh] [ebp-Dh]
+            #   int v13; // [esp+14h] [ebp-4h]
+            #
+            #   result = sub_4B4300((char *)dword_E8D11C + *(_DWORD *)(*((_DWORD *)dword_E8D11C + 2) + 4) + 8, &v11, 33);
+            #   v2 = v11;
+            #   v12 = *result == 0;
+            #   if ( v11 )
+            #   {
+            #     result = (_DWORD *)_InterlockedExchangeAdd((volatile signed __int32 *)(v11 + 4), 0xFFFFFFFF);
+            #     if ( !result )
+            #     {
+            #       if ( v2 )
+            #         result = (_DWORD *)(*(int (__stdcall **)(signed int))(*(_DWORD *)v2 + 4))(1);
+            #     }
+            #   }
+            #   if ( !v12 )
+            #   {
+            #     v3 = a1 == 0;
+            #     *((_BYTE *)dword_E8D3BC + 16) = 0;
+            #     if ( !v3 )
+            #     {
+            #       v4 = (void (__thiscall ***)(LPVOID, _DWORD, signed int, signed int, int))sub_4E5F10();
+            #       v5 = (void *)*sub_4B4300((char *)dword_E8D11C + *(_DWORD *)(*((_DWORD *)dword_E8D11C + 2) + 4) + 8, &a1, 33);
+            #       v6 = *v4;
+            #       v13 = 0;
+            #       v7 = sub_89B200(v5);
+            #       (*v6)(v4, 0, 9058, 15, v7);
+            #       v8 = a1;
+            #       v13 = -1;
+            #       if ( a1 )
+            #       {
+            #         if ( !_InterlockedDecrement((volatile signed __int32 *)(a1 + 4)) && v8 )
+            #           (*(void (__stdcall **)(signed int))(*(_DWORD *)v8 + 4))(1);
+            #       }
+            #     }
+            #     v9 = sub_8BE590((char *)dword_E8D11C + *(_DWORD *)(*((_DWORD *)dword_E8D11C + 2) + 4) + 12);
+            #     sub_4E2E90((unsigned int *)(v9 + 20), 0x21u);
+            #     if ( !byte_E9A7FC && !dword_E9A940 )
+            #     {
+            #       if ( *(_DWORD *)dword_E8D1B4 )
+            #       {
+            #         word_E8D1B8 = sub_89F370(21544, 0);
+            #         v10 = sub_83FC50(*(int *)dword_E8D1B4, 4, &word_E8D1B8, 2u);
+            #         j_j_j___free_base(0);
+            #         --dword_107B774;
+            #         if ( !v10 )
+            #           sub_4EBB90((_DWORD *)dword_CA6E74, (LPCRITICAL_SECTION **)dword_E8D1B4);
+            #       }
+            #       else
+            #       {
+            #         sub_8F15B0("Attempt to send message %d on a void connection.", 21544);
+            #       }
+            #     }
+            #     result = dword_E8D11C;
+            #     *((_BYTE *)dword_E8D11C + 9252) = 1;
+            #   }
+            #   return result;
+            # }
+            if functionString.find("0, 9058, 15,") != -1:
+                if functionString.find(", 33);") != -1:
+                    if functionString.find("= *result == 0;") != -1:
+                        if functionString.find(", 0xFFFFFFFF);") != -1:
+                            if functionString.find("result = dword_") != -1:
+                                if functionString.find("return result;") != -1:
+                                    functionList["CEverQuest__DropHeldItemOnGround"] = functionAddress
 
             # CDisplay
             # ----------------------------------------------------------------------------------------------------
@@ -2753,10 +3779,15 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_EQZoneInfo = " + functionList["EQZoneInfo"] + ";\n")
     out_file.write("\n")
-    out_file.write("    EQ_ADDRESS_POINTER_PlayerSpawn    = " + functionList["PlayerSpawn"] + ";\n")
-    out_file.write("    EQ_ADDRESS_POINTER_TargetSpawn    = " + functionList["TargetSpawn"] + ";\n")
+    out_file.write("    EQ_ADDRESS_POINTER_ControlledSpawn    = " + functionList["ControlledSpawn"] + ";\n")
+    out_file.write("    EQ_ADDRESS_POINTER_PlayerSpawn        = " + functionList["PlayerSpawn"] + ";\n")
+    out_file.write("    EQ_ADDRESS_POINTER_TargetSpawn        = " + functionList["TargetSpawn"] + ";\n")
     out_file.write("\n")
-    out_file.write("    EQ_ADDRESS_FUNCTION_DetectVirtualMachine          = " + functionList["DetectVirtualMachine"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_FlushDxKeyboard               = " + functionList["FlushDxKeyboard"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_FlushDxMouse                  = " + functionList["FlushDxMouse"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_ProcessKeyboardEvent          = " + functionList["ProcessKeyboardEvent"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_ProcessMouseEvent             = " + functionList["ProcessMouseEvent"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_WindowProc                    = " + functionList["WindowProc"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CollisionCallbackForActors    = " + functionList["CollisionCallbackForActors"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CastRay                       = " + functionList["CastRay"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CastRay2                      = " + functionList["CastRay2"] + ";\n")
@@ -2767,6 +3798,8 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("    EQ_ADDRESS_FUNCTION_GetTime                       = " + functionList["GetTime"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_UpdateLight                   = " + functionList["UpdateLight"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_GetGaugeValueFromEQ           = " + functionList["GetGaugeValueFromEQ"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_get_bearing                   = " + functionList["get_bearing"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_get_melee_range               = " + functionList["get_melee_range"] + ";\n")
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_POINTER_StringTable = " + functionList["StringTable"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_StringTable__getString    = " + functionList["StringTable__getString"] + ";\n")
@@ -2786,6 +3819,9 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CharacterZoneClient__SetNoGrav    = " + functionList["CharacterZoneClient__SetNoGrav"] + ";\n")
     out_file.write("\n")
+    out_file.write("    EQ_ADDRESS_POINTER_EQ_PC = " + functionList["EQ_PC"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_EQ_PC__DestroyHeldItemOrMoney    = " + functionList["EQ_PC__DestroyHeldItemOrMoney"] + ";\n")
+    out_file.write("\n")
     out_file.write("    EQ_ADDRESS_POINTER_EQPlayerManager = " + functionList["EQPlayerManager"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID      = " + functionList["EQPlayerManager__GetSpawnByID"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName    = " + functionList["EQPlayerManager__GetSpawnByName"] + ";\n")
@@ -2801,6 +3837,7 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("    EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteState    = " + functionList["EQPlayer__SetNameSpriteState"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteTint     = " + functionList["EQPlayer__SetNameSpriteTint"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_EQPlayer__ChangeLight           = " + functionList["EQPlayer__ChangeLight"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_EQPlayer__push_along_heading    = " + functionList["EQPlayer__push_along_heading"] + ";\n")
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_POINTER_EQSwitchManager = " + functionList["EQSwitchManager"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch      = " + functionList["EQSwitch__UseSwitch"] + ";\n")
@@ -2814,16 +3851,17 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("    EQ_ADDRESS_FUNCTION_CXWnd__IsReallyVisible    = " + functionList["CXWnd__IsReallyVisible"] + ";\n")
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_POINTER_CEverQuest = " + functionList["CEverQuest"] + ";\n")
-    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__DoPercentConvert    = " + functionList["CEverQuest__DoPercentConvert"] + ";\n")
-    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__EnterZone           = " + functionList["CEverQuest__EnterZone"] + ";\n")
-    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd        = " + functionList["CEverQuest__InterpretCmd"] + ";\n")
-    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat            = " + functionList["CEverQuest__dsp_chat"] + ";\n")
-    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__SetGameState        = " + functionList["CEverQuest__SetGameState"] + ";\n")
-    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__LMouseUp            = " + functionList["CEverQuest__LMouseUp"] + ";\n")
-    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp            = " + functionList["CEverQuest__RMouseUp"] + ";\n")
-    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__HandleMouseWheel    = " + functionList["CEverQuest__HandleMouseWheel"] + ";\n")
-    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting        = " + functionList["CEverQuest__StartCasting"] + ";\n")
-    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__SendNewText         = " + functionList["CEverQuest__SendNewText"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__DoPercentConvert        = " + functionList["CEverQuest__DoPercentConvert"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__EnterZone               = " + functionList["CEverQuest__EnterZone"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd            = " + functionList["CEverQuest__InterpretCmd"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat                = " + functionList["CEverQuest__dsp_chat"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__SetGameState            = " + functionList["CEverQuest__SetGameState"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__LMouseUp                = " + functionList["CEverQuest__LMouseUp"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp                = " + functionList["CEverQuest__RMouseUp"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__HandleMouseWheel        = " + functionList["CEverQuest__HandleMouseWheel"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting            = " + functionList["CEverQuest__StartCasting"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__SendNewText             = " + functionList["CEverQuest__SendNewText"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__DropHeldItemOnGround    = " + functionList["CEverQuest__DropHeldItemOnGround"] + ";\n")
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_POINTER_CDisplay = " + functionList["CDisplay"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2         = " + functionList["CDisplay__WriteTextHD2"] + ";\n")
