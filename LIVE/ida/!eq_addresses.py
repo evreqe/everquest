@@ -60,8 +60,8 @@ functionList = {
     "EQ_Character__StunMe": 0,
     "EQ_Character__UnStunMe": 0,
     "EQ_Character__ProcessEnvironment": 0,
-    "EQ_Character__TotalSpellAffects": 0,
     "CharacterZoneClient__SetNoGrav": 0,
+    "CharacterZoneClient__TotalSpellAffects": 0,
     "EQ_PC": 0,
     "EQ_PC__DestroyHeldItemOrMoney": 0,
     "EQPlayerManager": 0,
@@ -1871,7 +1871,7 @@ with open("eqgame.c", "rt") as in_file:
             #     && *(_DWORD *)(sub_8BC690((_DWORD *)(*(_DWORD *)(*(_DWORD *)(v1 + 4) + 4) + v1 + 8)) + 15600) != dword_BE37A8
             #     && *(_DWORD *)(sub_8BC690((_DWORD *)(*(_DWORD *)(*(_DWORD *)(v1 + 4) + 4) + v1 + 8)) + 15600) != dword_BE37D0 )
             #   {
-            #     result = sub_4C2410(v1, 0xEu, 1, 0, 1, 1) > 0;    # EQ_Character__TotalSpellAffects(EQ_SPELL_AFFECT_BREATHE_UNDERWATER, 1, 0, 1, 1,);
+            #     result = sub_4C2410(v1, 0xEu, 1, 0, 1, 1) > 0;    # CharacterZoneClient__TotalSpellAffects(EQ_SPELL_AFFECT_BREATHE_UNDERWATER, 1, 0, 1, 1,);
             #   }
             #   else
             #   {
@@ -1904,7 +1904,7 @@ with open("eqgame.c", "rt") as in_file:
             #   if ( v2 && (*(unsigned __int8 (**)(void))(*(_DWORD *)v2 + 224))() )
             #     v3 = 3001;
             #   else
-            #     v3 = sub_4C2410(v1, 0xDu, 1, 0, 1, 1);    # EQ_Character__TotalSpellAffects(EQ_SPELL_AFFECT_SEE_INVISIBLE, 1, 0, 1, 1,);
+            #     v3 = sub_4C2410(v1, 0xDu, 1, 0, 1, 1);    # CharacterZoneClient__TotalSpellAffects(EQ_SPELL_AFFECT_SEE_INVISIBLE, 1, 0, 1, 1,);
             #   if ( sub_4C2410(v1, 0x42u, 1, 0, 1, 1) <= 0 )
             #   {
             #     v4 = *(_DWORD *)(v1 + 8);
@@ -2052,40 +2052,6 @@ with open("eqgame.c", "rt") as in_file:
                                                                                     if functionString.find("/ 3;") != -1:
                                                                                         functionList["EQ_Character__ProcessEnvironment"] = functionAddress
 
-            # EQ_Character__TotalSpellAffects
-            # ----------------------------------------------------------------------------------------------------
-            # bool __thiscall sub_4DD9D0(void *this)    # EQ_Character__CanIBreathe
-            # {
-            #   int v1; // esi
-            #   signed int v2; // edi
-            #   bool result; // al
-            #
-            #   v1 = (int)this;
-            #   v2 = 0;
-            #   if ( sub_8C4A30((_DWORD *)dword_E805A8, *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(v1 + 4) + 4) + v1 + 356)) )
-            #     v2 = 1;
-            #   if ( (*(_BYTE *)(*(_DWORD *)(v1 + 8) + 160) >= 5u || v2)
-            #     && *(_DWORD *)(sub_8BC690((_DWORD *)(*(_DWORD *)(*(_DWORD *)(v1 + 4) + 4) + v1 + 8)) + 15600) != dword_BE383C
-            #     && *(_DWORD *)(sub_8BC690((_DWORD *)(*(_DWORD *)(*(_DWORD *)(v1 + 4) + 4) + v1 + 8)) + 15600) != dword_BE37A8
-            #     && *(_DWORD *)(sub_8BC690((_DWORD *)(*(_DWORD *)(*(_DWORD *)(v1 + 4) + 4) + v1 + 8)) + 15600) != dword_BE37D0 )
-            #   {
-            #     result = sub_4C2410(v1, 0xEu, 1, 0, 1, 1) > 0;    # 0x004C2410
-            #   }
-            #   else
-            #   {
-            #     result = 1;
-            #   }
-            #   return result;
-            # }
-            if functionString.find("bool result;") != -1:
-                if functionString.find(">= 5u ||") != -1:
-                    if functionString.find("0xEu, 1, 0, 1, 1) > 0;") != -1:
-                        if functionString.find("result = 1;") != -1:
-                            if functionString.find("return result;") != -1:
-                                matches = re.findall("result = sub_([0-9A-F]+)\([0-9a-z]+, 0xEu, 1, 0, 1, 1\) > 0;", functionString, re.MULTILINE)
-                                if matches:
-                                    functionList["EQ_Character__TotalSpellAffects"] = "0x00" + matches[0]
-
             # CharacterZoneClient__SetNoGrav
             # ----------------------------------------------------------------------------------------------------
             # void __thiscall sub_4B8960(_DWORD *this, int a2)    # 0x004B8960
@@ -2128,6 +2094,40 @@ with open("eqgame.c", "rt") as in_file:
                     if functionString.find("= 1;") != -1:
                         if functionString.find("== 1") != -1:
                             functionList["CharacterZoneClient__SetNoGrav"] = functionAddress
+
+            # CharacterZoneClient__TotalSpellAffects
+            # ----------------------------------------------------------------------------------------------------
+            # bool __thiscall sub_4DD9D0(void *this)    # EQ_Character__CanIBreathe
+            # {
+            #   int v1; // esi
+            #   signed int v2; // edi
+            #   bool result; // al
+            #
+            #   v1 = (int)this;
+            #   v2 = 0;
+            #   if ( sub_8C4A30((_DWORD *)dword_E805A8, *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(v1 + 4) + 4) + v1 + 356)) )
+            #     v2 = 1;
+            #   if ( (*(_BYTE *)(*(_DWORD *)(v1 + 8) + 160) >= 5u || v2)
+            #     && *(_DWORD *)(sub_8BC690((_DWORD *)(*(_DWORD *)(*(_DWORD *)(v1 + 4) + 4) + v1 + 8)) + 15600) != dword_BE383C
+            #     && *(_DWORD *)(sub_8BC690((_DWORD *)(*(_DWORD *)(*(_DWORD *)(v1 + 4) + 4) + v1 + 8)) + 15600) != dword_BE37A8
+            #     && *(_DWORD *)(sub_8BC690((_DWORD *)(*(_DWORD *)(*(_DWORD *)(v1 + 4) + 4) + v1 + 8)) + 15600) != dword_BE37D0 )
+            #   {
+            #     result = sub_4C2410(v1, 0xEu, 1, 0, 1, 1) > 0;    # 0x004C2410
+            #   }
+            #   else
+            #   {
+            #     result = 1;
+            #   }
+            #   return result;
+            # }
+            if functionString.find("bool result;") != -1:
+                if functionString.find(">= 5u ||") != -1:
+                    if functionString.find("0xEu, 1, 0, 1, 1) > 0;") != -1:
+                        if functionString.find("result = 1;") != -1:
+                            if functionString.find("return result;") != -1:
+                                matches = re.findall("result = sub_([0-9A-F]+)\([0-9a-z]+, 0xEu, 1, 0, 1, 1\) > 0;", functionString, re.MULTILINE)
+                                if matches:
+                                    functionList["CharacterZoneClient__TotalSpellAffects"] = "0x00" + matches[0]
 
             # EQ_PC
             # ----------------------------------------------------------------------------------------------------
@@ -3750,8 +3750,8 @@ for k, v in sorted(functionList.items()):
 
 # EQ_InitializeAddresses()
 with open("addresses.txt", "w") as out_file:
-    out_file.write("void EQ_InitializeAddresses()\n")
-    out_file.write("{\n")
+    #out_file.write("void EQ_InitializeAddresses()\n")
+    #out_file.write("{\n")
     out_file.write("    // " + buildDate + " " + buildTime + "\n")
     out_file.write("\n")
     out_file.write("    EQ_SIZE_CXWnd = " + functionList["SizeCXWnd"] + ";\n")
@@ -3771,11 +3771,11 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_WindowHWND = " + functionList["WindowHWND"] + ";\n")
     out_file.write("\n")
-    out_file.write("    EQ_ADDRESS_AutoAttack    = " + functionList["AutoAttack"] + ";\n")
-    out_file.write("    EQ_ADDRESS_AutoFire      = " + functionList["AutoFire"] + ";\n")
-    out_file.write("    EQ_ADDRESS_AutoRun       = " + functionList["AutoRun"] + ";\n")
-    out_file.write("    EQ_ADDRESS_MouseLook     = " + functionList["MouseLook"] + ";\n")
-    out_file.write("    EQ_ADDRESS_NetStatus     = " + functionList["NetStatus"] + ";\n")
+    out_file.write("    EQ_ADDRESS_AutoAttack              = " + functionList["AutoAttack"] + ";\n")
+    out_file.write("    EQ_ADDRESS_AutoFire                = " + functionList["AutoFire"] + ";\n")
+    out_file.write("    EQ_ADDRESS_AutoRun                 = " + functionList["AutoRun"] + ";\n")
+    out_file.write("    EQ_ADDRESS_MouseLook               = " + functionList["MouseLook"] + ";\n")
+    out_file.write("    EQ_ADDRESS_NetStatus               = " + functionList["NetStatus"] + ";\n")
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_EQZoneInfo = " + functionList["EQZoneInfo"] + ";\n")
     out_file.write("\n")
@@ -3783,11 +3783,11 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("    EQ_ADDRESS_POINTER_PlayerSpawn        = " + functionList["PlayerSpawn"] + ";\n")
     out_file.write("    EQ_ADDRESS_POINTER_TargetSpawn        = " + functionList["TargetSpawn"] + ";\n")
     out_file.write("\n")
-    out_file.write("    EQ_ADDRESS_FUNCTION_FlushDxKeyboard               = " + functionList["FlushDxKeyboard"] + ";\n")
-    out_file.write("    EQ_ADDRESS_FUNCTION_FlushDxMouse                  = " + functionList["FlushDxMouse"] + ";\n")
-    out_file.write("    EQ_ADDRESS_FUNCTION_ProcessKeyboardEvent          = " + functionList["ProcessKeyboardEvent"] + ";\n")
-    out_file.write("    EQ_ADDRESS_FUNCTION_ProcessMouseEvent             = " + functionList["ProcessMouseEvent"] + ";\n")
-    out_file.write("    EQ_ADDRESS_FUNCTION_WindowProc                    = " + functionList["WindowProc"] + ";\n")
+    #out_file.write("    EQ_ADDRESS_FUNCTION_FlushDxKeyboard               = " + functionList["FlushDxKeyboard"] + ";\n")
+    #out_file.write("    EQ_ADDRESS_FUNCTION_FlushDxMouse                  = " + functionList["FlushDxMouse"] + ";\n")
+    #out_file.write("    EQ_ADDRESS_FUNCTION_ProcessKeyboardEvent          = " + functionList["ProcessKeyboardEvent"] + ";\n")
+    #out_file.write("    EQ_ADDRESS_FUNCTION_ProcessMouseEvent             = " + functionList["ProcessMouseEvent"] + ";\n")
+    #out_file.write("    EQ_ADDRESS_FUNCTION_WindowProc                    = " + functionList["WindowProc"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CollisionCallbackForActors    = " + functionList["CollisionCallbackForActors"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CastRay                       = " + functionList["CastRay"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CastRay2                      = " + functionList["CastRay2"] + ";\n")
@@ -3815,9 +3815,9 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("    EQ_ADDRESS_FUNCTION_EQ_Character__StunMe                = " + functionList["EQ_Character__StunMe"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_EQ_Character__UnStunMe              = " + functionList["EQ_Character__UnStunMe"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_EQ_Character__ProcessEnvironment    = " + functionList["EQ_Character__ProcessEnvironment"] + ";\n")
-    out_file.write("    EQ_ADDRESS_FUNCTION_EQ_Character__TotalSpellAffects     = " + functionList["EQ_Character__TotalSpellAffects"] + ";\n")
     out_file.write("\n")
-    out_file.write("    EQ_ADDRESS_FUNCTION_CharacterZoneClient__SetNoGrav    = " + functionList["CharacterZoneClient__SetNoGrav"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CharacterZoneClient__SetNoGrav            = " + functionList["CharacterZoneClient__SetNoGrav"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CharacterZoneClient__TotalSpellAffects    = " + functionList["CharacterZoneClient__TotalSpellAffects"] + ";\n")
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_POINTER_EQ_PC = " + functionList["EQ_PC"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_EQ_PC__DestroyHeldItemOrMoney    = " + functionList["EQ_PC__DestroyHeldItemOrMoney"] + ";\n")
@@ -3886,4 +3886,4 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("    EQ_ADDRESS_POINTER_CSpellBookWnd = " + functionList["CSpellBookWnd"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellMemTicksLeft       = " + functionList["CSpellBookWnd__GetSpellMemTicksLeft"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellScribeTicksLeft    = " + functionList["CSpellBookWnd__GetSpellScribeTicksLeft"] + ";\n")
-    out_file.write("}\n")
+    #out_file.write("}\n")

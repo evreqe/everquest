@@ -1,5 +1,3 @@
-void EQ_InitializeAddresses()
-{
     // Jul 12 2019 11:58:54
 
     EQ_SIZE_CXWnd = 0x1E8;
@@ -19,11 +17,11 @@ void EQ_InitializeAddresses()
 
     EQ_ADDRESS_WindowHWND = 0x00F3F154;
 
-    EQ_ADDRESS_AutoAttack    = 0x00F3955B;
-    EQ_ADDRESS_AutoFire      = 0x00F3955C;
-    EQ_ADDRESS_AutoRun       = 0x00E9A8C8;
-    EQ_ADDRESS_MouseLook     = 0x00E9A8AA;
-    EQ_ADDRESS_NetStatus     = 0x00E9A8AD;
+    EQ_ADDRESS_AutoAttack              = 0x00F3955B;
+    EQ_ADDRESS_AutoFire                = 0x00F3955C;
+    EQ_ADDRESS_AutoRun                 = 0x00E9A8C8;
+    EQ_ADDRESS_MouseLook               = 0x00E9A8AA;
+    EQ_ADDRESS_NetStatus               = 0x00E9A8AD;
 
     EQ_ADDRESS_EQZoneInfo = 0x00E9AAA0;
 
@@ -31,11 +29,6 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_POINTER_PlayerSpawn        = 0x00E8AC50;
     EQ_ADDRESS_POINTER_TargetSpawn        = 0x00E8ACA4;
 
-    EQ_ADDRESS_FUNCTION_FlushDxKeyboard               = 0x006A5C80;
-    EQ_ADDRESS_FUNCTION_FlushDxMouse                  = 0x006A5900;
-    EQ_ADDRESS_FUNCTION_ProcessKeyboardEvent          = 0x006A77B0;
-    EQ_ADDRESS_FUNCTION_ProcessMouseEvent             = 0x005FB500;
-    EQ_ADDRESS_FUNCTION_WindowProc                    = 0x006A8750;
     EQ_ADDRESS_FUNCTION_CollisionCallbackForActors    = 0x0051DB20;
     EQ_ADDRESS_FUNCTION_CastRay                       = 0x0059B980;
     EQ_ADDRESS_FUNCTION_CastRay2                      = 0x0059B9D0;
@@ -63,9 +56,9 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_FUNCTION_EQ_Character__StunMe                = 0x004D3850;
     EQ_ADDRESS_FUNCTION_EQ_Character__UnStunMe              = 0x004D3970;
     EQ_ADDRESS_FUNCTION_EQ_Character__ProcessEnvironment    = 0x004DEB30;
-    EQ_ADDRESS_FUNCTION_EQ_Character__TotalSpellAffects     = 0x004C2A80;
 
-    EQ_ADDRESS_FUNCTION_CharacterZoneClient__SetNoGrav    = 0x004B8FC0;
+    EQ_ADDRESS_FUNCTION_CharacterZoneClient__SetNoGrav            = 0x004B8FC0;
+    EQ_ADDRESS_FUNCTION_CharacterZoneClient__TotalSpellAffects    = 0x004C2A80;
 
     EQ_ADDRESS_POINTER_EQ_PC = 0x00E8D11C;
     EQ_ADDRESS_FUNCTION_EQ_PC__DestroyHeldItemOrMoney    = 0x00636A20;
@@ -134,4 +127,3 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_POINTER_CSpellBookWnd = 0x00DD8AA4;
     EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellMemTicksLeft       = 0x007FBA70;
     EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellScribeTicksLeft    = 0x007FBBD0;
-}
