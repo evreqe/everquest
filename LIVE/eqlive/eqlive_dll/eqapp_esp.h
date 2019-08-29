@@ -232,7 +232,7 @@ void EQAPP_ESP_DrawSpawns()
 
         if (g_ESPFindSpawnID != 0)
         {
-            if (spawnLevel >= g_ESPFindSpawnID)
+            if (spawnID == g_ESPFindSpawnID)
             {
                 bIgnoreDistance = true;
 
@@ -296,18 +296,20 @@ void EQAPP_ESP_DrawSpawns()
         bool result = EQ_WorldLocationToScreenLocation(spawnY, spawnX, spawnZ, screenX, screenY);
         if (result == true)
         {
-            //if (spawnType == EQ_SPAWN_TYPE_NPC)
-            //{
-                // (EQ_IsSpawnMount(spawn) == true)
-                //{
-                    //continue;
-                //}
+/*
+            if (spawnType == EQ_SPAWN_TYPE_NPC)
+            {
+                if (EQ_IsSpawnMount(spawn) == true)
+                {
+                    continue;
+                }
 
-                //if (EQ_IsSpawnAura(spawn) == true)
-                //{
-                    //continue;
-                //}
-            //}
+                if (EQ_IsSpawnAura(spawn) == true)
+                {
+                    continue;
+                }
+            }
+*/
 
             std::stringstream drawText;
 
@@ -408,6 +410,7 @@ void EQAPP_ESP_DrawSpawns()
                 }
             }
 
+            // hold ALT then left-click to target a spawn by their ESP text
             if (GetAsyncKeyState(VK_MENU))
             {
                 if (spawnDistance <= g_ESPSpawnClickDistance)

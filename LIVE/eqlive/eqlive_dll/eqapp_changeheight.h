@@ -55,6 +55,12 @@ void EQAPP_ChangeHeight_Execute()
     auto spawn = EQ_GetFirstSpawn();
     while (spawn != NULL)
     {
+        if (spawn == playerSpawn)
+        {
+            spawn = EQ_GetSpawnNext(spawn);
+            continue;
+        }
+
         auto spawnType = EQ_GetSpawnType(spawn);
         if (spawnType == EQ_SPAWN_TYPE_PLAYER)
         {

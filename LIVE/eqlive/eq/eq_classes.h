@@ -12,6 +12,8 @@ namespace EQClass
     class EQ_Character;
     class CharacterZoneClient;
 
+    class EQ_PC;
+
     class EQPlayerManager;
     class EQPlayer;
 
@@ -35,6 +37,36 @@ namespace EQClass
     class CVector3; // needed by CastRay2
 } // namespace EQClass
 
+/* DirectX9 */
+
+//IDirect3DDevice9** EQ_CLASS_POINTER_IDirect3DDevice9_pptr = NULL;
+//IDirect3DDevice9* EQ_CLASS_POINTER_IDirect3DDevice9 = NULL;
+
+uintptr_t* EQ_VTABLE_IDirect3DDevice9 = NULL;
+
+#define EQ_VTABLE_INDEX_IDirect3DDevice9__Reset                   16
+#define EQ_VTABLE_INDEX_IDirect3DDevice9__Present                 17
+#define EQ_VTABLE_INDEX_IDirect3DDevice9__BeginScene              41
+#define EQ_VTABLE_INDEX_IDirect3DDevice9__EndScene                42
+#define EQ_VTABLE_INDEX_IDirect3DDevice9__Clear                   43
+#define EQ_VTABLE_INDEX_IDirect3DDevice9__SetRenderState          57
+#define EQ_VTABLE_INDEX_IDirect3DDevice9__DrawPrimitive           81
+#define EQ_VTABLE_INDEX_IDirect3DDevice9__DrawIndexedPrimitive    82
+#define EQ_VTABLE_INDEX_IDirect3DDevice9__SetStreamSource         100
+
+// DrawIndexedPrimitive
+typedef HRESULT (__stdcall* EQ_FUNCTION_TYPE_IDirect3DDevice9__DrawIndexedPrimitive)
+(
+    LPDIRECT3DDEVICE9 device,
+    D3DPRIMITIVETYPE primitiveType,
+    INT baseIndex,
+    UINT minIndex,
+    UINT numVertices,
+    UINT startIndex,
+    UINT primitiveCount
+);
+EQ_FUNCTION_TYPE_IDirect3DDevice9__DrawIndexedPrimitive IDirect3DDevice9__DrawIndexedPrimitive;
+
 /* CEverQuest */
 
 class EQClass::CEverQuest
@@ -48,6 +80,7 @@ public:
     void RMouseUp(int x, int y);
     void HandleMouseWheel(signed int delta);
     void SendNewText(int chatType, char* name, char* text, int unknown);
+    void DropHeldItemOnGround(int noDrop);
 };
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(char* EQClass::CEverQuest::DoPercentConvert(char* text, bool isOutgoing), EQ_ADDRESS_FUNCTION_CEverQuest__DoPercentConvert);
@@ -73,6 +106,9 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__HandleMouseWheel)(void* th
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::SendNewText(int chatType, char* name, char* text, int unknown), EQ_ADDRESS_FUNCTION_CEverQuest__SendNewText);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__SendNewText)(void* this_ptr, int chatType, char* name, char* text, int unknown);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::DropHeldItemOnGround(int NoDrop), EQ_ADDRESS_FUNCTION_CEverQuest__DropHeldItemOnGround);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__DropHeldItemOnGround)(void* this_ptr, int noDrop);
 
 EQClass::CEverQuest** EQ_CLASS_POINTER_CEverQuest_pptr;
 EQClass::CEverQuest* EQ_CLASS_POINTER_CEverQuest;
@@ -124,7 +160,6 @@ public:
     void StunMe(uint32_t duration, int unknown1, int unknown2, uint8_t bSpinInCircle); // (x, 0, 0, 0);
     void UnStunMe();
     void ProcessEnvironment();
-    int TotalSpellAffects(uint32_t spellAffectIndex, int unknown1, int unknown2, int unknown3, int unknown4);  // (x, 1, 0, 1, 1);
 };
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(float EQClass::EQ_Character::encum_factor(), EQ_ADDRESS_FUNCTION_EQ_Character__encum_factor);
@@ -148,9 +183,6 @@ typedef void (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__UnStunMe)(void* this_pt
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQ_Character::ProcessEnvironment(), EQ_ADDRESS_FUNCTION_EQ_Character__ProcessEnvironment);
 typedef void (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__ProcessEnvironment)(void* this_ptr);
 
-EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::EQ_Character::TotalSpellAffects(uint32_t spellAffectIndex, int unknown1, int unknown2, int unknown3, int unknown4), EQ_ADDRESS_FUNCTION_EQ_Character__TotalSpellAffects);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__TotalSpellAffects)(void* this_ptr, uint32_t spellAffectIndex, int unknown1, int unknown2, int unknown3, int unknown4);
-
 EQClass::EQ_Character** EQ_CLASS_POINTER_EQ_Character_pptr;
 EQClass::EQ_Character* EQ_CLASS_POINTER_EQ_Character;
 
@@ -160,10 +192,29 @@ class EQClass::CharacterZoneClient
 {
 public:
     void SetNoGrav(int gravityType);
+    int TotalSpellAffects(uint32_t spellAffectIndex, int unknown1, int unknown2, int unknown3, int unknown4);  // (x, 1, 0, 1, 1);
 };
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CharacterZoneClient::SetNoGrav(int gravityType), EQ_ADDRESS_FUNCTION_CharacterZoneClient__SetNoGrav);
 typedef void (__thiscall* EQ_FUNCTION_TYPE_CharacterZoneClient__SetNoGrav)(void* this_ptr, int gravityType);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::CharacterZoneClient::TotalSpellAffects(uint32_t spellAffectIndex, int unknown1, int unknown2, int unknown3, int unknown4), EQ_ADDRESS_FUNCTION_CharacterZoneClient__TotalSpellAffects);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CharacterZoneClient__TotalSpellAffects)(void* this_ptr, uint32_t spellAffectIndex, int unknown1, int unknown2, int unknown3, int unknown4);
+
+
+/* EQ_PC */
+
+class EQClass::EQ_PC
+{
+public:
+    void DestroyHeldItemOrMoney();
+};
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQ_PC::DestroyHeldItemOrMoney(), EQ_ADDRESS_FUNCTION_EQ_PC__DestroyHeldItemOrMoney);
+typedef void (__thiscall* EQ_FUNCTION_TYPE_EQ_PC__DestroyHeldItemOrMoney)(void* this_ptr);
+
+EQClass::EQ_PC** EQ_CLASS_POINTER_EQ_PC_pptr;
+EQClass::EQ_PC* EQ_CLASS_POINTER_EQ_PC;
 
 /* EQPlayerManager */
 
@@ -198,22 +249,26 @@ public:
     bool SetNameSpriteTint();
     void ChangeLight();
     uint32_t GetPlayerPhysicsClient();
+    int push_along_heading(float speed);
+    void Unknown();
 };
 
+#define EQ_VFTABLE_INDEX_EQPlayer__Unknown                   0x60    // Dismount
 #define EQ_VFTABLE_INDEX_EQPlayer__GetPlayerPhysicsClient    0x78
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQPlayer::ChangeHeight(float height, float a2, float a3, int a4), EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__ChangeHeight)(void* this_ptr, float height, float a2, float a3, int a4);
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQPlayer::ChangePosition(uint8_t standingState), EQ_ADDRESS_FUNCTION_EQPlayer__ChangePosition);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__ChangePosition)(void* this_ptr, uint8_t standingState);
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(uint8_t EQClass::EQPlayer::GetLevel(), EQ_ADDRESS_FUNCTION_EQPlayer__GetLevel);
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(uint32_t EQClass::EQPlayer::GetActorClient(), EQ_ADDRESS_FUNCTION_EQPlayer__GetActorClient);
 
-//
+// UpdateItemSlot
 
-//
+// IsTargetable
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::EQPlayer::SetNameSpriteState(bool isNameVisible), EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteState);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__SetNameSpriteState)(void* this_ptr, bool isNameVisible);
@@ -226,6 +281,12 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__ChangeLight)(void* this_ptr)
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(uint32_t EQClass::EQPlayer::GetPlayerPhysicsClient(), EQ_VFTABLE_INDEX_EQPlayer__GetPlayerPhysicsClient);
 typedef uint32_t (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__GetPlayerPhysicsClient)(void* this_ptr);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::EQPlayer::push_along_heading(float speed), EQ_ADDRESS_FUNCTION_EQPlayer__push_along_heading);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__push_along_heading)(void* this_ptr, float speed);
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::EQPlayer::Unknown(), EQ_VFTABLE_INDEX_EQPlayer__Unknown);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__Unknown)(void* this_ptr);
 
 /* EQSwitchManager */
 

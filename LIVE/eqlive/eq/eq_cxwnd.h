@@ -36,3 +36,11 @@ uint32_t EQ_SIZE_CSidlScreenWnd = 0x230;    // const CSidlScreenWnd::`vftable'  
 // "Game UI Initialized."
 
 #define EQ_OFFSET_CAlertWnd_BUTTON_CLOSE    EQ_SIZE_CSidlScreenWnd + 0x14    // uint32_t    "ALW_Close_Button"
+
+// CSpellBookWnd::GetSpellMemTicksLeft()
+#define EQ_OFFSET_CSpellBookWnd_MEMORIZE_SPELL_GEM_INDEX      EQ_SIZE_CSidlScreenWnd + 0x14    // signed int
+#define EQ_OFFSET_CSpellBookWnd_MEMORIZE_SPELL_ID             EQ_SIZE_CSidlScreenWnd + 0x18    // signed int
+#define EQ_OFFSET_CSpellBookWnd_MEMORIZE_SPELL_START_TIMER    EQ_SIZE_CSidlScreenWnd + 0x1C    // signed int
+#define EQ_OFFSET_CSpellBookWnd_MEMORIZE_SPELL_TIMER          EQ_SIZE_CSidlScreenWnd + 0x20    // signed int
+
+#define EQ_OFFSET_CSpellBookWnd_SCRIBE_SPELL_TIMER    EQ_SIZE_CSidlScreenWnd + 0x28    // uint32_t    CSpellBookWnd::GetSpellScribeTicksLeft()

@@ -7,6 +7,7 @@ void EQAPP_Bandolier_On();
 void EQAPP_Bandolier_Off();
 void EQAPP_Bandolier_Load();
 void EQAPP_Bandolier_Save();
+void EQAPP_Bandolier_SaveEx(const std::string& fileName);
 void EQAPP_Bandolier_Print();
 
 void EQAPP_Bandolier_Toggle()
@@ -189,6 +190,11 @@ void EQAPP_Bandolier_Save()
         return;
     }
 
+    EQAPP_Bandolier_SaveEx(playerName);
+}
+
+void EQAPP_Bandolier_SaveEx(const std::string& fileName)
+{
     auto charInfo2 = EQ_GetCharInfo2();
     if (charInfo2 == NULL)
     {
@@ -198,7 +204,7 @@ void EQAPP_Bandolier_Save()
     auto charInfo2Bandolier = (EQ::CharInfo2Bandolier_ptr)(charInfo2 + EQ_OFFSET_CharInfo2__Bandolier);
 
     std::stringstream filePath;
-    filePath << g_EQAppName << "/bandolier/" << playerName << ".txt";
+    filePath << g_EQAppName << "/bandolier/" << fileName << ".txt";
 
     std::string filePathStr = filePath.str();
 

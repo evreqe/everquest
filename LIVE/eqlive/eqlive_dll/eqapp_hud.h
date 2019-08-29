@@ -109,9 +109,12 @@ void EQAPP_HUD_Execute()
         g_HUDText << "- Free Camera\n";
     }
 
-    if (g_WaypointFollowPathIsEnabled == true)
+    if (g_WaypointIsEnabled == true)
     {
-        g_HUDText << "- Waypoint Follow Path\n";
+        if (g_WaypointFollowPathIsEnabled == true)
+        {
+            g_HUDText << "- Waypoint Follow Path\n";
+        }
     }
 
     if (g_SpeedIsEnabled == true)
@@ -144,36 +147,49 @@ void EQAPP_HUD_Execute()
     if (g_ESPIsEnabled == true)
     {
         g_HUDText << "- ESP\n";
+
+        if (g_ESPHeightFilterIsEnabled == true)
+        {
+            g_HUDText << "- ESP Height Filter\n";
+        }
+
+        if (g_ESPFindSpawnName.size() != 0)
+        {
+            g_HUDText << "- ESP Find Spawn Name: " << g_ESPFindSpawnName << " (" << g_ESPFindSpawnNameCount << ")\n";
+        }
+
+        if (g_ESPFindSpawnLastName.size() != 0)
+        {
+            g_HUDText << "- ESP Find Spawn Last Name: " << g_ESPFindSpawnLastName << " (" << g_ESPFindSpawnLastNameCount << ")\n";
+        }
+
+        if (g_ESPFindSpawnID != 0)
+        {
+            g_HUDText << "- ESP Find Spawn ID: " << g_ESPFindSpawnID << " (" << g_ESPFindSpawnIDCount << ")\n";
+        }
+
+        if (g_ESPFindSpawnLevel != 0)
+        {
+            g_HUDText << "- ESP Find Spawn Level: " << g_ESPFindSpawnLevel << " (" << g_ESPFindSpawnLevelCount << ")\n";
+        }
+
+        if (g_ESPShowSpawnIDIsEnabled == true)
+        {
+            g_HUDText << "- ESP Show Spawn ID\n";
+        }
     }
 
-    if (g_ESPHeightFilterIsEnabled == true)
+    if (g_FollowAIIsEnabled == true)
     {
-        g_HUDText << "- ESP Height Filter\n";
-    }
+        if (g_FollowAIBehindIsEnabled == true)
+        {
+            g_HUDText << "- Follow AI Behind\n";
+        }
 
-    if (g_ESPFindSpawnName.size() != 0)
-    {
-        g_HUDText << "- ESP Find Spawn Name: " << g_ESPFindSpawnName << " (" << g_ESPFindSpawnNameCount << ")\n";
-    }
-
-    if (g_ESPFindSpawnLastName.size() != 0)
-    {
-        g_HUDText << "- ESP Find Spawn Last Name: " << g_ESPFindSpawnLastName << " (" << g_ESPFindSpawnLastNameCount << ")\n";
-    }
-
-    if (g_ESPShowSpawnIDIsEnabled == true)
-    {
-        g_HUDText << "- ESP Show Spawn ID\n";
-    }
-
-    if (g_FollowAIBehindIsEnabled == true)
-    {
-        g_HUDText << "- Follow AI Behind\n";
-    }
-
-    if (g_FollowAIUseZAxisIsEnabled == true)
-    {
-        g_HUDText << "- Follow AI Use Z-Axis\n";
+        if (g_FollowAIUseZAxisIsEnabled == true)
+        {
+            g_HUDText << "- Follow AI Use Z-Axis\n";
+        }
     }
 
     if (g_ChangeHeightIsEnabled == true)

@@ -12,6 +12,7 @@ bool g_CheatLevitateIsEnabled = false;
 bool g_CheatFlyIsEnabled = false;
 bool g_CheatMemorizeSpellsInstantlyIsEnabled = true;
 bool g_CheatScribeSpellsInstantlyIsEnabled = true;
+bool g_CheatWallHackIsEnabled = false;
 
 void EQAPP_Cheat_AlwaysSeeInvis_Toggle();
 void EQAPP_Cheat_AlwaysSeeInvis_On();
@@ -44,18 +45,26 @@ void EQAPP_Cheat_NoEnvironmentalDamage_Off();
 void EQAPP_Cheat_Levitate_Toggle();
 void EQAPP_Cheat_Levitate_On();
 void EQAPP_Cheat_Levitate_Off();
+void EQAPP_Cheat_Levitate_Execute();
 
 void EQAPP_Cheat_Fly_Toggle();
 void EQAPP_Cheat_Fly_On();
 void EQAPP_Cheat_Fly_Off();
+void EQAPP_Cheat_Fly_Execute();
 
 void EQAPP_Cheat_MemorizeSpellsInstantly_Toggle();
 void EQAPP_Cheat_MemorizeSpellsInstantly_On();
 void EQAPP_Cheat_MemorizeSpellsInstantly_Off();
+bool EQAPP_Cheat_MemorizeSpellsInstantly_HandleEvent_CSpellBookWnd__GetSpellMemTicksLeft(void* this_ptr);
 
 void EQAPP_Cheat_ScribeSpellsInstantly_Toggle();
 void EQAPP_Cheat_ScribeSpellsInstantly_On();
 void EQAPP_Cheat_ScribeSpellsInstantly_Off();
+bool EQAPP_Cheat_ScribeSpellsInstantly_HandleEvent_CSpellBookWnd__GetSpellScribeTicksLeft(void* this_ptr);
+
+void EQAPP_Cheat_WallHack_Toggle();
+void EQAPP_Cheat_WallHack_On();
+void EQAPP_Cheat_WallHack_Off();
 
 void EQAPP_Cheat_AlwaysSeeInvis_Toggle()
 {
@@ -237,20 +246,27 @@ void EQAPP_Cheat_NoEnvironmentalDamage_Off()
 
 void EQAPP_Cheat_Levitate_Toggle()
 {
+    EQAPP_Cheat_Fly_Off();
+
     EQ_ToggleBool(g_CheatLevitateIsEnabled);
     EQAPP_PrintBool("Levitate", g_CheatLevitateIsEnabled);
+
+    if (g_CheatLevitateIsEnabled == true)
+    {
+        EQ_SetPlayerSpawnGravityType(EQ_GRAVITY_TYPE_LEVITATING);
+    }
+    else
+    {
+        EQ_SetPlayerSpawnGravityType(EQ_GRAVITY_TYPE_GROUND);
+    }
 }
 
 void EQAPP_Cheat_Levitate_On()
 {
-    EQAPP_Cheat_Fly_Off();
-
     if (g_CheatLevitateIsEnabled == false)
     {
         EQAPP_Cheat_Levitate_Toggle();
     }
-
-    EQ_SetPlayerSpawnGravityType(EQ_GRAVITY_TYPE_LEVITATING);
 }
 
 void EQAPP_Cheat_Levitate_Off()
@@ -259,26 +275,36 @@ void EQAPP_Cheat_Levitate_Off()
     {
         EQAPP_Cheat_Levitate_Toggle();
     }
+}
 
-    EQ_SetPlayerSpawnGravityType(EQ_GRAVITY_TYPE_SINKING_TO_GROUND);
+void EQAPP_Cheat_Levitate_Execute()
+{
+    EQ_SetPlayerSpawnGravityType(EQ_GRAVITY_TYPE_LEVITATING);
 }
 
 void EQAPP_Cheat_Fly_Toggle()
 {
+    EQAPP_Cheat_Levitate_Off();
+
     EQ_ToggleBool(g_CheatFlyIsEnabled);
     EQAPP_PrintBool("Fly", g_CheatFlyIsEnabled);
+
+    if (g_CheatFlyIsEnabled == true)
+    {
+        EQ_SetPlayerSpawnGravityType(EQ_GRAVITY_TYPE_FLYING);
+    }
+    else
+    {
+        EQ_SetPlayerSpawnGravityType(EQ_GRAVITY_TYPE_GROUND);
+    }
 }
 
 void EQAPP_Cheat_Fly_On()
 {
-    EQAPP_Cheat_Levitate_Off();
-
     if (g_CheatFlyIsEnabled == false)
     {
         EQAPP_Cheat_Fly_Toggle();
     }
-
-    EQ_SetPlayerSpawnGravityType(EQ_GRAVITY_TYPE_FLYING);
 }
 
 void EQAPP_Cheat_Fly_Off()
@@ -287,8 +313,11 @@ void EQAPP_Cheat_Fly_Off()
     {
         EQAPP_Cheat_Fly_Toggle();
     }
+}
 
-    EQ_SetPlayerSpawnGravityType(EQ_GRAVITY_TYPE_SINKING_TO_GROUND);
+void EQAPP_Cheat_Fly_Execute()
+{
+    EQ_SetPlayerSpawnGravityType(EQ_GRAVITY_TYPE_FLYING);
 }
 
 void EQAPP_Cheat_MemorizeSpellsInstantly_Toggle()
@@ -313,6 +342,21 @@ void EQAPP_Cheat_MemorizeSpellsInstantly_Off()
     }
 }
 
+bool EQAPP_Cheat_MemorizeSpellsInstantly_HandleEvent_CSpellBookWnd__GetSpellMemTicksLeft(void* this_ptr)
+{
+    // memorize spells instantly
+    auto spellBookWindow = (uint32_t)this_ptr;    // EQ_GetSpellBookWindow();
+    if (spellBookWindow != NULL)
+    {
+        auto timer = EQ_GetTimer();
+
+        EQ_WriteMemory<signed int>(spellBookWindow + EQ_OFFSET_CSpellBookWnd_MEMORIZE_SPELL_START_TIMER, timer);
+        EQ_WriteMemory<signed int>(spellBookWindow + EQ_OFFSET_CSpellBookWnd_MEMORIZE_SPELL_TIMER, timer);
+    }
+
+    return false;
+}
+
 void EQAPP_Cheat_ScribeSpellsInstantly_Toggle()
 {
     EQ_ToggleBool(g_CheatScribeSpellsInstantlyIsEnabled);
@@ -332,5 +376,39 @@ void EQAPP_Cheat_ScribeSpellsInstantly_Off()
     if (g_CheatScribeSpellsInstantlyIsEnabled == true)
     {
         EQAPP_Cheat_ScribeSpellsInstantly_Toggle();
+    }
+}
+
+bool EQAPP_Cheat_ScribeSpellsInstantly_HandleEvent_CSpellBookWnd__GetSpellScribeTicksLeft(void* this_ptr)
+{
+    // scribe spells instantly
+    auto spellBookWindow = (uint32_t)this_ptr;    // EQ_GetSpellBookWindow();
+    if (spellBookWindow != NULL)
+    {
+        EQ_WriteMemory<uint32_t>(spellBookWindow + EQ_OFFSET_CSpellBookWnd_SCRIBE_SPELL_TIMER, 0);
+    }
+
+    return false;
+}
+
+void EQAPP_Cheat_WallHack_Toggle()
+{
+    EQ_ToggleBool(g_CheatWallHackIsEnabled);
+    EQAPP_PrintBool("Wall Hack", g_CheatWallHackIsEnabled);
+}
+
+void EQAPP_Cheat_WallHack_On()
+{
+    if (g_CheatWallHackIsEnabled == false)
+    {
+        EQAPP_Cheat_WallHack_Toggle();
+    }
+}
+
+void EQAPP_Cheat_WallHack_Off()
+{
+    if (g_CheatWallHackIsEnabled == true)
+    {
+        EQAPP_Cheat_WallHack_Toggle();
     }
 }

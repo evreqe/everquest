@@ -129,6 +129,7 @@ EQApp::WaypointIndexList g_WaypointGetPathIndexList;
 
 EQApp::WaypointIndexList g_WaypointFollowPathIndexList;
 
+void EQAPP_WaypointEditor_Reset();
 void EQAPP_WaypointEditor_Toggle();
 void EQAPP_WaypointEditor_On();
 void EQAPP_WaypointEditor_Off();
@@ -325,7 +326,7 @@ void EQAPP_Waypoint_FollowPath_Toggle()
     {
         EQ_StopFollow();
 
-        g_FollowAISpawn = NULL;
+        EQAPP_FollowAI_StopFollow();
 
         g_WaypointEditorFromIndex = EQApp::WaypointIndexNull;
         g_WaypointEditorToIndex = EQApp::WaypointIndexNull;
@@ -2793,11 +2794,11 @@ bool EQAPP_Waypoint_FollowPath_HandleEvent_ExecuteCmd(uint32_t commandID, int is
 
     if
     (
-        commandID == EQ_EXECUTECMD_SIT_STAND  ||
-        commandID == EQ_EXECUTECMD_FORWARD    ||
-        commandID == EQ_EXECUTECMD_BACK       ||
-        commandID == EQ_EXECUTECMD_LEFT       ||
-        commandID == EQ_EXECUTECMD_RIGHT      ||
+        commandID == EQ_EXECUTECMD_SIT_STAND    ||
+        commandID == EQ_EXECUTECMD_FORWARD      ||
+        commandID == EQ_EXECUTECMD_BACK         ||
+        commandID == EQ_EXECUTECMD_LEFT         ||
+        commandID == EQ_EXECUTECMD_RIGHT        ||
         commandID == EQ_EXECUTECMD_AUTORUN
     )
     {

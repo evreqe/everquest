@@ -120,6 +120,9 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//ScribeSpellsInstantly",        &EQAPP_Cheat_ScribeSpellsInstantly_Toggle},
     {"//ScribeSpellsInstantlyOn",      &EQAPP_Cheat_ScribeSpellsInstantly_On},
     {"//ScribeSpellsInstantlyOff",     &EQAPP_Cheat_ScribeSpellsInstantly_Off},
+    {"//Wall",                         &EQAPP_Cheat_WallHack_Toggle},
+    {"//WallOn",                       &EQAPP_Cheat_WallHack_On},
+    {"//WallOff",                      &EQAPP_Cheat_WallHack_Off},
     {"//AutoGroup",                    &EQAPP_AutoGroup_Toggle},
     {"//AutoGroupOn",                  &EQAPP_AutoGroup_On},
     {"//AutoGroupOff",                 &EQAPP_AutoGroup_Off},
@@ -509,6 +512,12 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
     {
         std::cout << "Testing123" << std::endl;
 
+        auto playerSpawn = EQ_GetPlayerSpawn();
+
+        ((EQClass::EQPlayer*)playerSpawn)->Unknown();
+
+/*
+
         std::cout << "Character: 0x" << std::hex << EQ_GetCharacter() << std::dec << std::endl;
 
         std::cout << "CharacterBase: 0x" << std::hex << EQ_GetCharacterBase() << std::dec << std::endl;
@@ -532,6 +541,8 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
             std::cout << "[" << i + 1 << "-3] " << charInfo2Bandolier->Bandolier[i].Items[2].Name << std::endl;
             std::cout << "[" << i + 1 << "-4] " << charInfo2Bandolier->Bandolier[i].Items[3].Name << std::endl;
         }
+
+*/
 
 /*
         auto playerSpawn = EQ_GetPlayerSpawn();
@@ -624,7 +635,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (EQAPP_String_BeginsWith(commandText, "//BeepEx ") == true)
+    if (EQAPP_String_BeginsWith(commandText, "//Beep ") == true)
     {
         std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
         if (commandTextAfterSpace.size() != 0)
@@ -1080,7 +1091,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         {
             EQ_StopFollow();
 
-            g_FollowAISpawn = targetSpawn;
+            EQAPP_FollowAI_SetFollowSpawn(targetSpawn);
         }
 
         return true;
@@ -1100,7 +1111,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
                 EQ_SetTargetSpawn(spawn);
 
-                g_FollowAISpawn = spawn;
+                EQAPP_FollowAI_SetFollowSpawn(spawn);
             }
         }
 
@@ -1125,7 +1136,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
                     EQ_SetTargetSpawn(spawn);
 
-                    g_FollowAISpawn = spawn;
+                    EQAPP_FollowAI_SetFollowSpawn(spawn);
                 }
             }
         }
@@ -1137,7 +1148,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
     {
         EQ_StopFollow();
 
-        g_FollowAISpawn = NULL;
+        EQAPP_FollowAI_StopFollow();
 
         return true;
     }
@@ -1182,7 +1193,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
     if (commandText == "//CloseAllTopWindows")
     {
-        for (unsigned int i = 0; i < 10; i++)
+        for (unsigned int i = 0; i < 20; i++)
         {
             EQ_ExecuteCommand(EQ_EXECUTECMD_CLOSE_TOP_WINDOW, 1);
         }
@@ -2649,6 +2660,11 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
             g_ESPFindSpawnName = findText;
 
             std::cout << "ESP Find Spawn Name: " << findText << std::endl;
+
+            if (g_ESPIsEnabled == false)
+            {
+                EQAPP_ESP_On();
+            }
         }
 
         return true;
@@ -2671,6 +2687,11 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
             g_ESPFindSpawnLastName = findText;
 
             std::cout << "ESP Find Spawn Last Name: " << findText << std::endl;
+
+            if (g_ESPIsEnabled == false)
+            {
+                EQAPP_ESP_On();
+            }
         }
 
         return true;
@@ -2697,6 +2718,11 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                 g_ESPFindSpawnID = ID;
 
                 std::cout << "ESP Find Spawn ID: " << ID << std::endl;
+
+                if (g_ESPIsEnabled == false)
+                {
+                    EQAPP_ESP_On();
+                }
             }
         }
 
@@ -2724,6 +2750,11 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                 g_ESPFindSpawnLevel = level;
 
                 std::cout << "ESP Find Spawn Level: " << level << std::endl;
+
+                if (g_ESPIsEnabled == false)
+                {
+                    EQAPP_ESP_On();
+                }
             }
         }
 
@@ -3064,7 +3095,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
         uint32_t spawnIndex = 0;
 
-        std::vector<uint32_t> spawnIDList = EQAPP_GetNPCSpawnIDListSortedByDistance();
+        std::vector<uint32_t> spawnIDList = EQAPP_GetNPCSpawnIDListSortedByDistance(false);
 
         for (auto& spawnID : spawnIDList)
         {
@@ -4459,7 +4490,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         return true;
     }
 
-    if (commandText == "//CreateLight")
+    if (commandText == "//CreatePlayerLight")
     {
         auto playerSpawn = EQ_GetPlayerSpawn();
         if (playerSpawn != NULL)
@@ -4485,6 +4516,172 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         EQAPP_Cheat_Fly_Off();
 
         EQ_SetPlayerSpawnGravityType(EQ_GRAVITY_TYPE_GROUND);
+
+        return true;
+    }
+
+    if (commandText == "//DoJump")
+    {
+        EQ_DoPlayerJump(EQ_JUMP_STRENGTH_MULTIPLIER_DEFAULT, 1.0f);
+
+        return true;
+    }
+
+    if (commandText == "//TargetSpiderInCave")
+    {
+        auto playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn == NULL)
+        {
+            return true;
+        }
+
+        auto playerZ = EQ_GetSpawnZ(playerSpawn);
+
+        std::vector<uint32_t> spawnIDList = EQAPP_GetNPCSpawnIDListSortedByDistance(false);
+
+        for (auto& spawnID : spawnIDList)
+        {
+            auto spawn = EQ_GetSpawnByID(spawnID);
+            if (spawn == NULL)
+            {
+                continue;
+            }
+
+            auto spawnType = EQ_GetSpawnType(spawn);
+            if (spawnType != EQ_SPAWN_TYPE_NPC)
+            {
+                continue;
+            }
+
+            std::string spawnName = EQ_GetSpawnName(spawn);
+            if (spawnName.size() == 0)
+            {
+                continue;
+            }
+
+
+            if (EQ_IsSpawnWithinDistance(spawn, 200.0f) == false)
+            {
+                continue;
+            }
+
+            float spawnY = EQ_GetSpawnY(spawn);
+            float spawnX = EQ_GetSpawnX(spawn);
+            float spawnZ = EQ_GetSpawnZ(spawn);
+
+            if (std::fabs(spawnZ - playerZ) > 5.0f)
+            {
+                continue;
+            }
+
+            int numVertices = 4;
+            float verticesX[] = {-512.0f, -597.0f, -597.0f, -518.0f};
+            float verticesY[] = {2497.0f, 2495.0f, 2337.0f, 2337.0f};
+            float floorZ = -91.06f;
+
+            if (EQ_pnpoly(numVertices, verticesX, verticesY, spawnX, spawnY) == 1)
+            {
+                EQ_SetTargetSpawn(spawn);
+                break;
+            }
+
+        }
+
+        return true;
+    }
+
+    if (commandText == "//GetHeldItemName")
+    {
+        std::cout << "Held Item Name: " << EQ_GetHeldItemName() << std::endl;
+
+        return true;
+    }
+
+    if (commandText == "//DropHeldItemOnGround" || commandText == "//DropItem")
+    {
+        EQ_DropHeldItemOnGround();
+
+        return true;
+    }
+
+    if (commandText == "//DestroyHeldItemOrMoney" || commandText == "//DestroyItem" || commandText == "//DestroyMoney")
+    {
+        EQ_DestroyHeldItemOrMoney();
+
+        return true;
+    }
+
+    if (commandText == "//DropOrDestroyFishingItems")
+    {
+        auto heldItemName = EQ_GetHeldItemName();
+        if (heldItemName.size() != 0)
+        {
+            if (heldItemName == "Rusty Dagger" || heldItemName == "Tattered Cloth Sandal")
+            {
+                EQ_DropHeldItemOnGround();
+                return true;
+            }
+
+            if (heldItemName == "Gunthak Sea Shell")
+            {
+                EQ_DestroyHeldItemOrMoney();
+                return true;
+            }
+
+            EQ_DropHeldItemOnGround();
+        }
+
+        return true;
+    }
+
+    if (EQAPP_String_BeginsWith(commandText, "//GetSpellAffect ") == true || EQAPP_String_BeginsWith(commandText, "//GetSPA ") == true)
+    {
+        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+        if (commandTextAfterSpace.size() != 0)
+        {
+            if (EQAPP_String_IsDigits(commandTextAfterSpace) == true)
+            {
+                uint32_t spellAffect = std::stoul(commandTextAfterSpace);
+
+                auto characterZoneClient = EQ_GetCharacterZoneClient();
+                if (characterZoneClient != NULL)
+                {
+                    int result = ((EQClass::CharacterZoneClient*)characterZoneClient)->TotalSpellAffects(spellAffect, 1, 0, 1, 1);
+
+                    std::cout << "Spell Affect " << spellAffect << ": " << result << std::endl;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    if (commandText == "//DebugSpellAffects")
+    {
+        for (unsigned int i = 0; i < 1000; i++)
+        {
+            auto characterZoneClient = EQ_GetCharacterZoneClient();
+            if (characterZoneClient != NULL)
+            {
+                int result = ((EQClass::CharacterZoneClient*)characterZoneClient)->TotalSpellAffects(i, 1, 0, 1, 1);
+
+                if (result != 0)
+                {
+                    std::cout << "Spell Affect " << i << ": " << result << std::endl;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    if (EQAPP_String_BeginsWith(commandText, "//BandolierSave ") == true)
+    {
+        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+        if (commandTextAfterSpace.size() != 0)
+        {
+            EQAPP_Bandolier_SaveEx(commandTextAfterSpace);
+        }
 
         return true;
     }

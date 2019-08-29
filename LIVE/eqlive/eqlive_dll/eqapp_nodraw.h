@@ -60,6 +60,7 @@ bool EQAPP_NoDraw_HandleEvent_CRender__RenderPartialScene(void* this_ptr)
         }
     }
 
+    // reduce CPU and GPU usage to almost 0%
     if (EQ_IsWindowInBackground() == true)
     {
         return true;
@@ -84,6 +85,7 @@ bool EQAPP_NoDraw_HandleEvent_CRender__UpdateDisplay(void* this_ptr)
         }
     }
 
+    // reduce CPU and GPU usage to almost 0%
     if (EQ_IsWindowInBackground() == true)
     {
         return true;

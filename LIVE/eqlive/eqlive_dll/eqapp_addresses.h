@@ -1,5 +1,7 @@
 #pragma once
 
+uint32_t g_EQAppFixAddressIndex = 0;
+
 void EQAPP_FixAddress(uint32_t& address);
 void EQAPP_InitializeAddresses();
 bool EQAPP_IsAddressPointerValid(uint32_t addressPointer);
@@ -10,20 +12,27 @@ void EQAPP_FixAddress(uint32_t& address)
     if (address == 0)
     {
         std::stringstream ss;
-        ss << __FUNCTION__ << ": address is null";
+        ss << __FUNCTION__ << ": address is null at index " << g_EQAppFixAddressIndex;
 
         MessageBoxA(NULL, ss.str().c_str(), "Error", MB_ICONERROR);
+
+        g_EQAppFixAddressIndex++;
+
         return;
     }
 
     uint32_t baseAddress = (uint32_t)GetModuleHandle(NULL);
 
     address = (address - EQ_BASE_ADDRESS_VALUE) + baseAddress;
+
+    g_EQAppFixAddressIndex++;
 }
 
 void EQAPP_InitializeAddresses()
 {
     EQ_InitializeAddresses();
+
+    g_EQAppFixAddressIndex = 0;
 
     EQAPP_FixAddress(EQ_ADDRESS_WindowHWND);
 
@@ -33,7 +42,6 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_MouseLook);
     EQAPP_FixAddress(EQ_ADDRESS_NetStatus);
 
-    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_DetectVirtualMachine);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CollisionCallbackForActors);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CastRay);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CastRay2);
@@ -47,6 +55,7 @@ void EQAPP_InitializeAddresses()
 
     EQAPP_FixAddress(EQ_ADDRESS_EQZoneInfo);
 
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_ControlledSpawn);
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_PlayerSpawn);
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_TargetSpawn);
 
@@ -58,9 +67,12 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQ_Character__StunMe);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQ_Character__UnStunMe);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQ_Character__ProcessEnvironment);
-    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQ_Character__TotalSpellAffects);
 
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CharacterZoneClient__SetNoGrav);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CharacterZoneClient__TotalSpellAffects);
+
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_EQ_PC);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQ_PC__DestroyHeldItemOrMoney);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_EQPlayerManager);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID);
@@ -76,6 +88,7 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteState);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteTint);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__ChangeLight);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__push_along_heading);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_EQSwitchManager);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch);
@@ -99,6 +112,7 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CEverQuest__HandleMouseWheel);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CEverQuest__SendNewText);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CEverQuest__DropHeldItemOnGround);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CDisplay);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2);
@@ -141,6 +155,7 @@ bool EQAPP_InitializeAddressPointers()
     std::vector<uint32_t> addressPointerList =
     {
         EQ_ADDRESS_POINTER_EQ_Character,
+        EQ_ADDRESS_POINTER_EQ_PC,
         EQ_ADDRESS_POINTER_EQPlayerManager,
         EQ_ADDRESS_POINTER_EQSwitchManager,
         EQ_ADDRESS_POINTER_CXWndManager,
@@ -159,8 +174,13 @@ bool EQAPP_InitializeAddressPointers()
         }
     }
 
+    EQ_VTABLE_IDirect3DDevice9 = *(uintptr_t**)EQ_GetDirect3DDevicePointer();
+
     EQ_CLASS_POINTER_EQ_Character_pptr = (EQClass::EQ_Character**)EQ_ADDRESS_POINTER_EQ_Character;
     EQ_CLASS_POINTER_EQ_Character = (*EQ_CLASS_POINTER_EQ_Character_pptr);
+
+    EQ_CLASS_POINTER_EQ_PC_pptr = (EQClass::EQ_PC**)EQ_ADDRESS_POINTER_EQ_PC;
+    EQ_CLASS_POINTER_EQ_PC = (*EQ_CLASS_POINTER_EQ_PC_pptr);
 
     EQ_CLASS_POINTER_EQPlayerManager_pptr = (EQClass::EQPlayerManager**)EQ_ADDRESS_POINTER_EQPlayerManager;
     EQ_CLASS_POINTER_EQPlayerManager = (*EQ_CLASS_POINTER_EQPlayerManager_pptr);

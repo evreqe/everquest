@@ -10,7 +10,6 @@ bool g_FollowAIBehindIsEnabled = false;
 
 float g_FollowAIDistancePlayer = 10.0f;
 float g_FollowAIDistanceNPC    = 10.0f;
-float g_FollowAIDistanceCorpse = 10.0f;
 float g_FollowAIDistanceBehind = 5.0f;
 
 uint32_t g_FollowAISpawn = NULL;
@@ -24,8 +23,12 @@ void EQAPP_FollowAI_UseZAxis_Off();
 void EQAPP_FollowAI_Behind_Toggle();
 void EQAPP_FollowAI_Behind_On();
 void EQAPP_FollowAI_Behind_Off();
+void EQAPP_FollowAI_SetFollowSpawn(uint32_t spawn);
+void EQAPP_FollowAI_StopFollow();
 void EQAPP_FollowAI_Execute();
 bool EQAPP_FollowAI_HandleEvent_ExecuteCmd(uint32_t commandID, int isActive, int zero);
+bool EQAPP_FollowAI_HandleEvent_EQPlayer__ChangePosition(void* this_ptr, uint8_t standingState);
+bool EQAPP_FollowAI_HandleEvent_CDisplay__DeleteActor(void* this_ptr, uint32_t cactor);
 
 void EQAPP_FollowAI_Toggle()
 {
@@ -34,9 +37,7 @@ void EQAPP_FollowAI_Toggle()
 
     if (g_FollowAIIsEnabled == false)
     {
-        EQ_StopFollow();
-
-        g_FollowAISpawn = NULL;
+        EQAPP_FollowAI_StopFollow();
     }
 }
 
@@ -103,6 +104,22 @@ void EQAPP_FollowAI_Behind_Off()
     }
 }
 
+void EQAPP_FollowAI_SetFollowSpawn(uint32_t spawn)
+{
+    g_FollowAISpawn = spawn;
+}
+
+void EQAPP_FollowAI_StopFollow()
+{
+    if (g_FollowAISpawn != NULL)
+    {
+        std::cout << "You stopped following." << std::endl;
+    }
+
+    g_FollowAISpawn = NULL;
+    EQ_SetAutoRun(false);
+}
+
 void EQAPP_FollowAI_Execute()
 {
     auto playerSpawn = EQ_GetPlayerSpawn();
@@ -111,9 +128,16 @@ void EQAPP_FollowAI_Execute()
         return;
     }
 
-    if (EQ_DoesSpawnExist(g_FollowAISpawn) == false)
+    if (EQ_IsAutoRunEnabled() == true)
     {
-        return;
+        if (g_FollowAISpawn != NULL)
+        {
+            if (EQ_DoesSpawnExist(g_FollowAISpawn) == false)
+            {
+                EQAPP_FollowAI_StopFollow();
+                return;
+            }
+        }
     }
 
     auto followSpawn = g_FollowAISpawn;
@@ -128,26 +152,20 @@ void EQAPP_FollowAI_Execute()
             auto followSpawnType = EQ_GetSpawnType(followSpawn);
             if (followSpawnType == EQ_SPAWN_TYPE_CORPSE)
             {
-                g_FollowAISpawn = NULL;
-                EQ_SetAutoRun(false);
-
+                EQAPP_FollowAI_StopFollow();
                 return;
             }
 
             if (EQ_DoesSpawnExist(followSpawn) == false)
             {
-                g_FollowAISpawn = NULL;
-                EQ_SetAutoRun(false);
-
+                EQAPP_FollowAI_StopFollow();
                 return;
             }
 
             auto targetSpawn = EQ_GetTargetSpawn();
             if (targetSpawn == playerSpawn)
             {
-                g_FollowAISpawn = NULL;
-                EQ_SetAutoRun(false);
-
+                EQAPP_FollowAI_StopFollow();
                 return;
             }
 
@@ -156,17 +174,13 @@ void EQAPP_FollowAI_Execute()
                 auto targetType = EQ_GetSpawnType(targetSpawn);
                 if (targetType == EQ_SPAWN_TYPE_CORPSE)
                 {
-                    g_FollowAISpawn = NULL;
-                    EQ_SetAutoRun(false);
-
+                    EQAPP_FollowAI_StopFollow();
                     return;
                 }
 
                 if (EQ_DoesSpawnExist(targetSpawn) == false)
                 {
-                    g_FollowAISpawn = NULL;
-                    EQ_SetAutoRun(false);
-
+                    EQAPP_FollowAI_StopFollow();
                     return;
                 }
             }
@@ -263,15 +277,15 @@ void EQAPP_FollowAI_Execute()
         }
         else if (followSpawnType == EQ_SPAWN_TYPE_CORPSE)
         {
-            if (followSpawnDistance < g_FollowAIDistanceCorpse)
-            {
-                EQ_SetAutoRun(false);
-                return;
-            }
+            EQAPP_FollowAI_StopFollow();
+            return;
         }
     }
 
-    EQ_SetAutoRun(true);
+    if (g_FollowAISpawn != NULL)
+    {
+        EQ_SetAutoRun(true);
+    }
 
     // follow while swimming or levitating
     if (g_FollowAIUseZAxisIsEnabled == true || EQ_IsSpawnSwimming(playerSpawn) == true)
@@ -311,17 +325,69 @@ bool EQAPP_FollowAI_HandleEvent_ExecuteCmd(uint32_t commandID, int isActive, int
 
     if
     (
+        commandID == EQ_EXECUTECMD_CAMP       ||
         commandID == EQ_EXECUTECMD_SIT_STAND  ||
-        commandID == EQ_EXECUTECMD_DUCK       ||
-        commandID == EQ_EXECUTECMD_JUMP       ||
         commandID == EQ_EXECUTECMD_BACK       ||
-        commandID == EQ_EXECUTECMD_LEFT       ||
-        commandID == EQ_EXECUTECMD_RIGHT      ||
-        commandID == EQ_EXECUTECMD_AUTORUN
+        commandID == EQ_EXECUTECMD_FORWARD
     )
     {
-        g_FollowAISpawn = NULL;
-        return false;
+        EQAPP_FollowAI_StopFollow();
+    }
+
+    if
+    (
+        commandID == EQ_EXECUTECMD_LEFT       ||
+        commandID == EQ_EXECUTECMD_RIGHT
+    )
+    {
+        if (g_FollowAISpawn != NULL)
+        {
+            EQAPP_FollowAI_StopFollow();
+        }
+    }
+
+    if (commandID == EQ_EXECUTECMD_AUTORUN)
+    {
+        if (EQ_IsAutoRunEnabled() == true)
+        {
+            EQAPP_FollowAI_StopFollow();
+        }
+    }
+
+    return false;
+}
+
+bool EQAPP_FollowAI_HandleEvent_EQPlayer__ChangePosition(void* this_ptr, uint8_t standingState)
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn != NULL)
+    {
+        if ((uint32_t)this_ptr == playerSpawn)
+        {
+            if
+            (
+                standingState == EQ_STANDING_STATE_SITTING     ||
+                standingState == EQ_STANDING_STATE_FEIGN_DEATH ||
+                standingState == EQ_STANDING_STATE_DEAD
+            )
+            {
+                EQAPP_FollowAI_StopFollow();
+            }
+        }
+    }
+
+    return false;
+}
+
+bool EQAPP_FollowAI_HandleEvent_CDisplay__DeleteActor(void* this_ptr, uint32_t cactor)
+{
+    auto actorApplicationData = EQ_ReadMemory<uint32_t>(cactor + EQ_OFFSET_CActor_APPLICATION_DATA);
+    if (actorApplicationData != NULL && g_FollowAISpawn != NULL)
+    {
+        if (actorApplicationData == g_FollowAISpawn)
+        {
+            EQAPP_FollowAI_StopFollow();
+        }
     }
 
     return false;

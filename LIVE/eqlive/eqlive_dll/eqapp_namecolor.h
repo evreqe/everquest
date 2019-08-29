@@ -15,7 +15,7 @@ void EQAPP_NameColor_Toggle();
 void EQAPP_NameColor_On();
 void EQAPP_NameColor_Off();
 void EQAPP_NameColor_Execute();
-void EQAPP_NameColor_HandleEvent_EQPlayer__SetNameSpriteTint(void* this_ptr);
+bool EQAPP_NameColor_HandleEvent_EQPlayer__SetNameSpriteTint(void* this_ptr);
 
 void EQAPP_NameColor_Toggle()
 {
@@ -47,7 +47,7 @@ void EQAPP_NameColor_Execute()
     }
 }
 
-void EQAPP_NameColor_HandleEvent_EQPlayer__SetNameSpriteTint(void* this_ptr)
+bool EQAPP_NameColor_HandleEvent_EQPlayer__SetNameSpriteTint(void* this_ptr)
 {
     bool spawnIsTarget = false;
 
@@ -74,4 +74,6 @@ void EQAPP_NameColor_HandleEvent_EQPlayer__SetNameSpriteTint(void* this_ptr)
             EQ_SetSpawnNameColor(playerSpawn, g_NameColorFlickerColorARGB);
         }
     }
+
+    return false;
 }

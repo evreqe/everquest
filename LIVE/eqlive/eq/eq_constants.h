@@ -45,6 +45,8 @@ const float EQ_SPAWN_ACCELERATION_FRICTION_ICE        = 0.01999999955f;    // fl
 const float EQ_MELEE_DISTANCE_MIN    = 14.0f; // get_melee_range()
 const float EQ_MELEE_DISTANCE_MAX    = 75.0f; // get_melee_range()
 
+const float EQ_JUMP_STRENGTH_MULTIPLIER_DEFAULT = 1.65f;
+
 const uint32_t EQ_FAR_CLIP_PLANE_MIN = 0;
 const uint32_t EQ_FAR_CLIP_PLANE_MAX = 20;
 
@@ -122,6 +124,9 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_OFFSET_SPAWN_Y                                  0x64     // float
 #define EQ_OFFSET_SPAWN_X                                  0x68     // float
 #define EQ_OFFSET_SPAWN_Z                                  0x6C     // float
+#define EQ_OFFSET_SPAWN_Y_SPEED                            0x70     // float
+#define EQ_OFFSET_SPAWN_X_SPEED                            0x74     // float
+#define EQ_OFFSET_SPAWN_Z_SPEED                            0x78     // float
 #define EQ_OFFSET_SPAWN_MOVEMENT_SPEED                     0x7C     // float       // how fast you are moving while walking, running, riding a mount, etc
 #define EQ_OFFSET_SPAWN_HEADING                            0x80     // float       // turning
 #define EQ_OFFSET_SPAWN_HEADING_SPEED                      0x8C     // float       // turning speed, -12 to 12
@@ -171,11 +176,27 @@ std::unordered_map<uint32_t, std::string> EQ_SPAWN_TYPE_Strings =
     {EQ_SPAWN_TYPE_UNKNOWN,     "Unknown"},
 };
 
-uint32_t EQ_OFFSET_PlayerPhysicsClient__GravityType    = 0x0C; // EQ_GRAVITY_TYPE_x    // eGravityBehavior
+uint32_t EQ_OFFSET_PlayerPhysicsClient__GravityType    = 0x0C; // uint32_t    EQ_GRAVITY_TYPE_x    // eGravityBehavior
 
 uint32_t EQ_OFFSET_EQ_Character____CharacterZoneClient    = 0x2418; // check after patch
 
 uint32_t EQ_OFFSET_CharacterBase__CProfileManager    = 0x04;
+
+uint32_t EQ_OFFSET_CharInfo2__INVENTORY    = 0x1C;    // /*0x001C*/ struct _INVENTORYARRAY*      pInventoryArray;
+
+uint32_t EQ_OFFSET_INVENTORY_EQ_Item__CURSOR    = 0x84;    // /*0x84*/  struct    _CONTENTS* Cursor;
+
+uint32_t EQ_OFFSET_EQ_Item__ItemClient__ITEM2    = 0x154;    // /*0x014C*/ struct _ITEMINFO*	Item2;
+
+uint32_t EQ_OFFSET_ITEM_NAME                 = 0x00;     // char[0x40]
+uint32_t EQ_OFFSET_ITEM_ICON_NUMBER          = 0xF8;     // uint32_t
+uint32_t EQ_OFFSET_ITEM_WEIGHT               = 0x100;    // uint32_t
+uint32_t EQ_OFFSET_ITEM_IS_NOT_NO_RENT       = 0x104;    // uint8_t    // TEMPORARY item flag
+uint32_t EQ_OFFSET_ITEM_IS_NOT_NO_DROP       = 0x105;    // uint8_t
+uint32_t EQ_OFFSET_ITEM_IS_NO_DESTROY        = 0x109;    // uint8_t
+uint32_t EQ_OFFSET_ITEM_IS_NO_GROUND         = 0x110;    // uint8_t
+
+#define EQ_SIZE_ITEM_NAME    64 // 0x40
 
 #define EQ_SIZE_BANDOLIER_SET_NAME     32 // 0x20
 #define EQ_SIZE_BANDOLIER_ITEM_NAME    64 // 0x40
@@ -220,7 +241,7 @@ std::unordered_map<uint32_t, std::string> EQ_GRAVITY_TYPE_Strings =
 #define EQ_OFFSET_CActorClient_GENDER              0x19     // uint8_t
 #define EQ_OFFSET_CActorClient_ACTOR_DEFINITION    0x20     // char[0x40]
 #define EQ_OFFSET_CActorClient_CActorInterface     0x180    // uint32_t pointer   // 384 dec    // EQData::_SPAWNINFO::mActorClient->pcactorex
-#define EQ_OFFSET_CActorClinet_CLightInterface     0x184    // uint32_t pointer
+#define EQ_OFFSET_CActorClient_CLightInterface     0x184    // uint32_t pointer
 
 #define EQ_OFFSET_CActor_Y                          0x2C  // float
 #define EQ_OFFSET_CActor_X                          0x30  // float
@@ -459,6 +480,53 @@ std::unordered_map<uint32_t, std::string> EQ_DIRECTION_Strings =
     {EQ_DIRECTION_EAST,          "East"},
     {EQ_DIRECTION_NULL,          "Unknown"},
 };
+
+#define EQ_SPELL_AFFECT_INVISIBILITY                    12
+#define EQ_SPELL_AFFECT_SEE_INVIS                       13     // see invisible
+#define EQ_SPELL_AFFECT_ENDURING_BREATH                 14     // breathe underwater
+#define EQ_SPELL_AFFECT_BLIND                           20
+#define EQ_SPELL_AFFECT_STUN                            21
+#define EQ_SPELL_AFFECT_CHARM                           22
+#define EQ_SPELL_AFFECT_FEAR                            23
+#define EQ_SPELL_AFFECT_FATIGUE                         24
+#define EQ_SPELL_AFFECT_INVIS_VS_UNDEAD                 28
+#define EQ_SPELL_AFFECT_INVIS_VS_ANIMALS                29
+#define EQ_SPELL_AFFECT_ENTHRALL                        31     // mez
+#define EQ_SPELL_AFFECT_DISEASE                         35
+#define EQ_SPELL_AFFECT_POISON                          36
+#define EQ_SPELL_AFFECT_INVULNERABILITY                 40
+#define EQ_SPELL_AFFECT_LEVITATION                      57
+#define EQ_SPELL_AFFECT_SPIN_STUN                       64
+#define EQ_SPELL_AFFECT_INFRAVISION                     65
+#define EQ_SPELL_AFFECT_ULTRAVISION                     66
+#define EQ_SPELL_AFFECT_HEIGHT                          89
+#define EQ_SPELL_AFFECT_SILENCE                         96
+#define EQ_SPELL_AFFECT_ROOT                            99
+#define EQ_SPELL_AFFECT_SUMMON_MOUNT                    113    // horse
+#define EQ_SPELL_AFFECT_HUNGER_AND_THIRST               115
+#define EQ_SPELL_AFFECT_CURSE                           116
+#define EQ_SPELL_AFFECT_FEARLESS                        181
+#define EQ_SPELL_AFFECT_ILLUSION_OTHER                  202
+#define EQ_SPELL_AFFECT_MASS_BUFF                       203
+#define EQ_SPELL_AFFECT_REDUCE_WEIGHT                   221
+#define EQ_SPELL_AFFECT_METABOLISM                      233
+#define EQ_SPELL_AFFECT_PERMANENT_ILLUSION              238
+#define EQ_SPELL_AFFECT_LUNG_CAPACITY                   246
+#define EQ_SPELL_AFFECT_NO_FIZZLE                       265
+#define EQ_SPELL_AFFECT_INCREASED_MOVEMENT_CAP          290
+#define EQ_SPELL_AFFECT_HEIGHT_SMALL                    298
+#define EQ_SPELL_AFFECT_IMPROVED_INVIS                  314
+#define EQ_SPELL_AFFECT_IMPROVED_INVIS_UNDEAD           315
+#define EQ_SPELL_AFFECT_IMPROVED_INVIS_ANIMALS          316
+#define EQ_SPELL_AFFECT_SPELL_SLOTS                     326
+#define EQ_SPELL_AFFECT_BUFF_SLOTS                      327
+#define EQ_SPELL_AFFECT_BANDOLIER_SLOTS                 363
+#define EQ_SPELL_AFFECT_SLOW                            371
+#define EQ_SPELL_AFFECT_GRAVITATE                       424
+#define EQ_SPELL_AFFECT_FLY                             425
+#define EQ_SPELL_AFFECT_EXTENDED_TARGET_WINDOW_SLOTS    426
+#define EQ_SPELL_AFFECT_ADD_MERC_SLOT                   445    // mercenary slots
+#define EQ_SPELL_AFFECT_FEAR_STUN                       502
 
 #define EQ_RACE_UNKNOWN          0
 #define EQ_RACE_HUMAN            1

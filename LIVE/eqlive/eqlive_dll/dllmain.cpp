@@ -1,3 +1,5 @@
+#undef EQ_TEST_SERVER
+
 #include <algorithm>
 #include <array>
 #include <bitset>
@@ -19,7 +21,7 @@
 #include <vector>
 
 #include <filesystem>
-namespace std__filesystem = std::experimental::filesystem::v1; // not available yet
+namespace std__filesystem = std::experimental::filesystem; // not available yet
 
 #include <cstdio>
 #include <cstdlib>
@@ -121,6 +123,7 @@ void EQAPP_Load()
         }
     }
 
+/*
     auto render = EQ_GetRender();
     if (render != NULL)
     {
@@ -136,6 +139,7 @@ void EQAPP_Load()
     std::cout << "PlayerSpawn: 0x" << std::hex << EQ_GetPlayerSpawn() << std::dec << std::endl;
 
     std::cout << "PlayerPhysicsClient: 0x" << std::hex << EQ_GetPlayerSpawnPhysicsClient() << std::dec << std::endl;
+*/
 
     std::string timeText = EQAPP_Timer_GetTimeAsString();
 

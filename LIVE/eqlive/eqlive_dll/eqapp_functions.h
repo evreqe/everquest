@@ -31,7 +31,7 @@ bool EQAPP_FileExists(const char* fileName);
 void EQAPP_DeleteFileContents(const char* fileName);
 std::string EQAPP_ReadFileToString(const char* fileName);
 void EQAPP_ReadFileToList(const char* fileName, std::vector<std::string>& list, bool printLines = true);
-std::vector<uint32_t> EQAPP_GetNPCSpawnIDListSortedByDistance();
+std::vector<uint32_t> EQAPP_GetNPCSpawnIDListSortedByDistance(bool bLineOfSight);
 bool EQAPP_IsInGame();
 void EQAPP_CopyTextToClipboard(const char* text);
 void EQAPP_PrintSpawnList();
@@ -392,7 +392,7 @@ void EQAPP_ReadFileToList(const char* fileName, std::vector<std::string>& list, 
     file.close();
 }
 
-std::vector<uint32_t> EQAPP_GetNPCSpawnIDListSortedByDistance()
+std::vector<uint32_t> EQAPP_GetNPCSpawnIDListSortedByDistance(bool bLineOfSight)
 {
     std::vector<uint32_t> spawnIDList;
 
@@ -424,13 +424,16 @@ std::vector<uint32_t> EQAPP_GetNPCSpawnIDListSortedByDistance()
 
         float spawnDistance = EQ_CalculateDistance3D(playerSpawnY, playerSpawnX, playerSpawnZ, spawnY, spawnX, spawnZ);
 
-        float screenX = -1.0f;
-        float screenY = -1.0f;
-        bool result = EQ_WorldLocationToScreenLocation(spawnY, spawnX, spawnZ, screenX, screenY);
-        if (result == false)
+        if (bLineOfSight == true)
         {
-            spawn = EQ_GetSpawnNext(spawn);
-            continue;
+            float screenX = -1.0f;
+            float screenY = -1.0f;
+            bool result = EQ_WorldLocationToScreenLocation(spawnY, spawnX, spawnZ, screenX, screenY);
+            if (result == false)
+            {
+                spawn = EQ_GetSpawnNext(spawn);
+                continue;
+            }
         }
 
         uint32_t spawnID = EQ_GetSpawnID(spawn);

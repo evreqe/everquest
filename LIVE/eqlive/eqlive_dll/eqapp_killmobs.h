@@ -25,8 +25,7 @@ void EQAPP_KillMobs_Toggle()
 
     if (g_KillMobsIsEnabled == false)
     {
-        g_FollowAISpawn = NULL;
-        EQ_SetAutoRun(false);
+        EQAPP_FollowAI_StopFollow();
 
         EQ_SetAutoAttack(false);
     }
@@ -66,6 +65,8 @@ void EQAPP_KillMobs_Load()
     folderFileName << "killmobs/" << zoneShortName << ".txt";
 
     EQAPP_ReadFileToList(folderFileName.str().c_str(), g_KillMobsList, false);
+
+    std::cout << "Kill Mobs loaded from file: " << folderFileName.str() << std::endl;
 }
 
 void EQAPP_KillMobs_Execute()
@@ -88,9 +89,29 @@ void EQAPP_KillMobs_Execute()
     }
 
     auto targetSpawn = EQ_GetTargetSpawn();
-    if (targetSpawn == NULL)
+
+    if (targetSpawn == NULL && g_FollowAISpawn != NULL)
     {
-        std::vector<uint32_t> spawnIDList = EQAPP_GetNPCSpawnIDListSortedByDistance();
+        auto spawnType = EQ_GetSpawnType(g_FollowAISpawn);
+        if (spawnType == EQ_SPAWN_TYPE_NPC)
+        {
+            if (EQ_IsSpawnWithinDistance(g_FollowAISpawn, g_KillMobsDistance) == true)
+            {
+                EQ_SetTargetSpawn(g_FollowAISpawn);
+                return;
+            }
+        }
+        else
+        {
+            g_FollowAISpawn = NULL;
+            return;
+        }
+    }
+
+    targetSpawn = EQ_GetTargetSpawn();
+    if (targetSpawn == NULL && g_FollowAISpawn == NULL)
+    {
+        std::vector<uint32_t> spawnIDList = EQAPP_GetNPCSpawnIDListSortedByDistance(false);
 
         for (auto& spawnID : spawnIDList)
         {
@@ -127,10 +148,12 @@ void EQAPP_KillMobs_Execute()
                             EQ_SetTargetSpawn(spawn);
                         }
 
-                        g_FollowAISpawn = spawn;
+                        EQAPP_FollowAI_SetFollowSpawn(spawn);
                         EQ_SetAutoRun(true);
 
                         EQ_SetAutoAttack(true);
+
+                        std::cout << "Kill Mob Name: " << killMobsName << std::endl;
 
                         return;
                     }
@@ -140,9 +163,9 @@ void EQAPP_KillMobs_Execute()
     }
 
     targetSpawn = EQ_GetTargetSpawn();
-    if (targetSpawn == NULL)
+    if (targetSpawn == NULL && g_FollowAISpawn == NULL)
     {
-        std::vector<uint32_t> spawnIDList = EQAPP_GetNPCSpawnIDListSortedByDistance();
+        std::vector<uint32_t> spawnIDList = EQAPP_GetNPCSpawnIDListSortedByDistance(false);
 
         for (auto& spawnID : spawnIDList)
         {
@@ -158,11 +181,6 @@ void EQAPP_KillMobs_Execute()
                 continue;
             }
 
-            if (EQ_IsSpawnWithinDistance(spawn, g_KillMobsDistance) == false)
-            {
-                continue;
-            }
-
             std::string spawnName = EQ_GetSpawnName(spawn);
             if (spawnName.size() == 0)
             {
@@ -173,12 +191,17 @@ void EQAPP_KillMobs_Execute()
             {
                 if (spawnName == killMobsName)
                 {
-                    EQ_SetTargetSpawn(spawn);
+                    if (EQ_IsSpawnWithinDistance(spawn, g_KillMobsDistance) == true)
+                    {
+                        EQ_SetTargetSpawn(spawn);
+                    }
 
-                    g_FollowAISpawn = spawn;
+                    EQAPP_FollowAI_SetFollowSpawn(spawn);
                     EQ_SetAutoRun(true);
 
                     EQ_SetAutoAttack(true);
+
+                    std::cout << "Kill Mob Name: " << killMobsName << std::endl;
 
                     return;
                 }
@@ -187,53 +210,7 @@ void EQAPP_KillMobs_Execute()
     }
 
     targetSpawn = EQ_GetTargetSpawn();
-    if (targetSpawn == NULL)
-    {
-        bool foundTarget = false;
-
-        std::vector<uint32_t> spawnIDList = EQAPP_GetNPCSpawnIDListSortedByDistance();
-
-        for (auto& spawnID : spawnIDList)
-        {
-            if (foundTarget == true)
-            {
-                break;
-            }
-
-            auto spawn = EQ_GetSpawnByID(spawnID);
-            if (spawn == NULL)
-            {
-                continue;
-            }
-
-            auto spawnType = EQ_GetSpawnType(spawn);
-            if (spawnType != EQ_SPAWN_TYPE_NPC)
-            {
-                continue;
-            }
-
-            std::string spawnName = EQ_GetSpawnName(spawn);
-            if (spawnName.size() == 0)
-            {
-                continue;
-            }
-
-            for (auto& killMobsName : g_KillMobsList)
-            {
-                if (spawnName == killMobsName)
-                {
-                    g_FollowAISpawn = spawn;
-                    EQ_SetAutoRun(true);
-
-                    EQ_SetAutoAttack(true);
-
-                    return;
-                }
-            }
-        }
-    }
-
-    if (g_FollowAISpawn == NULL)
+    if (targetSpawn == NULL && g_FollowAISpawn == NULL)
     {
         EQ_SetAutoRun(false);
 

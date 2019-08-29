@@ -97,8 +97,6 @@ void EQAPP_ChatEvent_Load()
         return;
     }
 
-    std::cout << "Loading chat events..." << std::endl;
-
     unsigned int index = 0;
 
     std::string line;
@@ -137,6 +135,8 @@ void EQAPP_ChatEvent_Load()
 
         index++;
     }
+
+    std::cout << "Chat Events loaded from file: " << filePathStr << std::endl;
 
     file.close();
 }
