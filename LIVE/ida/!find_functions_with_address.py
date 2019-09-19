@@ -27,9 +27,8 @@ with open("eqgame.c", "rt") as in_file:
 
         if insideFunction == 0:
 
-            if functionString.find("DD84D0") != -1:    # address
-                if functionString.find("sub_8B7230") != -1:    # StringTable__getString()
-                    if re.search("0x[0-9A-F]+u", functionString):
-                        print(functionAddress)
+            if functionString.find("dword_DDD0CC") != -1:    # address
+                if re.search("0x[0-9A-F]+u", functionString):
+                    print(functionAddress)
 
             functionString = ""
