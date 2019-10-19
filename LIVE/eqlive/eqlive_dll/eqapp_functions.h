@@ -30,14 +30,14 @@ void EQAPP_BeepEx(UINT beepType);
 bool EQAPP_FileExists(const char* fileName);
 void EQAPP_DeleteFileContents(const char* fileName);
 std::string EQAPP_ReadFileToString(const char* fileName);
-void EQAPP_ReadFileToList(const char* fileName, std::vector<std::string>& list, bool printLines = true);
+bool EQAPP_ReadFileToList(const char* fileName, std::vector<std::string>& list, bool printLines = true);
 std::vector<uint32_t> EQAPP_GetNPCSpawnIDListSortedByDistance(bool bLineOfSight);
 bool EQAPP_IsInGame();
 void EQAPP_CopyTextToClipboard(const char* text);
 void EQAPP_PrintSpawnList();
 void EQAPP_PrintLocation();
 void EQAPP_PrintMouseLocation();
-void EQAPP_InventoryFind(const char* text);
+void EQAPP_InventoryFind(const char* fileNameText, const char* fileContentsText);
 void EQAPP_SetWindowTitle(const char* text);
 BOOL CALLBACK EQAPP_UpdateClientWindowList_EnumWindowsProc(HWND hwnd, LPARAM lParam);
 bool EQAPP_UpdateClientWindowList();
@@ -350,7 +350,7 @@ std::string EQAPP_ReadFileToString(const char* fileName)
     return buffer.str();
 }
 
-void EQAPP_ReadFileToList(const char* fileName, std::vector<std::string>& list, bool printLines)
+bool EQAPP_ReadFileToList(const char* fileName, std::vector<std::string>& list, bool printLines)
 {
     std::stringstream filePath;
     filePath << g_EQAppName << "/" << fileName;
@@ -365,7 +365,7 @@ void EQAPP_ReadFileToList(const char* fileName, std::vector<std::string>& list, 
         ss << "failed to open file: " << filePathStr;
 
         EQAPP_PrintDebugText(__FUNCTION__, ss.str().c_str());
-        return;
+        return false;
     }
 
     std::string line;
@@ -390,6 +390,8 @@ void EQAPP_ReadFileToList(const char* fileName, std::vector<std::string>& list, 
     }
 
     file.close();
+
+    return true;
 }
 
 std::vector<uint32_t> EQAPP_GetNPCSpawnIDListSortedByDistance(bool bLineOfSight)
@@ -534,7 +536,7 @@ void EQAPP_PrintMouseLocation()
     std::cout << "Mouse X,Y: " << EQ_GetMouseX() << "," << EQ_GetMouseY() << std::endl;
 }
 
-void EQAPP_InventoryFind(const char* text)
+void EQAPP_InventoryFind(const char* fileNameText, const char* fileContentsText)
 {
     uint32_t resultsCount = 0;
 
@@ -546,6 +548,14 @@ void EQAPP_InventoryFind(const char* text)
         }
 
         std::string fileName = it.path().filename().string();
+
+        if (fileNameText != NULL && strcmp(fileNameText, "all") != 0)
+        {
+            if (EQAPP_String_Contains(fileName, fileNameText) == false)
+            {
+                continue;
+            }
+        }
 
         if (EQAPP_String_EndsWith(fileName, "-Inventory.txt") == false)
         {
@@ -573,7 +583,7 @@ void EQAPP_InventoryFind(const char* text)
                 continue;
             }
 
-            if (EQAPP_String_Contains(line, text) == true)
+            if (EQAPP_String_Contains(line, fileContentsText) == true)
             {
                 std::cout << fileName << ": " << line << "\n";
 
@@ -584,7 +594,7 @@ void EQAPP_InventoryFind(const char* text)
         file.close();
     }
 
-    std::cout << resultsCount << " result(s) for '" << text << "'" << std::endl;
+    std::cout << resultsCount << " result(s) for '" << fileContentsText << "'" << std::endl;
 }
 
 void EQAPP_SetWindowTitle(const char* text)

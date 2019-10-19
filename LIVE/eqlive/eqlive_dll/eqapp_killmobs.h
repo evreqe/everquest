@@ -12,16 +12,25 @@ float g_KillMobsDistance = 400.0f;
 std::vector<std::string> g_KillMobsList;
 uint32_t g_KillMobsList_reserve = 1024;
 
+bool g_KillMobsMaxPlayersIsEnabled = true;
+uint32_t g_KillMobsMaxPlayersInZone = 5;
+
 void EQAPP_KillMobs_Toggle();
 void EQAPP_KillMobs_On();
 void EQAPP_KillMobs_Off();
 void EQAPP_KillMobs_Load();
 void EQAPP_KillMobs_Execute();
+bool EQAPP_KillMobs_IsSpawnSafeToKill(uint32_t spawn);
+void EQAPP_KillMobs_MaxPlayers_Toggle();
+void EQAPP_KillMobs_MaxPlayers_On();
+void EQAPP_KillMobs_MaxPlayers_Off();
 
 void EQAPP_KillMobs_Toggle()
 {
     EQ_ToggleBool(g_KillMobsIsEnabled);
     EQAPP_PrintBool("Kill Mobs", g_KillMobsIsEnabled);
+
+    EQ_ClearTarget();
 
     if (g_KillMobsIsEnabled == false)
     {
@@ -61,12 +70,32 @@ void EQAPP_KillMobs_Load()
         return;
     }
 
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn != NULL)
+    {
+        std::string playerName = EQ_GetSpawnName(playerSpawn);
+        if (playerName.size() != 0)
+        {
+            std::stringstream folderFileName;
+            folderFileName << "killmobs/" << zoneShortName << "_" << playerName << ".txt";
+
+            bool result = EQAPP_ReadFileToList(folderFileName.str().c_str(), g_KillMobsList, false);
+            if (result == true)
+            {
+                std::cout << "Kill Mobs loaded from file: " << folderFileName.str() << std::endl;
+                return;
+            }
+        }
+    }
+
     std::stringstream folderFileName;
     folderFileName << "killmobs/" << zoneShortName << ".txt";
 
-    EQAPP_ReadFileToList(folderFileName.str().c_str(), g_KillMobsList, false);
-
-    std::cout << "Kill Mobs loaded from file: " << folderFileName.str() << std::endl;
+    bool result = EQAPP_ReadFileToList(folderFileName.str().c_str(), g_KillMobsList, false);
+    if (result == true)
+    {
+        std::cout << "Kill Mobs loaded from file: " << folderFileName.str() << std::endl;
+    }
 }
 
 void EQAPP_KillMobs_Execute()
@@ -88,13 +117,78 @@ void EQAPP_KillMobs_Execute()
         return;
     }
 
+    auto zoneID = EQ_GetZoneID();
+
+    auto numPlayersInZone = EQ_GetNumSpawnsInZone(EQ_SPAWN_TYPE_PLAYER);
+
     auto targetSpawn = EQ_GetTargetSpawn();
+
+/*
+    if (g_KillMobsMaxPlayersIsEnabled == true)
+    {
+        if (targetSpawn == NULL)
+        {
+            auto numPlayersInZone = EQ_GetNumSpawnsInZone(EQ_SPAWN_TYPE_PLAYER);
+            if (numPlayersInZone > g_KillMobsMaxPlayersInZone)
+            {
+                g_FollowAISpawn = NULL;
+                EQ_SetAutoRun(false);
+
+                EQ_ClearTarget();
+
+                return;
+            }
+        }
+    }
+*/
+
+    if (targetSpawn != NULL)
+    {
+        auto targetType = EQ_GetSpawnType(targetSpawn);
+        if (targetType != EQ_SPAWN_TYPE_NPC)
+        {
+            g_FollowAISpawn = NULL;
+            EQ_SetAutoRun(false);
+
+            EQ_ClearTarget();
+
+            return;
+        }
+
+        std::string targetName = EQ_GetSpawnName(targetSpawn);
+        if (targetName.size() != 0)
+        {
+            std::string targetName2 = "*" + targetName;
+
+            auto it = std::find(g_KillMobsList.begin(), g_KillMobsList.end(), targetName);
+            auto it2 = std::find(g_KillMobsList.begin(), g_KillMobsList.end(), targetName2);
+
+            if (it == g_KillMobsList.end() && it2 == g_KillMobsList.end())
+            {
+                g_FollowAISpawn = NULL;
+                EQ_SetAutoRun(false);
+
+                EQ_ClearTarget();
+
+                return;
+            }
+        }
+    }
 
     if (targetSpawn == NULL && g_FollowAISpawn != NULL)
     {
-        auto spawnType = EQ_GetSpawnType(g_FollowAISpawn);
-        if (spawnType == EQ_SPAWN_TYPE_NPC)
+        auto followSpawnType = EQ_GetSpawnType(g_FollowAISpawn);
+        if (followSpawnType == EQ_SPAWN_TYPE_NPC)
         {
+            if (EQAPP_KillMobs_IsSpawnSafeToKill(g_FollowAISpawn) == false)
+            {
+                g_FollowAISpawn = NULL;
+                EQ_SetAutoRun(false);
+
+                std::cout << "Kill Mob skipping followed spawn because it is NOT safe to kill." << std::endl;
+                return;
+            }
+
             if (EQ_IsSpawnWithinDistance(g_FollowAISpawn, g_KillMobsDistance) == true)
             {
                 EQ_SetTargetSpawn(g_FollowAISpawn);
@@ -104,6 +198,8 @@ void EQAPP_KillMobs_Execute()
         else
         {
             g_FollowAISpawn = NULL;
+            EQ_SetAutoRun(false);
+
             return;
         }
     }
@@ -133,8 +229,30 @@ void EQAPP_KillMobs_Execute()
                 continue;
             }
 
+            if (EQAPP_KillMobs_IsSpawnSafeToKill(spawn) == false)
+            {
+                EQ_ClearTarget();
+
+                std::cout << "Kill Mob skipping '" << spawnName << "' because it is NOT safe to kill." << std::endl;
+                continue;
+            }
+
             for (auto& killMobsName : g_KillMobsList)
             {
+                if (g_KillMobsMaxPlayersIsEnabled == true)
+                {
+                    if (numPlayersInZone > g_KillMobsMaxPlayersInZone)
+                    {
+                        if (zoneID == EQ_ZONE_ID_NORTHKARANA)
+                        {
+                            if (EQAPP_String_Contains(killMobsName, "a highland lion") == false)
+                            {
+                                continue;
+                            }
+                        }
+                    }
+                }
+
                 if (EQAPP_String_BeginsWith(killMobsName, "*") == true)
                 {
                     std::string killSpawnName = killMobsName;
@@ -187,8 +305,30 @@ void EQAPP_KillMobs_Execute()
                 continue;
             }
 
+            if (EQAPP_KillMobs_IsSpawnSafeToKill(spawn) == false)
+            {
+                EQ_ClearTarget();
+
+                std::cout << "Kill Mob skipping '" << spawnName << "' because it is NOT safe to kill." << std::endl;
+                continue;
+            }
+
             for (auto& killMobsName : g_KillMobsList)
             {
+                if (g_KillMobsMaxPlayersIsEnabled == true)
+                {
+                    if (numPlayersInZone > g_KillMobsMaxPlayersInZone)
+                    {
+                        if (zoneID == EQ_ZONE_ID_NORTHKARANA)
+                        {
+                            if (EQAPP_String_Contains(killMobsName, "a highland lion") == false)
+                            {
+                                continue;
+                            }
+                        }
+                    }
+                }
+
                 if (spawnName == killMobsName)
                 {
                     if (EQ_IsSpawnWithinDistance(spawn, g_KillMobsDistance) == true)
@@ -218,3 +358,112 @@ void EQAPP_KillMobs_Execute()
     }
 }
 
+bool EQAPP_KillMobs_IsSpawnSafeToKill(uint32_t spawn)
+{
+    if (spawn == NULL)
+    {
+        return false;
+    }
+
+    auto spawnName = EQ_GetSpawnName(spawn);
+    if (spawnName.size() == 0)
+    {
+        return false;
+    }
+
+    auto zoneID = EQ_GetZoneID();
+    if (zoneID == EQ_ZONE_ID_NORTHKARANA)
+    {
+        if (spawnName == "a willowisp")
+        {
+            auto kosSpawn = EQ_GetSpawnByName("Sir Gerwin Thunderblade");
+            if (kosSpawn != NULL)
+            {
+                auto playerSpawn = EQ_GetPlayerSpawn();
+                if (EQ_IsSpawnWithinDistanceOfSpawn(playerSpawn, kosSpawn, 1000.0f) == true)
+                {
+                    return false;
+                }
+
+                if (EQ_IsSpawnWithinDistanceOfSpawn(spawn, kosSpawn, 1000.0f) == true)
+                {
+                    return false;
+                }
+            }
+        }
+
+        if (spawnName != "a highland lion")
+        {
+            uint32_t kosSpawn = NULL;
+
+            kosSpawn = EQ_GetSpawnByName("Brianna Treewhisper");
+            if (kosSpawn != NULL)
+            {
+                auto playerSpawn = EQ_GetPlayerSpawn();
+                if (EQ_IsSpawnWithinDistanceOfSpawn(playerSpawn, kosSpawn, 1000.0f) == true)
+                {
+                    return false;
+                }
+
+                if (EQ_IsSpawnWithinDistanceOfSpawn(spawn, kosSpawn, 1000.0f) == true)
+                {
+                    return false;
+                }
+            }
+
+            kosSpawn = EQ_GetSpawnByName("Tak Whistler");
+            if (kosSpawn != NULL)
+            {
+                auto playerSpawn = EQ_GetPlayerSpawn();
+                if (EQ_IsSpawnWithinDistanceOfSpawn(playerSpawn, kosSpawn, 1000.0f) == true)
+                {
+                    return false;
+                }
+
+                if (EQ_IsSpawnWithinDistanceOfSpawn(spawn, kosSpawn, 1000.0f) == true)
+                {
+                    return false;
+                }
+            }
+
+            kosSpawn = EQ_GetSpawnByName("a druid");
+            if (kosSpawn != NULL)
+            {
+                auto playerSpawn = EQ_GetPlayerSpawn();
+                if (EQ_IsSpawnWithinDistanceOfSpawn(playerSpawn, kosSpawn, 1000.0f) == true)
+                {
+                    return false;
+                }
+
+                if (EQ_IsSpawnWithinDistanceOfSpawn(spawn, kosSpawn, 1000.0f) == true)
+                {
+                    return false;
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
+void EQAPP_KillMobs_MaxPlayers_Toggle()
+{
+    EQ_ToggleBool(g_KillMobsMaxPlayersIsEnabled);
+    EQAPP_PrintBool("Kill Mobs Max Players In Zone", g_KillMobsMaxPlayersIsEnabled);
+}
+
+void EQAPP_KillMobs_MaxPlayers_On()
+{
+    if (g_KillMobsMaxPlayersIsEnabled == false)
+    {
+        EQAPP_KillMobs_MaxPlayers_Toggle();
+    }
+}
+
+void EQAPP_KillMobs_MaxPlayers_Off()
+{
+    if (g_KillMobsMaxPlayersIsEnabled == true)
+    {
+        EQAPP_KillMobs_MaxPlayers_Toggle();
+    }
+}

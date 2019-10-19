@@ -84,9 +84,11 @@ void EQAPP_NamedSpawns_Load()
     std::stringstream folderFileName;
     folderFileName << "namedspawns/" << zoneShortName << ".txt";
 
-    EQAPP_ReadFileToList(folderFileName.str().c_str(), g_NamedSpawnsList, false);
-
-    std::cout << "Named Spawns loaded from file: " << folderFileName.str() << std::endl;
+    bool result = EQAPP_ReadFileToList(folderFileName.str().c_str(), g_NamedSpawnsList, false);
+    if (result == true)
+    {
+        std::cout << "Named Spawns loaded from file: " << folderFileName.str() << std::endl;
+    }
 }
 
 void EQAPP_NamedSpawns_Execute()

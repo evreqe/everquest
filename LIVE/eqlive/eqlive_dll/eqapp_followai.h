@@ -2,6 +2,8 @@
 
 extern void EQAPP_Waypoint_FollowPath_Off();
 
+extern bool g_CheatFlyIsEnabled;
+
 bool g_FollowAIIsEnabled = true;
 
 bool g_FollowAIUseZAxisIsEnabled = false;
@@ -246,7 +248,7 @@ void EQAPP_FollowAI_Execute()
         EQ_TurnSpawnTowardsLocation(playerSpawn, behindSpawnY, behindSpawnX);
 
         float behindSpawnDistance = EQ_CalculateDistance(playerSpawnY, playerSpawnX, behindSpawnY, behindSpawnX);
-        if (behindSpawnDistance < 1.0f)
+        if (behindSpawnDistance <= 1.0f)
         {
             EQ_SetAutoRun(false);
             EQ_TurnPlayerTowardsSpawn(followSpawn);
@@ -261,15 +263,26 @@ void EQAPP_FollowAI_Execute()
 
         if (followSpawnType == EQ_SPAWN_TYPE_PLAYER)
         {
-            if (followSpawnDistance < g_FollowAIDistancePlayer)
+            if (g_CheatFlyIsEnabled == true)
             {
-                EQ_SetAutoRun(false);
-                return;
+                if (followSpawnDistance <= 1.0f)
+                {
+                    EQ_SetAutoRun(false);
+                    return;
+                }
+            }
+            else
+            {
+                if (followSpawnDistance <= g_FollowAIDistancePlayer)
+                {
+                    EQ_SetAutoRun(false);
+                    return;
+                }
             }
         }
         else if (followSpawnType == EQ_SPAWN_TYPE_NPC)
         {
-            if (followSpawnDistance < g_FollowAIDistanceNPC)
+            if (followSpawnDistance <= g_FollowAIDistanceNPC)
             {
                 EQ_SetAutoRun(false);
                 return;
@@ -288,7 +301,7 @@ void EQAPP_FollowAI_Execute()
     }
 
     // follow while swimming or levitating
-    if (g_FollowAIUseZAxisIsEnabled == true || EQ_IsSpawnSwimming(playerSpawn) == true)
+    if (g_FollowAIUseZAxisIsEnabled == true || EQ_IsSpawnSwimming(playerSpawn) == true || g_CheatFlyIsEnabled == true)
     {
         if ((followSpawnZ - 1.0f) > playerSpawnZ)
         {

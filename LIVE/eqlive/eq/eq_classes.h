@@ -1,6 +1,7 @@
 #pragma once
 
 #include "eq_constants.h"
+#include "eq_structures.h"
 #include "eq_macros.h"
 #include "eq_messages.h"
 
@@ -26,6 +27,9 @@ namespace EQClass
     class CXWnd;
 
     class CAlertWnd;
+    class CAlertStackWnd;
+    class CBazaarSearchWnd;
+    class CBazaarConfirmationWnd;
     class CSpellBookWnd;
 
     // EQGraphicsDX9.dll
@@ -81,6 +85,7 @@ public:
     void HandleMouseWheel(signed int delta);
     void SendNewText(int chatType, char* name, char* text, int unknown);
     void DropHeldItemOnGround(int noDrop);
+    void RightClickedOnPlayer(uint32_t spawn);
 };
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(char* EQClass::CEverQuest::DoPercentConvert(char* text, bool isOutgoing), EQ_ADDRESS_FUNCTION_CEverQuest__DoPercentConvert);
@@ -109,6 +114,9 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__SendNewText)(void* this_pt
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::DropHeldItemOnGround(int NoDrop), EQ_ADDRESS_FUNCTION_CEverQuest__DropHeldItemOnGround);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__DropHeldItemOnGround)(void* this_ptr, int noDrop);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::RightClickedOnPlayer(uint32_t spawn), EQ_ADDRESS_FUNCTION_CEverQuest__RightClickedOnPlayer);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__RightClickedOnPlayer)(void* this_ptr, uint32_t spawn);
 
 EQClass::CEverQuest** EQ_CLASS_POINTER_CEverQuest_pptr;
 EQClass::CEverQuest* EQ_CLASS_POINTER_CEverQuest;
@@ -251,6 +259,7 @@ public:
     uint32_t GetPlayerPhysicsClient();
     int push_along_heading(float speed);
     void Unknown();
+    bool AllowedToAttack(uint32_t spawn, uint32_t spellID);
 };
 
 #define EQ_VFTABLE_INDEX_EQPlayer__Unknown                   0x60    // Dismount
@@ -287,6 +296,9 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__push_along_heading)(void* th
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::EQPlayer::Unknown(), EQ_VFTABLE_INDEX_EQPlayer__Unknown);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__Unknown)(void* this_ptr);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::EQPlayer::AllowedToAttack(uint32_t spawn, uint32_t spellID), EQ_ADDRESS_FUNCTION_EQPlayer__AllowedToAttack);
+typedef bool (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__AllowedToAttack)(void* this_ptr, uint32_t spawn, uint32_t spellID);
 
 /* EQSwitchManager */
 
@@ -375,6 +387,60 @@ EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CAlertWnd::WndNotificati
 EQClass::CAlertWnd** EQ_CLASS_POINTER_CAlertWnd_pptr;
 EQClass::CAlertWnd* EQ_CLASS_POINTER_CAlertWnd;
 
+/* CAlertStackWnd */
+
+class EQClass::CAlertStackWnd
+{
+public:
+    int WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
+    void Deactivate();
+};
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CAlertStackWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CAlertStackWnd::Deactivate(), EQ_VFTABLE_INDEX_CXWnd__Deactivate);
+
+EQClass::CAlertStackWnd** EQ_CLASS_POINTER_CAlertStackWnd_pptr;
+EQClass::CAlertStackWnd* EQ_CLASS_POINTER_CAlertStackWnd;
+
+/* CBazaarSearchWnd */
+
+class EQClass::CBazaarSearchWnd
+{
+public:
+    int WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
+    void CBazaarSearchWnd::AddItemToList(char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11);
+    void CBazaarSearchWnd::doQuery();
+    bool CBazaarSearchWnd::BuyItem(int quantity);
+};
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CBazaarSearchWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CBazaarSearchWnd::AddItemToList(char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11), EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarSearchWnd__AddItemToList)(void* this_ptr, char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CBazaarSearchWnd::doQuery(), EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarSearchWnd__doQuery)(void* this_ptr);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::CBazaarSearchWnd::BuyItem(int quantity), EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarSearchWnd__BuyItem)(void* this_ptr, int quantity);
+
+EQClass::CBazaarSearchWnd** EQ_CLASS_POINTER_CBazaarSearchWnd_pptr;
+EQClass::CBazaarSearchWnd* EQ_CLASS_POINTER_CBazaarSearchWnd;
+
+/* CBazaarConfirmationWnd */
+
+class EQClass::CBazaarConfirmationWnd
+{
+public:
+    int CBazaarConfirmationWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
+};
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CBazaarConfirmationWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
+
+EQClass::CBazaarConfirmationWnd** EQ_CLASS_POINTER_CBazaarConfirmationWnd_pptr;
+EQClass::CBazaarConfirmationWnd* EQ_CLASS_POINTER_CBazaarConfirmationWnd;
+
 /* CSpellBookWnd */
 
 class EQClass::CSpellBookWnd
@@ -428,6 +494,7 @@ public:
     bool DrawColoredRectangle(EQ::Rectangle& rectangle, uint32_t colorARGB);
     void ClearRenderToBlack();
     void RenderPartialScene();
+    void Render0xB0();
     void UpdateDisplay();
     void TakeScreenshot(const char* fileName);
 };
@@ -439,7 +506,7 @@ public:
 #define EQ_VFTABLE_INDEX_CRender__DrawColoredRectangle    0xA0    // "*ScreenShot.jpg"
 #define EQ_VFTABLE_INDEX_CRender__ClearRenderToBlack      0xA8
 #define EQ_VFTABLE_INDEX_CRender__RenderPartialScene      0xAC
-#define EQ_VFTABLE_INDEX_CRender__RenderUNKNOWN           0xB0    // draws something, called after ClearRenderToBlack() while blind
+#define EQ_VFTABLE_INDEX_CRender__Render0xB0              0xB0    // does something, called after ClearRenderToBlack() while blind
 #define EQ_VFTABLE_INDEX_CRender__UpdateDisplay           0xB4
 #define EQ_VFTABLE_INDEX_CRender__TakeScreenshot          0xC4
 
@@ -457,6 +524,9 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CRender__ClearRenderToBlack)(void* thi
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CRender::RenderPartialScene(), EQ_VFTABLE_INDEX_CRender__RenderPartialScene);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CRender__RenderPartialScene)(void* this_ptr);
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CRender::Render0xB0(), EQ_VFTABLE_INDEX_CRender__Render0xB0);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CRender__Render0xB0)(void* this_ptr);
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CRender::UpdateDisplay(), EQ_VFTABLE_INDEX_CRender__UpdateDisplay);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CRender__UpdateDisplay)(void* this_ptr);

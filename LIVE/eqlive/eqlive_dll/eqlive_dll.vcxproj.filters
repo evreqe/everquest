@@ -150,6 +150,24 @@
     <ClInclude Include="eqapp_killmobs.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="eq_structures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eq_spellaffects.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_bazaarfilter.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_noalert.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_powerlevel.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_combatmacro.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

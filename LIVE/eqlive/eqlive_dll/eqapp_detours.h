@@ -7,6 +7,7 @@
 #include "eqapp_changeheight.h"
 #include "eqapp_chatevent.h"
 #include "eqapp_combathotbutton.h"
+#include "eqapp_combatmacro.h"
 #include "eqapp_console.h"
 #include "eqapp_killmobs.h"
 #include "eqapp_followai.h"
@@ -70,6 +71,8 @@ EQ_MACRO_FUNCTION_DefineDetour(CRender__ClearRenderToBlack);
 EQ_MACRO_FUNCTION_DefineDetour(CRender__RenderPartialScene);
 EQ_MACRO_FUNCTION_DefineDetour(CRender__UpdateDisplay);
 
+EQ_MACRO_FUNCTION_DefineDetour(CBazaarSearchWnd__AddItemToList);
+
 EQ_MACRO_FUNCTION_DefineDetour(CSpellBookWnd__GetSpellMemTicksLeft);
 EQ_MACRO_FUNCTION_DefineDetour(CSpellBookWnd__GetSpellScribeTicksLeft);
 
@@ -113,10 +116,14 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CRender__ClearRenderToBlack(void* this_pt
 int __fastcall EQAPP_DETOURED_FUNCTION_CRender__RenderPartialScene(void* this_ptr, void* not_used);
 int __fastcall EQAPP_DETOURED_FUNCTION_CRender__UpdateDisplay(void* this_ptr, void* not_used);
 
+int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* this_ptr, void* not_used, char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11);
+
 int __fastcall EQAPP_DETOURED_FUNCTION_CSpellBookWnd__GetSpellMemTicksLeft(void* this_ptr, void* not_used);
 int __fastcall EQAPP_DETOURED_FUNCTION_CSpellBookWnd__GetSpellScribeTicksLeft(void* this_ptr, void* not_used);
 
 HRESULT __stdcall EQAPP_DETOURED_FUNCTION_IDirect3DDevice9__DrawIndexedPrimitive(LPDIRECT3DDEVICE9 device, D3DPRIMITIVETYPE primitiveType, INT baseIndex, UINT minIndex, UINT numVertices, UINT startIndex, UINT primitiveCount);
+
+/*
 
 HMODULE WINAPI EQAPP_REAL_FUNCTION_GetModuleHandleA(LPCSTR lpModuleName);
 DETOUR_TRAMPOLINE(HMODULE WINAPI EQAPP_REAL_FUNCTION_GetModuleHandleA(LPCSTR lpModuleName), GetModuleHandleA);
@@ -152,6 +159,8 @@ HINSTANCE WINAPI EQAPP_DETOURED_FUNCTION_ShellExecuteA
     INT      nShowCmd
 );
 
+*/
+
 void EQAPP_Detours_AddDetoursForDX9()
 {
     if (g_DetoursIsDX9Detoured == true)
@@ -159,16 +168,28 @@ void EQAPP_Detours_AddDetoursForDX9()
         return;
     }
 
-    EQ_ADDRESS_FUNCTION_IDirect3DDevice9__DrawIndexedPrimitive = EQ_VTABLE_IDirect3DDevice9[EQ_VTABLE_INDEX_IDirect3DDevice9__DrawIndexedPrimitive];
-    if (EQ_ADDRESS_FUNCTION_IDirect3DDevice9__DrawIndexedPrimitive != 0)
+    auto devicePointer = EQ_GetDirect3DDevicePointer();
+    if (devicePointer != NULL)
     {
-        //std::cout << "DrawIndexedPrimitive: 0x" << std::hex << EQ_ADDRESS_FUNCTION_IDirect3DDevice9__DrawIndexedPrimitive << std::dec << std::endl;
+        EQ_VTABLE_IDirect3DDevice9 = *(uintptr_t**)EQ_GetDirect3DDevicePointer();
+        if (EQ_VTABLE_IDirect3DDevice9 != NULL)
+        {
+            EQ_ADDRESS_FUNCTION_IDirect3DDevice9__DrawIndexedPrimitive = EQ_VTABLE_IDirect3DDevice9[EQ_VTABLE_INDEX_IDirect3DDevice9__DrawIndexedPrimitive];
+            if (EQ_ADDRESS_FUNCTION_IDirect3DDevice9__DrawIndexedPrimitive != 0)
+            {
+                //std::cout << "DrawIndexedPrimitive: 0x" << std::hex << EQ_ADDRESS_FUNCTION_IDirect3DDevice9__DrawIndexedPrimitive << std::dec << std::endl;
 
-        EQ_MACRO_FUNCTION_AddDetour(IDirect3DDevice9__DrawIndexedPrimitive);
+                EQ_MACRO_FUNCTION_AddDetour(IDirect3DDevice9__DrawIndexedPrimitive);
 
-        g_DetoursIsDX9Detoured = true;
-        return;
+                //std::cout << "AddDetoursForDX9 ok!" << std::endl;
+
+                g_DetoursIsDX9Detoured = true;
+                return;
+            }
+        }
     }
+
+    std::cout << "AddDetoursForDX9 fail!" << std::endl;
 
     g_DetoursIsDX9Detoured = false;
 }
@@ -180,14 +201,26 @@ void EQAPP_Detours_RemoveDetoursForDX9()
         return;
     }
 
-    EQ_ADDRESS_FUNCTION_IDirect3DDevice9__DrawIndexedPrimitive = EQ_VTABLE_IDirect3DDevice9[EQ_VTABLE_INDEX_IDirect3DDevice9__DrawIndexedPrimitive];
-    if (EQ_ADDRESS_FUNCTION_IDirect3DDevice9__DrawIndexedPrimitive != 0)
+    auto devicePointer = EQ_GetDirect3DDevicePointer();
+    if (devicePointer != NULL)
     {
-        EQ_MACRO_FUNCTION_RemoveDetour(IDirect3DDevice9__DrawIndexedPrimitive);
+        EQ_VTABLE_IDirect3DDevice9 = *(uintptr_t**)EQ_GetDirect3DDevicePointer();
+        if (EQ_VTABLE_IDirect3DDevice9 != NULL)
+        {
+            EQ_ADDRESS_FUNCTION_IDirect3DDevice9__DrawIndexedPrimitive = EQ_VTABLE_IDirect3DDevice9[EQ_VTABLE_INDEX_IDirect3DDevice9__DrawIndexedPrimitive];
+            if (EQ_ADDRESS_FUNCTION_IDirect3DDevice9__DrawIndexedPrimitive != 0)
+            {
+                EQ_MACRO_FUNCTION_RemoveDetour(IDirect3DDevice9__DrawIndexedPrimitive);
 
-        g_DetoursIsDX9Detoured = false;
-        return;
+                //std::cout << "RemoveDetoursForDX9 ok!" << std::endl;
+
+                g_DetoursIsDX9Detoured = false;
+                return;
+            }
+        }
     }
+
+    std::cout << "RemoveDetoursForDX9 fail!" << std::endl;
 
     g_DetoursIsDX9Detoured = true;
 }
@@ -210,11 +243,15 @@ void EQAPP_Detours_AddDetoursForCamera()
             {
                 EQ_MACRO_FUNCTION_AddDetour(CCamera__SetCameraLocation);
 
+                //std::cout << "AddDetoursForCamera ok!" << std::endl;
+
                 g_DetoursIsCameraDetoured = true;
                 return;
             }
         }
     }
+
+    std::cout << "AddDetoursForCamera fail!" << std::endl;
 
     g_DetoursIsCameraDetoured = false;
 }
@@ -237,11 +274,15 @@ void EQAPP_Detours_RemoveDetoursForCamera()
             {
                 EQ_MACRO_FUNCTION_RemoveDetour(CCamera__SetCameraLocation);
 
+                //std::cout << "RemoveDetoursForCamera ok!" << std::endl;
+
                 g_DetoursIsCameraDetoured = false;
                 return;
             }
         }
     }
+
+    std::cout << "RemoveDetoursForCamera fail!" << std::endl;
 
     g_DetoursIsCameraDetoured = true;
 }
@@ -277,11 +318,15 @@ void EQAPP_Detours_AddDetoursForRender()
                 EQ_MACRO_FUNCTION_AddDetour(CRender__RenderPartialScene);
                 EQ_MACRO_FUNCTION_AddDetour(CRender__UpdateDisplay);
 
+                //std::cout << "AddDetoursForRender ok!" << std::endl;
+
                 g_DetoursIsRenderDetoured = true;
                 return;
             }
         }
     }
+
+    std::cout << "AddDetoursForRender fail!" << std::endl;
 
     g_DetoursIsRenderDetoured = false;
 }
@@ -317,17 +362,24 @@ void EQAPP_Detours_RemoveDetoursForRender()
                 EQ_MACRO_FUNCTION_RemoveDetour(CRender__RenderPartialScene);
                 EQ_MACRO_FUNCTION_RemoveDetour(CRender__UpdateDisplay);
 
+                //std::cout << "RemoveDetoursForRender ok!" << std::endl;
+
                 g_DetoursIsRenderDetoured = false;
                 return;
             }
         }
     }
 
+    std::cout << "RemoveDetoursForRender fail!" << std::endl;
+
     g_DetoursIsRenderDetoured = true;
 }
 
 void EQAPP_Detours_Load()
 {
+    DetourTransactionBegin();
+    DetourUpdateThread(GetCurrentThread());
+
     if (EQ_ADDRESS_FUNCTION_CollisionCallbackForActors != 0)
     {
         EQ_MACRO_FUNCTION_AddDetour(CollisionCallbackForActors);
@@ -457,6 +509,14 @@ void EQAPP_Detours_Load()
         }
     }
 
+    if (EQ_ADDRESS_POINTER_CBazaarSearchWnd != 0)
+    {
+        if (EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList != 0)
+        {
+            EQ_MACRO_FUNCTION_AddDetour(CBazaarSearchWnd__AddItemToList);
+        }
+    }
+
     if (EQ_ADDRESS_POINTER_CSpellBookWnd != 0)
     {
         if (EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellMemTicksLeft != 0)
@@ -474,12 +534,19 @@ void EQAPP_Detours_Load()
     EQAPP_Detours_AddDetoursForCamera();
     EQAPP_Detours_AddDetoursForRender();
 
-    ////DetourFunctionWithTrampoline((PBYTE)EQAPP_REAL_FUNCTION_GetModuleHandleA, (PBYTE)EQAPP_DETOURED_FUNCTION_GetModuleHandleA);
-    ////DetourFunctionWithTrampoline((PBYTE)EQAPP_REAL_FUNCTION_ShellExecuteA, (PBYTE)EQAPP_DETOURED_FUNCTION_ShellExecuteA);
+/*
+    DetourFunctionWithTrampoline((PBYTE)EQAPP_REAL_FUNCTION_GetModuleHandleA, (PBYTE)EQAPP_DETOURED_FUNCTION_GetModuleHandleA);
+    DetourFunctionWithTrampoline((PBYTE)EQAPP_REAL_FUNCTION_ShellExecuteA, (PBYTE)EQAPP_DETOURED_FUNCTION_ShellExecuteA);
+*/
+
+    DetourTransactionCommit();
 }
 
 void EQAPP_Detours_Unload()
 {
+    DetourTransactionBegin();
+    DetourUpdateThread(GetCurrentThread());
+
     if (EQ_ADDRESS_FUNCTION_CollisionCallbackForActors != 0)
     {
         EQ_MACRO_FUNCTION_RemoveDetour(CollisionCallbackForActors);
@@ -609,6 +676,14 @@ void EQAPP_Detours_Unload()
         }
     }
 
+    if (EQ_ADDRESS_POINTER_CBazaarSearchWnd != 0)
+    {
+        if (EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList != 0)
+        {
+            EQ_MACRO_FUNCTION_RemoveDetour(CBazaarSearchWnd__AddItemToList);
+        }
+    }
+
     if (EQ_ADDRESS_POINTER_CSpellBookWnd != 0)
     {
         if (EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellMemTicksLeft != 0)
@@ -626,8 +701,12 @@ void EQAPP_Detours_Unload()
     EQAPP_Detours_RemoveDetoursForCamera();
     EQAPP_Detours_RemoveDetoursForRender();
 
-    ////DetourRemove((PBYTE)EQAPP_REAL_FUNCTION_GetModuleHandleA, (PBYTE)EQAPP_DETOURED_FUNCTION_GetModuleHandleA);
-    ////DetourRemove((PBYTE)EQAPP_REAL_FUNCTION_ShellExecuteA, (PBYTE)EQAPP_DETOURED_FUNCTION_ShellExecuteA);
+/*
+    DetourRemove((PBYTE)EQAPP_REAL_FUNCTION_GetModuleHandleA, (PBYTE)EQAPP_DETOURED_FUNCTION_GetModuleHandleA);
+    DetourRemove((PBYTE)EQAPP_REAL_FUNCTION_ShellExecuteA, (PBYTE)EQAPP_DETOURED_FUNCTION_ShellExecuteA);
+*/
+
+    DetourTransactionCommit();
 }
 
 void EQAPP_Detours_OnEnterOrLeaveZone()
@@ -639,6 +718,8 @@ void EQAPP_Detours_OnEnterOrLeaveZone()
     EQAPP_Waypoint_FollowPath_Off();
 
     EQAPP_WaypointEditor_Reset();
+
+    EQAPP_KillMobs_Off();
 
     EQAPP_FreeCamera_Off();
     EQAPP_Speed_Off();
@@ -654,6 +735,8 @@ void EQAPP_Detours_OnEnterZone()
     EQAPP_KillMobs_Load();
     EQAPP_ChatEvent_Load();
     EQAPP_Bandolier_Load();
+    EQAPP_BazaarFilter_Load();
+    EQAPP_CombatMacro_Load();
 
     g_NoDrawIsEnabled = true;
 
@@ -755,6 +838,11 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
         return EQAPP_REAL_FUNCTION_DrawNetStatus(x, y, unknown);
     }
 
+    if (g_NoAlertIsEnabled == true)
+    {
+        EQAPP_NoAlert_Execute();
+    }
+
     if (g_WindowTitleIsEnabled == true)
     {
         if (EQAPP_Timer_HasTimeElapsed(g_WindowTitleTimer, g_WindowTitleTimerInterval) == true)
@@ -843,6 +931,11 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
         EQAPP_CombatHotButton_Execute();
     }
 
+    if (g_CombatMacroIsEnabled == true)
+    {
+        EQAPP_CombatMacro_Execute();
+    }
+
     if (g_ChangeHeightIsEnabled == true)
     {
         EQAPP_ChangeHeight_Execute();
@@ -856,6 +949,11 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
     if (g_NamedSpawnsIsEnabled == true)
     {
         EQAPP_NamedSpawns_Execute();
+    }
+
+    if (g_PowerLevelIsEnabled == true)
+    {
+        EQAPP_PowerLevel_Execute();
     }
 
     if (g_SpeedIsEnabled == true)
@@ -877,10 +975,6 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
     {
         EQAPP_HUD_Execute();
     }
-
-    EQAPP_Detours_AddDetoursForDX9();
-    EQAPP_Detours_AddDetoursForCamera();
-    EQAPP_Detours_AddDetoursForRender();
 
     EQAPP_Console_Print();
 
@@ -1100,43 +1194,73 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CharacterZoneClient__TotalSpellAffects(vo
 
     int result = EQAPP_REAL_FUNCTION_CharacterZoneClient__TotalSpellAffects(this_ptr, spellAffectIndex, unknown1, unknown2, unknown3, unknown4);
 
-/*
     // always see invisible
-    if (spellAffectIndex == EQ_SPELL_AFFECT_SEE_INVISIBLE)
+    if (g_CheatAlwaysSeeInvisIsEnabled == true)
     {
-        return 1;
+        if (spellAffectIndex == EQ_SPELL_AFFECT_SEE_INVISIBLE)
+        {
+            return 1;
+        }
     }
-*/
 
-/*
     // always breathe underwater
-    if (spellAffectIndex == EQ_SPELL_AFFECT_ENDURING_BREATH)
+    if (g_CheatAlwaysBreatheUnderwaterIsEnabled == true)
     {
-        return 1;
+        if (spellAffectIndex == EQ_SPELL_AFFECT_ENDURING_BREATH)
+        {
+            return 1;
+        }
     }
-*/
 
-/*
+    // always have ultravision
+    if (g_CheatAlwaysHaveUltravisionIsEnabled == true)
+    {
+        if (spellAffectIndex == EQ_SPELL_AFFECT_ULTRAVISION)
+        {
+            return 2;
+        }
+    }
+
+    // always have spirit of wolf
+    if (g_CheatAlwaysHaveSpiritOfWolfIsEnabled == true)
+    {
+        if (spellAffectIndex == EQ_SPELL_AFFECT_MOVEMENT_RATE)
+        {
+            if (result >= 0 && result < 60)
+            {
+                return 60;
+            }
+        }
+    }
+
     // never rooted
-    if (spellAffectIndex == EQ_SPELL_AFFECT_ROOT)
+    if (g_CheatNeverRootedIsEnabled == true)
     {
-        return 0;
-    }
-*/
-
-    if (g_CheatNeverBlindIsEnabled == true)
-    {
-        // never blind
-        if (spellAffectIndex == EQ_SPELL_AFFECT_BLIND)
+        if (spellAffectIndex == EQ_SPELL_AFFECT_ROOT)
         {
             return 0;
         }
     }
 
-    // always have ultravision
-    if (spellAffectIndex == EQ_SPELL_AFFECT_ULTRAVISION)
+    // never snared
+    if (g_CheatNeverSnaredIsEnabled == true)
     {
-        return 2;
+        if (spellAffectIndex == EQ_SPELL_AFFECT_MOVEMENT_RATE)
+        {
+            if (result < 0)
+            {
+                return 60;
+            }
+        }
+    }
+
+    // never blind
+    if (g_CheatNeverBlindIsEnabled == true)
+    {
+        if (spellAffectIndex == EQ_SPELL_AFFECT_BLIND)
+        {
+            return 0;
+        }
     }
 
     // always have max bandolier slots
@@ -1345,6 +1469,18 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void
     {
         if (EQAPP_String_BeginsWith(chatText, "You have entered an ") == false)
         {
+            if (g_DetoursIsDX9Detoured == false && g_DetoursIsCameraDetoured == false && g_DetoursIsRenderDetoured == false)
+            {
+                DetourTransactionBegin();
+                DetourUpdateThread(GetCurrentThread());
+
+                EQAPP_Detours_AddDetoursForDX9();
+                EQAPP_Detours_AddDetoursForCamera();
+                EQAPP_Detours_AddDetoursForRender();
+
+                DetourTransactionCommit();
+            }
+
             EQAPP_Detours_OnEnterZone();
         }
     }
@@ -1352,6 +1488,33 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void
     if (chatText == "It will take you about 30 seconds to prepare your camp.")
     {
         EQ_InterpretCommand("/outputfile inventory");
+
+        if (g_DetoursIsDX9Detoured == true && g_DetoursIsCameraDetoured == true && g_DetoursIsRenderDetoured == true)
+        {
+            DetourTransactionBegin();
+            DetourUpdateThread(GetCurrentThread());
+
+            EQAPP_Detours_RemoveDetoursForDX9();
+            EQAPP_Detours_RemoveDetoursForCamera();
+            EQAPP_Detours_RemoveDetoursForRender();
+
+            DetourTransactionCommit();
+        }
+    }
+
+    if (chatText == "You abandon your preparations to camp.")
+    {
+        if (g_DetoursIsDX9Detoured == false && g_DetoursIsCameraDetoured == false && g_DetoursIsRenderDetoured == false)
+        {
+            DetourTransactionBegin();
+            DetourUpdateThread(GetCurrentThread());
+
+            EQAPP_Detours_AddDetoursForDX9();
+            EQAPP_Detours_AddDetoursForCamera();
+            EQAPP_Detours_AddDetoursForRender();
+
+            DetourTransactionCommit();
+        }
     }
 
     if (g_AutoGroupIsEnabled == true)
@@ -1376,18 +1539,29 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__SetGameState(void* this_ptr, 
 
     g_NoDrawIsEnabled = false;
 
-    EQAPP_Detours_RemoveDetoursForDX9();
-    EQAPP_Detours_RemoveDetoursForCamera();
-    EQAPP_Detours_RemoveDetoursForRender();
+    EQAPP_FollowAI_StopFollow();
 
     EQAPP_InitializeAddresses();
     EQAPP_InitializeAddressPointers();
 
+    if (gameState != EQ_GAME_STATE_IN_GAME)
+    {
+        if (g_DetoursIsDX9Detoured == true && g_DetoursIsCameraDetoured == true && g_DetoursIsRenderDetoured == true)
+        {
+            DetourTransactionBegin();
+            DetourUpdateThread(GetCurrentThread());
+
+            EQAPP_Detours_RemoveDetoursForDX9();
+            EQAPP_Detours_RemoveDetoursForCamera();
+            EQAPP_Detours_RemoveDetoursForRender();
+
+            DetourTransactionCommit();
+        }
+    }
+
     if (gameState == EQ_GAME_STATE_CHARACTER_SELECT || gameState == EQ_GAME_STATE_IN_GAME)
     {
         EQAPP_SetWindowTitle("EverQuest*");
-
-        EQAPP_FollowAI_StopFollow();
     }
 
     return EQAPP_REAL_FUNCTION_CEverQuest__SetGameState(this_ptr, gameState);
@@ -1718,6 +1892,9 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CRender__ClearRenderToBlack(void* this_pt
 
     if (g_CheatNeverBlindIsEnabled == true)
     {
+        // draw the scene so we can see stuff because this gets skipped while blind
+        EQ_CLASS_POINTER_CRender->RenderPartialScene();
+
         // never blind
         return 0;
     }
@@ -1781,6 +1958,48 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CRender__UpdateDisplay(void* this_ptr, vo
     }
 
     return EQAPP_REAL_FUNCTION_CRender__UpdateDisplay(this_ptr);
+}
+
+int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* this_ptr, void* not_used, char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11)
+{
+    if (g_EQAppShouldUnload == 1)
+    {
+        return EQAPP_REAL_FUNCTION_CBazaarSearchWnd__AddItemToList(this_ptr, itemName, itemPrice, traderName, a4, a5, a6, a7, a8, a9, a10, a11);
+    }
+
+    if (EQ_IsInGame() == false)
+    {
+        return EQAPP_REAL_FUNCTION_CBazaarSearchWnd__AddItemToList(this_ptr, itemName, itemPrice, traderName, a4, a5, a6, a7, a8, a9, a10, a11);
+    }
+
+    if (g_EQAppIsInGame == false)
+    {
+        return EQAPP_REAL_FUNCTION_CBazaarSearchWnd__AddItemToList(this_ptr, itemName, itemPrice, traderName, a4, a5, a6, a7, a8, a9, a10, a11);
+    }
+
+    ////std::cout << "CBazaarSearchWnd::AddItemToList(): " << itemName << "^" << itemPrice << "^" << traderName << "^" << a4 << "^"  << a5 << "^" << a6 << "^" << a7 << "^" << a8 <<  "^" << a10 << std::endl;
+
+    if (g_BazaarFilterIsEnabled == true)
+    {
+        bool bShouldAddItemToList = EQAPP_BazaarFilter_HandleEvent_CBazaarSearchWnd__AddItemToList(itemName, itemPrice, traderName);
+        if (bShouldAddItemToList == false)
+        {
+            return 1;
+        }
+    }
+
+/*
+    if (g_BazaarBotIsEnabled == true)
+    {
+        bool bShouldAddItemToList = EQAPP_BazaarBot_HandleEvent_CBazaarSearchWnd__AddItemToList(itemName, itemPrice, traderName);
+        if (bShouldAddItemToList == false)
+        {
+            return 1;
+        }
+    }
+*/
+
+    return EQAPP_REAL_FUNCTION_CBazaarSearchWnd__AddItemToList(this_ptr, itemName, itemPrice, traderName, a4, a5, a6, a7, a8, a9, a10, a11);
 }
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CSpellBookWnd__GetSpellMemTicksLeft(void* this_ptr, void* not_used)
@@ -1886,6 +2105,8 @@ HRESULT __stdcall EQAPP_DETOURED_FUNCTION_IDirect3DDevice9__DrawIndexedPrimitive
     return EQAPP_REAL_FUNCTION_IDirect3DDevice9__DrawIndexedPrimitive(device, primitiveType, baseIndex, minIndex, numVertices, startIndex, primitiveCount);
 }
 
+/*
+
 HMODULE WINAPI EQAPP_DETOURED_FUNCTION_GetModuleHandleA(LPCSTR lpModuleName)
 {
     //std::stringstream ss;
@@ -1920,3 +2141,5 @@ HINSTANCE WINAPI EQAPP_DETOURED_FUNCTION_ShellExecuteA
 
     return EQAPP_REAL_FUNCTION_ShellExecuteA(hwnd, lpOperation, lpFile, lpParameters, lpDirectory, nShowCmd);
 }
+
+*/

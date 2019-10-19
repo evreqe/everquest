@@ -1,8 +1,8 @@
 #pragma once
 
-#include "eqapp_boxchat.h"
+extern std::list<std::string> g_BoxChatInterpretCommandList;
 
-bool g_CombatHotButtonIsEnabled = true; // false
+bool g_CombatHotButtonIsEnabled = false;
 
 EQApp::Timer g_CombatHotButtonTimer = EQAPP_Timer_GetTimeNow();
 EQApp::TimerInterval g_CombatHotButtonTimerInterval = 6;
@@ -75,12 +75,6 @@ void EQAPP_CombatHotButton_Execute()
 
     float targetSpawnDistance = EQ_GetSpawnDistance(targetSpawn);
     if (targetSpawnDistance > g_CombatHotButtonDistance)
-    {
-        return;
-    }
-
-    auto targetSpawnLastName = EQ_GetSpawnLastName(targetSpawn);
-    if (targetSpawnLastName.size() != 0)
     {
         return;
     }

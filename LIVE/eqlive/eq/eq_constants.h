@@ -111,52 +111,54 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_FONT_STYLE_NAME_SPRITE               10    // big text with drop shadow, used for text above players/npcs heads
 
 // class EQPlayer
-#define EQ_OFFSET_SPAWN_PREVIOUS                           0x04     // uint32_t pointer
-#define EQ_OFFSET_SPAWN_NEXT                               0x08     // uint32_t pointer
-#define EQ_OFFSET_SPAWN_JUMP_STRENGTH                      0x10     // float       // how high up you will jump, not forward
-#define EQ_OFFSET_SPAWN_SWIM_STRENGTH                      0x14     // float
-#define EQ_OFFSET_SPAWN_MOVEMENT_SPEED_BONUS               0x18     // float       // spells like SoW
-#define EQ_OFFSET_SPAWN_AREA_FRICTION                      0x1C     // float       // sliding on slippery surfaces or walking up slopes
-#define EQ_OFFSET_SPAWN_ACCELERATION_FRICTION              0x20     // float       // sliding on slippery surfaces or walking up slopes
-#define EQ_OFFSET_SPAWN_COLLIDE_WITH_ACTOR_TYPE            0x24     // uint32_t
-#define EQ_OFFSET_SPAWN_FLOOR_Z                            0x28     // float       // z-axis location where feet touch the ground
-#define EQ_OFFSET_SPAWN_LAST_NAME                          0x38     // char[32]
-#define EQ_OFFSET_SPAWN_Y                                  0x64     // float
-#define EQ_OFFSET_SPAWN_X                                  0x68     // float
-#define EQ_OFFSET_SPAWN_Z                                  0x6C     // float
-#define EQ_OFFSET_SPAWN_Y_SPEED                            0x70     // float
-#define EQ_OFFSET_SPAWN_X_SPEED                            0x74     // float
-#define EQ_OFFSET_SPAWN_Z_SPEED                            0x78     // float
-#define EQ_OFFSET_SPAWN_MOVEMENT_SPEED                     0x7C     // float       // how fast you are moving while walking, running, riding a mount, etc
-#define EQ_OFFSET_SPAWN_HEADING                            0x80     // float       // turning
-#define EQ_OFFSET_SPAWN_HEADING_SPEED                      0x8C     // float       // turning speed, -12 to 12
-#define EQ_OFFSET_SPAWN_PITCH                              0x90     // float       // look down and up, -128 to 128    // look forward, 0
-#define EQ_OFFSET_SPAWN_UNDERWATER_ENVIRONMENT_TYPE        0x94     // uint32_t    // touching water or lava, etc
-#define EQ_OFFSET_SPAWN_HEAD_ENVIRONMENT_TYPE              0xA0     // uint8_t
-#define EQ_OFFSET_SPAWN_FEET_ENVIRONMENT_TYPE              0xA1     // uint8_t
-#define EQ_OFFSET_SPAWN_BODY_ENVIRONMENT_TYPE              0xA2     // uint8_t
-#define EQ_OFFSET_SPAWN_NAME_NUMBERED                      0xA4     // char[64]
-#define EQ_OFFSET_SPAWN_NAME                               0xE4     // char[64]
-#define EQ_OFFSET_SPAWN_TYPE                               0x125    // uint8_t
-#define EQ_OFFSET_SPAWN_HEIGHT_Z                           0x138    // float       // height of player in z-axis units
-#define EQ_OFFSET_SPAWN_HEIGHT                             0x13C    // float       // determines height, width, length, bounding radius, etc
-#define EQ_OFFSET_SPAWN_ID                                 0x150    // uint32_t
-#define EQ_OFFSET_SPAWN_STATE_FLAGS                        0x154    // uint32_t    // uses bitwise flags (AND, OR)
-#define EQ_OFFSET_SPAWN_VEHICLE_SPAWN                      0x158    // uint32_t    // boats, airships, etc
-#define EQ_OFFSET_SPAWN_MOUNT_SPAWN                        0x15C    // uint32_t    // horses, etc
-#define EQ_OFFSET_SPAWN_MOUNT_RIDER_SPAWN                  0x160    // uint32_t    // spawn that is riding the mount
-#define EQ_OFFSET_SPAWN_IS_TARGETABLE                      0x168    // uint8_t
-uint32_t EQ_OFFSET_SPAWN_STANDING_STATE                  = 0;       // uint8_t
-uint32_t EQ_OFFSET_SPAWN_FOLLOW_SPAWN                    = 0;       // uint32_t pointer
-uint32_t EQ_OFFSET_SPAWN_HP_CURRENT                      = 0;       // uint64_t
-uint32_t EQ_OFFSET_SPAWN_HP_MAX                          = 0;       // uint64_t
-uint32_t EQ_OFFSET_SPAWN_MANA_CURRENT                    = 0;       // uint32_t
-uint32_t EQ_OFFSET_SPAWN_MANA_MAX                        = 0;       // uint32_t
-uint32_t EQ_OFFSET_SPAWN_ENDURANCE_CURRENT               = 0;       // uint32_t
-uint32_t EQ_OFFSET_SPAWN_ENDURANCE_MAX                   = 0;       // uint32_t
-uint32_t EQ_OFFSET_SPAWN_CharacterZoneClient             = 0;       // uint32_t pointer
-uint32_t EQ_OFFSET_EQ_Character____CharacterBase         = 0;       // uint32_t pointer
-uint32_t EQ_OFFSET_CharInfo2__Bandolier                  = 0;       // uint32_t pointer
+#define EQ_OFFSET_SPAWN_PREVIOUS                           0x04       // uint32_t pointer
+#define EQ_OFFSET_SPAWN_NEXT                               0x08       // uint32_t pointer
+#define EQ_OFFSET_SPAWN_JUMP_STRENGTH                      0x10       // float       // how high up you will jump, not forward
+#define EQ_OFFSET_SPAWN_SWIM_STRENGTH                      0x14       // float
+#define EQ_OFFSET_SPAWN_MOVEMENT_SPEED_BONUS               0x18       // float       // spells like SoW
+#define EQ_OFFSET_SPAWN_AREA_FRICTION                      0x1C       // float       // sliding on slippery surfaces or walking up slopes
+#define EQ_OFFSET_SPAWN_ACCELERATION_FRICTION              0x20       // float       // sliding on slippery surfaces or walking up slopes
+#define EQ_OFFSET_SPAWN_COLLIDE_WITH_ACTOR_TYPE            0x24       // uint32_t
+#define EQ_OFFSET_SPAWN_FLOOR_Z                            0x28       // float       // z-axis location where feet touch the ground
+#define EQ_OFFSET_SPAWN_LAST_NAME                          0x38       // char[32]
+#define EQ_OFFSET_SPAWN_Y                                  0x64       // float
+#define EQ_OFFSET_SPAWN_X                                  0x68       // float
+#define EQ_OFFSET_SPAWN_Z                                  0x6C       // float
+#define EQ_OFFSET_SPAWN_Y_SPEED                            0x70       // float
+#define EQ_OFFSET_SPAWN_X_SPEED                            0x74       // float
+#define EQ_OFFSET_SPAWN_Z_SPEED                            0x78       // float
+#define EQ_OFFSET_SPAWN_MOVEMENT_SPEED                     0x7C       // float       // how fast you are moving while walking, running, riding a mount, etc
+#define EQ_OFFSET_SPAWN_HEADING                            0x80       // float       // turning
+#define EQ_OFFSET_SPAWN_HEADING_SPEED                      0x8C       // float       // turning speed, -12 to 12
+#define EQ_OFFSET_SPAWN_PITCH                              0x90       // float       // look down and up, -128 to 128    // look forward, 0
+#define EQ_OFFSET_SPAWN_UNDERWATER_ENVIRONMENT_TYPE        0x94       // uint32_t    // touching water or lava, etc
+#define EQ_OFFSET_SPAWN_HEAD_ENVIRONMENT_TYPE              0xA0       // uint8_t
+#define EQ_OFFSET_SPAWN_FEET_ENVIRONMENT_TYPE              0xA1       // uint8_t
+#define EQ_OFFSET_SPAWN_BODY_ENVIRONMENT_TYPE              0xA2       // uint8_t
+#define EQ_OFFSET_SPAWN_NAME_NUMBERED                      0xA4       // char[64]
+#define EQ_OFFSET_SPAWN_NAME                               0xE4       // char[64]
+#define EQ_OFFSET_SPAWN_TYPE                               0x125      // uint8_t
+#define EQ_OFFSET_SPAWN_HEIGHT_Z                           0x138      // float       // height of player in z-axis units
+#define EQ_OFFSET_SPAWN_HEIGHT                             0x13C      // float       // determines height, width, length, bounding radius, etc
+#define EQ_OFFSET_SPAWN_ID                                 0x150      // uint32_t
+#define EQ_OFFSET_SPAWN_STATE_FLAGS                        0x154      // uint32_t    // uses bitwise flags (AND, OR)
+#define EQ_OFFSET_SPAWN_VEHICLE_SPAWN                      0x158      // uint32_t    // boats, airships, etc
+#define EQ_OFFSET_SPAWN_MOUNT_SPAWN                        0x15C      // uint32_t    // horses, etc
+#define EQ_OFFSET_SPAWN_MOUNT_RIDER_SPAWN                  0x160      // uint32_t    // spawn that is riding the mount
+#define EQ_OFFSET_SPAWN_IS_TARGETABLE                      0x168      // uint8_t
+uint32_t EQ_OFFSET_SPAWN_STANDING_STATE                  = 0;         // uint8_t
+uint32_t EQ_OFFSET_SPAWN_FOLLOW_SPAWN                    = 0;         // uint32_t pointer
+uint32_t EQ_OFFSET_SPAWN_HP_CURRENT                      = 0;         // uint64_t
+uint32_t EQ_OFFSET_SPAWN_HP_MAX                          = 0;         // uint64_t
+uint32_t EQ_OFFSET_SPAWN_MANA_CURRENT                    = 0;         // uint32_t
+uint32_t EQ_OFFSET_SPAWN_MANA_MAX                        = 0;         // uint32_t
+uint32_t EQ_OFFSET_SPAWN_ENDURANCE_CURRENT               = 0;         // uint32_t
+uint32_t EQ_OFFSET_SPAWN_ENDURANCE_MAX                   = 0;         // uint32_t
+uint32_t EQ_OFFSET_SPAWN_CharacterZoneClient             = 0;         // uint32_t pointer
+uint32_t EQ_OFFSET_EQ_Character____CharacterBase         = 0;         // uint32_t pointer
+uint32_t EQ_OFFSET_EQ_Character____ExtendedTargetList    = 0x2810;    // uint32_t pointer
+uint32_t EQ_OFFSET_EQ_Character____GroupInfo             = 0x2824;    // uint32_t pointer
+uint32_t EQ_OFFSET_CharInfo2__Bandolier                  = 0;         // uint32_t pointer
 
 #define EQ_SIZE_SPAWN_NAME         64 // 0x40
 #define EQ_SIZE_SPAWN_LAST_NAME    32 // 0x20
@@ -205,6 +207,34 @@ uint32_t EQ_OFFSET_ITEM_IS_NO_GROUND         = 0x110;    // uint8_t
 #define EQ_GENDER_FEMALE    1
 #define EQ_GENDER_UNKNOWN   2
 
+#define EQ_OFFSET_Group_GROUP_MEMBERS          0x04    // uint32_t[6] pointer
+#define EQ_OFFSET_Group_GROUP_MEMBER_1         EQ_OFFSET_Group_GROUP_MEMBERS + 0x00
+#define EQ_OFFSET_Group_GROUP_MEMBER_2         EQ_OFFSET_Group_GROUP_MEMBERS + 0x04
+#define EQ_OFFSET_Group_GROUP_MEMBER_3         EQ_OFFSET_Group_GROUP_MEMBERS + 0x08
+#define EQ_OFFSET_Group_GROUP_MEMBER_4         EQ_OFFSET_Group_GROUP_MEMBERS + 0x0C
+#define EQ_OFFSET_Group_GROUP_MEMBER_5         EQ_OFFSET_Group_GROUP_MEMBERS + 0x10
+#define EQ_OFFSET_Group_GROUP_MEMBER_6         EQ_OFFSET_Group_GROUP_MEMBERS + 0x14
+#define EQ_OFFSET_Group_GROUP_MEMBER_LEADER    EQ_OFFSET_Group_GROUP_MEMBERS + 0x1C
+
+#define EQ_OFFSET_GROUP_MEMBER_NAME                    0x04    // CXStr pointer
+#define EQ_OFFSET_GROUP_MEMBER_IS_MERCENARY            0x08    // uint8_t
+#define EQ_OFFSET_GROUP_MEMBER_MERCENARY_OWNER_NAME    0x0C    // CXStr pointer
+#define EQ_OFFSET_GROUP_MEMBER_LEVEL                   0x10    // uint32_t
+#define EQ_OFFSET_GROUP_MEMBER_IS_OFFLINE              0x14    // uint8_t
+#define EQ_OFFSET_GROUP_MEMBER_IS_MAIN_TANK            0x1D    // uint8_t
+#define EQ_OFFSET_GROUP_MEMBER_IS_MAIN_ASSIST          0x1E    // uint8_t
+#define EQ_OFFSET_GROUP_MEMBER_IS_PULLER               0x1F    // uint8_t
+#define EQ_OFFSET_GROUP_MEMBER_IS_MARK_NPC             0x20    // uint8_t
+#define EQ_OFFSET_GROUP_MEMBER_IS_MASTER_LOOTER        0x21    // uint8_t
+#define EQ_OFFSET_GROUP_MEMBER_ROLES_FLAGS             0x24    // uint32_t bitwise flags
+#define EQ_OFFSET_GROUP_MEMBER_SPAWN                   0x30    // uint32_t pointer
+
+#define EQ_GROUP_MEMBER_ROLES_FLAGS_MAIN_TANK        0x01
+#define EQ_GROUP_MEMBER_ROLES_FLAGS_MAIN_ASSIST      0x02
+#define EQ_GROUP_MEMBER_ROLES_FLAGS_PULLER           0x04
+#define EQ_GROUP_MEMBER_ROLES_FLAGS_MARK_NPC         0x08
+#define EQ_GROUP_MEMBER_ROLES_FLAGS_MASTER_LOOTER    0x10
+
 #define EQ_GRAVITY_TYPE_GROUND               0
 #define EQ_GRAVITY_TYPE_FLYING               1
 #define EQ_GRAVITY_TYPE_LEVITATING           2
@@ -243,6 +273,7 @@ std::unordered_map<uint32_t, std::string> EQ_GRAVITY_TYPE_Strings =
 #define EQ_OFFSET_CActorClient_CActorInterface     0x180    // uint32_t pointer   // 384 dec    // EQData::_SPAWNINFO::mActorClient->pcactorex
 #define EQ_OFFSET_CActorClient_CLightInterface     0x184    // uint32_t pointer
 
+// pcactorex
 #define EQ_OFFSET_CActor_Y                          0x2C  // float
 #define EQ_OFFSET_CActor_X                          0x30  // float
 #define EQ_OFFSET_CActor_Z                          0x34  // float
@@ -278,6 +309,9 @@ std::unordered_map<uint32_t, std::string> EQ_GRAVITY_TYPE_Strings =
 #define EQ_ENVIRONMENT_TYPE_WATER    5
 
 #define EQ_LIGHT_TYPE_GLOOMING_DEEP_LANTERN    11    // uint8_t
+
+#define EQ_BAZAAR_SEARCH_MAX_RESULTS_PER_TRADER    200
+#define EQ_BAZAAR_SEARCH_LIST_INDEX_NULL     0xFFFFFFFF // uint32_t
 
 #define EQ_STANDING_STATE_UNKNOWN     0
 #define EQ_STANDING_STATE_STANDING    100
@@ -481,53 +515,6 @@ std::unordered_map<uint32_t, std::string> EQ_DIRECTION_Strings =
     {EQ_DIRECTION_NULL,          "Unknown"},
 };
 
-#define EQ_SPELL_AFFECT_INVISIBILITY                    12
-#define EQ_SPELL_AFFECT_SEE_INVIS                       13     // see invisible
-#define EQ_SPELL_AFFECT_ENDURING_BREATH                 14     // breathe underwater
-#define EQ_SPELL_AFFECT_BLIND                           20
-#define EQ_SPELL_AFFECT_STUN                            21
-#define EQ_SPELL_AFFECT_CHARM                           22
-#define EQ_SPELL_AFFECT_FEAR                            23
-#define EQ_SPELL_AFFECT_FATIGUE                         24
-#define EQ_SPELL_AFFECT_INVIS_VS_UNDEAD                 28
-#define EQ_SPELL_AFFECT_INVIS_VS_ANIMALS                29
-#define EQ_SPELL_AFFECT_ENTHRALL                        31     // mez
-#define EQ_SPELL_AFFECT_DISEASE                         35
-#define EQ_SPELL_AFFECT_POISON                          36
-#define EQ_SPELL_AFFECT_INVULNERABILITY                 40
-#define EQ_SPELL_AFFECT_LEVITATION                      57
-#define EQ_SPELL_AFFECT_SPIN_STUN                       64
-#define EQ_SPELL_AFFECT_INFRAVISION                     65
-#define EQ_SPELL_AFFECT_ULTRAVISION                     66
-#define EQ_SPELL_AFFECT_HEIGHT                          89
-#define EQ_SPELL_AFFECT_SILENCE                         96
-#define EQ_SPELL_AFFECT_ROOT                            99
-#define EQ_SPELL_AFFECT_SUMMON_MOUNT                    113    // horse
-#define EQ_SPELL_AFFECT_HUNGER_AND_THIRST               115
-#define EQ_SPELL_AFFECT_CURSE                           116
-#define EQ_SPELL_AFFECT_FEARLESS                        181
-#define EQ_SPELL_AFFECT_ILLUSION_OTHER                  202
-#define EQ_SPELL_AFFECT_MASS_BUFF                       203
-#define EQ_SPELL_AFFECT_REDUCE_WEIGHT                   221
-#define EQ_SPELL_AFFECT_METABOLISM                      233
-#define EQ_SPELL_AFFECT_PERMANENT_ILLUSION              238
-#define EQ_SPELL_AFFECT_LUNG_CAPACITY                   246
-#define EQ_SPELL_AFFECT_NO_FIZZLE                       265
-#define EQ_SPELL_AFFECT_INCREASED_MOVEMENT_CAP          290
-#define EQ_SPELL_AFFECT_HEIGHT_SMALL                    298
-#define EQ_SPELL_AFFECT_IMPROVED_INVIS                  314
-#define EQ_SPELL_AFFECT_IMPROVED_INVIS_UNDEAD           315
-#define EQ_SPELL_AFFECT_IMPROVED_INVIS_ANIMALS          316
-#define EQ_SPELL_AFFECT_SPELL_SLOTS                     326
-#define EQ_SPELL_AFFECT_BUFF_SLOTS                      327
-#define EQ_SPELL_AFFECT_BANDOLIER_SLOTS                 363
-#define EQ_SPELL_AFFECT_SLOW                            371
-#define EQ_SPELL_AFFECT_GRAVITATE                       424
-#define EQ_SPELL_AFFECT_FLY                             425
-#define EQ_SPELL_AFFECT_EXTENDED_TARGET_WINDOW_SLOTS    426
-#define EQ_SPELL_AFFECT_ADD_MERC_SLOT                   445    // mercenary slots
-#define EQ_SPELL_AFFECT_FEAR_STUN                       502
-
 #define EQ_RACE_UNKNOWN          0
 #define EQ_RACE_HUMAN            1
 #define EQ_RACE_BARBARIAN        2
@@ -695,150 +682,3 @@ std::unordered_map<uint32_t, std::string> EQ_CLASS_ShortName_Strings =
     ////{EQ_CLASS_BANKER,          "BNKR"},
     ////{EQ_CLASS_MERCHANT,        "MCHT"},
 };
-
-namespace EQ
-{
-    typedef struct _Vector2f
-    {
-        float X;
-        float Y;
-    } Vector2f, *Vector2f_ptr;
-
-    typedef struct _Vector3f
-    {
-        float X;
-        float Y;
-        float Z;
-    } Vector3f, *Vector3f_ptr;
-
-    typedef struct _Location
-    {
-        float Y;
-        float X;
-        float Z;
-    } Location, *Location_ptr;
-
-    typedef struct _Line
-    {
-        float X1;
-        float Y1;
-        float Z1;
-        float X2;
-        float Y2;
-        float Z2;
-    } Line, *Line_ptr;
-
-    typedef struct _Rectangle
-    {
-        float X1;
-        float Y1;
-        float Z1;
-        float X2;
-        float Y2;
-        float Z2;
-        float X3;
-        float Y3;
-        float Z3;
-        float X4;
-        float Y4;
-        float Z4;
-    } Rectangle, *Rectangle_ptr;
-
-    typedef struct _CXRect
-    {
-        uint32_t X1; // Left      // upper left x
-        uint32_t Y1; // Top       // upper left y
-        uint32_t X2; // Right     // lower right x
-        uint32_t Y2; // Bottom    // lower right y
-    } CXRect, *CXRect_ptr;
-
-    typedef struct _CXStr
-    {
-/* 0x00 */ uint32_t Font;
-/* 0x04 */ uint32_t MaxLength;
-/* 0x08 */ uint32_t Length;
-/* 0x0C */ uint32_t Encoding; // 0 = ASCII, 1 = Unicode
-/* 0x10 */ PCRITICAL_SECTION Lock;
-/* 0x14 */ char Text[1];
-    } CXStr, *CXStr_ptr;
-
-    typedef struct _MouseState
-    {
-        uint32_t X;
-        uint32_t Y;
-        uint32_t Scroll;
-        uint32_t RelativeX;
-        uint32_t RelativeY;
-        uint32_t InWindow;
-    } MouseState, *MouseState_ptr;
-
-    typedef struct _MouseInfo2
-    {
-        signed int X;
-        signed int Y;
-        signed int SpeedX;
-        signed int SpeedY;
-        signed int Scroll;
-    } MouseInfo2, *MouseInfo2_ptr;
-
-    typedef struct _ColorARGB
-    {
-        union
-        {
-            struct
-            {
-                uint8_t B;
-                uint8_t G;
-                uint8_t R;
-                uint8_t A;
-            };
-            uint32_t ARGB;
-        };
-    } ColorARGB, *ColorARGB_ptr;
-
-    typedef struct _MapLabel
-    {
-/* 0x00 */ uint32_t Unknown;
-/* 0x04 */ struct _MapLabel* Next;
-/* 0x08 */ struct _MapLabel* Previous;
-/* 0x0C */ Vector3f Location;
-/* 0x18 */ ColorARGB Color;
-/* 0x1C */ uint32_t Size; // 1-3
-/* 0x20 */ char* Text;
-/* 0x24 */ uint32_t Layer; // 0-3
-/* 0x28 */ uint32_t Width;
-/* 0x2C */ uint32_t Height;
-/* 0x30 */ uint32_t X;
-/* 0x34 */ uint32_t Y;
-    } MapLabel, *MapLabel_ptr;
-
-    typedef struct _MapLine
-    {
-        struct _MapLine* Next;
-        struct _MapLine* Previous;
-        Vector3f Begin;
-        Vector3f End;
-        ColorARGB Color;
-        uint32_t Layer; // 0-3
-    } MapLine, *MapLine_ptr;
-
-    struct BandolierItemInfo
-    {
-/*0x00*/ int ItemID;
-/*0x04*/ int IconID;
-/*0x08*/ char Name[EQ_SIZE_BANDOLIER_ITEM_NAME];
-/*0x48*/
-    };
-
-    struct BandolierSet
-    {
-/*0x000*/ char Name[EQ_SIZE_BANDOLIER_SET_NAME];
-/*0x020*/ BandolierItemInfo Items[4]; // 0x120 = 0x48 * 4
-/*0x140*/
-    };
-
-    typedef struct _CharInfo2Bandolier
-    {
-/*0x00*/ BandolierSet Bandolier[EQ_NUM_BANDOLIER_SLOTS];
-    } CharInfo2Bandolier, *CharInfo2Bandolier_ptr;
-} // namespace EQ

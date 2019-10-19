@@ -74,10 +74,4 @@ void EQAPP_WindowTitle_Execute()
     {
         ShowWindow(window, SW_MAXIMIZE);
     }
-
-    // close popup ad window for free to play characters
-    if (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CAlertWnd) == true)
-    {
-        EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CAlertWnd, EQ_OFFSET_CAlertWnd_BUTTON_CLOSE);
-    }
 }

@@ -144,6 +144,11 @@ void EQAPP_HUD_Execute()
         g_HUDText << "- Combat HotButton: " << g_CombatHotButtonIndex + 1 << "\n";
     }
 
+    if (g_CombatMacroIsEnabled == true)
+    {
+        g_HUDText << "- Combat Macros: " << g_CombatMacroList.size() << "\n";
+    }
+
     if (g_ESPIsEnabled == true)
     {
         g_HUDText << "- ESP\n";
@@ -205,6 +210,11 @@ void EQAPP_HUD_Execute()
     if (g_KillMobsIsEnabled == true)
     {
         g_HUDText << "- Kill Mobs (" << g_KillMobsList.size() << ")\n";
+    }
+
+    if (g_PowerLevelIsEnabled == true)
+    {
+        g_HUDText << "- Power Level: " << g_PowerLevelHPPercent << "%\n";
     }
 
     EQ_DrawText(g_HUDText.str().c_str(), g_HUDX, g_HUDY);

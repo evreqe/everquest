@@ -89,6 +89,7 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteTint);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__ChangeLight);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__push_along_heading);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__AllowedToAttack);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_EQSwitchManager);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch);
@@ -113,6 +114,7 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CEverQuest__SendNewText);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CEverQuest__DropHeldItemOnGround);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CEverQuest__RightClickedOnPlayer);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CDisplay);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2);
@@ -126,6 +128,15 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CRender);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CAlertWnd);
+
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CAlertStackWnd);
+
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CBazaarSearchWnd);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery);
+
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CSpellBookWnd);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellMemTicksLeft);
@@ -163,6 +174,9 @@ bool EQAPP_InitializeAddressPointers()
         EQ_ADDRESS_POINTER_CDisplay,
         EQ_ADDRESS_POINTER_CRender,
         EQ_ADDRESS_POINTER_CAlertWnd,
+        EQ_ADDRESS_POINTER_CAlertStackWnd,
+        EQ_ADDRESS_POINTER_CBazaarSearchWnd,
+        EQ_ADDRESS_POINTER_CBazaarConfirmationWnd,
         EQ_ADDRESS_POINTER_CSpellBookWnd,
     };
 
@@ -202,6 +216,15 @@ bool EQAPP_InitializeAddressPointers()
 
     EQ_CLASS_POINTER_CAlertWnd_pptr = (EQClass::CAlertWnd**)EQ_ADDRESS_POINTER_CAlertWnd;
     EQ_CLASS_POINTER_CAlertWnd = (*EQ_CLASS_POINTER_CAlertWnd_pptr);
+
+    EQ_CLASS_POINTER_CAlertStackWnd_pptr = (EQClass::CAlertStackWnd**)EQ_ADDRESS_POINTER_CAlertStackWnd;
+    EQ_CLASS_POINTER_CAlertStackWnd = (*EQ_CLASS_POINTER_CAlertStackWnd_pptr);
+
+    EQ_CLASS_POINTER_CBazaarSearchWnd_pptr = (EQClass::CBazaarSearchWnd**)EQ_ADDRESS_POINTER_CBazaarSearchWnd;
+    EQ_CLASS_POINTER_CBazaarSearchWnd = (*EQ_CLASS_POINTER_CBazaarSearchWnd_pptr);
+
+    EQ_CLASS_POINTER_CBazaarConfirmationWnd_pptr = (EQClass::CBazaarConfirmationWnd**)EQ_ADDRESS_POINTER_CBazaarConfirmationWnd;
+    EQ_CLASS_POINTER_CBazaarConfirmationWnd = (*EQ_CLASS_POINTER_CBazaarConfirmationWnd_pptr);
 
     EQ_CLASS_POINTER_CSpellBookWnd_pptr = (EQClass::CSpellBookWnd**)EQ_ADDRESS_POINTER_CSpellBookWnd;
     EQ_CLASS_POINTER_CSpellBookWnd = (*EQ_CLASS_POINTER_CSpellBookWnd_pptr);

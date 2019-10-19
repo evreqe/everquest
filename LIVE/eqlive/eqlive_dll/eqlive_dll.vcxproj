@@ -38,11 +38,13 @@
     <ClInclude Include="eqapp_alwayshotbutton.h" />
     <ClInclude Include="eqapp_autogroup.h" />
     <ClInclude Include="eqapp_bandolier.h" />
+    <ClInclude Include="eqapp_bazaarfilter.h" />
     <ClInclude Include="eqapp_boxchat.h" />
     <ClInclude Include="eqapp_changeheight.h" />
     <ClInclude Include="eqapp_chatevent.h" />
     <ClInclude Include="eqapp_cheat.h" />
     <ClInclude Include="eqapp_combathotbutton.h" />
+    <ClInclude Include="eqapp_combatmacro.h" />
     <ClInclude Include="eqapp_console.h" />
     <ClInclude Include="eqapp_detours.h" />
     <ClInclude Include="eqapp_esp.h" />
@@ -55,7 +57,9 @@
     <ClInclude Include="eqapp_lantern.h" />
     <ClInclude Include="eqapp_namecolor.h" />
     <ClInclude Include="eqapp_namedspawns.h" />
+    <ClInclude Include="eqapp_noalert.h" />
     <ClInclude Include="eqapp_nodraw.h" />
+    <ClInclude Include="eqapp_powerlevel.h" />
     <ClInclude Include="eqapp_sleep.h" />
     <ClInclude Include="eqapp_speed.h" />
     <ClInclude Include="eqapp_string.h" />
@@ -64,6 +68,8 @@
     <ClInclude Include="eqapp_windowforeground.h" />
     <ClInclude Include="eqapp_windowtitle.h" />
     <ClInclude Include="eqapp_killmobs.h" />
+    <ClInclude Include="eq_spellaffects.h" />
+    <ClInclude Include="eq_structures.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -175,7 +181,9 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;EQLIVEDLL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>D:\Code\!libraries\detours;D:\Code\!libraries\directx9sdk\Include;D:\Code\everquest\eqlive\eq;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Code\!libraries\detours30-build343\include;D:\Code\!libraries\directx9sdk\Include;D:\Code\everquest\eqlive\eq;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>Default</LanguageStandard>
+      <EnableModules>false</EnableModules>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -184,7 +192,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <OutputFile>$(OutDir)eqlive.dll</OutputFile>
-      <AdditionalLibraryDirectories>D:\Code\!libraries\detours;D:\Code\!libraries\directx9sdk\Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Code\!libraries\detours30-build343\lib;D:\Code\!libraries\directx9sdk\Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

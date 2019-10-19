@@ -17,6 +17,7 @@
 #include <set>
 #include <string>
 #include <sstream>
+#include <thread>
 #include <unordered_map>
 #include <vector>
 
@@ -56,7 +57,7 @@ namespace std__filesystem = std::experimental::filesystem; // not available yet
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
 
-// Microsoft Detours 1.5
+// Microsoft Detours
 #include "detours.h"
 #pragma comment(lib, "detours.lib")
 
@@ -74,15 +75,18 @@ namespace std__filesystem = std::experimental::filesystem; // not available yet
 #include "eqapp_alwayshotbutton.h"
 #include "eqapp_autogroup.h"
 #include "eqapp_bandolier.h"
+#include "eqapp_bazaarfilter.h"
 #include "eqapp_boxchat.h"
 #include "eqapp_changeheight.h"
 #include "eqapp_chatevent.h"
 #include "eqapp_cheat.h"
 #include "eqapp_combathotbutton.h"
+#include "eqapp_combatmacro.h"
 #include "eqapp_killmobs.h"
 #include "eqapp_lantern.h"
 #include "eqapp_namecolor.h"
 #include "eqapp_namedspawns.h"
+#include "eqapp_powerlevel.h"
 #include "eqapp_speed.h"
 #include "eqapp_waypoint.h"
 #include "eqapp_console.h"
@@ -93,6 +97,7 @@ namespace std__filesystem = std::experimental::filesystem; // not available yet
 #include "eqapp_hud.h"
 #include "eqapp_interpretcommand.h"
 #include "eqapp_nodraw.h"
+#include "eqapp_noalert.h"
 #include "eqapp_sleep.h"
 #include "eqapp_windowtitle.h"
 #include "eqapp_windowforeground.h"
@@ -105,6 +110,8 @@ void EQAPP_Load()
     EQAPP_KillMobs_Load();
     EQAPP_ChatEvent_Load();
     EQAPP_Bandolier_Load();
+    EQAPP_BazaarFilter_Load();
+    EQAPP_CombatMacro_Load();
 
     if (g_WindowTitleIsEnabled == true)
     {
@@ -158,6 +165,8 @@ void EQAPP_Unload()
     g_WindowTitleIsEnabled = false;
     EQAPP_WindowTitle_Reset();
 
+    EQAPP_FollowAI_StopFollow();
+
     std::string timeText = EQAPP_Timer_GetTimeAsString();
 
     std::cout << "Unloaded!    " << timeText;
@@ -169,20 +178,25 @@ DWORD WINAPI EQAPP_ThreadLoop(LPVOID param)
 {
     while (g_EQAppShouldUnload == 0)
     {
-        Sleep(100);
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
     // wait for the console to unload
     while (g_ConsoleIsLoaded == 1)
     {
-        Sleep(100);
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
     EQAPP_BoxChat_Unload();
     EQAPP_Detours_Unload();
 
+    CloseHandle(g_EQAppHandleThreadLoad);
+    CloseHandle(g_EQAppHandleThreadConsole);
+
     TerminateThread(EQAPP_ThreadLoad, 0);
     TerminateThread(EQAPP_ThreadConsole, 0);
+
+    std::this_thread::sleep_for(std::chrono::seconds(1));
 
     FreeLibraryAndExitThread(g_EQAppModule, 0);
     return 0;

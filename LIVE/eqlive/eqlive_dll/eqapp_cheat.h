@@ -2,9 +2,13 @@
 
 bool g_CheatAlwaysSeeInvisIsEnabled = true;
 bool g_CheatAlwaysBreatheUnderwaterIsEnabled = true;
+bool g_CheatAlwaysHaveUltravisionIsEnabled = true;
+bool g_CheatAlwaysHaveSpiritOfWolfIsEnabled = false;
 bool g_CheatNeverBlindIsEnabled = true;
 bool g_CheatNeverEncumberedIsEnabled = true;
 bool g_CheatNeverStunnedIsEnabled = true;
+bool g_CheatNeverRootedIsEnabled = true;
+bool g_CheatNeverSnaredIsEnabled = false;
 bool g_CheatNeverSlideIsEnabled = false;
 bool g_CheatNoFallDamageIsEnabled = true;
 bool g_CheatNoEnvironmentalDamageIsEnabled = true;
@@ -22,6 +26,10 @@ void EQAPP_Cheat_AlwaysBreatheUnderwater_Toggle();
 void EQAPP_Cheat_AlwaysBreatheUnderwater_On();
 void EQAPP_Cheat_AlwaysBreatheUnderwater_Off();
 
+void EQAPP_Cheat_AlwaysHaveUltravision_Toggle();
+void EQAPP_Cheat_AlwaysHaveUltravision_On();
+void EQAPP_Cheat_AlwaysHaveUltravision_Off();
+
 void EQAPP_Cheat_NeverBlind_Toggle();
 void EQAPP_Cheat_NeverBlind_On();
 void EQAPP_Cheat_NeverBlind_Off();
@@ -33,6 +41,14 @@ void EQAPP_Cheat_NeverEncumbered_Off();
 void EQAPP_Cheat_NeverStunned_Toggle();
 void EQAPP_Cheat_NeverStunned_On();
 void EQAPP_Cheat_NeverStunned_Off();
+
+void EQAPP_Cheat_NeverRooted_Toggle();
+void EQAPP_Cheat_NeverRooted_On();
+void EQAPP_Cheat_NeverRooted_Off();
+
+void EQAPP_Cheat_NeverSnared_Toggle();
+void EQAPP_Cheat_NeverSnared_On();
+void EQAPP_Cheat_NeverSnared_Off();
 
 void EQAPP_Cheat_NoFallDamage_Toggle();
 void EQAPP_Cheat_NoFallDamage_On();
@@ -110,6 +126,50 @@ void EQAPP_Cheat_AlwaysBreatheUnderwater_Off()
     }
 }
 
+void EQAPP_Cheat_AlwaysHaveUltravision_Toggle()
+{
+    EQ_ToggleBool(g_CheatAlwaysHaveUltravisionIsEnabled);
+    EQAPP_PrintBool("Always Have Ultravision", g_CheatAlwaysHaveUltravisionIsEnabled);
+}
+
+void EQAPP_Cheat_AlwaysHaveUltravision_On()
+{
+    if (g_CheatAlwaysHaveUltravisionIsEnabled == false)
+    {
+        EQAPP_Cheat_AlwaysHaveUltravision_Toggle();
+    }
+}
+
+void EQAPP_Cheat_AlwaysHaveUltravision_Off()
+{
+    if (g_CheatAlwaysHaveUltravisionIsEnabled == true)
+    {
+        EQAPP_Cheat_AlwaysHaveUltravision_Toggle();
+    }
+}
+
+void EQAPP_Cheat_AlwaysHaveSpiritOfWolf_Toggle()
+{
+    EQ_ToggleBool(g_CheatAlwaysHaveSpiritOfWolfIsEnabled);
+    EQAPP_PrintBool("Always Have Spirit of Wolf", g_CheatAlwaysHaveSpiritOfWolfIsEnabled);
+}
+
+void EQAPP_Cheat_AlwaysHaveSpiritOfWolf_On()
+{
+    if (g_CheatAlwaysHaveSpiritOfWolfIsEnabled == false)
+    {
+        EQAPP_Cheat_AlwaysHaveSpiritOfWolf_Toggle();
+    }
+}
+
+void EQAPP_Cheat_AlwaysHaveSpiritOfWolf_Off()
+{
+    if (g_CheatAlwaysHaveSpiritOfWolfIsEnabled == true)
+    {
+        EQAPP_Cheat_AlwaysHaveSpiritOfWolf_Toggle();
+    }
+}
+
 void EQAPP_Cheat_NeverBlind_Toggle()
 {
     EQ_ToggleBool(g_CheatNeverBlindIsEnabled);
@@ -173,6 +233,50 @@ void EQAPP_Cheat_NeverStunned_Off()
     if (g_CheatNeverStunnedIsEnabled == true)
     {
         EQAPP_Cheat_NeverStunned_Toggle();
+    }
+}
+
+void EQAPP_Cheat_NeverRooted_Toggle()
+{
+    EQ_ToggleBool(g_CheatNeverRootedIsEnabled);
+    EQAPP_PrintBool("Never Rooted", g_CheatNeverRootedIsEnabled);
+}
+
+void EQAPP_Cheat_NeverRooted_On()
+{
+    if (g_CheatNeverRootedIsEnabled == false)
+    {
+        EQAPP_Cheat_NeverRooted_Toggle();
+    }
+}
+
+void EQAPP_Cheat_NeverRooted_Off()
+{
+    if (g_CheatNeverRootedIsEnabled == true)
+    {
+        EQAPP_Cheat_NeverRooted_Toggle();
+    }
+}
+
+void EQAPP_Cheat_NeverSnared_Toggle()
+{
+    EQ_ToggleBool(g_CheatNeverSnaredIsEnabled);
+    EQAPP_PrintBool("Never Snared", g_CheatNeverSnaredIsEnabled);
+}
+
+void EQAPP_Cheat_NeverSnared_On()
+{
+    if (g_CheatNeverSnaredIsEnabled == false)
+    {
+        EQAPP_Cheat_NeverSnared_Toggle();
+    }
+}
+
+void EQAPP_Cheat_NeverSnared_Off()
+{
+    if (g_CheatNeverSnaredIsEnabled == true)
+    {
+        EQAPP_Cheat_NeverSnared_Toggle();
     }
 }
 

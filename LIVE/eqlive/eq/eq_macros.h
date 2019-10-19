@@ -22,10 +22,21 @@
 
 #define EQ_MACRO_FUNCTION_DefineDetour(functionName) EQ_FUNCTION_TYPE_##functionName EQAPP_REAL_FUNCTION_##functionName = NULL
 
+/*
 #define EQ_MACRO_FUNCTION_AddDetour(functionName) EQAPP_REAL_FUNCTION_##functionName =\
 (EQ_FUNCTION_TYPE_##functionName)DetourFunction((PBYTE)EQ_ADDRESS_FUNCTION_##functionName, (PBYTE)EQAPP_DETOURED_FUNCTION_##functionName)
 
 #define EQ_MACRO_FUNCTION_RemoveDetour(functionName) DetourRemove((PBYTE)EQAPP_REAL_FUNCTION_##functionName, (PBYTE)EQAPP_DETOURED_FUNCTION_##functionName)
+*/
+
+#define EQ_MACRO_FUNCTION_AddDetour(functionName) {\
+    EQAPP_REAL_FUNCTION_##functionName = (EQ_FUNCTION_TYPE_##functionName)EQ_ADDRESS_FUNCTION_##functionName;\
+    DetourAttach(&(PVOID&)EQAPP_REAL_FUNCTION_##functionName, EQAPP_DETOURED_FUNCTION_##functionName);\
+}
+
+#define EQ_MACRO_FUNCTION_RemoveDetour(functionName) {\
+    DetourDetach(&(PVOID&)EQAPP_REAL_FUNCTION_##functionName, EQAPP_DETOURED_FUNCTION_##functionName);\
+}
 
 #define EQ_MACRO_FUNCTION_VariableToString(variable) (void(variable), #variable)
 

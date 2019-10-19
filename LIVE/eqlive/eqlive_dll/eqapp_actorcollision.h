@@ -86,9 +86,11 @@ void EQAPP_ActorCollision_Load()
     std::stringstream folderFileName;
     folderFileName << "actorcollision/" << zoneShortName << ".txt";
 
-    EQAPP_ReadFileToList(folderFileName.str().c_str(), g_ActorCollisionActorDefinitionList, false);
-
-    std::cout << "Actor Collision loaded from file: " << folderFileName.str() << std::endl;
+    bool result = EQAPP_ReadFileToList(folderFileName.str().c_str(), g_ActorCollisionActorDefinitionList, false);
+    if (result == true)
+    {
+        std::cout << "Actor Collision loaded from file: " << folderFileName.str() << std::endl;
+    }
 }
 
 void EQAPP_ActorCollision_PrintActorDefinitionList()
