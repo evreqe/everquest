@@ -13,7 +13,7 @@ std::vector<std::string> g_KillMobsList;
 uint32_t g_KillMobsList_reserve = 1024;
 
 bool g_KillMobsMaxPlayersIsEnabled = true;
-uint32_t g_KillMobsMaxPlayersInZone = 5;
+uint32_t g_KillMobsMaxPlayersInZone = 2;
 
 void EQAPP_KillMobs_Toggle();
 void EQAPP_KillMobs_On();
@@ -21,6 +21,7 @@ void EQAPP_KillMobs_Off();
 void EQAPP_KillMobs_Load();
 void EQAPP_KillMobs_Execute();
 bool EQAPP_KillMobs_IsSpawnSafeToKill(uint32_t spawn);
+bool EQAPP_KillMobs_IsSpawnInHillGiantRectangle(uint32_t spawn);
 void EQAPP_KillMobs_MaxPlayers_Toggle();
 void EQAPP_KillMobs_MaxPlayers_On();
 void EQAPP_KillMobs_MaxPlayers_Off();
@@ -180,6 +181,17 @@ void EQAPP_KillMobs_Execute()
         auto followSpawnType = EQ_GetSpawnType(g_FollowAISpawn);
         if (followSpawnType == EQ_SPAWN_TYPE_NPC)
         {
+            if (zoneID == EQ_ZONE_ID_RATHEMTN)
+            {
+                if (EQAPP_KillMobs_IsSpawnInHillGiantRectangle(g_FollowAISpawn) == false)
+                {
+                    g_FollowAISpawn = NULL;
+                    EQ_SetAutoRun(false);
+
+                    return;
+                }
+            }
+
             if (EQAPP_KillMobs_IsSpawnSafeToKill(g_FollowAISpawn) == false)
             {
                 g_FollowAISpawn = NULL;
@@ -227,6 +239,16 @@ void EQAPP_KillMobs_Execute()
             if (spawnName.size() == 0)
             {
                 continue;
+            }
+
+            if (zoneID == EQ_ZONE_ID_RATHEMTN)
+            {
+                if (EQAPP_KillMobs_IsSpawnInHillGiantRectangle(spawn) == false)
+                {
+                    EQ_ClearTarget();
+
+                    continue;
+                }
             }
 
             if (EQAPP_KillMobs_IsSpawnSafeToKill(spawn) == false)
@@ -303,6 +325,16 @@ void EQAPP_KillMobs_Execute()
             if (spawnName.size() == 0)
             {
                 continue;
+            }
+
+            if (zoneID == EQ_ZONE_ID_RATHEMTN)
+            {
+                if (EQAPP_KillMobs_IsSpawnInHillGiantRectangle(spawn) == false)
+                {
+                    EQ_ClearTarget();
+
+                    continue;
+                }
             }
 
             if (EQAPP_KillMobs_IsSpawnSafeToKill(spawn) == false)
@@ -444,6 +476,34 @@ bool EQAPP_KillMobs_IsSpawnSafeToKill(uint32_t spawn)
     }
 
     return true;
+}
+
+bool EQAPP_KillMobs_IsSpawnInHillGiantRectangle(uint32_t spawn)
+{
+    if (spawn == NULL)
+    {
+        return false;
+    }
+
+    auto zoneID = EQ_GetZoneID();
+    if (zoneID != EQ_ZONE_ID_RATHEMTN)
+    {
+        return false;
+    }
+
+    float spawnY = EQ_GetSpawnY(spawn);
+    float spawnX = EQ_GetSpawnX(spawn);
+
+    int numVertices = 4;
+    float verticesX[] = {-510.0f, -508.0f, -2408.0f, -2243.0f};
+    float verticesY[] = {3674.0f, 2505.0f,  2650.0f,  3726.0f};
+
+    if (EQ_pnpoly(numVertices, verticesX, verticesY, spawnX, spawnY) == 1)
+    {
+        return true;
+    }
+
+    return false;
 }
 
 void EQAPP_KillMobs_MaxPlayers_Toggle()

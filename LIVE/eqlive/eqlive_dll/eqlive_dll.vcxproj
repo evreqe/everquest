@@ -31,13 +31,16 @@
     <ClInclude Include="..\eq\eq_memory.h" />
     <ClInclude Include="..\eq\eq_messages.h" />
     <ClInclude Include="..\eq\eq_virtualkeycodes.h" />
+    <ClInclude Include="eqapp_autobank.h" />
     <ClInclude Include="eqapp.h" />
     <ClInclude Include="eqapp_actorcollision.h" />
     <ClInclude Include="eqapp_addresses.h" />
     <ClInclude Include="eqapp_alwaysattack.h" />
     <ClInclude Include="eqapp_alwayshotbutton.h" />
     <ClInclude Include="eqapp_autogroup.h" />
+    <ClInclude Include="eqapp_autoinventory.h" />
     <ClInclude Include="eqapp_bandolier.h" />
+    <ClInclude Include="eqapp_bazaarbot.h" />
     <ClInclude Include="eqapp_bazaarfilter.h" />
     <ClInclude Include="eqapp_boxchat.h" />
     <ClInclude Include="eqapp_changeheight.h" />
@@ -51,10 +54,17 @@
     <ClInclude Include="eqapp_followai.h" />
     <ClInclude Include="eqapp_freecamera.h" />
     <ClInclude Include="eqapp_functions.h" />
+    <ClInclude Include="eqapp_gui.h" />
+    <ClInclude Include="eqapp_gui_dockwindow.h" />
+    <ClInclude Include="eqapp_gui_mainwindow.h" />
+    <ClInclude Include="eqapp_gui_mapwindow.h" />
+    <ClInclude Include="eqapp_gui_spawnlistwindow.h" />
+    <ClInclude Include="eqapp_gui_waypointeditorwindow.h" />
     <ClInclude Include="eqapp_hud.h" />
     <ClInclude Include="eqapp_ini.h" />
     <ClInclude Include="eqapp_interpretcommand.h" />
     <ClInclude Include="eqapp_lantern.h" />
+    <ClInclude Include="eqapp_macro.h" />
     <ClInclude Include="eqapp_namecolor.h" />
     <ClInclude Include="eqapp_namedspawns.h" />
     <ClInclude Include="eqapp_noalert.h" />
@@ -70,9 +80,25 @@
     <ClInclude Include="eqapp_killmobs.h" />
     <ClInclude Include="eq_spellaffects.h" />
     <ClInclude Include="eq_structures.h" />
+    <ClInclude Include="imconfig.h" />
+    <ClInclude Include="imgui.h" />
+    <ClInclude Include="imgui_impl_dx9.h" />
+    <ClInclude Include="imgui_impl_win32.h" />
+    <ClInclude Include="imgui_internal.h" />
+    <ClInclude Include="imgui_stdlib.h" />
+    <ClInclude Include="imstb_rectpack.h" />
+    <ClInclude Include="imstb_textedit.h" />
+    <ClInclude Include="imstb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="imgui.cpp" />
+    <ClCompile Include="imgui_demo.cpp" />
+    <ClCompile Include="imgui_draw.cpp" />
+    <ClCompile Include="imgui_impl_dx9.cpp" />
+    <ClCompile Include="imgui_impl_win32.cpp" />
+    <ClCompile Include="imgui_stdlib.cpp" />
+    <ClCompile Include="imgui_widgets.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -181,8 +207,8 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;EQLIVEDLL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>D:\Code\!libraries\detours30-build343\include;D:\Code\!libraries\directx9sdk\Include;D:\Code\everquest\eqlive\eq;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>Default</LanguageStandard>
+      <AdditionalIncludeDirectories>D:\Code\!libraries\detours30-build343\include;D:\Code\!libraries\directx9sdk\Include;D:\Code\!libraries\imgui-docking;D:\Code\everquest\eqlive\eq;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>false</EnableModules>
     </ClCompile>
     <Link>

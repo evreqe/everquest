@@ -35,6 +35,8 @@ float g_ESPSpawnClickDistance = 400.0f;
 
 int g_ESPSpawnClickRadius = 25;
 
+std::unordered_map<uint32_t, std::string> g_ESPSpawnTagList; // <uint32_t spawnID, std::string tag>
+
 void EQAPP_ESP_Toggle();
 void EQAPP_ESP_On();
 void EQAPP_ESP_Off();
@@ -177,12 +179,23 @@ void EQAPP_ESP_DrawSpawns()
         bool bOutOfRange = false;
         bool bDrawLine = false;
         bool bNewSpawn = false;
+        bool bSpecialSpawn = false;
 
         for (auto& namedSpawnID : g_NamedSpawnsIDList)
         {
             if (spawnID == namedSpawnID)
             {
                 bIgnoreDistance = true;
+                break;
+            }
+        }
+
+        for (auto& specialSpawnID : g_NamedSpawnsSpecialSpawnsIDList)
+        {
+            if (spawnID == specialSpawnID)
+            {
+                bIgnoreDistance = true;
+                bSpecialSpawn = true;
                 break;
             }
         }
@@ -371,6 +384,19 @@ void EQAPP_ESP_DrawSpawns()
                 if (bNewSpawn == true)
                 {
                     drawText << "\n* New Spawn *";
+                }
+            }
+
+            if (bSpecialSpawn == true)
+            {
+                drawText << "\n* Special Spawn *";
+            }
+
+            for (auto tag : g_ESPSpawnTagList)
+            {
+                if (tag.first == spawn)
+                {
+                    drawText << "\n* Tag: " << tag.second << " *";
                 }
             }
 

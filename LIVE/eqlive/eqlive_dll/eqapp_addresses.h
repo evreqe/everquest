@@ -42,6 +42,11 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_MouseLook);
     EQAPP_FixAddress(EQ_ADDRESS_NetStatus);
 
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_FlushDxKeyboard);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_FlushDxMouse);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_ProcessKeyboardEvent);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_ProcessMouseEvent);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_WindowProc);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CollisionCallbackForActors);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CastRay);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CastRay2);
@@ -97,10 +102,14 @@ void EQAPP_InitializeAddresses()
 
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQSpell__SpellAffects);
 
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CXStr__CXStr_const_char_p);
+
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CXWndManager);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CXWndManager__DrawCursor);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows);
 
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CXWnd__IsReallyVisible);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CXWnd__GetChildItem);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CEverQuest);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CEverQuest__DoPercentConvert);
@@ -127,6 +136,8 @@ void EQAPP_InitializeAddresses()
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CRender);
 
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CRenderEx);
+
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CAlertWnd);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CAlertStackWnd);
@@ -135,12 +146,17 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__FindItem);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd);
+
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CMapViewWnd);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CSpellBookWnd);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellMemTicksLeft);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellScribeTicksLeft);
+
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_CTaskSelectWnd);
 }
 
 bool EQAPP_IsAddressPointerValid(uint32_t addressPointer)
@@ -173,11 +189,14 @@ bool EQAPP_InitializeAddressPointers()
         EQ_ADDRESS_POINTER_CEverQuest,
         EQ_ADDRESS_POINTER_CDisplay,
         EQ_ADDRESS_POINTER_CRender,
+        EQ_ADDRESS_POINTER_CRenderEx,
         EQ_ADDRESS_POINTER_CAlertWnd,
         EQ_ADDRESS_POINTER_CAlertStackWnd,
         EQ_ADDRESS_POINTER_CBazaarSearchWnd,
         EQ_ADDRESS_POINTER_CBazaarConfirmationWnd,
+        EQ_ADDRESS_POINTER_CMapViewWnd,
         EQ_ADDRESS_POINTER_CSpellBookWnd,
+        EQ_ADDRESS_POINTER_CTaskSelectWnd,
     };
 
     for (auto& addressPointer : addressPointerList)
@@ -214,6 +233,9 @@ bool EQAPP_InitializeAddressPointers()
     EQ_CLASS_POINTER_CRender_pptr = (EQClass::CRender**)EQ_ADDRESS_POINTER_CRender;
     EQ_CLASS_POINTER_CRender = (*EQ_CLASS_POINTER_CRender_pptr);
 
+    EQ_CLASS_POINTER_CRenderEx_pptr = (EQClass::CRenderEx**)EQ_ADDRESS_POINTER_CRenderEx;
+    EQ_CLASS_POINTER_CRenderEx = (*EQ_CLASS_POINTER_CRenderEx_pptr);
+
     EQ_CLASS_POINTER_CAlertWnd_pptr = (EQClass::CAlertWnd**)EQ_ADDRESS_POINTER_CAlertWnd;
     EQ_CLASS_POINTER_CAlertWnd = (*EQ_CLASS_POINTER_CAlertWnd_pptr);
 
@@ -226,8 +248,14 @@ bool EQAPP_InitializeAddressPointers()
     EQ_CLASS_POINTER_CBazaarConfirmationWnd_pptr = (EQClass::CBazaarConfirmationWnd**)EQ_ADDRESS_POINTER_CBazaarConfirmationWnd;
     EQ_CLASS_POINTER_CBazaarConfirmationWnd = (*EQ_CLASS_POINTER_CBazaarConfirmationWnd_pptr);
 
+    EQ_CLASS_POINTER_CMapViewWnd_pptr = (EQClass::CMapViewWnd**)EQ_ADDRESS_POINTER_CMapViewWnd;
+    EQ_CLASS_POINTER_CMapViewWnd = (*EQ_CLASS_POINTER_CMapViewWnd_pptr);
+
     EQ_CLASS_POINTER_CSpellBookWnd_pptr = (EQClass::CSpellBookWnd**)EQ_ADDRESS_POINTER_CSpellBookWnd;
     EQ_CLASS_POINTER_CSpellBookWnd = (*EQ_CLASS_POINTER_CSpellBookWnd_pptr);
+
+    EQ_CLASS_POINTER_CTaskSelectWnd_pptr = (EQClass::CTaskSelectWnd**)EQ_ADDRESS_POINTER_CTaskSelectWnd;
+    EQ_CLASS_POINTER_CTaskSelectWnd = (*EQ_CLASS_POINTER_CTaskSelectWnd_pptr);
 
     return result;
 }

@@ -103,18 +103,18 @@ void EQAPP_BazaarFilter_LoadEx(const char* fileName)
 
 bool EQAPP_BazaarFilter_HandleEvent_CBazaarSearchWnd__AddItemToList(char* itemName, uint32_t itemPrice, char* traderName)
 {
-    bool bShouldAddItemToList = false;
-
-    if (strlen(itemName) == 0)
+    if (itemPrice < g_BazaarFilterItemPriceMinimum || itemPrice > g_BazaarFilterItemPriceMaximum)
     {
-        return bShouldAddItemToList;
+        return false;
     }
 
     auto playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)
     {
-        return bShouldAddItemToList;
+        return false;
     }
+
+    bool bShouldAddItemToList = false;
 
     auto playerSpawnClass = EQ_GetSpawnClass(playerSpawn);
 
@@ -195,11 +195,6 @@ bool EQAPP_BazaarFilter_HandleEvent_CBazaarSearchWnd__AddItemToList(char* itemNa
                 break;
             }
         }
-    }
-
-    if (itemPrice < g_BazaarFilterItemPriceMinimum || itemPrice > g_BazaarFilterItemPriceMaximum)
-    {
-        bShouldAddItemToList = false;
     }
 
     if (bShouldAddItemToList == true)

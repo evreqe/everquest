@@ -1,3 +1,4 @@
+//#define EQ_TEST_SERVER 1
 #undef EQ_TEST_SERVER
 
 #include <algorithm>
@@ -20,9 +21,7 @@
 #include <thread>
 #include <unordered_map>
 #include <vector>
-
 #include <filesystem>
-namespace std__filesystem = std::experimental::filesystem; // not available yet
 
 #include <cstdio>
 #include <cstdlib>
@@ -57,6 +56,14 @@ namespace std__filesystem = std::experimental::filesystem; // not available yet
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
 
+// imgui
+// https://github.com/ocornut/imgui
+#include "imgui.h"
+#include "imgui_internal.h"
+#include "misc/cpp/imgui_stdlib.h"
+#include "imgui_impl_dx9.h"
+#include "imgui_impl_win32.h"
+
 // Microsoft Detours
 #include "detours.h"
 #pragma comment(lib, "detours.lib")
@@ -73,8 +80,11 @@ namespace std__filesystem = std::experimental::filesystem; // not available yet
 #include "eqapp_actorcollision.h"
 #include "eqapp_alwaysattack.h"
 #include "eqapp_alwayshotbutton.h"
+#include "eqapp_autobank.h"
+#include "eqapp_autoinventory.h"
 #include "eqapp_autogroup.h"
 #include "eqapp_bandolier.h"
+#include "eqapp_bazaarbot.h"
 #include "eqapp_bazaarfilter.h"
 #include "eqapp_boxchat.h"
 #include "eqapp_changeheight.h"
@@ -82,6 +92,7 @@ namespace std__filesystem = std::experimental::filesystem; // not available yet
 #include "eqapp_cheat.h"
 #include "eqapp_combathotbutton.h"
 #include "eqapp_combatmacro.h"
+#include "eqapp_macro.h"
 #include "eqapp_killmobs.h"
 #include "eqapp_lantern.h"
 #include "eqapp_namecolor.h"
@@ -102,14 +113,19 @@ namespace std__filesystem = std::experimental::filesystem; // not available yet
 #include "eqapp_windowtitle.h"
 #include "eqapp_windowforeground.h"
 
+#include "eqapp_gui.h"
+
 void EQAPP_Load()
 {
+    g_GUIIsLoaded = EQAPP_GUI_Load();
+
     EQAPP_ActorCollision_Load();
     EQAPP_WaypointList_Load();
     EQAPP_NamedSpawns_Load();
     EQAPP_KillMobs_Load();
     EQAPP_ChatEvent_Load();
     EQAPP_Bandolier_Load();
+    EQAPP_BazaarBot_Load();
     EQAPP_BazaarFilter_Load();
     EQAPP_CombatMacro_Load();
 
@@ -186,6 +202,8 @@ DWORD WINAPI EQAPP_ThreadLoop(LPVOID param)
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
+
+    EQAPP_GUI_Unload();
 
     EQAPP_BoxChat_Unload();
     EQAPP_Detours_Unload();

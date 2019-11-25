@@ -23,6 +23,9 @@ namespace EQClass
 
     class EQSpell;
 
+    class CXPoint;
+    class CXStr;
+
     class CXWndManager;
     class CXWnd;
 
@@ -30,18 +33,26 @@ namespace EQClass
     class CAlertStackWnd;
     class CBazaarSearchWnd;
     class CBazaarConfirmationWnd;
+    class CCharacterListWnd;
+    class CConfirmationDialog;
+    class CLargeDialogWnd;
+    class CMapViewWnd;
     class CSpellBookWnd;
+    class CTaskSelectWnd;
 
     // EQGraphicsDX9.dll
     class CCamera;
     class CRender;
+    class CRenderEx;
 
     class CActorInterface;
 
     class CVector3; // needed by CastRay2
 } // namespace EQClass
 
-/* DirectX9 */
+//////////////////////////////////////////////////
+/* IDirect3DDevice9 */
+//////////////////////////////////////////////////
 
 //IDirect3DDevice9** EQ_CLASS_POINTER_IDirect3DDevice9_pptr = NULL;
 //IDirect3DDevice9* EQ_CLASS_POINTER_IDirect3DDevice9 = NULL;
@@ -71,7 +82,9 @@ typedef HRESULT (__stdcall* EQ_FUNCTION_TYPE_IDirect3DDevice9__DrawIndexedPrimit
 );
 EQ_FUNCTION_TYPE_IDirect3DDevice9__DrawIndexedPrimitive IDirect3DDevice9__DrawIndexedPrimitive;
 
+//////////////////////////////////////////////////
 /* CEverQuest */
+//////////////////////////////////////////////////
 
 class EQClass::CEverQuest
 {
@@ -121,7 +134,9 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__RightClickedOnPlayer)(void
 EQClass::CEverQuest** EQ_CLASS_POINTER_CEverQuest_pptr;
 EQClass::CEverQuest* EQ_CLASS_POINTER_CEverQuest;
 
+//////////////////////////////////////////////////
 /* CDisplay */
+//////////////////////////////////////////////////
 
 class EQClass::CDisplay
 {
@@ -156,7 +171,9 @@ typedef uint32_t (__thiscall* EQ_FUNCTION_TYPE_CDisplay__CreateLight)(void* this
 EQClass::CDisplay** EQ_CLASS_POINTER_CDisplay_pptr;
 EQClass::CDisplay* EQ_CLASS_POINTER_CDisplay;
 
+//////////////////////////////////////////////////
 /* EQ_Character */
+//////////////////////////////////////////////////
 
 class EQClass::EQ_Character
 {
@@ -194,7 +211,9 @@ typedef void (__thiscall* EQ_FUNCTION_TYPE_EQ_Character__ProcessEnvironment)(voi
 EQClass::EQ_Character** EQ_CLASS_POINTER_EQ_Character_pptr;
 EQClass::EQ_Character* EQ_CLASS_POINTER_EQ_Character;
 
+//////////////////////////////////////////////////
 /* CharacterZoneClient */
+//////////////////////////////////////////////////
 
 class EQClass::CharacterZoneClient
 {
@@ -209,8 +228,9 @@ typedef void (__thiscall* EQ_FUNCTION_TYPE_CharacterZoneClient__SetNoGrav)(void*
 EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::CharacterZoneClient::TotalSpellAffects(uint32_t spellAffectIndex, int unknown1, int unknown2, int unknown3, int unknown4), EQ_ADDRESS_FUNCTION_CharacterZoneClient__TotalSpellAffects);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CharacterZoneClient__TotalSpellAffects)(void* this_ptr, uint32_t spellAffectIndex, int unknown1, int unknown2, int unknown3, int unknown4);
 
-
+//////////////////////////////////////////////////
 /* EQ_PC */
+//////////////////////////////////////////////////
 
 class EQClass::EQ_PC
 {
@@ -224,7 +244,9 @@ typedef void (__thiscall* EQ_FUNCTION_TYPE_EQ_PC__DestroyHeldItemOrMoney)(void* 
 EQClass::EQ_PC** EQ_CLASS_POINTER_EQ_PC_pptr;
 EQClass::EQ_PC* EQ_CLASS_POINTER_EQ_PC;
 
+//////////////////////////////////////////////////
 /* EQPlayerManager */
+//////////////////////////////////////////////////
 
 class EQClass::EQPlayerManager
 {
@@ -242,7 +264,9 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayerManager__GetSpawnByName)(void*
 EQClass::EQPlayerManager** EQ_CLASS_POINTER_EQPlayerManager_pptr;
 EQClass::EQPlayerManager* EQ_CLASS_POINTER_EQPlayerManager;
 
+//////////////////////////////////////////////////
 /* EQPlayer */
+//////////////////////////////////////////////////
 
 class EQClass::EQPlayer
 {
@@ -300,7 +324,9 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__Unknown)(void* this_ptr);
 EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::EQPlayer::AllowedToAttack(uint32_t spawn, uint32_t spellID), EQ_ADDRESS_FUNCTION_EQPlayer__AllowedToAttack);
 typedef bool (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__AllowedToAttack)(void* this_ptr, uint32_t spawn, uint32_t spellID);
 
+//////////////////////////////////////////////////
 /* EQSwitchManager */
+//////////////////////////////////////////////////
 
 class EQClass::EQSwitchManager
 {
@@ -313,7 +339,9 @@ public:
 EQClass::EQSwitchManager** EQ_CLASS_POINTER_EQSwitchManager_pptr;
 EQClass::EQSwitchManager* EQ_CLASS_POINTER_EQSwitchManager;
 
+//////////////////////////////////////////////////
 /* EQSwitch */
+//////////////////////////////////////////////////
 
 class EQClass::EQSwitch
 {
@@ -326,7 +354,9 @@ EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQSwitch::UseSwitch(uint32_t s
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQSwitch::ChangeState(uint8_t state, int zero1, int zero2), EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState);
 
+//////////////////////////////////////////////////
 /* EQSpell */
+//////////////////////////////////////////////////
 
 class EQClass::EQSpell
 {
@@ -337,13 +367,66 @@ public:
 EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::EQSpell::SpellAffects(uint32_t spellAffectIndex), EQ_ADDRESS_FUNCTION_EQSpell__SpellAffects);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_EQSpell__SpellAffects)(void* this_ptr, uint32_t spellAffectIndex);
 
+//////////////////////////////////////////////////
+/* CXPoint */
+//////////////////////////////////////////////////
+
+class EQClass::CXPoint
+{
+public:
+    class CXPoint CXPoint::operator=(class CXPoint);
+
+    uint32_t X;
+    uint32_t Y;
+};
+
+//////////////////////////////////////////////////
+/* CStrPtr */
+//////////////////////////////////////////////////
+
+struct CStrPtr
+{
+    int RefCount;
+    long MaxLength;
+    long Length;
+    int Encoding;
+    void *Buff;
+    union
+    {
+        char Ansi[1000];
+        wchar_t Unicode[500];
+        CStrPtr* pNext;
+    };
+};
+
+//////////////////////////////////////////////////
+/* CXStr */
+//////////////////////////////////////////////////
+
+class EQClass::CXStr
+{
+public:
+    CXStr::CXStr(char const *);
+
+    CStrPtr* ptr;
+};
+
+// CXStr(const char*) constructor
+EQ_MACRO_FUNCTION_FunctionAtAddress(EQClass::CXStr::CXStr(char const *), EQ_ADDRESS_FUNCTION_CXStr__CXStr_const_char_p);
+
+//////////////////////////////////////////////////
 /* CXWndManager */
+//////////////////////////////////////////////////
 
 class EQClass::CXWndManager
 {
 public:
+    int DrawCursor();
     int DrawWindows();
 };
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::CXWndManager::DrawCursor(), EQ_ADDRESS_FUNCTION_CXWndManager__DrawCursor);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CXWndManager__DrawCursor)(void* this_ptr);
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(int EQClass::CXWndManager::DrawWindows(), EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CXWndManager__DrawWindows)(void* this_ptr);
@@ -351,7 +434,9 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CXWndManager__DrawWindows)(void* this_
 EQClass::CXWndManager** EQ_CLASS_POINTER_CXWndManager_pptr;
 EQClass::CXWndManager* EQ_CLASS_POINTER_CXWndManager;
 
+//////////////////////////////////////////////////
 /* CXWnd */
+//////////////////////////////////////////////////
 
 class EQClass::CXWnd
 {
@@ -360,6 +445,7 @@ public:
     void Activate();
     void Deactivate();
     bool IsReallyVisible();
+    EQClass::CXWnd* CXWnd::GetChildItem(const EQClass::CXStr& name);
 };
 
 #define EQ_VFTABLE_INDEX_CXWnd__WndNotification       0x88
@@ -374,7 +460,11 @@ EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CXWnd::Deactivate(), EQ
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::CXWnd::IsReallyVisible(), EQ_ADDRESS_FUNCTION_CXWnd__IsReallyVisible);
 
+EQ_MACRO_FUNCTION_FunctionAtAddress(EQClass::CXWnd* EQClass::CXWnd::GetChildItem(const EQClass::CXStr& name), EQ_ADDRESS_FUNCTION_CXWnd__GetChildItem);
+
+//////////////////////////////////////////////////
 /* CAlertWnd */
+//////////////////////////////////////////////////
 
 class EQClass::CAlertWnd
 {
@@ -387,7 +477,9 @@ EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CAlertWnd::WndNotificati
 EQClass::CAlertWnd** EQ_CLASS_POINTER_CAlertWnd_pptr;
 EQClass::CAlertWnd* EQ_CLASS_POINTER_CAlertWnd;
 
+//////////////////////////////////////////////////
 /* CAlertStackWnd */
+//////////////////////////////////////////////////
 
 class EQClass::CAlertStackWnd
 {
@@ -403,7 +495,9 @@ EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CAlertStackWnd::Deactiv
 EQClass::CAlertStackWnd** EQ_CLASS_POINTER_CAlertStackWnd_pptr;
 EQClass::CAlertStackWnd* EQ_CLASS_POINTER_CAlertStackWnd;
 
+//////////////////////////////////////////////////
 /* CBazaarSearchWnd */
+//////////////////////////////////////////////////
 
 class EQClass::CBazaarSearchWnd
 {
@@ -412,6 +506,7 @@ public:
     void CBazaarSearchWnd::AddItemToList(char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11);
     void CBazaarSearchWnd::doQuery();
     bool CBazaarSearchWnd::BuyItem(int quantity);
+    void CBazaarSearchWnd::FindItem(char* itemName);
 };
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CBazaarSearchWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
@@ -425,10 +520,15 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarSearchWnd__doQuery)(void* this_
 EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::CBazaarSearchWnd::BuyItem(int quantity), EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarSearchWnd__BuyItem)(void* this_ptr, int quantity);
 
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CBazaarSearchWnd::FindItem(char* itemName), EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__FindItem);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CBazaarSearchWnd__FindItem)(void* this_ptr, char* itemName);
+
 EQClass::CBazaarSearchWnd** EQ_CLASS_POINTER_CBazaarSearchWnd_pptr;
 EQClass::CBazaarSearchWnd* EQ_CLASS_POINTER_CBazaarSearchWnd;
 
+//////////////////////////////////////////////////
 /* CBazaarConfirmationWnd */
+//////////////////////////////////////////////////
 
 class EQClass::CBazaarConfirmationWnd
 {
@@ -441,7 +541,24 @@ EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CBazaarConfirmationWnd::
 EQClass::CBazaarConfirmationWnd** EQ_CLASS_POINTER_CBazaarConfirmationWnd_pptr;
 EQClass::CBazaarConfirmationWnd* EQ_CLASS_POINTER_CBazaarConfirmationWnd;
 
+//////////////////////////////////////////////////
+/* CMapViewWnd */
+//////////////////////////////////////////////////
+
+class EQClass::CMapViewWnd
+{
+public:
+    int CMapViewWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
+};
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CMapViewWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
+
+EQClass::CMapViewWnd** EQ_CLASS_POINTER_CMapViewWnd_pptr;
+EQClass::CMapViewWnd* EQ_CLASS_POINTER_CMapViewWnd;
+
+//////////////////////////////////////////////////
 /* CSpellBookWnd */
+//////////////////////////////////////////////////
 
 class EQClass::CSpellBookWnd
 {
@@ -462,7 +579,24 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CSpellBookWnd__GetSpellScribeTicksLeft
 EQClass::CSpellBookWnd** EQ_CLASS_POINTER_CSpellBookWnd_pptr;
 EQClass::CSpellBookWnd* EQ_CLASS_POINTER_CSpellBookWnd;
 
+//////////////////////////////////////////////////
+/* CTaskSelectWnd */
+//////////////////////////////////////////////////
+
+class EQClass::CTaskSelectWnd
+{
+public:
+    int CTaskSelectWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
+};
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CTaskSelectWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
+
+EQClass::CTaskSelectWnd** EQ_CLASS_POINTER_CTaskSelectWnd_pptr;
+EQClass::CTaskSelectWnd* EQ_CLASS_POINTER_CTaskSelectWnd;
+
+//////////////////////////////////////////////////
 /* CCamera */
+//////////////////////////////////////////////////
 
 class EQClass::CCamera
 {
@@ -483,13 +617,16 @@ EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CCamera::WorldSpaceToSc
 EQClass::CCamera** EQ_CLASS_POINTER_CCamera_pptr;
 EQClass::CCamera* EQ_CLASS_POINTER_CCamera;
 
+//////////////////////////////////////////////////
 /* CRender */
+//////////////////////////////////////////////////
 
 class EQClass::CRender
 {
 public:
     bool ResetDevice(bool unknown);
     bool DrawLine(EQ::Vector3f& vectorBegin, EQ::Vector3f& vectorEnd, uint32_t colorARGB);
+    bool DrawLineEx(EQ::Vector3f& vectorBegin, EQ::Vector3f& vectorEnd, uint32_t colorARGB); // TODO: figure this out
     bool DrawWrappedText(uint32_t fontStyle, const char* text, EQ::CXRect& cxrect1, EQ::CXRect& cxrect2, uint32_t colorARGB, uint16_t flags, int startX);
     bool DrawColoredRectangle(EQ::Rectangle& rectangle, uint32_t colorARGB);
     void ClearRenderToBlack();
@@ -502,6 +639,7 @@ public:
 #define EQ_VFTABLE_INDEX_CRender__InitDevice              0x5C
 #define EQ_VFTABLE_INDEX_CRender__ResetDevice             0x64    // "ResetDevice() failed!"
 #define EQ_VFTABLE_INDEX_CRender__DrawLine                0x88
+#define EQ_VFTABLE_INDEX_CRender__DrawLineEx              0x8C
 #define EQ_VFTABLE_INDEX_CRender__DrawWrappedText         0x94
 #define EQ_VFTABLE_INDEX_CRender__DrawColoredRectangle    0xA0    // "*ScreenShot.jpg"
 #define EQ_VFTABLE_INDEX_CRender__ClearRenderToBlack      0xA8
@@ -514,6 +652,9 @@ EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::ResetDevice(bo
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CRender__ResetDevice)(void* this_ptr, bool unknown);
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawLine(EQ::Vector3f& vectorBegin, EQ::Vector3f& vectorEnd, uint32_t colorARGB), EQ_VFTABLE_INDEX_CRender__DrawLine);
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawLineEx(EQ::Vector3f& vectorBegin, EQ::Vector3f& vectorEn, uint32_t colorARGB), EQ_VFTABLE_INDEX_CRender__DrawLineEx);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CRender__DrawLineEx)(void* this_ptr, EQ::Vector3f& vectorBegin, EQ::Vector3f& vectorEnd, uint32_t colorARGB);
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRender::DrawWrappedText(uint32_t fontStyle, const char* text, EQ::CXRect& cxrect1, EQ::CXRect& cxrect2, uint32_t colorARGB, uint16_t flags, int startX), EQ_VFTABLE_INDEX_CRender__DrawWrappedText);
 
@@ -536,7 +677,32 @@ EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CRender::TakeScreenshot
 EQClass::CRender** EQ_CLASS_POINTER_CRender_pptr;
 EQClass::CRender* EQ_CLASS_POINTER_CRender;
 
-/**************************************************/
+//////////////////////////////////////////////////
+/* CRenderEx */
+//////////////////////////////////////////////////
+
+class EQClass::CRenderEx
+{
+public:
+    void SetAreaWireframeDrawing(bool bEnabled);
+    bool IsAreaWireframeDrawingEnabled();
+};
+
+#define EQ_VFTABLE_INDEX_CRenderEx__SetAreaWireframeDrawing          0x44
+#define EQ_VFTABLE_INDEX_CRenderEx__IsAreaWireframeDrawingEnabled    0x48
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CRenderEx::SetAreaWireframeDrawing(bool bEnabled), EQ_VFTABLE_INDEX_CRenderEx__SetAreaWireframeDrawing);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CRenderEx__SetAreaWireframeDrawing)(void* this_ptr, bool bEnabled);
+
+EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CRenderEx::IsAreaWireframeDrawingEnabled(), EQ_VFTABLE_INDEX_CRenderEx__IsAreaWireframeDrawingEnabled);
+typedef bool (__thiscall* EQ_FUNCTION_TYPE_CRenderEx__IsAreaWireframeDrawingEnabled)(void* this_ptr);
+
+EQClass::CRenderEx** EQ_CLASS_POINTER_CRenderEx_pptr;
+EQClass::CRenderEx* EQ_CLASS_POINTER_CRenderEx;
+
+//////////////////////////////////////////////////
+/* CVector3 */
+//////////////////////////////////////////////////
 
 class EQClass::CVector3
 {
@@ -630,7 +796,9 @@ public:
     }
 };
 
-/**************************************************/
+//////////////////////////////////////////////////
+/* CProfileManager */
+//////////////////////////////////////////////////
 
 enum eProfileListType
 {
@@ -640,7 +808,7 @@ enum eProfileListType
 
 class ProfileList
 {
-    //has no vftable
+    // has no vftable
 public:
 /*0x00*/    eProfileListType ListType;
 /*0x04*/    uint32_t* pFirst;
@@ -682,7 +850,9 @@ public:
     }
 };
 
-/**************************************************/
+//////////////////////////////////////////////////
+/* CActorInterface */
+//////////////////////////////////////////////////
 
 // EQData::_SPAWNINFO::mActorClient->pcactorex
 class EQClass::CActorInterface
@@ -701,7 +871,9 @@ EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(bool EQClass::CActorInterface::CanSet
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CActorInterface::SetNameColor(uint32_t& colorARGB), EQ_VFTABLE_INDEX_CActorInterface__SetNameColor);
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(void EQClass::CActorInterface::ChangeBoneStringSprite(int, int, char* text), EQ_VFTABLE_INDEX_CActorInterface__ChangeBoneStringSprite);
 
-/**************************************************/
+//////////////////////////////////////////////////
+/* CCollisionCallbackForActors */
+//////////////////////////////////////////////////
 
 // these classes are unknown and used in the game's CollisionCallbackForActors() function
 // we use them to disable collision with players in the eqapp_actorcollision.h header

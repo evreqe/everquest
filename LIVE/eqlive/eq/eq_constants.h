@@ -90,6 +90,9 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_OFFSET_CRender_VFTABLE                  0x00  // uint32_t pointer
 #define EQ_OFFSET_CRender_Direct3DDevicePointer    0xEC8 // uint32_t pointer    LPDIRECT3DDEVICE9
 
+// class CRenderEx
+#define EQ_OFFSET_CRenderEx_VFTABLE    0x00  // uint32_t pointer
+
 // EQData::_SPAWNMANAGER
 #define EQ_OFFSET_EQPlayerManager_FIRST_SPAWN    0x08 // struct  _SPAWNINFO        *FirstSpawn;
 #define EQ_OFFSET_EQPlayerManager_LAST_SPAWN     0x0C // struct  _SPAWNINFO        *LastSpawn;
@@ -159,6 +162,7 @@ uint32_t EQ_OFFSET_EQ_Character____CharacterBase         = 0;         // uint32_
 uint32_t EQ_OFFSET_EQ_Character____ExtendedTargetList    = 0x2810;    // uint32_t pointer
 uint32_t EQ_OFFSET_EQ_Character____GroupInfo             = 0x2824;    // uint32_t pointer
 uint32_t EQ_OFFSET_CharInfo2__Bandolier                  = 0;         // uint32_t pointer
+uint32_t EQ_OFFSET_CMapViewWnd__CMapViewMap              = 0;         // uint32_t pointer
 
 #define EQ_SIZE_SPAWN_NAME         64 // 0x40
 #define EQ_SIZE_SPAWN_LAST_NAME    32 // 0x20

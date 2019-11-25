@@ -12,7 +12,7 @@ bool g_HUDIsEnabled = true;
 std::stringstream g_HUDText;
 
 uint32_t g_HUDXDefault = 200;
-uint32_t g_HUDYDefault = 10;
+uint32_t g_HUDYDefault = 20;
 
 uint32_t g_HUDX = g_HUDXDefault;
 uint32_t g_HUDY = g_HUDYDefault;
@@ -120,6 +120,16 @@ void EQAPP_HUD_Execute()
     if (g_SpeedIsEnabled == true)
     {
         g_HUDText << "- Speed: " << g_SpeedMultiplier << "\n";
+    }
+
+    if (g_BazaarBotIsEnabled == true)
+    {
+        g_HUDText << "- Bazaar Bot\n";
+    }
+
+    if (g_BazaarFilterIsEnabled == true)
+    {
+        g_HUDText << "- Bazaar Filter\n";
     }
 
     if (g_AlwaysAttackIsEnabled == true)

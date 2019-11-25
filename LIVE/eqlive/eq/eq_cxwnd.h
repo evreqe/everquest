@@ -35,16 +35,22 @@ uint32_t EQ_SIZE_CSidlScreenWnd = 0x230;    // const CSidlScreenWnd::`vftable'  
 // "Resetting viewport."
 // "Game UI Initialized."
 
+//////////////////////////////////////////////////
 /* CAlertWnd */
+//////////////////////////////////////////////////
 
 #define EQ_OFFSET_CAlertWnd_BUTTON_CLOSE    EQ_SIZE_CSidlScreenWnd + 0x14    // uint32_t    "ALW_Close_Button"
 
+//////////////////////////////////////////////////
 /* CBazaarWnd */
+//////////////////////////////////////////////////
 
 #define EQ_OFFSET_CBazaarWnd_BUTTON_BEGIN_TRADER    EQ_SIZE_CSidlScreenWnd + 0x18 // uint32_t pointer    "Begin Trader" button    "BZW_Start_Button"
 #define EQ_OFFSET_CBazaarWnd_BUTTON_END_TRADER      EQ_SIZE_CSidlScreenWnd + 0x1C // uint32_t pointer    "End Trader" button      "BZW_End_Button"
 
+//////////////////////////////////////////////////
 /* CBazaarSearchWnd */
+//////////////////////////////////////////////////
 
 #define EQ_OFFSET_CBazaarSearchWnd_LIST_INDEX               EQ_SIZE_CSidlScreenWnd + 0x30  // uint32_t    index of the item in the search list to buy
 #define EQ_OFFSET_CBazaarSearchWnd_FIRST_ITEM               EQ_SIZE_CSidlScreenWnd + 0x38  // first item in the search list starts here
@@ -64,7 +70,9 @@ uint32_t EQ_SIZE_CSidlScreenWnd = 0x230;    // const CSidlScreenWnd::`vftable'  
 #define EQ_SIZE_CBazaarSearchWnd_TRADER_NAME    64 // 0x40
 #define EQ_SIZE_CBazaarSearchWnd_ITEM_NAME      64 // 0x40
 
+//////////////////////////////////////////////////
 /* CBazaarConfirmationWnd */
+//////////////////////////////////////////////////
 
 #define EQ_OFFSET_CBazaarConfirmationWnd_BUTTON_TO_ME         EQ_SIZE_CSidlScreenWnd + 0x1C // uint32_t pointer    "To Me" button         "BZC_UseTokenButton"
 #define EQ_OFFSET_CBazaarConfirmationWnd_BUTTON_TO_PARCELS    EQ_SIZE_CSidlScreenWnd + 0x28 // uint32_t pointer    "To Parcels" button    "BZC_UsePlatButton"
@@ -78,7 +86,16 @@ uint32_t EQ_SIZE_CSidlScreenWnd = 0x230;    // const CSidlScreenWnd::`vftable'  
 #define EQ_SIZE_CBazaarConfirmationWnd_TRADER_NAME    64 // 0x40
 #define EQ_SIZE_CBazaarConfirmationWnd_ITEM_NAME      64 // 0x40
 
+//////////////////////////////////////////////////
+/* CMapViewWnd */
+//////////////////////////////////////////////////
+
+#define EQ_OFFSET_CMapViewWnd_LINES     EQ_OFFSET_CMapViewWnd__CMapViewMap + 0x260 // uint32_t pointer
+#define EQ_OFFSET_CMapViewWnd_LABELS    EQ_OFFSET_CMapViewWnd__CMapViewMap + 0x264 // uint32_t pointer
+
+//////////////////////////////////////////////////
 /* CSpellBookWnd */
+//////////////////////////////////////////////////
 
 // CSpellBookWnd::GetSpellMemTicksLeft()
 #define EQ_OFFSET_CSpellBookWnd_MEMORIZE_SPELL_GEM_INDEX      EQ_SIZE_CSidlScreenWnd + 0x14    // signed int

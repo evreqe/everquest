@@ -9,7 +9,7 @@ Dreadlord Fanrik
 Ebon Lotus
 Ffroaak
 froglok forager
-froglok hunter
+#froglok hunter
 Hangman
 Harbinger Dronik
 Harbinger Josk

@@ -1,14 +1,14 @@
 #pragma once
 
-bool g_CheatAlwaysSeeInvisIsEnabled = true;
+bool g_CheatAlwaysSeeInvisibleIsEnabled = true;
 bool g_CheatAlwaysBreatheUnderwaterIsEnabled = true;
 bool g_CheatAlwaysHaveUltravisionIsEnabled = true;
-bool g_CheatAlwaysHaveSpiritOfWolfIsEnabled = false;
+bool g_CheatAlwaysRunFastIsEnabled = false;
 bool g_CheatNeverBlindIsEnabled = true;
 bool g_CheatNeverEncumberedIsEnabled = true;
 bool g_CheatNeverStunnedIsEnabled = true;
 bool g_CheatNeverRootedIsEnabled = true;
-bool g_CheatNeverSnaredIsEnabled = false;
+bool g_CheatNeverSnaredIsEnabled = true;
 bool g_CheatNeverSlideIsEnabled = false;
 bool g_CheatNoFallDamageIsEnabled = true;
 bool g_CheatNoEnvironmentalDamageIsEnabled = true;
@@ -18,9 +18,9 @@ bool g_CheatMemorizeSpellsInstantlyIsEnabled = true;
 bool g_CheatScribeSpellsInstantlyIsEnabled = true;
 bool g_CheatWallHackIsEnabled = false;
 
-void EQAPP_Cheat_AlwaysSeeInvis_Toggle();
-void EQAPP_Cheat_AlwaysSeeInvis_On();
-void EQAPP_Cheat_AlwaysSeeInvis_Off();
+void EQAPP_Cheat_AlwaysSeeInvisible_Toggle();
+void EQAPP_Cheat_AlwaysSeeInvisible_On();
+void EQAPP_Cheat_AlwaysSeeInvisible_Off();
 
 void EQAPP_Cheat_AlwaysBreatheUnderwater_Toggle();
 void EQAPP_Cheat_AlwaysBreatheUnderwater_On();
@@ -29,6 +29,10 @@ void EQAPP_Cheat_AlwaysBreatheUnderwater_Off();
 void EQAPP_Cheat_AlwaysHaveUltravision_Toggle();
 void EQAPP_Cheat_AlwaysHaveUltravision_On();
 void EQAPP_Cheat_AlwaysHaveUltravision_Off();
+
+void EQAPP_Cheat_AlwaysRunFast_Toggle();
+void EQAPP_Cheat_AlwaysRunFast_On();
+void EQAPP_Cheat_AlwaysRunFast_Off();
 
 void EQAPP_Cheat_NeverBlind_Toggle();
 void EQAPP_Cheat_NeverBlind_On();
@@ -82,25 +86,25 @@ void EQAPP_Cheat_WallHack_Toggle();
 void EQAPP_Cheat_WallHack_On();
 void EQAPP_Cheat_WallHack_Off();
 
-void EQAPP_Cheat_AlwaysSeeInvis_Toggle()
+void EQAPP_Cheat_AlwaysSeeInvisible_Toggle()
 {
-    EQ_ToggleBool(g_CheatAlwaysSeeInvisIsEnabled);
-    EQAPP_PrintBool("Always See Invis", g_CheatAlwaysSeeInvisIsEnabled);
+    EQ_ToggleBool(g_CheatAlwaysSeeInvisibleIsEnabled);
+    EQAPP_PrintBool("Always See Invisible", g_CheatAlwaysSeeInvisibleIsEnabled);
 }
 
-void EQAPP_Cheat_AlwaysSeeInvis_On()
+void EQAPP_Cheat_AlwaysSeeInvisible_On()
 {
-    if (g_CheatAlwaysSeeInvisIsEnabled == false)
+    if (g_CheatAlwaysSeeInvisibleIsEnabled == false)
     {
-        EQAPP_Cheat_AlwaysSeeInvis_Toggle();
+        EQAPP_Cheat_AlwaysSeeInvisible_Toggle();
     }
 }
 
-void EQAPP_Cheat_AlwaysSeeInvis_Off()
+void EQAPP_Cheat_AlwaysSeeInvisible_Off()
 {
-    if (g_CheatAlwaysSeeInvisIsEnabled == true)
+    if (g_CheatAlwaysSeeInvisibleIsEnabled == true)
     {
-        EQAPP_Cheat_AlwaysSeeInvis_Toggle();
+        EQAPP_Cheat_AlwaysSeeInvisible_Toggle();
     }
 }
 
@@ -148,25 +152,25 @@ void EQAPP_Cheat_AlwaysHaveUltravision_Off()
     }
 }
 
-void EQAPP_Cheat_AlwaysHaveSpiritOfWolf_Toggle()
+void EQAPP_Cheat_AlwaysRunFast_Toggle()
 {
-    EQ_ToggleBool(g_CheatAlwaysHaveSpiritOfWolfIsEnabled);
-    EQAPP_PrintBool("Always Have Spirit of Wolf", g_CheatAlwaysHaveSpiritOfWolfIsEnabled);
+    EQ_ToggleBool(g_CheatAlwaysRunFastIsEnabled);
+    EQAPP_PrintBool("Always Run Fast", g_CheatAlwaysRunFastIsEnabled);
 }
 
-void EQAPP_Cheat_AlwaysHaveSpiritOfWolf_On()
+void EQAPP_Cheat_AlwaysRunFast_On()
 {
-    if (g_CheatAlwaysHaveSpiritOfWolfIsEnabled == false)
+    if (g_CheatAlwaysRunFastIsEnabled == false)
     {
-        EQAPP_Cheat_AlwaysHaveSpiritOfWolf_Toggle();
+        EQAPP_Cheat_AlwaysRunFast_Toggle();
     }
 }
 
-void EQAPP_Cheat_AlwaysHaveSpiritOfWolf_Off()
+void EQAPP_Cheat_AlwaysRunFast_Off()
 {
-    if (g_CheatAlwaysHaveSpiritOfWolfIsEnabled == true)
+    if (g_CheatAlwaysRunFastIsEnabled == true)
     {
-        EQAPP_Cheat_AlwaysHaveSpiritOfWolf_Toggle();
+        EQAPP_Cheat_AlwaysRunFast_Toggle();
     }
 }
 

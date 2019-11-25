@@ -1,0 +1,373 @@
+#pragma once
+
+extern bool g_GUIDarkThemeIsEnabled;
+
+extern bool g_GUIDemoWindowIsEnabled;
+
+extern bool g_GUIMapWindowIsEnabled;
+extern bool g_GUIWaypointEditorWindowIsEnabled;
+extern bool g_GUIWaypointEditorWindowWasOpened;
+
+extern void EQAPP_InterpretCommand_PrintList();
+
+bool g_GUIMainWindowIsEnabled = false;
+
+bool g_GUIMainWindowPopupMenuClientsIsOpen = false;
+
+float g_GUIMainWindowX = 0.0f;
+float g_GUIMainWindowY = 0.0f;
+
+float g_GUIMainWindowAlphaActive = 0.8f;
+float g_GUIMainWindowAlphaInactive = 0.8f;
+
+static void EQAPP_GUI_MainWindow();
+static void EQAPP_GUI_MainWindow_MenuFile();
+static void EQAPP_GUI_MainWindow_MenuOptions();
+static void EQAPP_GUI_MainWindow_MenuCheats();
+static void EQAPP_GUI_MainWindow_MenuWaypoints();
+static void EQAPP_GUI_MainWindow_MenuClients();
+static void EQAPP_GUI_MainWindow_PopupMenuClients();
+static void EQAPP_GUI_MainWindow_MenuWindows();
+static void EQAPP_GUI_MainWindow_MenuGUI();
+static void EQAPP_GUI_MainWindow_MenuHelp();
+
+static void EQAPP_GUI_MainWindow()
+{
+    ImGuiIO& io = ImGui::GetIO();
+    if (io.WantCaptureMouse == true || io.WantCaptureKeyboard == true)
+    {
+       ImGui::PushStyleVar(ImGuiStyleVar_Alpha, g_GUIMainWindowAlphaActive);
+    }
+    else
+    {
+        ImGui::PushStyleVar(ImGuiStyleVar_Alpha, g_GUIMainWindowAlphaInactive);
+    }
+
+    EQAPP_GUI_MainWindow_PopupMenuClients();
+
+    ImGui::SetNextWindowPos(ImVec2(g_GUIMainWindowX, g_GUIMainWindowY), ImGuiCond_Once);
+
+    if (ImGui::Begin("EQApp##MainWindow", &g_GUIMainWindowIsEnabled, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoInputs) == false)
+    {
+        ImGui::End();
+        return;
+    }
+
+    if (ImGui::BeginMainMenuBar())
+    {
+        if (ImGui::BeginMenu("File##MainWindowMenuFile"))
+        {
+            EQAPP_GUI_MainWindow_MenuFile();
+
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Options##MainWindowMenuOptions"))
+        {
+            EQAPP_GUI_MainWindow_MenuOptions();
+
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Cheats##MainWindowMenuCheats"))
+        {
+            EQAPP_GUI_MainWindow_MenuCheats();
+
+            ImGui::EndMenu();
+        }
+
+        if (g_WaypointIsEnabled == true)
+        {
+            if (ImGui::BeginMenu("Waypoints##MainWindowMenuWaypoints"))
+            {
+                EQAPP_GUI_MainWindow_MenuWaypoints();
+
+                ImGui::EndMenu();
+            }
+        }
+
+        if (ImGui::BeginMenu("Windows##MainWindowMenuWindows"))
+        {
+            EQAPP_GUI_MainWindow_MenuWindows();
+
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Clients##MainWindowMenuClients"))
+        {
+            EQAPP_GUI_MainWindow_MenuClients();
+
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("GUI##MainWindowMenuGUI"))
+        {
+            EQAPP_GUI_MainWindow_MenuGUI();
+
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Help##MainWindowMenuHelp"))
+        {
+            EQAPP_GUI_MainWindow_MenuHelp();
+
+            ImGui::EndMenu();
+        }
+
+        ImGui::EndMainMenuBar();
+    }
+
+    ImGui::End();
+
+    ImGui::PopStyleVar();
+}
+
+static void EQAPP_GUI_MainWindow_MenuFile()
+{
+    ////if (ImGui::MenuItem("Load Scripts##MainWindowMenuItemFileLoadScripts")) { EQAPP_Lua_LoadAndPrintAllScripts(); }
+    if (ImGui::MenuItem("Load Waypoints##MainWindowMenuItemFileLoadWaypoints")) { EQAPP_WaypointList_Load(); }
+
+    ImGui::Separator();
+
+    if (ImGui::MenuItem("Unload##MainWindowMenuItemFileUnload")) { EQAPP_Unload(); }
+}
+
+static void EQAPP_GUI_MainWindow_MenuOptions()
+{
+    if (ImGui::MenuItem("Always Attack##MainWindowMenuItemOptionsAlwaysAttack", NULL, g_AlwaysAttackIsEnabled)) { EQAPP_AlwaysAttack_Toggle(); }
+
+    ImGui::Separator();
+
+    if (ImGui::MenuItem("ESP##MainWindowMenuItemOptionsESP", NULL, g_ESPIsEnabled)) { EQAPP_ESP_Toggle(); }
+    if (ImGui::MenuItem("ESP Height Filter##MainWindowMenuItemOptionsESPHeightFilter", NULL, g_ESPHeightFilterIsEnabled)) { EQAPP_ESP_HeightFilter_Toggle(); }
+
+    ImGui::Separator();
+
+    if (ImGui::MenuItem("Free Camera##MainWindowMenuItemOptionsFreeCamera", NULL, g_FreeCameraIsEnabled)) { EQAPP_FreeCamera_Toggle(); }
+
+    ImGui::Separator();
+
+    if (ImGui::MenuItem("Speed Hack##MainWindowMenuItemOptionsSpeed", NULL, g_SpeedIsEnabled)) { EQAPP_Speed_Toggle(); }
+    ImGui::SliderFloat("##MainWindowMenuItemOptionsSpeedValue", &g_SpeedMultiplier, 1.0f, 10.0f, "%.1f");
+}
+
+static void EQAPP_GUI_MainWindow_MenuCheats()
+{
+    if (ImGui::MenuItem("Fly##MainWindowMenuItemCheatsFly", NULL, g_CheatFlyIsEnabled)) { EQAPP_Cheat_Fly_Toggle(); }
+    if (ImGui::MenuItem("Levitate##MainWindowMenuItemCheatsLevitate", NULL, g_CheatLevitateIsEnabled)) { EQAPP_Cheat_Levitate_Toggle(); }
+
+    ImGui::Separator();
+
+    if (ImGui::MenuItem("Always Breathe Underwater##MainWindowMenuItemCheatsAlwaysBreatheUnderwater", NULL, g_CheatAlwaysBreatheUnderwaterIsEnabled)) { EQAPP_Cheat_AlwaysBreatheUnderwater_Toggle(); }
+    if (ImGui::MenuItem("Always Run Fast##MainWindowMenuItemCheatsAlwaysRunFast", NULL, g_CheatAlwaysRunFastIsEnabled)) { EQAPP_Cheat_AlwaysRunFast_Toggle(); }
+    if (ImGui::MenuItem("Always Have Ultravision##MainWindowMenuItemCheatsAlwaysHaveUltravision", NULL, g_CheatAlwaysHaveUltravisionIsEnabled)) { EQAPP_Cheat_AlwaysHaveUltravision_Toggle(); }
+    if (ImGui::MenuItem("Always See Invisible##MainWindowMenuItemCheatsAlwaysSeeInvisible", NULL, g_CheatAlwaysSeeInvisibleIsEnabled)) { EQAPP_Cheat_AlwaysSeeInvisible_Toggle(); }
+
+    ImGui::Separator();
+
+    if (ImGui::MenuItem("Never Blind##MainWindowMenuItemCheatsNeverBlind", NULL, g_CheatNeverBlindIsEnabled)) { EQAPP_Cheat_NeverBlind_Toggle(); }
+    if (ImGui::MenuItem("Never Encumbered##MainWindowMenuItemCheatsNeverEncumbered", NULL, g_CheatNeverEncumberedIsEnabled)) { EQAPP_Cheat_NeverEncumbered_Toggle(); }
+    if (ImGui::MenuItem("Never Rooted##MainWindowMenuItemCheatsNeverRooted", NULL, g_CheatNeverRootedIsEnabled)) { EQAPP_Cheat_NeverRooted_Toggle(); }
+    if (ImGui::MenuItem("Never Slide (ice and slime)##MainWindowMenuItemCheatsNeverSlide", NULL, g_CheatNeverSlideIsEnabled)) { EQAPP_Cheat_NeverSlide_Toggle(); }
+    if (ImGui::MenuItem("Never Snared##MainWindowMenuItemCheatsNeverSnared", NULL, g_CheatNeverSnaredIsEnabled)) { EQAPP_Cheat_NeverSnared_Toggle(); }
+    if (ImGui::MenuItem("Never Stunned##MainWindowMenuItemCheatsNeverStunned", NULL, g_CheatNeverStunnedIsEnabled)) { EQAPP_Cheat_NeverStunned_Toggle(); }
+
+    ImGui::Separator();
+
+    if (ImGui::MenuItem("No Environmental Damage##MainWindowMenuItemCheatsNoEnvironmentalDamage", NULL, g_CheatNoEnvironmentalDamageIsEnabled)) { EQAPP_Cheat_NoEnvironmentalDamage_Toggle(); }
+    if (ImGui::MenuItem("No Fall Damage##MainWindowMenuItemCheatsNoFallDamage", NULL, g_CheatNoFallDamageIsEnabled)) { EQAPP_Cheat_NoFallDamage_Toggle(); }
+
+    ImGui::Separator();
+
+    if (ImGui::MenuItem("Memorize Spells Instantly##MainWindowMenuItemCheatsMemorizeSpellsInstantly", NULL, g_CheatMemorizeSpellsInstantlyIsEnabled)) { EQAPP_Cheat_MemorizeSpellsInstantly_Toggle(); }
+    if (ImGui::MenuItem("Scribe Spells Instantly##MainWindowMenuItemCheatsScribeSpellsInstantly", NULL, g_CheatScribeSpellsInstantlyIsEnabled)) { EQAPP_Cheat_ScribeSpellsInstantly_Toggle(); }
+
+    ImGui::Separator();
+
+    if (ImGui::MenuItem("Wall Hack##MainWindowMenuItemCheatsWallHack", NULL, g_CheatWallHackIsEnabled)) { EQAPP_Cheat_WallHack_Toggle(); }
+}
+
+static void EQAPP_GUI_MainWindow_MenuWaypoints()
+{
+    if (ImGui::MenuItem("Editor##MainWindowMenuItemOptionsWaypointsWaypointEditor", NULL, g_WaypointEditorIsEnabled)) { EQAPP_WaypointEditor_Toggle(); }
+    if (ImGui::MenuItem("Editor Height Filter##MainWindowMenuItemOptionsWaypointsWaypointEditorHeightFilter", NULL, g_WaypointEditorHeightFilterIsEnabled)) { EQAPP_WaypointEditor_HeightFilter_Toggle(); }
+    if (ImGui::MenuItem("Editor Distance Filter##MainWindowMenuItemOptionsWaypointsWaypointEditorDistanceFilter", NULL, g_WaypointEditorDistanceFilterIsEnabled)) { EQAPP_WaypointEditor_DistanceFilter_Toggle(); }
+
+    if (g_WaypointList.size() == 0)
+    {
+        if (ImGui::MenuItem("(none)##MainWindowMenuItemWaypointsNone")) {}
+    }
+    else if (g_WaypointList.size() <= 20)
+    {
+        ImGui::Separator();
+
+        for (auto& waypoint : g_WaypointList)
+        {
+            if (waypoint.Name.size() == 0)
+            {
+                continue;
+            }
+
+            if (EQAPP_String_BeginsWith(waypoint.Name, "Waypoint") == true)
+            {
+                continue;
+            }
+
+            std::stringstream menuItemLabel;
+            menuItemLabel << waypoint.Name << "##MainWindowMenuItemWaypoints" << waypoint.Name << waypoint.Index;
+
+            if (ImGui::MenuItem(menuItemLabel.str().c_str()))
+            {
+                EQAPP_Waypoint_GotoByName(waypoint.Name.c_str());
+            }
+        }
+    }
+    else
+    {
+        ImGui::Separator();
+
+        ImGui::BeginChild("##MainWindowMenuItemWaypointsList", ImVec2(200,400), false);
+
+        auto waypointList = g_WaypointList;
+
+        std::sort
+        (
+            waypointList.begin(), waypointList.end(),
+            [] (const EQApp::Waypoint& a, const EQApp::Waypoint& b) -> bool
+            { 
+                return a.Name < b.Name;
+            }
+        );
+
+        for (auto& waypoint : waypointList)
+        {
+            if (waypoint.Name.size() == 0)
+            {
+                continue;
+            }
+
+            if (EQAPP_String_BeginsWith(waypoint.Name, "Waypoint") == true)
+            {
+                continue;
+            }
+
+            std::stringstream menuItemLabel;
+            menuItemLabel << waypoint.Name << "##MainWindowMenuItemWaypoints" << waypoint.Index;
+
+            if (ImGui::Selectable(menuItemLabel.str().c_str(), false))
+            {
+                EQAPP_Waypoint_GotoByName(waypoint.Name.c_str());
+
+                ImGui::CloseCurrentPopup();
+            }
+        }
+
+        ImGui::EndChild();
+    }
+}
+
+static void EQAPP_GUI_MainWindow_MenuClients()
+{
+    if (EQAPP_UpdateClientWindowList() == false)
+    {
+        ImGui::MenuItem("(none)##MainWindowMenuItemClientsNone");
+        return;
+    }
+
+    size_t windowIndex = 0;
+
+    for (auto& clientWindow : g_EQAppClientWindowList)
+    {
+        if (clientWindow.second == NULL)
+        {
+            continue;
+        }
+
+        if (clientWindow.first.size() == 0)
+        {
+            continue;
+        }
+
+        std::stringstream menuItemText;
+        menuItemText << clientWindow.first << "##MainWindowMenuItemClients" << windowIndex;
+
+        windowIndex++;
+
+        if (ImGui::MenuItem(menuItemText.str().c_str()))
+        {
+            ShowWindow(clientWindow.second, SW_SHOW);
+
+            if (IsIconic(clientWindow.second) == TRUE) // is window minimized
+            {
+                ShowWindow(clientWindow.second, SW_RESTORE);
+            }
+
+            SetForegroundWindow(clientWindow.second);
+            SetFocus(clientWindow.second);
+        }
+    }
+}
+
+static void EQAPP_GUI_MainWindow_PopupMenuClients()
+{
+    if (g_GUIMainWindowPopupMenuClientsIsOpen == true)
+    {
+        ImGui::OpenPopup("Clients##MainWindowPopupMenuClients");
+
+        g_GUIMainWindowPopupMenuClientsIsOpen = false;
+    }
+
+    if (ImGui::BeginPopup("Clients##MainWindowPopupMenuClients"))
+    {
+        EQAPP_GUI_MainWindow_MenuClients();
+        ImGui::EndPopup();
+    }
+}
+
+static void EQAPP_GUI_MainWindow_MenuWindows()
+{
+    if (ImGui::MenuItem("Map##MainWindowMenuItemWindowsMap", NULL, false)) { EQ_ToggleBool(g_GUIMapWindowIsEnabled); }
+    if (ImGui::MenuItem("Spawn List##MainWindowMenuItemWindowsSpawnList", NULL, false)) {}
+
+    if (g_WaypointIsEnabled == true)
+    {
+        if (ImGui::MenuItem("Waypoint Editor##MainWindowMenuWaypointEditor"))
+        {
+            g_GUIWaypointEditorWindowIsEnabled = true;
+
+            g_GUIWaypointEditorWindowWasOpened = true;
+
+            g_WaypointEditorIsEnabled = true;
+        }
+    }
+}
+
+static void EQAPP_GUI_MainWindow_MenuGUI()
+{
+    if (ImGui::MenuItem("Dark Theme##MainWindowMenuItemGUIDarkTheme"))
+    {
+        ImGui::StyleColorsDark();
+
+        g_GUIDarkThemeIsEnabled = true;
+    }
+
+    if (ImGui::MenuItem("Light Theme##MainWindowMenuItemGUILightTheme"))
+    {
+        ImGui::StyleColorsLight();
+
+        g_GUIDarkThemeIsEnabled = false;
+    }
+
+    ImGui::Separator();
+
+    if (ImGui::MenuItem("Show Demo Window##MainWindowMenuItemGUIShowDemoWindow", NULL, &g_GUIDemoWindowIsEnabled)) {}
+}
+
+static void EQAPP_GUI_MainWindow_MenuHelp()
+{
+    if (ImGui::MenuItem("Commands##MainWindowMenuItemHelpCommands")) { EQAPP_InterpretCommand_PrintList(); }
+
+    ImGui::Separator();
+
+    if (ImGui::MenuItem("About##MainWindowMenuItemHelpAbout")) {};
+}

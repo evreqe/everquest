@@ -5,7 +5,9 @@ bool g_AlwaysAttackIsEnabled = false;
 EQApp::Timer g_AlwaysAttackTimer = EQAPP_Timer_GetTimeNow();
 EQApp::TimerInterval g_AlwaysAttackTimerInterval = 1;
 
-float g_AlwaysAttackDistance = 30.0f;
+float g_AlwaysAttackMeleeDistance = 30.0f;
+
+float g_AlwaysAttackRangeDistance = 400.0f;
 
 void EQAPP_AlwaysAttack_Toggle();
 void EQAPP_AlwaysAttack_On();
@@ -50,6 +52,7 @@ void EQAPP_AlwaysAttack_Execute()
     if (targetSpawn == NULL)
     {
         EQ_SetAutoAttack(false);
+        EQ_SetAutoFire(false);
         return;
     }
 
@@ -57,12 +60,7 @@ void EQAPP_AlwaysAttack_Execute()
     if (targetType != EQ_SPAWN_TYPE_NPC)
     {
         EQ_SetAutoAttack(false);
-        return;
-    }
-
-    float targetDistance = EQ_GetSpawnDistance(targetSpawn);
-    if (targetDistance > g_AlwaysAttackDistance)
-    {
+        EQ_SetAutoFire(false);
         return;
     }
 
@@ -76,6 +74,25 @@ void EQAPP_AlwaysAttack_Execute()
     if (playerStandingState != EQ_STANDING_STATE_STANDING)
     {
         EQ_SetAutoAttack(false);
+        EQ_SetAutoFire(false);
+        return;
+    }
+
+    float targetDistance = EQ_GetSpawnDistance(targetSpawn);
+
+    auto playerClass = EQ_GetSpawnClass(playerSpawn);
+    if (playerClass == EQ_CLASS_RANGER)
+    {
+        if (targetDistance > g_AlwaysAttackMeleeDistance && targetDistance < g_AlwaysAttackRangeDistance)
+        {
+            EQ_SetAutoAttack(false);
+            EQ_SetAutoFire(true);
+            return;
+        }
+    }
+
+    if (targetDistance > g_AlwaysAttackMeleeDistance)
+    {
         return;
     }
 

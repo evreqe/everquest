@@ -16,9 +16,26 @@
 #include "eq_memory.h"
 #include "eq_macros.h"
 
+//////////////////////////////////////////////////
 /* game functions */
+//////////////////////////////////////////////////
 
 typedef int (__cdecl* EQ_FUNCTION_TYPE_DrawNetStatus)(int x, int y, int unknown);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(LRESULT __stdcall EQ_FUNCTION_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam), EQ_ADDRESS_FUNCTION_WindowProc);
+typedef LRESULT (__stdcall* EQ_FUNCTION_TYPE_WindowProc)(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQ_FUNCTION_ProcessMouseEvent(), EQ_ADDRESS_FUNCTION_ProcessMouseEvent);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_ProcessMouseEvent)();
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQ_FUNCTION_ProcessKeyboardEvent(), EQ_ADDRESS_FUNCTION_ProcessKeyboardEvent);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_ProcessKeyboardEvent)();
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQ_FUNCTION_FlushDxMouse(), EQ_ADDRESS_FUNCTION_FlushDxMouse);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_FlushDxMouse)();
+
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQ_FUNCTION_FlushDxKeyboard(), EQ_ADDRESS_FUNCTION_FlushDxKeyboard);
+typedef int (__cdecl* EQ_FUNCTION_TYPE_FlushDxKeyboard)();
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(int __cdecl EQ_FUNCTION_CollisionCallbackForActors(uint32_t cactor), EQ_ADDRESS_FUNCTION_CollisionCallbackForActors);
 typedef int (__cdecl* EQ_FUNCTION_TYPE_CollisionCallbackForActors)(uint32_t cactor);
@@ -38,7 +55,9 @@ typedef int (__cdecl* EQ_FUNCTION_TYPE_DoSpellEffect)(int type, int unknown, uin
 EQ_MACRO_FUNCTION_FunctionAtAddress(void __cdecl EQ_FUNCTION_UpdateLight(uint32_t character), EQ_ADDRESS_FUNCTION_UpdateLight);
 typedef void (__cdecl* EQ_FUNCTION_TYPE_UpdateLight)(uint32_t character);
 
+//////////////////////////////////////////////////
 /* function prototypes */
+//////////////////////////////////////////////////
 
 void EQ_Log(const char* text);
 
@@ -86,6 +105,7 @@ HWND EQ_GetWindow();
 uint32_t EQ_GetTimer();
 uint32_t EQ_GetCamera();
 uint32_t EQ_GetRender();
+uint32_t EQ_GetRenderEx();
 LPDIRECT3DDEVICE9 EQ_GetDirect3DDevicePointer();
 
 POINT EQ_GetMousePosition();
@@ -101,6 +121,7 @@ bool EQ_IsMouseLookEnabled();
 
 void EQ_SetNetStatus(bool b);
 void EQ_SetAutoAttack(bool b);
+void EQ_SetAutoFire(bool b);
 void EQ_SetAutoRun(bool b);
 void EQ_SetMouseLook(bool b);
 
@@ -173,6 +194,8 @@ float EQ_GetSpawnDistance3D(uint32_t spawn);
 int EQ_PushSpawnAlongHeading(uint32_t spawn, float speed);
 
 void EQ_DoPlayerJump(float jumpStrengthMultiplier, float pushSpeed);
+
+void EQ_RightClickOnSpawn(uint32_t spawn);
 
 bool EQ_IsSpawnWithinDistance(uint32_t spawn, float distance);
 bool EQ_IsSpawnWithinDistanceOfLocation(uint32_t spawn, float y, float x, float z, float distance);
@@ -380,6 +403,7 @@ void EQ_CloseAllDoors();
 bool EQ_CXWnd_IsOpen(uint32_t cxwndAddressPointer);
 
 bool EQ_CXWnd_ClickButton(uint32_t cxwndAddressPointer, uint32_t cxwndButtonOffset);
+bool EQ_CXWnd_ClickButtonByName(uint32_t cxwndAddressPointer, const char* name);
 
 uint32_t EQ_GetAlertWindow();
 bool EQ_AlertWindow_IsOpen();
@@ -392,7 +416,9 @@ bool EQ_BazaarSearchWindow_IsOpen();
 void EQ_BazaarSearchWindow_DoQuery();
 uint32_t EQ_BazaarSearchWindow_GetListCount();
 uint32_t EQ_BazaarSearchWindow_GetListIndexByItemName(const char* itemName, bool useExactComparsion);
+uint32_t EQ_BazaarSearchWindow_GetListIndexByLowestPrice();
 bool EQ_BazaarSearchWindow_BuyItem(uint32_t listIndex);
+void EQ_BazaarSearchWindow_FindItem(const char* itemName);
 uint32_t EQ_BazaarSearchWindow_GetListIndex();
 uint32_t EQ_BazaarSearchWindow_GetItemID(uint32_t listIndex);
 uint32_t EQ_BazaarSearchWindow_GetItemQuantity(uint32_t listIndex);
@@ -408,10 +434,22 @@ bool EQ_BazaarConfirmationWindow_IsOpen();
 bool EQ_BazaarConfirmationWindow_ClickToParcelsButton();
 bool EQ_BazaarConfirmationWindow_ClickCancelButton();
 
+uint32_t EQ_GetMapWindow();
+bool EQ_MapWindow_IsOpen();
+uint32_t EQ_MapWindow_GetLines();
+uint32_t EQ_MapWindow_GetLabels();
+
 uint32_t EQ_GetSpellBookWindow();
 bool EQ_SpellBookWindow_IsOpen();
 
+uint32_t EQ_GetTaskSelectWindow();
+bool EQ_TaskSelectWindow_IsOpen();
+bool EQ_TaskSelectWindow_ClickAcceptButton();
+bool EQ_TaskSelectWindow_ClickDeclineButton();
+
+//////////////////////////////////////////////////
 /* functions */
+//////////////////////////////////////////////////
 
 void EQ_Log(const char* text)
 {
@@ -851,6 +889,11 @@ uint32_t EQ_GetRender()
     return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CRender);
 }
 
+uint32_t EQ_GetRenderEx()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CRenderEx);
+}
+
 LPDIRECT3DDEVICE9 EQ_GetDirect3DDevicePointer()
 {
     auto render = EQ_GetRender();
@@ -932,6 +975,13 @@ void EQ_SetAutoAttack(bool b)
     uint8_t value = (uint8_t)b;
 
     EQ_WriteMemory<uint8_t>(EQ_ADDRESS_AutoAttack, value);
+}
+
+void EQ_SetAutoFire(bool b)
+{
+    uint8_t value = (uint8_t)b;
+
+    EQ_WriteMemory<uint8_t>(EQ_ADDRESS_AutoFire, value);
 }
 
 void EQ_SetAutoRun(bool b)
@@ -1645,6 +1695,11 @@ void EQ_DoPlayerJump(float jumpStrengthMultiplier, float pushSpeed)
         EQ_SetSpawnZSpeed(controlledSpawn, EQ_GetSpawnJumpStrength(controlledSpawn) * jumpStrengthMultiplier);
         EQ_PushSpawnAlongHeading(controlledSpawn, pushSpeed);
     }
+}
+
+void EQ_RightClickOnSpawn(uint32_t spawn)
+{
+    EQ_CLASS_POINTER_CEverQuest->RightClickedOnPlayer(spawn);
 }
 
 bool EQ_IsSpawnWithinDistance(uint32_t spawn, float distance)
@@ -3771,6 +3826,11 @@ bool EQ_CXWnd_ClickButton(uint32_t cxwndAddressPointer, uint32_t cxwndButtonOffs
         return false;
     }
 
+    if (((EQClass::CXWnd*)window)->IsReallyVisible() == false)
+    {
+        return false;
+    }
+
     uint32_t button = EQ_ReadMemory<uint32_t>(window + cxwndButtonOffset);
     if (button == NULL)
     {
@@ -3778,6 +3838,35 @@ bool EQ_CXWnd_ClickButton(uint32_t cxwndAddressPointer, uint32_t cxwndButtonOffs
     }
 
     ((EQClass::CXWnd*)window)->WndNotification(button, EQ_CXWND_MESSAGE_LEFT_CLICK, (void*)0);
+
+    return true;
+}
+
+bool EQ_CXWnd_ClickButtonByName(uint32_t cxwndAddressPointer, const char* name)
+{
+    if (cxwndAddressPointer == 0)
+    {
+        return false;
+    }
+
+    uint32_t window = EQ_ReadMemory<uint32_t>(cxwndAddressPointer);
+    if (window == NULL)
+    {
+        return false;
+    }
+
+    if (((EQClass::CXWnd*)window)->IsReallyVisible() == false)
+    {
+        return false;
+    }
+
+    auto button = ((EQClass::CXWnd*)window)->GetChildItem(name);
+    if (button == NULL)
+    {
+        return false;
+    }
+
+    ((EQClass::CXWnd*)window)->WndNotification((uint32_t)button, EQ_CXWND_MESSAGE_LEFT_CLICK, (void*)0);
 
     return true;
 }
@@ -3945,6 +4034,43 @@ uint32_t EQ_BazaarSearchWindow_GetListIndexByItemName(const char* itemName, bool
     return EQ_BAZAAR_SEARCH_LIST_INDEX_NULL;
 }
 
+uint32_t EQ_BazaarSearchWindow_GetListIndexByLowestPrice()
+{
+    uint32_t bazaarSearchWindow = EQ_GetBazaarSearchWindow();
+    if (bazaarSearchWindow == NULL)
+    {
+        return EQ_BAZAAR_SEARCH_LIST_INDEX_NULL;
+    }
+
+    bool isOpen = ((EQClass::CXWnd*)bazaarSearchWindow)->IsReallyVisible();
+    if (isOpen == false)
+    {
+        return EQ_BAZAAR_SEARCH_LIST_INDEX_NULL;
+    }
+
+    std::unordered_map<uint32_t, uint32_t> prices; // <listIndex, itemPrice>
+
+    for (uint32_t listIndex = 0; listIndex < EQ_BAZAAR_SEARCH_MAX_RESULTS_PER_TRADER; listIndex++)
+    {
+        uint32_t itemPrice = EQ_ReadMemory<uint32_t>(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_ITEM_PRICE + (listIndex * EQ_SIZE_CBazaarSearchWnd_ITEM)));
+        if (itemPrice == 0)
+        {
+            continue;
+        }
+
+        prices.insert({listIndex, itemPrice});
+    }
+
+    if (prices.size() == 0)
+    {
+        return EQ_BAZAAR_SEARCH_LIST_INDEX_NULL;
+    }
+
+    auto lowestPrice = std::min_element(prices.begin(), prices.end(), [](const auto& l, const auto& r) { return l.second < r.second; });
+
+    return lowestPrice->first;
+}
+
 bool EQ_BazaarSearchWindow_BuyItem(uint32_t listIndex)
 {
     uint32_t bazaarSearchWindow = EQ_GetBazaarSearchWindow();
@@ -3982,6 +4108,11 @@ bool EQ_BazaarSearchWindow_BuyItem(uint32_t listIndex)
     bool result = EQ_CLASS_POINTER_CBazaarSearchWnd->BuyItem(itemQuantity);
 
     return result;
+}
+
+void EQ_BazaarSearchWindow_FindItem(const char* itemName)
+{
+    EQ_CLASS_POINTER_CBazaarSearchWnd->FindItem((char*)itemName);
 }
 
 uint32_t EQ_BazaarSearchWindow_GetListIndex()
@@ -4159,6 +4290,38 @@ bool EQ_BazaarConfirmationWindow_ClickCancelButton()
     return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CBazaarConfirmationWnd, EQ_OFFSET_CBazaarConfirmationWnd_BUTTON_CANCEL);
 }
 
+uint32_t EQ_GetMapWindow()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CMapViewWnd);
+}
+
+bool EQ_MapWindow_IsOpen()
+{
+    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CMapViewWnd) == true);
+}
+
+uint32_t EQ_MapWindow_GetLines()
+{
+    auto mapWindow = EQ_GetMapWindow();
+    if (mapWindow == NULL)
+    {
+        return NULL;
+    }
+
+    return EQ_ReadMemory<uint32_t>(mapWindow + EQ_OFFSET_CMapViewWnd_LINES);
+}
+
+uint32_t EQ_MapWindow_GetLabels()
+{
+    auto mapWindow = EQ_GetMapWindow();
+    if (mapWindow == NULL)
+    {
+        return NULL;
+    }
+
+    return EQ_ReadMemory<uint32_t>(mapWindow + EQ_OFFSET_CMapViewWnd_LABELS);
+}
+
 uint32_t EQ_GetSpellBookWindow()
 {
     return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CSpellBookWnd);
@@ -4167,4 +4330,28 @@ uint32_t EQ_GetSpellBookWindow()
 bool EQ_SpellBookWindow_IsOpen()
 {
     return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CSpellBookWnd) == true);
+}
+
+uint32_t EQ_GetTaskSelectWindow()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_CTaskSelectWnd);
+}
+
+bool EQ_TaskSelectWindow_IsOpen()
+{
+    return (EQ_CXWnd_IsOpen(EQ_ADDRESS_POINTER_CTaskSelectWnd) == true);
+}
+
+bool EQ_TaskSelectWindow_ClickAcceptButton()
+{
+    return EQ_CXWnd_ClickButtonByName(EQ_ADDRESS_POINTER_CTaskSelectWnd, "AcceptButton");
+
+    ////return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CTaskSelectWnd, EQ_OFFSET_CTaskSelectWnd_BUTTON_ACCEPT);
+}
+
+bool EQ_TaskSelectWindow_ClickDeclineButton()
+{
+    return EQ_CXWnd_ClickButtonByName(EQ_ADDRESS_POINTER_CTaskSelectWnd, "DeclineButton");
+
+    ////return EQ_CXWnd_ClickButton(EQ_ADDRESS_POINTER_CTaskSelectWnd, EQ_OFFSET_CTaskSelectWnd_BUTTON_DECLINE);
 }

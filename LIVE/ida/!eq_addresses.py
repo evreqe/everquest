@@ -20,6 +20,7 @@ functionList = {
     "OffsetCharacterBase": 0,
 #   "OffsetCharacterGroupInfo": 0,
     "OffsetCharInfo2Bandolier": 0,
+    "OffsetCMapViewWnd__CMapViewMap": 0,
     "WindowHWND": 0,
     "AutoAttack": 0,
     "AutoFire": 0,
@@ -86,9 +87,12 @@ functionList = {
     "EQSwitch__UseSwitch": 0,
     "EQSwitch__ChangeState": 0,
     "EQSpell__SpellAffects": 0,
+    "CXStr__CXStr_const_char_p": 0,
     "CXWndManager": 0,
+    "CXWndManager__DrawCursor": 0,
     "CXWndManager__DrawWindows": 0,
     "CXWnd__IsReallyVisible": 0,
+    "CXWnd__GetChildItem": 0,
     "CEverQuest": 0,
     "CEverQuest__DoPercentConvert": 0,
     "CEverQuest__EnterZone": 0,
@@ -118,10 +122,13 @@ functionList = {
     "CBazaarSearchWnd__AddItemToList": 0,
     "CBazaarSearchWnd__BuyItem": 0,
     "CBazaarSearchWnd__doQuery": 0,
+    "CBazaarSearchWnd__FindItem": 0,
     "CBazaarConfirmationWnd": 0,
+    "CMapViewWnd": 0,
     "CSpellBookWnd": 0,
     "CSpellBookWnd__GetSpellMemTicksLeft": 0,
     "CSpellBookWnd__GetSpellScribeTicksLeft": 0,
+    "CTaskSelectWnd": 0,
 }
 
 functionAddress = ""
@@ -158,11 +165,48 @@ with open("eqgame.c", "rt") as in_file:
 
             # mapOffset
             # ----------------------------------------------------------------------------------------------------
-            # sub_6A9120(v5, (DWORD)"VERSION", (int)&off_BD6000);    # 0x00BD6000
-            matches = re.findall("sub_[0-9A-F]+\([0-9a-z]+, \(DWORD\)\"VERSION\", \(int\)&off_([0-9A-F]+)\);", functionString, re.MULTILINE)
-            if matches:
-                mapOffset = "0x00" + matches[0]
-                print("mapOffset", mapOffset)
+            # other function has "version" and "build_stamp"
+            # int __cdecl sub_8DA8E0(LPVOID lpMem)
+            # {
+            #   LPVOID *v1; // esi
+            #   int v2; // eax
+            #   int v3; // ecx
+            #   int v4; // ST08_4
+            #   int v5; // ST04_4
+            #   char (*v6)[4]; // eax
+            #   int v7; // esi
+            #   int v9; // [esp+8h] [ebp-10h]
+            #   int v10; // [esp+14h] [ebp-4h]
+            #
+            #   v1 = (LPVOID *)lpMem;
+            #   if ( *(_DWORD *)lpMem )
+            #     sub_478400(*(volatile signed __int32 **)lpMem);
+            #   lpMem = *v1;
+            #   v10 = 0;
+            #   v9 = 0;
+            #   sub_8ECFE0(&lpMem, 92, &v9);
+            #   if ( v9 )
+            #     sub_8ECBF0(&lpMem, 0, v9 + 1);
+            #   sub_8ED980(&lpMem);
+            #   v2 = sub_61DDF0(off_BF4000, strlen((const char *)off_BF4000));
+            #   if ( lpMem )
+            #     v3 = *((_DWORD *)lpMem + 2);
+            #   else
+            #     v3 = 0;
+            #   v4 = v2;
+            #   v5 = v3;
+            #   v6 = sub_8EB570(&lpMem);
+            #   v7 = sub_8EF240((unsigned int)v6, v5, v4);
+            #   v10 = 1;
+            #   if ( lpMem )
+            #     sub_8ED250(lpMem);
+            #   return v7;
+            # }
+            if functionString.find(", strlen((const char *)off_") != -1:
+                matches = re.findall("[0-9a-z]+ = sub_[0-9A-F]+\(off_([0-9A-F]+), strlen\(\(const char \*\)off_[0-9A-F]+\)\);", functionString, re.MULTILINE)
+                if matches:
+                    mapOffset = "0x00" + matches[0]
+                    print("mapOffset", mapOffset)
 
             # buildDate
             # buildTime
@@ -618,6 +662,28 @@ with open("eqgame.c", "rt") as in_file:
                 matches = re.findall("this \+ (\d+)", functionString, re.MULTILINE)
                 if matches:
                     functionList["OffsetCharInfo2Bandolier"] = int(matches[0])
+
+            # OffsetCMapViewWnd__CMapViewMap
+            # ----------------------------------------------------------------------------------------------------
+            # void __stdcall sub_76F4B0(int a1, char a2, int a3)
+            # {
+            #   if ( a1 == 100 )
+            #   {
+            #     if ( a2 & 5 )
+            #       sub_772D80((_DWORD *)(dword_DE8450 + 872));    dec 872
+            #   }
+            #   else if ( a1 == 101 )
+            #   {
+            #     if ( a2 & 5 )
+            #       sub_772E60((_DWORD *)(dword_DE8450 + 872));    dec 872
+            #   }
+            # }
+            if functionString.find("if ( a1 == 100 )") != -1:
+                if functionString.find("if ( a2 & 5 )") != -1:
+                    if functionString.find("else if ( a1 == 101 )") != -1:
+                        matches = re.findall("sub_[0-9A-F]+\(\(_DWORD \*\)\(dword_[0-9A-F]+ \+ (\d+)\)\);", functionString, re.MULTILINE)
+                        if matches:
+                            functionList["OffsetCMapViewWnd__CMapViewMap"] = int(matches[0])
 
             # AutoAttack
             # ----------------------------------------------------------------------------------------------------
@@ -4632,6 +4698,41 @@ with open("eqgame.c", "rt") as in_file:
                                                                                             if functionString.find("while ( 1 )") != -1:
                                                                                                 functionList["EQSpell__SpellAffects"] = functionAddress
 
+            # CXStr__CXStr_const_char_p
+            # ----------------------------------------------------------------------------------------------------
+            # LPVOID *__thiscall sub_8EAE00(LPVOID *this, void *a2)
+            # {
+            #   LPVOID *v2; // edi
+            #   signed int v3; // esi
+            #
+            #   v2 = this;
+            #   if ( a2 )
+            #     v3 = strlen((const char *)a2);
+            #   else
+            #     v3 = 0;
+            #   *v2 = 0;
+            #   if ( v3 > 0 )
+            #   {
+            #     sub_8EBD70(v2, v3 + 1, 0);
+            #     if ( *v2 )
+            #     {
+            #       *((_DWORD *)*v2 + 2) = v3;
+            #       memmove((char *)*v2 + 20, a2, v3 + 1);
+            #     }
+            #   }
+            #   return v2;
+            # }
+            if functionString.find("v2 = this;") != -1:
+                if functionString.find("if ( a2 )") != -1:
+                    if functionString.find("v3 = strlen((const char *)a2);") != -1:
+                        if functionString.find("v3 = 0;") != -1:
+                            if functionString.find("if ( v3 > 0 )") != -1:
+                                if functionString.find("(v2, v3 + 1, 0);") != -1:
+                                    if functionString.find("memmove") != -1:
+                                        if functionString.find(", a2, v3 + 1);") != -1:
+                                            if functionString.find("return v2;") != -1:
+                                                functionList["CXStr__CXStr_const_char_p"] = functionAddress
+
             # CXWndManager
             # ----------------------------------------------------------------------------------------------------
             # if ( dword_16C8928 )
@@ -4643,6 +4744,25 @@ with open("eqgame.c", "rt") as in_file:
                     matches = re.findall("sub_[0-9A-F]+\(\(_BYTE \*\)dword_([0-9A-F]+)\);", functionString, re.MULTILINE)
                     if matches:
                         functionList["CXWndManager"] = "0x0" + matches[0]
+
+            # CXWndManager__DrawCursor
+            # ----------------------------------------------------------------------------------------------------
+            # int __thiscall sub_9245E0(int this)
+            # {
+            #   HCURSOR v1; // eax
+            #
+            #   if ( *(_BYTE *)(this + 380) != 1 )
+            #   {
+            #     v1 = (HCURSOR)sub_926CF0((_DWORD *)this);
+            #     SetCursor(v1);
+            #   }
+            #   return 0;
+            # }
+            if functionString.find("HCURSOR v1;") != -1:
+                if functionString.find("v1 = (HCURSOR)sub_") != -1:
+                    if functionString.find("SetCursor(v1);") != -1:
+                        if functionString.find("return 0;") != -1:
+                            functionList["CXWndManager__DrawCursor"] = functionAddress
 
             # CXWndManager__DrawWindows
             # ----------------------------------------------------------------------------------------------------
@@ -4674,6 +4794,76 @@ with open("eqgame.c", "rt") as in_file:
                             if matches:
                                 functionList["CXWnd__IsReallyVisible"] = "0x00" + matches[0]
 
+            # CXWnd__GetChildItem
+            # ----------------------------------------------------------------------------------------------------
+            # int __thiscall sub_922E10(_DWORD *this, LPVOID lpMem)
+            # {
+            #   _DWORD *v2; // ebx
+            #   int v3; // esi
+            #   unsigned int v4; // edx
+            #   int v5; // eax
+            #   int v6; // esi
+            #   int result; // eax
+            #
+            #   v2 = this;
+            #   v3 = this[5];
+            #   if ( v3 )
+            #   {
+            #     while ( 1 )
+            #     {
+            #       v4 = *(_DWORD *)(v3 + 452);
+            #       if ( v4 )
+            #       {
+            #         v5 = sub_95A1C0((_DWORD *)dword_15DD748 + 76, v4 >> 16, (unsigned __int16)v4);
+            #         if ( v5 )
+            #         {
+            #           if ( sub_8EB0E0((LPVOID *)(v5 + 32), lpMem) )
+            #             break;
+            #         }
+            #       }
+            #       v3 = *(_DWORD *)(v3 + 12);
+            #       if ( !v3 )
+            #         goto LABEL_6;
+            #     }
+            #     result = v3;
+            #   }
+            #   else
+            #   {
+            # LABEL_6:
+            #     v6 = v2[5];
+            #     if ( v6 )
+            #     {
+            #       while ( 1 )
+            #       {
+            #         if ( *(_DWORD *)(v6 + 452) )
+            #         {
+            #           result = sub_922E10(lpMem);
+            #           if ( result )
+            #             break;
+            #         }
+            #         v6 = *(_DWORD *)(v6 + 12);
+            #         if ( !v6 )
+            #           goto LABEL_10;
+            #       }
+            #     }
+            #     else
+            #     {
+            # LABEL_10:
+            #       result = 0;
+            #     }
+            #   }
+            #   return result;
+            # }
+            if functionString.find("v2 = this;") != -1:
+                if functionString.find("v3 = this[5];") != -1:
+                    if functionString.find("if ( v3 )") != -1:
+                        if functionString.find("while ( 1 )") != -1:
+                            if functionString.find("result = v3;") != -1:
+                                if functionString.find("if ( result )") != -1:
+                                    if functionString.find("result = 0;") != -1:
+                                        if functionString.find("return result;") != -1:
+                                            if functionString.find("+ 76, v4 >> 16,") != -1:
+                                                functionList["CXWnd__GetChildItem"] = functionAddress
             # CEverQuest
             # ----------------------------------------------------------------------------------------------------
             # sub_8EEB00("Gamestate at crash = %d\n", *(_DWORD *)(dword_103C944 + 1480));    # 0x0103C944
@@ -8013,8 +8203,7 @@ with open("eqgame.c", "rt") as in_file:
             if re.search("\(\*\(void \(__stdcall \*\*\)\(int\)\)\(\*\(_DWORD \*\)dword_[0-9A-F]+ \+ 108\)\)\(\w+\d+\);", functionString):
                 if functionString.find(", 0, 1);") != -1:
                     if functionString.find(", 0);") != -1:
-                        if functionString.find(", 0, 1u);") != -1:
-                            functionList["CDisplay__DeleteActor"] = functionAddress
+                        functionList["CDisplay__DeleteActor"] = functionAddress
 
             # CDisplay__GetIntensity
             # ----------------------------------------------------------------------------------------------------
@@ -9092,6 +9281,121 @@ with open("eqgame.c", "rt") as in_file:
                                                                                             if functionString.find("while") != -1:
                                                                                                 functionList["CBazaarSearchWnd__doQuery"] = functionAddress
 
+            # CBazaarSearchWnd__FindItem
+            # ----------------------------------------------------------------------------------------------------
+            # void __userpurge sub_6DD770(int a1@<ecx>, int a2@<ebx>, LPVOID a3)
+            # {
+            #   int v3; // esi
+            #   int v4; // ecx
+            #   _DWORD *v5; // ecx
+            #   _DWORD *v6; // ecx
+            #   _DWORD *v7; // ecx
+            #   _DWORD *v8; // ecx
+            #   _DWORD *v9; // ecx
+            #   _DWORD *v10; // ecx
+            #   int v11; // ecx
+            #   int v12; // ecx
+            #   int v13; // ecx
+            #   int v14; // ecx
+            #   _DWORD *v15; // ecx
+            #   _DWORD *v16; // ecx
+            #   char v17; // [esp+4h] [ebp-1Ch]
+            #   LPVOID lpMem; // [esp+10h] [ebp-10h]
+            #   int v19; // [esp+1Ch] [ebp-4h]
+            #
+            #   v3 = a1;
+            #   if ( *(_DWORD *)(a1 + 37552) )
+            #   {
+            #     sub_8EA220(&lpMem, a3);
+            #     v4 = *(_DWORD *)(v3 + 37552);
+            #     v19 = 0;
+            #     (*(void (__stdcall **)(LPVOID *))(*(_DWORD *)v4 + 296))(&lpMem);
+            #     v19 = 1;
+            #     if ( lpMem )
+            #       sub_8EC650(lpMem);
+            #     v19 = -1;
+            #   }
+            #   v5 = *(_DWORD **)(v3 + 37540);
+            #   if ( v5 )
+            #     sub_939AA0(v5, 0);
+            #   v6 = *(_DWORD **)(v3 + 37536);
+            #   if ( v6 )
+            #     sub_939AA0(v6, 0);
+            #   v7 = *(_DWORD **)(v3 + 37532);
+            #   if ( v7 )
+            #     sub_939AA0(v7, 0);
+            #   v8 = *(_DWORD **)(v3 + 37528);
+            #   if ( v8 )
+            #     sub_939AA0(v8, 0);
+            #   v9 = *(_DWORD **)(v3 + 37524);
+            #   if ( v9 )
+            #     sub_939AA0(v9, 0);
+            #   v10 = *(_DWORD **)(v3 + 37520);
+            #   if ( v10 )
+            #     sub_939AA0(v10, 0);
+            #   if ( *(_DWORD *)(v3 + 37556) )
+            #   {
+            #     sub_8EA220(&lpMem, "9999999");
+            #     v11 = *(_DWORD *)(v3 + 37556);
+            #     v19 = 2;
+            #     (*(void (__stdcall **)(LPVOID *))(*(_DWORD *)v11 + 296))(&lpMem);
+            #     v19 = 3;
+            #     if ( lpMem )
+            #       sub_8EC650(lpMem);
+            #     v19 = -1;
+            #   }
+            #   if ( *(_DWORD *)(v3 + 37560) )
+            #   {
+            #     sub_8EA220(&lpMem, word_ABD7D4);
+            #     v12 = *(_DWORD *)(v3 + 37560);
+            #     v19 = 4;
+            #     (*(void (__stdcall **)(LPVOID *))(*(_DWORD *)v12 + 296))(&lpMem);
+            #     v19 = 5;
+            #     if ( lpMem )
+            #       sub_8EC650(lpMem);
+            #     v19 = -1;
+            #   }
+            #   if ( *(_DWORD *)(v3 + 37564) )
+            #   {
+            #     unknown_libname_64(110, &v17, 10);
+            #     sub_8EA220(&lpMem, &v17);
+            #     v13 = *(_DWORD *)(v3 + 37564);
+            #     v19 = 6;
+            #     (*(void (__stdcall **)(LPVOID *))(*(_DWORD *)v13 + 296))(&lpMem);
+            #     v19 = 7;
+            #     if ( lpMem )
+            #       sub_8EC650(lpMem);
+            #     v19 = -1;
+            #   }
+            #   if ( *(_DWORD *)(v3 + 37568) )
+            #   {
+            #     sub_8EA220(&a3, "1");
+            #     v14 = *(_DWORD *)(v3 + 37568);
+            #     v19 = 8;
+            #     (*(void (__stdcall **)(LPVOID *))(*(_DWORD *)v14 + 296))(&a3);
+            #     v19 = 9;
+            #     if ( a3 )
+            #       sub_8EC650(a3);
+            #     a3 = 0;
+            #     v19 = -1;
+            #   }
+            #   v15 = *(_DWORD **)(v3 + 37544);
+            #   if ( v15 )
+            #     sub_939AA0(v15, 0);
+            #   v16 = *(_DWORD **)(v3 + 37548);
+            #   if ( v16 )
+            #     sub_939AA0(v16, 0);
+            #   *(_BYTE *)(v3 + 37576) = 1;
+            #   sub_91E7D0((_BYTE *)v3, 1, 1, 1);
+            #   sub_6DA760(v3, a2);
+            #   sub_6DAB80((_DWORD *)v3);
+            # }
+            if functionString.find("\"9999999\"") != -1:
+                if functionString.find("\"1\"") != -1:
+                    if functionString.find(" + 296))(") != -1:
+                        if functionString.find(", 1, 1, 1);") != -1:
+                            functionList["CBazaarSearchWnd__FindItem"] = functionAddress
+
             # CBazaarConfirmationWnd
             # ----------------------------------------------------------------------------------------------------
             # char __thiscall sub_6DBE80(_DWORD *this, int a2)
@@ -9150,6 +9454,28 @@ with open("eqgame.c", "rt") as in_file:
                             matches = re.findall("if \( [0-9a-z]+ \< 0 \|\| [0-9a-z]+ \>\= 200 \|\| \!dword_([0-9A-F]+) \)", functionString, re.MULTILINE)
                             if matches:
                                 functionList["CBazaarConfirmationWnd"] = "0x00" + matches[0]
+
+            # CMapViewWnd
+            # ----------------------------------------------------------------------------------------------------
+            # void __stdcall sub_76F4B0(int a1, char a2, int a3)
+            # {
+            #   if ( a1 == 100 )
+            #   {
+            #     if ( a2 & 5 )
+            #       sub_772D80((_DWORD *)(dword_DE8450 + 872));    0x00DE8450
+            #   }
+            #   else if ( a1 == 101 )
+            #   {
+            #     if ( a2 & 5 )
+            #       sub_772E60((_DWORD *)(dword_DE8450 + 872));    0x00DE8450
+            #   }
+            # }
+            if functionString.find("if ( a1 == 100 )") != -1:
+                if functionString.find("if ( a2 & 5 )") != -1:
+                    if functionString.find("else if ( a1 == 101 )") != -1:
+                        matches = re.findall("sub_[0-9A-F]+\(\(_DWORD \*\)\(dword_([0-9A-F]+) \+ \d+\)\);", functionString, re.MULTILINE)
+                        if matches:
+                            functionList["CMapViewWnd"] = "0x00" + matches[0]
 
             # CSpellBookWnd
             # ----------------------------------------------------------------------------------------------------
@@ -9346,6 +9672,342 @@ with open("eqgame.c", "rt") as in_file:
                             if matches:
                                 functionList["CSpellBookWnd__GetSpellScribeTicksLeft"] = functionAddress
 
+            # CTaskSelectWnd
+            # ----------------------------------------------------------------------------------------------------
+            # void __thiscall sub_529060(_DWORD *this, signed int a2, unsigned int *a3, LPVOID a4)
+            # {
+            #   _DWORD *v4; // esi
+            #   _DWORD *v5; // ecx
+            #   signed int v6; // eax
+            #   unsigned int *v7; // esi
+            #   int v8; // ebx
+            #   char *v9; // eax
+            #   char *v10; // edx
+            #   char v11; // cl
+            #   int v12; // esi
+            #   unsigned int v13; // eax
+            #   int *v14; // edi
+            #   unsigned int v15; // ecx
+            #   int v16; // eax
+            #   int v17; // eax
+            #   int v18; // edi
+            #   int *v19; // eax
+            #   char v20; // al
+            #   int *v21; // edi
+            #   signed int v22; // ecx
+            #   CHAR *v23; // edx
+            #   int v24; // esi
+            #   int v25; // ebx
+            #   int v26; // ecx
+            #   void *v27; // esi
+            #   unsigned int *v28; // esi
+            #   char *v29; // eax
+            #   int v30; // [esp-2Ch] [ebp-9468h]
+            #   char v31; // [esp+4h] [ebp-9438h]
+            #   char v32; // [esp+8004h] [ebp-1438h]
+            #   char Mem[1024]; // [esp+9014h] [ebp-428h]
+            #   unsigned int *v34; // [esp+9414h] [ebp-28h]
+            #   LPVOID v35; // [esp+9418h] [ebp-24h]
+            #   int v36; // [esp+941Ch] [ebp-20h]
+            #   unsigned int *v37; // [esp+9420h] [ebp-1Ch]
+            #   LPVOID v38; // [esp+9424h] [ebp-18h]
+            #   int v39; // [esp+9428h] [ebp-14h]
+            #   LPVOID lpMem; // [esp+942Ch] [ebp-10h]
+            #   int v41; // [esp+9438h] [ebp-4h]
+            #   signed int v42; // [esp+9444h] [ebp+8h]
+            #
+            #   v4 = this;
+            #   if ( !dword_E81020 )
+            #     return;
+            #   if ( a2 > 11126 )
+            #   {
+            #     if ( a2 > 25054 )
+            #     {
+            #       switch ( a2 )
+            #       {
+            #         case 29559:
+            #           v28 = a3;
+            #           v29 = (char *)v28 + sub_52BCD0(&v32, a3, (int)a4);
+            #           if ( dword_F347B8 )
+            #           {
+            #             sub_67BD70(dword_F347B8, v29);
+            #             if ( dword_1053750 )
+            #               sub_80EC50((_DWORD *)dword_1053750);
+            #           }
+            #           break;
+            #         case 30632:
+            #           sub_52A230(this, (int)dword_E81020, *a3, a3[1]);
+            #           break;
+            #         case 34184:
+            #           sub_52AB10(this, (int)a3, (int)a4);
+            #           break;
+            #       }
+            #     }
+            #     else if ( a2 == 25054 )
+            #     {
+            #       sub_52A470((char *)this, (int)dword_E81020, (signed int *)a3);
+            #     }
+            #     else if ( a2 > 17637 )
+            #     {
+            #       if ( a2 == 24653 && dword_1053750 && *(_BYTE *)(dword_1053750 + 208) )
+            #         sub_80E5F0((_DWORD *)dword_1053750, a3[3]);
+            #     }
+            #     else
+            #     {
+            #       switch ( a2 )
+            #       {
+            #         case 17637:
+            #           sub_52A4F0((char *)this, (int)dword_E81020, a3, (unsigned int)a4);
+            #           break;
+            #         case 11451:
+            #           *((_DWORD *)dword_E81020 + 1412) = *a3 + *((_DWORD *)dword_E81024 + 85);
+            #           break;
+            #         case 14368:
+            #           sub_5297E0(this, (int)a3);
+            #           break;
+            #       }
+            #     }
+            #     return;
+            #   }
+            #   if ( a2 == 11126 )
+            #   {
+            #     sub_529870(this, a3);
+            #     return;
+            #   }
+            #   if ( a2 > 5425 )
+            #   {
+            #     if ( a2 > 10588 )
+            #     {
+            #       if ( a2 == 10821 )
+            #         sub_52A960((char *)this, (int)a3, (signed int)a4);
+            #     }
+            #     else
+            #     {
+            #       switch ( a2 )
+            #       {
+            #         case 10588:
+            #           v20 = 0;
+            #           v21 = this + 118381;
+            #           v22 = 0;
+            #           HIBYTE(a4) = 0;
+            #           v23 = Directory;
+            #           v42 = 0;
+            #           do
+            #           {
+            #             if ( v20 )
+            #               break;
+            #             v24 = 0;
+            #             if ( *v21 > 0 )
+            #             {
+            #               v25 = 0;
+            #               do
+            #               {
+            #                 if ( v20 )
+            #                   break;
+            #                 if ( v24 < *v21 && v25 >= 0 )
+            #                 {
+            #                   v26 = v21[1];
+            #                   if ( v26 )
+            #                     continue;
+            #                 }
+            #                 sub_4776D0(v21);
+            #                 if ( a3[2] == *(_DWORD *)(v26 + v25) )
+            #                 {
+            #                   v23 = (CHAR *)(sub_52B990(v21, v24) + 17);
+            #                   v20 = 1;
+            #                   HIBYTE(a4) = 1;
+            #                 }
+            #                 else
+            #                 {
+            #                   v20 = HIBYTE(a4);
+            #                 }
+            #                 ++v24;
+            #                 v25 += 84;
+            #               }
+            #               while ( v24 < *v21 );
+            #               v22 = v42;
+            #             }
+            #             ++v22;
+            #             v21 += 3819;
+            #             v42 = v22;
+            #           }
+            #           while ( v22 < 1 );
+            #           lpMem = 0;
+            #           v27 = (void *)13;
+            #           v41 = 0;
+            #           switch ( a3[3] )
+            #           {
+            #             case 0u:
+            #               sub_59A7C0((int)&v31, 3610, (int)v23, 0, 0, 0, 0, 0, 0, 0, 0);
+            #               v27 = (void *)15;
+            #               break;
+            #             case 1u:
+            #               sub_59A7C0((int)&v31, 3609, (int)v23, 0, 0, 0, 0, 0, 0, 0, 0);
+            #               break;
+            #             case 2u:
+            #               sub_59A7C0((int)&v31, 3613, (int)v23, 0, 0, 0, 0, 0, 0, 0, 0);
+            #               break;
+            #             case 3u:
+            #               sub_59A7C0((int)&v31, 3611, (int)v23, 0, 0, 0, 0, 0, 0, 0, 0);
+            #               break;
+            #             case 4u:
+            #               sub_59A7C0((int)&v31, 3612, (int)v23, (int)Directory, 0, 0, 0, 0, 0, 0, 0);
+            #               break;
+            #             case 5u:
+            #               sub_59A7C0((int)&v31, 3614, (int)v23, 0, 0, 0, 0, 0, 0, 0, 0);
+            #               break;
+            #             case 6u:
+            #               sub_59A7C0((int)&v31, 3621, (int)v23, 0, 0, 0, 0, 0, 0, 0, 0);
+            #               break;
+            #             default:
+            #               break;
+            #           }
+            #           sub_4E4FB0();
+            #           sub_4E56A0(&v31, v27, (LPVOID)1, (LPVOID)1, 0);
+            #           v41 = 1;
+            #           if ( lpMem )
+            #             sub_8EC650(lpMem);
+            #           break;
+            #         case 5676:
+            #           sub_529750(this, (int)a3);
+            #           break;
+            #         case 9815:
+            #           sub_529F50(this, (int)dword_E81020, a3, (unsigned int)a4);
+            #           break;
+            #       }
+            #     }
+            #     return;
+            #   }
+            #   if ( a2 == 5425 )
+            #   {
+            #     v8 = 0;
+            #     Mem[0] = 0;
+            #     if ( a3[5] )
+            #     {
+            #       v9 = (char *)sub_8B4830(dword_E81028, 6005, 0);
+            #       v10 = (char *)(Mem - v9);
+            #       do
+            #       {
+            #         v11 = *v9++;
+            #         v10[(_DWORD)v9 - 1] = v11;
+            #       }
+            #       while ( v11 );
+            #       v12 = 15;
+            # LABEL_45:
+            #       if ( Mem[0] )
+            #       {
+            #         v19 = sub_4A55A0();
+            #         sub_4A57E0(v19, Mem, v12, v8, 255, 500, 500, 3000);
+            #       }
+            #       return;
+            #     }
+            #     v13 = a3[1];
+            #     v14 = 0;
+            #     v15 = *a3;
+            #     if ( v13 )
+            #     {
+            #       v16 = v13 - 1;
+            #       if ( v16 )
+            #       {
+            #         if ( v16 != 1 )
+            #           goto LABEL_39;
+            #         if ( v15 > 0x1C )
+            #           goto LABEL_39;
+            #         v17 = 15276 * v15;
+            #         if ( !v4[3819 * v15 + 3820] )
+            #           goto LABEL_39;
+            #         v18 = (int)(v4 + 3820);
+            #       }
+            #       else
+            #       {
+            #         if ( v15 )
+            #           goto LABEL_39;
+            #         v17 = 0;
+            #         if ( !v4[114571] )
+            #           goto LABEL_39;
+            #         v18 = (int)(v4 + 114571);
+            #       }
+            #     }
+            #     else
+            #     {
+            #       if ( v15 )
+            #         goto LABEL_39;
+            #       v17 = 0;
+            #       if ( !v4[1] )
+            #         goto LABEL_39;
+            #       v18 = (int)(v4 + 1);
+            #     }
+            #     v14 = (int *)(v17 + v18);
+            # LABEL_39:
+            #     if ( *v14 != a3[2] )
+            #       return;
+            #     v30 = (int)(v14 + 2);
+            #     if ( a3[4] )
+            #     {
+            #       sub_59A7C0((int)Mem, 6003, v30, 0, 0, 0, 0, 0, 0, 0, 0);
+            #       v12 = 14;
+            #     }
+            #     else
+            #     {
+            #       sub_59A7C0((int)Mem, 6004, v30, 0, 0, 0, 0, 0, 0, 0, 0);
+            #       v12 = 13;
+            #     }
+            #     v8 = 1;
+            #     if ( dword_DCE8DC )
+            #       sub_55CAA0((_DWORD *)dword_DCE8DC, (int)v14, *v14, 0);
+            #     goto LABEL_45;
+            #   }
+            #   if ( a2 > 2899 )
+            #   {
+            #     if ( a2 == 3181 && dword_10536A0 )
+            #     {
+            #       v34 = a3;
+            #       v35 = a4;
+            #       v36 = 0;
+            #       sub_80D090((_DWORD *)dword_10536A0, &v34);    # 0x010536A0
+            #       (*(void (__stdcall **)(signed int, signed int, signed int))(*(_DWORD *)dword_10536A0 + 216))(1, 1, 1);    # 0x010536A0
+            #     }
+            #   }
+            #   else
+            #   {
+            #     switch ( a2 )
+            #     {
+            #       case 2899:
+            #         v37 = a3;
+            #         v38 = a4;
+            #         v39 = 0;
+            #         sub_4A9450(&v37, &a3);
+            #         v7 = a3;
+            #         sub_5CEE50((int *)&dword_E80E20, (int)a3, &v37);
+            #         if ( dword_1053750 )
+            #           sub_80E590((_DWORD *)dword_1053750, (unsigned int)v7);
+            #         break;
+            #       case 40:
+            #         v5 = this + 114571;
+            #         v6 = 0;
+            #         while ( a3[2] != *v5 )
+            #         {
+            #           ++v6;
+            #           v5 += 3819;
+            #           if ( v6 >= 1 )
+            #             return;
+            #         }
+            #         LOBYTE(v4[3819 * v6 + 118385]) = *((_BYTE *)a3 + 12);
+            #         break;
+            #       case 1114:
+            #         sub_529A70((char *)this, dword_E81020, (int)a3, a4);
+            #         break;
+            #     }
+            #   }
+            # }
+            if functionString.find(", 0x1773u,") != -1 or functionString.find(", 6003,") != -1:    # 6003 Task '%1' Completed
+                if functionString.find(", 0x1774u,") != -1 or functionString.find(", 6004,") != -1:    # 6004 Task '%1' Failed.
+                    if functionString.find(", 0x1775u,") != -1 or functionString.find(", 6005,") != -1:    # 6005 Task Stage Completed
+                        if functionString.find(", 255, 500, 500, 3000);") != -1:
+                            matches = re.findall("dword_([0-9A-F]+) \+ 216\)\)\(1, 1, 1\);", functionString, re.MULTILINE)
+                            if matches:
+                                functionList["CTaskSelectWnd"] = "0x0" + matches[0]
+
             functionString = ""
 
 if mapOffset != 0:
@@ -9384,6 +10046,7 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("    EQ_OFFSET_SPAWN_CharacterZoneClient        = " + hex(functionList["OffsetSpawnCharacterZoneClient"]) + ";\n")
     out_file.write("    EQ_OFFSET_EQ_Character____CharacterBase    = " + hex(functionList["OffsetCharacterBase"]) + ";\n")
     out_file.write("    EQ_OFFSET_CharInfo2__Bandolier             = " + hex(functionList["OffsetCharInfo2Bandolier"]) + ";\n")
+    out_file.write("    EQ_OFFSET_CMapViewWnd__CMapViewMap         = " + hex(functionList["OffsetCMapViewWnd__CMapViewMap"]) + ";\n")
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_WindowHWND = " + functionList["WindowHWND"] + ";\n")
     out_file.write("\n")
@@ -9399,11 +10062,11 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("    EQ_ADDRESS_POINTER_PlayerSpawn        = " + functionList["PlayerSpawn"] + ";\n")
     out_file.write("    EQ_ADDRESS_POINTER_TargetSpawn        = " + functionList["TargetSpawn"] + ";\n")
     out_file.write("\n")
-    #out_file.write("    EQ_ADDRESS_FUNCTION_FlushDxKeyboard               = " + functionList["FlushDxKeyboard"] + ";\n")
-    #out_file.write("    EQ_ADDRESS_FUNCTION_FlushDxMouse                  = " + functionList["FlushDxMouse"] + ";\n")
-    #out_file.write("    EQ_ADDRESS_FUNCTION_ProcessKeyboardEvent          = " + functionList["ProcessKeyboardEvent"] + ";\n")
-    #out_file.write("    EQ_ADDRESS_FUNCTION_ProcessMouseEvent             = " + functionList["ProcessMouseEvent"] + ";\n")
-    #out_file.write("    EQ_ADDRESS_FUNCTION_WindowProc                    = " + functionList["WindowProc"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_FlushDxKeyboard               = " + functionList["FlushDxKeyboard"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_FlushDxMouse                  = " + functionList["FlushDxMouse"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_ProcessKeyboardEvent          = " + functionList["ProcessKeyboardEvent"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_ProcessMouseEvent             = " + functionList["ProcessMouseEvent"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_WindowProc                    = " + functionList["WindowProc"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CollisionCallbackForActors    = " + functionList["CollisionCallbackForActors"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CastRay                       = " + functionList["CastRay"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CastRay2                      = " + functionList["CastRay2"] + ";\n")
@@ -9463,10 +10126,14 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_EQSpell__SpellAffects    = " + functionList["EQSpell__SpellAffects"] + ";\n")
     out_file.write("\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CXStr__CXStr_const_char_p    = " + functionList["CXStr__CXStr_const_char_p"] + ";\n")
+    out_file.write("\n")
     out_file.write("    EQ_ADDRESS_POINTER_CXWndManager = " + functionList["CXWndManager"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CXWndManager__DrawCursor     = " + functionList["CXWndManager__DrawCursor"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows    = " + functionList["CXWndManager__DrawWindows"] + ";\n")
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CXWnd__IsReallyVisible    = " + functionList["CXWnd__IsReallyVisible"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CXWnd__GetChildItem       = " + functionList["CXWnd__GetChildItem"] + ";\n")
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_POINTER_CEverQuest = " + functionList["CEverQuest"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CEverQuest__DoPercentConvert        = " + functionList["CEverQuest__DoPercentConvert"] + ";\n")
@@ -9500,6 +10167,8 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("    //EQ_ADDRESS_FUNCTION_CRender__RenderPartialScene    = 0x0; // calculated at runtime\n")
     out_file.write("    //EQ_ADDRESS_FUNCTION_CRender__UpdateDisplay         = 0x0; // calculated at runtime\n")
     out_file.write("\n")
+    out_file.write("    EQ_ADDRESS_POINTER_CRenderEx = EQ_ADDRESS_POINTER_CRender + 0x04;\n")
+    out_file.write("\n")
     out_file.write("    EQ_ADDRESS_POINTER_CAlertWnd = " + functionList["CAlertWnd"] + ";\n")
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_POINTER_CAlertStackWnd = " + functionList["CAlertStackWnd"] + ";\n")
@@ -9508,10 +10177,15 @@ with open("addresses.txt", "w") as out_file:
     out_file.write("    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList = " + functionList["CBazaarSearchWnd__AddItemToList"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem = " + functionList["CBazaarSearchWnd__BuyItem"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery = " + functionList["CBazaarSearchWnd__doQuery"] + ";\n")
+    out_file.write("    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__FindItem = " + functionList["CBazaarSearchWnd__FindItem"] + ";\n")
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_POINTER_CBazaarConfirmationWnd = " + functionList["CBazaarConfirmationWnd"] + ";\n")
+    out_file.write("\n")
+    out_file.write("    EQ_ADDRESS_POINTER_CMapViewWnd = " + functionList["CMapViewWnd"] + ";\n")
     out_file.write("\n")
     out_file.write("    EQ_ADDRESS_POINTER_CSpellBookWnd = " + functionList["CSpellBookWnd"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellMemTicksLeft       = " + functionList["CSpellBookWnd__GetSpellMemTicksLeft"] + ";\n")
     out_file.write("    EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellScribeTicksLeft    = " + functionList["CSpellBookWnd__GetSpellScribeTicksLeft"] + ";\n")
+    out_file.write("\n")
+    out_file.write("    EQ_ADDRESS_POINTER_CTaskSelectWnd = " + functionList["CTaskSelectWnd"] + ";\n")
     #out_file.write("}\n")

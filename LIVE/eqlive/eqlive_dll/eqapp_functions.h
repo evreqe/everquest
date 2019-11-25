@@ -165,27 +165,29 @@ void EQAPP_EnableDebugPrivileges()
 DWORD EQAPP_GetModuleBaseAddress(DWORD processID, const wchar_t* moduleName)
 {
     DWORD moduleBaseAddress = 0;
+
     HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, processID);
-
-    if (snapshot != INVALID_HANDLE_VALUE)
+    if (snapshot == INVALID_HANDLE_VALUE)
     {
-        MODULEENTRY32 ModuleEntry32 = {0};
-        ModuleEntry32.dwSize = sizeof(MODULEENTRY32);
-
-        if (Module32First(snapshot, &ModuleEntry32))
-        {
-            do
-            {
-                if (wcscmp(ModuleEntry32.szModule, moduleName) == 0)
-                {
-                    moduleBaseAddress = (DWORD)ModuleEntry32.modBaseAddr;
-                    break;
-                }
-            } while (Module32Next(snapshot, &ModuleEntry32));
-        }
-
-        CloseHandle(snapshot);
+        return -1;
     }
+
+    MODULEENTRY32 ModuleEntry32 = {0};
+    ModuleEntry32.dwSize = sizeof(MODULEENTRY32);
+
+    if (Module32First(snapshot, &ModuleEntry32))
+    {
+        do
+        {
+            if (_wcsicmp(ModuleEntry32.szModule, moduleName) == 0)
+            {
+                moduleBaseAddress = (DWORD)ModuleEntry32.modBaseAddr;
+                break;
+            }
+        } while (Module32Next(snapshot, &ModuleEntry32));
+    }
+
+    CloseHandle(snapshot);
 
     return moduleBaseAddress;
 }
@@ -540,7 +542,7 @@ void EQAPP_InventoryFind(const char* fileNameText, const char* fileContentsText)
 {
     uint32_t resultsCount = 0;
 
-    for (auto& it : std__filesystem::directory_iterator(std__filesystem::current_path()))
+    for (auto& it : std::filesystem::directory_iterator(std::filesystem::current_path()))
     {
         if (it.path().extension().string() != ".txt")
         {
@@ -624,7 +626,10 @@ BOOL CALLBACK EQAPP_UpdateClientWindowList_EnumWindowsProc(HWND hwnd, LPARAM lPa
     {
         if (EQAPP_String_BeginsWith(windowTitle, "EverQuest") == true || EQAPP_String_BeginsWith(windowTitle, "EQ: ") == true)
         {
-            g_EQAppClientWindowList.insert( {windowTitle, hwnd} );
+            if (EQAPP_String_Contains(windowTitle, "EverQuest II") == false)
+            {
+                g_EQAppClientWindowList.insert( {windowTitle, hwnd} );
+            }
         }
 
         for (auto& classShortName : EQ_CLASS_ShortName_Strings)

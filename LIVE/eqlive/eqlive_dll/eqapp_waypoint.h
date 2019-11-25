@@ -1,5 +1,7 @@
 #pragma once
 
+extern bool EQAPP_GUI_IsMouseOver();
+
 #include "eqapp_followai.h"
 
 namespace EQApp
@@ -92,7 +94,7 @@ bool g_WaypointEditorDistanceFilterIsEnabled = true;
 float g_WaypointEditorDistanceFilterDistance = 400.0f;
 
 uint32_t g_WaypointEditorDrawTextX = 600;
-uint32_t g_WaypointEditorDrawTextY = 10;
+uint32_t g_WaypointEditorDrawTextY = 20;
 
 uint32_t g_WaypointEditorFromIndex = EQApp::WaypointIndexNull;
 uint32_t g_WaypointEditorToIndex   = EQApp::WaypointIndexNull;
@@ -2429,15 +2431,15 @@ void EQAPP_WaypointList_Draw()
                 textColor = EQ_DRAW_TEXT_COLOR_TEAL;
             }
 
-            //if (EQAPP_GUI_IsMouseOver() == false)
-            //{
+            if (EQAPP_GUI_IsMouseOver() == false)
+            {
                 auto mouseX = EQ_GetMouseX();
                 auto mouseY = EQ_GetMouseY();
                 if (EQAPP_WaypointEditor_GetClickedIndex(mouseX, mouseY) == waypoint.Index)
                 {
                     textColor = EQ_DRAW_TEXT_COLOR_PINK;
                 }
-            //}
+            }
 
             EQ_DrawTextByColor(drawText.str().c_str(), (int)waypointScreenX, (int)waypointScreenY, textColor);
         }

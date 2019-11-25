@@ -9,7 +9,7 @@ bool g_NamedSpawnsNewSpawnsIsEnabled = false;
 std::stringstream g_NamedSpawnsText;
 
 uint32_t g_NamedSpawnsTextXDefault = 400;
-uint32_t g_NamedSpawnsTextYDefault = 10;
+uint32_t g_NamedSpawnsTextYDefault = 20;
 
 uint32_t g_NamedSpawnsTextX = g_NamedSpawnsTextXDefault;
 uint32_t g_NamedSpawnsTextY = g_NamedSpawnsTextYDefault;
@@ -24,6 +24,8 @@ std::vector<uint32_t> g_NamedSpawnsIDList;
 std::unordered_map<std::string, uint32_t> g_NamedSpawnsNameAndCountList;
 
 std::vector<uint32_t> g_NamedSpawnsNewSpawnsIDList;
+
+std::vector<uint32_t> g_NamedSpawnsSpecialSpawnsIDList;
 
 EQApp::Timer g_NamedSpawnsIDTimer = EQAPP_Timer_GetTimeNow();
 EQApp::TimerInterval g_NamedSpawnsIDTimerInterval = 3;
@@ -72,6 +74,8 @@ void EQAPP_NamedSpawns_Load()
 
     g_NamedSpawnsNewSpawnsIDList.clear();
 
+    g_NamedSpawnsSpecialSpawnsIDList.clear();
+
     EQAPP_ReadFileToList("namedspawns.txt", g_NamedSpawnsList, false);
 
     std::string zoneShortName = EQ_GetZoneShortName();
@@ -105,7 +109,7 @@ void EQAPP_NamedSpawns_DrawText()
         return;
     }
 
-    if (g_NamedSpawnsIDList.size() == 0)
+    if (g_NamedSpawnsIDList.size() == 0 && g_NamedSpawnsSpecialSpawnsIDList.size() == 0)
     {
         return;
     }
@@ -126,27 +130,39 @@ void EQAPP_NamedSpawns_DrawText()
             continue;
         }
 
-        for (auto& namedSpawnName : g_NamedSpawnsList)
+        auto g_NamedSpawnsNameAndCountList_it = g_NamedSpawnsNameAndCountList.find(spawnName);
+        if (g_NamedSpawnsNameAndCountList_it != g_NamedSpawnsNameAndCountList.end())
         {
-            if (namedSpawnName.size() == 0)
-            {
-                continue;
-            }
+            g_NamedSpawnsNameAndCountList_it->second++;
+        }
+        else
+        {
+            g_NamedSpawnsNameAndCountList.insert( {spawnName, 1} );
+        }
+    }
 
-            if (EQAPP_String_Contains(spawnName, namedSpawnName) == true)
-            {
-                auto it = g_NamedSpawnsNameAndCountList.find(spawnName);
-                if (it != g_NamedSpawnsNameAndCountList.end())
-                {
-                    it->second++;
-                }
-                else
-                {
-                    g_NamedSpawnsNameAndCountList.insert( {spawnName, 1} );
-                }
+    for (auto& spawnID : g_NamedSpawnsSpecialSpawnsIDList)
+    {
+        auto spawn = EQ_GetSpawnByID(spawnID);
+        if (spawn == NULL)
+        {
+            continue;
+        }
 
-                break;
-            }
+        std::string spawnName = EQ_GetSpawnName(spawn);
+        if (spawnName.size() == 0)
+        {
+            continue;
+        }
+
+        auto g_NamedSpawnsNameAndCountList_it = g_NamedSpawnsNameAndCountList.find(spawnName);
+        if (g_NamedSpawnsNameAndCountList_it != g_NamedSpawnsNameAndCountList.end())
+        {
+            g_NamedSpawnsNameAndCountList_it->second++;
+        }
+        else
+        {
+            g_NamedSpawnsNameAndCountList.insert( {spawnName, 1} );
         }
     }
 
@@ -251,6 +267,22 @@ void EQAPP_NamedSpawns_UpdateIDList()
             }
         }
 
+        // Eldrig the Old
+        auto zoneID = EQ_GetZoneID();
+        if (zoneID == EQ_ZONE_ID_SKYFIRE)
+        {
+            if
+            (
+                EQ_IsSpawnWithinDistanceOfLocation(spawn, 1770, -3850, -167, 400.0f) == true ||
+                EQ_IsSpawnWithinDistanceOfLocation(spawn, 550,  -4085, -159, 400.0f) == true
+            )
+            {
+                auto spawnID = EQ_GetSpawnID(spawn);
+
+                g_NamedSpawnsSpecialSpawnsIDList.push_back(spawnID);
+            }
+        }
+
         spawn = EQ_GetSpawnNext(spawn);
     }
 }
@@ -299,6 +331,45 @@ void EQAPP_NamedSpawns_HandleEvent_CDisplay__CreatePlayerActor(void* this_ptr, u
     if (spawnName.size() == 0)
     {
         return;
+    }
+
+    auto zoneID = EQ_GetZoneID();
+
+    // Eldrig the Old
+    if (zoneID == EQ_ZONE_ID_SKYFIRE)
+    {
+        if
+        (
+            EQ_IsSpawnWithinDistanceOfLocation(spawn, 1770, -3850, -167, 400.0f) == true ||
+            EQ_IsSpawnWithinDistanceOfLocation(spawn, 550,  -4085, -159, 400.0f) == true
+        )
+        {
+            std::cout << "Eldrig the Old placeholder or named has spawned!" << std::endl;
+
+            auto spawnID = EQ_GetSpawnID(spawn);
+
+            g_NamedSpawnsSpecialSpawnsIDList.push_back(spawnID);
+        }
+    }
+
+    // Quillmane
+    if (zoneID == EQ_ZONE_ID_SOUTHKARANA)
+    {
+        auto spawnY = EQ_GetSpawnY(spawn);
+        auto spawnX = EQ_GetSpawnX(spawn);
+
+        int numVertices = 4;
+        float verticesX[] = { 3318.0f, -3783.0f, -3733.0f,  3303.0f};
+        float verticesY[] = {-2752.0f, -2752.0f, -6809.0f, -6818.0f};
+
+        if (EQ_pnpoly(numVertices, verticesX, verticesY, spawnX, spawnY) == 1)
+        {
+            auto spawnID = EQ_GetSpawnID(spawn);
+
+            g_NamedSpawnsSpecialSpawnsIDList.push_back(spawnID);
+
+            std::cout << spawnName << " spawned in the Quillmane rectangle!" << std::endl;
+        }
     }
 
     auto spawnID = EQ_GetSpawnID(spawn);
@@ -376,6 +447,13 @@ void EQAPP_NamedSpawns_HandleEvent_CDisplay__DeleteActor(void* this_ptr, uint32_
     }
 
     auto spawnID = EQ_GetSpawnID(actorApplicationData);
+
+    g_NamedSpawnsSpecialSpawnsIDList.erase
+    (
+        std::remove(g_NamedSpawnsSpecialSpawnsIDList.begin(), g_NamedSpawnsSpecialSpawnsIDList.end(), spawnID),
+        g_NamedSpawnsSpecialSpawnsIDList.end()
+    );
+
     if (g_NamedSpawnsNewSpawnsIsEnabled == true)
     {
         g_NamedSpawnsNewSpawnsIDList.erase
