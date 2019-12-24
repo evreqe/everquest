@@ -100,6 +100,7 @@
 #include "eqapp_powerlevel.h"
 #include "eqapp_speed.h"
 #include "eqapp_waypoint.h"
+#include "eqapp_area.h"
 #include "eqapp_console.h"
 #include "eqapp_detours.h"
 #include "eqapp_followai.h"
@@ -119,15 +120,7 @@ void EQAPP_Load()
 {
     g_GUIIsLoaded = EQAPP_GUI_Load();
 
-    EQAPP_ActorCollision_Load();
-    EQAPP_WaypointList_Load();
-    EQAPP_NamedSpawns_Load();
-    EQAPP_KillMobs_Load();
-    EQAPP_ChatEvent_Load();
-    EQAPP_Bandolier_Load();
-    EQAPP_BazaarBot_Load();
-    EQAPP_BazaarFilter_Load();
-    EQAPP_CombatMacro_Load();
+    EQAPP_LoadFiles();
 
     if (g_WindowTitleIsEnabled == true)
     {
@@ -188,6 +181,19 @@ void EQAPP_Unload()
     std::cout << "Unloaded!    " << timeText;
 
     g_EQAppShouldUnload = 1;
+}
+
+void EQAPP_LoadFiles()
+{
+    EQAPP_ActorCollision_Load();
+    EQAPP_WaypointList_Load();
+    EQAPP_NamedSpawns_Load();
+    EQAPP_KillMobs_Load();
+    EQAPP_ChatEvent_Load();
+    EQAPP_Bandolier_Load();
+    EQAPP_BazaarBot_Load();
+    EQAPP_BazaarFilter_Load();
+    EQAPP_CombatMacro_Load();
 }
 
 DWORD WINAPI EQAPP_ThreadLoop(LPVOID param)

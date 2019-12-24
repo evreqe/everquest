@@ -22,7 +22,7 @@ bool g_HUDPlayersInZoneIsEnabled = true;
 bool g_HUDNearbyPlayersIsEnabled = true;
 
 float g_HUDNearbyPlayersDistance = 30.0f;
-float g_HUDNearbyPlayersDistanceZ = 20.0f;
+float g_HUDNearbyPlayersDistanceZ = 10.0f;
 
 void EQAPP_HUD_Toggle();
 void EQAPP_HUD_On();

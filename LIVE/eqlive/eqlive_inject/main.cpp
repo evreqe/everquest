@@ -187,7 +187,7 @@ int main(int argc, char *argv[])
 
                             CloseHandle(remote_thread);
 
-                            Sleep(1000);
+                            Sleep(100);
                         }
                     }
                 }

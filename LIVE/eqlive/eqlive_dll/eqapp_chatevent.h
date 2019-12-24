@@ -14,6 +14,7 @@ void EQAPP_ChatEvent_Debug_Toggle();
 void EQAPP_ChatEvent_Debug_On();
 void EQAPP_ChatEvent_Debug_Off();
 void EQAPP_ChatEvent_Load();
+void EQAPP_ChatEvent_LoadEx(const char* filename);
 void EQAPP_ChatEvent_AddToList(std::string chatText, std::string commandText);
 void EQAPP_ChatEvent_RemoveFromList(std::string chatText);
 void EQAPP_ChatEvent_ClearList();
@@ -66,6 +67,14 @@ void EQAPP_ChatEvent_Debug_Off()
 
 void EQAPP_ChatEvent_Load()
 {
+    g_ChatEventList.clear();
+    g_ChatEventList.reserve(g_ChatEventList_reserve);
+
+    std::stringstream filePath;
+    filePath << g_EQAppName << "/chatevent.txt";
+
+    EQAPP_ChatEvent_LoadEx(filePath.str().c_str());
+
     auto playerSpawn = EQ_GetPlayerSpawn();
     if (playerSpawn == NULL)
     {
@@ -78,20 +87,32 @@ void EQAPP_ChatEvent_Load()
         return;
     }
 
-    g_ChatEventList.clear();
-    g_ChatEventList.reserve(g_ChatEventList_reserve);
+    std::stringstream filePath2;
+    filePath2 << g_EQAppName << "/chatevent/" << playerName << ".txt";
 
-    std::stringstream filePath;
-    filePath << g_EQAppName << "/chatevent/" << playerName << ".txt";
+    EQAPP_ChatEvent_LoadEx(filePath2.str().c_str());
+}
 
-    std::string filePathStr = filePath.str();
+void EQAPP_ChatEvent_LoadEx(const char* filename)
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    std::string playerName = EQ_GetSpawnName(playerSpawn);
+    if (playerName.size() == 0)
+    {
+        return;
+    }
 
     std::fstream file;
-    file.open(filePathStr.c_str(), std::fstream::in);
+    file.open(filename, std::fstream::in);
     if (file.is_open() == false)
     {
         std::stringstream ss;
-        ss << "failed to open file: " << filePathStr;
+        ss << "failed to open file: " << filename;
 
         EQAPP_PrintDebugText(__FUNCTION__, ss.str().c_str());
         return;
@@ -136,7 +157,7 @@ void EQAPP_ChatEvent_Load()
         index++;
     }
 
-    std::cout << "Chat Events loaded from file: " << filePathStr << std::endl;
+    std::cout << "Chat Events loaded from file: " << filename << std::endl;
 
     file.close();
 }

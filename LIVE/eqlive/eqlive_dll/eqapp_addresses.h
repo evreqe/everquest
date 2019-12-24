@@ -42,6 +42,8 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_MouseLook);
     EQAPP_FixAddress(EQ_ADDRESS_NetStatus);
 
+    EQAPP_FixAddress(EQ_ADDRESS_LeftMouseHeldTime);
+
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_FlushDxKeyboard);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_FlushDxMouse);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_ProcessKeyboardEvent);

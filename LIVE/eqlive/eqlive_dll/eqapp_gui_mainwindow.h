@@ -14,6 +14,8 @@ bool g_GUIMainWindowIsEnabled = false;
 
 bool g_GUIMainWindowPopupMenuClientsIsOpen = false;
 
+bool g_GUIMainWIndowPopupModalUnloadIsOpen = false;
+
 float g_GUIMainWindowX = 0.0f;
 float g_GUIMainWindowY = 0.0f;
 
@@ -52,6 +54,8 @@ static void EQAPP_GUI_MainWindow()
         ImGui::End();
         return;
     }
+
+    g_GUIMainWIndowPopupModalUnloadIsOpen = false;
 
     if (ImGui::BeginMainMenuBar())
     {
@@ -117,6 +121,36 @@ static void EQAPP_GUI_MainWindow()
         ImGui::EndMainMenuBar();
     }
 
+    if (g_GUIMainWIndowPopupModalUnloadIsOpen == true)
+    {
+        ImGui::OpenPopup("Unload##MainWindowPopupModalUnload");
+    }
+
+    if (ImGui::BeginPopupModal("Unload##MainWindowPopupModalUnload", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+    {
+        ImGui::Text("Are you sure you want to unload?");
+
+        ImGui::Separator();
+
+        if (ImGui::Button("Yes", ImVec2(120.0f, 0)))
+        {
+            ImGui::CloseCurrentPopup();
+
+            EQAPP_Unload();
+        }
+
+        ImGui::SetItemDefaultFocus();
+
+        ImGui::SameLine();
+
+        if (ImGui::Button("No", ImVec2(120.0f, 0)))
+        {
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::EndPopup();
+    }
+
     ImGui::End();
 
     ImGui::PopStyleVar();
@@ -125,11 +159,14 @@ static void EQAPP_GUI_MainWindow()
 static void EQAPP_GUI_MainWindow_MenuFile()
 {
     ////if (ImGui::MenuItem("Load Scripts##MainWindowMenuItemFileLoadScripts")) { EQAPP_Lua_LoadAndPrintAllScripts(); }
-    if (ImGui::MenuItem("Load Waypoints##MainWindowMenuItemFileLoadWaypoints")) { EQAPP_WaypointList_Load(); }
+    if (ImGui::MenuItem("Load Files##MainWindowMenuItemFileLoadFiles")) { EQAPP_LoadFiles(); }
 
     ImGui::Separator();
 
-    if (ImGui::MenuItem("Unload##MainWindowMenuItemFileUnload")) { EQAPP_Unload(); }
+    if (ImGui::MenuItem("Unload##MainWindowMenuItemFileUnload"))
+    {
+        g_GUIMainWIndowPopupModalUnloadIsOpen = true;
+    }
 }
 
 static void EQAPP_GUI_MainWindow_MenuOptions()
@@ -195,6 +232,8 @@ static void EQAPP_GUI_MainWindow_MenuWaypoints()
 
     if (g_WaypointList.size() == 0)
     {
+        ImGui::Separator();
+
         if (ImGui::MenuItem("(none)##MainWindowMenuItemWaypointsNone")) {}
     }
     else if (g_WaypointList.size() <= 20)

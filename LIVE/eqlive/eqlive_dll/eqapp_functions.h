@@ -23,6 +23,8 @@ bool EQAPP_IsVKKeyDown(int vkKey);
 uint32_t EQAPP_GetRandomNumber(uint32_t low, uint32_t high);
 template <class T>
 T EQAPP_GetRandomNumberAny(T low, T high);
+template <class T>
+void EQAPP_RandomizeList(std::vector<T>& list);
 void EQAPP_PlaySound(const char* fileName);
 void EQAPP_StopSound();
 void EQAPP_Beep();
@@ -288,6 +290,15 @@ T EQAPP_GetRandomNumberAny(T low, T high)
     std::uniform_int_distribution<T>::param_type uidpt(low, high);
 
     return uid(g_EQAppRandomEngine);//, uidpt);
+}
+
+template <class T>
+void EQAPP_RandomizeList(std::vector<T>& list)
+{
+    std::random_device rd;
+    auto rng = std::default_random_engine {rd()};
+
+    std::shuffle(list.begin(), list.end(), rng);
 }
 
 void EQAPP_PlaySound(const char* fileName)

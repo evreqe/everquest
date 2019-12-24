@@ -3,10 +3,7 @@
 bool g_ChangeHeightIsEnabled = true;
 
 EQApp::Timer g_ChangeHeightTimer = EQAPP_Timer_GetTimeNow();
-EQApp::TimerInterval g_ChangeHeightTimerInterval = 3;
-
-float g_ChangeHeightMinimumHeightCrashCheck = 1.0f;
-float g_ChangeHeightMaximumHeightCrashCheck = 100.0f;
+EQApp::TimerInterval g_ChangeHeightTimerInterval = 1;
 
 float g_ChangeHeightMinimumHeight = 1.0f;
 float g_ChangeHeightMaximumHeight = 5.0f;
@@ -79,17 +76,7 @@ bool EQAPP_ChangeHeight_SetSpawnHeight(uint32_t spawn)
 {
     auto spawnHeight = EQ_GetSpawnHeight(spawn);
 
-    if (std::isnan(spawnHeight) == true)
-    {
-        return false;
-    }
-
-    if (spawnHeight < g_ChangeHeightMinimumHeightCrashCheck)
-    {
-        return false;
-    }
-
-    if (spawnHeight > g_ChangeHeightMaximumHeightCrashCheck)
+    if (spawnHeight < 1.0f)
     {
         return false;
     }

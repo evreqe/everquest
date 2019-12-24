@@ -22,6 +22,7 @@ void EQAPP_KillMobs_Load();
 void EQAPP_KillMobs_Execute();
 bool EQAPP_KillMobs_IsSpawnSafeToKill(uint32_t spawn);
 bool EQAPP_KillMobs_IsSpawnInHillGiantRectangle(uint32_t spawn);
+bool EQAPP_KillMobs_IsSpawnInSarnakCourierRectangle(uint32_t spawn);
 void EQAPP_KillMobs_MaxPlayers_Toggle();
 void EQAPP_KillMobs_MaxPlayers_On();
 void EQAPP_KillMobs_MaxPlayers_Off();
@@ -122,6 +123,8 @@ void EQAPP_KillMobs_Execute()
 
     auto numPlayersInZone = EQ_GetNumSpawnsInZone(EQ_SPAWN_TYPE_PLAYER);
 
+    auto numNearbyPlayers = EQ_GetNumNearbySpawns(EQ_SPAWN_TYPE_PLAYER, 100.0f, 10.0f);
+
     auto targetSpawn = EQ_GetTargetSpawn();
 
 /*
@@ -181,6 +184,24 @@ void EQAPP_KillMobs_Execute()
         auto followSpawnType = EQ_GetSpawnType(g_FollowAISpawn);
         if (followSpawnType == EQ_SPAWN_TYPE_NPC)
         {
+            if (zoneID == EQ_ZONE_ID_LAKEOFILLOMEN)
+            {
+                std::string followSpawnName = EQ_GetSpawnName(g_FollowAISpawn);
+                if (followSpawnName.size() != 0)
+                {
+                    if (EQAPP_String_Contains(followSpawnName, "sarnak courier") == false)
+                    {
+                        if (EQAPP_KillMobs_IsSpawnInSarnakCourierRectangle(g_FollowAISpawn) == false)
+                        {
+                            g_FollowAISpawn = NULL;
+                            EQ_SetAutoRun(false);
+
+                            return;
+                        }
+                    }
+                }
+            }
+
             if (zoneID == EQ_ZONE_ID_RATHEMTN)
             {
                 if (EQAPP_KillMobs_IsSpawnInHillGiantRectangle(g_FollowAISpawn) == false)
@@ -221,6 +242,11 @@ void EQAPP_KillMobs_Execute()
     {
         std::vector<uint32_t> spawnIDList = EQAPP_GetNPCSpawnIDListSortedByDistance(false);
 
+        if (numNearbyPlayers > 0)
+        {
+            EQAPP_RandomizeList(spawnIDList);
+        }
+
         for (auto& spawnID : spawnIDList)
         {
             auto spawn = EQ_GetSpawnByID(spawnID);
@@ -239,6 +265,19 @@ void EQAPP_KillMobs_Execute()
             if (spawnName.size() == 0)
             {
                 continue;
+            }
+
+            if (zoneID == EQ_ZONE_ID_LAKEOFILLOMEN)
+            {
+                if (EQAPP_String_Contains(spawnName, "sarnak courier") == false)
+                {
+                    if (EQAPP_KillMobs_IsSpawnInSarnakCourierRectangle(spawn) == false)
+                    {
+                        EQ_ClearTarget();
+
+                        continue;
+                    }
+                }
             }
 
             if (zoneID == EQ_ZONE_ID_RATHEMTN)
@@ -307,6 +346,11 @@ void EQAPP_KillMobs_Execute()
     {
         std::vector<uint32_t> spawnIDList = EQAPP_GetNPCSpawnIDListSortedByDistance(false);
 
+        if (numNearbyPlayers > 0)
+        {
+            EQAPP_RandomizeList(spawnIDList);
+        }
+
         for (auto& spawnID : spawnIDList)
         {
             auto spawn = EQ_GetSpawnByID(spawnID);
@@ -325,6 +369,19 @@ void EQAPP_KillMobs_Execute()
             if (spawnName.size() == 0)
             {
                 continue;
+            }
+
+            if (zoneID == EQ_ZONE_ID_LAKEOFILLOMEN)
+            {
+                if (EQAPP_String_Contains(spawnName, "sarnak courier") == false)
+                {
+                    if (EQAPP_KillMobs_IsSpawnInSarnakCourierRectangle(spawn) == false)
+                    {
+                        EQ_ClearTarget();
+
+                        continue;
+                    }
+                }
             }
 
             if (zoneID == EQ_ZONE_ID_RATHEMTN)
@@ -497,6 +554,34 @@ bool EQAPP_KillMobs_IsSpawnInHillGiantRectangle(uint32_t spawn)
     int numVertices = 4;
     float verticesX[] = {-510.0f, -508.0f, -2408.0f, -2243.0f};
     float verticesY[] = {3674.0f, 2505.0f,  2650.0f,  3726.0f};
+
+    if (EQ_pnpoly(numVertices, verticesX, verticesY, spawnX, spawnY) == 1)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool EQAPP_KillMobs_IsSpawnInSarnakCourierRectangle(uint32_t spawn)
+{
+    if (spawn == NULL)
+    {
+        return false;
+    }
+
+    auto zoneID = EQ_GetZoneID();
+    if (zoneID != EQ_ZONE_ID_LAKEOFILLOMEN)
+    {
+        return false;
+    }
+
+    float spawnY = EQ_GetSpawnY(spawn);
+    float spawnX = EQ_GetSpawnX(spawn);
+
+    int numVertices = 4;
+    float verticesX[] = {-3688.0f, -3688.0f, -700.0f, -785.0f};
+    float verticesY[] = {-3657.0f,   105.0f,  520.0f, -3915.0f};
 
     if (EQ_pnpoly(numVertices, verticesX, verticesY, spawnX, spawnY) == 1)
     {

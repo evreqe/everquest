@@ -21,12 +21,6 @@
 #define EQ_CXWND_KEYBOARD_FLAG_LALT     4
 #define EQ_CXWND_KEYBOARD_FLAG_RALT     8
 
-// class CXWnd
-uint32_t EQ_SIZE_CXWnd = 0x1F8;    // const CXWnd::`vftable'    // = &CXWnd::`vftable'
-
-// class CSidlScreenWnd
-uint32_t EQ_SIZE_CSidlScreenWnd = 0x230;    // const CSidlScreenWnd::`vftable'    // = &CSidlScreenWnd::`vftable'
-
 // search for one of these strings to find the
 // function where all of the windows are created:
 // "Initializing game UI."
@@ -34,6 +28,19 @@ uint32_t EQ_SIZE_CSidlScreenWnd = 0x230;    // const CSidlScreenWnd::`vftable'  
 // "Loading Icons."
 // "Resetting viewport."
 // "Game UI Initialized."
+
+//////////////////////////////////////////////////
+/* CXWnd */
+//////////////////////////////////////////////////
+
+uint32_t EQ_SIZE_CXWnd = 0x1F8;    // const CXWnd::`vftable'    // = &CXWnd::`vftable'
+
+//////////////////////////////////////////////////
+/* CSidlScreenWnd */
+//////////////////////////////////////////////////
+
+// class CSidlScreenWnd
+uint32_t EQ_SIZE_CSidlScreenWnd = 0x230;    // const CSidlScreenWnd::`vftable'    // = &CSidlScreenWnd::`vftable'
 
 //////////////////////////////////////////////////
 /* CAlertWnd */
@@ -90,8 +97,8 @@ uint32_t EQ_SIZE_CSidlScreenWnd = 0x230;    // const CSidlScreenWnd::`vftable'  
 /* CMapViewWnd */
 //////////////////////////////////////////////////
 
-#define EQ_OFFSET_CMapViewWnd_LINES     EQ_OFFSET_CMapViewWnd__CMapViewMap + 0x260 // uint32_t pointer
-#define EQ_OFFSET_CMapViewWnd_LABELS    EQ_OFFSET_CMapViewWnd__CMapViewMap + 0x264 // uint32_t pointer
+#define EQ_OFFSET_CMapViewWnd_LINES     EQ_OFFSET_CMapViewWnd__CMapViewMap + EQ_OFFSET_CMapViewMap__Lines     // uint32_t pointer
+#define EQ_OFFSET_CMapViewWnd_LABELS    EQ_OFFSET_CMapViewWnd__CMapViewMap + EQ_OFFSET_CMapViewMap__Labels    // uint32_t pointer
 
 //////////////////////////////////////////////////
 /* CSpellBookWnd */

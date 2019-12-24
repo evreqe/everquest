@@ -19,6 +19,8 @@ uint32_t EQ_ADDRESS_NetStatus     = 0x0; // uint8_t    byte_F30435 = sub_9CFF30(
 search for 1 and 0
 */
 
+uint32_t EQ_ADDRESS_LeftMouseHeldTime = 0x0;
+
 uint32_t EQ_ADDRESS_EQZoneInfo = 0x0; // struct
 
 uint32_t EQ_ADDRESS_FUNCTION_FlushDxKeyboard = 0x0;
@@ -318,136 +320,146 @@ void EQ_InitializeAddresses()
     EQ_ADDRESS_POINTER_CSpellBookWnd = 0x00DCF8B8;
     EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellMemTicksLeft       = 0x007F83C0;
     EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellScribeTicksLeft    = 0x007F8520;
+
 #else
-    // Nov 18 2019 19:01:07
 
-    EQ_SIZE_CXWnd = 0x1E8;
-    EQ_SIZE_CSidlScreenWnd = 0x230;
+    EQ_OFFSET_EQ_Character____ExtendedTargetList    = 0x2838;
+    EQ_OFFSET_EQ_Character____GroupInfo             = 0x284C;
 
-    EQ_OFFSET_SPAWN_STANDING_STATE             = 0x4e4;
-    EQ_OFFSET_SPAWN_FOLLOW_SPAWN               = 0xf28;
-    EQ_OFFSET_SPAWN_HP_CURRENT                 = 0x198;
-    EQ_OFFSET_SPAWN_HP_MAX                     = 0x4d8;
-    EQ_OFFSET_SPAWN_MANA_CURRENT               = 0x5e0;
-    EQ_OFFSET_SPAWN_MANA_MAX                   = 0x590;
-    EQ_OFFSET_SPAWN_ENDURANCE_CURRENT          = 0x1e8;
-    EQ_OFFSET_SPAWN_ENDURANCE_MAX              = 0x3fc;
-    EQ_OFFSET_SPAWN_CharacterZoneClient        = 0x3f8;
-    EQ_OFFSET_EQ_Character____CharacterBase    = 0x284c;
+    EQ_OFFSET_CMapViewMap__Lines     = 0x258;
+    EQ_OFFSET_CMapViewMap__Labels    = 0x25C;
+
+    // Dec 19 2019 15:04:34
+
+    EQ_SIZE_CXWnd = 0x1E0;
+    EQ_SIZE_CSidlScreenWnd = 0x228;
+
+    EQ_OFFSET_SPAWN_STANDING_STATE             = 0x1b4;
+    EQ_OFFSET_SPAWN_FOLLOW_SPAWN               = 0xf34;
+    EQ_OFFSET_SPAWN_HP_CURRENT                 = 0x518;
+    EQ_OFFSET_SPAWN_HP_MAX                     = 0x570;
+    EQ_OFFSET_SPAWN_MANA_CURRENT               = 0x58c;
+    EQ_OFFSET_SPAWN_MANA_MAX                   = 0x394;
+    EQ_OFFSET_SPAWN_ENDURANCE_CURRENT          = 0x3c8;
+    EQ_OFFSET_SPAWN_ENDURANCE_MAX              = 0x480;
+    EQ_OFFSET_SPAWN_CharacterZoneClient        = 0x5ac;
+    EQ_OFFSET_EQ_Character____CharacterBase    = 0x287c;
     EQ_OFFSET_CharInfo2__Bandolier             = 0x7434;
-    EQ_OFFSET_CMapViewWnd__CMapViewMap         = 0x368;
+    EQ_OFFSET_CMapViewWnd__CMapViewMap         = 0x360;
 
-    EQ_ADDRESS_WindowHWND = 0x00F4ED94;
+    EQ_ADDRESS_WindowHWND = 0x00F6E220;
 
-    EQ_ADDRESS_AutoAttack              = 0x00F4915F;
-    EQ_ADDRESS_AutoFire                = 0x00F49160;
-    EQ_ADDRESS_AutoRun                 = 0x00EAA4C0;
-    EQ_ADDRESS_MouseLook               = 0x00EAA4A2;
-    EQ_ADDRESS_NetStatus               = 0x00EAA4A5;
+    EQ_ADDRESS_AutoAttack              = 0x00F6615B;
+    EQ_ADDRESS_AutoFire                = 0x00F6615C;
+    EQ_ADDRESS_AutoRun                 = 0x00EC74B8;
+    EQ_ADDRESS_MouseLook               = 0x00EC749A;
+    EQ_ADDRESS_NetStatus               = 0x00EC749D;
 
-    EQ_ADDRESS_EQZoneInfo = 0x00EAA698;
+    EQ_ADDRESS_LeftMouseHeldTime       = 0x00EC7540;
 
-    EQ_ADDRESS_POINTER_ControlledSpawn    = 0x00E9CB60;
-    EQ_ADDRESS_POINTER_PlayerSpawn        = 0x00E9CA88;
-    EQ_ADDRESS_POINTER_TargetSpawn        = 0x00E9CADC;
+    EQ_ADDRESS_EQZoneInfo = 0x00EC7690;
 
-    EQ_ADDRESS_FUNCTION_FlushDxKeyboard               = 0x006A84D0;
-    EQ_ADDRESS_FUNCTION_FlushDxMouse                  = 0x006A8150;
-    EQ_ADDRESS_FUNCTION_ProcessKeyboardEvent          = 0x006AA040;
-    EQ_ADDRESS_FUNCTION_ProcessMouseEvent             = 0x005FE9C0;
-    EQ_ADDRESS_FUNCTION_WindowProc                    = 0x006AAAA0;
-    EQ_ADDRESS_FUNCTION_CollisionCallbackForActors    = 0x0051EDC0;
-    EQ_ADDRESS_FUNCTION_CastRay                       = 0x0059F0B0;
-    EQ_ADDRESS_FUNCTION_CastRay2                      = 0x0059F100;
-    EQ_ADDRESS_FUNCTION_DrawNetStatus                 = 0x0062B2A0;
-    EQ_ADDRESS_FUNCTION_ExecuteCmd                    = 0x005979F0;
-    EQ_ADDRESS_FUNCTION_DoSpellEffect                 = 0x005FD8D0;
-    EQ_ADDRESS_FUNCTION_PlaySoundAtLocation           = 0x0053C6D0;
-    EQ_ADDRESS_FUNCTION_GetTime                       = 0x008EE940;
-    EQ_ADDRESS_FUNCTION_UpdateLight                   = 0x0081B5E0;
-    EQ_ADDRESS_FUNCTION_GetGaugeValueFromEQ           = 0x00803720;
+    EQ_ADDRESS_POINTER_ControlledSpawn    = 0x00EB7720;
+    EQ_ADDRESS_POINTER_PlayerSpawn        = 0x00EB76C8;
+    EQ_ADDRESS_POINTER_TargetSpawn        = 0x00EB771C;
 
-    EQ_ADDRESS_POINTER_StringTable = 0x00E9C870;
-    EQ_ADDRESS_FUNCTION_StringTable__getString    = 0x008B2640;
+    EQ_ADDRESS_FUNCTION_FlushDxKeyboard               = 0x006BC640;
+    EQ_ADDRESS_FUNCTION_FlushDxMouse                  = 0x006BC2C0;
+    EQ_ADDRESS_FUNCTION_ProcessKeyboardEvent          = 0x006BE1B0;
+    EQ_ADDRESS_FUNCTION_ProcessMouseEvent             = 0x00612AA0;
+    EQ_ADDRESS_FUNCTION_WindowProc                    = 0x006BEC10;
+    EQ_ADDRESS_FUNCTION_CollisionCallbackForActors    = 0x0052A2F0;
+    EQ_ADDRESS_FUNCTION_CastRay                       = 0x005B28C0;
+    EQ_ADDRESS_FUNCTION_CastRay2                      = 0x005B2910;
+    EQ_ADDRESS_FUNCTION_DrawNetStatus                 = 0x0063F2D0;
+    EQ_ADDRESS_FUNCTION_ExecuteCmd                    = 0x005AB0D0;
+    EQ_ADDRESS_FUNCTION_DoSpellEffect                 = 0x006119C0;
+    EQ_ADDRESS_FUNCTION_PlaySoundAtLocation           = 0x00547C00;
+    EQ_ADDRESS_FUNCTION_GetTime                       = 0x00904D80;
+    EQ_ADDRESS_FUNCTION_UpdateLight                   = 0x0082F110;
+    EQ_ADDRESS_FUNCTION_GetGaugeValueFromEQ           = 0x008172F0;
 
-    EQ_ADDRESS_POINTER_CDBStr = 0x00DE7FC4;
-    EQ_ADDRESS_FUNCTION_CDBStr__GetString    = 0x00532000;
+    EQ_ADDRESS_POINTER_StringTable = 0x00EB9DB8;
+    EQ_ADDRESS_FUNCTION_StringTable__getString    = 0x008C6490;
 
-    EQ_ADDRESS_POINTER_EQ_Character = 0x00E9C86C;
-    EQ_ADDRESS_FUNCTION_EQ_Character__encum_factor          = 0x004D3600;
-    EQ_ADDRESS_FUNCTION_EQ_Character__TakeFallDamage        = 0x004DB4E0;
-    EQ_ADDRESS_FUNCTION_EQ_Character__CanIBreathe           = 0x004E0200;
-    EQ_ADDRESS_FUNCTION_EQ_Character__CanISeeInvis          = 0x004E1070;
-    EQ_ADDRESS_FUNCTION_EQ_Character__StunMe                = 0x004D5D10;
-    EQ_ADDRESS_FUNCTION_EQ_Character__UnStunMe              = 0x004D5E30;
-    EQ_ADDRESS_FUNCTION_EQ_Character__ProcessEnvironment    = 0x004E0F20;
+    EQ_ADDRESS_POINTER_CDBStr = 0x00E04F1C;
+    EQ_ADDRESS_FUNCTION_CDBStr__GetString    = 0x0053D520;
 
-    EQ_ADDRESS_FUNCTION_CharacterZoneClient__SetNoGrav            = 0x004BAFF0;
-    EQ_ADDRESS_FUNCTION_CharacterZoneClient__TotalSpellAffects    = 0x004C4FB0;
+    EQ_ADDRESS_POINTER_EQ_Character = 0x00EB9DB4;
+    EQ_ADDRESS_FUNCTION_EQ_Character__encum_factor          = 0x004D3B10;
+    EQ_ADDRESS_FUNCTION_EQ_Character__TakeFallDamage        = 0x004DB9B0;
+    EQ_ADDRESS_FUNCTION_EQ_Character__CanIBreathe           = 0x004E06D0;
+    EQ_ADDRESS_FUNCTION_EQ_Character__CanISeeInvis          = 0x004E1540;
+    EQ_ADDRESS_FUNCTION_EQ_Character__StunMe                = 0x004D6220;
+    EQ_ADDRESS_FUNCTION_EQ_Character__UnStunMe              = 0x004D6340;
+    EQ_ADDRESS_FUNCTION_EQ_Character__ProcessEnvironment    = 0x004E13F0;
 
-    EQ_ADDRESS_POINTER_EQ_PC = 0x00E9C86C;
-    EQ_ADDRESS_FUNCTION_EQ_PC__DestroyHeldItemOrMoney    = 0x00639BF0;
+    EQ_ADDRESS_FUNCTION_CharacterZoneClient__SetNoGrav            = 0x004BB510;
+    EQ_ADDRESS_FUNCTION_CharacterZoneClient__TotalSpellAffects    = 0x004C54E0;
 
-    EQ_ADDRESS_POINTER_EQPlayerManager = 0x00F4C340;
-    EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID      = 0x00653DC0;
-    EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName    = 0x00653E70;
+    EQ_ADDRESS_POINTER_EQ_PC = 0x00EB9DB4;
+    EQ_ADDRESS_FUNCTION_EQ_PC__DestroyHeldItemOrMoney    = 0x0064DD60;
 
-    EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight          = 0x0065BCC0;
-    EQ_ADDRESS_FUNCTION_EQPlayer__ChangePosition        = 0x0065C6F0;
-    EQ_ADDRESS_FUNCTION_EQPlayer__GetLevel              = 0x0065E270;
-    EQ_ADDRESS_FUNCTION_EQPlayer__GetActorClient        = 0x00595A40;
-    EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI        = 0x00647950;
-    EQ_ADDRESS_FUNCTION_EQPlayer__TurnOffAutoFollow     = 0x00647C70;
-    EQ_ADDRESS_FUNCTION_EQPlayer__UpdateItemSlot        = 0x0064D8F0;
-    EQ_ADDRESS_FUNCTION_EQPlayer__IsTargetable          = 0x00988410;
-    EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteState    = 0x00648D40;
-    EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteTint     = 0x00649C10;
-    EQ_ADDRESS_FUNCTION_EQPlayer__ChangeLight           = 0x006501D0;
-    EQ_ADDRESS_FUNCTION_EQPlayer__push_along_heading    = 0x005CAA00;
-    EQ_ADDRESS_FUNCTION_EQPlayer__AllowedToAttack       = 0x0065CFA0;
+    EQ_ADDRESS_POINTER_EQPlayerManager = 0x00F69340;
+    EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByID      = 0x00667F20;
+    EQ_ADDRESS_FUNCTION_EQPlayerManager__GetSpawnByName    = 0x00667FD0;
 
-    EQ_ADDRESS_POINTER_EQSwitchManager = 0x00E9A568;
-    EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch      = 0x005CF370;
-    EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState    = 0x005CF850;
+    EQ_ADDRESS_FUNCTION_EQPlayer__ChangeHeight          = 0x0066FE60;
+    EQ_ADDRESS_FUNCTION_EQPlayer__ChangePosition        = 0x00670890;
+    EQ_ADDRESS_FUNCTION_EQPlayer__GetLevel              = 0x00672410;
+    EQ_ADDRESS_FUNCTION_EQPlayer__GetActorClient        = 0x005A9160;
+    EQ_ADDRESS_FUNCTION_EQPlayer__FollowPlayerAI        = 0x0065BAE0;
+    EQ_ADDRESS_FUNCTION_EQPlayer__TurnOffAutoFollow     = 0x0065BE00;
+    EQ_ADDRESS_FUNCTION_EQPlayer__UpdateItemSlot        = 0x00661A60;
+    EQ_ADDRESS_FUNCTION_EQPlayer__IsTargetable          = 0x0099E7B0;
+    EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteState    = 0x0065CEC0;
+    EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteTint     = 0x0065DD80;
+    EQ_ADDRESS_FUNCTION_EQPlayer__ChangeLight           = 0x00664340;
+    EQ_ADDRESS_FUNCTION_EQPlayer__push_along_heading    = 0x005DEB50;
+    EQ_ADDRESS_FUNCTION_EQPlayer__AllowedToAttack       = 0x00671140;
 
-    EQ_ADDRESS_FUNCTION_EQSpell__SpellAffects    = 0x004BA630;
+    EQ_ADDRESS_POINTER_EQSwitchManager = 0x00EB7568;
+    EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch      = 0x005E34A0;
+    EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState    = 0x005E3980;
 
-    EQ_ADDRESS_FUNCTION_CXStr__CXStr_const_char_p =    0x008EAE00;
+    EQ_ADDRESS_FUNCTION_EQSpell__SpellAffects    = 0x004BAB50;
 
-    EQ_ADDRESS_POINTER_CXWndManager = 0x015DD744;
-    EQ_ADDRESS_FUNCTION_CXWndManager__DrawCursor     = 0x00925B30;
-    EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows    = 0x00925B50;
+    EQ_ADDRESS_FUNCTION_CXStr__CXStr_const_char_p    = 0x00901250;
 
-    EQ_ADDRESS_FUNCTION_CXWnd__IsReallyVisible    = 0x00921B50;
-    EQ_ADDRESS_FUNCTION_CXWnd__GetChildItem       = 0x00922E10;
+    EQ_ADDRESS_POINTER_CXWndManager = 0x015FD114;
+    EQ_ADDRESS_FUNCTION_CXWndManager__DrawCursor     = 0x0093BDE0;
+    EQ_ADDRESS_FUNCTION_CXWndManager__DrawWindows    = 0x0093BE00;
 
-    EQ_ADDRESS_POINTER_CEverQuest = 0x0F4ED98;
-    EQ_ADDRESS_FUNCTION_CEverQuest__DoPercentConvert        = 0x005ECE60;
-    EQ_ADDRESS_FUNCTION_CEverQuest__EnterZone               = 0x005E7640;
-    EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd            = 0x005FB3A0;
-    EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat                = 0x004E8AF0;
-    EQ_ADDRESS_FUNCTION_CEverQuest__SetGameState            = 0x005D3C50;
-    EQ_ADDRESS_FUNCTION_CEverQuest__LMouseUp                = 0x005D6450;
-    EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp                = 0x005D73D0;
-    EQ_ADDRESS_FUNCTION_CEverQuest__HandleMouseWheel        = 0x005D7AA0;
-    EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting            = 0x005E15C0;
-    EQ_ADDRESS_FUNCTION_CEverQuest__SendNewText             = 0x005E2400;
-    EQ_ADDRESS_FUNCTION_CEverQuest__DropHeldItemOnGround    = 0x005D3EC0;
-    EQ_ADDRESS_FUNCTION_CEverQuest__RightClickedOnPlayer    = 0x005D8990;
+    EQ_ADDRESS_FUNCTION_CXWnd__IsReallyVisible    = 0x00937DF0;
+    EQ_ADDRESS_FUNCTION_CXWnd__GetChildItem       = 0x00939080;
 
-    EQ_ADDRESS_POINTER_CDisplay = 0x0E9C80C;
-    EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2         = 0x005373D0;
-    EQ_ADDRESS_FUNCTION_CDisplay__CreateActor          = 0x0053A4D0;
-    EQ_ADDRESS_FUNCTION_CDisplay__CreatePlayerActor    = 0x00536020;
-    EQ_ADDRESS_FUNCTION_CDisplay__DeleteActor          = 0x0053A440;
-    EQ_ADDRESS_FUNCTION_CDisplay__GetIntensity         = 0x00537340;
-    EQ_ADDRESS_FUNCTION_CDisplay__CreateLight          = 0x0053AB20;
-    EQ_ADDRESS_FUNCTION_CDisplay__DeleteLight          = 0x0053AAF0;
+    EQ_ADDRESS_POINTER_CEverQuest = 0x0F6E250;
+    EQ_ADDRESS_FUNCTION_CEverQuest__DoPercentConvert        = 0x00601010;
+    EQ_ADDRESS_FUNCTION_CEverQuest__EnterZone               = 0x005FB7F0;
+    EQ_ADDRESS_FUNCTION_CEverQuest__InterpretCmd            = 0x0060F490;
+    EQ_ADDRESS_FUNCTION_CEverQuest__dsp_chat                = 0x004E8F70;
+    EQ_ADDRESS_FUNCTION_CEverQuest__SetGameState            = 0x005E7DF0;
+    EQ_ADDRESS_FUNCTION_CEverQuest__LMouseUp                = 0x005EA5F0;
+    EQ_ADDRESS_FUNCTION_CEverQuest__RMouseUp                = 0x005EB570;
+    EQ_ADDRESS_FUNCTION_CEverQuest__HandleMouseWheel        = 0x005EBC50;
+    EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting            = 0x005F5770;
+    EQ_ADDRESS_FUNCTION_CEverQuest__SendNewText             = 0x005F65B0;
+    EQ_ADDRESS_FUNCTION_CEverQuest__DropHeldItemOnGround    = 0x005E8060;
+    EQ_ADDRESS_FUNCTION_CEverQuest__RightClickedOnPlayer    = 0x005ECB40;
+
+    EQ_ADDRESS_POINTER_CDisplay = 0x0EB9C84;
+    EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2         = 0x00542900;
+    EQ_ADDRESS_FUNCTION_CDisplay__CreateActor          = 0x00545A00;
+    EQ_ADDRESS_FUNCTION_CDisplay__CreatePlayerActor    = 0x00541550;
+    EQ_ADDRESS_FUNCTION_CDisplay__DeleteActor          = 0x00545970;
+    EQ_ADDRESS_FUNCTION_CDisplay__GetIntensity         = 0x00542870;
+    EQ_ADDRESS_FUNCTION_CDisplay__CreateLight          = 0x00546050;
+    EQ_ADDRESS_FUNCTION_CDisplay__DeleteLight          = 0x00546020;
 
     //EQ_ADDRESS_POINTER_CCamera = 0x0; // calculated at runtime
     //EQ_ADDRESS_FUNCTION_CCamera__SetCameraLocation    = 0x0; // calculated at runtime
 
-    EQ_ADDRESS_POINTER_CRender = 0x015DE580;
+    EQ_ADDRESS_POINTER_CRender = 0x015FDF50;
     //EQ_ADDRESS_FUNCTION_CRender__ResetDevice    = 0x0; // calculated at runtime
     //EQ_ADDRESS_FUNCTION_CRender__ClearRenderToBlack    = 0x0; // calculated at runtime
     //EQ_ADDRESS_FUNCTION_CRender__RenderPartialScene    = 0x0; // calculated at runtime
@@ -455,24 +467,25 @@ void EQ_InitializeAddresses()
 
     EQ_ADDRESS_POINTER_CRenderEx = EQ_ADDRESS_POINTER_CRender + 0x04;
 
-    EQ_ADDRESS_POINTER_CAlertWnd = 0x0DE8194;
+    EQ_ADDRESS_POINTER_CAlertWnd = 0x0E04FC4;
 
-    EQ_ADDRESS_POINTER_CAlertStackWnd = 0x0DE817C;
+    EQ_ADDRESS_POINTER_CAlertStackWnd = 0x0E05850;
 
-    EQ_ADDRESS_POINTER_CBazaarSearchWnd = 0x00DE8104;
-    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList = 0x006DC830;
-    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem = 0x006DD5F0;
-    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery = 0x006DD0C0;
-    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__FindItem = 0x006DFCB0;
+    EQ_ADDRESS_POINTER_CBazaarSearchWnd = 0x00E05588;
+    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__AddItemToList = 0x006F09F0;
+    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__BuyItem = 0x006F17C0;
+    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__doQuery = 0x006F1290;
+    EQ_ADDRESS_FUNCTION_CBazaarSearchWnd__FindItem = 0x006F3E90;
 
-    EQ_ADDRESS_POINTER_CBazaarConfirmationWnd = 0x00DE8138;
+    EQ_ADDRESS_POINTER_CBazaarConfirmationWnd = 0x00E05814;
 
-    EQ_ADDRESS_POINTER_CMapViewWnd = 0x00DE8450;
+    EQ_ADDRESS_POINTER_CMapViewWnd = 0x00E04FF4;
 
-    EQ_ADDRESS_POINTER_CSpellBookWnd = 0x00DE83D0;
-    EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellMemTicksLeft       = 0x007FAF30;
-    EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellScribeTicksLeft    = 0x007FB090;
+    EQ_ADDRESS_POINTER_CSpellBookWnd = 0x00E0583C;
+    EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellMemTicksLeft       = 0x0080EB20;
+    EQ_ADDRESS_FUNCTION_CSpellBookWnd__GetSpellScribeTicksLeft    = 0x0080EC80;
 
-    EQ_ADDRESS_POINTER_CTaskSelectWnd = 0x0F648B8;
+    EQ_ADDRESS_POINTER_CTaskSelectWnd = 0x0F818B8;
+
 #endif // EQ_TEST_SERVER
 }

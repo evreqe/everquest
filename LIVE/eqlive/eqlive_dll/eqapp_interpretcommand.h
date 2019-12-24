@@ -25,6 +25,7 @@
 #include "eqapp_powerlevel.h"
 #include "eqapp_speed.h"
 #include "eqapp_waypoint.h"
+#include "eqapp_area.h"
 #include "eqapp_hud.h"
 #include "eqapp_nodraw.h"
 #include "eqapp_noalert.h"

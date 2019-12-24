@@ -228,6 +228,12 @@
     <ClInclude Include="eqapp_gui_spawnlistwindow.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="eqapp_area.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_loadoptions.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

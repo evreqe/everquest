@@ -44,6 +44,7 @@ BOOL __stdcall DllMain(HMODULE module, DWORD reason, LPVOID reserved);
 
 void EQAPP_Load();
 void EQAPP_Unload();
+void EQAPP_LoadFiles();
 
 namespace EQApp
 {

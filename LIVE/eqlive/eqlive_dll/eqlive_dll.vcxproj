@@ -31,6 +31,7 @@
     <ClInclude Include="..\eq\eq_memory.h" />
     <ClInclude Include="..\eq\eq_messages.h" />
     <ClInclude Include="..\eq\eq_virtualkeycodes.h" />
+    <ClInclude Include="eqapp_area.h" />
     <ClInclude Include="eqapp_autobank.h" />
     <ClInclude Include="eqapp.h" />
     <ClInclude Include="eqapp_actorcollision.h" />
@@ -64,6 +65,7 @@
     <ClInclude Include="eqapp_ini.h" />
     <ClInclude Include="eqapp_interpretcommand.h" />
     <ClInclude Include="eqapp_lantern.h" />
+    <ClInclude Include="eqapp_loadoptions.h" />
     <ClInclude Include="eqapp_macro.h" />
     <ClInclude Include="eqapp_namecolor.h" />
     <ClInclude Include="eqapp_namedspawns.h" />

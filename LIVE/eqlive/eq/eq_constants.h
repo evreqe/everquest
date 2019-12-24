@@ -159,10 +159,24 @@ uint32_t EQ_OFFSET_SPAWN_ENDURANCE_CURRENT               = 0;         // uint32_
 uint32_t EQ_OFFSET_SPAWN_ENDURANCE_MAX                   = 0;         // uint32_t
 uint32_t EQ_OFFSET_SPAWN_CharacterZoneClient             = 0;         // uint32_t pointer
 uint32_t EQ_OFFSET_EQ_Character____CharacterBase         = 0;         // uint32_t pointer
-uint32_t EQ_OFFSET_EQ_Character____ExtendedTargetList    = 0x2810;    // uint32_t pointer
-uint32_t EQ_OFFSET_EQ_Character____GroupInfo             = 0x2824;    // uint32_t pointer
+uint32_t EQ_OFFSET_EQ_Character____ExtendedTargetList    = 0;         // uint32_t pointer
+uint32_t EQ_OFFSET_EQ_Character____GroupInfo             = 0;         // uint32_t pointer
 uint32_t EQ_OFFSET_CharInfo2__Bandolier                  = 0;         // uint32_t pointer
 uint32_t EQ_OFFSET_CMapViewWnd__CMapViewMap              = 0;         // uint32_t pointer
+uint32_t EQ_OFFSET_CMapViewMap__Lines                    = 0;         // uint32_t pointer    EQ::MapLine_ptr
+uint32_t EQ_OFFSET_CMapViewMap__Labels                   = 0;         // uint32_t pointer    EQ::MapLabel_ptr
+
+uint32_t EQ_OFFSET_PlayerPhysicsClient__GravityType    = 0x0C; // uint32_t    EQ_GRAVITY_TYPE_x    // eGravityBehavior
+
+uint32_t EQ_OFFSET_EQ_Character____CharacterZoneClient    = 0x2418; // check after patch
+
+uint32_t EQ_OFFSET_CharacterBase__CProfileManager    = 0x04;
+
+uint32_t EQ_OFFSET_CharInfo2__INVENTORY    = 0x1C;    // /*0x001C*/ struct _INVENTORYARRAY*      pInventoryArray;
+
+uint32_t EQ_OFFSET_INVENTORY_EQ_Item__CURSOR    = 0x84;    // /*0x84*/  struct    _CONTENTS* Cursor;
+
+uint32_t EQ_OFFSET_EQ_Item__ItemClient__ITEM2    = 0x154;    // /*0x014C*/ struct _ITEMINFO*	Item2;
 
 #define EQ_SIZE_SPAWN_NAME         64 // 0x40
 #define EQ_SIZE_SPAWN_LAST_NAME    32 // 0x20
@@ -181,18 +195,6 @@ std::unordered_map<uint32_t, std::string> EQ_SPAWN_TYPE_Strings =
     {EQ_SPAWN_TYPE_CORPSE,      "Corpse"},
     {EQ_SPAWN_TYPE_UNKNOWN,     "Unknown"},
 };
-
-uint32_t EQ_OFFSET_PlayerPhysicsClient__GravityType    = 0x0C; // uint32_t    EQ_GRAVITY_TYPE_x    // eGravityBehavior
-
-uint32_t EQ_OFFSET_EQ_Character____CharacterZoneClient    = 0x2418; // check after patch
-
-uint32_t EQ_OFFSET_CharacterBase__CProfileManager    = 0x04;
-
-uint32_t EQ_OFFSET_CharInfo2__INVENTORY    = 0x1C;    // /*0x001C*/ struct _INVENTORYARRAY*      pInventoryArray;
-
-uint32_t EQ_OFFSET_INVENTORY_EQ_Item__CURSOR    = 0x84;    // /*0x84*/  struct    _CONTENTS* Cursor;
-
-uint32_t EQ_OFFSET_EQ_Item__ItemClient__ITEM2    = 0x154;    // /*0x014C*/ struct _ITEMINFO*	Item2;
 
 uint32_t EQ_OFFSET_ITEM_NAME                 = 0x00;     // char[0x40]
 uint32_t EQ_OFFSET_ITEM_ICON_NUMBER          = 0xF8;     // uint32_t
@@ -317,14 +319,14 @@ std::unordered_map<uint32_t, std::string> EQ_GRAVITY_TYPE_Strings =
 #define EQ_BAZAAR_SEARCH_MAX_RESULTS_PER_TRADER    200
 #define EQ_BAZAAR_SEARCH_LIST_INDEX_NULL     0xFFFFFFFF // uint32_t
 
-#define EQ_STANDING_STATE_UNKNOWN     0
-#define EQ_STANDING_STATE_STANDING    100
-#define EQ_STANDING_STATE_FROZEN      102 // stunned, mesmerized or feared    "You lose control of yourself!"
-#define EQ_STANDING_STATE_KNEELING    105 // looting or binding wounds
-#define EQ_STANDING_STATE_SITTING     110
-#define EQ_STANDING_STATE_DUCKING     111 // crouching
-#define EQ_STANDING_STATE_FEIGN_DEATH 115 // pretending to be dead
-#define EQ_STANDING_STATE_DEAD        120
+#define EQ_STANDING_STATE_UNKNOWN        0
+#define EQ_STANDING_STATE_STANDING       100
+#define EQ_STANDING_STATE_FROZEN         102 // stunned, mesmerized or feared    "You lose control of yourself!"
+#define EQ_STANDING_STATE_KNEELING       105 // looting or binding wounds
+#define EQ_STANDING_STATE_SITTING        110
+#define EQ_STANDING_STATE_DUCKING        111 // crouching
+#define EQ_STANDING_STATE_FEIGN_DEATH    115 // pretending to be dead
+#define EQ_STANDING_STATE_DEAD           120
 
 std::unordered_map<uint32_t, std::string> EQ_STANDING_STATE_Strings =
 {

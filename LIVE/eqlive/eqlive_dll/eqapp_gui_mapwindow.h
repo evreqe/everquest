@@ -125,6 +125,7 @@ static void EQAPP_GUI_MapWindow();
 static void EQAPP_GUI_MapWindow_LoadTextures();
 static void EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPosition(float x, float y, float& screenX, float& screenY);
 static void EQAPP_GUI_MapWindow_Map_ConvertWorldLocationToScreenPositionEx(float x, float y, float& screenX, float& screenY, float zoom);
+static void EQAPP_GUI_MapWIndow_Map_ConvertScreenPositionToWorldLocation(float screenX, float screenY, float& x, float& y);
 static bool EQAPP_GUI_MapWindow_Map_IsPointInsideMap(int x, int y);
 static void EQAPP_GUI_MapWindow_Map_ZoomOut();
 static void EQAPP_GUI_MapWindow_Map_ZoomIn();
@@ -518,6 +519,15 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
 
                     EQAPP_GUI_MapWindow_Map_Scroll(io.MouseDelta.x, io.MouseDelta.y);
                 }
+            }
+
+            // right click
+            if (io.MouseClicked[1] == true)
+            {
+                auto clickY = io.MousePos.y;
+                auto clickX = io.MousePos.x;
+
+                std::cout << "Click: " << clickY << ", " << clickX << std::endl;
             }
 
             // middle click

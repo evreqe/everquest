@@ -127,7 +127,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CRender__RenderPartialScene(void* this_pt
 int __fastcall EQAPP_DETOURED_FUNCTION_CRender__UpdateDisplay(void* this_ptr, void* not_used);
 //int __fastcall EQAPP_DETOURED_FUNCTION_CRender__DrawLineEx(void* this_ptr, void* not_used, int a1, int a2, uint32_t colorARGB);
 
-int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* this_ptr, void* not_used, char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11);
+int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* this_ptr, void* not_used, char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, uint32_t itemIconID, uint32_t itemID, void* a9, int a10, void* a11);
 int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__FindItem(void* this_ptr, void* not_used, char* itemName);
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CSpellBookWnd__GetSpellMemTicksLeft(void* this_ptr, void* not_used);
@@ -797,15 +797,7 @@ void EQAPP_Detours_OnEnterZone()
 {
     EQAPP_Detours_OnEnterOrLeaveZone();
 
-    EQAPP_ActorCollision_Load();
-    EQAPP_WaypointList_Load();
-    EQAPP_NamedSpawns_Load();
-    EQAPP_KillMobs_Load();
-    EQAPP_ChatEvent_Load();
-    EQAPP_Bandolier_Load();
-    EQAPP_BazaarBot_Load();
-    EQAPP_BazaarFilter_Load();
-    EQAPP_CombatMacro_Load();
+    EQAPP_LoadFiles();
 
     g_ESPSpawnTagList.clear();
 
@@ -843,6 +835,24 @@ LRESULT __stdcall EQAPP_DETOURED_FUNCTION_WindowProc(HWND hwnd, UINT uMsg, WPARA
     if (g_EQAppIsInGame == false)
     {
         return EQAPP_REAL_FUNCTION_WindowProc(hwnd, uMsg, wParam, lParam);
+    }
+
+    if (uMsg == WM_KEYDOWN)
+    {
+        if (lParam & (1 << 30))
+        {
+            // repeating key press
+        }
+        else
+        {
+            // first key press
+
+            // Home key
+            if (wParam == VK_HOME)
+            {
+                EQAPP_GUI_Toggle();
+            }
+        }
     }
 
     if (g_GUIIsEnabled == true)
@@ -1074,6 +1084,16 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
     if (g_FollowAIIsEnabled == true)
     {
         EQAPP_FollowAI_Execute();
+    }
+
+    if (g_AutoBankIsEnabled == true)
+    {
+        EQAPP_AutoBank_Execute();
+    }
+
+    if (g_AutoInventoryIsEnabled == true)
+    {
+        EQAPP_AutoInventory_Execute();
     }
 
     if (g_AlwaysAttackIsEnabled == true)
@@ -2217,24 +2237,31 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CRender__DrawLineEx(void* this_ptr, void*
 }
 */
 
-int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* this_ptr, void* not_used, char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, int a7, int a8, void* a9, int a10, void* a11)
+int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* this_ptr, void* not_used, char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, uint32_t itemIconID, uint32_t itemID, void* a9, int a10, void* a11)
 {
     if (g_EQAppShouldUnload == 1)
     {
-        return EQAPP_REAL_FUNCTION_CBazaarSearchWnd__AddItemToList(this_ptr, itemName, itemPrice, traderName, a4, a5, a6, a7, a8, a9, a10, a11);
+        return EQAPP_REAL_FUNCTION_CBazaarSearchWnd__AddItemToList(this_ptr, itemName, itemPrice, traderName, a4, a5, a6, itemIconID, itemID, a9, a10, a11);
     }
 
     if (EQ_IsInGame() == false)
     {
-        return EQAPP_REAL_FUNCTION_CBazaarSearchWnd__AddItemToList(this_ptr, itemName, itemPrice, traderName, a4, a5, a6, a7, a8, a9, a10, a11);
+        return EQAPP_REAL_FUNCTION_CBazaarSearchWnd__AddItemToList(this_ptr, itemName, itemPrice, traderName, a4, a5, a6, itemIconID, itemID, a9, a10, a11);
     }
 
     if (g_EQAppIsInGame == false)
     {
-        return EQAPP_REAL_FUNCTION_CBazaarSearchWnd__AddItemToList(this_ptr, itemName, itemPrice, traderName, a4, a5, a6, a7, a8, a9, a10, a11);
+        return EQAPP_REAL_FUNCTION_CBazaarSearchWnd__AddItemToList(this_ptr, itemName, itemPrice, traderName, a4, a5, a6, itemIconID, itemID, a9, a10, a11);
     }
 
-    ////std::cout << "CBazaarSearchWnd::AddItemToList(): " << itemName << "^" << itemPrice << "^" << traderName << "^" << a4 << "^"  << a5 << "^" << a6 << "^" << a7 << "^" << a8 <<  "^" << a10 << std::endl;
+    // #ITEM_ID^ICON_ID^ITEM_NAME
+
+    std::stringstream lootFilterText;
+    lootFilterText << itemID << "^" << itemIconID << "^" << itemName;
+
+    EQAPP_PrintTextToFileNoDuplicates("bazaarsearchlootfiltertext.txt", lootFilterText.str().c_str());
+
+    //std::cout << "CBazaarSearchWnd::AddItemToList(): " << itemName << "^" << itemPrice << "^" << traderName << "^" << a4 << "^"  << a5 << "^" << a6 << "^" << itemIconID << "^" << itemID <<  "^" << a9 << "^" << a10 << "^" << a11 << std::endl;
 
     if (g_BazaarFilterIsEnabled == true)
     {
@@ -2254,7 +2281,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* thi
         }
     }
 
-    return EQAPP_REAL_FUNCTION_CBazaarSearchWnd__AddItemToList(this_ptr, itemName, itemPrice, traderName, a4, a5, a6, a7, a8, a9, a10, a11);
+    return EQAPP_REAL_FUNCTION_CBazaarSearchWnd__AddItemToList(this_ptr, itemName, itemPrice, traderName, a4, a5, a6, itemIconID, itemID, a9, a10, a11);
 }
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__FindItem(void* this_ptr, void* not_used, char* itemName)
