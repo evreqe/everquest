@@ -1,6 +1,7 @@
 #pragma once
 
 // virtual key codes for WinAPI GetAsyncKeyState() function
+// https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
 #define EQ_VK_ALT          VK_MENU
 #define EQ_VK_LEFT_ALT     VK_LMENU
 #define EQ_VK_RIGHT_ALT    VK_RMENU

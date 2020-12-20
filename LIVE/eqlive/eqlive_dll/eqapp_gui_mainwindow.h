@@ -1,14 +1,13 @@
 #pragma once
 
-extern bool g_GUIDarkThemeIsEnabled;
-
-extern bool g_GUIDemoWindowIsEnabled;
+extern void EQAPP_InterpretCommand_PrintList();
 
 extern bool g_GUIMapWindowIsEnabled;
+
 extern bool g_GUIWaypointEditorWindowIsEnabled;
 extern bool g_GUIWaypointEditorWindowWasOpened;
 
-extern void EQAPP_InterpretCommand_PrintList();
+extern bool g_GUITransmogWindowIsEnabled;
 
 bool g_GUIMainWindowIsEnabled = false;
 
@@ -24,6 +23,7 @@ float g_GUIMainWindowAlphaInactive = 0.8f;
 
 static void EQAPP_GUI_MainWindow();
 static void EQAPP_GUI_MainWindow_MenuFile();
+static void EQAPP_GUI_MainWindow_MenuEdit();
 static void EQAPP_GUI_MainWindow_MenuOptions();
 static void EQAPP_GUI_MainWindow_MenuCheats();
 static void EQAPP_GUI_MainWindow_MenuWaypoints();
@@ -62,6 +62,13 @@ static void EQAPP_GUI_MainWindow()
         if (ImGui::BeginMenu("File##MainWindowMenuFile"))
         {
             EQAPP_GUI_MainWindow_MenuFile();
+
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Edit##MainWindowMenuEdit"))
+        {
+            EQAPP_GUI_MainWindow_MenuEdit();
 
             ImGui::EndMenu();
         }
@@ -166,6 +173,14 @@ static void EQAPP_GUI_MainWindow_MenuFile()
     if (ImGui::MenuItem("Unload##MainWindowMenuItemFileUnload"))
     {
         g_GUIMainWIndowPopupModalUnloadIsOpen = true;
+    }
+}
+
+static void EQAPP_GUI_MainWindow_MenuEdit()
+{
+    if (ImGui::MenuItem("Bazaar Bot##MainWindowMenuItemEditBazaarBot"))
+    {
+        EQAPP_OpenFileWithNotepad("bazaarbot.txt");
     }
 }
 
@@ -366,6 +381,7 @@ static void EQAPP_GUI_MainWindow_PopupMenuClients()
 static void EQAPP_GUI_MainWindow_MenuWindows()
 {
     if (ImGui::MenuItem("Map##MainWindowMenuItemWindowsMap", NULL, false)) { EQ_ToggleBool(g_GUIMapWindowIsEnabled); }
+
     if (ImGui::MenuItem("Spawn List##MainWindowMenuItemWindowsSpawnList", NULL, false)) {}
 
     if (g_WaypointIsEnabled == true)
@@ -379,6 +395,8 @@ static void EQAPP_GUI_MainWindow_MenuWindows()
             g_WaypointEditorIsEnabled = true;
         }
     }
+
+    if (ImGui::MenuItem("Transmog##MainWindowMenuItemWindowsTransmog", NULL, false)) { EQ_ToggleBool(g_GUITransmogWindowIsEnabled); }
 }
 
 static void EQAPP_GUI_MainWindow_MenuGUI()
@@ -402,6 +420,18 @@ static void EQAPP_GUI_MainWindow_MenuGUI()
     if (ImGui::MenuItem("Show Demo Window##MainWindowMenuItemGUIShowDemoWindow", NULL, &g_GUIDemoWindowIsEnabled)) {}
 }
 
+static int MyResizeCallback(ImGuiInputTextCallbackData* data)
+{
+    if (data->EventFlag == ImGuiInputTextFlags_CallbackResize)
+    {
+        ImVector<char>* my_str = (ImVector<char>*)data->UserData;
+        IM_ASSERT(my_str->begin() == data->Buf);
+        my_str->resize(data->BufSize);  // NB: On resizing calls, generally data->BufSize == data->BufTextLen + 1
+        data->Buf = my_str->begin();
+    }
+    return 0;
+}
+
 static void EQAPP_GUI_MainWindow_MenuHelp()
 {
     if (ImGui::MenuItem("Commands##MainWindowMenuItemHelpCommands")) { EQAPP_InterpretCommand_PrintList(); }
@@ -409,4 +439,10 @@ static void EQAPP_GUI_MainWindow_MenuHelp()
     ImGui::Separator();
 
     if (ImGui::MenuItem("About##MainWindowMenuItemHelpAbout")) {};
+
+    //ImGui::Separator();
+
+    //std::string asdf = EQAPP_ReadFileToString("bazaarbot.txt");
+
+    //ImGui::InputTextMultiline("asdfasdfasdf", &asdf);
 }

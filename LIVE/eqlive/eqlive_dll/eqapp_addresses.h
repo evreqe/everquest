@@ -12,7 +12,7 @@ void EQAPP_FixAddress(uint32_t& address)
     if (address == 0)
     {
         std::stringstream ss;
-        ss << __FUNCTION__ << ": address is null at index " << g_EQAppFixAddressIndex;
+        ss << __FUNCTION__ << ": address is NULL at index " << g_EQAppFixAddressIndex;
 
         MessageBoxA(NULL, ss.str().c_str(), "Error", MB_ICONERROR);
 
@@ -261,3 +261,4 @@ bool EQAPP_InitializeAddressPointers()
 
     return result;
 }
+

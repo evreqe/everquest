@@ -1,14 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
@@ -16,172 +8,168 @@
     <Filter Include="imgui">
       <UniqueIdentifier>{20e66205-dd9b-4a8c-b003-6ab756abcbe9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="eq">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="eqapp">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="inc">
+      <UniqueIdentifier>{fb999966-f23b-4ea9-ab02-ab71a97bffd4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="eqapp_functions.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_hud.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="eqapp_ini.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_interpretcommand.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_nodraw.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_sleep.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="eqapp_string.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="eqapp_timer.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_windowtitle.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_actorcollision.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_addresses.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_alwaysattack.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_alwayshotbutton.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_autogroup.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_boxchat.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_changeheight.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_combathotbutton.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_console.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_detours.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_followai.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="..\eq\eq.h">
-      <Filter>Header Files</Filter>
+      <Filter>eq</Filter>
     </ClInclude>
     <ClInclude Include="..\eq\eq_addresses.h">
-      <Filter>Header Files</Filter>
+      <Filter>eq</Filter>
     </ClInclude>
     <ClInclude Include="..\eq\eq_classes.h">
-      <Filter>Header Files</Filter>
+      <Filter>eq</Filter>
     </ClInclude>
     <ClInclude Include="..\eq\eq_constants.h">
-      <Filter>Header Files</Filter>
+      <Filter>eq</Filter>
     </ClInclude>
     <ClInclude Include="..\eq\eq_cxwnd.h">
-      <Filter>Header Files</Filter>
+      <Filter>eq</Filter>
     </ClInclude>
     <ClInclude Include="..\eq\eq_executecmd.h">
-      <Filter>Header Files</Filter>
+      <Filter>eq</Filter>
     </ClInclude>
     <ClInclude Include="..\eq\eq_functions.h">
-      <Filter>Header Files</Filter>
+      <Filter>eq</Filter>
     </ClInclude>
     <ClInclude Include="..\eq\eq_keys.h">
-      <Filter>Header Files</Filter>
+      <Filter>eq</Filter>
     </ClInclude>
     <ClInclude Include="..\eq\eq_macros.h">
-      <Filter>Header Files</Filter>
+      <Filter>eq</Filter>
     </ClInclude>
     <ClInclude Include="..\eq\eq_memory.h">
-      <Filter>Header Files</Filter>
+      <Filter>eq</Filter>
     </ClInclude>
     <ClInclude Include="..\eq\eq_messages.h">
-      <Filter>Header Files</Filter>
+      <Filter>eq</Filter>
     </ClInclude>
     <ClInclude Include="..\eq\eq_virtualkeycodes.h">
-      <Filter>Header Files</Filter>
+      <Filter>eq</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_freecamera.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_esp.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_chatevent.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_namedspawns.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_speed.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_waypoint.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_namecolor.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_windowforeground.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_lantern.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_bandolier.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_cheat.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_killmobs.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="eq_structures.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="eq_spellaffects.h">
-      <Filter>Header Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_bazaarfilter.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_noalert.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_powerlevel.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_combatmacro.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_macro.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_bazaarbot.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_autobank.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_autoinventory.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="imconfig.h">
       <Filter>imgui</Filter>
@@ -211,33 +199,66 @@
       <Filter>imgui</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_gui.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_gui_mainwindow.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_gui_mapwindow.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_gui_waypointeditorwindow.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_gui_dockwindow.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_gui_spawnlistwindow.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_area.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClInclude>
     <ClInclude Include="eqapp_loadoptions.h">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_gui_transmogwindow.h">
+      <Filter>eqapp</Filter>
+    </ClInclude>
+    <ClInclude Include="eq_addresses_live.h">
+      <Filter>eq</Filter>
+    </ClInclude>
+    <ClInclude Include="eq_addresses_test.h">
+      <Filter>eq</Filter>
+    </ClInclude>
+    <ClInclude Include="inc_master.h">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_utility_string.h">
+      <Filter>eqapp</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_utility_timer.h">
+      <Filter>eqapp</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_utility_ini.h">
+      <Filter>eqapp</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_detours_prototypes.h">
+      <Filter>eqapp</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_autotrade.h">
+      <Filter>eqapp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\eq\eq_spellaffects.h">
+      <Filter>eq</Filter>
+    </ClInclude>
+    <ClInclude Include="..\eq\eq_structures.h">
+      <Filter>eq</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>eqapp</Filter>
     </ClCompile>
     <ClCompile Include="imgui.cpp">
       <Filter>imgui</Filter>

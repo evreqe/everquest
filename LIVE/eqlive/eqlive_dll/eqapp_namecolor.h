@@ -77,3 +77,4 @@ bool EQAPP_NameColor_HandleEvent_EQPlayer__SetNameSpriteTint(void* this_ptr)
 
     return false;
 }
+

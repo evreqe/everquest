@@ -7,6 +7,8 @@ EQApp::TimerInterval g_LanternTimerInterval = 1;
 
 uint32_t g_LanternLight = NULL;
 
+float g_LanternOffsetZ = 4.0f;
+
 void EQAPP_Lantern_Toggle();
 void EQAPP_Lantern_On();
 void EQAPP_Lantern_Off();
@@ -53,8 +55,9 @@ void EQAPP_Lantern_Execute()
         float playerX = EQ_GetSpawnX(playerSpawn);
         float playerZ = EQ_GetSpawnZ(playerSpawn);
 
-        g_LanternLight = EQ_CLASS_POINTER_CDisplay->CreateLight(EQ_LIGHT_TYPE_GLOOMING_DEEP_LANTERN, 0.0f, playerY, playerX, playerZ + 4.0f);
+        g_LanternLight = EQ_CLASS_POINTER_CDisplay->CreateLight(EQ_LIGHT_TYPE_GLOOMING_DEEP_LANTERN, 0.0f, playerY, playerX, playerZ + g_LanternOffsetZ);
 
         EQ_SetPlayerLightInterface(g_LanternLight);
     }
 }
+

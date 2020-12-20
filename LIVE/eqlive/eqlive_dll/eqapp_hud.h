@@ -1,12 +1,5 @@
 #pragma once
 
-#include "eqapp_alwaysattack.h"
-#include "eqapp_alwayshotbutton.h"
-#include "eqapp_boxchat.h"
-#include "eqapp_combathotbutton.h"
-#include "eqapp_esp.h"
-#include "eqapp_sleep.h"
-
 bool g_HUDIsEnabled = true;
 
 std::stringstream g_HUDText;
@@ -16,6 +9,11 @@ uint32_t g_HUDYDefault = 20;
 
 uint32_t g_HUDX = g_HUDXDefault;
 uint32_t g_HUDY = g_HUDYDefault;
+
+uint32_t g_HUDNumClients = 0;
+
+EQApp::Timer g_HUDNumClientsTimer = EQAPP_Timer_GetTimeNow();
+EQApp::TimerInterval g_HUDNumClientsTimerInterval = 60;
 
 bool g_HUDPlayersInZoneIsEnabled = true;
 
@@ -72,10 +70,14 @@ void EQAPP_HUD_Execute()
         g_HUDText << "- SLEEP!\n";
     }
 
-    auto numClients = EQAPP_GetNumClients();
-    if (numClients > 1)
+    if (EQAPP_Timer_HasTimeElapsed(g_HUDNumClientsTimer, g_HUDNumClientsTimerInterval) == true)
     {
-        g_HUDText << "- Clients: " << numClients << "\n";
+        g_HUDNumClients = EQAPP_GetNumClients();
+    }
+
+    if (g_HUDNumClients > 1)
+    {
+        g_HUDText << "- Clients: " << g_HUDNumClients << "\n";
     }
 
     if (g_HUDPlayersInZoneIsEnabled == true)
@@ -100,7 +102,7 @@ void EQAPP_HUD_Execute()
     {
         if (g_BoxChatIsConnected == true)
         {
-            g_HUDText << "- Box Chat: Connected (" << g_BoxChatChannelName << ")\n";
+            g_HUDText << "- Box Chat: Connected [" << g_BoxChatGlobalChannelName << "] (" << g_BoxChatChannelName << ")\n";
         }
     }
 

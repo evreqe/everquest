@@ -147,8 +147,8 @@ void EQAPP_ChatEvent_LoadEx(const char* filename)
         //std::string chatText = tokens.at(0);
         //std::string commandText = tokens.at(1);
 
-        //std::cout << "[" << index << "] Chat Text: " << chatText << std::endl;
-        //std::cout << "[" << index << "] Command Text: " << commandText << std::endl;
+        //std::cout << "[" << index << "] Chat Text: " << chatText << "\n";
+        //std::cout << "[" << index << "] Command Text: " << commandText << "\n";
 
         //g_ChatEventList.insert(std::make_pair(chatText, commandText));
 
@@ -157,7 +157,7 @@ void EQAPP_ChatEvent_LoadEx(const char* filename)
         index++;
     }
 
-    std::cout << "Chat Events loaded from file: " << filename << std::endl;
+    std::cout << "Chat Events loaded from file: " << filename << "\n";
 
     file.close();
 }
@@ -190,7 +190,7 @@ void EQAPP_ChatEvent_ClearList()
 
 void EQAPP_ChatEvent_PrintList()
 {
-    std::cout << "Chat Events:" << std::endl;
+    std::cout << "Chat Events:" << "\n";
 
     bool bDisable = false;
 
@@ -205,8 +205,8 @@ void EQAPP_ChatEvent_PrintList()
 
     for (auto& keyValue : g_ChatEventList)
     {
-        std::cout << "[" << index << "] Chat Text: " << keyValue.first << std::endl;
-        std::cout << "[" << index << "] Command Text: " << keyValue.second << std::endl;
+        std::cout << "[" << index << "] Chat Text: " << keyValue.first << "\n";
+        std::cout << "[" << index << "] Command Text: " << keyValue.second << "\n";
 
         index++;
     }
@@ -268,3 +268,5 @@ void EQAPP_ChatEvent_HandleEvent_CEverQuest__dsp_chat(std::string text, int text
         }
     }
 }
+
+

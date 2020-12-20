@@ -89,27 +89,27 @@ void EQAPP_ActorCollision_Load()
     bool result = EQAPP_ReadFileToList(folderFileName.str().c_str(), g_ActorCollisionActorDefinitionList, false);
     if (result == true)
     {
-        std::cout << "Actor Collision loaded from file: " << folderFileName.str() << std::endl;
+        std::cout << "Actor Collision loaded from file: " << folderFileName.str() << "\n";
     }
 }
 
 void EQAPP_ActorCollision_PrintActorDefinitionList()
 {
-    std::cout << "Actor Collision Actor Definition List:" << std::endl;
+    std::cout << "Actor Collision Actor Definition List:" << "\n";
 
     for (auto& actorDefinition : g_ActorCollisionActorDefinitionList)
     {
-        std::cout << actorDefinition << std::endl;
+        std::cout << actorDefinition << "\n";
     }
 }
 
 void EQAPP_ActorCollision_PrintActorDefinitionDebugList()
 {
-    std::cout << "Actor Collision Actor Definition Debug List:" << std::endl;
+    std::cout << "Actor Collision Actor Definition Debug List:" << "\n";
 
     for (auto& actorDefinition : g_ActorCollisionActorDefinitionDebugList)
     {
-        std::cout << actorDefinition << std::endl;
+        std::cout << actorDefinition << "\n";
     }
 }
 
@@ -286,3 +286,5 @@ bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors_Player(uint32_t
 
     return false;
 }
+
+

@@ -27,8 +27,8 @@ with open("eqgame.c", "rt") as in_file:
 
         if insideFunction == 0:
 
-            if functionString.find("dword_DDD0CC") != -1:    # address
-                if re.search("0x[0-9A-F]+u", functionString):
+            if functionString.find("6762F0") != -1:    # address
+                if re.search("\"[a-zA-Z\s]+\"", functionString):
                     print(functionAddress)
 
             functionString = ""

@@ -1,7 +1,5 @@
 #pragma once
 
-extern std::list<std::string> g_BoxChatInterpretCommandList;
-
 bool g_CombatMacroIsEnabled = true;
 
 EQApp::Timer g_CombatMacroTimer = EQAPP_Timer_GetTimeNow();
@@ -63,7 +61,7 @@ void EQAPP_CombatMacro_Load()
     bool result = EQAPP_ReadFileToList(folderFileName.str().c_str(), g_CombatMacroList, false);
     if (result == true)
     {
-        std::cout << "Combat Macro loaded from file: " << folderFileName.str() << std::endl;
+        std::cout << "Combat Macro loaded from file: " << folderFileName.str() << "\n";
         return;
     }
 }
@@ -75,12 +73,12 @@ void EQAPP_CombatMacro_Execute()
         return;
     }
 
-    if (g_CombatMacroList.size() == 0)
+    if (g_CombatMacroList.empty() == true)
     {
         return;
     }
 
-    if (g_BoxChatInterpretCommandList.size() != 0)
+    if (g_BoxChatInterpretCommandList.empty() == false)
     {
         return;
     }

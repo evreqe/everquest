@@ -1,22 +1,5 @@
 #pragma once
 
-#include "eqapp_alwaysattack.h"
-#include "eqapp_alwayshotbutton.h"
-#include "eqapp_autogroup.h"
-#include "eqapp_boxchat.h"
-#include "eqapp_changeheight.h"
-#include "eqapp_chatevent.h"
-#include "eqapp_combathotbutton.h"
-#include "eqapp_combatmacro.h"
-#include "eqapp_console.h"
-#include "eqapp_killmobs.h"
-#include "eqapp_followai.h"
-#include "eqapp_freecamera.h"
-#include "eqapp_hud.h"
-#include "eqapp_interpretcommand.h"
-#include "eqapp_sleep.h"
-#include "eqapp_windowtitle.h"
-
 bool g_DetoursIsDX9Detoured = false;
 bool g_DetoursIsCameraDetoured = false;
 bool g_DetoursIsRenderDetoured = false;
@@ -51,6 +34,7 @@ EQ_MACRO_FUNCTION_DefineDetour(CharacterZoneClient__TotalSpellAffects);
 
 EQ_MACRO_FUNCTION_DefineDetour(EQPlayer__ChangePosition);
 EQ_MACRO_FUNCTION_DefineDetour(EQPlayer__SetNameSpriteTint);
+EQ_MACRO_FUNCTION_DefineDetour(EQPlayer__UpdateItemSlot);
 
 EQ_MACRO_FUNCTION_DefineDetour(CXWndManager__DrawCursor);
 EQ_MACRO_FUNCTION_DefineDetour(CXWndManager__DrawWindows);
@@ -84,94 +68,7 @@ EQ_MACRO_FUNCTION_DefineDetour(CSpellBookWnd__GetSpellScribeTicksLeft);
 
 EQ_MACRO_FUNCTION_DefineDetour(IDirect3DDevice9__DrawIndexedPrimitive);
 
-LRESULT __stdcall EQAPP_DETOURED_FUNCTION_WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-int __cdecl EQAPP_DETOURED_FUNCTION_ProcessMouseEvent();
-int __cdecl EQAPP_DETOURED_FUNCTION_ProcessKeyboardEvent();
-int __cdecl EQAPP_DETOURED_FUNCTION_CollisionCallbackForActors(uint32_t cactor);
-int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown);
-int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive, void* unknown, int zero);
-
-float __fastcall EQAPP_DETOURED_FUNCTION_EQ_Character__encum_factor(void* this_ptr, void* not_used);
-int __fastcall EQAPP_DETOURED_FUNCTION_EQ_Character__TakeFallDamage(void* this_ptr, void* not_used, float value);
-bool __fastcall EQAPP_DETOURED_FUNCTION_EQ_Character__CanIBreathe(void* this_ptr, void* not_used);
-int __fastcall EQAPP_DETOURED_FUNCTION_EQ_Character__CanISeeInvis(void* this_ptr, void* not_used);
-void __fastcall EQAPP_DETOURED_FUNCTION_EQ_Character__StunMe(void* this_ptr, void* not_used, uint32_t duration, int unknown1, int unknown2, uint8_t bSpinInCircle);
-void __fastcall EQAPP_DETOURED_FUNCTION_EQ_Character__ProcessEnvironment(void* this_ptr, void* not_used);
-
-int __fastcall EQAPP_DETOURED_FUNCTION_CharacterZoneClient__TotalSpellAffects(void* this_ptr, void* not_used, uint32_t spellAffectIndex, int unknown1, int unknown2, int unknown3, int unknown4);
-
-int __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__ChangePosition(void* this_ptr, void* not_used, uint8_t standingState);
-bool __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__SetNameSpriteTint(void* this_ptr, void* not_used);
-
-int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawCursor(void* this_ptr, void* not_used);
-int __fastcall EQAPP_DETOURED_FUNCTION_CXWndManager__DrawWindows(void* this_ptr, void* not_used);
-
-char* __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__DoPercentConvert(void* this_ptr, void* not_used, char* text, bool isOutgoing);
-int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__InterpretCmd(void* this_ptr, void* not_used, class EQPlayer* player, const char* text);
-int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void* not_used, const char* text, int textColor, bool one_1, bool one_2, bool zero_1);
-int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__SetGameState(void* this_ptr, void* not_used, int gameState);
-int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__LMouseUp(void* this_ptr, void* not_used, int x, int y);
-int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__RMouseUp(void* this_ptr, void* not_used, int x, int y);
-int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__HandleMouseWheel(void* this_ptr, void* not_used, signed int delta);
-int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__SendNewText(void* this_ptr, void* not_used, int chatType, char* name, char* text, int unknown);
-
-int __fastcall EQAPP_DETOURED_FUNCTION_CDisplay__CreateActor(void* this_ptr, void* not_used, char* actorDefinition, float y, float x, float z, float a5, float a6, float a7, float a8, float a9, float a10, int a11);
-int __fastcall EQAPP_DETOURED_FUNCTION_CDisplay__CreatePlayerActor(void* this_ptr, void* not_used, uint32_t spawn, int a2, int a3, int a4, int a5, int a6);
-int __fastcall EQAPP_DETOURED_FUNCTION_CDisplay__DeleteActor(void* this_ptr, void* not_used, uint32_t cactor);
-
-int __fastcall EQAPP_DETOURED_FUNCTION_CCamera__SetCameraLocation(void* this_ptr, void* not_used, EQ::Location& location, bool canSetLocation);
-
-int __fastcall EQAPP_DETOURED_FUNCTION_CRender__ResetDevice(void* this_ptr, void* not_used, bool unknown);
-int __fastcall EQAPP_DETOURED_FUNCTION_CRender__ClearRenderToBlack(void* this_ptr, void* not_used);
-int __fastcall EQAPP_DETOURED_FUNCTION_CRender__RenderPartialScene(void* this_ptr, void* not_used);
-int __fastcall EQAPP_DETOURED_FUNCTION_CRender__UpdateDisplay(void* this_ptr, void* not_used);
-//int __fastcall EQAPP_DETOURED_FUNCTION_CRender__DrawLineEx(void* this_ptr, void* not_used, int a1, int a2, uint32_t colorARGB);
-
-int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* this_ptr, void* not_used, char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, uint32_t itemIconID, uint32_t itemID, void* a9, int a10, void* a11);
-int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__FindItem(void* this_ptr, void* not_used, char* itemName);
-
-int __fastcall EQAPP_DETOURED_FUNCTION_CSpellBookWnd__GetSpellMemTicksLeft(void* this_ptr, void* not_used);
-int __fastcall EQAPP_DETOURED_FUNCTION_CSpellBookWnd__GetSpellScribeTicksLeft(void* this_ptr, void* not_used);
-
-HRESULT __stdcall EQAPP_DETOURED_FUNCTION_IDirect3DDevice9__DrawIndexedPrimitive(LPDIRECT3DDEVICE9 device, D3DPRIMITIVETYPE primitiveType, INT baseIndex, UINT minIndex, UINT numVertices, UINT startIndex, UINT primitiveCount);
-
-/*
-
-HMODULE WINAPI EQAPP_REAL_FUNCTION_GetModuleHandleA(LPCSTR lpModuleName);
-DETOUR_TRAMPOLINE(HMODULE WINAPI EQAPP_REAL_FUNCTION_GetModuleHandleA(LPCSTR lpModuleName), GetModuleHandleA);
-
-HMODULE WINAPI EQAPP_DETOURED_FUNCTION_GetModuleHandleA(LPCSTR lpModuleName);
-
-HINSTANCE WINAPI EQAPP_REAL_FUNCTION_ShellExecuteA
-(
-    HWND     hwnd,
-    LPCSTR   lpOperation,
-    LPCSTR   lpFile,
-    LPCSTR   lpParameters,
-    LPCSTR   lpDirectory,
-    INT      nShowCmd
-);
-DETOUR_TRAMPOLINE(HINSTANCE WINAPI EQAPP_REAL_FUNCTION_ShellExecuteA
-(
-    HWND     hwnd,
-    LPCSTR   lpOperation,
-    LPCSTR   lpFile,
-    LPCSTR   lpParameters,
-    LPCSTR   lpDirectory,
-    INT      nShowCmd
-), ShellExecuteA);
-
-HINSTANCE WINAPI EQAPP_DETOURED_FUNCTION_ShellExecuteA
-(
-    HWND     hwnd,
-    LPCSTR   lpOperation,
-    LPCSTR   lpFile,
-    LPCSTR   lpParameters,
-    LPCSTR   lpDirectory,
-    INT      nShowCmd
-);
-
-*/
+#include "eqapp_detours_prototypes.h"
 
 void EQAPP_Detours_AddDetoursForDX9()
 {
@@ -189,11 +86,11 @@ void EQAPP_Detours_AddDetoursForDX9()
             EQ_ADDRESS_FUNCTION_IDirect3DDevice9__DrawIndexedPrimitive = EQ_VTABLE_IDirect3DDevice9[EQ_VTABLE_INDEX_IDirect3DDevice9__DrawIndexedPrimitive];
             if (EQ_ADDRESS_FUNCTION_IDirect3DDevice9__DrawIndexedPrimitive != 0)
             {
-                //std::cout << "DrawIndexedPrimitive: 0x" << std::hex << EQ_ADDRESS_FUNCTION_IDirect3DDevice9__DrawIndexedPrimitive << std::dec << std::endl;
+                //std::cout << "DrawIndexedPrimitive: 0x" << std::hex << EQ_ADDRESS_FUNCTION_IDirect3DDevice9__DrawIndexedPrimitive << std::dec << "\n";
 
                 EQ_MACRO_FUNCTION_AddDetour(IDirect3DDevice9__DrawIndexedPrimitive);
 
-                //std::cout << "AddDetoursForDX9 ok!" << std::endl;
+                //std::cout << "AddDetoursForDX9 ok!" << "\n";
 
                 g_DetoursIsDX9Detoured = true;
                 return;
@@ -201,7 +98,7 @@ void EQAPP_Detours_AddDetoursForDX9()
         }
     }
 
-    std::cout << "AddDetoursForDX9 fail!" << std::endl;
+    std::cout << "AddDetoursForDX9() failed!\n";
 
     g_DetoursIsDX9Detoured = false;
 }
@@ -224,7 +121,7 @@ void EQAPP_Detours_RemoveDetoursForDX9()
             {
                 EQ_MACRO_FUNCTION_RemoveDetour(IDirect3DDevice9__DrawIndexedPrimitive);
 
-                //std::cout << "RemoveDetoursForDX9 ok!" << std::endl;
+                //std::cout << "RemoveDetoursForDX9 ok!" << "\n";
 
                 g_DetoursIsDX9Detoured = false;
                 return;
@@ -232,7 +129,7 @@ void EQAPP_Detours_RemoveDetoursForDX9()
         }
     }
 
-    std::cout << "RemoveDetoursForDX9 fail!" << std::endl;
+    std::cout << "RemoveDetoursForDX9() failed!\n";
 
     g_DetoursIsDX9Detoured = true;
 }
@@ -255,7 +152,7 @@ void EQAPP_Detours_AddDetoursForCamera()
             {
                 EQ_MACRO_FUNCTION_AddDetour(CCamera__SetCameraLocation);
 
-                //std::cout << "AddDetoursForCamera ok!" << std::endl;
+                //std::cout << "AddDetoursForCamera ok!" << "\n";
 
                 g_DetoursIsCameraDetoured = true;
                 return;
@@ -263,7 +160,7 @@ void EQAPP_Detours_AddDetoursForCamera()
         }
     }
 
-    std::cout << "AddDetoursForCamera fail!" << std::endl;
+    std::cout << "AddDetoursForCamera() failed!\n";
 
     g_DetoursIsCameraDetoured = false;
 }
@@ -286,7 +183,7 @@ void EQAPP_Detours_RemoveDetoursForCamera()
             {
                 EQ_MACRO_FUNCTION_RemoveDetour(CCamera__SetCameraLocation);
 
-                //std::cout << "RemoveDetoursForCamera ok!" << std::endl;
+                //std::cout << "RemoveDetoursForCamera ok!" << "\n";
 
                 g_DetoursIsCameraDetoured = false;
                 return;
@@ -294,7 +191,7 @@ void EQAPP_Detours_RemoveDetoursForCamera()
         }
     }
 
-    std::cout << "RemoveDetoursForCamera fail!" << std::endl;
+    std::cout << "RemoveDetoursForCamera() failed!\n";
 
     g_DetoursIsCameraDetoured = true;
 }
@@ -333,7 +230,7 @@ void EQAPP_Detours_AddDetoursForRender()
                 EQ_MACRO_FUNCTION_AddDetour(CRender__UpdateDisplay);
                 //EQ_MACRO_FUNCTION_AddDetour(CRender__DrawLineEx);
 
-                //std::cout << "AddDetoursForRender ok!" << std::endl;
+                //std::cout << "AddDetoursForRender ok!" << "\n";
 
                 g_DetoursIsRenderDetoured = true;
                 return;
@@ -341,7 +238,7 @@ void EQAPP_Detours_AddDetoursForRender()
         }
     }
 
-    std::cout << "AddDetoursForRender fail!" << std::endl;
+    std::cout << "AddDetoursForRender() failed!\n";
 
     g_DetoursIsRenderDetoured = false;
 }
@@ -380,7 +277,7 @@ void EQAPP_Detours_RemoveDetoursForRender()
                 EQ_MACRO_FUNCTION_RemoveDetour(CRender__UpdateDisplay);
                 //EQ_MACRO_FUNCTION_RemoveDetour(CRender__DrawLineEx);
 
-                //std::cout << "RemoveDetoursForRender ok!" << std::endl;
+                //std::cout << "RemoveDetoursForRender ok!" << "\n";
 
                 g_DetoursIsRenderDetoured = false;
                 return;
@@ -388,7 +285,7 @@ void EQAPP_Detours_RemoveDetoursForRender()
         }
     }
 
-    std::cout << "RemoveDetoursForRender fail!" << std::endl;
+    std::cout << "RemoveDetoursForRender() failed!\n";
 
     g_DetoursIsRenderDetoured = true;
 }
@@ -471,6 +368,11 @@ void EQAPP_Detours_Load()
     if (EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteTint != 0)
     {
         EQ_MACRO_FUNCTION_AddDetour(EQPlayer__SetNameSpriteTint);
+    }
+
+    if (EQ_ADDRESS_FUNCTION_EQPlayer__UpdateItemSlot != 0)
+    {
+        EQ_MACRO_FUNCTION_AddDetour(EQPlayer__UpdateItemSlot);
     }
 
     if (EQ_ADDRESS_POINTER_CXWndManager != 0)
@@ -665,6 +567,11 @@ void EQAPP_Detours_Unload()
         EQ_MACRO_FUNCTION_RemoveDetour(EQPlayer__SetNameSpriteTint);
     }
 
+    if (EQ_ADDRESS_FUNCTION_EQPlayer__UpdateItemSlot != 0)
+    {
+        EQ_MACRO_FUNCTION_RemoveDetour(EQPlayer__UpdateItemSlot);
+    }
+
     if (EQ_ADDRESS_POINTER_CXWndManager != 0)
     {
         if (EQ_ADDRESS_FUNCTION_CXWndManager__DrawCursor != 0)
@@ -835,6 +742,25 @@ LRESULT __stdcall EQAPP_DETOURED_FUNCTION_WindowProc(HWND hwnd, UINT uMsg, WPARA
     if (g_EQAppIsInGame == false)
     {
         return EQAPP_REAL_FUNCTION_WindowProc(hwnd, uMsg, wParam, lParam);
+    }
+
+    // prevent double-click
+    if (uMsg == WM_LBUTTONDBLCLK)
+    {
+        g_EQAppWindowProcLastMessageWasDoubleClick = true;
+
+        return true;
+    }
+
+    if (uMsg == WM_LBUTTONUP)
+    {
+        if (g_EQAppWindowProcLastMessageWasDoubleClick == true)
+        {
+
+            g_EQAppWindowProcLastMessageWasDoubleClick = false;
+
+            return true;
+        }
     }
 
     if (uMsg == WM_KEYDOWN)
@@ -1200,7 +1126,7 @@ int __cdecl EQAPP_DETOURED_FUNCTION_ExecuteCmd(uint32_t commandID, int isActive,
         return EQAPP_REAL_FUNCTION_ExecuteCmd(commandID, isActive, unknown, zero);
     }
 
-    ////std::cout << "ExecuteCmd(): " << commandID << " (Active: " << isActive << ") " << zero << std::endl;
+    ////std::cout << "ExecuteCmd(): " << commandID << " (Active: " << isActive << ") " << zero << "\n";
 
     if (g_FollowAIIsEnabled == true)
     {
@@ -1280,7 +1206,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_EQ_Character__TakeFallDamage(void* this_p
     if (g_CheatNoFallDamageIsEnabled == true)
     {
         // never take fall damage
-        std::cout << "You would have taken fall damage! (" << value << ")" << std::endl;
+        std::cout << "You would have taken fall damage! (" << value << ")" << "\n";
         return 0;
     }
 
@@ -1542,6 +1468,45 @@ bool __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__SetNameSpriteTint(void* this_p
     {
         EQAPP_NameColor_HandleEvent_EQPlayer__SetNameSpriteTint(this_ptr);
     }
+
+    return result;
+}
+
+bool __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__UpdateItemSlot(void* this_ptr, void* not_used, uint8_t updateItemSlot, int itemDefinition, bool b1, bool serverSide, bool b3)
+{
+    if (g_EQAppShouldUnload == 1)
+    {
+        return EQAPP_REAL_FUNCTION_EQPlayer__UpdateItemSlot(this_ptr, updateItemSlot, itemDefinition, b1, serverSide, b3);
+    }
+
+    if (EQ_IsInGame() == false)
+    {
+        return EQAPP_REAL_FUNCTION_EQPlayer__UpdateItemSlot(this_ptr, updateItemSlot, itemDefinition, b1, serverSide, b3);
+    }
+
+    if (g_EQAppIsInGame == false)
+    {
+        return EQAPP_REAL_FUNCTION_EQPlayer__UpdateItemSlot(this_ptr, updateItemSlot, itemDefinition, b1, serverSide, b3);
+    }
+
+    bool result = EQAPP_REAL_FUNCTION_EQPlayer__UpdateItemSlot(this_ptr, updateItemSlot, itemDefinition, b1, serverSide, b3);
+
+/*
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn != NULL)
+    {
+        if ((uint32_t)this_ptr == playerSpawn)
+        {
+            std::cout << "EQPlayer::UpdateItemSlot()\n";
+
+            std::cout << "updateItemSlot: " << (int)updateItemSlot << "\n";
+            std::cout << "itemDefinition: " << itemDefinition << "\n";
+            std::cout << "b1: " << std::boolalpha << b1 << "\n";
+            std::cout << "serverSide: " << std::boolalpha << serverSide << "\n";
+            std::cout << "b3: " << std::boolalpha << b3 << "\n";
+        }
+    }
+*/
 
     return result;
 }
@@ -1820,6 +1785,33 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__LMouseUp(void* this_ptr, void
         return EQAPP_REAL_FUNCTION_CEverQuest__LMouseUp(this_ptr, x, y);
     }
 
+    if (g_EQAppDoubleClickMouseFixIsEnabled == true)
+    {
+        auto time = EQ_GetTimer();
+
+        if (g_EQAppDoubleClickMouseFixLMouseUpTimePrevious == 0)
+        {
+            g_EQAppDoubleClickMouseFixLMouseUpTimePrevious = EQ_GetTimer();
+        }
+
+        auto timeDifference = time - g_EQAppDoubleClickMouseFixLMouseUpTimePrevious;
+
+        //std::cout << "time: " << time << "\n";
+
+        //std::cout << "prev: " << g_EQAppLMouseUpTimePrevious << "\n";
+
+        //std::cout << "timeDifference: " << timeDifference << "\n";
+
+        if (timeDifference != 0 && timeDifference <= g_EQAppDoubleClickMouseFixDelay)
+        {
+            g_EQAppDoubleClickMouseFixLMouseUpTimePrevious = EQ_GetTimer();
+            //std::cout << "Double-click detected.\n";
+            return 1;
+        }
+
+        g_EQAppDoubleClickMouseFixLMouseUpTimePrevious = EQ_GetTimer();
+    }
+
     if (g_ESPIsEnabled == true)
     {
         bool result = EQAPP_ESP_HandleEvent_CEverQuest__LMouseUp(x, y);
@@ -1889,7 +1881,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__HandleMouseWheel(void* this_p
         return EQAPP_REAL_FUNCTION_CEverQuest__HandleMouseWheel(this_ptr, delta);
     }
 
-    ////std::cout << "mouse wheel delta: " << delta << std::endl;
+    ////std::cout << "mouse wheel delta: " << delta << "\n";
 
     // clamp delta value within valid range due to bug with GUI
     if (delta > EQ_MOUSE_WHEEL_DELTA_MAX || delta < EQ_MOUSE_WHEEL_DELTA_MIN)
@@ -1935,7 +1927,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__SendNewText(void* this_ptr, v
 
     if (EQAPP_String_Contains(strText, "//") == true)
     {
-        std::cout << "Double-slash command blocked from being sent accidentally by CEverQuest::SendNewText()!" << std::endl;
+        std::cout << "Double-slash command blocked from being sent accidentally by CEverQuest::SendNewText()!" << "\n";
         return 1;
     }
 
@@ -1986,7 +1978,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CDisplay__CreateActor(void* this_ptr, voi
     }
 
 /*
-    std::cout << "CDisplay::CreateActor(): " << actorDefinition << std::endl;
+    std::cout << "CDisplay::CreateActor(): " << actorDefinition << "\n";
 */
 
     return EQAPP_REAL_FUNCTION_CDisplay__CreateActor(this_ptr, actorDefinition, y, x, z, a5, a6, a7, a8, a9, a10, a11);
@@ -2020,7 +2012,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CDisplay__CreatePlayerActor(void* this_pt
     std::string spawnNameNumbered = EQ_GetSpawnNameNumbered(spawn);
     if (spawnNameNumbered.size() != 0)
     {
-        std::cout << "CDisplay::CreatePlayerActor(): " << spawnNameNumbered << std::endl;
+        std::cout << "CDisplay::CreatePlayerActor(): " << spawnNameNumbered << "\n";
     }
 */
 
@@ -2049,7 +2041,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CDisplay__DeleteActor(void* this_ptr, voi
         return EQAPP_REAL_FUNCTION_CDisplay__DeleteActor(this_ptr, cactor);
     }
 
-    ////std::cout << "CDisplay::DeleteActor(): 0x" << std::hex << cactor << std::dec << std::endl;
+    ////std::cout << "CDisplay::DeleteActor(): 0x" << std::hex << cactor << std::dec << "\n";
 
 /*
     auto actorType = EQ_ReadMemory<uint32_t>(cactor + EQ_OFFSET_CActor_ACTOR_TYPE);
@@ -2061,7 +2053,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CDisplay__DeleteActor(void* this_ptr, voi
             std::string spawnNameNumbered = EQ_GetSpawnNameNumbered(actorApplicationData);
             if (spawnNameNumbered.size() != 0)
             {
-                std::cout << "CDisplay::DeleteActor(): " << spawnNameNumbered << std::endl;
+                std::cout << "CDisplay::DeleteActor(): " << spawnNameNumbered << "\n";
             }
         }
     }
@@ -2261,7 +2253,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* thi
 
     EQAPP_PrintTextToFileNoDuplicates("bazaarsearchlootfiltertext.txt", lootFilterText.str().c_str());
 
-    //std::cout << "CBazaarSearchWnd::AddItemToList(): " << itemName << "^" << itemPrice << "^" << traderName << "^" << a4 << "^"  << a5 << "^" << a6 << "^" << itemIconID << "^" << itemID <<  "^" << a9 << "^" << a10 << "^" << a11 << std::endl;
+    //std::cout << "CBazaarSearchWnd::AddItemToList(): " << itemName << "^" << itemPrice << "^" << traderName << "^" << a4 << "^"  << a5 << "^" << a6 << "^" << itemIconID << "^" << itemID <<  "^" << a9 << "^" << a10 << "^" << a11 << "\n";
 
     if (g_BazaarFilterIsEnabled == true)
     {
@@ -2304,7 +2296,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__FindItem(void* this_ptr
 /*
     if (itemName != NULL)
     {
-        std::cout << "CBazaarSearchWnd::FindItem(): " << itemName << std::endl;
+        std::cout << "CBazaarSearchWnd::FindItem(): " << itemName << "\n";
     }
 */
 
@@ -2387,15 +2379,15 @@ HRESULT __stdcall EQAPP_DETOURED_FUNCTION_IDirect3DDevice9__DrawIndexedPrimitive
             streamData->Release();
         }
 
-        //std::cout << "IDirect3DDevice9::DrawIndexedPrimitive()" << std::endl;
-        //std::cout << "offset: " << offset << std::endl;
-        //std::cout << "stride: " << stride << std::endl;
-        //std::cout << "baseIndex: " << baseIndex << std::endl;
-        //std::cout << "minIndex: " << minIndex << std::endl;
-        //std::cout << "numVertices: " << numVertices << std::endl;
-        //std::cout << "startIndex: " << startIndex << std::endl;
-        //std::cout << "primitiveCount: " << primitiveCount << std::endl;
-        //std::cout << "--------------------------------------------------" << std::endl;
+        //std::cout << "IDirect3DDevice9::DrawIndexedPrimitive()" << "\n";
+        //std::cout << "offset: " << offset << "\n";
+        //std::cout << "stride: " << stride << "\n";
+        //std::cout << "baseIndex: " << baseIndex << "\n";
+        //std::cout << "minIndex: " << minIndex << "\n";
+        //std::cout << "numVertices: " << numVertices << "\n";
+        //std::cout << "startIndex: " << startIndex << "\n";
+        //std::cout << "primitiveCount: " << primitiveCount << "\n";
+        //std::cout << "--------------------------------------------------" << "\n";
 
         // stride 24 = World + Static Actors
         // stride 32 = Players/NPCs + Dynamic Actors
@@ -2427,8 +2419,8 @@ HRESULT __stdcall EQAPP_DETOURED_FUNCTION_IDirect3DDevice9__DrawIndexedPrimitive
 HMODULE WINAPI EQAPP_DETOURED_FUNCTION_GetModuleHandleA(LPCSTR lpModuleName)
 {
     //std::stringstream ss;
-    //ss << "GetModuleHandleA() lpModuleName: " << lpModuleName << std::endl;
-    //ss << "--------------------------------------------------" << std::endl;
+    //ss << "GetModuleHandleA() lpModuleName: " << lpModuleName << "\n";
+    //ss << "--------------------------------------------------" << "\n";
 
     //EQAPP_Log(ss.str().c_str());
 
@@ -2446,13 +2438,13 @@ HINSTANCE WINAPI EQAPP_DETOURED_FUNCTION_ShellExecuteA
 )
 {
     std::stringstream ss;
-    ss << "ShellExecuteA()" << std::endl;
-    ss << "lpOperation: " << lpOperation << std::endl;
-    ss << "lpFile: " << lpFile << std::endl;
-    ss << "lpParameters: " << lpParameters << std::endl;
-    ss << "lpDirectory: " << lpDirectory << std::endl;
-    ss << "nShowCmd: " << nShowCmd << std::endl;
-    ss << "--------------------------------------------------" << std::endl;
+    ss << "ShellExecuteA()" << "\n";
+    ss << "lpOperation: " << lpOperation << "\n";
+    ss << "lpFile: " << lpFile << "\n";
+    ss << "lpParameters: " << lpParameters << "\n";
+    ss << "lpDirectory: " << lpDirectory << "\n";
+    ss << "nShowCmd: " << nShowCmd << "\n";
+    ss << "--------------------------------------------------" << "\n";
 
     EQAPP_Log(ss.str().c_str());
 

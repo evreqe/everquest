@@ -97,3 +97,4 @@ bool EQAPP_ChangeHeight_SetSpawnHeight(uint32_t spawn)
 
     return false;
 }
+

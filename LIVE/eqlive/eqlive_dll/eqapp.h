@@ -1,15 +1,6 @@
 #pragma once
 
-#include <cstdint>
-
-#include <chrono>
-#include <random>
-#include <unordered_map>
-#include <vector>
-
-#include "eqapp_string.h"
-#include "eqapp_timer.h"
-#include "eqapp_ini.h"
+#include "inc_master.h"
 
 const char* g_EQAppName = "eqlive";
 const char* g_EQAppNameEx = "EQLive";
@@ -25,6 +16,14 @@ bool g_EQAppIsInGame = false;
 
 bool g_EQAppDebugTextIsEnabled = false;
 
+bool g_EQAppDoubleClickMouseFixIsEnabled = true;
+
+uint32_t g_EQAppDoubleClickMouseFixDelay = 500;
+
+uint32_t g_EQAppDoubleClickMouseFixLMouseUpTimePrevious = 0;
+
+bool g_EQAppWindowProcLastMessageWasDoubleClick = false;
+
 std::random_device g_EQAppRandomDevice;
 std::mt19937 g_EQAppRandomEngine(g_EQAppRandomDevice());
 
@@ -36,19 +35,18 @@ HANDLE g_EQAppHandleThreadLoad;
 HANDLE g_EQAppHandleThreadLoop;
 HANDLE g_EQAppHandleThreadConsole;
 
+void EQAPP_Load();
+void EQAPP_Unload();
+
+void EQAPP_LoadFiles();
+
 DWORD WINAPI EQAPP_ThreadLoad(LPVOID param);
 DWORD WINAPI EQAPP_ThreadLoop(LPVOID param);
 DWORD WINAPI EQAPP_ThreadConsole(LPVOID param);
 
-BOOL __stdcall DllMain(HMODULE module, DWORD reason, LPVOID reserved);
-
-void EQAPP_Load();
-void EQAPP_Unload();
-void EQAPP_LoadFiles();
-
 namespace EQApp
 {
-    enum class StringComparsionType : uint8_t
+    enum class StringComparisonType : uint8_t
     {
         Equals,
         Ignore,

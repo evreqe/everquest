@@ -177,7 +177,7 @@ void EQAPP_Bandolier_LoadEx(const std::string& fileName)
         }
     }
 
-    std::cout << "Bandolier loaded from file: " << filePathStr << std::endl;
+    std::cout << "Bandolier loaded from file: " << filePathStr << "\n";
 
     file.close();
 }
@@ -278,7 +278,7 @@ void EQAPP_Bandolier_SaveEx(const std::string& fileName)
         file << ss.str().c_str() << "\n";
     }
 
-    std::cout << "Bandolier saved to file: " << filePathStr << std::endl;
+    std::cout << "Bandolier saved to file: " << filePathStr << "\n";
 
     file.close();
 }
@@ -293,15 +293,15 @@ void EQAPP_Bandolier_Print()
 
     auto charInfo2Bandolier = (EQ::CharInfo2Bandolier_ptr)(charInfo2 + EQ_OFFSET_CharInfo2__Bandolier);
 
-    std::cout << "Bandolier:" << std::endl;
+    std::cout << "Bandolier:" << "\n";
 
     for (unsigned int i = 0; i < EQ_NUM_BANDOLIER_SLOTS; i++)
     {
-        std::cout << "[" << i + 1 << "] " << charInfo2Bandolier->Bandolier[i].Name << std::endl;
+        std::cout << "[" << i + 1 << "] " << charInfo2Bandolier->Bandolier[i].Name << "\n";
 
-        std::cout << "[" << i + 1 << "-1] " << charInfo2Bandolier->Bandolier[i].Items[0].Name << std::endl;
-        std::cout << "[" << i + 1 << "-2] " << charInfo2Bandolier->Bandolier[i].Items[1].Name << std::endl;
-        std::cout << "[" << i + 1 << "-3] " << charInfo2Bandolier->Bandolier[i].Items[2].Name << std::endl;
-        std::cout << "[" << i + 1 << "-4] " << charInfo2Bandolier->Bandolier[i].Items[3].Name << std::endl;
+        std::cout << "[" << i + 1 << "-1] " << charInfo2Bandolier->Bandolier[i].Items[0].Name << "\n";
+        std::cout << "[" << i + 1 << "-2] " << charInfo2Bandolier->Bandolier[i].Items[1].Name << "\n";
+        std::cout << "[" << i + 1 << "-3] " << charInfo2Bandolier->Bandolier[i].Items[2].Name << "\n";
+        std::cout << "[" << i + 1 << "-4] " << charInfo2Bandolier->Bandolier[i].Items[3].Name << "\n";
     }
 }

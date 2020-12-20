@@ -11,6 +11,7 @@ const char* g_BoxChatProcessFileName = "eqlivebcs.exe";
 const wchar_t g_BoxChatProcessFileNameWide[] = L"eqlivebcs.exe";
 
 std::string g_BoxChatClientName = "UNKNOWN";
+std::string g_BoxChatGlobalChannelName = "Global1";
 std::string g_BoxChatChannelName = "Default";
 
 std::list<std::string> g_BoxChatInterpretCommandList;
@@ -48,6 +49,7 @@ bool EQAPP_BoxChat_Connect(std::string clientName);
 void EQAPP_BoxChat_Disconnect();
 void EQAPP_BoxChat_DisconnectEx();
 bool EQAPP_BoxChat_SendText(std::string text);
+bool EQAPP_BoxChat_SetGlobalChannel(std::string channelName);
 bool EQAPP_BoxChat_SetChannel(std::string channelName);
 void EQAPP_BoxChat_Execute();
 void EQAPP_BoxChat_InterpretCommands();
@@ -161,7 +163,7 @@ bool EQAPP_BoxChat_Connect(std::string clientName)
                 return false;
             }
 
-            std::cout << "Box Chat connected." << std::endl;
+            std::cout << "Box Chat connected." << "\n";
 
             g_BoxChatClientName = clientName;
 
@@ -180,7 +182,7 @@ void EQAPP_BoxChat_Disconnect()
 {
     EQAPP_BoxChat_DisconnectEx();
 
-    std::cout << "Box Chat disconnected." << std::endl;
+    std::cout << "Box Chat disconnected." << "\n";
 }
 
 void EQAPP_BoxChat_DisconnectEx()
@@ -190,6 +192,7 @@ void EQAPP_BoxChat_DisconnectEx()
     g_BoxChatIsConnected = false;
 
     g_BoxChatClientName = "UNKNOWN";
+    g_BoxChatGlobalChannelName = "Global1";
     g_BoxChatChannelName = "Default";
 }
 
@@ -202,13 +205,32 @@ bool EQAPP_BoxChat_SendText(std::string text)
 
     if (send(g_BoxChatSocket, text.c_str(), text.size(), 0) == SOCKET_ERROR)
     {
-        std::cout << "Box Chat failed to send text: " << text << std::endl;
+        std::cout << "Box Chat failed to send text: " << text << "\n";
 
         EQAPP_BoxChat_Disconnect();
         return false;
     }
 
     return true;
+}
+
+bool EQAPP_BoxChat_SetGlobalChannel(std::string channelName)
+{
+    if (channelName.size() == 0)
+    {
+        g_BoxChatGlobalChannelName = "Global1";
+    }
+
+    std::stringstream ss;
+    ss << "$ClientGlobalChannel " << channelName;
+
+    if (EQAPP_BoxChat_SendText(ss.str()) == true)
+    {
+        g_BoxChatGlobalChannelName = channelName;
+        return true;
+    }
+
+    return false;
 }
 
 bool EQAPP_BoxChat_SetChannel(std::string channelName)
@@ -274,17 +296,17 @@ void EQAPP_BoxChat_Execute()
         std::string recvText = g_BoxChatRecvBuffer;
         if (recvText.size() == 0)
         {
-            ////std::cout << "recvText size() == 0" << std::endl;
+            ////std::cout << "recvText size() == 0" << "\n";
             return;
         }
 
-        ////std::cout << "recvText: " << recvText << std::endl;
+        ////std::cout << "recvText: " << recvText << "\n";
 
         std::vector<std::string> recvTokens = EQAPP_String_Split(recvText, '\n');
 
         if (recvTokens.size() == 0)
         {
-            ////std::cout << "recvTokens size() == 0" << std::endl;
+            ////std::cout << "recvTokens size() == 0" << "\n";
             return;
         }
 
@@ -294,7 +316,7 @@ void EQAPP_BoxChat_Execute()
 
             if (textTokens.size() == 0)
             {
-                ////std::cout << "textTokens size() == 0" << std::endl;
+                ////std::cout << "textTokens size() == 0" << "\n";
                 continue;
             }
 
@@ -308,18 +330,18 @@ void EQAPP_BoxChat_Execute()
 
                     if (textTokensEx.size() == 0)
                     {
-                        ////std::cout << "textTokensEx size() == 0" << std::endl;
+                        ////std::cout << "textTokensEx size() == 0" << "\n";
                         continue;
                     }
 
                     std::string commandText = EQAPP_String_JoinStrings(textTokensEx, " ");
                     if (commandText.size() == 0)
                     {
-                        ////std::cout << "commandText size() == 0" << std::endl;
+                        ////std::cout << "commandText size() == 0" << "\n";
                         break;
                     }
 
-                    ////std::cout << "commandText: " << commandText << std::endl;
+                    ////std::cout << "commandText: " << commandText << "\n";
 
                     g_BoxChatInterpretCommandList.push_back(commandText);
                 }
@@ -351,8 +373,6 @@ void EQAPP_BoxChat_InterpretCommands()
     bool bUseTimer = false;
 
     bool bHasTimeElapsed = false;
-
-    auto timeNow = EQAPP_Timer_GetTimeNow();
 
     EQApp::TimerInterval timeInterval = 1;
 

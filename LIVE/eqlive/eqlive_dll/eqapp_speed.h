@@ -78,3 +78,5 @@ void EQAPP_Speed_SetAccelerationFrictionByMultiplier(float multiplier)
     EQAPP_Speed_SetAccelerationFriction(EQ_SPAWN_ACCELERATION_FRICTION_DEFAULT * multiplier);
 }
 
+
+

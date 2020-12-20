@@ -4,6 +4,7 @@
 #include "eq_structures.h"
 #include "eq_macros.h"
 #include "eq_messages.h"
+#include "eq_addresses.h"
 
 namespace EQClass
 {
@@ -275,7 +276,7 @@ public:
     void ChangePosition(uint8_t standingState);
     uint8_t GetLevel();
     uint32_t GetActorClient();
-    bool UpdateItemSlot(uint8_t updateItemSlot, const char* itemDefinition, bool b1, bool serverSide, bool b3);
+    bool UpdateItemSlot(uint8_t updateItemSlot, int itemDefinition, bool b1, bool serverSide, bool b3);
     bool IsTargetable();
     int SetNameSpriteState(bool isNameVisible);
     bool SetNameSpriteTint();
@@ -299,7 +300,8 @@ EQ_MACRO_FUNCTION_FunctionAtAddress(uint8_t EQClass::EQPlayer::GetLevel(), EQ_AD
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(uint32_t EQClass::EQPlayer::GetActorClient(), EQ_ADDRESS_FUNCTION_EQPlayer__GetActorClient);
 
-// UpdateItemSlot
+EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::EQPlayer::UpdateItemSlot(uint8_t updateItemSlot, int itemDefinition, bool b1, bool serverSide, bool b3), EQ_ADDRESS_FUNCTION_EQPlayer__UpdateItemSlot);
+typedef bool (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__UpdateItemSlot)(void* this_ptr, uint8_t updateItemSlot, int itemDefinition, bool b1, bool serverSide, bool b3);
 
 // IsTargetable
 
@@ -374,7 +376,7 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_EQSpell__SpellAffects)(void* this_ptr,
 class EQClass::CXPoint
 {
 public:
-    class CXPoint CXPoint::operator=(class CXPoint);
+    class CXPoint operator=(class CXPoint);
 
     uint32_t X;
     uint32_t Y;
@@ -406,7 +408,7 @@ struct CStrPtr
 class EQClass::CXStr
 {
 public:
-    CXStr::CXStr(char const *);
+    CXStr(char const *);
 
     CStrPtr* ptr;
 };
@@ -445,7 +447,7 @@ public:
     void Activate();
     void Deactivate();
     bool IsReallyVisible();
-    EQClass::CXWnd* CXWnd::GetChildItem(const EQClass::CXStr& name);
+    EQClass::CXWnd* GetChildItem(const EQClass::CXStr& name);
 };
 
 #define EQ_VFTABLE_INDEX_CXWnd__WndNotification       0x88
@@ -503,10 +505,10 @@ class EQClass::CBazaarSearchWnd
 {
 public:
     int WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
-    void CBazaarSearchWnd::AddItemToList(char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, uint32_t itemIconID, uint32_t itemID, void* a9, int a10, void* a11);
-    void CBazaarSearchWnd::doQuery();
-    bool CBazaarSearchWnd::BuyItem(int quantity);
-    void CBazaarSearchWnd::FindItem(char* itemName);
+    void AddItemToList(char* itemName, uint32_t itemPrice, char* traderName, int a4, int a5, int a6, uint32_t itemIconID, uint32_t itemID, void* a9, int a10, void* a11);
+    void doQuery();
+    bool BuyItem(int quantity);
+    void FindItem(char* itemName);
 };
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CBazaarSearchWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
@@ -533,7 +535,7 @@ EQClass::CBazaarSearchWnd* EQ_CLASS_POINTER_CBazaarSearchWnd;
 class EQClass::CBazaarConfirmationWnd
 {
 public:
-    int CBazaarConfirmationWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
+    int WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
 };
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CBazaarConfirmationWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
@@ -548,7 +550,7 @@ EQClass::CBazaarConfirmationWnd* EQ_CLASS_POINTER_CBazaarConfirmationWnd;
 class EQClass::CMapViewWnd
 {
 public:
-    int CMapViewWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
+    int WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
 };
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CMapViewWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
@@ -586,7 +588,7 @@ EQClass::CSpellBookWnd* EQ_CLASS_POINTER_CSpellBookWnd;
 class EQClass::CTaskSelectWnd
 {
 public:
-    int CTaskSelectWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
+    int WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown);
 };
 
 EQ_MACRO_FUNCTION_FunctionAtVirtualAddress(int EQClass::CTaskSelectWnd::WndNotification(uint32_t cxwndAddress, uint32_t cxwndMessage, void* unknown), EQ_VFTABLE_INDEX_CXWnd__WndNotification);
@@ -826,7 +828,7 @@ public:
 /*0x04*/    eProfileListType CurProfileList;
 /*0x08*/
 
-    inline const ProfileList* CProfileManager::GetCurrentProfileList() const
+    inline const ProfileList* GetCurrentProfileList() const
     {
         ProfileList *pWalk = pFirst;
         while ( pWalk != NULL ) {
@@ -839,7 +841,7 @@ public:
         return NULL;
     }
 
-    inline const uint32_t* CProfileManager::GetCurrentProfile() const
+    inline const uint32_t* GetCurrentProfile() const
     {
         const ProfileList *pList = GetCurrentProfileList();
         if ( pList != NULL )

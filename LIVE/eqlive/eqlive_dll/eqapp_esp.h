@@ -170,7 +170,7 @@ void EQAPP_ESP_DrawSpawns()
         auto spawnID = EQ_GetSpawnID(spawn);
         auto spawnType = EQ_GetSpawnType(spawn);
         auto spawnLevel = EQ_GetSpawnLevel(spawn);
-        auto spawnRace = EQ_GetSpawnRace(spawn);
+        //auto spawnRace = EQ_GetSpawnRace(spawn);
         auto spawnClass = EQ_GetSpawnClass(spawn);
 
         auto spawnStandingState = EQ_GetSpawnStandingState(spawn);
@@ -374,8 +374,6 @@ void EQAPP_ESP_DrawSpawns()
 
             if (g_ESPShowSpawnIDIsEnabled == true)
             {
-                auto spawnID = EQ_GetSpawnID(spawn);
-
                 drawText << "\n(ID: " << spawnID << ")";
             }
 
@@ -505,7 +503,7 @@ void EQAPP_ESP_DrawDoors()
 
     auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
     auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
-    auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
+    //auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
 
     for (unsigned int i = 0; i < numDoors; i++)
     {

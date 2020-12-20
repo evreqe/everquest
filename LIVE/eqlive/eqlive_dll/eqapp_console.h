@@ -41,8 +41,18 @@ void EQAPP_Console_Print()
     if (g_ConsolePrintIsEnabled == true)
     {
         // print redirected cout to the chat window
-        for (std::string text; std::getline(g_ConsoleStringStream, text, '\n');)
+        for (std::string text; std::getline(g_ConsoleStringStream, text, '\n'); )
         {
+            if (text.empty() == true)
+            {
+                continue;
+            }
+
+            if (text[0] == '\n')
+            {
+                continue;
+            }
+
             std::stringstream ss;
             ss << "[" << g_EQAppNameEx << "] " << text;
 
@@ -53,3 +63,4 @@ void EQAPP_Console_Print()
     g_ConsoleStringStream.str(std::string());
     g_ConsoleStringStream.clear();
 }
+

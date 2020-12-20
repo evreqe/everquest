@@ -1,48 +1,6 @@
 #pragma once
 
-#include "eqapp_actorcollision.h"
-#include "eqapp_alwaysattack.h"
-#include "eqapp_alwayshotbutton.h"
-#include "eqapp_autobank.h"
-#include "eqapp_autoinventory.h"
-#include "eqapp_autogroup.h"
-#include "eqapp_bandolier.h"
-#include "eqapp_bazaarbot.h"
-#include "eqapp_bazaarfilter.h"
-#include "eqapp_boxchat.h"
-#include "eqapp_changeheight.h"
-#include "eqapp_chatevent.h"
-#include "eqapp_cheat.h"
-#include "eqapp_combathotbutton.h"
-#include "eqapp_combatmacro.h"
-#include "eqapp_macro.h"
-#include "eqapp_killmobs.h"
-#include "eqapp_lantern.h"
-#include "eqapp_console.h"
-#include "eqapp_followai.h"
-#include "eqapp_namecolor.h"
-#include "eqapp_namedspawns.h"
-#include "eqapp_powerlevel.h"
-#include "eqapp_speed.h"
-#include "eqapp_waypoint.h"
-#include "eqapp_area.h"
-#include "eqapp_hud.h"
-#include "eqapp_nodraw.h"
-#include "eqapp_noalert.h"
-#include "eqapp_sleep.h"
-#include "eqapp_windowtitle.h"
-#include "eqapp_windowforeground.h"
-
-#include "eqapp_gui.h"
-
 bool g_InterpretCommandIsEnabled = true;
-
-void EQAPP_InterpretCommand_NULL();
-
-void EQAPP_InterpretCommand_NULL()
-{
-    return;
-}
 
 std::map<std::string, std::function<void()>> g_InterpretCommandList =
 {
@@ -349,6 +307,7 @@ std::map<std::string, std::function<void()>> g_InterpretCommandList =
     {"//NSNewSpawnsOff",               &EQAPP_NamedSpawns_NewSpawns_Off},
     {"//NSLoad",                       &EQAPP_NamedSpawns_Load},
     {"//NSList",                       &EQAPP_NamedSpawns_PrintList},
+    {"//NSIDList",                     &EQAPP_NamedSpawns_PrintIDList},
     {"//NSUp",                         &EQAPP_NamedSpawns_PrintUp},
     {"//NoDraw",                       &EQAPP_NoDraw_Toggle},
     {"//NoDrawOn",                     &EQAPP_NoDraw_On},
@@ -394,16 +353,16 @@ void EQAPP_InterpretCommand_ConvertText(std::string& text);
 bool EQAPP_InterpretCommand_HandleEvent_CEverQuest__InterpretCmd(void* this_ptr, class EQPlayer* player, const char* commandText_);
 void EQAPP_InterpretCommand_InterpretArguments(const std::string& commandText, const std::string& prependText);
 void EQAPP_InterpretCommand_InterpretArgumentsRandom(const std::string& commandText, const std::string& prependText);
-bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText);
+bool EQAPP_InterpretCommand_HandleCommandText(const std::string& commandText);
 void EQAPP_InterpretCommand_Execute(const std::string& commandText);
 
 void EQAPP_InterpretCommand_PrintList()
 {
-    std::cout << "Command List: " << std::endl;
+    std::cout << "Command List: " << "\n";
 
     for (auto& cmd : g_InterpretCommandList)
     {
-        std::cout << cmd.first << std::endl;
+        std::cout << cmd.first << "\n";
     }
 }
 
@@ -560,7 +519,7 @@ void EQAPP_InterpretCommand_InterpretArgumentsRandom(const std::string& commandT
         return;
     }
 
-    ////std::cout << "random number: " << number << std::endl;
+    ////std::cout << "random number: " << number << "\n";
 
     std::stringstream ss;
     ss << prependText << number;
@@ -596,7 +555,7 @@ void EQAPP_InterpretCommand_Execute(const std::string& commandText)
     }
 }
 
-bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
+bool EQAPP_InterpretCommand_HandleCommandText(const std::string& commandText)
 {
     if (commandText == "//Help" || commandText == "//Commands")
     {
@@ -607,23 +566,44 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
     if (commandText == "//Test")
     {
-        std::cout << "Testing123" << std::endl;
+        std::cout << "Testing123\n";
 
-        auto playerSpawn = EQ_GetPlayerSpawn();
+        //auto playerSpawn = EQ_GetPlayerSpawn();
 
-        ((EQClass::EQPlayer*)playerSpawn)->Unknown();
+        //((EQClass::EQPlayer*)playerSpawn)->Unknown();
 
+        size_t waypointListSize = g_WaypointList.size();
+        for (size_t i = 0; i < waypointListSize; i++)
+        {
+            auto waypoint = EQAPP_Waypoint_GetByIndex(i);
+
+            if (waypoint->ConnectIndexList.size() > 0)
+            {
+                for (auto& index : waypoint->ConnectIndexList)
+                {
+                    auto connectedWaypoint = EQAPP_Waypoint_GetByIndex(index);
+
+                    float distance = EQ_CalculateDistance3D(waypoint->Y, waypoint->X, waypoint->Z, connectedWaypoint->Y, connectedWaypoint->X, connectedWaypoint->Z);
+
+                    if (distance > 100.0f)
+                    {
+                        EQAPP_Waypoint_Split(waypoint->Index, connectedWaypoint->Index);
+                        waypointListSize++;
+                    }
+                }
+            }
+        }
 /*
 
-        std::cout << "Character: 0x" << std::hex << EQ_GetCharacter() << std::dec << std::endl;
+        std::cout << "Character: 0x" << std::hex << EQ_GetCharacter() << std::dec << "\n";
 
-        std::cout << "CharacterBase: 0x" << std::hex << EQ_GetCharacterBase() << std::dec << std::endl;
+        std::cout << "CharacterBase: 0x" << std::hex << EQ_GetCharacterBase() << std::dec << "\n";
 
-        std::cout << "ProfileManager: 0x" << std::hex << EQ_GetProfileManager() << std::dec << std::endl;
+        std::cout << "ProfileManager: 0x" << std::hex << EQ_GetProfileManager() << std::dec << "\n";
 
-        std::cout << "CharInfo2: 0x" << std::hex << EQ_GetCharInfo2() << std::dec << std::endl;
+        std::cout << "CharInfo2: 0x" << std::hex << EQ_GetCharInfo2() << std::dec << "\n";
 
-        std::cout << "Bandolier: 0x" << std::hex << EQ_GetCharInfo2() + EQ_OFFSET_CharInfo2__Bandolier << std::dec << std::endl;
+        std::cout << "Bandolier: 0x" << std::hex << EQ_GetCharInfo2() + EQ_OFFSET_CharInfo2__Bandolier << std::dec << "\n";
 
         auto charInfo2 = EQ_GetCharInfo2();
 
@@ -631,12 +611,12 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
         for (unsigned int i = 0; i < EQ_NUM_BANDOLIER_SLOTS; i++)
         {
-            std::cout << "[" << i + 1 << "] " << charInfo2Bandolier->Bandolier[i].Name << std::endl;
+            std::cout << "[" << i + 1 << "] " << charInfo2Bandolier->Bandolier[i].Name << "\n";
 
-            std::cout << "[" << i + 1 << "-1] " << charInfo2Bandolier->Bandolier[i].Items[0].Name << std::endl;
-            std::cout << "[" << i + 1 << "-2] " << charInfo2Bandolier->Bandolier[i].Items[1].Name << std::endl;
-            std::cout << "[" << i + 1 << "-3] " << charInfo2Bandolier->Bandolier[i].Items[2].Name << std::endl;
-            std::cout << "[" << i + 1 << "-4] " << charInfo2Bandolier->Bandolier[i].Items[3].Name << std::endl;
+            std::cout << "[" << i + 1 << "-1] " << charInfo2Bandolier->Bandolier[i].Items[0].Name << "\n";
+            std::cout << "[" << i + 1 << "-2] " << charInfo2Bandolier->Bandolier[i].Items[1].Name << "\n";
+            std::cout << "[" << i + 1 << "-3] " << charInfo2Bandolier->Bandolier[i].Items[2].Name << "\n";
+            std::cout << "[" << i + 1 << "-4] " << charInfo2Bandolier->Bandolier[i].Items[3].Name << "\n";
         }
 
 */
@@ -644,27 +624,27 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 /*
         auto playerSpawn = EQ_GetPlayerSpawn();
 
-        std::cout << "spawn: 0x" << std::hex << playerSpawn << std::dec << std::endl;
+        std::cout << "spawn: 0x" << std::hex << playerSpawn << std::dec << "\n";
 
         auto spawnActorClient = EQ_GetSpawnActorClient(playerSpawn);
         if (spawnActorClient != NULL)
         {
-            std::cout << "spawnActorClient: 0x" << std::hex << spawnActorClient << std::dec << std::endl;
+            std::cout << "spawnActorClient: 0x" << std::hex << spawnActorClient << std::dec << "\n";
 
             auto spawnActorInterface = EQ_ReadMemory<uint32_t>(spawnActorClient + EQ_OFFSET_CActorClient_CActorInterface);
             if (spawnActorInterface != NULL)
             {
-                std::cout << "spawnActorInterface: 0x" << std::hex << spawnActorInterface << std::dec << std::endl;
+                std::cout << "spawnActorInterface: 0x" << std::hex << spawnActorInterface << std::dec << "\n";
 
-                std::cout << "spawnActorInterface &: 0x" << std::hex << spawnActorInterface << std::dec << std::endl;
+                std::cout << "spawnActorInterface &: 0x" << std::hex << spawnActorInterface << std::dec << "\n";
             }
 
             auto spawnLightInterface = EQ_ReadMemory<uint32_t>(spawnActorClient + EQ_OFFSET_CActorClient_CActorInterface + 0x04);
             if (spawnActorInterface != NULL)
             {
-                std::cout << "spawnLightInterface: 0x" << std::hex << spawnLightInterface << std::dec << std::endl;
+                std::cout << "spawnLightInterface: 0x" << std::hex << spawnLightInterface << std::dec << "\n";
 
-                std::cout << "spawnLightInterface &: 0x" << std::hex << spawnLightInterface << std::dec << std::endl;
+                std::cout << "spawnLightInterface &: 0x" << std::hex << spawnLightInterface << std::dec << "\n";
             }
         }
 */
@@ -683,15 +663,15 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
                 auto playerSpawn = EQ_GetPlayerSpawn();
 
-                std::cout << "playerSpawn: " << std::hex << playerSpawn << std::dec << std::endl;
+                std::cout << "playerSpawn: " << std::hex << playerSpawn << std::dec << "\n";
 
                 auto actorClient = EQ_GetSpawnActorClient(playerSpawn);
 
-                std::cout << "actorClient: " << std::hex << actorClient << std::dec << std::endl;
+                std::cout << "actorClient: " << std::hex << actorClient << std::dec << "\n";
 
                 auto actorClientValue = EQ_ReadMemory<signed int>(actorClient + value);
 
-                std::cout << "actorClientValue: " << actorClientValue << std::endl;
+                std::cout << "actorClientValue: " << actorClientValue << "\n";
             }
         }
 
@@ -702,9 +682,9 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
     {
         auto EQGraphicsDX9address = EQAPP_GetModuleBaseAddress(GetCurrentProcessId(), L"EQGraphicsDX9.DLL");
 
-        std::cout << "EQGraphicsDX9.dll address: 0x" << std::hex << EQGraphicsDX9address << std::dec << std::endl;
+        std::cout << "EQGraphicsDX9.dll address: 0x" << std::hex << EQGraphicsDX9address << std::dec << "\n";
 
-        std::cout << "RenderPartialScene(): " << std::hex << EQ_ADDRESS_FUNCTION_CRender__RenderPartialScene << std::dec << std::endl;
+        std::cout << "RenderPartialScene(): " << std::hex << EQ_ADDRESS_FUNCTION_CRender__RenderPartialScene << std::dec << "\n";
 
         auto render = EQ_GetRender();
         if (render != 0)
@@ -716,9 +696,9 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                 uint32_t CRender__DrawWrappedText = EQ_ReadMemory<uint32_t>(EQ_VFTABLE_CRender + EQ_VFTABLE_INDEX_CRender__DrawWrappedText);
                 uint32_t CRender__DrawColoredRectangle = EQ_ReadMemory<uint32_t>(EQ_VFTABLE_CRender + EQ_VFTABLE_INDEX_CRender__DrawColoredRectangle);
 
-                std::cout << "CRender::DrawLine(): 0x" << std::hex << CRender__DrawLine << " (" << (CRender__DrawLine - EQGraphicsDX9address) << ") " << std::dec << std::endl;
-                std::cout << "CRender::DrawWrappedText(): 0x" << std::hex << CRender__DrawWrappedText << " (" << (CRender__DrawWrappedText - EQGraphicsDX9address) << ") " << std::dec << std::endl;
-                std::cout << "CRender::DrawColoredRectangle(): 0x" << std::hex << CRender__DrawColoredRectangle << " (" << (CRender__DrawColoredRectangle - EQGraphicsDX9address) << ") " << std::dec << std::endl;
+                std::cout << "CRender::DrawLine(): 0x" << std::hex << CRender__DrawLine << " (" << (CRender__DrawLine - EQGraphicsDX9address) << ") " << std::dec << "\n";
+                std::cout << "CRender::DrawWrappedText(): 0x" << std::hex << CRender__DrawWrappedText << " (" << (CRender__DrawWrappedText - EQGraphicsDX9address) << ") " << std::dec << "\n";
+                std::cout << "CRender::DrawColoredRectangle(): 0x" << std::hex << CRender__DrawColoredRectangle << " (" << (CRender__DrawColoredRectangle - EQGraphicsDX9address) << ") " << std::dec << "\n";
             }
         }
 
@@ -731,8 +711,8 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                 uint32_t CRenderEx__SetAreaWireframeDrawing = EQ_ReadMemory<uint32_t>(EQ_VFTABLE_CRenderEx + EQ_VFTABLE_INDEX_CRenderEx__SetAreaWireframeDrawing);
                 uint32_t CRenderEx__IsAreaWireframeDrawingEnabled = EQ_ReadMemory<uint32_t>(EQ_VFTABLE_CRenderEx + EQ_VFTABLE_INDEX_CRenderEx__IsAreaWireframeDrawingEnabled);
 
-                std::cout << "CRenderEx::SetAreaWireframeDrawing(): 0x" << std::hex << CRenderEx__SetAreaWireframeDrawing << " (" << (CRenderEx__SetAreaWireframeDrawing - EQGraphicsDX9address) << ") " << std::dec << std::endl;
-                std::cout << "CRenderEx::IsAreaWireframeDrawingEnabled(): 0x" << std::hex << CRenderEx__IsAreaWireframeDrawingEnabled << " (" << (CRenderEx__IsAreaWireframeDrawingEnabled - EQGraphicsDX9address) << ") " << std::dec << std::endl;
+                std::cout << "CRenderEx::SetAreaWireframeDrawing(): 0x" << std::hex << CRenderEx__SetAreaWireframeDrawing << " (" << (CRenderEx__SetAreaWireframeDrawing - EQGraphicsDX9address) << ") " << std::dec << "\n";
+                std::cout << "CRenderEx::IsAreaWireframeDrawingEnabled(): 0x" << std::hex << CRenderEx__IsAreaWireframeDrawingEnabled << " (" << (CRenderEx__IsAreaWireframeDrawingEnabled - EQGraphicsDX9address) << ") " << std::dec << "\n";
             }
         }
 
@@ -758,7 +738,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         auto group = EQ_GetGroup();
         if (group == NULL)
         {
-            std::cout << "group == NULL" << std::endl;
+            std::cout << "group == NULL" << "\n";
         }
 
         auto groupMemberSpawnList = EQ_GetGroupMemberSpawnList();
@@ -777,12 +757,35 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                     continue;
                 }
 
-                std::cout << "groupMemberSpawnName: " << groupMemberSpawnName << std::endl;
+                std::cout << "groupMemberSpawnName: " << groupMemberSpawnName << "\n";
             }
         }
         else
         {
-            std::cout << "groupMemberSpawnList.size() == 0" << std::endl;
+            std::cout << "groupMemberSpawnList.size() == 0" << "\n";
+        }
+
+        return true;
+    }
+
+    if (commandText == "//TestEQPlayerManager")
+    {
+        auto spawn = EQ_GetSpawnByName("Skajx");
+        if (spawn != NULL)
+        {
+            std::cout << "spawn != NULL" << "\n";
+
+            auto spawnID = EQ_GetSpawnID(spawn);
+
+            std::cout << "spawnID: " << spawnID << "\n";
+
+            auto spawnEx = EQ_GetSpawnByID(spawnID);
+            if (spawnEx != NULL)
+            {
+                std::cout << "spawnEx != NULL" << "\n";
+
+                //EQ_SetTargetSpawnByID(spawnID);
+            }
         }
 
         return true;
@@ -844,7 +847,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
             }
             else
             {
-                std::cout << "MP3 files are not supported." << std::endl;
+                std::cout << "MP3 files are not supported." << "\n";
             }
         }
 
@@ -877,7 +880,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
             }
             else
             {
-                std::cout << "MP3 files are not supported." << std::endl;
+                std::cout << "MP3 files are not supported." << "\n";
             }
         }
 
@@ -1029,7 +1032,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         std::stringstream ss;
         ss << "Field of View: " << EQ_GetCameraFieldOfView();
 
-        std::cout << ss.str() << std::endl;
+        std::cout << ss.str() << "\n";
 
         return true;
     }
@@ -1038,7 +1041,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
     {
         EQ_SetCameraFieldOfView(EQ_CAMERA_FIELD_OF_VIEW_DEFAULT);
 
-        std::cout << "Field of View set to default." << std::endl;
+        std::cout << "Field of View set to default." << "\n";
 
         return true;
     }
@@ -1055,7 +1058,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                 {
                     EQ_SetCameraFieldOfView(fieldOfView);
 
-                    std::cout << "Field of View: " << fieldOfView << std::endl;
+                    std::cout << "Field of View: " << fieldOfView << "\n";
                 }
             }
         }
@@ -1068,7 +1071,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         std::stringstream ss;
         ss << "Draw Distance: " << EQ_GetCameraDrawDistance();
 
-        std::cout << ss.str() << std::endl;
+        std::cout << ss.str() << "\n";
 
         return true;
     }
@@ -1085,7 +1088,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                 {
                     EQ_SetCameraDrawDistance(distance);
 
-                    std::cout << "Draw Distance: " << distance << std::endl;
+                    std::cout << "Draw Distance: " << distance << "\n";
                 }
             }
         }
@@ -1098,7 +1101,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         std::stringstream ss;
         ss << "Far Clip Plane: " << EQ_GetCameraFarClipPlane();
 
-        std::cout << ss.str() << std::endl;
+        std::cout << ss.str() << "\n";
 
         return true;
     }
@@ -1115,7 +1118,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                 {
                     EQ_SetCameraFarClipPlane(distance);
 
-                    std::cout << "Far Clip Plane: " << distance << std::endl;
+                    std::cout << "Far Clip Plane: " << distance << "\n";
                 }
             }
         }
@@ -2791,7 +2794,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                             std::stringstream ss;
                             ss << "/useitem " << bagNumber << " " << slotNumber;
 
-                            std::cout << ss.str() << std::endl;
+                            std::cout << ss.str() << "\n";
 
                             EQ_InterpretCommand(ss.str().c_str());
                         }
@@ -2829,7 +2832,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                 {
                     g_CombatHotButtonIndex = buttonNumber - 1;
 
-                    std::cout << "Combat HotButton: " << buttonNumber << std::endl;
+                    std::cout << "Combat HotButton: " << buttonNumber << "\n";
                 }
             }
         }
@@ -2850,7 +2853,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
                 {
                     g_AlwaysHotButtonIndex = buttonNumber - 1;
 
-                    std::cout << "Always HotButton: " << buttonNumber << std::endl;
+                    std::cout << "Always HotButton: " << buttonNumber << "\n";
                 }
             }
         }
@@ -2862,7 +2865,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
     {
         g_ESPFindSpawnName = std::string();
 
-        std::cout << "ESP Find Spawn Name reset!" << std::endl;
+        std::cout << "ESP Find Spawn Name reset!" << "\n";
 
         return true;
     }
@@ -2874,7 +2877,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         {
             g_ESPFindSpawnName = findText;
 
-            std::cout << "ESP Find Spawn Name: " << findText << std::endl;
+            std::cout << "ESP Find Spawn Name: " << findText << "\n";
 
             if (g_ESPIsEnabled == false)
             {
@@ -2889,7 +2892,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
     {
         g_ESPFindSpawnLastName = std::string();
 
-        std::cout << "ESP Find Spawn Last Name reset!" << std::endl;
+        std::cout << "ESP Find Spawn Last Name reset!" << "\n";
 
         return true;
     }
@@ -2901,7 +2904,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         {
             g_ESPFindSpawnLastName = findText;
 
-            std::cout << "ESP Find Spawn Last Name: " << findText << std::endl;
+            std::cout << "ESP Find Spawn Last Name: " << findText << "\n";
 
             if (g_ESPIsEnabled == false)
             {
@@ -2916,7 +2919,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
     {
         g_ESPFindSpawnID = 0;
 
-        std::cout << "ESP Find Spawn ID reset!" << std::endl;
+        std::cout << "ESP Find Spawn ID reset!" << "\n";
 
         return true;
     }
@@ -2932,7 +2935,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
                 g_ESPFindSpawnID = ID;
 
-                std::cout << "ESP Find Spawn ID: " << ID << std::endl;
+                std::cout << "ESP Find Spawn ID: " << ID << "\n";
 
                 if (g_ESPIsEnabled == false)
                 {
@@ -2948,7 +2951,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
     {
         g_ESPFindSpawnLevel = 0;
 
-        std::cout << "ESP Find Spawn Level reset!" << std::endl;
+        std::cout << "ESP Find Spawn Level reset!" << "\n";
 
         return true;
     }
@@ -2964,7 +2967,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
 
                 g_ESPFindSpawnLevel = level;
 
-                std::cout << "ESP Find Spawn Level: " << level << std::endl;
+                std::cout << "ESP Find Spawn Level: " << level << "\n";
 
                 if (g_ESPIsEnabled == false)
                 {
@@ -3067,11 +3070,11 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         std::string name = EQAPP_String_GetAfter(commandText, " ");
         if (name.size() != 0)
         {
-            std::cout << "Box Chat Connect as Name: " << name << std::endl;
+            std::cout << "Box Chat Connect as Name: " << name << "\n";
 
             if (EQAPP_BoxChat_Connect(name) == false)
             {
-                std::cout << "Box Chat failed to connect!" << std::endl;
+                std::cout << "Box Chat failed to connect!" << "\n";
             }
         }
 
@@ -3085,7 +3088,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         {
             g_BoxChatServerIPAddress = ipAddress;
 
-            std::cout << "Box Chat IP Address: " << g_BoxChatServerIPAddress << std::endl;
+            std::cout << "Box Chat IP Address: " << g_BoxChatServerIPAddress << "\n";
         }
 
         return true;
@@ -3098,7 +3101,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         {
             if (EQAPP_BoxChat_Connect(playerSpawnName) == false)
             {
-                std::cout << "Box Chat failed to connect!" << std::endl;
+                std::cout << "Box Chat failed to connect!" << "\n";
             }
         }
 
@@ -3116,21 +3119,40 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
     {
         if (g_BoxChatIsConnected == false)
         {
-            std::cout << "Box Chat Status: You are disconnected." << std::endl;
+            std::cout << "Box Chat Status: You are disconnected." << "\n";
         }
         else
         {
-            std::cout << "Box Chat Status: You are connected." << std::endl;
+            std::cout << "Box Chat Status: You are connected." << "\n";
 
             if (g_BoxChatClientName.size() != 0)
             {
-                std::cout << "Client Name: " << g_BoxChatClientName << std::endl;
+                std::cout << "Client Name: " << g_BoxChatClientName << "\n";
             }
 
             if (g_BoxChatChannelName.size() != 0)
             {
-                std::cout << "Channel Name: " << g_BoxChatChannelName << std::endl;
+                std::cout << "Channel Name: " << g_BoxChatChannelName << "\n";
             }
+        }
+
+        return true;
+    }
+
+    if (EQAPP_String_BeginsWith(commandText, "//BoxChatSetGlobalChannel ") == true || EQAPP_String_BeginsWith(commandText, "//BCSGC ") == true)
+    {
+        if (g_BoxChatIsConnected == false)
+        {
+            std::cout << "Error: You must first connect to the Box Chat server!" << "\n";
+            return true;
+        }
+
+        std::string name = EQAPP_String_GetAfter(commandText, " ");
+        if (name.size() != 0)
+        {
+            EQAPP_BoxChat_SetGlobalChannel(name);
+
+            std::cout << "Box Chat Global Channel set to '" << name << "'" << "\n";
         }
 
         return true;
@@ -3140,7 +3162,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
     {
         if (g_BoxChatIsConnected == false)
         {
-            std::cout << "Error: You must first connect to the Box Chat server!" << std::endl;
+            std::cout << "Error: You must first connect to the Box Chat server!" << "\n";
             return true;
         }
 
@@ -3149,7 +3171,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
         {
             EQAPP_BoxChat_SetChannel(name);
 
-            std::cout << "Box Chat Channel set to '" << name << "'" << std::endl;
+            std::cout << "Box Chat Channel set to '" << name << "'" << "\n";
         }
 
         return true;
@@ -3159,7 +3181,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
     {
         if (g_BoxChatIsConnected == false)
         {
-            std::cout << "Error: You must first connect to the Box Chat server!" << std::endl;
+            std::cout << "Error: You must first connect to the Box Chat server!" << "\n";
             return true;
         }
 
@@ -3171,7 +3193,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
             {
                 EQAPP_BoxChat_SendText(commandText);
 
-                std::cout << "Box Chat to '" << name << "': " << commandText << std::endl;
+                std::cout << "Box Chat to '" << name << "': " << commandText << "\n";
             }
         }
 
@@ -3182,7 +3204,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
     {
         if (g_BoxChatIsConnected == false)
         {
-            std::cout << "Error: You must first connect to the Box Chat server!" << std::endl;
+            std::cout << "Error: You must first connect to the Box Chat server!" << "\n";
             return true;
         }
 
@@ -3194,7 +3216,7 @@ bool EQAPP_InterpretCommand_HandleCommandText(std::string commandText)
             {
                 EQAPP_BoxChat_SendText(commandText);
 
-                std::cout << "Box Chat to Channel '" << name << "': " << commandText << std::endl;
+                std::cout << "Box Chat to Channel '" << name << "': " << commandText << "\n";
             }
         }
 
@@ -3205,7 +3227,7 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
     {
         if (g_BoxChatIsConnected == false)
         {
-            std::cout << "Error: You must first connect to the Box Chat server!" << std::endl;
+            std::cout << "Error: You must first connect to the Box Chat server!" << "\n";
             return true;
         }
 
@@ -3238,7 +3260,7 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
                     }
                 }
 
-                std::cout << "Box Chat to Group: " << commandTextAfterSpace << std::endl;
+                std::cout << "Box Chat to Group: " << commandTextAfterSpace << "\n";
             }
         }
 
@@ -3249,7 +3271,7 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
     {
         if (g_BoxChatIsConnected == false)
         {
-            std::cout << "Error: You must first connect to the Box Chat server!" << std::endl;
+            std::cout << "Error: You must first connect to the Box Chat server!" << "\n";
             return true;
         }
 
@@ -3288,7 +3310,7 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
                     }
                 }
 
-                std::cout << "Box Chat to Group All: " << commandTextAfterSpace << std::endl;
+                std::cout << "Box Chat to Group All: " << commandTextAfterSpace << "\n";
             }
         }
 
@@ -3299,7 +3321,7 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
     {
         if (g_BoxChatIsConnected == false)
         {
-            std::cout << "Error: You must first connect to the Box Chat server!" << std::endl;
+            std::cout << "Error: You must first connect to the Box Chat server!" << "\n";
             return true;
         }
 
@@ -3308,7 +3330,7 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
         {
             EQAPP_BoxChat_SendText(commandText);
 
-            std::cout << "Box Chat to Others: " << commandTextAfterSpace << std::endl;
+            std::cout << "Box Chat to Others: " << commandTextAfterSpace << "\n";
         }
 
         return true;
@@ -3318,7 +3340,7 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
     {
         if (g_BoxChatIsConnected == false)
         {
-            std::cout << "Error: You must first connect to the Box Chat server!" << std::endl;
+            std::cout << "Error: You must first connect to the Box Chat server!" << "\n";
             return true;
         }
 
@@ -3327,7 +3349,22 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
         {
             EQAPP_BoxChat_SendText(commandText);
 
-            std::cout << "Box Chat to All: " << commandTextAfterSpace << std::endl;
+            std::cout << "Box Chat to All: " << commandTextAfterSpace << "\n";
+        }
+
+        return true;
+    }
+
+
+    if (EQAPP_String_BeginsWith(commandText, "//ChatEventLoad ") == true || EQAPP_String_BeginsWith(commandText, "//CELoad ") == true)
+    {
+        std::string commandTextAfterSpace = EQAPP_String_GetAfter(commandText, " ");
+        if (commandTextAfterSpace.size() != 0)
+        {
+            std::stringstream filePath;
+            filePath << g_EQAppName << "/chatevent/" << commandTextAfterSpace << ".txt";
+
+            EQAPP_ChatEvent_LoadEx(filePath.str().c_str());
         }
 
         return true;
@@ -3350,9 +3387,9 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
                     {
                         EQAPP_ChatEvent_AddToList(chatText, commandText);
 
-                        std::cout << "Chat Event added." << std::endl;
-                        //std::cout << "Chat Text: " << chatText << std::endl;
-                        //std::cout << "Command Text: " << commandText << std::endl;
+                        std::cout << "Chat Event added." << "\n";
+                        //std::cout << "Chat Text: " << chatText << "\n";
+                        //std::cout << "Command Text: " << commandText << "\n";
                     }
                 }
             }
@@ -3368,8 +3405,8 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
         {
             EQAPP_ChatEvent_RemoveFromList(commandTextAfterSpace);
 
-            std::cout << "Chat Event removed." << std::endl;
-            //std::cout << "Chat Text: " << commandTextAfterSpace << std::endl;
+            std::cout << "Chat Event removed." << "\n";
+            //std::cout << "Chat Text: " << commandTextAfterSpace << "\n";
         }
 
         return true;
@@ -3377,7 +3414,7 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
 
     if (commandText == "//SpawnList")
     {
-        std::cout << "Spawn List:" << std::endl;
+        std::cout << "Spawn List:" << "\n";
 
         EQAPP_PrintSpawnList();
 
@@ -3400,7 +3437,7 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
 
     if (commandText == "//NearbyNPCList")
     {
-        std::cout << "Nearby NPC List:" << std::endl;
+        std::cout << "Nearby NPC List:" << "\n";
 
         uint32_t spawnIndex = 0;
 
@@ -3427,7 +3464,7 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
                 continue;
             }
 
-            std::cout << (spawnIndex + 1) << ": " << spawnName << " (ID: " << spawnID << ")" << std::endl;
+            std::cout << (spawnIndex + 1) << ": " << spawnName << " (ID: " << spawnID << ")" << "\n";
 
             spawnIndex++;
         }
@@ -4038,7 +4075,7 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
             {
                 g_SpeedMultiplier = multiplier;
 
-                std::cout << "Speed Multiplier: " << multiplier << std::endl;
+                std::cout << "Speed Multiplier: " << multiplier << "\n";
             }
         }
 
@@ -4049,6 +4086,13 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
 
     if (g_WaypointIsEnabled == true && g_WaypointEditorIsEnabled == true)
     {
+        if (commandText == "//WPListSize")
+        {
+            std::cout << "Num Waypoints: " << g_WaypointList.size() << "\n";
+
+            return true;
+        }
+
         if (commandText == "//WPUndo")
         {
             EQAPP_Waypoint_Undo();
@@ -4889,23 +4933,23 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
                     {
                         float slope = EQ_GetLineSlope(fromWaypoint->Y, fromWaypoint->X, toWaypoint->Y, toWaypoint->X);
 
-                        std::cout << "Slope: " << slope << std::endl;
+                        std::cout << "Slope: " << slope << "\n";
 
                         if (std::isinf(slope) == true)
                         {
-                            std::cout << "Slope is vertical (North <-> South)" << std::endl;
+                            std::cout << "Slope is vertical (North <-> South)" << "\n";
                         }
                         else if (slope == 0 || slope == -0)
                         {
-                            std::cout << "Slope is horizontal (West <-> East)" << std::endl;
+                            std::cout << "Slope is horizontal (West <-> East)" << "\n";
                         }
                         else if (slope < 0 || slope == -1)
                         {
-                            std::cout << "Slope is diagonal (South West <-> North East)" << std::endl;
+                            std::cout << "Slope is diagonal (South West <-> North East)" << "\n";
                         }
                         else if (slope > 0|| slope == 1)
                         {
-                            std::cout << "Slope is diagonal (North West <-> South East)" << std::endl;
+                            std::cout << "Slope is diagonal (North West <-> South East)" << "\n";
                         }
                     }
                 }
@@ -5178,7 +5222,6 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
                 continue;
             }
 
-
             if (EQ_IsSpawnWithinDistance(spawn, 200.0f) == false)
             {
                 continue;
@@ -5198,7 +5241,7 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
             float verticesY[] = {2497.0f, 2495.0f, 2337.0f, 2337.0f};
             float floorZ = -91.06f;
 
-            if (EQ_pnpoly(numVertices, verticesX, verticesY, spawnX, spawnY) == 1)
+            if (EQ_IsPointInsidePolygon(spawnX, spawnY, numVertices, verticesX, verticesY) == true)
             {
                 EQ_SetTargetSpawn(spawn);
                 break;
@@ -5211,7 +5254,7 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
 
     if (commandText == "//GetHeldItemName")
     {
-        std::cout << "Held Item Name: " << EQ_GetHeldItemName() << std::endl;
+        std::cout << "Held Item Name: " << EQ_GetHeldItemName() << "\n";
 
         return true;
     }
@@ -5273,7 +5316,7 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
 
                         if (spellAffect < numSpellAffects)
                         {
-                            std::cout << "Spell Affect " << spellAffect << ": " << EQ_SPELL_AFFECT_Strings.at(spellAffect) << " = " << result << std::endl;
+                            std::cout << "Spell Affect " << spellAffect << ": " << EQ_SPELL_AFFECT_Strings.at(spellAffect) << " = " << result << "\n";
                         }
                     }
                 }
@@ -5285,7 +5328,7 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
 
     if (commandText == "//DebugSpellAffects" || commandText == "//DebugSPA")
     {
-        std::cout << "Spell Affects:" << std::endl;
+        std::cout << "Spell Affects:" << "\n";
 
         uint32_t numSpellAffects =  EQ_SPELL_AFFECT_Strings.size();
 
@@ -5298,7 +5341,7 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
 
                 if (result != 0)
                 {
-                    std::cout << i << ": " << EQ_SPELL_AFFECT_Strings.at(i) << " = " << result << std::endl;
+                    std::cout << i << ": " << EQ_SPELL_AFFECT_Strings.at(i) << " = " << result << "\n";
                 }
             }
         }
@@ -5339,7 +5382,7 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
 
                 g_KillMobsMaxPlayersInZone = maxPlayers;
 
-                std::cout << "Kill Mobs Max Players In Zone: " << g_KillMobsMaxPlayersInZone << std::endl;
+                std::cout << "Kill Mobs Max Players In Zone: " << g_KillMobsMaxPlayersInZone << "\n";
             }
         }
 
@@ -5352,7 +5395,7 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
         {
             auto listCount = EQ_BazaarSearchWindow_GetListCount();
 
-            std::cout << "Bazaar List Count: " << listCount << std::endl;
+            std::cout << "Bazaar List Count: " << listCount << "\n";
         }
 
         return true;
@@ -5364,7 +5407,7 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
         {
             auto listIndex = EQ_BazaarSearchWindow_GetListIndex();
 
-            std::cout << "Bazaar List Index: " << listIndex << std::endl;
+            std::cout << "Bazaar List Index: " << listIndex << "\n";
         }
 
         return true;
@@ -5488,7 +5531,7 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
 
                 EQAPP_PowerLevel_SetHPPercent(value);
 
-                std::cout << "Power Level HP%: " << g_PowerLevelHPPercent << std::endl;
+                std::cout << "Power Level HP%: " << g_PowerLevelHPPercent << "\n";
             }
         }
 
@@ -5514,7 +5557,7 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
                     ss << name << " ";
                 }
 
-                std::cout << ss.str() << std::endl;
+                std::cout << ss.str() << "\n";
             }
         }
 
@@ -5525,7 +5568,7 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
     {
         g_ESPSpawnTagList.clear();
 
-        std::cout << "ESP Tag list reset." << std::endl;
+        std::cout << "ESP Tag list reset." << "\n";
 
         return true;
     }
@@ -5540,7 +5583,7 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
             {
                 g_ESPSpawnTagList.insert( {targetSpawn, commandTextAfterSpace} );
 
-                std::cout << "ESP Tag added to target: " << commandTextAfterSpace << std::endl;
+                std::cout << "ESP Tag added to target: " << commandTextAfterSpace << "\n";
             }
         }
 
@@ -5558,7 +5601,7 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
                 {
                     it = g_ESPSpawnTagList.erase(it);
 
-                    std::cout << "ESP Tag removed from target." << std::endl;
+                    std::cout << "ESP Tag removed from target." << "\n";
                 }
                 else
                 {
@@ -5619,3 +5662,4 @@ if (EQAPP_String_BeginsWith(commandText, "//BoxChatGroup ") == true || EQAPP_Str
 
     return false;
 }
+

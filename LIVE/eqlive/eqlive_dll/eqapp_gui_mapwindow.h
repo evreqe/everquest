@@ -1,7 +1,5 @@
 #pragma once
 
-extern bool g_GUIDarkThemeIsEnabled;
-
 bool g_GUIMapWindowIsEnabled = false;
 
 bool g_GUIMapWindowMapLinesIsEnabled = true;
@@ -302,7 +300,7 @@ static void EQAPP_GUI_MapWindow_LoadTextures()
     HRESULT result = D3DXCreateTextureFromFile(devicePointer, L"uifiles\\default\\cart.tga", &g_GUIMapWindowMapBackgroundTexture);
     if (result != D3D_OK)
     {
-        std::cout << "D3DXCreateTextureFromFile() failed!" << std::endl;
+        std::cout << "D3DXCreateTextureFromFile() failed!" << "\n";
     }
 }
 
@@ -527,7 +525,7 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
                 auto clickY = io.MousePos.y;
                 auto clickX = io.MousePos.x;
 
-                std::cout << "Click: " << clickY << ", " << clickX << std::endl;
+                std::cout << "Click: " << clickY << ", " << clickX << "\n";
             }
 
             // middle click
@@ -1508,12 +1506,12 @@ static void EQAPP_GUI_MapWindow_Map_PrintDebugInformation()
         {
             numMapLabels++;
 
-            std::cout << "Map Label Text: " << mapLabel->Text << std::endl;
+            std::cout << "Map Label Text: " << mapLabel->Text << "\n";
 
             mapLabel = mapLabel->Next;
         }
     }
 
-    std::cout << "Map Lines: " << numMapLines << std::endl;
-    std::cout << "Map Labels: " << numMapLabels << std::endl;
+    std::cout << "Map Lines: " << numMapLines << "\n";
+    std::cout << "Map Labels: " << numMapLabels << "\n";
 }

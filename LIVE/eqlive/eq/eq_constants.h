@@ -1,15 +1,10 @@
 #pragma once
 
-#include <cstdint>
-
-#include <string>
-#include <unordered_map>
-
 const char* EQ_WINDOW_TITLE_DEFAULT = "EverQuest";
 
 const uint32_t EQ_BASE_ADDRESS_VALUE = 0x400000;
 
-const float EQ_PI = 3.14159265358979f;
+const float EQ_PI = 3.14159265358979323846f; // std::numbers::pi; // C++20
 
 const float EQ_ZONE_GRAVITY_DEFAULT = 0.400000006f;
 
@@ -66,6 +61,10 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 #define EQ_NUM_BANDOLIER_SLOTS               20
 
 #define EQ_SPELL_ID_NULL 0xFFFFFFFF // uint32_t
+
+#define EQ_UPDATE_ITEM_SLOT_HEAD         0
+#define EQ_UPDATE_ITEM_SLOT_PRIMARY      7
+#define EQ_UPDATE_ITEM_SLOT_SECONDARY    8
 
 #define EQ_ALTERNATE_ABILITY_TYPE_GENERAL      1
 #define EQ_ALTERNATE_ABILITY_TYPE_ARCHETYPE    2

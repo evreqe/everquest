@@ -106,3 +106,5 @@ void EQAPP_PowerLevel_SetHPPercent(uint32_t hpPercent)
 
     g_PowerLevelHPPercent = hpPercent;
 }
+
+

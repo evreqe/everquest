@@ -96,7 +96,7 @@ void EQAPP_BazaarFilter_LoadEx(const char* fileName)
         g_BazaarFilterItemNameList.push_back(line);
     }
 
-    std::cout << "Bazaar Filter loaded from file: " << fileName << std::endl;
+    std::cout << "Bazaar Filter loaded from file: " << fileName << "\n";
 
     file.close();
 }
@@ -125,7 +125,7 @@ bool EQAPP_BazaarFilter_HandleEvent_CBazaarSearchWnd__AddItemToList(char* itemNa
         std::string itemNameAdd = itemName;
         std::string itemNameFilter = filterItemName;
 
-        EQApp::StringComparsionType comparsionType = EQApp::StringComparsionType::Equals;
+        EQApp::StringComparisonType comparsionType = EQApp::StringComparisonType::Equals;
 
         if (itemNameFilter.size() > 1)
         {
@@ -133,29 +133,29 @@ bool EQAPP_BazaarFilter_HandleEvent_CBazaarSearchWnd__AddItemToList(char* itemNa
             {
                 itemNameFilter.erase(0, 1);
 
-                comparsionType = EQApp::StringComparsionType::Ignore;
+                comparsionType = EQApp::StringComparisonType::Ignore;
             }
             else if (EQAPP_String_BeginsWith(itemNameFilter, "@") == true)
             {
                 itemNameFilter.erase(0, 1);
 
-                comparsionType = EQApp::StringComparsionType::Contains;
+                comparsionType = EQApp::StringComparisonType::Contains;
             }
             else if (EQAPP_String_BeginsWith(itemNameFilter, "{") == true)
             {
                 itemNameFilter.erase(0, 1);
 
-                comparsionType = EQApp::StringComparsionType::BeginsWith;
+                comparsionType = EQApp::StringComparisonType::BeginsWith;
             }
             else if (EQAPP_String_BeginsWith(itemNameFilter, "}") == true)
             {
                 itemNameFilter.erase(0, 1);
 
-                comparsionType = EQApp::StringComparsionType::EndsWith;
+                comparsionType = EQApp::StringComparisonType::EndsWith;
             }
         }
 
-        if (comparsionType == EQApp::StringComparsionType::Equals)
+        if (comparsionType == EQApp::StringComparisonType::Equals)
         {
             if (itemNameAdd == itemNameFilter)
             {
@@ -163,7 +163,7 @@ bool EQAPP_BazaarFilter_HandleEvent_CBazaarSearchWnd__AddItemToList(char* itemNa
                 break;
             }
         }
-        else if (comparsionType == EQApp::StringComparsionType::Ignore)
+        else if (comparsionType == EQApp::StringComparisonType::Ignore)
         {
             if (itemNameAdd == itemNameFilter)
             {
@@ -171,7 +171,7 @@ bool EQAPP_BazaarFilter_HandleEvent_CBazaarSearchWnd__AddItemToList(char* itemNa
                 break;
             }
         }
-        else if (comparsionType == EQApp::StringComparsionType::Contains)
+        else if (comparsionType == EQApp::StringComparisonType::Contains)
         {
             if (EQAPP_String_Contains(itemNameAdd, itemNameFilter) == true)
             {
@@ -179,7 +179,7 @@ bool EQAPP_BazaarFilter_HandleEvent_CBazaarSearchWnd__AddItemToList(char* itemNa
                 break;
             }
         }
-        else if (comparsionType == EQApp::StringComparsionType::BeginsWith)
+        else if (comparsionType == EQApp::StringComparisonType::BeginsWith)
         {
             if (EQAPP_String_BeginsWith(itemNameAdd, itemNameFilter) == true)
             {
@@ -187,7 +187,7 @@ bool EQAPP_BazaarFilter_HandleEvent_CBazaarSearchWnd__AddItemToList(char* itemNa
                 break;
             }
         }
-        else if (comparsionType == EQApp::StringComparsionType::EndsWith)
+        else if (comparsionType == EQApp::StringComparisonType::EndsWith)
         {
             if (EQAPP_String_EndsWith(itemNameAdd, itemNameFilter) == true)
             {
@@ -210,10 +210,11 @@ bool EQAPP_BazaarFilter_HandleEvent_CBazaarSearchWnd__AddItemToList(char* itemNa
 
 void EQAPP_BazaarFilter_PrintItemNameList()
 {
-    std::cout << "Bazaar Filter Item Name List:" << std::endl;
+    std::cout << "Bazaar Filter Item Name List:\n";
 
     for (auto& itemName : g_BazaarFilterItemNameList)
     {
-        std::cout << itemName << std::endl;
+        std::cout << itemName << "\n";
     }
 }
+

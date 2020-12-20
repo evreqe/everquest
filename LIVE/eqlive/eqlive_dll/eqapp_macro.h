@@ -45,11 +45,11 @@ void EQAPP_Macro_Execute(const char* fileName)
     bool result = EQAPP_ReadFileToList(folderFileName.str().c_str(), macroList, false);
     if (result == false)
     {
-        std::cout << "Macro failed to execute with file: " << folderFileName.str() << std::endl;
+        std::cout << "Macro failed to execute with file: " << folderFileName.str() << "\n";
         return;
     }
 
-    if (macroList.size() == 0)
+    if (macroList.empty() == true)
     {
         return;
     }
@@ -59,3 +59,4 @@ void EQAPP_Macro_Execute(const char* fileName)
         EQ_InterpretCommand(command.c_str());
     }
 }
+

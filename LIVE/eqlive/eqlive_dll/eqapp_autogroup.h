@@ -84,3 +84,4 @@ void EQAPP_AutoGroup_HandleEvent_CEverQuest__dsp_chat(std::string text, int text
 
     EQAPP_AutoGroup_Execute();
 }
+

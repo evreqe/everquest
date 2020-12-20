@@ -1,7 +1,5 @@
 #pragma once
 
-extern void EQAPP_Waypoint_FollowPath_Off();
-
 extern bool g_CheatFlyIsEnabled;
 
 bool g_FollowAIIsEnabled = true;
@@ -115,7 +113,7 @@ void EQAPP_FollowAI_StopFollow()
 {
     if (g_FollowAISpawn != NULL)
     {
-        std::cout << "You stopped following." << std::endl;
+        std::cout << "You stopped following." << "\n";
     }
 
     g_FollowAISpawn = NULL;
@@ -405,3 +403,4 @@ bool EQAPP_FollowAI_HandleEvent_CDisplay__DeleteActor(void* this_ptr, uint32_t c
 
     return false;
 }
+

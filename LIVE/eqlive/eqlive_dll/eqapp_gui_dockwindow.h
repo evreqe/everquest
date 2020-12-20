@@ -1,7 +1,5 @@
 #pragma once
 
-extern bool g_GUIDarkThemeIsEnabled;
-
 bool g_GUIDockWindowIsEnabled = true;
 
 ImGuiID g_GUIDockWindowDockSpaceID;
@@ -42,3 +40,4 @@ static void EQAPP_GUI_DockWindow()
 
     ImGui::End();
 }
+

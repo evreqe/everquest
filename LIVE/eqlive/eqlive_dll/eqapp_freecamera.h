@@ -2,7 +2,10 @@
 
 bool g_FreeCameraIsEnabled = false;
 
-float g_FreeCameraMultiplier = 1.0f;
+float g_FreeCameraMultiplierDefault = 1.0f;
+float g_FreeCameraMultiplierFast = 4.0f;
+
+float g_FreeCameraMultiplier = g_FreeCameraMultiplierDefault;
 
 void EQAPP_FreeCamera_Toggle();
 void EQAPP_FreeCamera_On();
@@ -52,11 +55,11 @@ void EQAPP_FreeCamera_Execute()
 
     if (EQAPP_IsVKKeyDown(VK_CONTROL) == true)
     {
-        g_FreeCameraMultiplier = 4.0f;
+        g_FreeCameraMultiplier = g_FreeCameraMultiplierFast;
     }
     else
     {
-        g_FreeCameraMultiplier = 1.0f;
+        g_FreeCameraMultiplier = g_FreeCameraMultiplierDefault;
     }
 
     if (EQAPP_IsVKKeyDown(VK_UP) == true)
@@ -258,3 +261,4 @@ bool EQAPP_FreeCamera_HandleEvent_ExecuteCmd(uint32_t commandID, int isActive, i
 
     return false;
 }
+

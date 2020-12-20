@@ -1,7 +1,5 @@
 #pragma once
 
-#include "eqapp_boxchat.h"
-
 bool g_AlwaysHotButtonIsEnabled = false;
 
 EQApp::Timer g_AlwaysHotButtonTimer = EQAPP_Timer_GetTimeNow();
@@ -49,7 +47,7 @@ void EQAPP_AlwaysHotButton_Execute()
         return;
     }
 
-    if (g_BoxChatInterpretCommandList.size() != 0)
+    if (g_BoxChatInterpretCommandList.empty() == false)
     {
         return;
     }

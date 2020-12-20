@@ -10,11 +10,11 @@
 #include <psapi.h>
 #pragma comment(lib, "psapi.lib")
 
-#define APPLICATION_NAME "EQLive Inject DLL"
+const char* APPLICATION_NAME = "EQLive Inject DLL";
 
-#define APPLICATION_DLL_NAME "eqlive.dll"
+const char* APPLICATION_DLL_NAME = "eqlive.dll";
 
-#define GAME_PROCESS_NAME "eqgame.exe"
+const char* GAME_PROCESS_NAME = "eqgame.exe";
 
 void enable_debug_privileges()
 {
@@ -94,7 +94,20 @@ DWORD get_module_base_address(DWORD process_id, const char* module_name)
 
 int main(int argc, char *argv[])
 {
+    const char* inject_dll_name = NULL;
+
+    if (argc == 2)
+    {
+        inject_dll_name = argv[1];
+    }
+    else
+    {
+        inject_dll_name = APPLICATION_DLL_NAME;
+    }
+
     printf("%s\n", APPLICATION_NAME);
+
+    printf("DLL: %s\n", inject_dll_name);
 
     printf("Enabling debug privileges.\n");
 
@@ -146,7 +159,7 @@ int main(int argc, char *argv[])
 
                                 //printf("Module Name: %s\n", module_name);
 
-                                if (strcmp(module_name, APPLICATION_DLL_NAME) == 0)
+                                if (strcmp(module_name, inject_dll_name) == 0)
                                 {
                                     printf("DLL is already injected in EverQuest. (Name: %s, ID: %d | 0x%08X)\nSkipping...\n", module_name, (int)processes[i], (int)processes[i]);
 
@@ -162,7 +175,7 @@ int main(int argc, char *argv[])
                             printf("EverQuest process found. (Name: %s, ID: %d | 0x%08X)\nInjecting DLL...\n", module_name, (int)processes[i], (int)processes[i]);
 
                             char dll_path_name[MAX_PATH] = {0};
-                            GetFullPathNameA(APPLICATION_DLL_NAME, MAX_PATH, dll_path_name, NULL);
+                            GetFullPathNameA(inject_dll_name, MAX_PATH, dll_path_name, NULL);
 
                             LPVOID remote_memory = VirtualAllocEx(process_handle, NULL, strlen(dll_path_name), MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
 

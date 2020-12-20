@@ -93,3 +93,4 @@ bool EQAPP_NoDraw_HandleEvent_CRender__UpdateDisplay(void* this_ptr)
 
     return false;
 }
+

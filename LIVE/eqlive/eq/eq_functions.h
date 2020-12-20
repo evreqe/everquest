@@ -1,20 +1,6 @@
 #pragma once
 
-#include <string>
-#include <sstream>
-#include <tuple>
-#include <unordered_map>
-
-#include <cstdint>
-#include <cstring>
-#include <cmath>
-
-#include <windows.h>
-
-#include "eq_addresses.h"
-#include "eq_classes.h"
-#include "eq_memory.h"
-#include "eq_macros.h"
+#include "eq.h"
 
 //////////////////////////////////////////////////
 /* game functions */
@@ -85,7 +71,7 @@ std::tuple<float, float> EQ_ApplyLeftwardMovementAsTuple(float y, float x, float
 std::tuple<float, float> EQ_ApplyRightwardMovementAsTuple(float y, float x, float heading, float distance);
 
 bool EQ_IsPointInsideRectangle(int pointX, int pointY, int rectangleX, int rectangleY, int rectangleWidth, int rectangleHeight);
-int EQ_pnpoly(int numVertices, float *verticesX, float *verticesY, float testX, float testY);
+bool EQ_IsPointInsidePolygon(float pointX, float pointY, uint32_t numVertices, float *verticesX, float *verticesY);
 uint32_t EQ_ColorARGB_Darken(uint32_t colorARGB, float percent);
 
 EQ::Vector2f EQ_Vector2f_GetMidpoint(float y1, float x1, float y2, float x2);
@@ -102,6 +88,7 @@ bool EQ_IsInGame();
 bool EQ_IsSpellIDValid(uint32_t spellID);
 bool EQ_HasTimeElapsed(uint32_t& timer, uint32_t& timerInterval);
 HWND EQ_GetWindow();
+bool EQ_IsWindowInBackground();
 uint32_t EQ_GetTimer();
 uint32_t EQ_GetCamera();
 uint32_t EQ_GetRender();
@@ -291,6 +278,11 @@ void EQ_SetSpawnPitch(uint32_t spawn, float pitch);
 void EQ_SetSpawnHeight(uint32_t spawn, float height);
 void EQ_SetSpawnFollowSpawn(uint32_t spawn, uint32_t followSpawn);
 
+bool EQ_SetSpawnItemSlot(uint32_t spawn, uint32_t updateItemSlot, int itemDefinition);
+bool EQ_SetSpawnItemSlotPrimary(uint32_t spawn, int itemDefinition);
+bool EQ_SetSpawnItemSlotSecondary(uint32_t spawn, int itemDefinition);
+bool EQ_SetSpawnItemSlotHead(uint32_t spawn, int itemDefinition);
+
 void EQ_UpdateLight();
 void EQ_ChangePlayerLight();
 void EQ_SetSpawnLightInterface(uint32_t spawn, uint32_t light);
@@ -414,6 +406,7 @@ bool EQ_AlertStackWindow_IsOpen();
 uint32_t EQ_GetBazaarSearchWindow();
 bool EQ_BazaarSearchWindow_IsOpen();
 void EQ_BazaarSearchWindow_DoQuery();
+void EQ_BazaarSearchWindow_PrintList();
 uint32_t EQ_BazaarSearchWindow_GetListCount();
 uint32_t EQ_BazaarSearchWindow_GetListIndexByItemName(const char* itemName, bool useExactComparsion);
 uint32_t EQ_BazaarSearchWindow_GetListIndexByLowestPrice();
@@ -447,15 +440,11 @@ bool EQ_TaskSelectWindow_IsOpen();
 bool EQ_TaskSelectWindow_ClickAcceptButton();
 bool EQ_TaskSelectWindow_ClickDeclineButton();
 
-//////////////////////////////////////////////////
-/* functions */
-//////////////////////////////////////////////////
-
 void EQ_Log(const char* text)
 {
     std::fstream file;
     file.open("Logs/eq-log.txt", std::ios::out | std::ios::app);
-    file << "[" << __TIME__ << "] " << text << std::endl;
+    file << "[" << __TIME__ << "] " << text << "\n";
     file.close();
 }
 
@@ -466,17 +455,17 @@ void EQ_ToggleBool(bool& b)
 
 float EQ_CalculateDistance(float y1, float x1, float y2, float x2)
 {
-    return std::sqrtf(std::pow(x2 - x1, 2) + std::pow(y2 - y1, 2));
+    return std::sqrtf(std::powf(x2 - x1, 2) + std::powf(y2 - y1, 2));
 }
 
 float EQ_CalculateDistance3D(float y1, float x1, float z1, float y2, float x2, float z2)
 {
-    return std::sqrtf(std::pow(x2 - x1, 2) + std::pow(y2 - y1, 2) + std::pow(z2 - z1, 2));
+    return std::sqrtf(std::powf(x2 - x1, 2) + std::powf(y2 - y1, 2) + std::powf(z2 - z1, 2));
 }
 
 bool EQ_IsWithinDistance(float y1, float x1, float y2, float x2, float distance)
 {
-    return (std::pow(x2 - x1, 2) + std::pow(y2 - y1, 2)) <= std::pow(distance, 2);
+    return (std::powf(x2 - x1, 2) + std::powf(y2 - y1, 2)) <= std::powf(distance, 2);
 }
 
 float EQ_GetBearing(float y1, float x1, float y2, float x2)
@@ -717,23 +706,30 @@ bool EQ_IsPointInsideRectangle(int pointX, int pointY, int rectangleX, int recta
 
 // pnpoly
 // https://wrf.ecse.rpi.edu/Research/Short_Notes/pnpoly.html
-int EQ_pnpoly(int numVertices, float *verticesX, float *verticesY, float testX, float testY)
+bool EQ_IsPointInsidePolygon(float pointX, float pointY, uint32_t numVertices, float *verticesX, float *verticesY)
 {
-    int i, j, c = 0;
+    // need at least 3 vertices to form a polygon
+    if (numVertices < 3)
+    {
+        return false;
+    }
+
+    uint32_t i = 0;
+    uint32_t j = 0;
 
     for (i = 0, j = numVertices - 1; i < numVertices; j = i++)
     {
         if
         ( 
-            ((verticesY[i] > testY) != (verticesY[j] > testY)) &&
-            (testX < (verticesX[j] - verticesX[i]) * (testY - verticesY[i]) / (verticesY[j] - verticesY[i]) + verticesX[i])
+            ((verticesY[i] > pointY) != (verticesY[j] > pointY)) &&
+            (pointX < (verticesX[j] - verticesX[i]) * (pointY - verticesY[i]) / (verticesY[j] - verticesY[i]) + verticesX[i])
         )
         {
-            c = !c;
+            return true;
         }
     }
 
-    return c;
+    return false;
 }
 
 uint32_t EQ_ColorARGB_Darken(uint32_t colorARGB, float percent)
@@ -760,8 +756,8 @@ uint32_t EQ_ColorARGB_Darken(uint32_t colorARGB, float percent)
 EQ::Vector2f EQ_Vector2f_GetMidpoint(float y1, float x1, float y2, float x2)
 {
     EQ::Vector2f vector;
-    vector.Y = (y1 + y2) * 0.5f;
-    vector.X = (x1 + x2) * 0.5f;
+    vector.Y = std::midpoint(y1, y2);
+    vector.X = std::midpoint(x1, x2);
 
     return vector;
 }
@@ -769,9 +765,9 @@ EQ::Vector2f EQ_Vector2f_GetMidpoint(float y1, float x1, float y2, float x2)
 EQ::Vector3f EQ_Vector3f_GetMidpoint(float y1, float x1, float z1, float y2, float x2, float z2)
 {
     EQ::Vector3f vector;
-    vector.X = (x1 + x2) * 0.5f;
-    vector.Y = (y1 + y2) * 0.5f;
-    vector.Z = (z1 + z2) * 0.5f;
+    vector.X = std::midpoint(x1, x2);
+    vector.Y = std::midpoint(y1, y2);
+    vector.Z = std::midpoint(z1, z2);
 
     return vector;
 }
@@ -1199,10 +1195,6 @@ uint32_t EQ_GetNumSpawnsInZone(uint32_t spawnType)
     auto spawn = EQ_GetFirstSpawn();
     while (spawn != NULL)
     {
-        auto spawnY = EQ_GetSpawnY(spawn);
-        auto spawnX = EQ_GetSpawnX(spawn);
-        auto spawnZ = EQ_GetSpawnZ(spawn);
-
         auto spawnType_ = EQ_GetSpawnType(spawn);
         if (spawnType_ != spawnType)
         {
@@ -1279,12 +1271,14 @@ uint32_t EQ_GetSpawnByID(uint32_t spawnID)
     uint32_t* player = EQ_CLASS_POINTER_EQPlayerManager->GetSpawnByID(spawnID);
     if (player == NULL)
     {
+        //std::cout << __FUNCTION__ << "(): player == NULL\n";
         return NULL;
     }
 
     uint32_t spawn = (uint32_t)*&player;
     if (spawn == NULL)
     {
+        //std::cout << __FUNCTION__ << "(): spawn == NULL\n";
         return NULL;
     }
 
@@ -1729,7 +1723,7 @@ bool EQ_IsSpawnWithinDistanceOfLocation(uint32_t spawn, float y, float x, float 
 
     auto diffY = std::fabs(spawnY - y);
     auto diffX = std::fabs(spawnX - x);
-    auto diffZ = std::fabs(spawnZ - z);
+    //auto diffZ = std::fabs(spawnZ - z);
 
     bool result = (diffY < distance && diffX < distance);
 
@@ -1976,7 +1970,7 @@ std::string EQ_GetSpawnNameNumbered(uint32_t spawn)
     }
 
     char spawnNameNumbered[EQ_SIZE_SPAWN_NAME];
-    std::memmove(spawnNameNumbered, (LPVOID)(spawn + EQ_OFFSET_SPAWN_NAME_NUMBERED), sizeof(spawnNameNumbered));
+    memcpy(spawnNameNumbered, (LPVOID)(spawn + EQ_OFFSET_SPAWN_NAME_NUMBERED), sizeof(spawnNameNumbered));
 
     if (strlen(spawnNameNumbered) == 0)
     {
@@ -1994,7 +1988,7 @@ std::string EQ_GetSpawnName(uint32_t spawn)
     }
 
     char spawnName[EQ_SIZE_SPAWN_NAME];
-    std::memmove(spawnName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_NAME), sizeof(spawnName));
+    memcpy(spawnName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_NAME), sizeof(spawnName));
 
     if (strlen(spawnName) == 0)
     {
@@ -2012,8 +2006,7 @@ std::string EQ_GetSpawnLastName(uint32_t spawn)
     }
 
     char spawnLastName[EQ_SIZE_SPAWN_LAST_NAME];
-    ////memcpy(spawnLastName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_LAST_NAME), sizeof(spawnLastName));
-    std::memmove(spawnLastName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_LAST_NAME), sizeof(spawnLastName));
+    memcpy(spawnLastName, (LPVOID)(spawn + EQ_OFFSET_SPAWN_LAST_NAME), sizeof(spawnLastName));
 
     if (strlen(spawnLastName) == 0)
     {
@@ -2525,6 +2518,26 @@ void EQ_SetSpawnFollowSpawn(uint32_t spawn, uint32_t followSpawn)
     EQ_WriteMemory<uint32_t>(spawn + EQ_OFFSET_SPAWN_FOLLOW_SPAWN, followSpawn);
 }
 
+bool EQ_SetSpawnItemSlot(uint32_t spawn, uint32_t updateItemSlot, int itemDefinition)
+{
+    return ((EQClass::EQPlayer*)spawn)->UpdateItemSlot(updateItemSlot, itemDefinition, false, false, false);
+}
+
+bool EQ_SetSpawnItemSlotPrimary(uint32_t spawn, int itemDefinition)
+{
+    return EQ_SetSpawnItemSlot(spawn, EQ_UPDATE_ITEM_SLOT_PRIMARY, itemDefinition);
+}
+
+bool EQ_SetSpawnItemSlotSecondary(uint32_t spawn, int itemDefinition)
+{
+    return EQ_SetSpawnItemSlot(spawn, EQ_UPDATE_ITEM_SLOT_SECONDARY, itemDefinition);
+}
+
+bool EQ_SetSpawnItemSlotHead(uint32_t spawn, int itemDefinition)
+{
+    return EQ_SetSpawnItemSlot(spawn, EQ_UPDATE_ITEM_SLOT_HEAD, itemDefinition);
+}
+
 void EQ_UpdateLight()
 {
     auto character = EQ_GetCharacter();
@@ -2855,23 +2868,28 @@ void EQ_LookCameraAtLocation(float y, float x, float z)
 
     float opposite = EQ_CalculateDistance(cameraY, cameraX, y, x);
 
-    //std::cout << "opposite: " << opposite << std::endl;
+    //std::cout << "opposite: " << opposite << "\n";
 
     float adjacent = std::fabsf(cameraZ - z);
 
-    //std::cout << "adjacent: " << adjacent << std::endl;
+    //std::cout << "adjacent: " << adjacent << "\n";
 
-    float hypotenuse = std::sqrtf(std::pow(opposite, 2) + std::pow(adjacent, 2));
+    float hypotenuse = std::sqrtf(std::powf(opposite, 2) + std::powf(adjacent, 2));
 
-    //std::cout << "hypotenuse: " << hypotenuse << std::endl;
+    //std::cout << "hypotenuse: " << hypotenuse << "\n";
+
+    if (adjacent == 0.0f || hypotenuse == 0.0f)
+    {
+        return;
+    }
 
     float angleRadians = std::acosf(adjacent / hypotenuse); // SOHCAHTOA
 
-    //std::cout << "angle radians: " << angleRadians << std::endl;
+    //std::cout << "angle radians: " << angleRadians << "\n";
 
     float angleDegrees = EQ_GetDegrees(angleRadians);
 
-    //std::cout << "angle degrees: " << angleDegrees << std::endl;
+    //std::cout << "angle degrees: " << angleDegrees << "\n";
 
     EQ_TurnCameraTowardsLocation(y, x);
 
@@ -2930,23 +2948,28 @@ void EQ_LookPlayerAtLocation(float y, float x, float z)
 
     float opposite = EQ_CalculateDistance(cameraY, cameraX, y, x);
 
-    //std::cout << "opposite: " << opposite << std::endl;
+    //std::cout << "opposite: " << opposite << "\n";
 
     float adjacent = std::fabsf(cameraZ - z);
 
-    //std::cout << "adjacent: " << adjacent << std::endl;
+    //std::cout << "adjacent: " << adjacent << "\n";
 
-    float hypotenuse = std::sqrtf(std::pow(opposite, 2) + std::pow(adjacent, 2));
+    float hypotenuse = std::sqrtf(std::powf(opposite, 2) + std::powf(adjacent, 2));
 
-    //std::cout << "hypotenuse: " << hypotenuse << std::endl;
+    //std::cout << "hypotenuse: " << hypotenuse << "\n";
+
+    if (adjacent == 0.0f || hypotenuse == 0.0f)
+    {
+        return;
+    }
 
     float angleRadians = std::acosf(adjacent / hypotenuse); // SOHCAHTOA
 
-    //std::cout << "angle radians: " << angleRadians << std::endl;
+    //std::cout << "angle radians: " << angleRadians << "\n";
 
     float angleDegrees = EQ_GetDegrees(angleRadians);
 
-    //std::cout << "angle degrees: " << angleDegrees << std::endl;
+    //std::cout << "angle degrees: " << angleDegrees << "\n";
 
     if (z < cameraZ)
     {
@@ -3616,7 +3639,7 @@ void EQ_UseDoor(const char* doorName)
 
     auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
     auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
-    auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
+    //auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
 
     for (unsigned int i = 0; i < numDoors; i++)
     {
@@ -3628,7 +3651,7 @@ void EQ_UseDoor(const char* doorName)
 
         auto doorY = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_Y);
         auto doorX = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_X);
-        auto doorZ = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_Z);
+        //auto doorZ = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_Z);
 
         float doorDistance = EQ_CalculateDistance(playerSpawnY, playerSpawnX, doorY, doorX);
         if (doorDistance > EQ_USE_DOOR_DISTANCE_DEFAULT)
@@ -3672,7 +3695,7 @@ void EQ_UseDoorByDistance(float distance)
 
     auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
     auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
-    auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
+    //auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
 
     for (unsigned int i = 0; i < numDoors; i++)
     {
@@ -3684,7 +3707,7 @@ void EQ_UseDoorByDistance(float distance)
 
         auto doorY = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_Y);
         auto doorX = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_X);
-        auto doorZ = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_Z);
+        //auto doorZ = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_Z);
 
         float doorDistance = EQ_CalculateDistance(playerSpawnY, playerSpawnX, doorY, doorX);
         if (doorDistance > distance)
@@ -3726,7 +3749,7 @@ void EQ_UseDoorOnCollision()
 
     auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
     auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
-    auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
+    //auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
 
     for (unsigned int i = 0; i < numDoors; i++)
     {
@@ -3744,7 +3767,7 @@ void EQ_UseDoorOnCollision()
 
         auto doorY = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_Y);
         auto doorX = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_X);
-        auto doorZ = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_Z);
+        //auto doorZ = EQ_ReadMemory<float>(door + EQ_OFFSET_EQSwitch_Z);
 
         float doorDistance = EQ_CalculateDistance(playerSpawnY, playerSpawnX, doorY, doorX);
         if (doorDistance > EQ_USE_DOOR_DISTANCE_DEFAULT)
@@ -3753,7 +3776,7 @@ void EQ_UseDoorOnCollision()
         }
 
         //auto doorBearing = EQ_GetBearing(playerSpawnY, playerSpawnX, doorY, doorX);
-        //std::cout << "door bearing: " << doorBearing << std::endl;
+        //std::cout << "door bearing: " << doorBearing << "\n";
 
         auto playerSpawnID = EQ_GetSpawnID(playerSpawn);
 
@@ -3919,7 +3942,7 @@ void EQ_BazaarSearchWindow_PrintList()
         return;
     }
 
-    std::cout << "Bazaar Search Window List:" << std::endl;
+    std::cout << "Bazaar Search Window List:" << "\n";
 
     for (size_t i = 0; i < listCount; i++)
     {
@@ -3955,10 +3978,10 @@ void EQ_BazaarSearchWindow_PrintList()
             continue;
         }
 
-        std::cout << itemName << ", " << itemQuantity << "x, " << itemPrice << "pp, " << traderName << std::endl;
+        std::cout << itemName << ", " << itemQuantity << "x, " << itemPrice << "pp, " << traderName << "\n";
     }
 
-    std::cout << listCount << " item(s) in list." << std::endl;
+    std::cout << listCount << " item(s) in list." << "\n";
 }
 
 uint32_t EQ_BazaarSearchWindow_GetListCount()

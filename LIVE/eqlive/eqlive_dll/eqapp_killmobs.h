@@ -1,6 +1,8 @@
 #pragma once
 
-#include "eqapp_followai.h"
+extern uint32_t g_FollowAISpawn;
+extern void EQAPP_FollowAI_SetFollowSpawn(uint32_t spawn);
+extern void EQAPP_FollowAI_StopFollow();
 
 bool g_KillMobsIsEnabled = false;
 
@@ -66,9 +68,9 @@ void EQAPP_KillMobs_Load()
     EQAPP_ReadFileToList("killmobs.txt", g_KillMobsList, false);
 
     std::string zoneShortName = EQ_GetZoneShortName();
-    if (zoneShortName.size() == 0)
+    if (zoneShortName.empty() == true)
     {
-        EQAPP_PrintDebugText(__FUNCTION__, "zone short name is null");
+        EQAPP_PrintDebugText(__FUNCTION__, "zoneShortName is empty");
         return;
     }
 
@@ -84,7 +86,7 @@ void EQAPP_KillMobs_Load()
             bool result = EQAPP_ReadFileToList(folderFileName.str().c_str(), g_KillMobsList, false);
             if (result == true)
             {
-                std::cout << "Kill Mobs loaded from file: " << folderFileName.str() << std::endl;
+                std::cout << "Kill Mobs loaded from file: " << folderFileName.str() << "\n";
                 return;
             }
         }
@@ -96,7 +98,7 @@ void EQAPP_KillMobs_Load()
     bool result = EQAPP_ReadFileToList(folderFileName.str().c_str(), g_KillMobsList, false);
     if (result == true)
     {
-        std::cout << "Kill Mobs loaded from file: " << folderFileName.str() << std::endl;
+        std::cout << "Kill Mobs loaded from file: " << folderFileName.str() << "\n";
     }
 }
 
@@ -218,7 +220,7 @@ void EQAPP_KillMobs_Execute()
                 g_FollowAISpawn = NULL;
                 EQ_SetAutoRun(false);
 
-                std::cout << "Kill Mob skipping followed spawn because it is NOT safe to kill." << std::endl;
+                std::cout << "Kill Mob skipping followed spawn because it is NOT safe to kill." << "\n";
                 return;
             }
 
@@ -294,7 +296,7 @@ void EQAPP_KillMobs_Execute()
             {
                 EQ_ClearTarget();
 
-                std::cout << "Kill Mob skipping '" << spawnName << "' because it is NOT safe to kill." << std::endl;
+                std::cout << "Kill Mob skipping '" << spawnName << "' because it is NOT safe to kill." << "\n";
                 continue;
             }
 
@@ -332,7 +334,7 @@ void EQAPP_KillMobs_Execute()
 
                         EQ_SetAutoAttack(true);
 
-                        std::cout << "Kill Mob Name: " << killMobsName << std::endl;
+                        std::cout << "Kill Mob Name: " << killMobsName << "\n";
 
                         return;
                     }
@@ -398,7 +400,7 @@ void EQAPP_KillMobs_Execute()
             {
                 EQ_ClearTarget();
 
-                std::cout << "Kill Mob skipping '" << spawnName << "' because it is NOT safe to kill." << std::endl;
+                std::cout << "Kill Mob skipping '" << spawnName << "' because it is NOT safe to kill." << "\n";
                 continue;
             }
 
@@ -430,7 +432,7 @@ void EQAPP_KillMobs_Execute()
 
                     EQ_SetAutoAttack(true);
 
-                    std::cout << "Kill Mob Name: " << killMobsName << std::endl;
+                    std::cout << "Kill Mob Name: " << killMobsName << "\n";
 
                     return;
                 }
@@ -555,7 +557,7 @@ bool EQAPP_KillMobs_IsSpawnInHillGiantRectangle(uint32_t spawn)
     float verticesX[] = {-510.0f, -508.0f, -2408.0f, -2243.0f};
     float verticesY[] = {3674.0f, 2505.0f,  2650.0f,  3726.0f};
 
-    if (EQ_pnpoly(numVertices, verticesX, verticesY, spawnX, spawnY) == 1)
+    if (EQ_IsPointInsidePolygon(spawnX, spawnY, numVertices, verticesX, verticesY) == true)
     {
         return true;
     }
@@ -583,7 +585,7 @@ bool EQAPP_KillMobs_IsSpawnInSarnakCourierRectangle(uint32_t spawn)
     float verticesX[] = {-3688.0f, -3688.0f, -700.0f, -785.0f};
     float verticesY[] = {-3657.0f,   105.0f,  520.0f, -3915.0f};
 
-    if (EQ_pnpoly(numVertices, verticesX, verticesY, spawnX, spawnY) == 1)
+    if (EQ_IsPointInsidePolygon(spawnX, spawnY, numVertices, verticesX, verticesY) == 1)
     {
         return true;
     }
@@ -612,3 +614,4 @@ void EQAPP_KillMobs_MaxPlayers_Off()
         EQAPP_KillMobs_MaxPlayers_Toggle();
     }
 }
+

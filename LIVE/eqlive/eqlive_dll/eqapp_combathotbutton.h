@@ -1,7 +1,5 @@
 #pragma once
 
-extern std::list<std::string> g_BoxChatInterpretCommandList;
-
 bool g_CombatHotButtonIsEnabled = false;
 
 EQApp::Timer g_CombatHotButtonTimer = EQAPP_Timer_GetTimeNow();
@@ -51,7 +49,7 @@ void EQAPP_CombatHotButton_Execute()
         return;
     }
 
-    if (g_BoxChatInterpretCommandList.size() != 0)
+    if (g_BoxChatInterpretCommandList.empty() == false)
     {
         return;
     }
@@ -160,3 +158,4 @@ void EQAPP_CombatHotButton_Execute()
 
     EQ_ExecuteCommand(command, 1);
 }
+

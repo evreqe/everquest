@@ -1,2 +1,0 @@
-#Index^Name^Y^X^Z^ConnectionList^Flags^ScriptFileName
-0^Waypoint0^-21^0^-0.0714874^-1^0^null.lua

@@ -4,11 +4,6 @@
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-#include "eqapp_gui_dockwindow.h"
-#include "eqapp_gui_mainwindow.h"
-#include "eqapp_gui_mapwindow.h"
-#include "eqapp_gui_waypointeditorwindow.h"
-
 bool g_GUIIsEnabled = true;
 
 bool g_GUIIsLoaded = false;
@@ -20,6 +15,12 @@ bool g_GUIDarkThemeIsEnabled = true;
 bool g_GUIDemoWindowIsEnabled = false;
 
 ImFont* g_GUIFont = NULL;
+
+#include "eqapp_gui_dockwindow.h"
+#include "eqapp_gui_mainwindow.h"
+#include "eqapp_gui_mapwindow.h"
+#include "eqapp_gui_waypointeditorwindow.h"
+#include "eqapp_gui_transmogwindow.h"
 
 void EQAPP_GUI_Toggle();
 void EQAPP_GUI_On();
@@ -358,6 +359,11 @@ void EQAPP_GUI_HandleEvent_CRender__UpdateDisplay()
         }
     }
 
+    if (g_GUITransmogWindowIsEnabled == true)
+    {
+        EQAPP_GUI_TransmogWindow();
+    }
+
     ImGui::EndFrame();
 
     ImGui::Render();
@@ -365,3 +371,4 @@ void EQAPP_GUI_HandleEvent_CRender__UpdateDisplay()
 
     g_GUIIsRendered = true;
 }
+

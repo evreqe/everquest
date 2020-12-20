@@ -42,3 +42,4 @@ void EQAPP_WindowForeground_Execute()
     SetForegroundWindow(window);
     SetCapture(window);
 }
+

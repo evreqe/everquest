@@ -1,7 +1,5 @@
 #pragma once
 
-#include "eqapp.h"
-
 void EQAPP_Log(const char* text);
 void EQAPP_PrintTextToFile(const char* fileName, const char* text);
 void EQAPP_PrintTextToFileNoDuplicates(const char* fileName, const char* text);
@@ -29,6 +27,7 @@ void EQAPP_PlaySound(const char* fileName);
 void EQAPP_StopSound();
 void EQAPP_Beep();
 void EQAPP_BeepEx(UINT beepType);
+void EQAPP_OpenFileWithNotepad(const char* fileName);
 bool EQAPP_FileExists(const char* fileName);
 void EQAPP_DeleteFileContents(const char* fileName);
 std::string EQAPP_ReadFileToString(const char* fileName);
@@ -43,6 +42,7 @@ void EQAPP_InventoryFind(const char* fileNameText, const char* fileContentsText)
 void EQAPP_SetWindowTitle(const char* text);
 BOOL CALLBACK EQAPP_UpdateClientWindowList_EnumWindowsProc(HWND hwnd, LPARAM lParam);
 bool EQAPP_UpdateClientWindowList();
+std::string EQAPP_GetTimeAsString();
 
 void EQAPP_Log(const char* text)
 {
@@ -51,7 +51,7 @@ void EQAPP_Log(const char* text)
 
     std::fstream file;
     file.open(filePath.str().c_str(), std::ios::out | std::ios::app);
-    file << "[" << __TIME__ << "] " << text << std::endl;
+    file << "[" << __TIME__ << "] " << text << "\n";
     file.close();
 }
 
@@ -62,7 +62,7 @@ void EQAPP_PrintTextToFile(const char* fileName, const char* text)
 
     std::fstream file;
     file.open(filePath.str().c_str(), std::ios::out | std::ios::app);
-    file << text << std::endl;
+    file << text << "\n";
     file.close();
 }
 
@@ -89,7 +89,7 @@ void EQAPP_PrintTextToFileNoDuplicates(const char* fileName, const char* text)
 
 void EQAPP_PrintBool(const char* text, bool& b)
 {
-    std::cout << text << ": " << (b ? "On" : "Off") << std::endl;
+    std::cout << text << ": " << (b ? "On" : "Off") << "\n";
 }
 
 void EQAPP_PrintDebugText(const char* functionName, const char* text)
@@ -99,7 +99,7 @@ void EQAPP_PrintDebugText(const char* functionName, const char* text)
         return;
     }
 
-    std::cout << "[DEBUG] " << functionName << "(): " << text << std::endl;
+    std::cout << "[DEBUG] " << functionName << "(): " << text << "\n";
 }
 
 void EQAPP_DebugText_Toggle()
@@ -286,10 +286,10 @@ uint32_t EQAPP_GetRandomNumber(uint32_t low, uint32_t high)
 template <class T>
 T EQAPP_GetRandomNumberAny(T low, T high)
 {
-    std::uniform_int_distribution<T> uid(low, high);
-    std::uniform_int_distribution<T>::param_type uidpt(low, high);
+    auto uid = std::uniform_int_distribution<T>(low, high);
+    auto uidpt = std::uniform_int_distribution<T>::param_type(low, high);
 
-    return uid(g_EQAppRandomEngine);//, uidpt);
+    return uid(g_EQAppRandomEngine, uidpt);
 }
 
 template <class T>
@@ -322,6 +322,14 @@ void EQAPP_Beep()
 void EQAPP_BeepEx(UINT beepType)
 {
     MessageBeep(beepType);
+}
+
+void EQAPP_OpenFileWithNotepad(const char* fileName)
+{
+    std::stringstream filePath;
+    filePath << ".\\" << g_EQAppName << "\\" << fileName;
+
+    ShellExecuteA(0, "open", "c:\\windows\\notepad.exe", filePath.str().c_str(), 0, SW_SHOW);
 }
 
 bool EQAPP_FileExists(const char* fileName)
@@ -396,7 +404,7 @@ bool EQAPP_ReadFileToList(const char* fileName, std::vector<std::string>& list, 
 
         if (printLines == true)
         {
-            std::cout << fileName << ": " << line << std::endl;
+            std::cout << fileName << ": " << line << "\n";
         }
 
         list.push_back(line);
@@ -515,7 +523,7 @@ void EQAPP_PrintSpawnList()
 
         ss << " - Type=" << spawnType;
 
-        std::cout << ss.str() << std::endl;
+        std::cout << ss.str() << "\n";
 
         spawn = EQ_GetSpawnNext(spawn);
     }
@@ -530,7 +538,7 @@ void EQAPP_PrintLocation()
         auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
         auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
 
-        std::cout << "Your location is " << playerSpawnY << ", " << playerSpawnX << ", " << playerSpawnZ << "." << std::endl;
+        std::cout << "Your location is " << playerSpawnY << ", " << playerSpawnX << ", " << playerSpawnZ << ".\n";
     }
 
     auto targetSpawn = EQ_GetTargetSpawn();
@@ -540,13 +548,13 @@ void EQAPP_PrintLocation()
         auto targetSpawnX = EQ_GetSpawnX(targetSpawn);
         auto targetSpawnZ = EQ_GetSpawnZ(targetSpawn);
 
-        std::cout << "Your target's location is " << targetSpawnY << ", " << targetSpawnX << ", " << targetSpawnZ << "." << std::endl;
+        std::cout << "Your target's location is " << targetSpawnY << ", " << targetSpawnX << ", " << targetSpawnZ << ".\n";
     }
 }
 
 void EQAPP_PrintMouseLocation()
 {
-    std::cout << "Mouse X,Y: " << EQ_GetMouseX() << "," << EQ_GetMouseY() << std::endl;
+    std::cout << "Mouse X,Y: " << EQ_GetMouseX() << "," << EQ_GetMouseY() << "\n";
 }
 
 void EQAPP_InventoryFind(const char* fileNameText, const char* fileContentsText)
@@ -575,7 +583,7 @@ void EQAPP_InventoryFind(const char* fileNameText, const char* fileContentsText)
             continue;
         }
 
-        ////std::cout << fileName << std::endl;
+        ////std::cout << fileName << "\n";
 
         std::fstream file;
         file.open(fileName, std::fstream::in);
@@ -607,7 +615,7 @@ void EQAPP_InventoryFind(const char* fileNameText, const char* fileContentsText)
         file.close();
     }
 
-    std::cout << resultsCount << " result(s) for '" << fileContentsText << "'" << std::endl;
+    std::cout << resultsCount << " result(s) for '" << fileContentsText << "'" << "\n";
 }
 
 void EQAPP_SetWindowTitle(const char* text)
@@ -662,4 +670,15 @@ bool EQAPP_UpdateClientWindowList()
     EnumWindows(EQAPP_UpdateClientWindowList_EnumWindowsProc, NULL);
 
     return (g_EQAppClientWindowList.size() != 0);
+}
+
+std::string EQAPP_GetTimeAsString()
+{
+    std::chrono::system_clock::time_point timePoint = std::chrono::system_clock::now();
+    std::time_t time = std::chrono::system_clock::to_time_t(timePoint);
+
+    char timeText[1024];
+    ctime_s(timeText, sizeof(timeText), &time);
+
+    return timeText;
 }

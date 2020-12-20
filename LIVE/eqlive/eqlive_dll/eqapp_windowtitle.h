@@ -75,3 +75,4 @@ void EQAPP_WindowTitle_Execute()
         ShowWindow(window, SW_MAXIMIZE);
     }
 }
+

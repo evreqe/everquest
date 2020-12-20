@@ -362,3 +362,4 @@ static void EQAPP_GUI_WaypointEditorWindow()
 
     ImGui::PopStyleVar();
 }
+

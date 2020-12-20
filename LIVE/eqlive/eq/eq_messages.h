@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cstdint>
-
 namespace EQMessage
 {
     typedef struct _CEverQuest__StartCasting

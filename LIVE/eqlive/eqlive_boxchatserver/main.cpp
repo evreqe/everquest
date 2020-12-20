@@ -16,56 +16,65 @@
 #include <iphlpapi.h>
 #pragma comment(lib, "ws2_32.lib")
 
-#define EQ_BCS_PORT_NUMBER 29015
-#define EQ_BCS_CLIENTS_MAX 32
-#define EQ_BCS_STRING_MAX 4096
+namespace EQBoxChatServer
+{
+    uint32_t PortNumber = 29015;
 
-std::string EQ_BCS_JoinStrings(const std::vector<std::string> &elements, const std::string &separator)
-{       
-    if (elements.empty() == false)
+    const uint32_t ClientsMax = 64;
+
+    const uint32_t StringMax = 4096;
+
+    std::string JoinStrings(const std::vector<std::string> &elements, const std::string &separator)
     {
-        std::stringstream ss;
-
-        auto it = elements.cbegin();
-        while (true)
+        if (elements.empty() == false)
         {
-            ss << *it++;
+            std::stringstream ss;
 
-            if (it != elements.cend())
+            auto it = elements.cbegin();
+            while (true)
             {
-                ss << separator;
-            }
-            else
-            {
-                return ss.str();
+                ss << *it++;
+
+                if (it != elements.cend())
+                {
+                    ss << separator;
+                }
+                else
+                {
+                    return ss.str();
+                }
             }
         }
+
+        return std::string();
     }
 
-    return std::string();
-}
+    std::vector<std::string> SplitString(const std::string& subject, char delimiter)
+    {
+        std::vector<std::string> tokens;
 
-std::vector<std::string> EQ_BCS_SplitString(const std::string& subject, char delimiter)
-{
-    std::vector<std::string> tokens;
+        std::istringstream iss(subject);
+        for (std::string token; std::getline(iss, token, delimiter); tokens.push_back(token));
 
-    std::istringstream iss(subject);
-    for (std::string token; std::getline(iss, token, delimiter); tokens.push_back(token));
+        return tokens;
+    }
 
-    return tokens;
-}
+}; // namespace EQBoxChatServer
 
 int main(int argc , char *argv[])
 {
-    std::cout << "EverQuest Box Chat Server" << std::endl;
+    std::cout << "EverQuest Box Chat Server" << "\n";
 
-    std::cout << "Port: " << EQ_BCS_PORT_NUMBER << std::endl;
+    std::cout << "Build: " << __DATE__ << " " << __TIME__ << "\n";
+
+    std::cout << "Port: " << EQBoxChatServer::PortNumber << "\n";
 
     WSADATA wsaData;
 
-    SOCKET clientSocket[EQ_BCS_CLIENTS_MAX];
-    char clientName[EQ_BCS_CLIENTS_MAX][EQ_BCS_STRING_MAX];
-    char clientChannel[EQ_BCS_CLIENTS_MAX][EQ_BCS_STRING_MAX];
+    SOCKET clientSocket[EQBoxChatServer::ClientsMax];
+    char clientName[EQBoxChatServer::ClientsMax][EQBoxChatServer::StringMax];
+    char clientGlobalChannel[EQBoxChatServer::ClientsMax][EQBoxChatServer::StringMax];
+    char clientChannel[EQBoxChatServer::ClientsMax][EQBoxChatServer::StringMax];
 
     SOCKET listenSocket;
     SOCKET acceptSocket;
@@ -79,63 +88,66 @@ int main(int argc , char *argv[])
 
     fd_set fdSetRead;
 
-    char recvBuffer[EQ_BCS_STRING_MAX];
+    char recvBuffer[EQBoxChatServer::StringMax];
 
-    for (size_t i = 0 ; i < EQ_BCS_CLIENTS_MAX; i++)
+    for (size_t i = 0 ; i < EQBoxChatServer::ClientsMax; i++)
     {
         clientSocket[i] = 0;
 
-        memset(clientName[i], 0, EQ_BCS_STRING_MAX);
-        strcpy_s(clientName[i], EQ_BCS_STRING_MAX, "UNKNOWN");
+        memset(clientName[i], 0, EQBoxChatServer::StringMax);
+        strcpy_s(clientName[i], EQBoxChatServer::StringMax, "UNKNOWN");
 
-        memset(clientChannel[i], 0, EQ_BCS_STRING_MAX);
-        strcpy_s(clientChannel[i], EQ_BCS_STRING_MAX, "Default");
+        memset(clientGlobalChannel[i], 0, EQBoxChatServer::StringMax);
+        strcpy_s(clientGlobalChannel[i], EQBoxChatServer::StringMax, "Global1");
+
+        memset(clientChannel[i], 0, EQBoxChatServer::StringMax);
+        strcpy_s(clientChannel[i], EQBoxChatServer::StringMax, "Default");
     }
 
-    std::cout << "Initializing Winsock..." << std::endl;
+    std::cout << "Initializing Winsock..." << "\n";
 
     if (WSAStartup(MAKEWORD(2,2), &wsaData) != 0)
     {
-        std::cout << "WSAStartup() failed. Error Code: " << WSAGetLastError() << std::endl;
+        std::cout << "WSAStartup() failed. Error Code: " << WSAGetLastError() << "\n";
         return 1;
     }
 
-    std::cout << "Creating listen socket..." << std::endl;
+    std::cout << "Creating listen socket..." << "\n";
 
     if ((listenSocket = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET)
     {
-        std::cout << "socket() failed. Error Code: " << WSAGetLastError() << std::endl;
+        std::cout << "socket() failed. Error Code: " << WSAGetLastError() << "\n";
         closesocket(listenSocket);
         return 1;
     }
 
     server.sin_family      = AF_INET;
     server.sin_addr.s_addr = INADDR_ANY;
-    server.sin_port        = htons(EQ_BCS_PORT_NUMBER);
+    server.sin_port        = htons(EQBoxChatServer::PortNumber);
 
-    std::cout << "Binding listen socket..." << std::endl;
+    std::cout << "Binding listen socket..." << "\n";
 
     if (bind(listenSocket, (struct sockaddr*)&server, sizeof(server)) == SOCKET_ERROR)
     {
-        std::cout << "bind() failed. Error Code: " << WSAGetLastError() << std::endl;
+        std::cout << "bind() failed. Error Code: " << WSAGetLastError() << "\n";
         return 1;
     }
 
     if (listen(listenSocket, SOMAXCONN) == SOCKET_ERROR)
     {
-        std::cout << "listen() failed. Error Code: " << WSAGetLastError() << std::endl;
+        std::cout << "listen() failed. Error Code: " << WSAGetLastError() << "\n";
         closesocket(listenSocket);
         return 1;
     }
 
-    std::cout << "Waiting for incoming connections..." << std::endl;
+    std::cout << "Waiting for incoming connections..." << "\n";
 
     while (true)
     {
         FD_ZERO(&fdSetRead);
         FD_SET(listenSocket, &fdSetRead);
 
-        for (size_t i = 0 ; i < EQ_BCS_CLIENTS_MAX; i++)
+        for (size_t i = 0 ; i < EQBoxChatServer::ClientsMax; i++)
         {
             recvSocket = clientSocket[i];
 
@@ -148,7 +160,7 @@ int main(int argc , char *argv[])
         int selectResult = select(0, &fdSetRead, NULL, NULL, NULL);
         if (selectResult == SOCKET_ERROR)
         {
-            std::cout << "select() failed. Error Code: " << WSAGetLastError() << std::endl;
+            std::cout << "select() failed. Error Code: " << WSAGetLastError() << "\n";
             return 1;
         }
 
@@ -156,7 +168,7 @@ int main(int argc , char *argv[])
         {
             if ((acceptSocket = accept(listenSocket, (struct sockaddr*)&serverAddress, (int*)&addressLength)) < 0)
             {
-                std::cout << "accept() failed." << std::endl;
+                std::cout << "accept() failed." << "\n";
                 return 1;
             }
 
@@ -166,23 +178,23 @@ int main(int argc , char *argv[])
             std::cout << "Client connected. Socket: " << acceptSocket
                       << ", IP: " << strIPAddress
                       << ", Port: " << ntohs(serverAddress.sin_port)
-                      << std::endl;
+                      << "\n";
 
             //const char* connectMessage = "Connected to EverQuest Box Chat Server\n";
             //send(acceptSocket, connectMessage, strlen(connectMessage), 0);
 
-            for (size_t i = 0; i < EQ_BCS_CLIENTS_MAX; i++)
+            for (size_t i = 0; i < EQBoxChatServer::ClientsMax; i++)
             {
                 if (clientSocket[i] == 0)
                 {
                     clientSocket[i] = acceptSocket;
-                    std::cout << "Client assigned to socket index: " << i << std::endl;
+                    std::cout << "Client assigned to socket index: " << i << "\n";
                     break;
                 }
             }
         }
 
-        for (size_t i = 0; i < EQ_BCS_CLIENTS_MAX; i++)
+        for (size_t i = 0; i < EQBoxChatServer::ClientsMax; i++)
         {
             recvSocket = clientSocket[i];
 
@@ -196,22 +208,25 @@ int main(int argc , char *argv[])
                     std::cout << "Client disconnected because keep alive failed."
                                 << " Socket: " << clientSocket[i]
                                 << ", Name: " << clientName[i]
-                                << std::endl;
+                                << "\n";
 
                     closesocket(recvSocket);
 
                     clientSocket[i] = 0;
 
-                    memset(clientName[i], 0, EQ_BCS_STRING_MAX);
-                    strcpy_s(clientName[i], EQ_BCS_STRING_MAX, "UNKNOWN");
+                    memset(clientName[i], 0, EQBoxChatServer::StringMax);
+                    strcpy_s(clientName[i], EQBoxChatServer::StringMax, "UNKNOWN");
 
-                    memset(clientChannel[i], 0, EQ_BCS_STRING_MAX);
-                    strcpy_s(clientChannel[i], EQ_BCS_STRING_MAX, "Default");
+                    memset(clientGlobalChannel[i], 0, EQBoxChatServer::StringMax);
+                    strcpy_s(clientGlobalChannel[i], EQBoxChatServer::StringMax, "Global1");
+
+                    memset(clientChannel[i], 0, EQBoxChatServer::StringMax);
+                    strcpy_s(clientChannel[i], EQBoxChatServer::StringMax, "Default");
                 }
 
-                memset(recvBuffer, 0, EQ_BCS_STRING_MAX);
+                memset(recvBuffer, 0, EQBoxChatServer::StringMax);
 
-                int recvResult = recv(recvSocket, recvBuffer, EQ_BCS_STRING_MAX, 0);
+                int recvResult = recv(recvSocket, recvBuffer, EQBoxChatServer::StringMax, 0);
 
                 int errorCode = WSAGetLastError();
                 if (errorCode == WSAECONNRESET)
@@ -219,8 +234,9 @@ int main(int argc , char *argv[])
                     std::cout << "Client disconnected unexpectedly."
                                 << " Socket: " << clientSocket[i]
                                 << ", Name: " << clientName[i]
+                                << ", Global Channel: " << clientGlobalChannel[i]
                                 << ", Channel: " << clientChannel[i]
-                                << std::endl;
+                                << "\n";
 
                     //const char* disconnectMessage = "Disconnected from EverQuest Box Chat Server\n";
                     //send(recvSocket, disconnectMessage, strlen(disconnectMessage), 0);
@@ -229,11 +245,14 @@ int main(int argc , char *argv[])
 
                     clientSocket[i] = 0;
 
-                    memset(clientName[i], 0, EQ_BCS_STRING_MAX);
-                    strcpy_s(clientName[i], EQ_BCS_STRING_MAX, "UNKNOWN");
+                    memset(clientName[i], 0, EQBoxChatServer::StringMax);
+                    strcpy_s(clientName[i], EQBoxChatServer::StringMax, "UNKNOWN");
 
-                    memset(clientChannel[i], 0, EQ_BCS_STRING_MAX);
-                    strcpy_s(clientChannel[i], EQ_BCS_STRING_MAX, "Default");
+                    memset(clientGlobalChannel[i], 0, EQBoxChatServer::StringMax);
+                    strcpy_s(clientGlobalChannel[i], EQBoxChatServer::StringMax, "Global1");
+
+                    memset(clientChannel[i], 0, EQBoxChatServer::StringMax);
+                    strcpy_s(clientChannel[i], EQBoxChatServer::StringMax, "Default");
                 }
 
                 if (recvResult == SOCKET_ERROR)
@@ -241,7 +260,7 @@ int main(int argc , char *argv[])
                     std::cout << "Client disconnected."
                               << " Socket: " << clientSocket[i]
                               << ", Name: " << clientName[i]
-                              << std::endl;
+                              << "\n";
 
                     //const char* disconnectMessage = "Disconnected from EverQuest Box Chat Server\n";
                     //send(recvSocket, disconnectMessage, strlen(disconnectMessage), 0);
@@ -250,15 +269,18 @@ int main(int argc , char *argv[])
 
                     clientSocket[i] = 0;
 
-                    memset(clientName[i], 0, EQ_BCS_STRING_MAX);
-                    strcpy_s(clientName[i], EQ_BCS_STRING_MAX, "UNKNOWN");
+                    memset(clientName[i], 0, EQBoxChatServer::StringMax);
+                    strcpy_s(clientName[i], EQBoxChatServer::StringMax, "UNKNOWN");
 
-                    memset(clientChannel[i], 0, EQ_BCS_STRING_MAX);
-                    strcpy_s(clientChannel[i], EQ_BCS_STRING_MAX, "Default");
+                    memset(clientGlobalChannel[i], 0, EQBoxChatServer::StringMax);
+                    strcpy_s(clientGlobalChannel[i], EQBoxChatServer::StringMax, "Global1");
+
+                    memset(clientChannel[i], 0, EQBoxChatServer::StringMax);
+                    strcpy_s(clientChannel[i], EQBoxChatServer::StringMax, "Default");
                 }
                 else
                 {
-                    recvBuffer[EQ_BCS_STRING_MAX - 1] = '\0'; // append null terminator
+                    recvBuffer[EQBoxChatServer::StringMax - 1] = '\0'; // append null terminator
 
                     std::string recvText = recvBuffer;
                     if (recvText.size() == 0)
@@ -266,18 +288,18 @@ int main(int argc , char *argv[])
                         continue;
                     }
 
-                    ////std::cout << "recvText: " << recvText << std::endl;
+                    ////std::cout << "recvText: " << recvText << "\n";
 
-                    std::vector<std::string> recvTokens = EQ_BCS_SplitString(recvText, '\n');
+                    std::vector<std::string> recvTokens = EQBoxChatServer::SplitString(recvText, '\n');
 
                     for (auto& token : recvTokens)
                     {
                         if (token != "$KeepAlive")
                         {
-                            std::cout << "#" << clientName[i] << " (" << clientChannel[i] << "): " << token << std::endl;
+                            std::cout << "#" << clientName[i] << " (" << clientChannel[i] << "): " << token << "\n";
                         }
 
-                        std::vector<std::string> textTokens = EQ_BCS_SplitString(token, ' ');
+                        std::vector<std::string> textTokens = EQBoxChatServer::SplitString(token, ' ');
 
                         if (textTokens.size() > 1)
                         {
@@ -285,15 +307,34 @@ int main(int argc , char *argv[])
                             {
                                 std::string name = textTokens.at(1);
 
-                                for (size_t k = 0; k < EQ_BCS_CLIENTS_MAX; k++)
+                                for (size_t k = 0; k < EQBoxChatServer::ClientsMax; k++)
                                 {
                                     if (clientSocket[k] == recvSocket)
                                     {
                                         std::cout << "Name '" << name
                                                   << "' has been linked to client socket " << clientSocket[k]
-                                                  << std::endl;
+                                                  << "\n";
 
-                                        strcpy_s(clientName[k], EQ_BCS_STRING_MAX, name.c_str());
+                                        strcpy_s(clientName[k], EQBoxChatServer::StringMax, name.c_str());
+
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (textTokens.at(0) == "$ClientGlobalChannel")
+                            {
+                                std::string name = textTokens.at(1);
+
+                                for (size_t k = 0; k < EQBoxChatServer::ClientsMax; k++)
+                                {
+                                    if (clientSocket[k] == recvSocket)
+                                    {
+                                        std::cout << "Global Channel '" << name
+                                                  << "' has been linked to client socket " << clientSocket[k]
+                                                  << "\n";
+
+                                        strcpy_s(clientGlobalChannel[k], EQBoxChatServer::StringMax, name.c_str());
 
                                         break;
                                     }
@@ -304,15 +345,15 @@ int main(int argc , char *argv[])
                             {
                                 std::string name = textTokens.at(1);
 
-                                for (size_t k = 0; k < EQ_BCS_CLIENTS_MAX; k++)
+                                for (size_t k = 0; k < EQBoxChatServer::ClientsMax; k++)
                                 {
                                     if (clientSocket[k] == recvSocket)
                                     {
                                         std::cout << "Channel '" << name
                                                   << "' has been linked to client socket " << clientSocket[k]
-                                                  << std::endl;
+                                                  << "\n";
 
-                                        strcpy_s(clientChannel[k], EQ_BCS_STRING_MAX, name.c_str());
+                                        strcpy_s(clientChannel[k], EQBoxChatServer::StringMax, name.c_str());
 
                                         break;
                                     }
@@ -368,7 +409,37 @@ int main(int argc , char *argv[])
 
                             if (bBroadcast == true)
                             {
-                                for (size_t j = 0; j < EQ_BCS_CLIENTS_MAX; j++)
+                                int sendIndex = -1;
+                                int recvIndex = -1;
+
+                                for (size_t l = 0; l < EQBoxChatServer::ClientsMax; l++)
+                                {
+                                    if (clientSocket[l] == 0)
+                                    {
+                                        continue;
+                                    }
+
+                                    if (clientSocket[l] == sendSocket)
+                                    {
+                                        sendIndex = l;
+                                    }
+
+                                    if (clientSocket[l] == recvSocket)
+                                    {
+                                        recvIndex = l;
+                                    }
+                                }
+
+                                // skip clients that do not have the same global channel as the sender
+                                if (sendIndex != -1 && recvIndex != -1)
+                                {
+                                    if (strcmp(clientGlobalChannel[sendIndex], clientGlobalChannel[recvIndex]) != 0)
+                                    {
+                                        continue;
+                                    }
+                                }
+
+                                for (size_t j = 0; j < EQBoxChatServer::ClientsMax; j++)
                                 {
                                     if (clientSocket[j] == 0)
                                     {
@@ -458,13 +529,13 @@ int main(int argc , char *argv[])
                                         continue;
                                     }
 
-                                    std::string textTokensExStr = EQ_BCS_JoinStrings(textTokensEx, " ");
+                                    std::string textTokensExStr = EQBoxChatServer::JoinStrings(textTokensEx, " ");
                                     if (textTokensExStr.size() == 0)
                                     {
                                         continue;
                                     }
 
-                                    std::vector<std::string> commandTokens = EQ_BCS_SplitString(textTokensExStr, ';');
+                                    std::vector<std::string> commandTokens = EQBoxChatServer::SplitString(textTokensExStr, ';');
                                     if (commandTokens.size() == 0)
                                     {
                                         continue;
@@ -486,7 +557,7 @@ int main(int argc , char *argv[])
                                              continue;
                                         }
 
-                                        ////std::cout << "commandText: " << commandText << std::endl;
+                                        ////std::cout << "commandText: " << commandText << "\n";
 
                                         send(sendSocket, commandText.c_str(), commandText.size(), 0);
                                     }
@@ -504,7 +575,7 @@ int main(int argc , char *argv[])
     closesocket(recvSocket);
     closesocket(sendSocket);
 
-    for (size_t i = 0; i < EQ_BCS_CLIENTS_MAX; i++)
+    for (size_t i = 0; i < EQBoxChatServer::ClientsMax; i++)
     {
         closesocket(clientSocket[i]);
     }

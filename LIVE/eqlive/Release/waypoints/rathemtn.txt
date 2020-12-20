@@ -1,2 +1,0 @@
-#Index^Name^Y^X^Z^ConnectionList^(Flags)^(ScriptFileName)
-0^Waypoint0^-1158^313^0.409251^-1

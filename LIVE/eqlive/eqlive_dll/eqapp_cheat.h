@@ -54,6 +54,10 @@ void EQAPP_Cheat_NeverSnared_Toggle();
 void EQAPP_Cheat_NeverSnared_On();
 void EQAPP_Cheat_NeverSnared_Off();
 
+void EQAPP_Cheat_NeverSlide_Toggle();
+void EQAPP_Cheat_NeverSlide_On();
+void EQAPP_Cheat_NeverSlide_Off();
+
 void EQAPP_Cheat_NoFallDamage_Toggle();
 void EQAPP_Cheat_NoFallDamage_On();
 void EQAPP_Cheat_NoFallDamage_Off();

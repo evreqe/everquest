@@ -33,3 +33,4 @@ void EQAPP_AutoInventory_Execute()
 {
     EQ_InterpretCommand("/autoinventory");
 }
+

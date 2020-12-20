@@ -33,3 +33,4 @@ void EQAPP_AutoBank_Execute()
 {
     EQ_InterpretCommand("/autobank");
 }
+

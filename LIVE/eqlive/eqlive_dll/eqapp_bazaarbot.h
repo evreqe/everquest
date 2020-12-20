@@ -2,7 +2,7 @@
 
 bool g_BazaarBotIsEnabled = false;
 
-bool g_BazaarBotUseBuyItemsListIsEnabled = true;
+bool g_BazaarBotUseBuyItemsListIsEnabled = false;
 
 EQApp::Timer g_BazaarBotFindItemsTimer = EQAPP_Timer_GetTimeNow();
 EQApp::TimerInterval g_BazaarBotFindItemsTimerInterval = 10;
@@ -22,8 +22,8 @@ std::vector<std::string> g_BazaarBotLoreItemsList;
 // 1000 = 1pp                  one platinum piece
 // 100000 = 100pp              one hundred platinum pieces
 // 2000000000 = 2,000,000pp    two million platinum pieces
-uint32_t g_BazaarBotItemPriceMinimum = 1;           // 1cp
-uint32_t g_BazaarBotItemPriceMaximum = 10000000;    // 10,000pp    // 2000000000;    // 2,000,000pp
+uint32_t g_BazaarBotItemPriceMinimum = 1;             // 1cp
+uint32_t g_BazaarBotItemPriceMaximum = 2000000000;    // 2,000,000pp
 
 void EQAPP_BazaarBot_Toggle();
 void EQAPP_BazaarBot_On();
@@ -44,7 +44,6 @@ void EQAPP_BazaarBot_BuyCheapestItemByName(const char* itemName);
 void EQAPP_BazaarBot_BuyCheapestItem();
 void EQAPP_BazaarBot_BuyAnyItem();
 void EQAPP_BazaarBot_ClickToParcelsButton();
-
 void EQAPP_BazaarBot_HandleEvent_CEverQuest__dsp_chat(std::string text, int textColor);
 bool EQAPP_BazaarBot_HandleEvent_CBazaarSearchWnd__AddItemToList(char* itemName, uint32_t itemPrice, char* traderName);
 
@@ -139,7 +138,7 @@ void EQAPP_BazaarBot_LoadEx(const char* fileName)
         g_BazaarBotBuyItemsList.push_back(line);
     }
 
-    std::cout << "Bazaar Bot loaded from file: " << fileName << std::endl;
+    std::cout << "Bazaar Bot loaded from file: " << fileName << "\n";
 
     file.close();
 }
@@ -153,7 +152,6 @@ void EQAPP_BazaarBot_Execute_BuyEverything()
 
 void EQAPP_BazaarBot_Execute_BuyFromBuyItemsList()
 {
-/*
     std::vector<std::string> randomItemNames;
 
     std::sample
@@ -171,16 +169,13 @@ void EQAPP_BazaarBot_Execute_BuyFromBuyItemsList()
     }
 
     std::string randomItemName = randomItemNames.at(0);
-*/
-
-    std::string itemName = g_BazaarBotBuyItemsList.at(0);
-    if (itemName.size() == 0)
+    if (randomItemName.size() == 0)
     {
         return;
     }
 
-    EQAPP_BazaarBot_FindItem(itemName.c_str());
-    EQAPP_BazaarBot_BuyCheapestItemByName(itemName.c_str());
+    EQAPP_BazaarBot_FindItem(randomItemName.c_str());
+    EQAPP_BazaarBot_BuyCheapestItemByName(randomItemName.c_str());
     EQAPP_BazaarBot_ClickToParcelsButton();
 }
 
@@ -208,7 +203,7 @@ void EQAPP_BazaarBot_FindItem(const char* itemName)
         return;
     }
 
-    std::cout << "[Bazaar Bot] Searching for: " << itemName << std::endl;
+    std::cout << "[Bazaar Bot] Searching for: " << itemName << "\n";
 
     EQ_BazaarSearchWindow_FindItem(itemName);
 
@@ -261,13 +256,13 @@ void EQAPP_BazaarBot_BuyItemByName(const char* itemName)
         return;
     }
 
-    std::cout << "[Bazaar Bot] Attempting to purchase: " << itemName << std::endl;
+    std::cout << "[Bazaar Bot] Attempting to purchase: " << itemName << "\n";
 
     for (auto& loreItemName : g_BazaarBotLoreItemsList)
     {
         if (itemName == loreItemName)
         {
-            std::cout << "[Bazaar Bot] " << itemName << " found in the lore items list." << std::endl;
+            std::cout << "[Bazaar Bot] " << itemName << " found in the lore items list.\n";
             return;
         }
     }
@@ -310,13 +305,13 @@ void EQAPP_BazaarBot_BuyCheapestItemByName(const char* itemName)
         auto listItemPrice = EQ_BazaarSearchWindow_GetItemPrice(listIndex);
         if (listItemPrice > 0)
         {
-            std::cout << "[Bazaar Bot] Attempting to purchase " << listItemName << " for " << (listItemPrice / 1000) << "pp." << std::endl;
+            std::cout << "[Bazaar Bot] Attempting to purchase " << listItemName << " for " << (listItemPrice / 1000) << "pp.\n";
 
             for (auto& loreItemName : g_BazaarBotLoreItemsList)
             {
                 if (listItemName == loreItemName)
                 {
-                    std::cout << "[Bazaar Bot] " << listItemName << " found in the lore items list." << std::endl;
+                    std::cout << "[Bazaar Bot] " << listItemName << " found in the lore items list.\n";
                     return;
                 }
             }
@@ -352,13 +347,13 @@ void EQAPP_BazaarBot_BuyCheapestItem()
     std::string itemName = EQ_BazaarSearchWindow_GetItemName(listIndex);
     if (itemName.size() != 0)
     {
-        std::cout << "[Bazaar Bot] Attempting to purchase: " << itemName << std::endl;
+        std::cout << "[Bazaar Bot] Attempting to purchase: " << itemName << "\n";
 
         for (auto& loreItemName : g_BazaarBotLoreItemsList)
         {
             if (itemName == loreItemName)
             {
-                std::cout << "[Bazaar Bot] " << itemName << " found in the lore items list." << std::endl;
+                std::cout << "[Bazaar Bot] " << itemName << " found in the lore items list.\n";
                 return;
             }
         }
@@ -395,13 +390,13 @@ void EQAPP_BazaarBot_BuyAnyItem()
     std::string itemName = EQ_BazaarSearchWindow_GetItemName(listIndex);
     if (itemName.size() != 0)
     {
-        std::cout << "[Bazaar Bot] Attempting to purchase: " << itemName << std::endl;
+        std::cout << "[Bazaar Bot] Attempting to purchase: " << itemName << "\n";
 
         for (auto& loreItemName : g_BazaarBotLoreItemsList)
         {
             if (itemName == loreItemName)
             {
-                std::cout << "[Bazaar Bot] " << itemName << " found in the lore items list." << std::endl;
+                std::cout << "[Bazaar Bot] " << itemName << " found in the lore items list.\n";
                 return;
             }
         }
@@ -427,7 +422,7 @@ void EQAPP_BazaarBot_ClickToParcelsButton()
         return;
     }
 
-    std::cout << "[Bazaar Bot] Clicking To Parcels button." << std::endl;
+    std::cout << "[Bazaar Bot] Clicking To Parcels button.\n";
 
     EQ_BazaarConfirmationWindow_ClickToParcelsButton();
 }
@@ -455,7 +450,7 @@ void EQAPP_BazaarBot_HandleEvent_CEverQuest__dsp_chat(std::string text, int text
 
         if (EQAPP_String_Contains(text, "failed because you already possess that lore item.") == true)
         {
-            ////std::cout << "[Bazaar Bot] You are attemping to purchase a lore item you already possess." << std::endl;
+            ////std::cout << "[Bazaar Bot] You are attemping to purchase a lore item you already possess." << "\n";
 
             uint32_t listIndex = EQ_BazaarSearchWindow_GetListIndex();
             if (listIndex != EQ_BAZAAR_SEARCH_LIST_INDEX_NULL)
@@ -465,16 +460,16 @@ void EQAPP_BazaarBot_HandleEvent_CEverQuest__dsp_chat(std::string text, int text
                 {
                     g_BazaarBotLoreItemsList.push_back(itemName);
 
-                    std::cout << "[Bazaar Bot] " << itemName << " added to the lore items list." << std::endl;
+                    std::cout << "[Bazaar Bot] " << itemName << " added to the lore items list.\n";
                 }
                 else
                 {
-                    std::cout << "[Bazaar Bot] itemName.size() == 0" << std::endl;
+                    std::cout << "[Bazaar Bot] itemName.size() == 0\n";
                 }
             }
             //else
             //{
-                ////std::cout << "[Bazaar Bot] ERROR: list index is null." << std::endl;
+                ////std::cout << "[Bazaar Bot] ERROR: list index is null.\n";
             //}
 
             bResult = false;
@@ -507,7 +502,7 @@ bool EQAPP_BazaarBot_HandleEvent_CBazaarSearchWnd__AddItemToList(char* itemName,
 
     if (itemPrice < g_BazaarBotItemPriceMinimum || itemPrice > g_BazaarBotItemPriceMaximum)
     {
-        std::cout << "[Bazaar Bot] " << itemName << " was NOT added to the search list because the price was too high. (" << (itemPrice / 1000) << "pp)" << std::endl;
+        std::cout << "[Bazaar Bot] " << itemName << " was NOT added to the search list because the price was too high. (" << (itemPrice / 1000) << "pp)\n";
 
         return false;
     }
@@ -518,7 +513,7 @@ bool EQAPP_BazaarBot_HandleEvent_CBazaarSearchWnd__AddItemToList(char* itemName,
     {
         if (itemNameStr == loreItemName)
         {
-            std::cout << "[Bazaar Bot] " << itemName << " was NOT added to the search list because it was found in the lore items list." << std::endl;
+            std::cout << "[Bazaar Bot] " << itemName << " was NOT added to the search list because it was found in the lore items list.\n";
 
             return false;
         }
@@ -537,3 +532,4 @@ bool EQAPP_BazaarBot_HandleEvent_CBazaarSearchWnd__AddItemToList(char* itemName,
 
     return bShouldAddItemToList;
 }
+
