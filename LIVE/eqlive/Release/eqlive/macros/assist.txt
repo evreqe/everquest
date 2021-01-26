@@ -1,0 +1,2 @@
+//BCGA //Stand;//XTarget2;//Follow;//AutoAttackOn
+//FaceTarget

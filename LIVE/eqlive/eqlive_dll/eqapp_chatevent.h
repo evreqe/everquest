@@ -15,11 +15,11 @@ void EQAPP_ChatEvent_Debug_On();
 void EQAPP_ChatEvent_Debug_Off();
 void EQAPP_ChatEvent_Load();
 void EQAPP_ChatEvent_LoadEx(const char* filename);
-void EQAPP_ChatEvent_AddToList(std::string chatText, std::string commandText);
-void EQAPP_ChatEvent_RemoveFromList(std::string chatText);
+void EQAPP_ChatEvent_AddToList(const std::string& chatText, const std::string& commandText);
+void EQAPP_ChatEvent_RemoveFromList(const std::string& chatText);
 void EQAPP_ChatEvent_ClearList();
 void EQAPP_ChatEvent_PrintList();
-void EQAPP_ChatEvent_HandleEvent_CEverQuest__dsp_chat(std::string text, int textColor);
+void EQAPP_ChatEvent_HandleEvent_CEverQuest__dsp_chat(std::string_view chatText, int chatTextColor);
 
 void EQAPP_ChatEvent_Toggle()
 {
@@ -82,7 +82,7 @@ void EQAPP_ChatEvent_Load()
     }
 
     std::string playerName = EQ_GetSpawnName(playerSpawn);
-    if (playerName.size() == 0)
+    if (playerName.empty() == true)
     {
         return;
     }
@@ -102,7 +102,7 @@ void EQAPP_ChatEvent_LoadEx(const char* filename)
     }
 
     std::string playerName = EQ_GetSpawnName(playerSpawn);
-    if (playerName.size() == 0)
+    if (playerName.empty() == true)
     {
         return;
     }
@@ -123,7 +123,7 @@ void EQAPP_ChatEvent_LoadEx(const char* filename)
     std::string line;
     while (std::getline(file, line))
     {
-        if (line.size() == 0)
+        if (line.empty() == true)
         {
             continue;
         }
@@ -133,12 +133,12 @@ void EQAPP_ChatEvent_LoadEx(const char* filename)
             continue;
         }
 
-        if (EQAPP_String_Contains(line, "|") == false)
+        if (EQAPP_String_Contains(line, "^") == false)
         {
             continue;
         }
 
-        std::vector<std::string> tokens = EQAPP_String_Split(line, '|');
+        std::vector<std::string> tokens = EQAPP_String_Split(line, '^');
         if (tokens.size() != 2)
         {
             continue;
@@ -162,14 +162,14 @@ void EQAPP_ChatEvent_LoadEx(const char* filename)
     file.close();
 }
 
-void EQAPP_ChatEvent_AddToList(std::string chatText, std::string commandText)
+void EQAPP_ChatEvent_AddToList(const std::string& chatText, const std::string& commandText)
 {
-    if (chatText.size() == 0)
+    if (chatText.empty() == true)
     {
         return;
     }
 
-    if (commandText.size() == 0)
+    if (commandText.empty() == true)
     {
         return;
     }
@@ -177,7 +177,7 @@ void EQAPP_ChatEvent_AddToList(std::string chatText, std::string commandText)
     g_ChatEventList.insert(std::make_pair(chatText, commandText));
 }
 
-void EQAPP_ChatEvent_RemoveFromList(std::string chatText)
+void EQAPP_ChatEvent_RemoveFromList(const std::string& chatText)
 {
     g_ChatEventList.erase(chatText);
 }
@@ -190,7 +190,11 @@ void EQAPP_ChatEvent_ClearList()
 
 void EQAPP_ChatEvent_PrintList()
 {
-    std::cout << "Chat Events:" << "\n";
+    std::cout << "Chat Events:\n";
+
+    // bDisable is used to temporarily disable Chat Event
+    // so that the events are not reacted to when
+    // printing out the search text
 
     bool bDisable = false;
 
@@ -201,12 +205,12 @@ void EQAPP_ChatEvent_PrintList()
         g_ChatEventIsEnabled = false;
     }
 
-    unsigned int index = 0;
+    unsigned int index = 1;
 
-    for (auto& keyValue : g_ChatEventList)
+    for (auto& [searchText, commandText] : g_ChatEventList)
     {
-        std::cout << "[" << index << "] Chat Text: " << keyValue.first << "\n";
-        std::cout << "[" << index << "] Command Text: " << keyValue.second << "\n";
+        std::cout << "[" << index << "] Search Text: " << searchText << "\n";
+        std::cout << "[" << index << "] Command Text: " << commandText << "\n";
 
         index++;
     }
@@ -217,56 +221,50 @@ void EQAPP_ChatEvent_PrintList()
     }
 }
 
-void EQAPP_ChatEvent_HandleEvent_CEverQuest__dsp_chat(std::string text, int textColor)
+void EQAPP_ChatEvent_HandleEvent_CEverQuest__dsp_chat(std::string_view chatText, int chatTextColor)
 {
     if (g_ChatEventDebugIsEnabled == true)
     {
-        EQAPP_PrintTextToFile("chateventdebug.txt", text.c_str());
+        EQAPP_PrintTextToFile("chatevent_debug.txt", chatText.data());
     }
 
-    for (auto& keyValue : g_ChatEventList)
+    for (auto& [searchText, commandText] : g_ChatEventList)
     {
-        if (text == keyValue.first)
+        if (chatText == searchText)
         {
-            EQ_InterpretCommand(keyValue.second.c_str());
+            EQ_InterpretCommand(commandText.c_str());
             return;
         }
 
-        std::string findText = keyValue.first;
+        std::string_view searchTextWithoutPrefix = searchText;
 
-        if (EQAPP_String_BeginsWith(findText, "@") == true)
+        searchTextWithoutPrefix.remove_prefix(1);
+
+        if (EQAPP_String_BeginsWith(searchText, "@") == true)
         {
-            findText.erase(0, 1);
-
-            if (EQAPP_String_Contains(text, findText) == true)
+            if (EQAPP_StringView_Contains(chatText, searchTextWithoutPrefix) == true)
             {
-                EQ_InterpretCommand(keyValue.second.c_str());
+                EQ_InterpretCommand(commandText.c_str());
                 return;
             }
         }
 
-        if (EQAPP_String_BeginsWith(findText, "{") == true)
+        if (EQAPP_String_BeginsWith(searchText, "{") == true)
         {
-            findText.erase(0, 1);
-
-            if (EQAPP_String_BeginsWith(text, findText) == true)
+            if (EQAPP_StringView_BeginsWith(chatText, searchTextWithoutPrefix) == true)
             {
-                EQ_InterpretCommand(keyValue.second.c_str());
+                EQ_InterpretCommand(commandText.c_str());
                 return;
             }
         }
 
-        if (EQAPP_String_BeginsWith(findText, "}") == true)
+        if (EQAPP_String_BeginsWith(searchText, "}") == true)
         {
-            findText.erase(0, 1);
-
-            if (EQAPP_String_EndsWith(text, findText) == true)
+            if (EQAPP_StringView_EndsWith(chatText, searchTextWithoutPrefix) == true)
             {
-                EQ_InterpretCommand(keyValue.second.c_str());
+                EQ_InterpretCommand(commandText.c_str());
                 return;
             }
         }
     }
 }
-
-

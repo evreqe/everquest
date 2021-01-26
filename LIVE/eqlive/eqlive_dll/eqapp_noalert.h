@@ -34,7 +34,7 @@ void EQAPP_NoAlert_Off()
 
 void EQAPP_NoAlert_Execute()
 {
-    if (EQAPP_Timer_HasTimeElapsed(g_NoAlertTimer, g_NoAlertTimerInterval) == false)
+    if (EQAPP_Timer_HasTimeElapsedInSeconds(g_NoAlertTimer, g_NoAlertTimerInterval) == false)
     {
         return;
     }

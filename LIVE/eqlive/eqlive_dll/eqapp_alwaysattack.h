@@ -43,7 +43,7 @@ void EQAPP_AlwaysAttack_Off()
 
 void EQAPP_AlwaysAttack_Execute()
 {
-    if (EQAPP_Timer_HasTimeElapsed(g_AlwaysAttackTimer, g_AlwaysAttackTimerInterval) == false)
+    if (EQAPP_Timer_HasTimeElapsedInSeconds(g_AlwaysAttackTimer, g_AlwaysAttackTimerInterval) == false)
     {
         return;
     }

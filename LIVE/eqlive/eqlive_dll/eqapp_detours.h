@@ -47,6 +47,7 @@ EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__LMouseUp);
 EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__RMouseUp);
 EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__HandleMouseWheel);
 EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__SendNewText);
+EQ_MACRO_FUNCTION_DefineDetour(CEverQuest__StartCasting);
 
 EQ_MACRO_FUNCTION_DefineDetour(CDisplay__CreateActor);
 EQ_MACRO_FUNCTION_DefineDetour(CDisplay__CreatePlayerActor);
@@ -90,7 +91,7 @@ void EQAPP_Detours_AddDetoursForDX9()
 
                 EQ_MACRO_FUNCTION_AddDetour(IDirect3DDevice9__DrawIndexedPrimitive);
 
-                //std::cout << "AddDetoursForDX9 ok!" << "\n";
+                //std::cout << "AddDetoursForDX9 ok!\n";
 
                 g_DetoursIsDX9Detoured = true;
                 return;
@@ -121,7 +122,7 @@ void EQAPP_Detours_RemoveDetoursForDX9()
             {
                 EQ_MACRO_FUNCTION_RemoveDetour(IDirect3DDevice9__DrawIndexedPrimitive);
 
-                //std::cout << "RemoveDetoursForDX9 ok!" << "\n";
+                //std::cout << "RemoveDetoursForDX9 ok!\n";
 
                 g_DetoursIsDX9Detoured = false;
                 return;
@@ -152,7 +153,7 @@ void EQAPP_Detours_AddDetoursForCamera()
             {
                 EQ_MACRO_FUNCTION_AddDetour(CCamera__SetCameraLocation);
 
-                //std::cout << "AddDetoursForCamera ok!" << "\n";
+                //std::cout << "AddDetoursForCamera ok!\n";
 
                 g_DetoursIsCameraDetoured = true;
                 return;
@@ -183,7 +184,7 @@ void EQAPP_Detours_RemoveDetoursForCamera()
             {
                 EQ_MACRO_FUNCTION_RemoveDetour(CCamera__SetCameraLocation);
 
-                //std::cout << "RemoveDetoursForCamera ok!" << "\n";
+                //std::cout << "RemoveDetoursForCamera ok!\n";
 
                 g_DetoursIsCameraDetoured = false;
                 return;
@@ -230,7 +231,7 @@ void EQAPP_Detours_AddDetoursForRender()
                 EQ_MACRO_FUNCTION_AddDetour(CRender__UpdateDisplay);
                 //EQ_MACRO_FUNCTION_AddDetour(CRender__DrawLineEx);
 
-                //std::cout << "AddDetoursForRender ok!" << "\n";
+                //std::cout << "AddDetoursForRender ok!\n";
 
                 g_DetoursIsRenderDetoured = true;
                 return;
@@ -277,7 +278,7 @@ void EQAPP_Detours_RemoveDetoursForRender()
                 EQ_MACRO_FUNCTION_RemoveDetour(CRender__UpdateDisplay);
                 //EQ_MACRO_FUNCTION_RemoveDetour(CRender__DrawLineEx);
 
-                //std::cout << "RemoveDetoursForRender ok!" << "\n";
+                //std::cout << "RemoveDetoursForRender ok!\n";
 
                 g_DetoursIsRenderDetoured = false;
                 return;
@@ -428,6 +429,11 @@ void EQAPP_Detours_Load()
         if (EQ_ADDRESS_FUNCTION_CEverQuest__SendNewText != 0)
         {
             EQ_MACRO_FUNCTION_AddDetour(CEverQuest__SendNewText);
+        }
+
+        if (EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting != 0)
+        {
+            EQ_MACRO_FUNCTION_AddDetour(CEverQuest__StartCasting);
         }
     }
 
@@ -626,6 +632,11 @@ void EQAPP_Detours_Unload()
         {
             EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__SendNewText);
         }
+
+        if (EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting != 0)
+        {
+            EQ_MACRO_FUNCTION_RemoveDetour(CEverQuest__StartCasting);
+        }
     }
 
     if (EQ_ADDRESS_POINTER_CDisplay != 0)
@@ -715,7 +726,7 @@ void EQAPP_Detours_OnEnterZone()
 
     g_EQAppIsInGame = true;
 
-    EQ_InterpretCommand("/outputfile inventory");
+    EQ_OutputFiles();
 }
 
 void EQAPP_Detours_OnLeaveZone()
@@ -880,12 +891,12 @@ int __cdecl EQAPP_DETOURED_FUNCTION_CollisionCallbackForActors(uint32_t cactor)
             return 0; // no collision
         }
 
-        if (g_ActorCollisionAllIsEnabled == true)
+        if (g_ActorCollisionNoCollisionWithAllIsEnabled == true)
         {
             return 0; // no collision
         }
 
-        if (g_ActorCollisionPlayerIsEnabled == true)
+        if (g_ActorCollisionNoCollisionWithPlayersIsEnabled == true)
         {
             bool result = EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors_Player(cactor);
             if (result == true)
@@ -929,6 +940,8 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
 
     if (g_EQAppIsLoaded == 0)
     {
+        EQ_OutputFiles();
+
         EQAPP_Load();
 
         g_EQAppIsInGame = true;
@@ -946,7 +959,7 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
 
     if (g_WindowTitleIsEnabled == true)
     {
-        if (EQAPP_Timer_HasTimeElapsed(g_WindowTitleTimer, g_WindowTitleTimerInterval) == true)
+        if (EQAPP_Timer_HasTimeElapsedInSeconds(g_WindowTitleTimer, g_WindowTitleTimerInterval) == true)
         {
             EQAPP_WindowTitle_Execute();
         }
@@ -967,12 +980,12 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
         {
             if (g_BoxChatAutoConnectIsEnabled == true)
             {
-                if (EQAPP_Timer_HasTimeElapsed(g_BoxChatAutoConnectTimer, g_BoxChatAutoConnectTimerInterval) == true)
+                if (EQAPP_Timer_HasTimeElapsedInSeconds(g_BoxChatAutoConnectTimer, g_BoxChatAutoConnectTimerInterval) == true)
                 {
                     if (EQAPP_BoxChat_IsServerRunning() == true)
                     {
                         std::string playerSpawnName = EQ_GetPlayerSpawnName();
-                        if (playerSpawnName.size() != 0)
+                        if (playerSpawnName.empty() == false)
                         {
                             EQAPP_BoxChat_Connect(playerSpawnName);
                         }
@@ -1089,9 +1102,19 @@ int __cdecl EQAPP_DETOURED_FUNCTION_DrawNetStatus(int x, int y, int unknown)
         EQAPP_KillMobs_Execute();
     }
 
+    if (g_MacroIsEnabled == true)
+    {
+        EQAPP_Macro_Execute();
+    }
+
+    if (g_SpawnCastSpellIsEnabled == true)
+    {
+        EQAPP_SpawnCastSpell_Execute();
+    }
+
     if (g_WaypointIsEnabled == true && g_WaypointFollowPathIsEnabled == true)
     {
-        EQAPP_Waypoint_FollowPathList(g_WaypointFollowPathIndexList);
+        EQAPP_Waypoint_FollowPathIndexList(g_WaypointFollowPathIndexList);
     }
 
     if (g_HUDIsEnabled == true)
@@ -1205,8 +1228,9 @@ int __fastcall EQAPP_DETOURED_FUNCTION_EQ_Character__TakeFallDamage(void* this_p
 
     if (g_CheatNoFallDamageIsEnabled == true)
     {
+        std::cout << fmt::format("You would have taken fall damage! (Damage Multiplier: {})\n", value);
+
         // never take fall damage
-        std::cout << "You would have taken fall damage! (" << value << ")" << "\n";
         return 0;
     }
 
@@ -1391,11 +1415,13 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CharacterZoneClient__TotalSpellAffects(vo
         }
     }
 
+/*
     // always have max bandolier slots
     if (spellAffectIndex == EQ_SPELL_AFFECT_BANDOLIER_SLOTS)
     {
         return EQ_NUM_BANDOLIER_SLOTS;
     }
+*/
 
 /*
     // always have max extended target window slots
@@ -1508,6 +1534,17 @@ bool __fastcall EQAPP_DETOURED_FUNCTION_EQPlayer__UpdateItemSlot(void* this_ptr,
     }
 */
 
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn != NULL)
+    {
+        if ((uint32_t)this_ptr != playerSpawn)
+        {
+            std::string strItemDefinition = std::to_string(itemDefinition);
+
+            EQAPP_PrintTextToFileNoDuplicates("updateitemslot.txt", strItemDefinition.c_str());
+        }
+    }
+
     return result;
 }
 
@@ -1586,18 +1623,21 @@ char* __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__DoPercentConvert(void* this
         return EQAPP_REAL_FUNCTION_CEverQuest__DoPercentConvert(this_ptr, text, isOutgoing);
     }
 
-    std::string str;
-    str.reserve(strlen(text));
+    std::string strText;
+    strText.reserve(strlen(text));
 
-    str = text;
+    strText = text;
 
-    if (EQAPP_String_Contains(str, "${") != false)
+    if (EQAPP_String_Contains(strText, "{") != false)
     {
-        EQAPP_InterpretCommand_ConvertText(str);
-
-        if (str.size() != 0)
+        if (EQAPP_String_Contains(strText, "}") != false)
         {
-            return EQAPP_REAL_FUNCTION_CEverQuest__DoPercentConvert(this_ptr, (char*)str.c_str(), isOutgoing);
+            EQAPP_InterpretCommand_ConvertText(strText);
+
+            if (strText.empty() == false)
+            {
+                return EQAPP_REAL_FUNCTION_CEverQuest__DoPercentConvert(this_ptr, (char*)strText.c_str(), isOutgoing);
+            }
         }
     }
 
@@ -1650,7 +1690,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void
         return EQAPP_REAL_FUNCTION_CEverQuest__dsp_chat(this_ptr, text, textColor, one_1, one_2, zero_1);
     }
 
-    std::string chatText = text;
+    std::string_view chatText = text;
 
     ////EQAPP_Log(chatText.c_str(), textColor);
 
@@ -1661,9 +1701,9 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void
         EQAPP_Detours_OnLeaveZone();
     }
 
-    if (EQAPP_String_BeginsWith(chatText, "You have entered ") == true)
+    if (EQAPP_StringView_BeginsWith(chatText, "You have entered ") == true)
     {
-        if (EQAPP_String_BeginsWith(chatText, "You have entered an ") == false)
+        if (EQAPP_StringView_BeginsWith(chatText, "You have entered an ") == false)
         {
             if (g_DetoursIsDX9Detoured == false && g_DetoursIsCameraDetoured == false && g_DetoursIsRenderDetoured == false)
             {
@@ -1683,7 +1723,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__dsp_chat(void* this_ptr, void
 
     if (chatText == "It will take you about 30 seconds to prepare your camp.")
     {
-        EQ_InterpretCommand("/outputfile inventory");
+        EQ_OutputFiles();
 
         if (g_DetoursIsDX9Detoured == true && g_DetoursIsCameraDetoured == true && g_DetoursIsRenderDetoured == true)
         {
@@ -1923,11 +1963,11 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__SendNewText(void* this_ptr, v
         return EQAPP_REAL_FUNCTION_CEverQuest__SendNewText(this_ptr, chatType, name, text, unknown);
     }
 
-    std::string strText = text;
+    std::string_view svText = text;
 
-    if (EQAPP_String_Contains(strText, "//") == true)
+    if (EQAPP_StringView_Contains(svText, "//") == true)
     {
-        std::cout << "Double-slash command blocked from being sent accidentally by CEverQuest::SendNewText()!" << "\n";
+        std::cout << "Double-slash command blocked from being sent accidentally by CEverQuest::SendNewText()!\n";
         return 1;
     }
 
@@ -1953,6 +1993,47 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__SendNewText(void* this_ptr, v
 */
 
     return EQAPP_REAL_FUNCTION_CEverQuest__SendNewText(this_ptr, chatType, name, text, unknown);
+}
+
+int __fastcall EQAPP_DETOURED_FUNCTION_CEverQuest__StartCasting(void* this_ptr, void* not_used, EQMessage::CEverQuest__StartCasting_ptr message)
+{
+    if (g_EQAppShouldUnload == 1)
+    {
+        return EQAPP_REAL_FUNCTION_CEverQuest__StartCasting(this_ptr, message);
+    }
+
+    if (EQ_IsInGame() == false)
+    {
+        return EQAPP_REAL_FUNCTION_CEverQuest__StartCasting(this_ptr, message);
+    }
+
+    if (g_EQAppIsInGame == false)
+    {
+        return EQAPP_REAL_FUNCTION_CEverQuest__StartCasting(this_ptr, message);
+    }
+
+/*
+    auto spawn = EQ_GetSpawnByID(message->SpawnID);
+    if (spawn != NULL)
+    {
+        std::string spawnName = EQ_GetSpawnName(spawn);
+
+        std::string spellName = EQ_GetSpellNameByID(message->SpellID);
+
+        std::cout << "---- CEverQuest::StartCasting() ----" << std::endl;
+        std::cout << "Spawn ID: " << message->SpawnID << " (" << spawnName << ")" << std::endl;
+        std::cout << "Spell ID: " << message->SpellID << " <" << spellName << ">" << std::endl;
+        std::cout << "Spell Cast Time: " << message->SpellCastTime << std::endl;
+        std::cout << "------------------------------------" << std::endl;
+    }
+*/
+
+    if (g_SpawnCastSpellIsEnabled == true)
+    {
+        EQAPP_SpawnCastSpell_HandleEvent_CEverQuest__StartCasting(this_ptr, message);
+    }
+
+    return EQAPP_REAL_FUNCTION_CEverQuest__StartCasting(this_ptr, message);
 }
 
 int __fastcall EQAPP_DETOURED_FUNCTION_CDisplay__CreateActor(void* this_ptr, void* not_used, char* actorDefinition, float y, float x, float z, float a5, float a6, float a7, float a8, float a9, float a10, int a11)
@@ -2010,7 +2091,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CDisplay__CreatePlayerActor(void* this_pt
 
 /*
     std::string spawnNameNumbered = EQ_GetSpawnNameNumbered(spawn);
-    if (spawnNameNumbered.size() != 0)
+    if (spawnNameNumbered.empty() == false)
     {
         std::cout << "CDisplay::CreatePlayerActor(): " << spawnNameNumbered << "\n";
     }
@@ -2051,7 +2132,7 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CDisplay__DeleteActor(void* this_ptr, voi
         if (actorApplicationData != NULL)
         {
             std::string spawnNameNumbered = EQ_GetSpawnNameNumbered(actorApplicationData);
-            if (spawnNameNumbered.size() != 0)
+            if (spawnNameNumbered.empty() == false)
             {
                 std::cout << "CDisplay::DeleteActor(): " << spawnNameNumbered << "\n";
             }
@@ -2248,10 +2329,9 @@ int __fastcall EQAPP_DETOURED_FUNCTION_CBazaarSearchWnd__AddItemToList(void* thi
 
     // #ITEM_ID^ICON_ID^ITEM_NAME
 
-    std::stringstream lootFilterText;
-    lootFilterText << itemID << "^" << itemIconID << "^" << itemName;
+    std::string lootFilterText = fmt::format(FMT_COMPILE("{}^{}^{}"), itemID, itemIconID, itemName);
 
-    EQAPP_PrintTextToFileNoDuplicates("bazaarsearchlootfiltertext.txt", lootFilterText.str().c_str());
+    EQAPP_PrintTextToFileNoDuplicates("bazaarsearchlootfiltertext.txt", lootFilterText.c_str());
 
     //std::cout << "CBazaarSearchWnd::AddItemToList(): " << itemName << "^" << itemPrice << "^" << traderName << "^" << a4 << "^"  << a5 << "^" << a6 << "^" << itemIconID << "^" << itemID <<  "^" << a9 << "^" << a10 << "^" << a11 << "\n";
 
@@ -2379,7 +2459,7 @@ HRESULT __stdcall EQAPP_DETOURED_FUNCTION_IDirect3DDevice9__DrawIndexedPrimitive
             streamData->Release();
         }
 
-        //std::cout << "IDirect3DDevice9::DrawIndexedPrimitive()" << "\n";
+        //std::cout << "IDirect3DDevice9::DrawIndexedPrimitive()\n";
         //std::cout << "offset: " << offset << "\n";
         //std::cout << "stride: " << stride << "\n";
         //std::cout << "baseIndex: " << baseIndex << "\n";
@@ -2387,7 +2467,7 @@ HRESULT __stdcall EQAPP_DETOURED_FUNCTION_IDirect3DDevice9__DrawIndexedPrimitive
         //std::cout << "numVertices: " << numVertices << "\n";
         //std::cout << "startIndex: " << startIndex << "\n";
         //std::cout << "primitiveCount: " << primitiveCount << "\n";
-        //std::cout << "--------------------------------------------------" << "\n";
+        //std::cout << "--------------------------------------------------\n";
 
         // stride 24 = World + Static Actors
         // stride 32 = Players/NPCs + Dynamic Actors
@@ -2420,7 +2500,7 @@ HMODULE WINAPI EQAPP_DETOURED_FUNCTION_GetModuleHandleA(LPCSTR lpModuleName)
 {
     //std::stringstream ss;
     //ss << "GetModuleHandleA() lpModuleName: " << lpModuleName << "\n";
-    //ss << "--------------------------------------------------" << "\n";
+    //ss << "--------------------------------------------------\n";
 
     //EQAPP_Log(ss.str().c_str());
 
@@ -2438,7 +2518,7 @@ HINSTANCE WINAPI EQAPP_DETOURED_FUNCTION_ShellExecuteA
 )
 {
     std::stringstream ss;
-    ss << "ShellExecuteA()" << "\n";
+    ss << "ShellExecuteA()\n";
     ss << "lpOperation: " << lpOperation << "\n";
     ss << "lpFile: " << lpFile << "\n";
     ss << "lpParameters: " << lpParameters << "\n";

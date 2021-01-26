@@ -1,0 +1,2 @@
+/xtarget set 1 grouptank
+/xtarget set 2 grouptanktarget

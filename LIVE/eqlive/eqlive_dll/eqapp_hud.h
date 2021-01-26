@@ -70,7 +70,7 @@ void EQAPP_HUD_Execute()
         g_HUDText << "- SLEEP!\n";
     }
 
-    if (EQAPP_Timer_HasTimeElapsed(g_HUDNumClientsTimer, g_HUDNumClientsTimerInterval) == true)
+    if (EQAPP_Timer_HasTimeElapsedInSeconds(g_HUDNumClientsTimer, g_HUDNumClientsTimerInterval) == true)
     {
         g_HUDNumClients = EQAPP_GetNumClients();
     }
@@ -170,12 +170,12 @@ void EQAPP_HUD_Execute()
             g_HUDText << "- ESP Height Filter\n";
         }
 
-        if (g_ESPFindSpawnName.size() != 0)
+        if (g_ESPFindSpawnName.empty() == false)
         {
             g_HUDText << "- ESP Find Spawn Name: " << g_ESPFindSpawnName << " (" << g_ESPFindSpawnNameCount << ")\n";
         }
 
-        if (g_ESPFindSpawnLastName.size() != 0)
+        if (g_ESPFindSpawnLastName.empty() == false)
         {
             g_HUDText << "- ESP Find Spawn Last Name: " << g_ESPFindSpawnLastName << " (" << g_ESPFindSpawnLastNameCount << ")\n";
         }
@@ -227,6 +227,35 @@ void EQAPP_HUD_Execute()
     if (g_PowerLevelIsEnabled == true)
     {
         g_HUDText << "- Power Level: " << g_PowerLevelHPPercent << "%\n";
+    }
+
+    if (g_MacroIsEnabled == true)
+    {
+        if (g_MacroList.empty() == false)
+        {
+            g_HUDText << "- Macros:\n";
+
+            for (auto& macro : g_MacroList)
+            {
+                g_HUDText << "-> " << macro.Name << " (";
+
+                if (macro.bEnabled == false)
+                {
+                    g_HUDText << "disabled)\n";
+                }
+                else
+                {
+                    if (macro.bUseTimer == false)
+                    {
+                        g_HUDText << "always)\n";
+                    }
+                    else
+                    {
+                        g_HUDText << macro.TimerInterval << "s)\n";
+                    }
+                }
+            }
+        }
     }
 
     EQ_DrawText(g_HUDText.str().c_str(), g_HUDX, g_HUDY);

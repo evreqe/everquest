@@ -1,0 +1,2000 @@
+9006^542^Wooden Shield
+83376^636^Blood Worshipper's Gloves
+30983^636^Worn Weighted Gloves
+61992^856^Refreshing Milk
+61994^704^Exquisite Elven Wine
+61997^1066^Decadent Jumjum Cake
+61995^1020^Spicy Wolf Sandwich
+5712^528^Stained Cloth Mask
+7037^592^Ebon Dagger
+87797^4611^Eternal Grove Cloth Chest Ornament
+16875^1026^Stalking Probe
+53758^2239^Minor Nebulous Dream Fragment
+96953^587^Philter of Shadows
+50563^887^Ornate Defiant Skullstaff
+50133^764^Flawed Defiant Leather Boots
+50230^1591^Elegant Defiant Leather Bracer
+50116^942^Ornate Defiant Cloth Robe
+50105^1562^Ornate Defiant Leather Boots
+50106^1609^Ornate Defiant Leather Cap
+50091^844^Ornate Defiant Plate Boots
+50089^1585^Ornate Defiant Plate Bracer
+50090^1601^Ornate Defiant Plate Gauntlets
+50062^1600^Rough Defiant Plate Gauntlets
+50047^1585^Simple Defiant Leather Bracer
+50118^846^Flawed Defiant Plate Gauntlets
+50121^1594^Flawed Defiant Plate Vambraces
+50099^628^Ornate Defiant Chain Coif
+50020^636^Crude Defiant Leather Gloves
+50013^526^Crude Defiant Chain Gauntlets
+50058^669^Simple Defiant Cloth Sleeves
+50623^1549^Elegant Defiant Nightblade
+50111^531^Ornate Defiant Cloth Gloves
+50622^1718^Elegant Defiant Fireborn Axe
+50619^1788^Elegant Defiant Square Hammer
+50575^1285^Flawed Defiant Shortsword
+50114^1595^Ornate Defiant Cloth Sleeves
+50139^529^Flawed Defiant Silk Gloves
+50214^2123^Elegant Defiant Plate Wristguard
+50590^890^Intricate Defiant Katana
+50564^1397^Ornate Defiant Harpoon
+50615^1383^Elaborate Defiant Aegis
+50183^2135^Elaborate Defiant Plate Boots
+50625^2293^Elegant Defiant Knuckle Guards
+50621^1333^Elegant Defiant Shortsword
+50558^605^Ornate Defiant Longsword
+50094^1577^Ornate Defiant Plate Greaves
+50157^1565^Intricate Defiant Chain Boots
+50629^1628^Elegant Defiant Bow
+50628^1748^Elegant Defiant Battleaxe
+50110^1585^Ornate Defiant Cloth Wristwrap
+50064^550^Rough Defiant Plate Helm
+50071^536^Rough Defiant Chain Coif
+50085^937^Rough Defiant Cloth Cap
+50072^1592^Rough Defiant Chain Sleeves
+50066^845^Rough Defiant Plate Greaves
+50083^530^Rough Defiant Cloth Gloves
+50070^779^Rough Defiant Chain Boots
+50063^524^Rough Defiant Plate Boots
+50549^736^Rough Defiant Halberd
+50098^1563^Ornate Defiant Chain Boots
+50199^1564^Elaborate Defiant Leather Boots
+50231^1591^Elegant Defiant Leather Wristguard
+152071^5369^Arch Lich's Conflagrant Wristguard
+94250^5611^Castaway Armguards
+94248^5606^Castaway Boots
+94246^5607^Castaway Bracer
+94247^5608^Castaway Gloves
+94249^5609^Castaway Helm
+120328^1032^Chipped Shards of Dread
+140106^6606^Chitin Stud
+30140^567^Coldain Smithing Hammer
+152159^9187^Conflagrant Rapier
+152160^9187^Conflagrant Saber
+94092^1649^Draconic Soulstone
+150576^8940^Wrapped Painting: Toadstool Tavern
+35089^2014^Aderirse Bur
+10614^618^Spoon
+5841^575^Shard of Night
+148801^6858^Minor Writ of the Combine
+145287^7550^Minor Essence of Life
+148803^6856^Median Writ of the Combine
+148802^6857^Lesser Writ of the Combine
+44515^3081^Spider's Bite XV
+44513^3081^Spider's Bite XIII
+151902^9371^Lesser Clawed Tablet of the Ring of Scale
+44511^3081^Spider's Bite XI
+148804^6854^Greater Writ of the Combine
+158304^9590^Greater Spellbound Lamp
+160748^504^Ability: Enchant Celestial Platinum (x10)
+14091^806^Spirit of Sloth
+152504^927^Conflagrant Fish Scale
+145290^7554^Greater Essence of Life
+7218^575^Viik's Dark Defender
+11543^1164^Weighted Axe
+151904^9372^Greater Clawed Tablet of the Ring of Scale
+148805^6855^Glowing Writ of the Combine
+158305^9587^Glowing Spellbound Lamp
+20875^575^Efreeti Dirk
+76551^2243^Lesser Dreadmote
+145291^7555^Glowing Essence of Life
+44528^3085^Scorpion's Agony XIII
+44521^3085^Scorpion's Agony VI
+40139^558^Twice-Stitched Sandals
+44529^3085^Scorpion's Agony XIV
+44517^3085^Scorpion's Agony II
+72210^632^Fear Touched Tunic
+151905^9373^Glowing Clawed Tablet of the Ring of Scale
+72209^635^Fear Touched Leggings
+72207^641^Fear Touched Helm
+72205^636^Fear Touched Gloves
+70341^3071^Lesser Alaran Cantrip
+4411^623^Mithril Vambraces
+36287^1075^Rune Binding Powder
+145288^7552^Lesser Essence of Life
+72204^637^Fear Touched Bracer
+70340^3072^Minor Alaran Cantrip
+72206^633^Fear Touched Boots
+76550^2247^Minor Dreadmote
+20712^6770^Bloodstained Hilt
+101990^3358^Prize: Pike of Avanish Ornament
+11645^576^Blood Fire
+46170^529^Calcified Bone Gauntlets
+72208^634^Fear Touched Armguards
+53760^2234^Median Nebulous Dream Fragment
+53759^2237^Lesser Nebulous Dream Fragment
+53761^2235^Greater Nebulous Dream Fragment
+70343^3070^Greater Alaran Cantrip
+53762^2233^Glowing Nebulous Dream Fragment
+70344^3074^Glowing Alaran Cantrip
+85339^5933^Butterfly Wings
+88960^778^Tome: Blunted Blade Rk. II
+145289^7553^Median Essence of Life
+99947^863^Smudged Rough Sortilege Sheet
+99950^863^Smudged Runic Sortilege Sheet
+99949^863^Sooty Fine Sortilege Sheet
+99948^863^Sooty Sortilege Sheet
+148580^6548^Assassin's Extravagant Necklace
+84645^4562^Old Beryl Hero's Forge Chain Chest Ornament
+84570^4546^Old Ebon Hero's Forge Leather Feet Ornament
+84594^4569^Old Viridian Hero's Forge Leather Chest Ornament
+84583^4575^Old Viridian Hero's Forge Plate Hands Ornament
+58372^785^Beer-Battered Crab Rolls
+58464^785^Beer-Battered Tuna Rolls
+84673^4549^Old Auburn Hero's Forge Chain Helm Ornament
+84685^4552^Old Auburn Hero's Forge Leather Legs Ornament
+84668^4550^Old Auburn Hero's Forge Plate Arms Ornament
+84667^4548^Old Auburn Hero's Forge Plate Chest Ornament
+84671^4552^Old Auburn Hero's Forge Plate Legs Ornament
+84655^4568^Old Beryl Hero's Forge Leather Hands Ornament
+84638^4562^Old Beryl Hero's Forge Plate Chest Ornament
+84563^4546^Old Ebon Hero's Forge Chain Feet Ornament
+84561^4547^Old Ebon Hero's Forge Chain Hands Ornament
+84562^4545^Old Ebon Hero's Forge Chain Legs Ornament
+84567^4544^Old Ebon Hero's Forge Leather Wrist Ornament
+84587^4569^Old Viridian Hero's Forge Chain Chest Ornament
+84591^4573^Old Viridian Hero's Forge Chain Legs Ornament
+84589^4572^Old Viridian Hero's Forge Chain Wrist Ornament
+84599^4574^Old Viridian Hero's Forge Leather Feet Ornament
+84593^4570^Old Viridian Hero's Forge Leather Helm Ornament
+84596^4572^Old Viridian Hero's Forge Leather Wrist Ornament
+65259^1179^Hickory Handled Shears
+85419^4639^Green Santug Cap Ornament
+4164^624^Rubicite Breastplate
+96467^695^Philter of Major Translocation
+96477^699^Philter of the Wolf V
+10233^615^Glowing Golden Band
+52891^701^Majestic Tonic of Healing
+135919^2297^Ancient Arrows
+152077^930^Arch Lich's Conflagrant Robe
+152074^5378^Arch Lich's Conflagrant Cap
+152042^5374^Storm Warden's Conflagrant Tunic
+152039^5378^Storm Warden's Conflagrant Cowl
+152037^5377^Storm Warden's Conflagrant Gloves
+152036^5369^Storm Warden's Conflagrant Wristguard
+152038^5375^Storm Warden's Conflagrant Boots
+152041^5379^Storm Warden's Conflagrant Leggings
+152072^5377^Arch Lich's Conflagrant Gloves
+152076^5379^Arch Lich's Conflagrant Pants
+152075^5380^Arch Lich's Conflagrant Sleeves
+152073^5375^Arch Lich's Conflagrant Sandals
+164406^5239^Faded Snowbound Legs Armor
+164404^5238^Faded Snowbound Head Armor
+164403^5235^Faded Snowbound Feet Armor
+164407^5234^Faded Snowbound Chest Armor
+164405^5240^Faded Snowbound Arms Armor
+164401^5236^Faded Snowbound Wrist Armor
+164402^5237^Faded Snowbound Hands Armor
+31598^966^Orange Diamond of War
+12504^810^Wand of Souls
+89722^526^Gloves of the Sandglow Guardian
+36334^860^Intricate Scroll of Static Strike
+96425^702^Distillate of Skinspikes VI
+1366^631^Silversilk Leggings
+93984^2600^Ceramic Butterfly Statuette
+8332^681^Shuriken of the Tranquil
+27142^779^Peerless Dragonhorn Boots
+85215^6677^Ethercharged Bola
+5752^1006^Vial of Roiling Gas
+70200^545^Feranskin Sandals
+70202^670^Mordant Sleeves
+149178^9209^Cockatrice Skull
+5163^578^Guardians Mace
+29522^1160^Water Mephit Blood
+70222^638^Swirling Silk Bracer
+52887^1907^Worlu's Prying Eyes
+59888^778^Tome of Head Crush
+13750^554^Low Quality Bear Skin
+14098^806^Mind Melt
+85493^1557^Exalted Tonic of Healing
+70221^637^Thrice-Laced Wristguard
+60316^1239^Gemming Tool
+5317^596^Gnoll Hide Lariat
+11465^696^10 Dose Spine Rend
+12500^810^Wand of Conflagration
+22523^694^Swirling Mist
+6402^822^Gem-Encrusted Scepter
+10200^501^Ring of Bone
+76333^824^Cazic's Blood
+46182^524^Golden Drolvarg Boots
+14745^789^Book of Obulus
+6083^771^Acrylia Studded Mask
+133913^558^Snake Tooth Sandals
+43417^564^Buckled Shale Belt
+32547^730^Collapsed Toolkit
+79895^2317^Pauldrons of the Eternal Storm
+102971^1916^Sibilisan Viridian Pigment
+22800^817^Frost Giant Meat
+19085^558^Sepultura Sandals
+21961^817^Iksar Meat
+59905^778^Tome of Deathfury Axe
+22801^817^Storm Giant Meat
+22809^817^Wurm Meat
+13658^1154^Bazu Plasma
+13639^1159^Murkglider Plasma
+22123^571^Russet Oxide
+23539^1156^Bile Temper
+14720^967^Stone of Morid
+18317^789^Korucust's Report to the Di'zok
+12508^951^Slowstone Amber
+83181^753^Highpass Signet
+40587^2052^Essence of Basilisk
+66615^867^Gold Ticket
+13044^584^Pod of Water
+13048^925^Rabbit Meat
+133930^540^Tasset of the Underworld
+4297^505^Rotbone Bracelet
+113541^1997^Trade-In Gem: Hypnotic Stare Rk. II
+19702^518^Gloves of the Brood
+70004^677^Swamp Walker's Veil
+94083^1689^Candy Jewels
+61264^1019^Lemon-Buttered Dream Meat Pie
+106047^895^Undeath Figurine
+103321^638^Archaic Cloth Wristband
+103323^666^Archaic Cloth Sandals
+103325^670^Archaic Cloth Sleeves
+103324^639^Archaic Cloth Cap
+103322^517^Archaic Cloth Gloves
+103326^631^Archaic Cloth Pants
+103327^713^Archaic Cloth Robe
+106020^1622^Fangskin Belt
+106015^665^Glimmerlight Drape
+106025^668^Spaulders of Resolution
+106016^2311^Dalin's Cape
+106014^1621^Blightfang Choker
+106013^1062^Veil of the Plaguecaller
+106017^1945^Shimmerstar
+105555^905^Staff of the Long Walk
+106018^1851^Web of Flies
+106038^2421^Shield of Dancing Flame
+105559^2161^Arc of Pain
+106044^2462^Gleam
+10307^859^Fire Beetle Eye
+81128^817^Fresh Meat
+19137^969^Drake Egg
+87936^4550^Auburn Hero's Forge Leather Arms Ornament
+50346^809^Rough Combatant's Stake
+87807^4544^Ebon Hero's Forge Plate Wrist Ornament
+87842^4571^Viridian Hero's Forge Chain Arms Ornament
+87849^4571^Viridian Hero's Forge Leather Arms Ornament
+52892^1867^Pail of Slop
+76949^2235^Fear Jewel of Life
+81123^2768^Alliance Elixir
+85195^1273^Chronomagic Axe
+87853^4574^Viridian Hero's Forge Leather Feet Ornament
+81124^1020^Merchant's Feast
+85216^1671^Distorting Guard
+87969^5519^Armor of Guidance
+87704^4606^Sylvan Leather Arms Ornament
+85196^4035^Ethernere Traveler's Blade
+133938^2084^Hanging Gong of Warning
+32151^581^Centi Warhammer
+46480^526^Sunderspring Gloves
+30114^527^Ry`Gorr Battle Mail
+14882^580^Coterie Short Sword
+87953^3437^Sorcerer's Blade
+120170^3414^Jagged Metal Knuckles
+71232^772^Mask of Simmering Storms
+101112^663^Folded Propellers
+7249^591^Blood Point
+22821^575^Kelorek`Dar Spine Razor
+6647^567^Sarnak Battlehammer
+50366^1502^Ornate Combatant's Globe
+4132^747^Incarnadine Helm
+20769^953^Bluish Stone
+20951^895^Efreeti Statuette
+10229^694^Essence of Wind
+20743^959^Ethereal Opal
+20986^1018^Red Face Paint
+20837^951^Shimmering Amber
+20824^966^Shimmering Diamond
+11644^606^Shield of Rainbow Hues
+87831^4546^Ebon Hero's Forge Cloth Feet Ornament
+11611^567^Warhammer of Divine Grace
+120348^3554^Inscribed Bone Totem
+120028^3554^Carved Bone Totem
+120155^3532^Painmaker
+120037^1722^Ring of Unfettered Rage
+87844^4575^Viridian Hero's Forge Chain Hands Ornament
+87799^4614^Eternal Grove Cloth Wrist Ornament
+87709^4605^Sylvan Cloth Helm Ornament
+96420^702^Distillate of Skinspikes I
+47115^1017^Grilled Brell's Bounty Soup
+47118^817^Grilled Brell's Bounty Steaks
+17327^725^Fleeting Quiver
+87687^7003^Bloodforged Cloth Robe Ornament
+87686^4595^Bloodforged Cloth Feet Ornament
+87672^4595^Bloodforged Chain Feet Ornament
+87665^4595^Bloodforged Plate Feet Ornament
+87673^4591^Bloodforged Leather Helm Ornament
+87659^4591^Bloodforged Plate Helm Ornament
+87666^4591^Bloodforged Chain Helm Ornament
+87683^4593^Bloodforged Cloth Wrist Ornament
+87685^4594^Bloodforged Cloth Legs Ornament
+87675^4592^Bloodforged Leather Arms Ornament
+87682^4592^Bloodforged Cloth Arms Ornament
+87669^4593^Bloodforged Chain Wrist Ornament
+87667^4590^Bloodforged Chain Chest Ornament
+87660^4590^Bloodforged Plate Chest Ornament
+87678^4594^Bloodforged Leather Legs Ornament
+87684^4596^Bloodforged Cloth Hands Ornament
+87693^4608^Sylvan Plate Legs Ornament
+87692^4610^Sylvan Plate Hands Ornament
+87689^4604^Sylvan Plate Chest Ornament
+87705^4607^Sylvan Leather Wrist Ornament
+87677^4596^Bloodforged Leather Hands Ornament
+87662^4593^Bloodforged Plate Wrist Ornament
+22815^1088^Section of Lodizal's Shell
+120033^1721^Ring of Righteous Fury
+120034^2674^Rotspittle Ring
+120339^769^Fancy Chain Gorget
+120165^3401^Greataxe of Fervent Rage
+120168^3407^Eclipse
+120014^3217^Neckguard of Purity
+120357^1892^Ring of the Evil Wanderer
+101030^500^Chillform Choker
+34244^1095^Indium Ore
+33792^1095^Sunshard Ore
+34246^1095^Tungsten Ore
+34247^1095^Cobalt Ore
+81133^2078^Black Powder Pouch
+29772^817^Boar Meat
+29419^1157^War Wraith Blood
+81985^1092^Steel Ingot
+44925^2200^Fine Oleander
+27284^1390^Tactician's Bulwark
+34896^2026^Hemic Marrow
+37844^1946^Uncut Amethyst
+37859^1440^Raw Amber Nihilite
+34245^1095^Rhenium Ore
+29350^1091^Brick of Bloodmetal
+15971^926^Smashed War Grubs
+37851^1952^Uncut Demantoid
+37845^1947^Uncut Combine Star
+37849^1948^Uncut Morganite
+97875^861^Grubby Fine Papyrus
+97876^861^Dirty Runic Papyrus
+93496^869^Grimy Fine Vellum Parchment
+93495^869^Shabby Vellum Parchment
+93494^869^Grubby Fine Parchment
+34231^1251^Pristine Animal Pelt
+81162^555^Leather Roll
+34882^1917^Bonded Loam
+34218^782^Pristine Silk
+29981^782^Fire Arachnid Silk
+34219^782^Fine Silk
+34221^782^Superb Silk
+50407^952^Intricate Combatant's Orb
+26705^528^War Wraith Mask
+34233^556^Excellent Animal Pelt
+16282^1138^Brick of Ethereal Energy
+34234^552^Superb Animal Pelt
+34232^556^Fine Animal Pelt
+58067^1442^Raw Crimson Nihilite
+37848^1951^Uncut Goshenite
+28608^947^Highly Polished Gem
+37858^1439^Raw Indigo Nihilite
+58068^1441^Raw Shimmering Nihilite
+44755^1236^Concentrated Grade AA Nigriventer Venom
+16285^853^Strand of Ether
+44757^1236^Refined Grade AA Nigriventer Venom
+44946^2198^Fresh Caladium
+44956^2209^Stale Laburnum
+44945^2199^Stale Caladium
+44923^2201^Stale Oleander
+44935^2216^Fresh Larkspur
+44934^2217^Stale Larkspur
+44912^2040^Stale Muscimol
+44913^2040^Fresh Muscimol
+44924^2200^Fresh Oleander
+44957^2208^Fresh Laburnum
+44971^2225^Stale Delphinium
+44972^2224^Fresh Delphinium
+81127^911^Medicinal Herbs
+81132^2078^Writing Ink
+29750^1003^Blood Raven Parts
+44772^1226^Refined Grade AA Gormar Venom
+34881^1916^Ductile Loam
+36283^1075^Refined Binding Powder
+34909^1240^Fine Spinneret Fluid
+34908^1228^Pristine Spinneret Fluid
+28459^504^Spell: Insanity
+28468^504^Spell: Bliss
+26710^1038^Battle Worn Trinket
+28606^965^Small Sparkling Gem
+26708^920^Head of a Diaku Soldier
+26709^1082^Symbol of the Diaku
+5659^1211^Silver Swiftblade
+120036^1890^Ring of the Flowing Wind
+50132^1604^Flawed Defiant Leather Gloves
+50104^1605^Ornate Defiant Leather Gloves
+50107^1592^Ornate Defiant Leather Sleeves
+50109^1568^Ornate Defiant Leather Tunic
+50108^1578^Ornate Defiant Leather Trousers
+50095^1572^Ornate Defiant Breastplate
+50097^846^Ornate Defiant Chain Gauntlets
+50112^525^Ornate Defiant Cloth Sandals
+50568^972^Ornate Defiant Glowing Shield
+50562^953^Ornate Defiant Orb
+50093^623^Ornate Defiant Plate Vambraces
+11058^601^Fungi Covered Great Staff
+19985^819^Strange Dark Fungus
+35087^1695^Versluierd Fungus
+24088^1233^Fungus Clump
+28758^1139^Swollen Fungusbeast Gland
+110333^2980^Prize: Magi Shield Ornament
+101989^3356^Prize: War Hammer of Avanish Ornament
+94252^5605^Castaway Tunic
+94251^5610^Castaway Leggings
+64424^1009^Barbequed Al-Metes Kabobs
+133171^2095^Xorbb's Caged Hatred
+76341^1009^Barbequed Planar Goo Kabobs
+61291^1009^Barbequed Dream Meat Kabobs
+57914^7017^Warhelm of Rallos Zek
+87697^4606^Sylvan Chain Arms Ornament
+87699^4610^Sylvan Chain Hands Ornament
+84442^4604^Old Sylvan Chain Chest Ornament
+87698^4607^Sylvan Chain Wrist Ornament
+87701^4609^Sylvan Chain Feet Ornament
+87700^4608^Sylvan Chain Legs Ornament
+87695^4605^Sylvan Chain Helm Ornament
+4133^624^Incarnadine Breastplate
+50117^1587^Flawed Defiant Plate Bracer
+50161^1573^Intricate Defiant Chain Tunic
+50228^1582^Elegant Defiant Chain Leggings
+50224^1602^Elegant Defiant Chain Gauntlets
+50592^1407^Intricate Defiant Sacrificial Dagger
+50200^1611^Elaborate Defiant Leather Cap
+50600^676^Intricate Defiant Targ Shield
+16351^860^Ornate Leather Glove Pattern
+16350^860^Ornate Leather Wristband Pattern
+106011^1202^Stenchmoss
+105565^1330^Bentback Bow
+105562^1351^Healing Hammer
+103309^545^Archaic Chain Boots
+103311^543^Archaic Chain Sleeves
+103310^625^Archaic Chain Coif
+103308^526^Archaic Chain Gauntlets
+103307^620^Archaic Chain Wristguard
+103316^633^Archaic Leather Boots
+103318^634^Archaic Leather Armwraps
+103317^640^Archaic Leather Cowl
+103315^636^Archaic Leather Gloves
+103314^637^Archaic Leather Wristguard
+103300^671^Archaic Plate Bracer
+103302^545^Archaic Plate Boots
+103304^546^Archaic Plate Vambraces
+103303^628^Archaic Plate Helm
+103301^531^Archaic Plate Gauntlets
+106027^2438^Mother's Watchful Eye
+105554^1393^Marrowfall
+106028^1309^Escutcheon of the Plague Lord
+106037^734^Seal of Life
+105558^1870^Pestilence
+105522^2557^Hardslime Bauble
+106022^2559^Vileplume Bauble
+105552^1681^Rendsoul
+105557^1543^Deadclaw
+106024^880^Circlet of Living Light
+106023^2594^Masquerade
+106033^1088^Mask of the Red Mother
+106029^874^Band of Lo'Eszch
+105529^875^Band of Binding
+106034^505^Jelvalak's Gorget
+106043^528^Face of the Malign
+105532^619^Batfang Earring
+106032^619^Crimson Batfang
+105542^1452^Lump of Resounding Clay
+106042^1438^Resounding Heart
+106049^1617^Veschtar's Ring of Reaping
+105549^1616^Ring of the Reaper
+105539^872^Warband
+106039^617^Butcher's Band
+105504^665^Shawl of Warwishes
+105512^2215^Twisted Leaf Earring
+106012^2214^Living Leaf Earring
+106019^1621^Signet of Snakemaster Graxos
+105519^1620^Snakehandler Signet
+105501^2543^Earring of the Mundunugu
+106001^2544^Mundunugu Rawl's Earring
+106007^1841^Axeweaver's Large Shield
+106003^1002^Axeweaver's Medal of Distinction
+106002^771^Nightstalker's Mask
+105564^740^Longfang
+105553^2658^Barrelbreaker
+105560^801^Blightfang
+105561^2156^Bertoxxulous' Crook
+105556^1780^Zealot's Cleaver
+106036^663^Tsetsian Scalecloak
+106005^660^Stenchcloak
+106046^2312^Cloak of the Steward
+106035^2316^Pauldrons of Wrath
+106045^1118^Slitherskin Shoulderguards
+106040^1623^Thrallmaster Belt
+106030^560^Fangflesh Belt
+106050^2308^Xantheos' Girdle of Honor
+103306^624^Archaic Plate Breastplate
+103320^632^Archaic Leather Tunic
+103313^538^Archaic Chain Coat
+103305^540^Archaic Plate Greaves
+103319^635^Archaic Leather Leggings
+103312^630^Archaic Chain Leggings
+132586^4659^Grydon's Blazing Sceptre
+132758^2310^Algid Conjurer's Mantle
+133818^874^Band of Minimal Effort
+51260^1191^Blackened Acrylia Blade
+25210^1165^Blade of Carnage
+133807^3058^Bloody Leather Loop
+133821^3688^Blue Belt
+6429^604^Bone Handled Scimitar
+132557^4672^Brazen Barricade
+132531^2855^Bruke's Fur Lined Cloak
+133813^2311^Cloak of Serenity
+62186^567^Copper Hammer of Striking
+132748^505^Corrupted Dragonthrall Bone Necklace
+133804^2593^Distorting Crystal Grimace
+133811^1220^Dredged Hide
+132544^2569^Elsrop's Signet Ring
+40204^518^Fighting Gauntlet
+135587^2590^Foreman's Spiked Bracer
+133816^1007^Forgotten Mojo
+133814^2962^Foul Breath of the Coronach
+25022^902^Frostbringer
+132514^770^Frostdweller's Face Warmer
+132526^642^Frostdweller's Shawl
+135599^1044^Galrok's Deceitful Resolve
+135591^1045^Galrok's Trick
+132518^756^Ghrek's Frost Band
+132731^2785^Glacierbane's Sparkler
+132525^769^Gloom Mane
+133806^1218^Hollowed Horn
+132740^1125^Hooked Horns
+132521^798^Ice Plate Shoulderguards
+132774^675^Infinity Loop
+133817^1625^Life Leech Tentacle
+32153^800^Mind Worm Fang
+132511^2876^Obscuring Pane
+9204^805^Ornate Rune Shield
+132543^880^Piceous Frost Band
+132552^1131^Pyrebeak's Scarred Eye
+133800^880^Resonating Ice Loop
+132573^731^Rixact's Gear of Crushing
+132759^842^Ry`Gorr Mortis
+132741^2616^Shimmering Veil
+132510^906^Slit Skull
+135595^1003^Smason's Heart
+24753^562^Spiked Seahorse Hide Belt
+132744^677^Steppewalker's Aspect
+25203^1170^Swiftblade of Zek
+62188^590^Sword of the Bloodsworn
+132582^4655^Sword of the Lone Tarot
+25195^800^The Horn of Hsagra
+133827^3091^Warm Wyvern Blood
+133801^1902^Whispering Compass
+120353^1616^Ring of Gibbering Madness
+120035^1893^Emerald Ring of Rot
+120324^2559^Emerald Earring of Rot
+120334^3218^Healer's Gorget of Aid
+120340^3206^The Watcher's Stitched Spaulders
+120361^533^Belt of Torture
+120344^2857^Dreadcloak of the Blackbone
+120325^1484^Donna's Tear of Lost Love
+120329^1652^Gohednugh's Mask of the Goat
+120159^3416^The Alpha's Claw
+120151^3530^Blade of Tortured Souls
+120160^3534^Dagger of Rotting Flesh
+120154^3518^Brutal Enforcer
+120150^3516^Axe of the Woodcutter
+120162^3410^Quilaztli's Cutlass
+120164^3524^Deadman's Battleaxe
+120356^1890^Ring of Restless Sleep
+120354^1891^Ring of the Fearborn
+120363^3303^Petrified Rat of Monster Slaying
+120343^840^Krupp's Drape of Exploration
+120332^1652^Whitepaw's Faceplate of Realized Nightmares
+120335^3220^Blood-Spattered Gorget
+120338^2316^Frost-Covered Pauldrons
+120360^564^Darnor's Belt of Ultimate Terror
+120016^643^Leaper's Silk Collar
+120012^1652^Faceguard of Turning Dreams
+120156^3520^Darkdreamer's Rod
+120030^615^Golden Band of the Traveler
+120017^668^Drape of the Ape
+120092^3195^Shield of Rituals
+120021^842^Cape of the Wailing Winds
+120349^3557^Ganborn's Rod of Curses
+120362^709^Clurg's Prized Stein
+120322^618^Leaf of Blackest Winter
+120350^520^Diggory's Ring
+120346^3515^Slightly Chewed Doll
+120171^3540^Gilded Bow of the Hunter
+120330^770^Zealot's Faceguard of Terrified Aggression
+120011^771^Putrid Gorilla Fur Mask
+120167^3537^Hammer of Greatness
+120320^619^Spectral Skull of the Fear
+120166^3525^Bouncer's Best Friend
+120169^3526^Fearful Spiked Knuckles
+120094^3420^Guard of Tangible Thoughts
+120337^668^Great Ape's Nape Drape
+120326^800^The Alpha's Adornment
+120153^3517^Jumping Axe
+120158^3519^Intricate Scarlet Rod
+120091^3422^Fearless Bulwark
+120026^3515^Badly Chewed Doll
+120323^1475^Shorn Tendril of Terror's Minion
+120341^2314^Poncho of Ultimate Pain
+120029^3557^Ganborn's Stick of Curses
+120040^1622^Belt of the Faithful Servant
+120039^1624^Belt of Dreamslaying
+120041^1627^Cinch of Braided Hair
+120043^2098^Orb of Undead Rites
+120027^3512^Whitened Totem
+120015^3219^Executioner's Choker
+120038^938^Girdle of the Feartouched Arachnid
+120009^2594^Fanciful Mask of Joyful Slaying
+120013^2487^Necklace of the Drowned
+120161^3523^Deathpoint
+120093^3421^Shield of Fangs
+120090^3588^Shield of Spiteful Dreams
+120157^3538^Scepter of Smashing
+120125^3136^Hook of Disemboweling
+120001^1619^Isabeaux' Loop of Dark Tidings
+120352^878^Watchful Ring
+120020^665^Tae Ew Stitched Spaulders
+120336^643^Silken Collar of the Jungle Arachnid
+120006^800^Tanglewolf Fang
+120007^715^Earring of Lethargic Rage
+120347^3512^Bleached Totem
+120032^877^Deadeye Ring
+120042^708^Grak's Crude Stein
+120163^3559^Dagger of the Devoted
+120018^3215^Steel Shoulders of Spite
+120022^842^Bloodstained Cloak
+120126^1879^Rattle of the Easily Amused
+120024^660^Dreadcloak
+120023^840^Explorer's Cape
+61219^1984^Antithesis of Fear
+17768^892^Planar Sewing Kit
+17947^1014^Spit
+57000^1986^Stone of Tranquility
+93699^1933^Folded Pack of Wirn's Armaments
+76549^1930^Folded Pack of Wirn's Plate
+76507^770^Summoned: Visor of Gobeker
+99809^1931^Folded Pack of Thalassic Armaments
+99807^1935^Folded Pack of Thalassic Plate
+76529^1931^Folded Pack of Frightforged Armaments
+76527^1935^Folded Pack of Frightforged Plate
+64977^1931^Folded Pack of Manaforged Armaments
+64975^1935^Folded Pack of Manaforged Plate
+57295^1930^Folded Pack of Spectral Armaments
+57293^1937^Folded Pack of Spectral Plate
+57276^770^Summoned: Visor of Vabtik
+85484^4147^Brightedge
+85492^6209^Imprint of the Enhanced Minion
+93698^1934^Folded Pack of Ioulin's Heirlooms
+28596^971^Summoned: Hand of Ixiblat
+57294^1938^Folded Pack of Enibik's Heirlooms
+76552^2244^Median Dreadmote
+76553^2241^Greater Dreadmote
+133909^630^Chain Leggings of the Stalker
+133910^538^Chain Tunic of Pestilence
+133907^625^Forseeing Chain Coif of the Stalker
+133906^1560^Hasteful Chain Treads
+133908^670^Bosquetreader's Chain Sleeves
+133918^637^Branded Servant's Reminders
+133904^620^Stalker's Poisonous Wristband
+133905^526^Frostchain Gloves of the Stalker
+133919^971^Ellithia's Hot Handwraps
+133921^1121^Sleeping Cap of Unrest
+133920^666^Herbed Slippers of the Botanist
+133924^2107^Gilded Riding Gown
+133916^655^Last Light Bolters
+132581^4694^Hissing Unsociable Blade
+132587^4696^Voiceless Hound Skean
+132522^668^Dexterous Shoulderguards
+132764^2242^Foul Soul of the Foreman
+132520^1648^Jeweled Locket
+135596^3210^Kreztik's Precognition
+132537^2876^The Prospector's Loot
+132508^2633^Glacier Giant's Guise
+132742^3678^Gemmed Bauta Mask
+133911^1590^Reinforced Bear Hide Bracer
+132536^3511^Cerebrum of the Pack
+132551^2307^Figment Scale Belt
+132534^2242^Rixact's Corrupted Soul
+132584^4695^Laconic Edged Pincer
+132737^1501^Black Vertebrae
+132771^880^Crystal Lurker Silk Band
+132541^1071^Rugged Silk Band
+132528^2310^Shivering Witch's Cloak
+132556^4702^Dreadful Visage
+132502^885^Squishy Spider Eye
+132595^4697^Silent Grimace
+132548^1623^Snow Cord
+132732^859^Dracnia's Focus
+132597^4668^Frozen Lunatic's Hammer
+132594^4665^Velium Knuckles of the Pit
+132777^1623^Dragon Scale Cincture
+132515^1883^Grydon's Shackle
+132778^3688^Snowflake Sash of the Tundra
+133914^641^Chilled Hide Helmet
+132524^3206^Alluring Drape
+132596^4667^Velium Staff of Obliteration
+132580^4654^Axe of Splitting Glaciers
+132588^4660^Velium Spike of Madness
+132598^4669^Bow of Nature's Caress
+132590^4662^Ry`Gorr Ceremonial Dagger
+132583^4663^Galrok's Stick
+132506^1642^Kyenka's Stud
+132765^2241^Stalwart Fear Amethyst
+132781^1488^Slagheart's Tail
+135594^1062^Veil of Anonymity
+132527^1383^Steadfast Spirited Backplate
+133831^1901^Spinning Note
+133810^668^Shoulderpads of Alertness
+132747^849^Ice Crystal Riviere
+132733^1901^Yetarr's Fine Dangle
+132546^533^Keldor's Ornate Girdle
+132503^675^Unending Loop of the Undead
+132535^2241^Chipped Amethyst
+132754^3236^Fey Swarm Shawl
+133809^1118^Kyenka's Tuned Spaulders
+133834^1118^Shaman Goliath's Spaulders
+132569^800^Smason's Bite
+132567^963^Moonstone of the Frozen Priest
+132739^2617^Visage of the Prophet
+132561^801^Fjeka's Fang
+145631^8107^Wither and Decay Plate Arms Ornament
+145630^8104^Wither and Decay Plate Chest Ornament
+145635^8106^Wither and Decay Plate Feet Ornament
+145633^8109^Wither and Decay Plate Hands Ornament
+145629^8103^Wither and Decay Plate Helm Ornament
+145634^8105^Wither and Decay Plate Legs Ornament
+145632^8108^Wither and Decay Plate Wrist Ornament
+135857^884^Unexpanded Tailored Transcendent Pack
+50438^2086^Elaborate Adept's Crystal
+50187^2109^Elaborate Defiant Breastplate
+50191^545^Elaborate Defiant Chain Boots
+50188^1589^Elaborate Defiant Chain Bracer
+50192^1612^Elaborate Defiant Chain Coif
+50190^1603^Elaborate Defiant Chain Gauntlets
+50194^1581^Elaborate Defiant Chain Leggings
+50195^1570^Elaborate Defiant Chain Tunic
+50189^1589^Elaborate Defiant Chain Wristguard
+50613^1534^Elaborate Defiant Claymore
+50607^1400^Elaborate Defiant Cutlass
+50605^1524^Elaborate Defiant Dragonrod
+50616^1384^Elaborate Defiant Heater
+50606^1541^Elaborate Defiant Kama
+50201^1597^Elaborate Defiant Leather Sleeves
+50197^1590^Elaborate Defiant Leather Wristguard
+50611^2282^Elaborate Defiant Minotaur Staff
+50179^2121^Elaborate Defiant Plate Bracer
+50182^2127^Elaborate Defiant Plate Gauntlets
+50186^2131^Elaborate Defiant Plate Greaves
+50184^2113^Elaborate Defiant Plate Helm
+50185^2117^Elaborate Defiant Plate Vambraces
+50181^2121^Elaborate Defiant Plate Wristband
+50180^2121^Elaborate Defiant Plate Wristguard
+50614^1379^Elaborate Defiant Recurve Bow
+50209^935^Elaborate Defiant Silk Cap
+50207^1607^Elaborate Defiant Silk Gloves
+50211^1578^Elaborate Defiant Silk Pantaloons
+50208^1562^Elaborate Defiant Silk Sandals
+50210^1598^Elaborate Defiant Silk Sleeves
+50205^1588^Elaborate Defiant Silk Wristband
+50204^1588^Elaborate Defiant Silk Wristguard
+50604^1804^Elaborate Defiant Spikemaul
+50082^1584^Rough Defiant Cloth Wristwrap
+50065^622^Rough Defiant Plate Vambraces
+50244^1599^Elegant Defiant Silk Sleeves
+50242^633^Elegant Defiant Silk Sandals
+50583^1244^Flawed Defiant Scale Shield
+50241^1605^Elegant Defiant Silk Gloves
+50544^1215^Rough Defiant Stone Dagger
+50620^2165^Elegant Defiant Sceptre
+50243^1121^Elegant Defiant Silk Cap
+50523^581^Simple Defiant Hammer
+50618^767^Elegant Defiant Nightstone
+50441^533^Elaborate Adept's Belt
+50437^840^Elaborate Adept's Cloak
+50198^1602^Elaborate Defiant Leather Gloves
+50571^951^Flawed Defiant Amberstone
+50126^1564^Flawed Defiant Chain Boots
+50124^1586^Flawed Defiant Chain Bracer
+50578^944^Flawed Defiant Orb
+50120^746^Flawed Defiant Plate Helm
+50570^1984^Flawed Defiant Quartz
+50154^1588^Intricate Defiant Chain Bracer
+50167^1596^Intricate Defiant Leather Sleeves
+50169^1571^Intricate Defiant Leather Tunic
+50148^2126^Intricate Defiant Plate Gauntlets
+50152^2129^Intricate Defiant Plate Greaves
+50172^1587^Intricate Defiant Silk Wristwrap
+132591^4663^The Frozen's Grudge
+133833^3214^Banescale Pauldrons
+132599^4670^Stygian Nightmare's Bow
+132753^665^Bubbling Shoulderpads
+132745^1883^Overseer's Bindings
+132500^1621^Onyx Crescent
+132560^1233^Sparking Scale
+132539^1890^Distorted Emblem
+133900^2116^Gift of the Caesar
+133899^2136^Resonating Boots of Aetemius
+133902^2132^Alacritous Greaves
+133903^624^Pestilent Breastplate
+133901^622^Vambrace of Salubritas
+133898^529^Bulky Grips of Aetemius
+133897^2124^Aetemius' Bracer
+132769^2976^Burdensome Pall
+120124^527^Terror Infused Linked Coat
+120123^1119^Terror Infused Battleskirt
+120121^1610^Terror Infused Linked Coif
+120120^1564^Terror Infused Linked Boots
+120122^1594^Terror Infused Linked Vambraces
+50081^1569^Rough Defiant Leather Tunic
+50056^558^Simple Defiant Cloth Sandals
+50033^516^Simple Defiant Plate Bracer
+50034^518^Simple Defiant Plate Gauntlets
+50018^632^Crude Defiant Chain Tunic
+50507^737^Crude Defiant Club
+50025^678^Crude Defiant Leather Tunic
+50005^671^Crude Defiant Plate Bracer
+50548^1163^Rough Defiant Trident
+50519^1959^Simple Defiant Alexandrite Shard
+50078^1611^Rough Defiant Leather Cap
+50069^1607^Rough Defiant Chain Gauntlets
+50044^622^Simple Defiant Chain Sleeves
+50040^620^Simple Defiant Chain Bracer
+50054^637^Simple Defiant Cloth Wristwrap
+50240^1589^Elegant Defiant Silk Wristwrap
+13778^551^Fine Lute Tuners
+2745^573^Venomous Axe of the Velium Brood
+152154^9201^Conflagrant Buckler
+5815^514^Earring of Cleansing
+5814^618^Earring of Purity
+29523^1156^Earth Mephit Blood
+10150^877^Moonstone Ring
+11625^973^Orb of Tishan
+153050^3628^Simple Work of the Sarnak Hero
+88921^778^Tome: Phantom Partisan Rk. II
+99923^7661^Military Dress Ornament
+87931^4554^Auburn Hero's Forge Chain Hands Ornament
+87924^4554^Auburn Hero's Forge Plate Hands Ornament
+87796^4612^Eternal Grove Cloth Helm Ornament
+87795^4616^Eternal Grove Leather Feet Ornament
+108940^7774^Troubadour Frock Ornament
+87742^4589^Valiant Cloth Hands Ornament
+87869^4556^Violet Hero's Forge Chain Helm Ornament
+87868^4560^Violet Hero's Forge Plate Feet Ornament
+87798^4613^Eternal Grove Cloth Arms Ornament
+87800^4617^Eternal Grove Cloth Hands Ornament
+87738^4584^Valiant Cloth Helm Ornament
+87743^4587^Valiant Cloth Legs Ornament
+87741^4586^Valiant Cloth Wrist Ornament
+87855^4569^Viridian Hero's Forge Cloth Chest Ornament
+50220^2130^Elegant Defiant Plate Greaves
+50219^2119^Elegant Defiant Plate Vambraces
+50119^1565^Flawed Defiant Plate Boots
+50218^2115^Elegant Defiant Plate Helm
+114864^1482^Prize: Familiar of Lightningcaller Vhalek
+114868^723^Prize: Ping's Protective Potion Pack
+101974^782^Prize: Springwork Spider
+101986^1233^Prize: Spore Curer Bait
+114930^723^Prize: Ping's Propagating Potion Package
+22823^1088^Emerald Dragon Scales
+27938^1104^Innard Strung Bone Bow
+22827^758^Tanglewood Shield
+26083^742^Two Tined Corpse Pitchfork
+29539^1091^Brick of Electrified Copper
+34032^730^Collapsed Gnomish Recharging Kit
+22533^1156^Ice Goblin Blood
+14942^1158^Hydrolyzed Ether
+21764^693^Metallic Substance
+9449^1063^Mask of the Hailstorms
+138993^10386^Suit of Windstalker's Mankind Cloth
+30885^965^Thunder Stone
+29912^956^Wind-Worn Stone
+50226^1613^Elegant Defiant Chain Coif
+50234^1609^Elegant Defiant Leather Cap
+118227^504^Spell: Blessing of the Heartwood Rk. II
+50141^933^Flawed Defiant Silk Cap
+50609^1427^Elaborate Defiant Flint Spear
+50624^1702^Elegant Defiant Dayblade
+50588^1348^Intricate Defiant Hammer
+50627^1672^Elegant Defiant Forked Spear
+50561^1326^Ornate Defiant Dagger
+50581^603^Flawed Defiant Emeraldblade
+50631^1388^Elegant Defiant Buckler
+50102^621^Ornate Defiant Chain Tunic
+50229^1568^Elegant Defiant Chain Tunic
+118867^504^Spell: Mark of the Pious Rk. II
+50237^1572^Elegant Defiant Leather Tunic
+50144^2107^Flawed Defiant Silk Robe
+50585^1248^Flawed Defiant Charm
+50567^976^Ornate Defiant Skullshield
+50584^1246^Flawed Defiant Carapace
+50143^1576^Flawed Defiant Silk Pantaloons
+50235^1598^Elegant Defiant Leather Sleeves
+50405^798^Intricate Combatant's Pauldrons
+50128^1594^Flawed Defiant Chain Sleeves
+50221^2111^Elegant Defiant Breastplate
+50246^931^Elegant Defiant Silk Robe
+50212^2108^Elaborate Defiant Silk Robe
+50137^1570^Flawed Defiant Leather Tunic
+50236^1581^Elegant Defiant Leather Trousers
+41348^633^Ornate Gnollish Leather Boots
+50233^633^Elegant Defiant Leather Boots
+50225^1567^Elegant Defiant Chain Boots
+50103^1587^Ornate Defiant Leather Bracer
+50222^1590^Elegant Defiant Chain Bracer
+50096^1587^Ornate Defiant Chain Bracer
+87663^4596^Bloodforged Plate Hands Ornament
+30110^800^Orc Fang Earring
+50155^1588^Intricate Defiant Chain Wristguard
+58422^6369^Buttered Tuna Souffle
+58375^6369^Beer-Battered Crab Souffle
+119770^3804^Prize: Tekko of the Vermilion Dragon Ornament
+34213^782^Tacky Silk
+13430^1012^Skewers
+97281^1135^Vergalid Clay
+37878^1920^Distillate of Spirituality IX
+44509^3081^Spider's Bite IX
+58431^6369^Garlic-Buttered Tuna Souffle
+85423^4803^Glowing Nose Ornament
+97277^1088^Basilisk Scale
+58467^6369^Beer-Battered Tuna Souffle
+58440^6369^Lemon-Buttered Tuna Souffle
+13099^782^Spiderling Silk
+34215^782^Thick Silk
+87835^4571^Viridian Hero's Forge Plate Arms Ornament
+46399^521^Blackfeather Noble's Ring
+46400^534^Blackfeather Noble's Earring
+8194^1020^Patty Melt
+46411^535^Earring of the Roost
+87688^4605^Sylvan Plate Helm Ornament
+87715^4609^Sylvan Cloth Feet Ornament
+87696^4604^Sylvan Chain Chest Ornament
+87714^4608^Sylvan Cloth Legs Ornament
+85425^4640^Snowman Head Ornament
+87690^4606^Sylvan Plate Arms Ornament
+19966^979^Faydwer Shaker
+46353^638^Florenta's Dress
+87691^4607^Sylvan Plate Wrist Ornament
+24083^1074^Golden Ember Powder
+97278^797^Leopard Intestines
+97283^1135^Steppes Ore
+97276^817^Steppes Reptile Meat
+87711^4606^Sylvan Cloth Arms Ornament
+16585^979^Ol'Tujim's Fierce Brew
+85421^4641^Santug Helper's Striped Cap Ornament
+46461^640^Mineral Encrusted Hood
+10023^952^Jade
+34897^2013^Natural Marrow
+19069^525^Campaigner's Blessed Boots
+44815^1159^Concentrated Grade AA Choresine Sample
+34911^1228^Superb Spinneret Fluid
+105563^2161^Bloodreaper
+11646^510^Amulet of Necropotence
+1624^838^Tolapumj's Robe
+164371^10100^Ice Encrusted Maul
+164346^3686^Ingenious Ice Encrusted Belt
+164375^10104^Ice Encrusted Devotional Staff
+164357^10086^Ice Encrusted Hammer
+164352^10081^Ice Encrusted Tower Shield
+164362^10091^Ice Encrusted War Hammer
+164377^10106^Ice Encrusted Compound Bow
+164368^10097^Ice Encrusted Athame
+164365^10094^Ice Encrusted Injection Dagger
+164361^10090^Ice Encrusted War Axe
+164355^10084^Ice Encrusted Sword
+164359^10088^Ice Encrusted Dagger
+164370^10099^Ice Encrusted Great Axe
+164373^10102^Ice Encrusted Great Sword
+164366^10095^Ice Encrusted Mace
+148942^3591^Guardian of Lost Hopes
+164374^10103^Ice Encrusted Battle Staff
+147415^5906^Enameled Box
+164391^10296^Minor Engraved Velium Rune
+164394^10299^Greater Engraved Velium Rune
+164393^10298^Median Engraved Velium Rune
+164392^10297^Lesser Engraved Velium Rune
+151903^9374^Median Clawed Tablet of the Ring of Scale
+151901^9375^Minor Clawed Tablet of the Ring of Scale
+36627^5836^Remnant of Tranquility
+67633^1937^Extraplanar Trade Satchel
+148950^8514^Bloodlaced Blade
+32557^1153^Vial of Prismatic Dye
+148442^6511^Extra Planar Potential Shard
+161746^5050^Ingenious Descending Moon Belt
+163586^2992^Velium Protector Source
+160789^9792^Primordial Noodles with Indigenous Primordial Meat
+160796^6414^Primordial Plasma Smoothie
+54447^3945^Scuffed Journeyman's Rucksack
+158301^9586^Minor Spellbound Lamp
+158302^9589^Lesser Spellbound Lamp
+158303^9588^Median Spellbound Lamp
+164395^10300^Glowing Engraved Velium Rune
+41172^725^Prescient Fleeting Quiver
+164231^10289^Minor Bloodmarked Velium Gem
+164234^10292^Greater Bloodmarked Velium Gem
+164232^10290^Lesser Bloodmarked Velium Gem
+164233^10291^Median Bloodmarked Velium Gem
+148901^6542^Golden Sage's Earring
+164376^10105^Ice Encrusted Arcane Staff
+164329^6586^Ice Encrusted Necklace of Adroitness
+164331^664^Ice Encrusted Amice of Adroitness
+164342^6569^Ice Encrusted Ring of Brilliance
+164348^5049^Vital Ice Encrusted Belt
+164337^10108^Ice Encrusted Idol of Brilliance
+164334^8165^Ice Encrusted Cloak of Brilliance
+164350^905^Ice Encrusted Charm of Brilliance
+164340^1722^Ice Encrusted Ring of Adroitness
+164322^6609^Ice Encrusted Earring of Vigor
+164324^8157^Ice Encrusted Earring of Brilliance
+164327^3681^Ice Encrusted Mask of Brilliance
+54448^3940^Scuffed Journeyman's Pocketed Rucksack
+164422^8617^Restless Sack
+50158^747^Intricate Defiant Chain Coif
+50156^531^Intricate Defiant Chain Gauntlets
+50159^1595^Intricate Defiant Chain Sleeves
+50587^1477^Intricate Defiant Crystal Shard
+50164^1603^Intricate Defiant Leather Gloves
+50591^1315^Intricate Defiant Scimitar
+50586^1438^Intricate Defiant Spotstone
+31596^555^Water Mephit Skin
+31448^555^Earth Mephit Skin
+72020^823^Ruined Murkglider Skin
+20615^895^Idol of the Wavecrasher
+4238^522^Sinew Tied Bone Earring
+19067^666^Rain Soaked Sandals
+132532^657^Shadow Web Shawl
+140182^5078^Belt of Silent Rage
+85491^1385^Bulwark of Many Portals
+152127^3209^Conflagrant Amice of Vigor
+152122^2549^Conflagrant Mask of Brilliance
+152121^3679^Conflagrant Mask of Vigor
+87965^3255^Crown of Clarity
+85486^6367^Ether-Fused Tea
+140217^7786^Fused Coral Claw
+140213^7782^Fused Coral Knife
+102983^2750^Glowing Sebilisian Boots
+102982^2749^Glowing Sebilisian Gloves
+102984^2753^Glowing Sebilisian Hat
+102986^2755^Glowing Sebilisian Leggings
+102985^2754^Glowing Sebilisian Sleeves
+102987^2727^Glowing Sebilisian Tunic
+102981^2748^Glowing Sebilisian Wristband
+89444^7554^Greater Briny Essence
+101046^1392^Lelluran's Scarred Longsword
+89442^7552^Lesser Briny Essence
+70342^3069^Median Alaran Cantrip
+81125^708^Merchant's Brew
+89441^7550^Minor Briny Essence
+83186^6635^Ring of the Next Era
+148431^1983^Sebilisian Brilliance
+133802^1652^Spiked Guard
+147253^6502^Courageous Hematite
+35923^702^Distillate of Skinspikes XIII
+152614^1978^Wrapped Conflagrant Gem of Brilliance
+152616^6465^Wrapped Conflagrant Gem of Striking
+88611^1168^Ornate Bonecrafted Sword
+50232^1607^Elegant Defiant Leather Gloves
+50601^2772^Intricate Defiant Charm
+50175^934^Intricate Defiant Silk Cap
+50170^1587^Intricate Defiant Silk Wristguard
+50551^970^Rough Defiant Chitin Shield
+22124^1076^Iron Oxide
+35085^2199^Curzon
+29770^817^Jord Meat
+140136^3210^Deepwalker Carapace Spaulders
+58272^830^Beer Braising Sauce
+35086^2207^Urticaceae
+50449^2235^Elegant Combatant's Shard
+44758^1236^Purified Grade B Nigriventer Venom
+36280^1075^Modest Binding Powder
+35084^2219^Lucidem
+79875^1884^Loop of the Ravaged
+140170^1620^Serpentil's Ring
+140155^5726^Slimy Tentacle
+34241^1095^Iridium Ore
+44770^1226^Concentrated Grade AA Gormar Venom
+96913^733^Exceptional Shade Essence
+119838^1365^Prize: Heavy Throwing Dagger
+114945^2623^Prize: Riftseeker Short Spear Ornament
+30192^601^Obsidianwood Bowstave
+36278^1075^Makeshift Binding Powder
+161311^9617^Secret Dawn Necklace of Security Muhbis
+22517^585^Drop of Mercury
+161301^6604^Summoner's Secret Dawn Earring Muhbis
+19972^854^Underfoot Mushroom
+44771^1226^Refined Grade A Gormar Venom
+44756^1236^Refined Grade A Nigriventer Venom
+96910^1157^Robust Lizard Man Blood
+24084^733^Dust of Decay
+51853^733^Darkmatter Dust
+76919^2224^Tainted Delphinium
+76915^2216^Tainted Larkspur
+76874^1226^Distilled Grade A Gormar Venom
+24092^1202^Autumn Crocus
+135313^905^Animal Fearbone
+36281^1075^Simple Binding Powder
+79874^1645^Havoc Loop
+50410^1624^Intricate Combatant's Belt
+164425^10258^Snowbound Refined Velium
+148944^8880^Lifecleaver
+50016^546^Crude Defiant Chain Sleeves
+50006^531^Crude Defiant Plate Gauntlets
+50014^1562^Crude Defiant Chain Boots
+50022^640^Crude Defiant Leather Cap
+50026^638^Crude Defiant Cloth Wristwrap
+50015^523^Crude Defiant Chain Coif
+50007^779^Crude Defiant Plate Boots
+50021^666^Crude Defiant Leather Boots
+50008^628^Crude Defiant Plate Helm
+50027^517^Crude Defiant Cloth Gloves
+50506^578^Crude Defiant Mace
+50238^1589^Elegant Defiant Silk Wristguard
+50100^1593^Ornate Defiant Chain Sleeves
+50501^1437^Crude Defiant Emerald
+50036^536^Simple Defiant Plate Helm
+50009^543^Crude Defiant Plate Vambraces
+50504^1431^Crude Defiant Stone Fragment
+50075^1586^Rough Defiant Leather Bracer
+66977^3085^Liquid Nightmare
+16865^716^Mechanized Lockpicks
+66980^556^Prowler Pelt
+32518^817^Mind Worm Meat
+101014^2310^Elladrial's Cloak of Shining Silk
+101514^2310^Elladrial's Scintillating Cloak
+118348^504^Spell: Ensorcelling Wave Rk. II
+118834^504^Spell: Armor of Unwavering Faith Rk. II
+85420^4642^Santug Helper's Cap Ornament
+85434^4855^Ebon Wizard Hat Ornament
+84654^4565^Old Beryl Hero's Forge Leather Wrist Ornament
+87694^4609^Sylvan Plate Feet Ornament
+44671^3099^Fighter's Bane IX
+44673^3099^Fighter's Bane XI
+44670^3099^Fighter's Bane VIII
+44696^3087^Monk's Bane XI
+44672^3099^Fighter's Bane X
+44659^3100^Messenger's Bane IX
+44658^3100^Messenger's Bane VIII
+44660^3100^Messenger's Bane X
+44695^3087^Monk's Bane X
+44644^3101^Myrmidon's Sloth IX
+44643^3101^Myrmidon's Sloth VIII
+44645^3101^Myrmidon's Sloth X
+44646^3101^Myrmidon's Sloth XI
+44629^3104^Quellious' Trauma IX
+44628^3104^Quellious' Trauma VIII
+44630^3104^Quellious' Trauma X
+44524^3085^Scorpion's Agony IX
+44631^3104^Quellious' Trauma XI
+44522^3085^Scorpion's Agony VII
+44526^3085^Scorpion's Agony XI
+44510^3081^Spider's Bite X
+44507^3081^Spider's Bite VII
+44683^3089^Warlord's Bane IX
+44681^3089^Warlord's Bane VII
+44682^3089^Warlord's Bane VIII
+44684^3089^Warlord's Bane X
+44685^3089^Warlord's Bane XI
+77510^501^Summoned: Crystal Belt
+46987^770^Summoned: Muzzle of Mowcha
+106677^8193^Adoptable Tortoise Shell Kitten
+106678^8194^Adoptable Sandy Calico Kitten
+106679^8195^Adoptable Gray Calico Kitten
+106680^8192^Adoptable Erudian Blue
+106681^8193^Adoptable Antonican Shorthair
+106682^8194^Adoptable Antonican Wirehair
+106683^8195^Adoptable Halasian Highlander
+109211^8861^Adoptable Chelsith Bengal
+109212^8827^Adoptable Alarian Grey Bobtail
+109213^8864^Adoptable Phase Puma
+109214^8865^Adoptable Karanas Lion
+109215^8825^Adoptable Overthere Tigress
+109216^8831^Adoptable Antonican Albino Lynx
+109217^8828^Adoptable Onyx Stone Tiger
+107962^8363^Adoptable Grey Wolf
+107963^8364^Adoptable Halasian Wolf
+107964^8365^Adoptable Antonican Wolf
+107965^8366^Adoptable Grey Frostfell Pup
+106971^8601^Adoptable Crag Chick
+106972^8600^Adoptable Borrower Hatchling
+106973^8603^Adoptable Timorous Parrot
+106974^8604^Adoptable Steppes Hawk
+106975^8601^Adoptable Majestic Eagle
+107984^8504^Adoptable Darkfell Gnoll Pup
+107985^8505^Adoptable Gnoll Reaver Pup
+107986^8506^Adoptable Direwind Gnoll Pup
+107987^8507^Adoptable Blackburrow Gnoll Pup
+107988^8508^Adoptable Splitpaw Gnoll Pup
+107989^8499^Adoptable Plush Ishva Mal
+107991^8502^Adoptable Plush Tranixx Darkpaw
+109476^8918^Adoptable Baby Reindeer
+109471^8926^Adoptable Abominable Snowman
+109472^8922^Adoptable Blizzard Tarantula
+109477^8924^Adoptable Frozen Fiend
+109473^8912^Adoptable Gigglegibber Goblin
+109474^8920^Adoptable Icy Serpent
+150562^8952^Adoptable Black Mamba
+150563^8948^Adoptable Blood Runed Gargoyle
+150561^8944^Adoptable Fourth Gate Vesper
+150560^8950^Adoptable Nektulos Araneidae
+106684^8192^Adoptable Midnight
+106685^8193^Adoptable Cranky Cat
+109218^8867^Adoptable Ruishi
+109219^8832^Adoptable Schrodinger
+107968^8369^Adoptable Santug's Grey Pup
+106977^8605^Adoptable Nightmare Raven
+106978^8609^Adoptable Flitter
+106979^8602^Adoptable Bentley
+107990^8500^Adoptable Plush Lord Elgnub
+107992^8503^Adoptable Plush Ergrez Shortpaw
+107993^8501^Adoptable Plush Fippy Darkpaw
+107971^8365^Adoptable Shadow
+109478^8910^Adoptable Boxxy
+109480^8916^Adoptable Festive Santug Claugg
+109475^8914^Adoptable Menagerie Golem
+109479^8908^Adoptable Snowbella
+87790^4611^Eternal Grove Leather Chest Ornament
+61407^3338^Curved Wood Crafted Bench
+7617^504^Spell: Spirit of Eagle
+7697^504^Spell: Jolting Blades
+7607^504^Spell: Mark of Retribution
+7679^504^Spell: Torrent of Fatigue
+7678^504^Spell: Torrent of Pain
+7616^504^Spell: Foliage Shield
+22505^946^Flawless Aquamarine
+68309^1203^Broken Hynid Claw
+19347^504^Spell: Gift of Xev
+61526^3338^Great Wood Hewn Chair
+77807^1159^Distillate of Health IX
+61618^3338^Padded Wood Carved Stool
+7219^577^Dragon Horn Ykesha
+50462^1622^Elegant Adept's Belt
+133935^625^Ornamental Chain Coif
+61226^530^Gauntlets of Dementia
+50458^839^Elegant Adept's Cloak
+13005^570^Iron Ration
+62112^772^Durable Silver Mask
+79896^769^Blessing of Agnarr
+127273^2438^Moonglow
+3345^580^Polished Chitin Blade
+40312^505^Bracelet of the Spiritcharmer
+101120^665^Bloodmoon Ritual Mantle
+61224^515^Ring of Lunacy
+13006^584^Water Flask
+62104^939^Woven Leaf Sash
+11941^1174^Finely Crafted Fer`Esh
+32974^1616^Dragon Touched Ring
+105515^665^Glimmerlight Amice
+50457^664^Elegant Adept's Hood
+152617^6464^Wrapped Conflagrant Gem of Devastation
+105616^668^Chitinous Shoulderpads
+101623^1616^Signate Ring of the Master Lifter
+50528^574^Simple Defiant Dagger
+22503^9644^Blue Diamond
+13976^922^Lettuce
+80177^682^Arcane Scroll of Suncrest
+15879^503^Belt of Dripping Bile
+45121^1351^Hammer of Silent Screams
+50630^1387^Elegant Defiant Round Shield
+32149^589^Centi Shortsword
+46538^639^Direwrought Silk Hood
+152613^1960^Wrapped Conflagrant Gem of Adroitness
+49882^545^Vanadium Chain Boots Template
+49894^524^Vanadium Plate Boot Template
+70001^840^Cape of Swirling Mist
+49871^625^Vanadium Chain Coif Template
+3309^769^Bloodstained Mantle
+49880^526^Vanadium Chain Gloves Template
+105513^677^Veil of Plagues
+40178^530^Gloves of the Fallen Spirit
+85199^3557^Warped Baton
+152177^9200^Conflagrant Compound Bow
+71185^1527^Dragorn Silver Broadsword
+100221^1586^Glossy Silk Wristband
+87281^669^Worn Scattercloud Armguards
+46236^634^Ichor Encrusted Hide Sleeves
+25084^771^Antlered Mask
+133936^670^Counter-Weighted Chain Sleeves
+152619^1943^Wrapped Conflagrant Intensity
+40047^634^Brined Armbands
+54749^734^Combine Stone
+1320^1126^Flowing Black Robe
+81117^1535^Scintillating Shard
+54741^791^Water Drake Wing
+89443^7553^Median Briny Essence
+152043^5369^Transcendent's Conflagrant Wristguard
+29538^1135^Brick of Nightmare Iron
+85288^641^Helm of Latent Ether
+35921^702^Distillate of Skinspikes XI
+29917^1232^Storm Rider Skin
+29280^592^Embalmers Skinning Knife
+11607^593^McVaxius` Horn of War
+41994^2708^Glowing Reis Wristband
+85286^636^Gloves of Latent Ether
+24488^1039^Mithril Champion Arrows
+20657^1186^Glowing Black Sword
+5660^580^Sarnak Skullsplitter
+46264^531^Gauntlets of the Watchtower
+125646^504^Song: Aria of Amelioration Rk. II
+125673^504^Song: Aura of Renewal Rk. II
+125691^504^Song: Fergar's Chant of Frost Rk. II
+125655^504^Song: Pulse of Renewal Rk. II
+125658^504^Song: Rumbling Barrier Rk. II
+125664^504^Song: Shiverback's Chant of Disease Rk. II
+125670^504^Song: Song of Recalcitrance Rk. II
+115380^504^Spell: Chillvapor Breath Rk. II
+22135^1233^Green Goblin Skin
+22522^1157^Iksar Blood
+81122^3290^Combat Spellbook
+44950^2198^Pristine Caladium
+76916^2198^Tainted Caladium
+72153^1073^Straggle Grass
+65431^1157^Minotaur Blood
+87785^4614^Eternal Grove Chain Wrist Ornament
+12776^1091^Gold Nugget
+138998^10393^Suit of Marnek's Mankind Leather
+133939^637^Tainted Bracers
+138996^10435^Suit of Marnek's Mankind Scalemail
+153514^6034^Velium Covered Awl
+153515^6778^Velium Covered Chisel
+86145^6837^Love Letter: Renter's Proposal
+86146^861^Love Letter: The Pen Is Mightier
+86147^784^Love Letter: Tasty First Date
+86148^6388^Love Letter: Closing Time
+86149^1004^Love Letter: Failed Attempt
+86150^869^Love Letter: Direct Offer
+86151^868^Love Letter: Sister Pranks
+86152^683^Love Letter: Growing Older
+81376^860^Conscription Notice
+81377^1570^Standard Armor
+97533^2015^Deadhills Stonework
+116678^1675^Rock Breaker
+116680^6745^Shaping Pick
+116681^3060^Measuring String
+116682^3371^Overgrowth Shears
+116683^8137^Cleaning Brush
+115313^504^Spell: Divine Destiny Rk. II
+115244^504^Spell: Sound of Resonance Rk. II
+116403^504^Spell: Vsorug's Presence Rk. II
+119796^3937^Prize: Building Block - Column - Draconic
+114916^2608^Prize: Tunarian Great Axe Ornamentation
+114872^2582^Prize: Rallosian Claw Ornamentation
+114918^2610^Prize: Tunarian Spear Ornamentation
+46495^596^Girdle of Rotting Flesh
+80176^560^Dark Belt of Fangs
+76332^3067^Planar Overdose
+122050^10330^Restless Ice Cloth Legs Ornament
+24596^1343^The Putrid Fish
+9758^6382^Qeynos Afternoon Tea
+93985^6276^Relic Fragment Figurine
+28756^678^Fungus Patch Vest
+50598^1856^Intricate Defiant Bow
+50582^1448^Flawed Defiant Longbow
+50574^1165^Flawed Defiant Longsword
+50556^1263^Ornate Defiant Bone Sledgehammer
+50531^1329^Simple Defiant Spear
+45945^3128^Unfired Ceramic Fist Ornament Mold
+50572^1265^Flawed Defiant Brawl Stick
+50049^780^Simple Defiant Leather Boots
+50505^1435^Crude Defiant Turquoise
+50138^1586^Flawed Defiant Silk Wristwrap
+50239^1589^Elegant Defiant Silk Wristband
+50580^1328^Flawed Defiant Lance
+50595^1783^Intricate Defiant Spiked Warhammer
+50596^1401^Intricate Defiant Trident
+50540^903^Rough Defiant Hammer
+50593^1187^Intricate Defiant Partisan Spear
+50617^1951^Elegant Defiant Goshenite
+50559^882^Ornate Defiant Gladius
+50532^568^Simple Defiant Greataxe
+152034^5288^Dread Suzerain's Conflagrant Greaves
+152022^5117^Forest Stalker's Conflagrant Wristguard
+152110^5121^Fury's Conflagrant Sleeves
+152033^5289^Dread Suzerain's Conflagrant Vambraces
+152031^5284^Dread Suzerain's Conflagrant Boots
+152453^9161^Conflagrant Diamond
+75975^749^Just the Stick
+153688^1213^Broken Great Staff
+72142^1005^Fishing Report, Day 79
+81417^1479^Righteous Defense
+72141^861^Guard Report, Unknown Date
+72143^2265^Menu
+153673^1225^Crystal Spider's Abdomen
+99566^6375^Cadaverous Carp
+150873^729^Lantern of Aalishai
+145539^4123^Stony Skean
+153676^5714^Crystal Spider's Fur
+153534^1568^Hoarfrost Tempered Vest
+153669^801^Crystal Spider's Mandible
+153674^1475^Crystal Spider's Spinneret
+153641^6793^Frozen Cheeseboard
+149214^6760^Shattered Vial
+99684^6182^Aqua Patterned Throw
+88707^2043^Opaque Crimson Teir`Dal Tonic
+153656^2271^Page 333 of Embalmer's Tomb
+153662^8140^Ectoplasm Covered Quill
+149181^2446^Brightflower
+88597^1943^Jewel of Neriak's Heart
+99589^6256^Golden Clypeasteroida
+153527^1075^Frost Imbued Handkerchief
+99645^6170^Gastric Bleached Sand
+153526^5696^Frost Imbued Tizmak Hoof
+153529^2139^Frost Imbued Vertebrae
+153525^800^Frost Imbued Wurm Claw
+99532^6251^Glimmering Seashell
+150870^6803^Piece of Aalishai Brass
+153536^666^Hoarfrost Tempered Clogs
+76587^6418^Sausage
+99659^2446^Stone Flower
+153540^8162^Hoarfrost Tempered Scarf
+153558^757^Bronze Orc Earring
+153569^675^Frozen Orc Armor Ring
+153589^782^Frozen Crystal Spider Silk
+153573^5976^Black Blank Emblem
+153519^5896^Ice-Encased ID Badge - E031699
+153585^1472^Thickened Tentacle
+153517^5894^Ice-Encased ID Badge - K031688
+153583^907^Pulverized Spider Leg
+153518^5895^Ice-Encased ID Badge - S061783
+153581^794^Spider Leg Cluster
+154128^1497^Frozen Draconic Tome Vol. 4
+153685^903^Shattered Hammer
+153622^5744^Frozen Giant's Toe
+153481^5744^Frozen Coldain Fingernail
+153628^917^Frozen Direwolf Eye
+153621^924^Frozen Giant's Nose
+153477^5745^Frozen Giant Toenail
+116688^782^Tuft of Dried Drachnid Silk
+153625^5695^Frozen Direwolf Paw
+153609^1032^Broken Blade Tips
+77377^910^Venomshell Wing
+153692^551^Stringless Lute
+153671^5729^Crystal Spider's Eye
+153670^5713^Crystal Spider's Leg
+153672^5720^Crystal Spider's Cephalothorax
+153675^5715^Crystal Spider's Claw
+153535^670^Hoarfrost Tempered Cuffs
+153539^838^Hoarfrost Tempered Smallclothes
+88665^2275^Prayer to Cazic-Thule
+99578^6188^Temple Shaper's Robe Threads
+153537^632^Hoarfrost Tempered Undershirt
+99568^6377^Inanimate Angelfish
+153538^641^Hoarfrost Tempered Ushanka
+153533^635^Hoarfrost Tempered Britches
+99638^5938^Blue Mite
+99637^5940^Grey Biter
+99641^5946^Stinging Insect
+99635^5936^Red Nibbler
+99639^5941^Red Biter
+99636^5937^Yellow Nibbler
+99634^5939^Red Mite
+99640^5947^Black Sting
+81412^1235^Spiked Shackles
+153508^6483^Shard of Restless Ice
+153505^804^Restless Ice Smeared Bone Chip
+153504^2015^Restless Ice Glazed Stone Chip
+153502^1438^Restless Ice Rimed Stone
+153507^8625^Restless Ice Enveloped Tile
+153503^6250^Restless Ice Encrusted Seashell
+153501^795^Restless Ice Covered Twig
+99542^2169^Shissar Shield
+99619^6794^Petrified Wood Shard
+72386^1621^Tendril Ring
+153506^1431^Restless Ice Blanketed Paver
+153571^6615^Frozen Gold Orc Earring
+99563^6372^Stilled Smelt
+99553^6698^Katta Castrum Guard Emblem
+153566^503^Large Frozen Orc Belt Buckle
+153568^640^Frozen Orc Skullcap
+153565^620^Frozen Orc Wristlet
+99564^6373^Rotting Rockfish
+101021^500^Adornment of Frenzy
+10236^502^Circled Toe Bones
+50511^776^Crude Defiant Spear
+22965^1367^Defenders Lightblade
+70139^1152^Dragorn Wardrum
+50612^1529^Elaborate Defiant Poleaxe
+101002^626^Felmight Gorget
+70233^521^Infernal Ring of Regrowth
+5816^575^Sarnak Backstabber
+7959^1180^Shissar Ulak
+70120^1048^Silverine Earring
+87716^7002^Sylvan Cloth Robe Ornament
+114898^723^Prize: Ping's Penetrating Potion Pack
+110370^1889^Prize: Signet of Anashti Sul
+107946^7771^IceSy Robe of Permafrost Ornament
+149734^9326^Militant's Iksar Ringmail Wrist Ornament
+149733^9325^Militant's Iksar Ringmail Arms Ornament
+149735^9327^Militant's Iksar Ringmail Hands Ornament
+149737^9329^Militant's Iksar Ringmail Feet Ornament
+149731^9323^Militant's Iksar Ringmail Helm Ornament
+149736^9328^Militant's Iksar Ringmail Legs Ornament
+149732^9324^Militant's Iksar Ringmail Chest Ornament
+87843^4572^Viridian Hero's Forge Chain Wrist Ornament
+87846^4574^Viridian Hero's Forge Chain Feet Ornament
+87782^4612^Eternal Grove Chain Helm Ornament
+87787^4615^Eternal Grove Chain Legs Ornament
+87789^4612^Eternal Grove Leather Helm Ornament
+161422^8619^Hickory Battleworn Sack
+124630^2974^Abu-Kar's Arcane Solution
+141449^6580^Brigand's Silver Pendant
+93895^7143^Caedes
+93892^7124^Cisum
+11621^658^Cloak of Flames
+93893^7127^Ferio
+140231^7800^Fused Coral Bow
+93883^6545^Legatus Band
+93886^5062^Legatus Girdle
+93865^6606^Legatus Stud
+93900^7175^Secare
+93894^7141^Tritum
+135827^565^Unexpanded Tailored Transcendent Backpack
+46289^533^Girdle of the Foreboding Heart
+101005^720^Felmight Fetish
+46551^661^Windstill Chain Cloak
+71128^842^Tainted Cloak of Treachery
+88555^5738^Delicately Preserved Remains
+119333^504^Spell: Talendor's Presence Rk. II
+97001^1505^Prestidigitase
+152128^3206^Conflagrant Amice of Security
+152164^9190^Conflagrant Battle Rod
+152135^6259^Conflagrant Idol of Vigor
+152166^9186^Conflagrant Mace
+152120^772^Guardian's Conflagrant Mask
+152089^5380^Arch Convoker's Conflagrant Sleeves
+152085^5369^Arch Convoker's Conflagrant Wristguard
+152087^5375^Arch Convoker's Conflagrant Sandals
+152090^5379^Arch Convoker's Conflagrant Pants
+152168^9188^Conflagrant Athame
+152098^930^Coercer's Conflagrant Robe
+152095^5378^Coercer's Conflagrant Cap
+152093^5377^Coercer's Conflagrant Gloves
+152096^5380^Coercer's Conflagrant Sleeves
+152092^5369^Coercer's Conflagrant Wristguard
+152094^5375^Coercer's Conflagrant Sandals
+152097^5379^Coercer's Conflagrant Pants
+152133^6258^Conflagrant Idol of Brilliance
+50193^1596^Elaborate Defiant Chain Sleeves
+76554^2246^Glowing Dreadmote
+120355^675^Twisted Ring of Madness
+71178^757^Earring of Coalesced Mana
+87778^4614^Eternal Grove Plate Wrist Ornament
+87780^4615^Eternal Grove Plate Legs Ornament
+87802^4616^Eternal Grove Cloth Feet Ornament
+21954^958^Alkaline Etched Stone
+29346^1157^Bubonian Blood
+96445^705^Distillate of Regeneration VI
+51503^951^Bar of Nashtar Berry Soap
+54349^905^Splintered Discordling Bone
+51507^1140^Spool of Balemoon Silk
+77765^968^Discordant Crystal Shard
+51493^1495^Ikaav Head
+51491^554^Shattered Ukun Hide
+51487^1439^Large Piece of Kuuan Ore
+51461^861^Muramite Ritual Scroll
+50448^657^Elegant Combatant's Cloak
+88639^3001^Ornamental Bixie Shield
+88609^1425^Ornamental Guard Halberd
+153289^9907^Couture Clockwork Leather Hands Ornament
+85430^4860^Green Leaf Wizard Hat Ornament
+153279^9890^Couture Clockwork Chain Chest Ornament
+149115^8806^Lcea Katta Plate Hands Ornament
+153275^9914^Couture Clockwork Plate Hands Ornament
+149122^8799^Lcea Katta Chain Hands Ornament
+87681^4590^Bloodforged Cloth Chest Ornament
+85432^4872^Skull Charm Wizard Hat Ornament
+85437^4856^Beryl Wizard Hat Ornament
+87671^4594^Bloodforged Chain Legs Ornament
+119815^3690^Prize: Dragon Embossed Belt
+119775^1890^Prize: Dragonflame Ring
+119738^2192^Prize: Drake of Pure Nature
+119753^1644^Prize: Emblem of Druushk
+110330^528^Prize: Roadyle's Mask
+118036^504^Spell: Mark of the Unsullied Rk. II
+119169^504^Spell: Feralization Rk. II
+116762^2460^Gradual Interrogator
+149295^5834^Ancient Silver Coin
+19305^504^Spell: Servant of Bones
+116925^2394^Twirling Flight Gauge
+118667^778^Tome of Chrono Projection Rk. II
+149238^5882^Jarsath Engraved Copper
+59983^1462^Minor Muramite Rune
+116922^2364^Self-Lubricating Clutch Switcher
+149240^5885^Nathsar Engraved Copper
+116919^6666^Mono-Valve Spinninator
+59985^1464^Muramite Rune
+149241^5864^Sebilisian Imperial Gold
+149237^5861^Kunzar Engraved Copper
+149263^6838^Torn Weathered Parchment
+116233^504^Spell: Vestax's Spear of Venom Rk. II
+71020^663^Aged Silver Splinted Cloak
+116923^5079^Copper-Melded Faceplate
+70129^549^Drakeguard Girdle
+116918^2370^Servo Actuator
+116924^2304^Visual Enhancement Orb
+116921^2418^Mana-Infused Springatron
+119025^778^Tome of Smokescreen Rk. II
+118777^504^Spell: Mind Decomposition Rk. II
+70131^657^Blacklink Cape
+149261^6828^Frayed Muslin Patch
+46249^1368^Bonehilt Dagger
+8776^626^Large Smoothmetal Torque
+149294^5816^Ancient Lead Coin
+70210^850^Warped Choker of Enslavement
+144950^504^Scroll: Illusion: Thaell Ew
+50206^1588^Elaborate Defiant Silk Wristwrap
+19277^504^Spell: Bane of Nife
+149236^5890^Obulus Engraved Copper
+103263^2030^Ancient Sarnak Bones
+27109^779^Worked Dragonhorn Boots
+149242^5821^Broken Chelsith Silver
+149299^5892^Ancient Steel Coin
+149264^790^Tattered Baby Sling
+149260^6381^Broken Ceramic Cup
+149243^5787^Wooden Slave Coin
+71167^1124^Frayed Cap of Patience
+149293^5809^Ancient Copper Coin
+149278^5970^Green Golden Death's Head Medal
+149239^5898^Kylong Engraved Copper
+116761^1533^Master's Mercy
+99692^1861^Expert's Lost Tool
+149266^6281^Tiny Carved Shissar
+149265^3252^Wooden Cazic Idol
+149279^5971^Red Golden Death's Head Medal
+149298^5850^Ancient Brellium Coin
+149290^6179^Magic Dust
+149262^891^Dusty Metal Spoon
+149267^751^Splintered Wooden Recorder
+149281^5973^Silver Death's Head Medal
+149286^6166^Scale Dust
+149283^6012^Bloodbathed Deathblade Medal
+149288^6168^Gold Dust
+116920^2333^Multi-Tooth Smoothing Gear
+127262^4073^Ancient Alaran Shield
+148908^2594^Bard's Golden Mask
+83442^1048^Icesliver Jewel
+148926^8562^Blade of Defense
+60759^3120^Extravagant Infused Recurve Bow
+148924^8565^Blade of Protection
+148965^8529^Bloodlaced Bow
+148914^6644^Collector's Heirloom Necklace
+93902^7188^Bruma
+27258^510^Zlandicar's Talisman
+26009^1003^Zlandicar's Heart
+132566^1944^Vitalizing Stone
+148943^8894^Tower of Sebilis
+93889^7211^The Blue Tower
+148959^8891^Taka, Slayer of Dragons
+148938^1468^Symbol of the Dragon's Scale
+148916^3210^Swift Pauldron
+148958^8883^Staff of the Shai'din
+148907^1063^Soldier's Golden Mask
+148955^8578^Skywrack
+148952^8582^Skyripper
+148949^8571^Skypiercer
+148940^8584^Skyiron Kite
+148941^8585^Skyiron Heater
+148954^8572^Skygouger
+93896^7140^Sentio
+11604^1169^Scimitar of the Mistwalker
+148910^3678^Sage's Golden Mask
+148929^508^Rogue's Golden Ring
+101984^3362^Prize: Nimbus of Fire and Ice
+101992^3364^Prize: Crystalline Shield Nimbus
+93901^7163^Percutio
+132564^1133^Pakjol's Appetite for Destruction
+128501^3692^Mysterious Belt of Daggers
+148928^1040^Minstrel's Golden Ring
+22816^1244^Lodizal Shell Shield
+127272^2904^Krucidon's Inverted War Charm
+148930^6626^Knight's Golden Ring
+132571^3182^Ire of Reivaj
+132565^1234^Inflexible Scale
+96907^1156^Hearty Goblin Blood
+148917^3216^Guardian's Pauldron
+148920^840^Grey Cloak
+148903^6607^Golden Soldier's Stud
+148913^8160^Golden Soldier's Neck Guard
+148934^5055^Golden Soldier's Belt
+148904^1640^Golden Rogue's Crescent
+148935^5056^Golden Knight's Belt
+140230^7799^Fused Coral Longbow
+93975^6646^Forgotten Relic Necklace
+93890^7204^Emerald Aegis
+148956^8519^Edge of the Di`Zok
+148921^841^Dust Cloak
+114917^2609^Prize: Tunarian Dagger Ornamentation
+12781^507^Ice Dragon Crystal
+52664^1816^Summoned: Icefall Icicle
+101619^1218^Jon E's Control Device
+10037^966^Diamond
+34248^1095^Titanium Ore
+135314^1477^Fractured Shard
+9757^1029^Fermented Yarrow
+9644^694^Soda Water
+36286^1075^Ornate Binding Powder
+34249^1135^Tantalum Ore
+10012^767^Black Pearl
+97002^1503^Staurolite
+15981^966^Raw Diamond
+44760^1236^Purified Grade AA Nigriventer Venom
+48162^1135^Vanadium Ore
+44775^1226^Purified Grade AA Gormar Venom
+36285^1075^Elaborate Binding Powder
+97003^1506^Harmonagate
+47102^2019^Brell's Bounty
+34243^1135^Rubicite Ore
+24086^696^Deepwater Ink
+34242^1138^Fulginate Ore
+97286^1506^Taaffeite
+12487^507^Fire Dragon Crystal
+12783^507^Wind Dragon Crystal
+50061^1584^Rough Defiant Plate Bracer
+50202^1583^Elaborate Defiant Leather Trousers
+164296^3085^Scorpion's Agony XX
+152157^3519^Conflagrant Rod
+148575^6610^Soother's Extravagant Earring
+163145^10021^Thosgromri's Glacial Axe
+152054^5289^Maestro's Conflagrant Vambraces
+140109^2593^Reefmaw Carapace Mask
+120008^1032^Shards of the Jungle Sentinel
+152050^5285^Maestro's Conflagrant Bracer
+152053^5287^Maestro's Conflagrant Helm
+152056^5283^Maestro's Conflagrant Breastplate
+152055^5288^Maestro's Conflagrant Greaves
+152051^5286^Maestro's Conflagrant Gauntlets
+148578^5060^Soother's Extravagant Belt
+132513^2593^Crystal Visor
+114888^2585^Prize: Draconic Great Hammer Ornamentation
+132540^2568^Enlightening Chaos Band
+44691^3103^Archer's Bane XII
+44690^3103^Archer's Bane XI
+44663^3100^Messenger's Bane XIII
+44697^3087^Monk's Bane XII
+44674^3099^Fighter's Bane XII
+44508^3081^Spider's Bite VIII
+44686^3089^Warlord's Bane XII
+44527^3085^Scorpion's Agony XII
+34211^782^Coarse Silk
+50030^670^Crude Defiant Cloth Sleeves
+19303^504^Spell: Levant
+93505^705^Vellum Parchment Solution
+87283^635^Worn Scattercloud Leggings
+50315^662^Crude Adept's Cloak
+19384^504^Spell: Dementia
+61420^3338^Reinforced Wood Crafted Chair
+30406^504^Spell: Improved Invisibility
+61592^3338^Hefty Wood Carved Bench
+30411^504^Spell: Improved Invis vs. Undead
+30422^504^Spell: Translocate
+14721^960^Essence of Dol
+50012^1235^Crude Defiant Chain Bracer
+26728^798^Cracked Ornamental Epaulet
+50031^631^Crude Defiant Cloth Pantaloons
+46542^1179^Twin-Edged Razorfist
+30472^504^Spell: Burnout IV
+30409^504^Spell: Gift of Insight
+142023^1591^August Bloodpact Armband
+141935^1561^August Bloodpact Boots
+141847^1573^August Bloodpact Cuirass
+142067^1604^August Bloodpact Gloves
+141891^1578^August Bloodpact Greaves
+142111^1611^August Bloodpact Helm
+141979^1596^August Bloodpact Sleeves
+139691^1533^August Infused Blade Whip
+139692^3033^August Infused Knuckle Blade
+139693^3519^August Infused Wrapped Rod
+101054^1334^Bejeweled Parrypoint
+50316^889^Crude Adept's Broom
+50304^668^Crude Combatant's Shoulderpads
+50032^928^Crude Defiant Cloth Robe
+101058^1429^Dawnlight Fistwraps
+101050^1359^Flail of Redemption
+101029^1062^Flametouched Mask
+101532^658^Moonfire Cape of Ages
+87679^4595^Bloodforged Leather Feet Ornament
+101505^720^Badge of the Resolute Defender
+116346^778^Tome of Armor of Draconic Runes Rk. II
+70115^852^Articulated Battleleader Gorget
+71129^972^Crystal Shield of Remembrance
+70141^674^Blacklink Band
+50603^948^Elaborate Defiant Coldstone
+71133^517^Desecrated Gloves of Order
+132507^1227^Twitching Snood
+32981^1622^Waistwrap of Grieg's Faithful
+50602^960^Elaborate Defiant Fire Bauble
+50599^760^Intricate Defiant Hammered Buckler
+50594^1486^Intricate Defiant Handwraps
+70174^628^Dented Draconian Helm
+71125^674^Ring of Coalesced Hatred
+50160^1577^Intricate Defiant Chain Leggings
+50597^1286^Intricate Defiant Greatsword
+46493^1002^Reinforced Green Legion Neckguard
+50162^1589^Intricate Defiant Leather Bracer
+50589^1325^Intricate Defiant Mace
+50151^2118^Intricate Defiant Plate Vambraces
+85285^637^Bracer of Latent Ether
+71161^1408^Scarred Shield of the Stalwart
+50131^1588^Flawed Defiant Leather Bracer
+50135^1595^Flawed Defiant Leather Sleeves
+87670^4596^Bloodforged Chain Hands Ornament
+71062^620^Muramite Chain Bracer of Battle
+87661^4592^Bloodforged Plate Arms Ornament
+50579^1378^Flawed Defiant Quarterstaff
+71063^932^Muramite Leather Band of Conflict
+71053^536^Muramite Plate Helmet of War
+31503^838^Netted Kelp Tunic
+68318^528^Painted Primal Mask
+50073^611^Rough Defiant Chain Leggings
+76892^3076^Bite of the Shissar XVIII
+50227^1597^Elegant Defiant Chain Sleeves
+50245^1579^Elegant Defiant Silk Pantaloons
+50473^2308^Extravagant Combatant's Belt
+114893^2590^Prize: Draconic Fist Ornamentation
+114895^2601^Prize: Familiar of Zi-Thuuli, the Granite Claw
+114855^2146^Prize: Legendary Norrathian Standard
+114926^2275^Prize: Title of the Hero of the Oathbound
+46332^633^Stained Snakeskin Boots
+46338^1806^Dromrek Billy Club
+70195^524^Boots of Slaughter
+152528^3099^Acidic Abrasive
+50029^938^Crude Defiant Cloth Cap
+50028^761^Crude Defiant Cloth Sandals
+50534^676^Simple Defiant Kite Shield
+50514^776^Crude Defiant Greatspear
+50512^971^Crude Defiant Fists
+22711^522^Busy Bee Dry Fly
+22704^522^Giant Bloodsucker Dry Fly
+22709^522^Jelly Bandit Dry Fly
+22707^522^Purple Trickster Dry Fly
+22731^522^Screeching Dry Fly
+22726^522^Shimmering Gossamer Circle Fly
+22708^522^Shimmering Gossamer Dry Fly
+22723^522^Small Bloodsucker Circle Fly
+22705^522^Small Bloodsucker Dry Fly
+22724^522^Yellowjacket Circle Fly
+22706^522^Yellowjacket Dry Fly
+44518^3085^Scorpion's Agony III
+44519^3085^Scorpion's Agony IV
+44520^3085^Scorpion's Agony V
+13437^6712^Muffin Tin
+13438^1013^Pie Tin
+78261^504^Spell: Beast's Beckoning Rk. II
+79892^663^Blackened Ukun Hide Cloak
+105547^1414^Squalid Fetish
+70155^613^Dragorn Commoner's Ring
+46401^1150^Studded Harpy's Belt
+138928^9527^Suit of McDaniel's Northman Scalemail
+3217^526^Kylong Gauntlets
+1607^714^Siren Scale Robe
+24736^661^Ancient Seahorse Hide Cloak
+10383^822^Rod of Oblations
+50577^1368^Flawed Defiant Dagger
+50386^1860^Flawed Combatant's Hoe
+48149^865^The Green Fog
+72050^1423^Damaged Muramite Battle Blade
+20656^1130^Eye of Innoruuk
+50309^564^Crude Combatant's Belt
+50165^844^Intricate Defiant Leather Boots
+50166^641^Intricate Defiant Leather Cap
+50168^1582^Intricate Defiant Leather Trousers
+50163^1589^Intricate Defiant Leather Wristguard
+93882^7203^Centurio Knife
+93877^5071^Legatus Cloak
+50174^1560^Intricate Defiant Silk Sandals
+50113^939^Ornate Defiant Cloth Cap
+50115^655^Ornate Defiant Cloth Pantaloons
+71173^619^Sickly Glowing Earring
+70085^620^Tarnished Dragorn Bracer
+40218^1072^Thorn Necklace
+68302^620^Gnarled Mesh Bracer
+71022^515^Golden Ring of Lightning
+50142^1596^Flawed Defiant Silk Sleeves
+120031^880^Crystallized Ooze Ring
+64918^863^Smudged Runic Spell Tablet
+76294^863^Sooty Numen Plaque
+64919^863^Stained Fine Runic Spell Tablet
+76296^863^Smudged Runic Numen Plaque
+76320^863^Stained Fine Runic Orphic Card
+112607^2891^Exotic Spinneret Fluid
+76295^863^Sooty Fine Numen Plaque
+76920^1502^Energized Gemstone
+64756^3229^Rustic Stole of Argath
+64753^2580^Rustic Headdress of Argath
+50787^1357^Ancient Spellbook
+76318^863^Sooty Fine Orphic Card
+64750^812^Rustic Wristwraps of Argath
+67645^2887^Extraplanar Silk
+50459^2243^Elegant Adept's Shard
+101117^1723^Shiny Trinket
+87640^4579^Noble Chain Wrist Ornament
+72351^2241^Small Glowing Fear Shard
+87272^1121^Woven Crescent Hood
+46244^770^Mask of Snake Leather
+87268^779^Reinforced Incendiary Boots
+127315^4053^Rod of the Shieldbearer
+76316^863^Smudged Rough Orphic Card
+50502^1941^Crude Defiant Ruby Shard
+50176^1597^Intricate Defiant Silk Sleeves
+50171^1587^Intricate Defiant Silk Wristband
+119801^1644^Prize: Dragon-Marked Amulet
+64915^863^Smudged Rough Spell Tablet
+118140^504^Spell: Purified Blood Rk. II
+118018^504^Spell: Order of the Devout Rk. II
+76322^2101^Planar Energy Shard
+64917^863^Sooty Fine Spell Tablet
+76297^863^Stained Fine Runic Numen Plaque
+118066^504^Spell: Armor of the Devout Rk. II
+118540^504^Spell: Fickle Blaze Rk. II
+119416^504^Spell: Thricewoven Energy Rk. II
+118121^504^Spell: Word of Recovery Rk. II
+118927^504^Spell: Heartshear Rk. II
+116613^2318^Primitive Sarnak Cogworks
+116607^3057^Goblin Tally Counter
+45985^2055^Tonic of Resonant Toxin XII
+61216^1962^Green Crystallized Essence
+6638^567^Truncheon of Doom
+5159^1184^Kunzar Ku'juch
+6692^559^Smoldering Brand
+41393^567^Lost Tae Ew Hammer of Aggression
+72652^1431^Boneflow Stone
+72656^948^Skyflow Stone
+85483^6047^Tavon's Polished Gemstone
+4553^516^Mrylokar's Bracer
+4577^524^Elder Spiritist's Boots
+4573^622^Elder Spiritist's Vambraces
+4530^624^Jaundiced Bone Breastplate
+4529^746^Jaundiced Bone Helm
+46535^518^Direwrought Plate Gauntlets
+25026^636^Coldain Skin Gloves
+70208^663^Shroud of the Fallen Defender
+65562^935^Ribbon of Empathy
+17359^557^Rallic Pack
+11585^1244^Shield of the Red Dragon
+4563^524^Singing Steel Boots
+85490^6049^Tavon's Burnished Gemstone
+7223^776^Slime Coated Harpoon
+6621^737^Ykeshan War Club
+7222^574^Sebilite Croaking Dirk
+70199^531^Iron Gauntlets of Ruin
+5661^1168^Jagged Blade of Mourning
+105534^501^Living Bone Gorget
+9678^1177^Mistletoe Cutting Sickle
+9689^709^Opal Encrusted Stein
+25204^1168^Reaver
+25980^1356^War Marshall's Bladed Staff
+25098^973^Orb of the Infinite Void
+16294^683^Ornate Chain Glove Pattern
+25200^1044^Wrist Guard of Thunder
+24991^633^Othmir Fur Moccasins
+87668^4592^Bloodforged Chain Arms Ornament
+87676^4593^Bloodforged Leather Wrist Ornament
+120351^1617^Ring of the All Seeing Eye
+115076^504^Song: Rhythm of Restoration Rk. II
+115097^504^Spell: Falrazim's Gnashing Rk. II
+115241^504^Spell: Solemn Light Rk. II

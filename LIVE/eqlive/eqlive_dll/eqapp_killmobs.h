@@ -78,7 +78,7 @@ void EQAPP_KillMobs_Load()
     if (playerSpawn != NULL)
     {
         std::string playerName = EQ_GetSpawnName(playerSpawn);
-        if (playerName.size() != 0)
+        if (playerName.empty() == false)
         {
             std::stringstream folderFileName;
             folderFileName << "killmobs/" << zoneShortName << "_" << playerName << ".txt";
@@ -104,7 +104,7 @@ void EQAPP_KillMobs_Load()
 
 void EQAPP_KillMobs_Execute()
 {
-    if (EQAPP_Timer_HasTimeElapsed(g_KillMobsTimer, g_KillMobsTimerInterval) == false)
+    if (EQAPP_Timer_HasTimeElapsedInSeconds(g_KillMobsTimer, g_KillMobsTimerInterval) == false)
     {
         return;
     }
@@ -162,7 +162,7 @@ void EQAPP_KillMobs_Execute()
         }
 
         std::string targetName = EQ_GetSpawnName(targetSpawn);
-        if (targetName.size() != 0)
+        if (targetName.empty() == false)
         {
             std::string targetName2 = "*" + targetName;
 
@@ -189,7 +189,7 @@ void EQAPP_KillMobs_Execute()
             if (zoneID == EQ_ZONE_ID_LAKEOFILLOMEN)
             {
                 std::string followSpawnName = EQ_GetSpawnName(g_FollowAISpawn);
-                if (followSpawnName.size() != 0)
+                if (followSpawnName.empty() == false)
                 {
                     if (EQAPP_String_Contains(followSpawnName, "sarnak courier") == false)
                     {
@@ -220,7 +220,7 @@ void EQAPP_KillMobs_Execute()
                 g_FollowAISpawn = NULL;
                 EQ_SetAutoRun(false);
 
-                std::cout << "Kill Mob skipping followed spawn because it is NOT safe to kill." << "\n";
+                std::cout << "Kill Mob skipping followed spawn because it is NOT safe to kill.\n";
                 return;
             }
 
@@ -264,7 +264,7 @@ void EQAPP_KillMobs_Execute()
             }
 
             std::string spawnName = EQ_GetSpawnName(spawn);
-            if (spawnName.size() == 0)
+            if (spawnName.empty() == true)
             {
                 continue;
             }
@@ -296,7 +296,7 @@ void EQAPP_KillMobs_Execute()
             {
                 EQ_ClearTarget();
 
-                std::cout << "Kill Mob skipping '" << spawnName << "' because it is NOT safe to kill." << "\n";
+                std::cout << "Kill Mob skipping '" << spawnName << "' because it is NOT safe to kill.\n";
                 continue;
             }
 
@@ -368,7 +368,7 @@ void EQAPP_KillMobs_Execute()
             }
 
             std::string spawnName = EQ_GetSpawnName(spawn);
-            if (spawnName.size() == 0)
+            if (spawnName.empty() == true)
             {
                 continue;
             }
@@ -400,7 +400,7 @@ void EQAPP_KillMobs_Execute()
             {
                 EQ_ClearTarget();
 
-                std::cout << "Kill Mob skipping '" << spawnName << "' because it is NOT safe to kill." << "\n";
+                std::cout << "Kill Mob skipping '" << spawnName << "' because it is NOT safe to kill.\n";
                 continue;
             }
 
@@ -457,7 +457,7 @@ bool EQAPP_KillMobs_IsSpawnSafeToKill(uint32_t spawn)
     }
 
     auto spawnName = EQ_GetSpawnName(spawn);
-    if (spawnName.size() == 0)
+    if (spawnName.empty() == true)
     {
         return false;
     }

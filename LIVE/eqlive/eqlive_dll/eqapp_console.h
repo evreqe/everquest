@@ -14,7 +14,8 @@ void EQAPP_Console_Print();
 
 void EQAPP_Console_Load()
 {
-    setvbuf(stdout, 0, _IOLBF, 4096);
+    // line buffering
+    setvbuf(stdout, 0, _IOLBF, 1024);
 
     // redirect cout to stringstream
     g_ConsoleStreamBuffer = std::cout.rdbuf(g_ConsoleStringStream.rdbuf());
@@ -53,10 +54,9 @@ void EQAPP_Console_Print()
                 continue;
             }
 
-            std::stringstream ss;
-            ss << "[" << g_EQAppNameEx << "] " << text;
+            std::string printText = fmt::format(FMT_COMPILE("[{}] {}"), g_EQAppNameEx, text);
 
-            EQ_PrintTextToChat(ss.str().c_str());
+            EQ_PrintTextToChat(printText.c_str());
         }
     }
 

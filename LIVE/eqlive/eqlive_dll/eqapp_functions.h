@@ -20,7 +20,8 @@ bool EQAPP_IsForegroundWindowCurrentProcessID();
 bool EQAPP_IsVKKeyDown(int vkKey);
 uint32_t EQAPP_GetRandomNumber(uint32_t low, uint32_t high);
 template <class T>
-T EQAPP_GetRandomNumberAny(T low, T high);
+T EQAPP_GetRandomNumberInt(T low, T high);
+float EQAPP_GetRandomNumberFloat(float low, float high);
 template <class T>
 void EQAPP_RandomizeList(std::vector<T>& list);
 void EQAPP_PlaySound(const char* fileName);
@@ -40,7 +41,8 @@ void EQAPP_PrintLocation();
 void EQAPP_PrintMouseLocation();
 void EQAPP_InventoryFind(const char* fileNameText, const char* fileContentsText);
 void EQAPP_SetWindowTitle(const char* text);
-BOOL CALLBACK EQAPP_UpdateClientWindowList_EnumWindowsProc(HWND hwnd, LPARAM lParam);
+std::string EQAPP_GetWindowTitle(HWND hwnd);
+BOOL CALLBACK EQAPP_UpdateClientWindowList_EnumWindowsProc(HWND hwnd, LPARAM lparam);
 bool EQAPP_UpdateClientWindowList();
 std::string EQAPP_GetTimeAsString();
 
@@ -69,18 +71,21 @@ void EQAPP_PrintTextToFile(const char* fileName, const char* text)
 void EQAPP_PrintTextToFileNoDuplicates(const char* fileName, const char* text)
 {
     std::vector<std::string> fileContents;
-    EQAPP_ReadFileToList(fileName, fileContents, false);
 
-    for (auto& fileLine : fileContents)
+    bool result = EQAPP_ReadFileToList(fileName, fileContents, false);
+    if (result == true)
     {
-        if (fileLine.size() == 0)
+        for (auto& fileLine : fileContents)
         {
-            continue;
-        }
+            if (fileLine.empty() == true)
+            {
+                continue;
+            }
 
-        if (fileLine == text)
-        {
-            return;
+            if (fileLine == text)
+            {
+                return;
+            }
         }
     }
 
@@ -89,7 +94,9 @@ void EQAPP_PrintTextToFileNoDuplicates(const char* fileName, const char* text)
 
 void EQAPP_PrintBool(const char* text, bool& b)
 {
-    std::cout << text << ": " << (b ? "On" : "Off") << "\n";
+    std::string boolText = (b ? "On" : "Off");
+
+    std::cout << fmt::format("{}: {}\n", text, boolText);
 }
 
 void EQAPP_PrintDebugText(const char* functionName, const char* text)
@@ -99,7 +106,7 @@ void EQAPP_PrintDebugText(const char* functionName, const char* text)
         return;
     }
 
-    std::cout << "[DEBUG] " << functionName << "(): " << text << "\n";
+    std::cout << fmt::format(FMT_COMPILE("[DEBUG] {}(): {}\n"), functionName, text);
 }
 
 void EQAPP_DebugText_Toggle()
@@ -277,28 +284,30 @@ bool EQAPP_IsVKKeyDown(int vkKey)
 
 uint32_t EQAPP_GetRandomNumber(uint32_t low, uint32_t high)
 {
-    std::uniform_int_distribution<uint32_t> uid;
-    std::uniform_int_distribution<uint32_t>::param_type uidpt(low, high);
+    std::uniform_int_distribution<uint32_t> distribution(low, high);
 
-    return uid(g_EQAppRandomEngine, uidpt);
+    return distribution(g_EQAppRandomEngine);
 }
 
 template <class T>
-T EQAPP_GetRandomNumberAny(T low, T high)
+T EQAPP_GetRandomNumberInt(T low, T high)
 {
-    auto uid = std::uniform_int_distribution<T>(low, high);
-    auto uidpt = std::uniform_int_distribution<T>::param_type(low, high);
+    std::uniform_int_distribution<T> distribution(low, high);
 
-    return uid(g_EQAppRandomEngine, uidpt);
+    return distribution(g_EQAppRandomEngine);
+}
+
+float EQAPP_GetRandomNumberFloat(float low, float high)
+{
+    std::uniform_real_distribution<float> distribution(low, high);
+
+    return distribution(g_EQAppRandomEngine);
 }
 
 template <class T>
 void EQAPP_RandomizeList(std::vector<T>& list)
 {
-    std::random_device rd;
-    auto rng = std::default_random_engine {rd()};
-
-    std::shuffle(list.begin(), list.end(), rng);
+    std::shuffle(list.begin(), list.end(), g_EQAppRandomEngine);
 }
 
 void EQAPP_PlaySound(const char* fileName)
@@ -392,7 +401,7 @@ bool EQAPP_ReadFileToList(const char* fileName, std::vector<std::string>& list, 
     std::string line;
     while (std::getline(file, line))
     {
-        if (line.size() == 0)
+        if (line.empty() == true)
         {
             continue;
         }
@@ -502,7 +511,7 @@ void EQAPP_PrintSpawnList()
         std::stringstream ss;
 
         auto spawnName = EQ_GetSpawnName(spawn);
-        if (spawnName.size() != 0)
+        if (spawnName.empty() == false)
         {
             ss << spawnName;
         }
@@ -515,7 +524,7 @@ void EQAPP_PrintSpawnList()
         if (spawnType == EQ_SPAWN_TYPE_NPC)
         {
             auto spawnLastName = EQ_GetSpawnLastName(spawn);
-            if (spawnLastName.size() != 0)
+            if (spawnLastName.empty() == false)
             {
                 ss << " (" << spawnLastName << ")";
             }
@@ -599,7 +608,7 @@ void EQAPP_InventoryFind(const char* fileNameText, const char* fileContentsText)
         std::string line;
         while (std::getline(file, line))
         {
-            if (line.size() == 0)
+            if (line.empty() == true)
             {
                 continue;
             }
@@ -615,7 +624,7 @@ void EQAPP_InventoryFind(const char* fileNameText, const char* fileContentsText)
         file.close();
     }
 
-    std::cout << resultsCount << " result(s) for '" << fileContentsText << "'" << "\n";
+    std::cout << resultsCount << " result(s) for '" << fileContentsText << "'\n";
 }
 
 void EQAPP_SetWindowTitle(const char* text)
@@ -629,34 +638,31 @@ void EQAPP_SetWindowTitle(const char* text)
     SetWindowTextA(hwnd, text);
 }
 
-BOOL CALLBACK EQAPP_UpdateClientWindowList_EnumWindowsProc(HWND hwnd, LPARAM lParam)
+std::string EQAPP_GetWindowTitle(HWND hwnd)
+{
+    int windowTitleLength = GetWindowTextLengthA(hwnd) + 1;
+
+    std::vector<char> windowTitleBuffer(windowTitleLength);
+
+    GetWindowTextA(hwnd, &windowTitleBuffer[0], windowTitleLength);
+
+    return &windowTitleBuffer[0];
+}
+
+BOOL CALLBACK EQAPP_UpdateClientWindowList_EnumWindowsProc(HWND hwnd, LPARAM lparam)
 {
     if (hwnd == EQ_GetWindow())
     {
         return TRUE;
     }
 
-    int windowTitleLength = GetWindowTextLengthA(hwnd) + 1;
+    std::string windowTitle = EQAPP_GetWindowTitle(hwnd);
 
-    std::string windowTitle(windowTitleLength, L'\0');
-    GetWindowTextA(hwnd, &windowTitle[0], windowTitleLength);
-
-    if (windowTitle.size() != 0)
+    if (windowTitle.empty() == false)
     {
-        if (EQAPP_String_BeginsWith(windowTitle, "EverQuest") == true || EQAPP_String_BeginsWith(windowTitle, "EQ: ") == true)
+        if (EQAPP_String_BeginsWith(windowTitle, "EQ: ") == true)
         {
-            if (EQAPP_String_Contains(windowTitle, "EverQuest II") == false)
-            {
-                g_EQAppClientWindowList.insert( {windowTitle, hwnd} );
-            }
-        }
-
-        for (auto& classShortName : EQ_CLASS_ShortName_Strings)
-        {
-            if (EQAPP_String_BeginsWith(windowTitle, classShortName.second))
-            {
-                g_EQAppClientWindowList.insert( {windowTitle, hwnd} );
-            }
+            g_EQAppClientWindowList.insert( {windowTitle, hwnd} );
         }
     }
 
@@ -669,15 +675,15 @@ bool EQAPP_UpdateClientWindowList()
 
     EnumWindows(EQAPP_UpdateClientWindowList_EnumWindowsProc, NULL);
 
-    return (g_EQAppClientWindowList.size() != 0);
+    return (g_EQAppClientWindowList.empty() == false);
 }
 
 std::string EQAPP_GetTimeAsString()
 {
-    std::chrono::system_clock::time_point timePoint = std::chrono::system_clock::now();
-    std::time_t time = std::chrono::system_clock::to_time_t(timePoint);
+    std::chrono::system_clock::time_point timePointNow = std::chrono::system_clock::now();
+    std::time_t time = std::chrono::system_clock::to_time_t(timePointNow);
 
-    char timeText[1024];
+    char timeText[32];
     ctime_s(timeText, sizeof(timeText), &time);
 
     return timeText;

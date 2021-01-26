@@ -313,6 +313,54 @@ void EQAPP_GUI_HandleEvent_CRender__ResetDevice_After()
     ImGui_ImplDX9_CreateDeviceObjects();
 }
 
+void EQAPP_GUI_NamePlates()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn != NULL)
+    {
+        auto playerSpawnY = EQ_GetSpawnY(playerSpawn);
+        auto playerSpawnX = EQ_GetSpawnX(playerSpawn);
+        auto playerSpawnZ = EQ_GetSpawnZ(playerSpawn);
+
+        float screenX = -1.0f;
+        float screenY = -1.0f;
+        bool result = EQ_WorldLocationToScreenLocation(playerSpawnY, playerSpawnX, playerSpawnZ, screenX, screenY);
+        if (result == true)
+        {
+            ImGuiWindowFlags windowFlags =
+                ImGuiWindowFlags_AlwaysAutoResize |
+                ImGuiWindowFlags_NoTitleBar |
+                ImGuiWindowFlags_NoBackground |
+                ImGuiWindowFlags_NoResize |
+                ImGuiWindowFlags_NoCollapse |
+                ImGuiWindowFlags_NoScrollbar |
+                ImGuiWindowFlags_NoScrollWithMouse |
+                ImGuiWindowFlags_NoSavedSettings |
+                ImGuiWindowFlags_NoInputs;
+
+            ImGui::SetNextWindowPos(ImVec2(screenX - 50.0f, screenY));
+
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
+            bool visible = true;
+
+            ImGui::Begin("", &visible, windowFlags);
+
+            ImGui::PushStyleColor(ImGuiCol_PlotHistogram, ImVec4(255.0f, 0.0f, 0.0f, 255.0f));
+            ImGui::ProgressBar(50.0f, ImVec2(100, 0), "HP");
+            ImGui::PopStyleColor();
+
+            ImGui::End();
+
+            ImGui::PopStyleVar(3);
+
+            ImGui::End();
+        }
+    }
+}
+
 void EQAPP_GUI_HandleEvent_CRender__UpdateDisplay()
 {
     if (g_GUIIsLoaded == false)
@@ -371,4 +419,5 @@ void EQAPP_GUI_HandleEvent_CRender__UpdateDisplay()
 
     g_GUIIsRendered = true;
 }
+
 

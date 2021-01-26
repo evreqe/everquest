@@ -83,7 +83,7 @@ void EQAPP_BazaarFilter_LoadEx(const char* fileName)
     std::string line;
     while (std::getline(file, line))
     {
-        if (line.size() == 0)
+        if (line.empty() == true)
         {
             continue;
         }

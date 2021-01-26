@@ -43,7 +43,7 @@ void EQAPP_PowerLevel_Off()
 
 void EQAPP_PowerLevel_Execute()
 {
-    if (EQAPP_Timer_HasTimeElapsed(g_PowerLevelTimer, g_PowerLevelTimerInterval) == false)
+    if (EQAPP_Timer_HasTimeElapsedInSeconds(g_PowerLevelTimer, g_PowerLevelTimerInterval) == false)
     {
         return;
     }
@@ -88,10 +88,9 @@ void EQAPP_PowerLevel_Execute()
     {
         for (auto& name : g_PowerLevelNames)
         {
-            std::stringstream ss;
-            ss << "//BCT " << name << " //TargetID ${Target.ID};//Stand;//Follow;//AutoAttackOn";
+            std::string commandText = fmt::format("//BCT {} //TargetID {TargetID};//Stand;//Follow;//AutoAttackOn", name);
 
-            EQ_InterpretCommand(ss.str().c_str());
+            EQ_InterpretCommand(commandText.c_str());
         }
     }
 }

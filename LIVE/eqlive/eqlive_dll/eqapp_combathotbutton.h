@@ -44,7 +44,7 @@ void EQAPP_CombatHotButton_SetIndex(signed int index)
 
 void EQAPP_CombatHotButton_Execute()
 {
-    if (EQAPP_Timer_HasTimeElapsed(g_CombatHotButtonTimer, g_CombatHotButtonTimerInterval) == false)
+    if (EQAPP_Timer_HasTimeElapsedInSeconds(g_CombatHotButtonTimer, g_CombatHotButtonTimerInterval) == false)
     {
         return;
     }

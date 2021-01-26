@@ -17,6 +17,8 @@
 #include <array>
 #include <bitset>
 #include <chrono>
+#include <filesystem>
+//#include <format> // C++20
 #include <fstream>
 #include <functional>
 #include <iomanip>
@@ -29,13 +31,13 @@
 #include <random>
 #include <regex>
 #include <set>
+//#include <source_location> // C++20
 #include <string>
 #include <string_view>
 #include <sstream>
 #include <thread>
 #include <unordered_map>
 #include <vector>
-#include <filesystem>
 
 // Windows
 #define _WINSOCKAPI_ // prevent windows.h from including winsock.h, we use winsock2.h instead
@@ -65,6 +67,26 @@
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
 
+// fmt
+// https://github.com/fmtlib/fmt
+#define FMT_UNICODE 0
+#include "fmt/core.h"
+#include "fmt/compile.h"
+#pragma comment(lib, "fmt.lib")
+
+// spdlog
+// https://github.com/gabime/spdlog
+#define SPDLOG_TRACE_ON
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/stdout_sinks.h"
+#include "spdlog/sinks/basic_file_sink.h"
+#pragma comment(lib, "spdlog.lib")
+
+// tomlplusplus
+// https://github.com/marzer/tomlplusplus
+#include "toml++/toml.h"
+
 // imgui
 // https://github.com/ocornut/imgui
 #include "imgui.h"
@@ -74,6 +96,7 @@
 #include "imgui_impl_win32.h"
 
 // Microsoft Detours
+// https://github.com/microsoft/Detours
 #include "detours.h"
 #pragma comment(lib, "detours.lib")
 
@@ -89,20 +112,24 @@
 #include "eqapp.h"
 #include "eqapp_functions.h"
 
+#include "eqapp_addresses.h"
+
 #include "eqapp_console.h"
+
+#include "eqapp_log.h"
 
 #include "eqapp_boxchat.h"
 
 #include "eqapp_detours_prototypes.h"
 
 #include "eqapp_actorcollision.h"
-#include "eqapp_addresses.h"
 #include "eqapp_alwaysattack.h"
 #include "eqapp_alwayshotbutton.h"
 #include "eqapp_area.h"
 #include "eqapp_autobank.h"
 #include "eqapp_autogroup.h"
 #include "eqapp_autoinventory.h"
+#include "eqapp_autotrade.h"
 #include "eqapp_bandolier.h"
 #include "eqapp_bazaarbot.h"
 #include "eqapp_bazaarfilter.h"
@@ -122,6 +149,7 @@
 #include "eqapp_nodraw.h"
 #include "eqapp_powerlevel.h"
 #include "eqapp_sleep.h"
+#include "eqapp_spawncastspell.h"
 #include "eqapp_speed.h"
 #include "eqapp_waypoint.h"
 #include "eqapp_windowforeground.h"
@@ -137,5 +165,5 @@
 
 #include "eqapp_detours.h"
 
-#include "eqapp_loadoptions.h"
+#include "eqapp_config.h"
 

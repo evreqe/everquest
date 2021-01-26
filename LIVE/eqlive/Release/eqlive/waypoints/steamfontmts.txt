@@ -1,4 +1,4 @@
-#Index^Name^Y^X^Z^ConnectionList^(Flags)^(ScriptFileName)
+#Index^Name^Y^X^Z^ConnectionList^Flags^ScriptFileName
 0^Waypoint0^-1122^940^4.89277^1,26
 1^pok^-1132.1^949.157^5.70101^0^16
 2^Waypoint2^-1084.83^-1201.38^-17.7111^3,4

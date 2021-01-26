@@ -113,7 +113,7 @@ void EQAPP_FollowAI_StopFollow()
 {
     if (g_FollowAISpawn != NULL)
     {
-        std::cout << "You stopped following." << "\n";
+        std::cout << "You stopped following.\n";
     }
 
     g_FollowAISpawn = NULL;

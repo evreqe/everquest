@@ -1,20 +1,24 @@
 #pragma once
 
 bool EQAPP_String_Contains(const std::string& subject, const std::string& search);
+bool EQAPP_StringView_Contains(std::string_view subject, std::string_view search);
 bool EQAPP_String_BeginsWith(const std::string& subject, const std::string& search);
+bool EQAPP_StringView_BeginsWith(std::string_view subject, std::string_view search);
 bool EQAPP_String_EndsWith(const std::string& subject, const std::string& search);
+bool EQAPP_StringView_EndsWith(std::string_view subject, std::string_view search);
 void EQAPP_String_ReplaceAll(std::string& subject, const std::string& search, const std::string& replace);
 std::string EQAPP_String_GetBetween(const std::string& subject, const std::string& begin, const std::string& end);
 std::string EQAPP_String_GetBetweenBeginAndEnd(const std::string& subject, const std::string& begin, const std::string& end);
 std::string EQAPP_String_GetBefore(const std::string& subject, const std::string& search);
 std::string EQAPP_String_GetAfter(const std::string& subject, const std::string& search);
-std::string EQAPP_String_JoinStrings(const std::vector<std::string>& elements, const std::string& separator);
+std::string EQAPP_String_JoinStrings(const std::vector<std::string>& stringList, const std::string& separator);
 std::vector<std::string> EQAPP_String_Split(const std::string& subject, char delimiter);
+bool EQAPP_String_IsAlphaNumericWithSpaces(const std::string& subject);
 bool EQAPP_String_IsDigits(const std::string &subject);
 bool EQAPP_String_IsUppercase(const std::string &subject);
 bool EQAPP_String_IsLowercase(const std::string &subject);
-std::string EQAPP_String_ToLowercase(const std::string& subject);
-std::string EQAPP_String_ToUppercase(const std::string& subject);
+void EQAPP_String_ToLowercase(std::string& subject);
+void EQAPP_String_ToUppercase(std::string& subject);
 std::string EQAPP_String_RemoveHTMLTags(std::string& subject);
 
 bool EQAPP_String_Contains(const std::string& subject, const std::string& search)
@@ -22,40 +26,33 @@ bool EQAPP_String_Contains(const std::string& subject, const std::string& search
     return (subject.find(search) != std::string::npos);
 }
 
+bool EQAPP_StringView_Contains(std::string_view subject, std::string_view search)
+{
+    return (subject.find(search) != std::string::npos);
+}
+
 bool EQAPP_String_BeginsWith(const std::string& subject, const std::string& search)
 {
-/*
-    return (subject.compare(0, search.size(), search) == 0);
- */
+    return subject.starts_with(search);
+}
 
+bool EQAPP_StringView_BeginsWith(std::string_view subject, std::string_view search)
+{
     return subject.starts_with(search);
 }
 
 bool EQAPP_String_EndsWith(const std::string& subject, const std::string& search)
 {
-/*
-    if (subject.length() >= search.length())
-    {
-        return (subject.compare (subject.length() - search.length(), search.length(), search) == 0);
-    }
-*/
+    return subject.ends_with(search);
+}
 
-    //return false;
-
+bool EQAPP_StringView_EndsWith(std::string_view subject, std::string_view search)
+{
     return subject.ends_with(search);
 }
 
 void EQAPP_String_ReplaceAll(std::string& subject, const std::string& search, const std::string& replace)
 {
-/*
-    std::size_t position = 0;
-    while ((position = subject.find(search, position)) != std::string::npos)
-    {
-         subject.replace(position, search.length(), replace);
-         position += replace.length();
-    }
-*/
-
     std::string newString;
     newString.reserve(subject.length());
 
@@ -134,18 +131,18 @@ std::string EQAPP_String_GetAfter(const std::string& subject, const std::string&
     return result;
 }
 
-std::string EQAPP_String_JoinStrings(const std::vector<std::string>& elements, const std::string& separator)
+std::string EQAPP_String_JoinStrings(const std::vector<std::string>& stringList, const std::string& separator)
 {
-    if (elements.empty() == false)
+    if (stringList.empty() == false)
     {
         std::stringstream ss;
 
-        auto it = elements.cbegin();
+        auto it = stringList.cbegin();
         while (true)
         {
             ss << *it++;
 
-            if (it != elements.cend())
+            if (it != stringList.cend())
             {
                 ss << separator;
             }
@@ -169,6 +166,46 @@ std::vector<std::string> EQAPP_String_Split(const std::string& subject, char del
     return tokens;
 }
 
+bool EQAPP_String_IsAlphaNumericWithSpaces(const std::string& subject)
+{
+    bool result = true;
+
+    for (unsigned int i = 0; i < subject.length(); i++)
+    {
+        if (::isalnum(subject.at(i)) == 0)
+        {
+            result = false;
+        }
+
+        if (::isspace(subject.at(i)) != 0)
+        {
+            result = true;
+        }
+
+        if (subject.at(i) == ':')
+        {
+            result = true;
+        }
+
+        if (subject.at(i) == '-')
+        {
+            result = true;
+        }
+
+        if (subject.at(i) == ',')
+        {
+            result = true;
+        }
+
+        if (subject.at(i) == '\'')
+        {
+            result = true;
+        }
+    }
+    
+    return result;
+}
+
 bool EQAPP_String_IsDigits(const std::string &subject)
 {
     return std::all_of(subject.begin(), subject.end(), ::isdigit);
@@ -184,20 +221,14 @@ bool EQAPP_String_IsUppercase(const std::string &subject)
     return std::all_of(subject.begin(), subject.end(), ::isupper);
 }
 
-std::string EQAPP_String_ToLowercase(const std::string& subject)
+void EQAPP_String_ToLowercase(std::string& subject)
 {
-    std::string str = subject;
-    std::transform(str.begin(), str.end(), str.begin(), ::tolower);
-
-    return str;
+    std::transform(subject.begin(), subject.end(), subject.begin(), ::tolower);
 }
 
-std::string EQAPP_String_ToUppercase(const std::string& subject)
+void EQAPP_String_ToUppercase(std::string& subject)
 {
-    std::string str = subject;
-    std::transform(str.begin(), str.end(), str.begin(), ::toupper);
-
-    return str;
+    std::transform(subject.begin(), subject.end(), subject.begin(), ::toupper);
 }
 
 std::string EQAPP_String_RemoveHTMLTags(std::string& subject)

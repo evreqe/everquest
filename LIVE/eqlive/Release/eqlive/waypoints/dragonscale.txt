@@ -1,6 +1,6 @@
 #Index^Name^Y^X^Z^ConnectionList^Flags^ScriptFileName
-0^Waypoint0^3667.3^-2359.76^27.4058^1^0^null.lua
-1^Waypoint1^3676.92^-2360.22^27.4712^2,0^0^null.lua
-2^Waypoint2^3731.89^-2364.76^77.3273^3,1^0^null.lua
-3^Waypoint3^3731.73^-2368.95^77.3272^2,4^0^null.lua
-4^cannon^3730.98^-2384.8^77.3272^3^0^null.lua
+0^Waypoint0^3667.3^-2359.76^27.4058^1^0^_.txt
+1^Waypoint1^3676.92^-2360.22^27.4712^2,0^0^_.txt
+2^Waypoint2^3731.89^-2364.76^77.3273^3,1^0^_.txt
+3^Waypoint3^3731.73^-2368.95^77.3272^2,4^0^_.txt
+4^cannon^3730.98^-2384.8^77.3272^3^0^_.txt

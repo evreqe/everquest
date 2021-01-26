@@ -12,7 +12,7 @@ void EQAPP_FixAddress(uint32_t& address)
     if (address == 0)
     {
         std::stringstream ss;
-        ss << __FUNCTION__ << ": address is NULL at index " << g_EQAppFixAddressIndex;
+        ss << __FUNCTION__ << ": address is null at index " << g_EQAppFixAddressIndex;
 
         MessageBoxA(NULL, ss.str().c_str(), "Error", MB_ICONERROR);
 
@@ -97,11 +97,13 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__ChangeLight);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__push_along_heading);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__AllowedToAttack);
+    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQPlayer__RightClickedOnPlayer);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_EQSwitchManager);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState);
 
+    EQAPP_FixAddress(EQ_ADDRESS_POINTER_EQSpellManager);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_EQSpell__SpellAffects);
 
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CXStr__CXStr_const_char_p);
@@ -125,7 +127,6 @@ void EQAPP_InitializeAddresses()
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CEverQuest__SendNewText);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CEverQuest__DropHeldItemOnGround);
-    EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CEverQuest__RightClickedOnPlayer);
 
     EQAPP_FixAddress(EQ_ADDRESS_POINTER_CDisplay);
     EQAPP_FixAddress(EQ_ADDRESS_FUNCTION_CDisplay__WriteTextHD2);

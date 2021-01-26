@@ -80,9 +80,9 @@ void EQAPP_NamedSpawns_Load()
     EQAPP_ReadFileToList("namedspawns.txt", g_NamedSpawnsList, false);
 
     std::string zoneShortName = EQ_GetZoneShortName();
-    if (zoneShortName.size() == 0)
+    if (zoneShortName.empty() == true)
     {
-        EQAPP_PrintDebugText(__FUNCTION__, "zone short name is null");
+        EQAPP_PrintDebugText(__FUNCTION__, "zoneShortName is empty");
         return;
     }
 
@@ -110,7 +110,7 @@ void EQAPP_NamedSpawns_DrawText()
         return;
     }
 
-    if (g_NamedSpawnsIDList.size() == 0 && g_NamedSpawnsSpecialSpawnsIDList.size() == 0)
+    if (g_NamedSpawnsIDList.empty() == true && g_NamedSpawnsSpecialSpawnsIDList.empty() == true)
     {
         return;
     }
@@ -126,7 +126,7 @@ void EQAPP_NamedSpawns_DrawText()
         }
 
         std::string spawnName = EQ_GetSpawnName(spawn);
-        if (spawnName.size() == 0)
+        if (spawnName.empty() == true)
         {
             continue;
         }
@@ -151,7 +151,7 @@ void EQAPP_NamedSpawns_DrawText()
         }
 
         std::string spawnName = EQ_GetSpawnName(spawn);
-        if (spawnName.size() == 0)
+        if (spawnName.empty() == true)
         {
             continue;
         }
@@ -192,7 +192,7 @@ void EQAPP_NamedSpawns_DrawText()
 
 void EQAPP_NamedSpawns_PrintList()
 {
-    std::cout << "Named Spawns List:" << "\n";
+    std::cout << "Named Spawns List:\n";
 
     for (auto& namedSpawnName : g_NamedSpawnsList)
     {
@@ -202,7 +202,7 @@ void EQAPP_NamedSpawns_PrintList()
 
 void EQAPP_NamedSpawns_PrintIDList()
 {
-    std::cout << "Named Spawns ID List:" << "\n";
+    std::cout << "Named Spawns ID List:\n";
 
     for (auto& namedSpawnID : g_NamedSpawnsIDList)
     {
@@ -213,7 +213,7 @@ void EQAPP_NamedSpawns_PrintIDList()
 
 void EQAPP_NamedSpawns_PrintUp()
 {
-    std::cout << "Named Spawns Up:" << "\n";
+    std::cout << "Named Spawns Up:\n";
 
     for (auto& spawnID : g_NamedSpawnsIDList)
     {
@@ -227,9 +227,9 @@ void EQAPP_NamedSpawns_PrintUp()
         }
 
         std::string spawnName = EQ_GetSpawnName(spawn);
-        if (spawnName.size() == 0)
+        if (spawnName.empty() == true)
         {
-            //std::cout << "spawnName.size() == 0\n";
+            //std::cout << "spawnName.empty() == true\n";
             continue;
         }
 
@@ -237,15 +237,15 @@ void EQAPP_NamedSpawns_PrintUp()
 
         for (auto& namedSpawnName : g_NamedSpawnsList)
         {
-            if (namedSpawnName.size() == 0)
+            if (namedSpawnName.empty() == true)
             {
-                //std::cout << "namedSpawnName.size() == 0\n";
+                //std::cout << "namedSpawnName.empty() == true\n";
                 continue;
             }
 
             if (EQAPP_String_Contains(spawnName, namedSpawnName) == true)
             {
-                std::cout << spawnName << " is up!" << "\n";
+                std::cout << spawnName << " is up!\n";
 
                 break;
             }
@@ -255,7 +255,7 @@ void EQAPP_NamedSpawns_PrintUp()
 
 void EQAPP_NamedSpawns_UpdateIDList()
 {
-    if (EQAPP_Timer_HasTimeElapsed(g_NamedSpawnsIDTimer, g_NamedSpawnsIDTimerInterval) == false)
+    if (EQAPP_Timer_HasTimeElapsedInSeconds(g_NamedSpawnsIDTimer, g_NamedSpawnsIDTimerInterval) == false)
     {
         return;
     }
@@ -273,7 +273,7 @@ void EQAPP_NamedSpawns_UpdateIDList()
         }
 
         std::string spawnName = EQ_GetSpawnName(spawn);
-        if (spawnName.size() == 0)
+        if (spawnName.empty() == true)
         {
             spawn = EQ_GetSpawnNext(spawn);
             continue;
@@ -352,7 +352,7 @@ void EQAPP_NamedSpawns_HandleEvent_CDisplay__CreatePlayerActor(void* this_ptr, u
     }
 
     std::string spawnName = EQ_GetSpawnName(spawn);
-    if (spawnName.size() == 0)
+    if (spawnName.empty() == true)
     {
         return;
     }
@@ -368,7 +368,7 @@ void EQAPP_NamedSpawns_HandleEvent_CDisplay__CreatePlayerActor(void* this_ptr, u
             EQ_IsSpawnWithinDistanceOfLocation(spawn, 550,  -4085, -159, 400.0f) == true
         )
         {
-            std::cout << "Eldrig the Old placeholder or named has spawned!" << "\n";
+            std::cout << "Eldrig the Old placeholder or named has spawned!\n";
 
             auto spawnID = EQ_GetSpawnID(spawn);
 
@@ -392,7 +392,7 @@ void EQAPP_NamedSpawns_HandleEvent_CDisplay__CreatePlayerActor(void* this_ptr, u
 
             g_NamedSpawnsSpecialSpawnsIDList.push_back(spawnID);
 
-            std::cout << spawnName << " spawned in the Quillmane rectangle!" << "\n";
+            std::cout << spawnName << " spawned in the Quillmane rectangle!\n";
         }
     }
 
@@ -412,7 +412,7 @@ void EQAPP_NamedSpawns_HandleEvent_CDisplay__CreatePlayerActor(void* this_ptr, u
         }
 
         std::string spawnLastName = EQ_GetSpawnLastName(spawn);
-        if (spawnLastName.size() == 0)
+        if (spawnLastName.empty() == true)
         {
             if (EQAPP_String_EndsWith(spawnLastName, " pet") == true || EQAPP_String_EndsWith(spawnLastName, " Pet") == true)
             {
@@ -424,7 +424,7 @@ void EQAPP_NamedSpawns_HandleEvent_CDisplay__CreatePlayerActor(void* this_ptr, u
         {
             g_NamedSpawnsNewSpawnsIDList.push_back(spawnID);
 
-            std::cout << "Named Spawns New Spawn added: " << spawnName << " (ID: " << spawnID << ")" << "\n";
+            std::cout << "Named Spawns New Spawn added: " << spawnName << " (ID: " << spawnID << ")\n";
         }
     }
 
@@ -432,7 +432,7 @@ void EQAPP_NamedSpawns_HandleEvent_CDisplay__CreatePlayerActor(void* this_ptr, u
     {
         if (EQAPP_String_Contains(spawnName, namedSpawnName) == true)
         {
-            std::cout << "Named Spawns: " << spawnName << " has spawned." << "\n";
+            std::cout << "Named Spawns: " << spawnName << " has spawned.\n";
 
             break;
         }
@@ -465,7 +465,7 @@ void EQAPP_NamedSpawns_HandleEvent_CDisplay__DeleteActor(void* this_ptr, uint32_
     }
 
     std::string spawnName = EQ_GetSpawnName(actorApplicationData);
-    if (spawnName.size() == 0)
+    if (spawnName.empty() == true)
     {
         return;
     }
@@ -499,7 +499,7 @@ void EQAPP_NamedSpawns_HandleEvent_CDisplay__DeleteActor(void* this_ptr, uint32_
         }
 
         std::string spawnLastName = EQ_GetSpawnLastName(actorApplicationData);
-        if (spawnLastName.size() == 0)
+        if (spawnLastName.empty() == true)
         {
             if (EQAPP_String_EndsWith(spawnLastName, " pet") == true || EQAPP_String_EndsWith(spawnLastName, " Pet") == true)
             {
@@ -509,7 +509,7 @@ void EQAPP_NamedSpawns_HandleEvent_CDisplay__DeleteActor(void* this_ptr, uint32_
 
         if (bNewSpawn == true)
         {
-            std::cout << "Named Spawns New Spawn removed: " << spawnName << " (ID: " << spawnID << ")" << "\n";
+            std::cout << "Named Spawns New Spawn removed: " << spawnName << " (ID: " << spawnID << ")\n";
         }
     }
 
@@ -517,7 +517,7 @@ void EQAPP_NamedSpawns_HandleEvent_CDisplay__DeleteActor(void* this_ptr, uint32_
     {
         if (EQAPP_String_Contains(spawnName, namedSpawnName) == true)
         {
-            std::cout << "Named Spawns: " << spawnName << " has despawned." << "\n";
+            std::cout << "Named Spawns: " << spawnName << " has despawned.\n";
 
             break;
         }

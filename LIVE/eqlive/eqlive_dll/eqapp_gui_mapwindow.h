@@ -300,7 +300,7 @@ static void EQAPP_GUI_MapWindow_LoadTextures()
     HRESULT result = D3DXCreateTextureFromFile(devicePointer, L"uifiles\\default\\cart.tga", &g_GUIMapWindowMapBackgroundTexture);
     if (result != D3D_OK)
     {
-        std::cout << "D3DXCreateTextureFromFile() failed!" << "\n";
+        std::cout << "D3DXCreateTextureFromFile() failed!\n";
     }
 }
 
@@ -882,7 +882,7 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
                         if (mouseDistanceToSpawnY < mouseDistanceToSpawnCheck)
                         {
                             auto spawnName = EQ_GetSpawnName(spawn);
-                            if (spawnName.size() != 0)
+                            if (spawnName.empty() == false)
                             {
                                 std::stringstream ssHoverText;
                                 ssHoverText << spawnName;
@@ -895,7 +895,7 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
                                 if (spawnType == EQ_SPAWN_TYPE_NPC)
                                 {
                                     auto spawnLastName = EQ_GetSpawnLastName(spawn);
-                                    if (spawnLastName.size() != 0)
+                                    if (spawnLastName.empty() == false)
                                     {
                                         ssHoverText << "\n(" << spawnLastName << ")";
                                     }
@@ -1096,7 +1096,7 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
                         {
                             if (mouseDistanceToGroundSpawnY < mouseDistanceToGroundSpawnCheck)
                             {
-                                if (groundSpawnName.size() != 0)
+                                if (groundSpawnName.empty() == false)
                                 {
                                     std::stringstream ssHoverText;
                                     ssHoverText << "GS: " << groundSpawnName;
@@ -1145,7 +1145,7 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
 
                 if (g_GUIMapWindowMapGroundSpawnMouseHover == false)
                 {
-                    if (groundSpawnName.size() != 0)
+                    if (groundSpawnName.empty() == false)
                     {
                         ImVec2 textSize = ImGui::CalcTextSize(groundSpawnName.c_str(), NULL);
 
@@ -1235,7 +1235,7 @@ static void EQAPP_GUI_MapWindow_Map_Draw()
                     {
                         if (mouseDistanceToWaypointY < mouseDistanceToWaypointCheck)
                         {
-                            if (waypoint.Name.size() != 0)
+                            if (waypoint.Name.empty() == false)
                             {
                                 std::stringstream ssHoverText;
                                 ssHoverText << "WP: " << waypoint.Name << "\n(Index: " << waypoint.Index << ")";

@@ -50,7 +50,7 @@ void EQAPP_CombatMacro_Load()
     }
 
     std::string playerName = EQ_GetSpawnName(playerSpawn);
-    if (playerName.size() == 0)
+    if (playerName.empty() == true)
     {
         return;
     }
@@ -68,7 +68,7 @@ void EQAPP_CombatMacro_Load()
 
 void EQAPP_CombatMacro_Execute()
 {
-    if (EQAPP_Timer_HasTimeElapsed(g_CombatMacroTimer, g_CombatMacroTimerInterval) == false)
+    if (EQAPP_Timer_HasTimeElapsedInSeconds(g_CombatMacroTimer, g_CombatMacroTimerInterval) == false)
     {
         return;
     }

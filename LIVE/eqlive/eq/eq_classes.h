@@ -22,6 +22,7 @@ namespace EQClass
     class EQSwitchManager;
     class EQSwitch;
 
+    class EQSpellManager;
     class EQSpell;
 
     class CXPoint;
@@ -99,7 +100,7 @@ public:
     void HandleMouseWheel(signed int delta);
     void SendNewText(int chatType, char* name, char* text, int unknown);
     void DropHeldItemOnGround(int noDrop);
-    void RightClickedOnPlayer(uint32_t spawn);
+    void StartCasting(EQMessage::CEverQuest__StartCasting_ptr message);
 };
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(char* EQClass::CEverQuest::DoPercentConvert(char* text, bool isOutgoing), EQ_ADDRESS_FUNCTION_CEverQuest__DoPercentConvert);
@@ -129,8 +130,8 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__SendNewText)(void* this_pt
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::DropHeldItemOnGround(int NoDrop), EQ_ADDRESS_FUNCTION_CEverQuest__DropHeldItemOnGround);
 typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__DropHeldItemOnGround)(void* this_ptr, int noDrop);
 
-EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::RightClickedOnPlayer(uint32_t spawn), EQ_ADDRESS_FUNCTION_CEverQuest__RightClickedOnPlayer);
-typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__RightClickedOnPlayer)(void* this_ptr, uint32_t spawn);
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::CEverQuest::StartCasting(EQMessage::CEverQuest__StartCasting_ptr message), EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_CEverQuest__StartCasting)(void* this_ptr, EQMessage::CEverQuest__StartCasting_ptr message);
 
 EQClass::CEverQuest** EQ_CLASS_POINTER_CEverQuest_pptr;
 EQClass::CEverQuest* EQ_CLASS_POINTER_CEverQuest;
@@ -285,6 +286,7 @@ public:
     int push_along_heading(float speed);
     void Unknown();
     bool AllowedToAttack(uint32_t spawn, uint32_t spellID);
+    void RightClickedOnPlayer(uint32_t spawn, bool unknown);
 };
 
 #define EQ_VFTABLE_INDEX_EQPlayer__Unknown                   0x60    // Dismount
@@ -326,6 +328,9 @@ typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__Unknown)(void* this_ptr);
 EQ_MACRO_FUNCTION_FunctionAtAddress(bool EQClass::EQPlayer::AllowedToAttack(uint32_t spawn, uint32_t spellID), EQ_ADDRESS_FUNCTION_EQPlayer__AllowedToAttack);
 typedef bool (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__AllowedToAttack)(void* this_ptr, uint32_t spawn, uint32_t spellID);
 
+EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQPlayer::RightClickedOnPlayer(uint32_t spawn, bool unknown), EQ_ADDRESS_FUNCTION_EQPlayer__RightClickedOnPlayer);
+typedef int (__thiscall* EQ_FUNCTION_TYPE_EQPlayer__RightClickedOnPlayer)(void* this_ptr, uint32_t spawn, bool unknown);
+
 //////////////////////////////////////////////////
 /* EQSwitchManager */
 //////////////////////////////////////////////////
@@ -355,6 +360,21 @@ public:
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQSwitch::UseSwitch(uint32_t spawnID, uint32_t keyID, uint32_t pickSkill, const void* hitLocation), EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch);
 
 EQ_MACRO_FUNCTION_FunctionAtAddress(void EQClass::EQSwitch::ChangeState(uint8_t state, int zero1, int zero2), EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState);
+
+//////////////////////////////////////////////////
+/* EQSpellManager */
+//////////////////////////////////////////////////
+
+class EQClass::EQSpellManager
+{
+public:
+    //
+};
+
+//
+
+EQClass::EQSpellManager** EQ_CLASS_POINTER_EQSpellManager_pptr;
+EQClass::EQSpellManager* EQ_CLASS_POINTER_EQSpellManager;
 
 //////////////////////////////////////////////////
 /* EQSpell */

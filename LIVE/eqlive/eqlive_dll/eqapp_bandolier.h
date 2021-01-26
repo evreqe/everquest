@@ -42,7 +42,7 @@ void EQAPP_Bandolier_Load()
     }
 
     std::string playerName = EQ_GetSpawnName(playerSpawn);
-    if (playerName.size() == 0)
+    if (playerName.empty() == true)
     {
         return;
     }
@@ -79,7 +79,7 @@ void EQAPP_Bandolier_LoadEx(const std::string& fileName)
     std::string line;
     while (std::getline(file, line))
     {
-        if (line.size() == 0)
+        if (line.empty() == true)
         {
             continue;
         }
@@ -90,7 +90,7 @@ void EQAPP_Bandolier_LoadEx(const std::string& fileName)
         }
 
         std::vector<std::string> tokens = EQAPP_String_Split(line, '^');
-        if (tokens.size() == 0)
+        if (tokens.empty() == true)
         {
             continue;
         }
@@ -191,7 +191,7 @@ void EQAPP_Bandolier_Save()
     }
 
     std::string playerName = EQ_GetSpawnName(playerSpawn);
-    if (playerName.size() == 0)
+    if (playerName.empty() == true)
     {
         return;
     }
@@ -230,31 +230,31 @@ void EQAPP_Bandolier_SaveEx(const std::string& fileName)
     for (unsigned int i = 0; i < EQ_NUM_BANDOLIER_SLOTS; i++)
     {
         std::string name = charInfo2Bandolier->Bandolier[i].Name;
-        if (name.size() == 0)
+        if (name.empty() == true)
         {
             name = "NULL";
         }
 
         std::string itemName0 = charInfo2Bandolier->Bandolier[i].Items[0].Name;
-        if (itemName0.size() == 0)
+        if (itemName0.empty() == true)
         {
             itemName0 = "NULL";
         }
 
         std::string itemName1 = charInfo2Bandolier->Bandolier[i].Items[1].Name;
-        if (itemName1.size() == 0)
+        if (itemName1.empty() == true)
         {
             itemName1 = "NULL";
         }
 
         std::string itemName2 = charInfo2Bandolier->Bandolier[i].Items[2].Name;
-        if (itemName2.size() == 0)
+        if (itemName2.empty() == true)
         {
             itemName2 = "NULL";
         }
 
         std::string itemName3 = charInfo2Bandolier->Bandolier[i].Items[3].Name;
-        if (itemName3.size() == 0)
+        if (itemName3.empty() == true)
         {
             itemName3 = "NULL";
         }
@@ -293,7 +293,7 @@ void EQAPP_Bandolier_Print()
 
     auto charInfo2Bandolier = (EQ::CharInfo2Bandolier_ptr)(charInfo2 + EQ_OFFSET_CharInfo2__Bandolier);
 
-    std::cout << "Bandolier:" << "\n";
+    std::cout << "Bandolier:\n";
 
     for (unsigned int i = 0; i < EQ_NUM_BANDOLIER_SLOTS; i++)
     {

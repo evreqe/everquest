@@ -5,7 +5,7 @@
 
 void EQAPP_Load()
 {
-    EQAPP_LoadOptions();
+    EQAPP_Config_Load();
 
     EQAPP_LoadFiles();
 
@@ -30,7 +30,9 @@ void EQAPP_Load()
 
     std::string timeText = EQAPP_GetTimeAsString();
 
-    std::cout << "Loaded!    " << timeText << "\n";
+    std::cout << fmt::format("Loaded!    {}\n", timeText);
+
+    SPDLOG_TRACE("Loaded");
 
     g_EQAppIsLoaded = 1;
 }
@@ -49,13 +51,16 @@ void EQAPP_Unload()
 
     std::string timeText = EQAPP_GetTimeAsString();
 
-    std::cout << "Unloaded!    " << timeText << "\n";
+    std::cout << fmt::format("Unloaded!    {}\n", timeText);
+
+    SPDLOG_TRACE("Unloaded");
 
     g_EQAppShouldUnload = 1;
 }
 
 void EQAPP_LoadFiles()
 {
+    EQAPP_Macro_Load();
     EQAPP_ActorCollision_Load();
     EQAPP_WaypointList_Load();
     EQAPP_NamedSpawns_Load();
@@ -94,6 +99,7 @@ DWORD WINAPI EQAPP_ThreadLoop(LPVOID param)
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
     FreeLibraryAndExitThread(g_EQAppModule, 0);
+
     return 0;
 }
 
@@ -110,6 +116,8 @@ DWORD WINAPI EQAPP_ThreadLoad(LPVOID param)
     while (g_ConsoleIsLoaded == 0);
 
     g_EQAppHandleThreadLoop = CreateThread(NULL, 0, &EQAPP_ThreadLoop, NULL, 0, NULL);
+
+    EQAPP_Log_Load();
 
     EQAPP_Detours_Load();
 

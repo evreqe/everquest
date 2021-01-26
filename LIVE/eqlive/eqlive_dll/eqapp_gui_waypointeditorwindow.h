@@ -254,23 +254,22 @@ static void EQAPP_GUI_WaypointEditorWindow()
             if (ImGui::BeginCombo("Flags##WaypointEditorWindowFlagCombo", g_GUIWaypointEditorWindowFlagSelectedName.c_str()))
             {
                 uint32_t flagIndex = 0;
-                for (auto& flagString : EQApp::WaypointFlagsStrings)
+                for (const auto& [flagValue, flagName] : EQApp::WaypointFlags_Strings)
                 {
-                    if (flagString.first == EQApp::WaypointFlagNull)
+                    if (flagValue == EQApp::WaypointFlagNull)
                     {
                         continue;
                     }
 
-                    std::stringstream flagLabelID;
-                    flagLabelID << flagString.second << "##WaypointEditorWindowFlagCombo" << flagString.first;
+                    std::string flagLabelID = fmt::format(FMT_COMPILE("{}##WaypointEditorWindowFlagCombo{}"), flagName, flagValue);
 
-                    if (ImGui::Selectable(flagLabelID.str().c_str(), flagIndex == g_GUIWaypointEditorWindowFlagSelectedIndex))
+                    if (ImGui::Selectable(flagLabelID.c_str(), flagIndex == g_GUIWaypointEditorWindowFlagSelectedIndex))
                     {
                         g_GUIWaypointEditorWindowFlagSelectedIndex = flagIndex;
 
-                        g_GUIWaypointEditorWindowFlagSelectedFlag = flagString.first;
+                        g_GUIWaypointEditorWindowFlagSelectedFlag = flagValue;
 
-                        g_GUIWaypointEditorWindowFlagSelectedName = flagString.second;
+                        g_GUIWaypointEditorWindowFlagSelectedName = flagName;
                     }
 
                     flagIndex++;

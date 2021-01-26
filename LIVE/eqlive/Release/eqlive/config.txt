@@ -1,0 +1,3 @@
+[GUI]
+bEnabled=1
+bDarkTheme=1

@@ -24,12 +24,11 @@ static void EQAPP_GUI_DockWindow()
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-    ImGui::Begin("EQApp DockSpace", &g_GUIDockWindowIsEnabled, windowFlags);
-    ImGui::PopStyleVar();
 
-    ImGui::PopStyleVar(2);
+    ImGui::Begin("EQApp DockSpace", &g_GUIDockWindowIsEnabled, windowFlags);
+
+    ImGui::PopStyleVar(3);
 
     ImGuiIO& io = ImGui::GetIO();
     if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)

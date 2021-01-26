@@ -67,10 +67,12 @@
     <ClInclude Include="eqapp_gui_transmogwindow.h" />
     <ClInclude Include="eqapp_gui_waypointeditorwindow.h" />
     <ClInclude Include="eqapp_hud.h" />
+    <ClInclude Include="eqapp_log.h" />
+    <ClInclude Include="eqapp_spawncastspell.h" />
     <ClInclude Include="eqapp_utility_ini.h" />
     <ClInclude Include="eqapp_interpretcommand.h" />
     <ClInclude Include="eqapp_lantern.h" />
-    <ClInclude Include="eqapp_loadoptions.h" />
+    <ClInclude Include="eqapp_config.h" />
     <ClInclude Include="eqapp_macro.h" />
     <ClInclude Include="eqapp_namecolor.h" />
     <ClInclude Include="eqapp_namedspawns.h" />
@@ -215,7 +217,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;EQLIVEDLL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>D:\Code\!libraries\detours30-build343\include;D:\Code\!libraries\directx9sdk\Include;D:\Code\!libraries\imgui-docking;D:\Code\everquest\eqlive\eq;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Code\!libraries\Detours-4.0.1\include;D:\Code\!libraries\tomlplusplus-2.3.0\include;D:\Code\!libraries\fmt-7.1.3\include;D:\Code\!libraries\spdlog-1.8.2\include;D:\Code\!libraries\directx9sdk\Include;D:\Code\!libraries\imgui-docking;D:\Code\everquest\eqlive\eq;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableModules>false</EnableModules>
     </ClCompile>
@@ -226,7 +228,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <OutputFile>$(OutDir)eqlive.dll</OutputFile>
-      <AdditionalLibraryDirectories>D:\Code\!libraries\detours30-build343\lib;D:\Code\!libraries\directx9sdk\Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Code\!libraries\fmt-7.1.3\lib;D:\Code\!libraries\Detours-4.0.1\lib.X86;D:\Code\!libraries\directx9sdk\Lib\x86;D:\Code\!libraries\spdlog-1.8.2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

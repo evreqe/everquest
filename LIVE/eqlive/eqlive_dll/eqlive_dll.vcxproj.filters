@@ -219,9 +219,6 @@
     <ClInclude Include="eqapp_area.h">
       <Filter>eqapp</Filter>
     </ClInclude>
-    <ClInclude Include="eqapp_loadoptions.h">
-      <Filter>eqapp</Filter>
-    </ClInclude>
     <ClInclude Include="eqapp_gui_transmogwindow.h">
       <Filter>eqapp</Filter>
     </ClInclude>
@@ -254,6 +251,15 @@
     </ClInclude>
     <ClInclude Include="..\eq\eq_structures.h">
       <Filter>eq</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_spawncastspell.h">
+      <Filter>eqapp</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_config.h">
+      <Filter>eqapp</Filter>
+    </ClInclude>
+    <ClInclude Include="eqapp_log.h">
+      <Filter>eqapp</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

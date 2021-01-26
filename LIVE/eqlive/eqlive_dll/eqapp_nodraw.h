@@ -48,9 +48,9 @@ bool EQAPP_NoDraw_HandleEvent_CRender__RenderPartialScene(void* this_ptr)
 {
     if (g_NoDrawUseTimersIsEnabled == true)
     {
-        if (EQAPP_Timer_HasTimeElapsed(g_NoDrawRenderPartialSceneTimer, g_NoDrawRenderPartialSceneTimerInterval) == true)
+        if (EQAPP_Timer_HasTimeElapsedInSeconds(g_NoDrawRenderPartialSceneTimer, g_NoDrawRenderPartialSceneTimerInterval) == true)
         {
-            auto randomTimerInterval = EQAPP_GetRandomNumberAny<EQApp::TimerInterval>(g_NoDrawRandomTimerIntervalMin, g_NoDrawRandomTimerIntervalMax);
+            auto randomTimerInterval = EQAPP_GetRandomNumberInt<EQApp::TimerInterval>(g_NoDrawRandomTimerIntervalMin, g_NoDrawRandomTimerIntervalMax);
 
             g_NoDrawRenderPartialSceneTimerInterval = randomTimerInterval;
 
@@ -73,9 +73,9 @@ bool EQAPP_NoDraw_HandleEvent_CRender__UpdateDisplay(void* this_ptr)
 {
     if (g_NoDrawUseTimersIsEnabled == true)
     {
-        if (EQAPP_Timer_HasTimeElapsed(g_NoDrawUpdateDisplayTimer, g_NoDrawUpdateDisplayTimerInterval) == true)
+        if (EQAPP_Timer_HasTimeElapsedInSeconds(g_NoDrawUpdateDisplayTimer, g_NoDrawUpdateDisplayTimerInterval) == true)
         {
-            auto randomTimerInterval = EQAPP_GetRandomNumberAny<EQApp::TimerInterval>(g_NoDrawRandomTimerIntervalMin, g_NoDrawRandomTimerIntervalMax);
+            auto randomTimerInterval = EQAPP_GetRandomNumberInt<EQApp::TimerInterval>(g_NoDrawRandomTimerIntervalMin, g_NoDrawRandomTimerIntervalMax);
 
             g_NoDrawUpdateDisplayTimerInterval = randomTimerInterval;
 

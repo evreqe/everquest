@@ -49,7 +49,7 @@ const float EQ_USE_DOOR_DISTANCE_DEFAULT    = 20.0f;
 
 #define EQ_NUM_HOTBARS                       11    // 10 + 1, potion belt was removed and replaced with another hotbar
 #define EQ_NUM_HOTBAR_BUTTONS                12
-#define EQ_NUM_SPELLS                        60000
+#define EQ_NUM_SPELLS                        62000
 #define EQ_NUM_SPELL_GEMS                    18
 #define EQ_NUM_SPELL_GEMS_IN_WINDOW          14    // CCastSpellWnd    CSPW_Spell%d
 #define EQ_NUM_BAGS                          10    // number of bags you can hold in your inventory
@@ -385,6 +385,15 @@ std::unordered_map<uint32_t, std::string> EQ_STANDING_STATE_Strings =
 #define EQ_OFFSET_EQSwitch_IS_VISIBLE             0xD6    // uint8_t             offsetof(EQData::_DOOR, bVisible)
 
 #define EQ_SIZE_EQSwitch_NAME    32 // 0x20
+
+// class SpellManager
+#define EQ_OFFSET_SpellManager_SPELLS    0x3DAE4    // uint32_t pointer SPELL[EQ_NUM_SPELLS]
+
+#define EQ_SIZE_SPELL_NAME    0x40
+
+// struct SPELL
+#define EQ_OFFSET_SPELL_ID      0x90     // uint32_t
+#define EQ_OFFSET_SPELL_NAME    0x195    // char[EQ_SIZE_SPELL_NAME]
 
 #define EQ_SPAWN_STATE_FLAGS_IDLE                         0
 #define EQ_SPAWN_STATE_FLAGS_OPEN                         1

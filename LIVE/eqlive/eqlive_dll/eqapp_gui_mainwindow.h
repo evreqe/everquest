@@ -196,11 +196,6 @@ static void EQAPP_GUI_MainWindow_MenuOptions()
     ImGui::Separator();
 
     if (ImGui::MenuItem("Free Camera##MainWindowMenuItemOptionsFreeCamera", NULL, g_FreeCameraIsEnabled)) { EQAPP_FreeCamera_Toggle(); }
-
-    ImGui::Separator();
-
-    if (ImGui::MenuItem("Speed Hack##MainWindowMenuItemOptionsSpeed", NULL, g_SpeedIsEnabled)) { EQAPP_Speed_Toggle(); }
-    ImGui::SliderFloat("##MainWindowMenuItemOptionsSpeedValue", &g_SpeedMultiplier, 1.0f, 10.0f, "%.1f");
 }
 
 static void EQAPP_GUI_MainWindow_MenuCheats()
@@ -237,6 +232,11 @@ static void EQAPP_GUI_MainWindow_MenuCheats()
     ImGui::Separator();
 
     if (ImGui::MenuItem("Wall Hack##MainWindowMenuItemCheatsWallHack", NULL, g_CheatWallHackIsEnabled)) { EQAPP_Cheat_WallHack_Toggle(); }
+
+    ImGui::Separator();
+
+    if (ImGui::MenuItem("Speed Hack##MainWindowMenuItemCheatsSpeedHack", NULL, g_SpeedIsEnabled)) { EQAPP_Speed_Toggle(); }
+    ImGui::SliderFloat("##MainWindowMenuItemCheatsSpeedHackValue", &g_SpeedMultiplier, 1.0f, 10.0f, "%.1f");
 }
 
 static void EQAPP_GUI_MainWindow_MenuWaypoints()
@@ -245,7 +245,7 @@ static void EQAPP_GUI_MainWindow_MenuWaypoints()
     if (ImGui::MenuItem("Editor Height Filter##MainWindowMenuItemOptionsWaypointsWaypointEditorHeightFilter", NULL, g_WaypointEditorHeightFilterIsEnabled)) { EQAPP_WaypointEditor_HeightFilter_Toggle(); }
     if (ImGui::MenuItem("Editor Distance Filter##MainWindowMenuItemOptionsWaypointsWaypointEditorDistanceFilter", NULL, g_WaypointEditorDistanceFilterIsEnabled)) { EQAPP_WaypointEditor_DistanceFilter_Toggle(); }
 
-    if (g_WaypointList.size() == 0)
+    if (g_WaypointList.empty() == true)
     {
         ImGui::Separator();
 
@@ -257,7 +257,7 @@ static void EQAPP_GUI_MainWindow_MenuWaypoints()
 
         for (auto& waypoint : g_WaypointList)
         {
-            if (waypoint.Name.size() == 0)
+            if (waypoint.Name.empty() == true)
             {
                 continue;
             }
@@ -280,7 +280,7 @@ static void EQAPP_GUI_MainWindow_MenuWaypoints()
     {
         ImGui::Separator();
 
-        ImGui::BeginChild("##MainWindowMenuItemWaypointsList", ImVec2(200,400), false);
+        ImGui::BeginChild("##MainWindowMenuItemWaypointsList", ImVec2(400,600), false);
 
         auto waypointList = g_WaypointList;
 
@@ -295,7 +295,7 @@ static void EQAPP_GUI_MainWindow_MenuWaypoints()
 
         for (auto& waypoint : waypointList)
         {
-            if (waypoint.Name.size() == 0)
+            if (waypoint.Name.empty() == true)
             {
                 continue;
             }
@@ -306,7 +306,26 @@ static void EQAPP_GUI_MainWindow_MenuWaypoints()
             }
 
             std::stringstream menuItemLabel;
-            menuItemLabel << waypoint.Name << "##MainWindowMenuItemWaypoints" << waypoint.Index;
+            menuItemLabel << waypoint.Name;
+
+            if (waypoint.TagList.empty() == false)
+            {
+                menuItemLabel << " (";
+
+                for (auto& tagName : waypoint.TagList)
+                {
+                    menuItemLabel << tagName;
+
+                    if (tagName != waypoint.TagList.back())
+                    {
+                        menuItemLabel << ",";
+                    }
+                }
+
+                menuItemLabel << ")";
+            }
+
+            menuItemLabel << "##MainWindowMenuItemWaypoints" << waypoint.Index;
 
             if (ImGui::Selectable(menuItemLabel.str().c_str(), false))
             {
@@ -314,6 +333,10 @@ static void EQAPP_GUI_MainWindow_MenuWaypoints()
 
                 ImGui::CloseCurrentPopup();
             }
+
+            ImGui::SameLine(ImGui::GetWindowContentRegionMax().x - 20.0f);
+
+            ImGui::Text("%d", waypoint.Index);
         }
 
         ImGui::EndChild();
@@ -330,34 +353,34 @@ static void EQAPP_GUI_MainWindow_MenuClients()
 
     size_t windowIndex = 0;
 
-    for (auto& clientWindow : g_EQAppClientWindowList)
+    for (auto& [clientWindowTitle, clientWindowHWND] : g_EQAppClientWindowList)
     {
-        if (clientWindow.second == NULL)
+        if (clientWindowHWND == NULL)
         {
             continue;
         }
 
-        if (clientWindow.first.size() == 0)
+        if (clientWindowTitle.empty() == true)
         {
             continue;
         }
 
         std::stringstream menuItemText;
-        menuItemText << clientWindow.first << "##MainWindowMenuItemClients" << windowIndex;
+        menuItemText << clientWindowTitle << "##MainWindowMenuItemClients" << windowIndex;
 
         windowIndex++;
 
         if (ImGui::MenuItem(menuItemText.str().c_str()))
         {
-            ShowWindow(clientWindow.second, SW_SHOW);
+            ShowWindow(clientWindowHWND, SW_SHOW);
 
-            if (IsIconic(clientWindow.second) == TRUE) // is window minimized
+            if (IsIconic(clientWindowHWND) == TRUE) // is window minimized
             {
-                ShowWindow(clientWindow.second, SW_RESTORE);
+                ShowWindow(clientWindowHWND, SW_RESTORE);
             }
 
-            SetForegroundWindow(clientWindow.second);
-            SetFocus(clientWindow.second);
+            SetForegroundWindow(clientWindowHWND);
+            SetFocus(clientWindowHWND);
         }
     }
 }

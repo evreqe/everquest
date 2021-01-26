@@ -1,6 +1,6 @@
 #pragma once
 
-bool g_ESPIsEnabled = false;
+bool g_ESPIsEnabled = true;
 
 bool g_ESPHeightFilterIsEnabled = false;
 
@@ -153,19 +153,36 @@ void EQAPP_ESP_DrawSpawns()
             continue;
         }
 
+        // skip self
         if (spawn == playerSpawn)
         {
             continue;
         }
-
-        std::string spawnName = EQ_GetSpawnName(spawn);
-        std::string spawnLastName = EQ_GetSpawnLastName(spawn);
 
         auto spawnY = EQ_GetSpawnY(spawn);
         auto spawnX = EQ_GetSpawnX(spawn);
         auto spawnZ = EQ_GetSpawnZ(spawn);
 
         float spawnDistance = EQ_CalculateDistance(playerSpawnY, playerSpawnX, spawnY, spawnX);
+
+        // skip mounts and auras
+        if (spawnDistance < 1.0f)
+        {
+            continue;
+        }
+
+/*
+        if (spawnDistance < 100.0f)
+        {
+            if (EQ_CanSpawnCastRayToSpawn(playerSpawn, spawn) == true)
+            {
+                continue;
+            }
+        }
+*/
+
+        std::string spawnName = EQ_GetSpawnName(spawn);
+        std::string spawnLastName = EQ_GetSpawnLastName(spawn);
 
         auto spawnID = EQ_GetSpawnID(spawn);
         auto spawnType = EQ_GetSpawnType(spawn);
@@ -213,7 +230,7 @@ void EQAPP_ESP_DrawSpawns()
             }
         }
 
-        if (g_ESPFindSpawnName.size() != 0)
+        if (g_ESPFindSpawnName.empty() == false)
         {
             if (EQAPP_String_Contains(spawnName, g_ESPFindSpawnName) == true)
             {
@@ -228,7 +245,7 @@ void EQAPP_ESP_DrawSpawns()
             }
         }
 
-        if (g_ESPFindSpawnLastName.size() != 0)
+        if (g_ESPFindSpawnLastName.empty() == false)
         {
             if (EQAPP_String_Contains(spawnLastName, g_ESPFindSpawnLastName) == true)
             {
@@ -341,7 +358,7 @@ void EQAPP_ESP_DrawSpawns()
             if (bShowSpawnClassShortName == true)
             {
                 auto spawnClassShortName = EQ_GetClassShortNameByID(spawnClass);
-                if (spawnClassShortName.size() != 0)
+                if (spawnClassShortName.empty() == false)
                 {
                     drawText << " " << spawnClassShortName;
                 }
@@ -366,7 +383,7 @@ void EQAPP_ESP_DrawSpawns()
 
             if (spawnType == EQ_SPAWN_TYPE_NPC)
             {
-                if (spawnLastName.size() != 0)
+                if (spawnLastName.empty() == false)
                 {
                     drawText << "\n(" << spawnLastName << ")";
                 }
@@ -529,7 +546,7 @@ void EQAPP_ESP_DrawDoors()
         if (result == true)
         {
             char doorName[EQ_SIZE_EQSwitch_NAME];
-            std::memmove(doorName, (LPVOID)(door + EQ_OFFSET_EQSwitch_NAME), sizeof(doorName));
+            memcpy(doorName, (LPVOID)(door + EQ_OFFSET_EQSwitch_NAME), sizeof(doorName));
 
             std::stringstream drawText;
             drawText << "[Door] " << doorName << " (" << (int)doorDistance << "m)";

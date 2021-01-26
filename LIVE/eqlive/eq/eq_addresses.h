@@ -88,11 +88,15 @@ uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__SetNameSpriteTint = 0x0;
 uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__ChangeLight = 0x0;
 uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__push_along_heading = 0x0;
 uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__AllowedToAttack = 0x0;
+uint32_t EQ_ADDRESS_FUNCTION_EQPlayer__RightClickedOnPlayer = 0x0;
 
 uint32_t EQ_ADDRESS_POINTER_EQSwitchManager = 0x0;
 
 uint32_t EQ_ADDRESS_FUNCTION_EQSwitch__UseSwitch = 0x0;
 uint32_t EQ_ADDRESS_FUNCTION_EQSwitch__ChangeState = 0x0;
+
+// class EQSpellManager
+uint32_t EQ_ADDRESS_POINTER_EQSpellManager = 0x0; // pinstSpellManager
 
 // class EQSpell
 uint32_t EQ_ADDRESS_FUNCTION_EQSpell__SpellAffects = 0x0;
@@ -124,7 +128,6 @@ uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__HandleMouseWheel = 0x0;
 uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__StartCasting = 0x0;
 uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__SendNewText = 0x0;
 uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__DropHeldItemOnGround = 0x0;
-uint32_t EQ_ADDRESS_FUNCTION_CEverQuest__RightClickedOnPlayer = 0x0;
 
 uint32_t EQ_ADDRESS_POINTER_CDisplay = 0x0; // pinstCDisplay    "CDisplay::CreatePlayerActor - FATAL ERROR - mySpriteDef is NULL. "
 

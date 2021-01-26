@@ -49,6 +49,8 @@ void EQ_Log(const char* text);
 
 void EQ_ToggleBool(bool& b);
 
+void EQ_OutputFiles();
+
 float EQ_CalculateDistance(float y1, float x1, float y2, float x2);
 float EQ_CalculateDistance3D(float y1, float x1, float z1, float y2, float x2, float z2);
 bool EQ_IsWithinDistance(float y1, float x1, float y2, float x2, float distance);
@@ -121,6 +123,11 @@ void EQ_SetZoneGravity(float gravity);
 bool EQ_IsFogEnabled();
 void EQ_SetFog(bool b);
 
+uint32_t EQ_GetSpellManager();
+uint32_t EQ_GetSpellByID(uint32_t spellID);
+uint32_t EQ_GetSpellIDByName(const char* spellName);
+std::string EQ_GetSpellNameByID(uint32_t spellID);
+
 bool EQ_CastSpellByGemIndex(uint32_t spellGemIndex);
 
 uint32_t EQ_GetCharacter();
@@ -156,9 +163,13 @@ void EQ_SetPlayerSpawnGravityType(uint32_t gravityType);
 
 void EQ_SetPlayerNoGrav(uint32_t noGravity);
 
+uint32_t EQ_GetPlayerSpawnID();
+
 std::string EQ_GetPlayerSpawnNameNumbered();
 std::string EQ_GetPlayerSpawnName();
 std::string EQ_GetPlayerSpawnLastName();
+
+uint32_t EQ_GetTargetSpawnID();
 
 std::string EQ_GetTargetSpawnNameNumbered();
 std::string EQ_GetTargetSpawnName();
@@ -443,14 +454,21 @@ bool EQ_TaskSelectWindow_ClickDeclineButton();
 void EQ_Log(const char* text)
 {
     std::fstream file;
-    file.open("Logs/eq-log.txt", std::ios::out | std::ios::app);
-    file << "[" << __TIME__ << "] " << text << "\n";
+    file.open("Logs/eq_log.txt", std::ios::out | std::ios::app);
+    file << fmt::format(FMT_COMPILE("[{}] {}\n"), __TIME__, text);
     file.close();
 }
 
 void EQ_ToggleBool(bool& b)
 {
     b = !b;
+}
+
+void EQ_OutputFiles()
+{
+    EQ_InterpretCommand("/outputfile inventory");
+    EQ_InterpretCommand("/outputfile realestate");
+    EQ_InterpretCommand("/outputfile missingspells");
 }
 
 float EQ_CalculateDistance(float y1, float x1, float y2, float x2)
@@ -1002,7 +1020,7 @@ uint32_t EQ_GetZoneID()
 std::string EQ_GetZoneLongName()
 {
     char zoneLongName[EQ_SIZE_EQZoneInfo_ZONE_LONG_NAME];
-    std::memmove(zoneLongName, (LPVOID)(EQ_ADDRESS_EQZoneInfo + EQ_OFFSET_EQZoneInfo_ZONE_LONG_NAME), sizeof(zoneLongName));
+    memcpy(zoneLongName, (LPVOID)(EQ_ADDRESS_EQZoneInfo + EQ_OFFSET_EQZoneInfo_ZONE_LONG_NAME), sizeof(zoneLongName));
 
     return zoneLongName;
 }
@@ -1010,7 +1028,7 @@ std::string EQ_GetZoneLongName()
 std::string EQ_GetZoneShortName()
 {
     char zoneShortName[EQ_SIZE_EQZoneInfo_ZONE_SHORT_NAME];
-    std::memmove(zoneShortName, (LPVOID)(EQ_ADDRESS_EQZoneInfo + EQ_OFFSET_EQZoneInfo_ZONE_SHORT_NAME), sizeof(zoneShortName));
+    memcpy(zoneShortName, (LPVOID)(EQ_ADDRESS_EQZoneInfo + EQ_OFFSET_EQZoneInfo_ZONE_SHORT_NAME), sizeof(zoneShortName));
 
     return zoneShortName;
 }
@@ -1044,6 +1062,96 @@ void EQ_SetFog(bool b)
     EQ_WriteMemory<uint8_t>(EQ_ADDRESS_EQZoneInfo + EQ_OFFSET_EQZoneInfo_FOG_ENABLED, value);
 }
 
+uint32_t EQ_GetSpellManager()
+{
+    return EQ_ReadMemory<uint32_t>(EQ_ADDRESS_POINTER_EQSpellManager);
+}
+
+uint32_t EQ_GetSpellByID(uint32_t spellID)
+{
+    auto spellManager = EQ_GetSpellManager();
+    if (spellManager == NULL)
+    {
+        return EQ_SPELL_ID_NULL;
+    }
+
+    for (unsigned int i = 0; i < EQ_NUM_SPELLS; i++)
+    {
+        auto spell = EQ_ReadMemory<uint32_t>(spellManager + EQ_OFFSET_SpellManager_SPELLS + (i * 0x04));
+        if (spell == NULL)
+        {
+            continue;
+        }
+
+        auto spellManagerSpellID = EQ_ReadMemory<uint32_t>(spell + EQ_OFFSET_SPELL_ID);
+        if (spellID == spellManagerSpellID)
+        {
+            return spell;
+        }
+    }
+
+    return EQ_SPELL_ID_NULL;
+}
+
+uint32_t EQ_GetSpellIDByName(const char* spellName)
+{
+    auto spellManager = EQ_GetSpellManager();
+    if (spellManager == NULL)
+    {
+        return EQ_SPELL_ID_NULL;
+    }
+
+    for (unsigned int i = 0; i < EQ_NUM_SPELLS; i++)
+    {
+        auto spell = EQ_ReadMemory<uint32_t>(spellManager + EQ_OFFSET_SpellManager_SPELLS + (i * 0x04));
+        if (spell == NULL)
+        {
+            continue;
+        }
+
+        char spellManagerSpellName[EQ_SIZE_SPELL_NAME];
+        memcpy(spellManagerSpellName, (LPVOID)(spell + EQ_OFFSET_SPELL_NAME), sizeof(spellManagerSpellName));
+
+        if (strcmp(spellManagerSpellName, spellName) == 0)
+        {
+            auto spellManagerSpellID = EQ_ReadMemory<uint32_t>(spell + EQ_OFFSET_SPELL_ID);
+
+            return spellManagerSpellID;
+        }
+    }
+
+    return EQ_SPELL_ID_NULL;
+}
+
+std::string EQ_GetSpellNameByID(uint32_t spellID)
+{
+    auto spellManager = EQ_GetSpellManager();
+    if (spellManager == NULL)
+    {
+        return std::string();
+    }
+
+    for (unsigned int i = 0; i < EQ_NUM_SPELLS; i++)
+    {
+        auto spell = EQ_ReadMemory<uint32_t>(spellManager + EQ_OFFSET_SpellManager_SPELLS + (i * 0x04));
+        if (spell == NULL)
+        {
+            continue;
+        }
+
+        auto spellManagerSpellID = EQ_ReadMemory<uint32_t>(spell + EQ_OFFSET_SPELL_ID);
+        if (spellID == spellManagerSpellID)
+        {
+            char spellManagerSpellName[EQ_SIZE_SPELL_NAME];
+            memcpy(spellManagerSpellName, (LPVOID)(spell + EQ_OFFSET_SPELL_NAME), sizeof(spellManagerSpellName));
+
+            return spellManagerSpellName;
+        }
+    }
+
+    return std::string();
+}
+
 bool EQ_CastSpellByGemIndex(uint32_t spellGemIndex)
 {
     if (spellGemIndex > (EQ_NUM_SPELL_GEMS - 1))
@@ -1051,13 +1159,25 @@ bool EQ_CastSpellByGemIndex(uint32_t spellGemIndex)
         return false;
     }
 
-    std::stringstream ss;
-    ss << "/cast " << spellGemIndex + 1;
+    std::string commandText = fmt::format("/cast {}", spellGemIndex + 1);
+
+    // bard does not fizzle
+    // casting multiple times will cause aura to fail
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn != NULL)
+    {
+        auto playerClass = EQ_GetSpawnClass(playerSpawn);
+        if (playerClass == EQ_CLASS_BARD)
+        {
+            EQ_InterpretCommand(commandText.c_str());
+            return true;
+        }
+    }
 
     // cast the spell multiple times in case of fizzles
     for (unsigned int i = 0; i < 4; i++)
     {
-        EQ_InterpretCommand(ss.str().c_str());
+        EQ_InterpretCommand(commandText.c_str());
     }
 
     return true;
@@ -1399,6 +1519,17 @@ void EQ_SetPlayerNoGrav(uint32_t noGravity)
     }
 }
 
+uint32_t EQ_GetPlayerSpawnID()
+{
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return EQ_SPAWN_ID_NULL;
+    }
+
+    return EQ_GetSpawnID(playerSpawn);
+}
+
 std::string EQ_GetPlayerSpawnNameNumbered()
 {
     auto playerSpawn = EQ_GetPlayerSpawn();
@@ -1430,6 +1561,17 @@ std::string EQ_GetPlayerSpawnLastName()
     }
 
     return EQ_GetSpawnLastName(playerSpawn);
+}
+
+uint32_t EQ_GetTargetSpawnID()
+{
+    auto targetSpawn = EQ_GetTargetSpawn();
+    if (targetSpawn == NULL)
+    {
+        return EQ_SPAWN_ID_NULL;
+    }
+
+    return EQ_GetSpawnID(targetSpawn);
 }
 
 std::string EQ_GetTargetSpawnNameNumbered()
@@ -1570,7 +1712,7 @@ uint32_t EQ_GetGroupMemberSpawnByName(const char* spawnName)
         }
 
         std::string groupMemberName = EQ_GetSpawnName(groupMemberSpawn);
-        if (groupMemberName.size() == 0)
+        if (groupMemberName.empty() == true)
         {
             continue;
         }
@@ -1604,7 +1746,7 @@ uint32_t EQ_GetGroupLeaderSpawn()
 bool EQ_IsSpawnGroupMember(uint32_t spawn)
 {
     auto groupMemberSpawnList = EQ_GetGroupMemberSpawnList();
-    if (groupMemberSpawnList.size() == 0)
+    if (groupMemberSpawnList.empty() == true)
     {
         return false;
     }
@@ -1693,7 +1835,18 @@ void EQ_DoPlayerJump(float jumpStrengthMultiplier, float pushSpeed)
 
 void EQ_RightClickOnSpawn(uint32_t spawn)
 {
-    EQ_CLASS_POINTER_CEverQuest->RightClickedOnPlayer(spawn);
+    auto playerSpawn = EQ_GetPlayerSpawn();
+    if (playerSpawn == NULL)
+    {
+        return;
+    }
+
+    if (spawn == NULL)
+    {
+        return;
+    }
+
+    ((EQClass::EQPlayer*)playerSpawn)->RightClickedOnPlayer(spawn, true);
 }
 
 bool EQ_IsSpawnWithinDistance(uint32_t spawn, float distance)
@@ -3365,7 +3518,7 @@ std::string EQ_GetHeldItemName()
     }
 
     char heldItemName[EQ_SIZE_ITEM_NAME];
-    std::memmove(heldItemName, (LPVOID)(heldItem + EQ_OFFSET_ITEM_NAME), sizeof(heldItemName));
+    memcpy(heldItemName, (LPVOID)(heldItem + EQ_OFFSET_ITEM_NAME), sizeof(heldItemName));
 
     return heldItemName;
 }
@@ -3660,7 +3813,7 @@ void EQ_UseDoor(const char* doorName)
         }
 
         char doorName_[EQ_SIZE_EQSwitch_NAME];
-        std::memmove(doorName_, (LPVOID)(door + EQ_OFFSET_EQSwitch_NAME), sizeof(doorName_));
+        memcpy(doorName_, (LPVOID)(door + EQ_OFFSET_EQSwitch_NAME), sizeof(doorName_));
 
         if (strcmp(doorName, doorName_) != 0)
         {
@@ -3942,7 +4095,7 @@ void EQ_BazaarSearchWindow_PrintList()
         return;
     }
 
-    std::cout << "Bazaar Search Window List:" << "\n";
+    std::cout << "Bazaar Search Window List:\n";
 
     for (size_t i = 0; i < listCount; i++)
     {
@@ -3967,13 +4120,13 @@ void EQ_BazaarSearchWindow_PrintList()
         itemPrice = (uint32_t)(itemPrice / 1000); // price in platinum pieces
 
         std::string itemName = EQ_BazaarSearchWindow_GetItemName(i);
-        if (itemName.size() == 0)
+        if (itemName.empty() == true)
         {
             continue;
         }
 
         std::string traderName = EQ_BazaarSearchWindow_GetTraderName(i);
-        if (traderName.size() == 0)
+        if (traderName.empty() == true)
         {
             continue;
         }
@@ -3981,7 +4134,7 @@ void EQ_BazaarSearchWindow_PrintList()
         std::cout << itemName << ", " << itemQuantity << "x, " << itemPrice << "pp, " << traderName << "\n";
     }
 
-    std::cout << listCount << " item(s) in list." << "\n";
+    std::cout << listCount << " item(s) in list.\n";
 }
 
 uint32_t EQ_BazaarSearchWindow_GetListCount()
@@ -4031,7 +4184,7 @@ uint32_t EQ_BazaarSearchWindow_GetListIndexByItemName(const char* itemName, bool
     for (size_t i = 0; i < EQ_BAZAAR_SEARCH_MAX_RESULTS_PER_TRADER; i++)
     {
         char itemNameEx[EQ_SIZE_CBazaarSearchWnd_ITEM_NAME];
-        std::memmove(itemNameEx, (LPVOID)(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_ITEM_NAME + (i * EQ_SIZE_CBazaarSearchWnd_ITEM))), sizeof(itemNameEx));
+        memcpy(itemNameEx, (LPVOID)(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_ITEM_NAME + (i * EQ_SIZE_CBazaarSearchWnd_ITEM))), sizeof(itemNameEx));
 
         if (strlen(itemNameEx) == 0)
         {
@@ -4084,7 +4237,7 @@ uint32_t EQ_BazaarSearchWindow_GetListIndexByLowestPrice()
         prices.insert({listIndex, itemPrice});
     }
 
-    if (prices.size() == 0)
+    if (prices.empty() == true)
     {
         return EQ_BAZAAR_SEARCH_LIST_INDEX_NULL;
     }
@@ -4247,7 +4400,7 @@ std::string EQ_BazaarSearchWindow_GetItemName(uint32_t listIndex)
     }
 
     char itemName[EQ_SIZE_CBazaarSearchWnd_ITEM_NAME];
-    std::memmove(itemName, (LPVOID)(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_ITEM_NAME + (listIndex * EQ_SIZE_CBazaarSearchWnd_ITEM))), sizeof(itemName));
+    memcpy(itemName, (LPVOID)(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_ITEM_NAME + (listIndex * EQ_SIZE_CBazaarSearchWnd_ITEM))), sizeof(itemName));
 
     return itemName;
 }
@@ -4273,7 +4426,7 @@ std::string EQ_BazaarSearchWindow_GetTraderName(uint32_t listIndex)
     }
 
     char traderName[EQ_SIZE_CBazaarSearchWnd_TRADER_NAME];
-    std::memmove(traderName, (LPVOID)(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_TRADER_NAME + (listIndex * EQ_SIZE_CBazaarSearchWnd_ITEM))), sizeof(traderName));
+    memcpy(traderName, (LPVOID)(bazaarSearchWindow + (EQ_OFFSET_CBazaarSearchWnd_TRADER_NAME + (listIndex * EQ_SIZE_CBazaarSearchWnd_ITEM))), sizeof(traderName));
 
     return traderName;
 }

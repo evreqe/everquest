@@ -38,7 +38,7 @@ void EQAPP_ChangeHeight_Off()
 
 void EQAPP_ChangeHeight_Execute()
 {
-    if (EQAPP_Timer_HasTimeElapsed(g_ChangeHeightTimer, g_ChangeHeightTimerInterval) == false)
+    if (EQAPP_Timer_HasTimeElapsedInSeconds(g_ChangeHeightTimer, g_ChangeHeightTimerInterval) == false)
     {
         return;
     }

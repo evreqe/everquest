@@ -1,7 +1,5 @@
 #pragma once
 
-#include "inc_master.h"
-
 const char* g_EQAppName = "eqlive";
 const char* g_EQAppNameEx = "EQLive";
 
@@ -25,9 +23,9 @@ uint32_t g_EQAppDoubleClickMouseFixLMouseUpTimePrevious = 0;
 bool g_EQAppWindowProcLastMessageWasDoubleClick = false;
 
 std::random_device g_EQAppRandomDevice;
-std::mt19937 g_EQAppRandomEngine(g_EQAppRandomDevice());
+std::default_random_engine g_EQAppRandomEngine(g_EQAppRandomDevice());
 
-std::unordered_map<std::string, HWND> g_EQAppClientWindowList;
+std::map<std::string, HWND> g_EQAppClientWindowList;
 
 HMODULE g_EQAppModule;
 

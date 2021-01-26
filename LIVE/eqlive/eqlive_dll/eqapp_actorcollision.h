@@ -7,20 +7,22 @@ EQApp::TimerInterval g_ActorCollisionTimerInterval = 1;
 
 bool g_ActorCollisionDebugIsEnabled = false;
 
-bool g_ActorCollisionAllIsEnabled = false;
-bool g_ActorCollisionPlayerIsEnabled = true;
+bool g_ActorCollisionNoCollisionWithAllIsEnabled = false;
+bool g_ActorCollisionNoCollisionWithPlayersIsEnabled = true;
 
 std::vector<std::string> g_ActorCollisionActorDefinitionList;
 uint32_t g_ActorCollisionActorDefinitionList_reserve = 1024;
 
 std::set<std::string> g_ActorCollisionActorDefinitionDebugList;
 
+float g_ActorCollisionDebugDistance = 100.0f;
+
 void EQAPP_ActorCollision_Toggle();
 void EQAPP_ActorCollision_On();
 void EQAPP_ActorCollision_Off();
 void EQAPP_ActorCollision_Debug_Toggle();
-void EQAPP_ActorCollision_All_Toggle();
-void EQAPP_ActorCollision_Player_Toggle();
+void EQAPP_ActorCollision_NoCollisionWithAll_Toggle();
+void EQAPP_ActorCollision_NoCollisionWithPlayers_Toggle();
 void EQAPP_ActorCollision_Load();
 void EQAPP_ActorCollision_PrintActorDefinitionList();
 void EQAPP_ActorCollision_PrintActorDefinitionDebugList();
@@ -57,16 +59,16 @@ void EQAPP_ActorCollision_Debug_Toggle()
     g_ActorCollisionActorDefinitionDebugList.clear();
 }
 
-void EQAPP_ActorCollision_All_Toggle()
+void EQAPP_ActorCollision_NoCollisionWithAll_Toggle()
 {
-    EQ_ToggleBool(g_ActorCollisionAllIsEnabled);
-    EQAPP_PrintBool("Actor Collision All", g_ActorCollisionAllIsEnabled);
+    EQ_ToggleBool(g_ActorCollisionNoCollisionWithAllIsEnabled);
+    EQAPP_PrintBool("Actor Collision No Collision With All", g_ActorCollisionNoCollisionWithAllIsEnabled);
 }
 
-void EQAPP_ActorCollision_Player_Toggle()
+void EQAPP_ActorCollision_NoCollisionWithPlayers_Toggle()
 {
-    EQ_ToggleBool(g_ActorCollisionPlayerIsEnabled);
-    EQAPP_PrintBool("Actor Collision Player", g_ActorCollisionPlayerIsEnabled);
+    EQ_ToggleBool(g_ActorCollisionNoCollisionWithPlayersIsEnabled);
+    EQAPP_PrintBool("Actor Collision No Collision With Players", g_ActorCollisionNoCollisionWithPlayersIsEnabled);
 }
 
 void EQAPP_ActorCollision_Load()
@@ -77,9 +79,9 @@ void EQAPP_ActorCollision_Load()
     EQAPP_ReadFileToList("actorcollision.txt", g_ActorCollisionActorDefinitionList, false);
 
     std::string zoneShortName = EQ_GetZoneShortName();
-    if (zoneShortName.size() == 0)
+    if (zoneShortName.empty() == true)
     {
-        EQAPP_PrintDebugText(__FUNCTION__, "zoneShortName.size() == 0");
+        EQAPP_PrintDebugText(__FUNCTION__, "zoneShortName is empty");
         return;
     }
 
@@ -95,7 +97,7 @@ void EQAPP_ActorCollision_Load()
 
 void EQAPP_ActorCollision_PrintActorDefinitionList()
 {
-    std::cout << "Actor Collision Actor Definition List:" << "\n";
+    std::cout << "Actor Collision Actor Definition List:\n";
 
     for (auto& actorDefinition : g_ActorCollisionActorDefinitionList)
     {
@@ -105,7 +107,7 @@ void EQAPP_ActorCollision_PrintActorDefinitionList()
 
 void EQAPP_ActorCollision_PrintActorDefinitionDebugList()
 {
-    std::cout << "Actor Collision Actor Definition Debug List:" << "\n";
+    std::cout << "Actor Collision Actor Definition Debug List:\n";
 
     for (auto& actorDefinition : g_ActorCollisionActorDefinitionDebugList)
     {
@@ -130,7 +132,7 @@ bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor
     }
 
     char actorDefinitionName[EQ_SIZE_ACTOR_DEFINITION_NAME];
-    std::memmove(actorDefinitionName, (LPVOID)(actorDefinitionAddress), sizeof(actorDefinitionName));
+    memcpy(actorDefinitionName, (LPVOID)(actorDefinitionAddress), sizeof(actorDefinitionName));
 
     ////auto actorApplicationData = EQ_ReadMemory<uint32_t>(cactor + EQ_OFFSET_CActor_APPLICATION_DATA);
 
@@ -144,41 +146,78 @@ bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor
 
     if (g_ActorCollisionDebugIsEnabled == true)
     {
-        g_ActorCollisionActorDefinitionDebugList.insert(actorDefinitionName);
+        bool bSkipActor = false;
 
-        float screenX = -1.0f;
-        float screenY = -1.0f;
-        bool result = EQ_WorldLocationToScreenLocation(actorY, actorX, actorZ, screenX, screenY);
-        if (result == true)
+        // skip players and NPCs
+        if (actorType == 1)
         {
-            std::stringstream drawText;
-            drawText << "[Actor] " << actorDefinitionName;
+            bSkipActor = true;
+        }
 
-            drawText << "\nAddress: 0x" << std::hex << cactor << std::dec;
+        auto playerSpawn = EQ_GetPlayerSpawn();
+        if (playerSpawn != NULL)
+        {
+            float playerY = EQ_GetSpawnY(playerSpawn);
+            float playerX = EQ_GetSpawnX(playerSpawn);
 
-            ////drawText << "\nAD: 0x" << fmt::hex(actorApplicationData);
+            auto actorDistance = EQ_CalculateDistance(playerY, playerX, actorY, actorX);
+            if (actorDistance > g_ActorCollisionDebugDistance)
+            {
+                bSkipActor = true;
+            }
+        }
 
-            drawText << "\nType: " << actorType;
+        if (bSkipActor == false)
+        {
+            g_ActorCollisionActorDefinitionDebugList.insert(actorDefinitionName);
 
-            drawText << "\nY: " << actorY;
-            drawText << "\nX: " << actorX;
-            drawText << "\nZ: " << actorZ;
+            float screenX = -1.0f;
+            float screenY = -1.0f;
+            bool result = EQ_WorldLocationToScreenLocation(actorY, actorX, actorZ, screenX, screenY);
+            if (result == true)
+            {
+                std::string drawText = fmt::format
+                (
+                    FMT_COMPILE
+                    (
+                        "[Actor] {}\n"
+                        "Address: 0x{:04X}\n"
+                        "Type: {}\n"
+                        "Y: {}\n"
+                        "X: {}\n"
+                        "Z: {}\n"
+                        "C: {}"
+                    ),
+                    actorDefinitionName,
+                    cactor,
+                    actorType,
+                    actorY,
+                    actorX,
+                    actorZ,
+                    actorCollisionScale
+                );
 
-            drawText << "\nC: " << actorCollisionScale;
-
-            EQ_DrawTextByColor(drawText.str().c_str(), (int)screenX, (int)screenY, EQ_DRAW_TEXT_COLOR_WHITE);
+                EQ_DrawTextByColor(drawText.c_str(), (int)screenX, (int)screenY, EQ_DRAW_TEXT_COLOR_WHITE);
+            }
         }
     }
 
     for (auto& actorDefinitionListName : g_ActorCollisionActorDefinitionList)
     {
+        if (strcmp(actorDefinitionName, actorDefinitionListName.c_str()) == 0)
+        {
+            EQ_WriteMemory<float>(cactor + EQ_OFFSET_CActor_COLLISION_SCALE, 0.0f); // no collision
+
+            return true;
+        }
+
+        std::string_view actorDefinitionListNameWithoutPrefix = actorDefinitionListName;
+
+        actorDefinitionListNameWithoutPrefix.remove_prefix(1);
+
         if (EQAPP_String_BeginsWith(actorDefinitionListName, "!") == true)
         {
-            std::string trimmedName = actorDefinitionListName;
-
-            trimmedName.erase(0, 1);
-
-            if (strcmp(actorDefinitionName, trimmedName.c_str()) == 0)
+            if (actorDefinitionName == actorDefinitionListNameWithoutPrefix)
             {
                 EQ_WriteMemory<float>(cactor + EQ_OFFSET_CActor_COLLISION_SCALE, 1.0f); // collision
 
@@ -188,11 +227,7 @@ bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor
 
         if (EQAPP_String_BeginsWith(actorDefinitionListName, "@") == true)
         {
-            std::string trimmedName = actorDefinitionListName;
-
-            trimmedName.erase(0, 1);
-
-            if (strcmp(actorDefinitionName, trimmedName.c_str()) == 0)
+            if (actorDefinitionName == actorDefinitionListNameWithoutPrefix)
             {
                 return true; // walk through or climb up and over
             }
@@ -200,11 +235,7 @@ bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor
 
         if (EQAPP_String_BeginsWith(actorDefinitionListName, "*") == true)
         {
-            std::string trimmedName = actorDefinitionListName;
-
-            trimmedName.erase(0, 1);
-
-            if (strcmp(actorDefinitionName, trimmedName.c_str()) == 0)
+            if (actorDefinitionName == actorDefinitionListNameWithoutPrefix)
             {
                 if (EQ_IsAutoRunEnabled() == true)
                 {
@@ -221,13 +252,9 @@ bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor
             }
         }
 
-        if (EQAPP_String_BeginsWith(actorDefinitionListName, "^") == true)
+        if (EQAPP_String_BeginsWith(actorDefinitionListName, "$") == true)
         {
-            std::string trimmedName = actorDefinitionListName;
-
-            trimmedName.erase(0, 1);
-
-            if (strcmp(actorDefinitionName, trimmedName.c_str()) == 0)
+            if (actorDefinitionName == actorDefinitionListNameWithoutPrefix)
             {
                 // move it below the world
                 EQ_WriteMemory<float>(cactor + EQ_OFFSET_CActor_Z, -20000.0f);
@@ -238,13 +265,6 @@ bool EQAPP_ActorCollision_HandleEvent_CollisionCallbackForActors(uint32_t cactor
 
                 return true;
             }
-        }
-
-        if (strcmp(actorDefinitionName, actorDefinitionListName.c_str()) == 0)
-        {
-            EQ_WriteMemory<float>(cactor + EQ_OFFSET_CActor_COLLISION_SCALE, 0.0f); // no collision
-
-            return true;
         }
     }
 

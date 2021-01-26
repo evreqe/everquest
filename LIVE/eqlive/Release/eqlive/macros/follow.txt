@@ -1,0 +1,1 @@
+//BCA //AutoAttackOff;//Stand;//Target {PlayerName};//Follow

@@ -38,7 +38,7 @@ void EQAPP_Lantern_Off()
 
 void EQAPP_Lantern_Execute()
 {
-    if (EQAPP_Timer_HasTimeElapsed(g_LanternTimer, g_LanternTimerInterval) == false)
+    if (EQAPP_Timer_HasTimeElapsedInSeconds(g_LanternTimer, g_LanternTimerInterval) == false)
     {
         return;
     }

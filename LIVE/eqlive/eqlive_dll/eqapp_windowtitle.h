@@ -58,7 +58,7 @@ void EQAPP_WindowTitle_Execute()
     }
 
     std::string playerName = EQ_GetSpawnName(playerSpawn);
-    if (playerName.size() == 0)
+    if (playerName.empty() == true)
     {
         return;
     }
